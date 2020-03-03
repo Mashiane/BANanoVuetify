@@ -2,7 +2,7 @@
 
 [Watch Video](https://www.youtube.com/watch?v=taMhwyMI2Mg&t=208s)
 
-BANanoVuetify started out as [BANanoVueMaterial](https://github.com/Mashiane/BANanoVueMaterial), a wrapper for the VueMaterial framework for one to write in B4X and get their SPA/PWA out using the BANano. At the time of writing a very supported framework, VueJS existed which shares a lot of similaries though very enhanced to VM. So this was rather inevitable for stability purposes. [Vuetify](https://vuetifyjs.com/en/) is a Material based framework for VueJS.
+BANanoVuetify started out as [BANanoVueMaterial](https://github.com/Mashiane/BANanoVueMaterial), a wrapper for the VueMaterial framework for one to write in B4X and get their SPA/PWA out using the BANano. At the time of writing a very supported framework, Vuetify existed which shares a lot of similaries with VueMaterial but is greatly supported and has more components. So this was rather inevitable. [Vuetify](https://vuetifyjs.com/en/) is a Material based framework for VueJS.
 
 With BANano, one is able to code using VB like syntax using B4J from Anywhere Software and the result is a PWA (Progressive Web App) in SPA (Single Page Application) format.
 
