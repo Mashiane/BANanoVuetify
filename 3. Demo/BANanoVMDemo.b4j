@@ -1,0 +1,127 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=1.jpg
+File10=upload.php
+File11=vbanner.jpg
+File2=2.jpg
+File3=3.jpg
+File4=4.jpg
+File5=5.jpg
+File6=bg-2.jpg
+File7=dark-beach.jpg
+File8=material.jpg
+File9=sponge.png
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananopostprocessor
+Library5=bananovuetify
+Module1=modAlert
+Module10=modChips
+Module11=modCombo
+Module12=modDataTable
+Module13=modDatePicker
+Module14=modDesign
+Module15=modDialog
+Module16=modFileInput
+Module17=modForm
+Module18=modGrid
+Module19=modIcons
+Module2=modAutoComplete
+Module20=modImages
+Module21=modLists
+Module22=modMenus
+Module23=modRadioGroups
+Module24=modSelects
+Module25=modSlider
+Module26=modSnackBar
+Module27=modStepper
+Module28=modSwitch
+Module29=modTabs
+Module3=modAvatar
+Module30=modTextArea
+Module31=modTextField
+Module32=modTimePicker
+Module33=modToolbar
+Module34=modTreeView
+Module35=pgIndex
+Module4=modBadges
+Module5=modBanner
+Module6=modBottomNavigation
+Module7=modBottomSheet
+Module8=modButtons
+Module9=modCheckBox
+NumberOfFiles=11
+NumberOfLibraries=5
+NumberOfModules=35
+Version=8.1
+@EndOfDesignText@
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+	#LibraryVersion: 3.00
+	#LibraryName: BANanoVMDemo
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "BANanoVMDemo"
+	Private Publish As String
+	Private BP As BANanoPostProcessor
+	Public ServerIP As String
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'post processor
+	BP.Initialize
+	BP.RedirectOutput(File.DirApp,"log.txt")
+	Publish = "C:\laragon\www"
+	ServerIP = "localhost"
+	'
+	Dim Version As Long = DateTime.now
+	Dim appFile As String = $"app${Version}.js"$
+	
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, Version)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppName
+	BANano.JAVASCRIPT_NAME = appFile
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	'
+	BANano.Build(Publish)
+	BP.OpenLog(File.DirApp, "log.txt")
+	
+	BP.PublishPath = Publish
+	BP.ShortName = AppName
+	BP.AssetsPath = BANano.ASSETS_FOLDER
+	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
+	BP.StylesPath = BANano.STYLES_FOLDER
+	BP.ScriptFile = BANano.JAVASCRIPT_NAME
+	BP.UnzipFonts
+	BP.Open(True)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	pgIndex.Init
+End Sub

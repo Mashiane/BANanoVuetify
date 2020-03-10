@@ -1,0 +1,361 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=1.png
+File10=devices.min.css
+File11=dom-to-image.min.js
+File12=enjoyhint.min.css
+File13=enjoyhint.min.js
+File14=fileSaver.min.js
+File15=fonts.zip
+File16=frappe-gantt.css
+File17=frappe-gantt.js
+File18=gijgo.min.css
+File19=gijgo.min.js
+File2=2.png
+File20=gray.png
+File21=green.png
+File22=happyface.png
+File23=hashes.min.js
+File24=helpers.css
+File25=icons.svg
+File26=info-box.css
+File27=jquery.countTo.js
+File28=jquery.knob.min.js
+File29=jquery.media.js
+File3=bCrypt.js
+File30=jquery.timeago.min.js
+File31=jquery-3.4.1.min.js
+File32=jszip.min.js
+File33=materialdesignicons.min.css
+File34=materialfont.css
+File35=md5.min.js
+File36=moment.js
+File37=neutralface.png
+File38=numeral.min.js
+File39=orange.png
+File4=Chart.min.css
+File40=oxml.min.js
+File41=pdfmake.js
+File42=printThis.js
+File43=progresscircle.css
+File44=progresscircle.js
+File45=red.png
+File46=renderstring.js
+File47=roboto.css
+File48=sadface.png
+File49=tron-knob.js
+File5=Chart.min.js
+File50=upload.php
+File51=vfs_fonts.js
+File52=vue.min.js
+File53=vue2-animate.min.css
+File54=vue-chartkick.min.js
+File55=vue-google-maps.js
+File56=vue-loading.css
+File57=vue-loading.min.js
+File58=vue-router.min.js
+File59=vue-slider-component.umd.min.js
+File6=clipboard.min.js
+File60=vue-slider-material.css
+File61=vuetify.js
+File62=vuetify.min.css
+File7=collect.min.js
+File8=colors.js
+File9=createWaterBall-jquery.js
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
+FileGroup3=Default Group
+FileGroup30=Default Group
+FileGroup31=Default Group
+FileGroup32=Default Group
+FileGroup33=Default Group
+FileGroup34=Default Group
+FileGroup35=Default Group
+FileGroup36=Default Group
+FileGroup37=Default Group
+FileGroup38=Default Group
+FileGroup39=Default Group
+FileGroup4=Default Group
+FileGroup40=Default Group
+FileGroup41=Default Group
+FileGroup42=Default Group
+FileGroup43=Default Group
+FileGroup44=Default Group
+FileGroup45=Default Group
+FileGroup46=Default Group
+FileGroup47=Default Group
+FileGroup48=Default Group
+FileGroup49=Default Group
+FileGroup5=Default Group
+FileGroup50=Default Group
+FileGroup51=Default Group
+FileGroup52=Default Group
+FileGroup53=Default Group
+FileGroup54=Default Group
+FileGroup55=Default Group
+FileGroup56=Default Group
+FileGroup57=Default Group
+FileGroup58=Default Group
+FileGroup59=Default Group
+FileGroup6=Default Group
+FileGroup60=Default Group
+FileGroup61=Default Group
+FileGroup62=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Module1=BANanoAlaSQLE
+Module10=VMAvatar
+Module100=VMSlideGroup
+Module101=VMSlider
+Module102=VMSnackBar
+Module103=VMSparkLine
+Module104=VMSpeedDial
+Module105=VMStepper
+Module106=VMStepperContent
+Module107=VMStepperHeader
+Module108=VMStepperItems
+Module109=VMStepperStep
+Module11=VMBadge
+Module110=VMSubHeader
+Module111=VMSwitch
+Module112=VMTab
+Module113=VMTabItem
+Module114=VMTabs
+Module115=VMTabsItems
+Module116=VMTabsSlider
+Module117=VMTemplate
+Module118=VMTextArea
+Module119=VMTextField
+Module12=VMBanner
+Module120=VMTimeline
+Module121=VMTimelineItem
+Module122=VMTimePicker
+Module123=VMToolBar
+Module124=VMToolTip
+Module125=VMTreeView
+Module126=VMWaterBall
+Module127=VMWindow
+Module128=VMWindowItem
+Module129=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module13=VMBottomNavigation
+Module14=VMBottomSheet
+Module15=VMBreadCrumbs
+Module16=VMBreadCrumbsItem
+Module17=VMButton
+Module18=VMButtonToggle
+Module19=VMCalendar
+Module2=BANanoMSSQL
+Module20=VMCalendarDaily
+Module21=VMCalendarMonthly
+Module22=VMCalendarWeekly
+Module23=VMCard
+Module24=VMCardActions
+Module25=VMCardSubTitle
+Module26=VMCardText
+Module27=VMCardTitle
+Module28=VMCarousel
+Module29=VMChartKick
+Module3=BANanoMySQL
+Module30=VMCheckBox
+Module31=VMChip
+Module32=VMChipGroup
+Module33=VMCol
+Module34=VMColorPicker
+Module35=VMComboBox
+Module36=VMContainer
+Module37=VMData
+Module38=VMDataFooter
+Module39=VMDataIterator
+Module4=BANanoMySQLE
+Module40=VMDataTable
+Module41=VMDatePicker
+Module42=VMDevice
+Module43=VMDialog
+Module44=VMDivider
+Module45=VMEasyHint
+Module46=VMEditDialog
+Module47=VMElement
+Module48=VMExpandTransition
+Module49=VMExpansionPanel
+Module5=BANanoVM
+Module50=VMExpansionPanelContent
+Module51=VMExpansionPanelHeader
+Module52=VMExpansionPanels
+Module53=VMFileInput
+Module54=VMFooter
+Module55=VMForm
+Module56=VMFrappeGantt
+Module57=VMGMap
+Module58=VMHover
+Module59=VMIcon
+Module6=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\BANanoVue
+Module60=VMImage
+Module61=VMInfoBox
+Module62=VMInput
+Module63=VMItem
+Module64=VMItemGroup
+Module65=VMKnob
+Module66=VMLabel
+Module67=VMLazy
+Module68=VMList
+Module69=VMListGroup
+Module7=VMAlert
+Module70=VMListItem
+Module71=VMListItemAction
+Module72=VMListItemAvatar
+Module73=VMListItemContent
+Module74=VMListItemGroup
+Module75=VMListItemIcon
+Module76=VMListItemSubTitle
+Module77=VMListItemTitle
+Module78=VMMenu
+Module79=VMNavigationDrawer
+Module8=VMAppBar
+Module80=VMOverlay
+Module81=VMPagination
+Module82=VMParallax
+Module83=VMPDF
+Module84=VMPrettyPrint
+Module85=VMProgressCircle
+Module86=VMProgressCircular
+Module87=VMProgressLinear
+Module88=VMRadio
+Module89=VMRadioGroup
+Module9=VMAutoComplete
+Module90=VMRangeSlider
+Module91=VMRating
+Module92=VMResponsive
+Module93=VMRow
+Module94=VMSelect
+Module95=VMSheet
+Module96=VMSimpleCheckBox
+Module97=VMSimpleTable
+Module98=VMSkeleton
+Module99=VMSkeletonLoader
+NumberOfFiles=62
+NumberOfLibraries=3
+NumberOfModules=129
+Version=8.1
+@EndOfDesignText@
+
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+	#LibraryVersion: 3.00
+	#LibraryName: BANanoVuetify
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "BANanoVuetify"
+	Private Publish As String
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	Dim Version As Long = DateTime.now
+	Dim appFile As String = $"app${Version}.js"$
+	
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, Version)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppName
+	BANano.JAVASCRIPT_NAME = appFile
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	'
+	'
+	BANano.Header.AddCSSFile("roboto.css")
+	BANano.Header.AddCSSFile("materialfont.css")
+	BANano.header.AddCSSFile("materialdesignicons.min.css")
+	BANano.Header.AddCSSFile("vuetify.min.css")
+	'
+	BANano.Header.AddJavascriptFile("vue.min.js")
+	BANano.Header.AddJavascriptFile("vuetify.js")
+	BANano.Header.AddJavascriptFile("vue-router.min.js")
+	
+	BANano.Header.AddJavascriptFile("jquery-3.4.1.min.js")
+	BANano.Header.AddCSSFile("vue2-animate.min.css")
+	BANano.Header.AddJavascriptFile("renderstring.js")
+	'bananooxml
+	BANano.Header.AddJavascriptFile("dom-to-image.min.js")
+	BANano.Header.AddJavascriptFile("fileSaver.min.js")
+	BANano.Header.AddJavascriptFile("jszip.min.js")
+	BANano.Header.AddJavascriptFile("oxml.min.js")
+	'
+	BANano.Header.AddCSSFile("info-box.css")
+	BANano.Header.AddJavascriptFile("jquery.countTo.js")
+	BANano.Header.AddCSSFile("helpers.css")
+	BANano.Header.AddJavascriptFile("jquery.knob.min.js")
+	BANano.Header.AddJavascriptFile("tron-knob.js")
+	BANano.Header.AddJavascriptFile("md5.min.js")
+	BANano.Header.AddJavascriptFile("hashes.min.js")
+	BANano.Header.AddJavascriptFile("bCrypt.js")
+	BANano.Header.AddJavascriptFile("moment.js")
+	BANano.Header.AddJavascriptFile("numeral.min.js")
+	BANano.Header.AddJavascriptFile("pdfmake.js")
+	BANano.Header.AddJavascriptFile("vfs_fonts.js")
+	BANano.Header.AddJavascriptFile("jquery.media.js")
+	'
+	BANano.Header.AddCSSFile("vue-loading.css")
+	BANano.Header.AddJavascriptFile("vue-loading.min.js")
+	'
+	BANano.Header.AddCSSFile("frappe-gantt.css")
+	BANano.Header.AddJavascriptFile("frappe-gantt.js")
+	BANano.Header.AddJavascriptFile("createWaterBall-jquery.js")
+	BANano.Header.AddJavascriptFile("colors.js")
+	'
+	BANano.Header.AddCSSFile("progresscircle.css")
+	BANano.Header.AddJavascriptFile("progresscircle.js")
+	'
+	BANano.Header.AddCSSFile("Chart.min.css")
+	BANano.Header.AddJavascriptFile("Chart.min.js")
+	BANano.Header.AddJavascriptFile("vue-chartkick.min.js")
+	BANano.Header.AddJavascriptFile("collect.min.js")
+	BANano.Header.AddJavascriptFile("vue-google-maps.js")
+	BANano.Header.Addcssfile("devices.min.css")
+	'
+	BANano.Header.AddCSSFile("enjoyhint.min.css")
+	BANano.Header.AddJavascriptFile("enjoyhint.min.js")
+	
+	'BANano.Header.AddCSSFile("zircle.css")
+	'BANano.Header.AddJavascriptFile("zircle.umd.js")
+		
+	BANano.BuildAsB4XLib("3.00")
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	
+End Sub
