@@ -145,25 +145,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMParallax
-	vue.SetStateSingle($"${ID}show"$, False)
+	Parallax.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMParallax
-	vue.SetStateSingle($"${ID}show"$, True)
+	Parallax.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMParallax
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Parallax.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMParallax
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Parallax.Disable(True)
 	Return Me
 End Sub
 
@@ -292,4 +292,9 @@ Sub SetKey(k As String) As VMParallax
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMParallax
+Parallax.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -307,22 +307,22 @@ End Sub
 
 
 Sub Hide As VMBanner
-	vue.SetStateSingle($"${ID}show"$, False)
+	Banner.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMBanner
-	vue.SetStateSingle($"${ID}show"$, True)
+	Banner.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMBanner
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Banner.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMBanner
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Banner.Disable(True)
 	Return Me
 End Sub
 
@@ -386,4 +386,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBanner
+Banner.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

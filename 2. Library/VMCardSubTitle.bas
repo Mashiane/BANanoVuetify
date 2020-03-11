@@ -136,22 +136,22 @@ End Sub
 
 
 Sub Hide As VMCardSubTitle
-	vue.SetStateSingle($"${ID}show"$, False)
+	CardSubTitle.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMCardSubTitle
-	vue.SetStateSingle($"${ID}show"$, True)
+	CardSubTitle.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMCardSubTitle
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	CardSubTitle.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMCardSubTitle
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	CardSubTitle.Disable(True)
 	Return Me
 End Sub
 
@@ -206,4 +206,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMCardSubTitle
 	CardSubTitle.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMCardSubTitle
+CardSubTitle.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

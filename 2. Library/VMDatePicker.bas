@@ -649,22 +649,22 @@ End Sub
 
 
 Sub Hide As VMDatePicker
-	vue.SetStateSingle($"${ID}show"$, False)
+	DatePicker.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMDatePicker
-	vue.SetStateSingle($"${ID}show"$, True)
+	DatePicker.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMDatePicker
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	DatePicker.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMDatePicker
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	DatePicker.Disable(True)
 	Return Me
 End Sub
 
@@ -724,4 +724,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDatePicker
+DatePicker.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -518,3 +518,8 @@ Sub SetAttrSingle(prop As String, value As String) As VMSwitchBox
 	SwitchBox.SetAttrSingle(prop, value)
 	Return Me
 End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSwitchBox
+SwitchBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

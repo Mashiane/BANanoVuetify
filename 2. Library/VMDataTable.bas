@@ -84,6 +84,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	Return Me
 End Sub
 
+Sub Reset
+	exclusions.Initialize 
+	filters.Initialize
+	hasFilters = False
+	columnsM.Initialize
+End Sub
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMDataTable
 	DataTable.SetRC(sRow, sCol)
@@ -110,7 +117,7 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 End Sub
 
 'add edit icon
-private Sub AddEdit(colField As String, colTitle As String)
+Sub AddEdit(colField As String, colTitle As String)
 	AddExclusion(colField)
 	AddColumn(colField,colTitle)
 	SetColumnFilterable(colField,False)
@@ -119,7 +126,7 @@ private Sub AddEdit(colField As String, colTitle As String)
 	SetColumnAlignment(colField, ALIGN_CENTER)
 End Sub
 
-private Sub AddDelete(colField As String, colTitle As String)
+Sub AddDelete(colField As String, colTitle As String)
 	AddExclusion(colField)
 	AddColumn(colField,colTitle)
 	SetColumnFilterable(colField,False)
@@ -139,7 +146,7 @@ Sub AddIcon(colField As String, colTitle As String, colIcon As String)
 End Sub
 
 'add edit & delete button
-Sub AddEditTrash
+Sub AddEditThrash
 	AddEdit("edit", "Edit")
 	AddDelete("delete", "Delete")
 End Sub
@@ -1258,25 +1265,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMDataTable
-	vue.SetStateSingle($"${ID}show"$, False)
+	DataTable.SetVisible(False)
     Return Me
 End Sub
 
 'show the component
 Sub Show As VMDataTable
-	vue.SetStateSingle($"${ID}show"$, True)
+	DataTable.SetVisible(True)
     Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMDataTable
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	DataTable.Enable(True)
     Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMDataTable
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	DataTable.Disable(True)
     Return Me
 End Sub
 
@@ -1405,4 +1412,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDataTable
+DataTable.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -161,25 +161,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMTimeline
-	vue.SetStateSingle($"${ID}show"$, False)
+	Timeline.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMTimeline
-	vue.SetStateSingle($"${ID}show"$, True)
+	Timeline.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMTimeline
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Timeline.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMTimeline
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Timeline.Disable(True)
 	Return Me
 End Sub
 
@@ -304,4 +304,9 @@ Sub SetKey(k As String) As VMTimeline
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTimeline
+Timeline.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

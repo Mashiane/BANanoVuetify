@@ -147,3 +147,8 @@ Sub SetKey(k As String) As VMDevices
 	Device.SetKey(k, False)
 	Return Me
 End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDevices
+Devices.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

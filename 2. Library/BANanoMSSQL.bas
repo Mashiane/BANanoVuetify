@@ -112,13 +112,14 @@ Sub SchemaAddBooleans(bools As List) As BANanoMSSQL
 	Return Me
 End Sub
 '
-'Sub SchemaFromDesign(vDesign As VMContainer)
-'	SchemaAddBoolean(vDesign.Booleans)
-'	SchemaAddDate(vDesign.Dates)
-'	SchemaAddFloat(vDesign.Doubles)
-'	SchemaAddInt(vDesign.Integers)
-'	SchemaAddText(vDesign.Strings)
-'End Sub
+Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMSSQL
+	SchemaAddBoolean(vDesign.Booleans)
+	SchemaAddDate(vDesign.Dates)
+	SchemaAddFloat(vDesign.Doubles)
+	SchemaAddInt(vDesign.Integers)
+	SchemaAddText(vDesign.Strings)
+	Return Me
+End Sub
 
 Sub SchemaAddIntegers(ints As List) As BANanoMSSQL
 	SchemaAddInt(ints)

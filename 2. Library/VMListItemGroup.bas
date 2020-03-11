@@ -113,25 +113,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMListItemGroup
-	vue.SetStateSingle($"${ID}show"$, False)
+	ListItemGroup.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMListItemGroup
-	vue.SetStateSingle($"${ID}show"$, True)
+	ListItemGroup.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMListItemGroup
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ListItemGroup.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMListItemGroup
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ListItemGroup.Disable(True)
 	Return Me
 End Sub
 
@@ -223,4 +223,9 @@ End Sub
 Sub BindStyleSingle(prop As String, value As String) As VMListItemGroup
 	ListItemGroup.BindStyleSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItemGroup
+ListItemGroup.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -214,22 +214,22 @@ End Sub
 
 
 Sub Hide As VMSimpleCheckBox
-	vue.SetStateSingle($"${ID}show"$, False)
+	SimpleCheckBox.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMSimpleCheckBox
-	vue.SetStateSingle($"${ID}show"$, True)
+	SimpleCheckBox.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMSimpleCheckBox
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	SimpleCheckBox.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMSimpleCheckBox
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	SimpleCheckBox.Disable(True)
 	Return Me
 End Sub
 
@@ -291,3 +291,8 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSimpleCheckBox
+SimpleCheckBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

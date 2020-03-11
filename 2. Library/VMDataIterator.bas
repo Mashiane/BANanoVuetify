@@ -582,9 +582,9 @@ End Sub
 '
 Sub SetOnUpdateSortDesc(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:sort-desc": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -594,25 +594,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMDataIterator
-	vue.SetStateSingle($"${ID}show"$, False)
+	DataIterator.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMDataIterator
-	vue.SetStateSingle($"${ID}show"$, True)
+	DataIterator.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMDataIterator
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	DataIterator.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMDataIterator
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	DataIterator.Disable(True)
 	Return Me
 End Sub
 
@@ -783,4 +783,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDataIterator
+DataIterator.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

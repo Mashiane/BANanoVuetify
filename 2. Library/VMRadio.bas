@@ -357,22 +357,22 @@ End Sub
 
 
 Sub Hide As VMRadio
-	vue.SetStateSingle($"${ID}show"$, False)
+	Radio.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMRadio
-	vue.SetStateSingle($"${ID}show"$, True)
+	Radio.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMRadio
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Radio.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMRadio
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Radio.Disable(True)
 	Return Me
 End Sub
 
@@ -425,4 +425,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMRadio
+Radio.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

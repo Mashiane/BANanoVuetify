@@ -82,11 +82,11 @@ Sub Code
 	'
 	Dim btn As VMButton = vm.NewButton("buttonx", "TheMash Block", True, True, True).SetDevicePositions(7, 2, 12, 6, 6, 6)
 	cont.AddControl1(btn.Button, btn.ToString)
-	'
-	Dim mysel As VMSelect = vm.NewSelect("myselect", "Select States", True, True, "States", "states2", "id", "name", False, "My thingo", 0).SetDevicePositions(8, 1, 12, 6, 6, 6)
+	'datasource
+	Dim mysel As VMSelect = vm.NewSelect1("myselect", "Select States", True, True, "States", "states2", "id", "name", False, "My thingo", 0).SetDevicePositions(8, 1, 12, 6, 6, 6)
 	cont.AddControl1(mysel.Combo, mysel.ToString)
-	'
-	Dim mysel1 As VMSelect = vm.NewSelect1("myselect1", "Select Gender", True, False, "Gender", genderlist, "id", "text", False, "My thingo", 0).SetDevicePositions(8, 2, 12, 6, 6, 6)
+	'map
+	Dim mysel1 As VMSelect = vm.NewSelect("myselect1", "Select Gender", True, False, "Gender", genderlist, "id", "text", False, "My thingo", 0).SetDevicePositions(8, 2, 12, 6, 6, 6)
 	cont.AddControl1(mysel1.Combo, mysel1.ToString)
 	'
 	Dim btnx As VMButton = vm.NewIconButton("btnicon", "mdi-dots-vertical", vm.COLOR_BROWN, "Account details").SetDevicePositions(9, 1, 12, 6, 6, 6)

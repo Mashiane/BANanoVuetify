@@ -185,25 +185,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMProgressCircular
-	vue.SetStateSingle($"${ID}show"$, False)
+	ProgressCircular.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMProgressCircular
-	vue.SetStateSingle($"${ID}show"$, True)
+	ProgressCircular.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMProgressCircular
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ProgressCircular.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMProgressCircular
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ProgressCircular.Disable(True)
 	Return Me
 End Sub
 
@@ -295,4 +295,9 @@ End Sub
 Sub BindStyleSingle(prop As String, value As String) As VMProgressCircular
 	ProgressCircular.BindStyleSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMProgressCircular
+ProgressCircular.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

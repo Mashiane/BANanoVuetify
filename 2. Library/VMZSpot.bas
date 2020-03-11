@@ -288,3 +288,7 @@ End Sub
 Sub Pop(p As VMElement)
 	p.SetText(ToString)
 End Sub
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMZSpot
+ZSpot.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

@@ -36,19 +36,19 @@ Sub SetAttributes(attrs As List) As VMSkeleton
 End Sub
 
 Sub Hide
-	vue.SetStateSingle($"${ID}show"$, False)
+	Skeleton.SetVisible(False)
 End Sub
 
 Sub Show
-	vue.SetStateSingle($"${ID}show"$, True)
+	Skeleton.SetVisible(True)
 End Sub
 
 Sub Enable
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Skeleton.Enable(True)
 End Sub
 
 Sub Disable
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Skeleton.Disable(True)
 End Sub
 
 Sub SetHeight(h As String) As VMSkeleton
@@ -170,4 +170,9 @@ End Sub
 
 Sub Pop(p As VMElement)
 	p.SetText(ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSkeleton
+Skeleton.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

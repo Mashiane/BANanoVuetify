@@ -136,25 +136,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMLazy
-	vue.SetStateSingle($"${ID}show"$, False)
+	Lazy.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMLazy
-	vue.SetStateSingle($"${ID}show"$, True)
+	Lazy.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMLazy
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Lazy.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMLazy
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Lazy.Disable(True)
 	Return Me
 End Sub
 
@@ -283,4 +283,9 @@ Sub SetKey(k As String) As VMLazy
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMLazy
+Lazy.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

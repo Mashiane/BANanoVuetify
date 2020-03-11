@@ -123,25 +123,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMSubHeader
-	vue.SetStateSingle($"${ID}show"$, False)
+	SubHeader.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMSubHeader
-	vue.SetStateSingle($"${ID}show"$, True)
+	SubHeader.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMSubHeader
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	SubHeader.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMSubHeader
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	SubHeader.Disable(True)
 	Return Me
 End Sub
 
@@ -266,4 +266,9 @@ Sub SetKey(k As String) As VMSubHeader
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSubHeader
+SubHeader.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -218,22 +218,22 @@ End Sub
 
 
 Sub Hide As VMRow
-	vue.SetStateSingle($"${ID}show"$, False)
+	Row.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMRow
-	vue.SetStateSingle($"${ID}show"$, True)
+	Row.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMRow
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Row.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMRow
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Row.Disable(True)
 	Return Me
 End Sub
 
@@ -288,4 +288,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMRow
 	Row.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMRow
+Row.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

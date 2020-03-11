@@ -328,25 +328,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMAlert
-	vue.SetStateSingle($"${ID}show"$, False)
+	Alert.SetVisible(False)
     Return Me
 End Sub
 
 'show the component
 Sub Show As VMAlert
-	vue.SetStateSingle($"${ID}show"$, True)
+	Alert.SetVisible(True)
     Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMAlert
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Alert.Enable(True)
     Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMAlert
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Alert.Disable(True)
     Return Me
 End Sub
 
@@ -525,3 +525,8 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAlert
+Alert.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

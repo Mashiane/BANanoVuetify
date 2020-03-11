@@ -791,7 +791,7 @@ Sub SetOnMouseup(methodName As String) As VMFileInput
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:mouseup": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -812,22 +812,22 @@ End Sub
 
 
 Sub Hide As VMFileInput
-	vue.SetStateSingle($"${ID}show"$, False)
+	FileInput.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMFileInput
-	vue.SetStateSingle($"${ID}show"$, True)
+	FileInput.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMFileInput
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	FileInput.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMFileInput
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	FileInput.Disable(True)
 	Return Me
 End Sub
 
@@ -893,3 +893,8 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMFileInput
+FileInput.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

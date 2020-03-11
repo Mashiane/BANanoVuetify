@@ -69,6 +69,13 @@ Sub AddComponent(comp As String) As VMSelect
 	Return Me
 End Sub
 
+Sub AddItems(items As List) As VMSelect
+	Dim targ As String = $"${ID}items"$
+	vue.SetData(targ, items)
+	SetItems(targ)
+	Return Me
+End Sub
+
 'use an existing state
 Sub SetDataSource(sourceName As String, sourceField As String, displayField As String, returnObject As Boolean) As VMSelect
 	sourceName = sourceName.tolowercase
@@ -327,7 +334,7 @@ Sub SetDisableLookup(varDisableLookup As Object) As VMSelect
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMSelect
+Sub SetDisabled(varDisabled As Boolean) As VMSelect
 	Combo.SetDisabled(varDisabled)
 	Return Me
 End Sub
@@ -998,22 +1005,22 @@ End Sub
 
 
 Sub Hide As VMSelect
-	vue.SetStateSingle($"${ID}show"$, False)
+	Combo.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMSelect
-	vue.SetStateSingle($"${ID}show"$, True)
+	Combo.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMSelect
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Combo.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMSelect
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Combo.Disable(True)
 	Return Me
 End Sub
 
@@ -1073,4 +1080,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSelect
+Combo.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

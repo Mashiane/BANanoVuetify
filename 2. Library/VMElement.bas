@@ -74,6 +74,7 @@ Sub Class_Globals
 	Public IsExcluded As Boolean
 	Public ActualID As String
 	Public Host As String
+	Public Exclude As Boolean
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -151,6 +152,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	IsExcluded = False
 	ActualID = ""
 	Host = ""
+	Exclude = False
 	Return Me
 End Sub
 
@@ -390,7 +392,9 @@ Sub SetAttrSingle(prop As String, vals As String) As VMElement
 End Sub
 
 Sub Required(b As Boolean) As VMElement
+	IsRequired = b
 	vue.SetStateSingle(reqKey, b)
+	Bind(":required", reqKey)
 	Return Me
 End Sub
 
@@ -398,23 +402,36 @@ Sub Enable(b As Boolean) As VMElement
 	Dim n As Boolean = Not(b)
 	IsDisabled = n
 	vue.SetStateSingle(disKey, n)
+	Bind(":disabled", disKey)
 	Return Me
 End Sub
 
+Sub Disable(b As Boolean) As VMElement
+	IsDisabled = b
+	vue.SetStateSingle(disKey, b)
+	Bind(":disabled", disKey)
+	Return Me
+End Sub
+
+
+'show using id
 Sub Show As VMElement
 	IsVisible = True
 	vue.SetStateSingle(ID, True)
 	Return Me
 End Sub
 
+'hide using id
 Sub Hide As VMElement
 	IsVisible = False
 	vue.SetStateSingle(ID, False)
 	Return Me
 End Sub
 
+'set vshow
 Sub SetVisible(b As Boolean) As VMElement
 	IsVisible = b
+	SetVShow(showKey)
 	vue.SetStateSingle(showKey, b)
 	Return Me
 End Sub
@@ -1308,17 +1325,6 @@ Sub StateExists(stateName As String) As Boolean
 	Return data.ContainsKey(stateName)
 End Sub
 
-Sub SetShowState(k As String, v As Boolean)
-	Dim showKey As String = $"${k}show"$
-	SetStateSingle(showKey, v)
-End Sub
-
-Sub SetDisabledState(k As String, v As Boolean)
-	Dim disKey As String = $"${k}disabled"$
-	SetStateSingle(disKey, v)
-End Sub
-
-
 'set the state
 Sub SetState(m As Map) As VMElement
 	For Each k As String In m.Keys
@@ -1479,4 +1485,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMElement
+	Element.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub

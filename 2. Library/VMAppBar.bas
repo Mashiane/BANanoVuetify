@@ -595,3 +595,8 @@ Sub SetAttrSingle(prop As String, value As String) As VMAppBar
 	Return Me
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAppBar
+AppBar.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

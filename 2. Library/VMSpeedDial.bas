@@ -309,12 +309,12 @@ Sub Show As VMSpeedDial
 End Sub
 
 Sub Enable As VMSpeedDial
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	SpeedDial.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMSpeedDial
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	SpeedDial.Disable(True)
 	Return Me
 End Sub
 
@@ -374,4 +374,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSpeedDial
+SpeedDial.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

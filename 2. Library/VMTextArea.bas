@@ -800,22 +800,22 @@ End Sub
 
 
 Sub Hide As VMTextArea
-	vue.SetStateSingle($"${ID}show"$, False)
+	TextArea.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTextArea
-	vue.SetStateSingle($"${ID}show"$, True)
+	TextArea.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTextArea
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	TextArea.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTextArea
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	TextArea.Disable(True)
 	Return Me
 End Sub
 
@@ -875,4 +875,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTextArea
+TextArea.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

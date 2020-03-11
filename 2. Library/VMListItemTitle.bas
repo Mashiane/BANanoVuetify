@@ -328,22 +328,22 @@ End Sub
 
 
 Sub Hide As VMListItemTitle
-	vue.SetStateSingle($"${ID}show"$, False)
+	ListItemTitle.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMListItemTitle
-	vue.SetStateSingle($"${ID}show"$, True)
+	ListItemTitle.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMListItemTitle
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ListItemTitle.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMListItemTitle
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ListItemTitle.Disable(True)
 	Return Me
 End Sub
 
@@ -398,4 +398,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMListItemTitle
 	ListItemTitle.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItemTitle
+ListItemTitle.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

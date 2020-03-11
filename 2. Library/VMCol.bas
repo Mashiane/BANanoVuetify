@@ -216,22 +216,22 @@ End Sub
 
 
 Sub Hide As VMCol
-	vue.SetStateSingle($"${ID}show"$, False)
+	Col.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMCol
-	vue.SetStateSingle($"${ID}show"$, True)
+	Col.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMCol
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Col.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMCol
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Col.Disable(True)
 	Return Me
 End Sub
 
@@ -286,4 +286,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMCol
 	Col.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMCol
+Col.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

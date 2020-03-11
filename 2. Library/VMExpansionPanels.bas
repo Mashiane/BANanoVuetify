@@ -224,25 +224,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMExpansionPanels
-	vue.SetStateSingle($"${ID}show"$, False)
+	ExpansionPanels.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMExpansionPanels
-	vue.SetStateSingle($"${ID}show"$, True)
+	ExpansionPanels.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMExpansionPanels
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ExpansionPanels.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMExpansionPanels
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ExpansionPanels.Disable(True)
 	Return Me
 End Sub
 
@@ -413,4 +413,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMExpansionPanels
+ExpansionPanels.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -157,13 +157,14 @@ Sub SchemaAddStrings(strings As List) As BANanoAlaSQLE
 End Sub
 
 '
-'Sub SchemaFromDesign(vDesign As VMContainer)
-'	SchemaAddBoolean(vDesign.Booleans)
-'	SchemaAddDate(vDesign.Dates)
-'	SchemaAddFloat(vDesign.Doubles)
-'	SchemaAddInt(vDesign.Integers)
-'	SchemaAddText(vDesign.Strings)
-'End Sub
+Sub SchemaFromDesign(vDesign As VMContainer) As BANanoAlaSQLE
+	SchemaAddBoolean(vDesign.Booleans)
+	SchemaAddDate(vDesign.Dates)
+	SchemaAddFloat(vDesign.Doubles)
+	SchemaAddInt(vDesign.Integers)
+	SchemaAddText(vDesign.Strings)
+	Return Me
+End Sub
 
 
 Sub SchemaAddFloat(floats As List) As BANanoAlaSQLE

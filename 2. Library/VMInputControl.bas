@@ -981,3 +981,7 @@ Sub SetPadding(pt As Object, pb As Object, pl As Object, pr As Object) As VMInpu
 	PaddingRight = pr
 	Return Me
 End Sub
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMInputControl
+InputControl.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

@@ -225,25 +225,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMWindow
-	vue.SetStateSingle($"${ID}show"$, False)
+	Window.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMWindow
-	vue.SetStateSingle($"${ID}show"$, True)
+	Window.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMWindow
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Window.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMWindow
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Window.Disable(True)
 	Return Me
 End Sub
 
@@ -372,4 +372,9 @@ Sub SetKey(k As String) As VMWindow
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMWindow
+Window.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

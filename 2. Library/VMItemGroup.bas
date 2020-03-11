@@ -152,25 +152,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMItemGroup
-	vue.SetStateSingle($"${ID}show"$, False)
+	ItemGroup.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMItemGroup
-	vue.SetStateSingle($"${ID}show"$, True)
+	ItemGroup.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMItemGroup
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ItemGroup.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMItemGroup
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ItemGroup.Disable(True)
 	Return Me
 End Sub
 
@@ -341,4 +341,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMItemGroup
+ItemGroup.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

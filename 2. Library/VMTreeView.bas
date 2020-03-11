@@ -528,25 +528,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMTreeView
-	vue.SetStateSingle($"${ID}show"$, False)
+	TreeView.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMTreeView
-	vue.SetStateSingle($"${ID}show"$, True)
+	TreeView.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMTreeView
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	TreeView.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMTreeView
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	TreeView.Disable(True)
 	Return Me
 End Sub
 
@@ -671,4 +671,9 @@ Sub SetKey(k As String) As VMTreeView
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTreeView
+TreeView.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

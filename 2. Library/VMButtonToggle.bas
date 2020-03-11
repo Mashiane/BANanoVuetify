@@ -216,9 +216,9 @@ End Sub
 '
 Sub SetOnChange(methodName As String) As VMButtonToggle
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -228,25 +228,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMButtonToggle
-	vue.SetStateSingle($"${ID}show"$, False)
+	ButtonToggle.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMButtonToggle
-	vue.SetStateSingle($"${ID}show"$, True)
+	ButtonToggle.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMButtonToggle
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ButtonToggle.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMButtonToggle
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ButtonToggle.Disable(True)
 	Return Me
 End Sub
 
@@ -417,4 +417,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMButtonToggle
+ButtonToggle.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

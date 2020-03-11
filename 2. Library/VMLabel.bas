@@ -144,8 +144,7 @@ public Sub RemoveAttr(sName As String) As VMLabel
 End Sub
 
 Sub SetRequired(b As Boolean) As VMLabel
-	Dim reqKey As String = $"${ID}required"$
-	vue.SetStateSingle(reqKey, b)
+	Label.SetRequired(b)
 	Return Me
 End Sub
 
@@ -408,4 +407,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMLabel
+Label.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

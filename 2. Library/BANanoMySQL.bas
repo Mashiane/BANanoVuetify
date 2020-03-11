@@ -177,13 +177,14 @@ Sub SchemaAddBoolean(bools As List) As BANanoMySQL
 	Return Me
 End Sub
 ''
-'Sub SchemaFromDesign(vDesign As VMContainer)
-'	SchemaAddBoolean(vDesign.Booleans)
-'	SchemaAddDate(vDesign.Dates)
-'	SchemaAddFloat(vDesign.Doubles)
-'	SchemaAddInt(vDesign.Integers)
-'	SchemaAddText(vDesign.Strings)
-'End Sub
+Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMySQL
+	SchemaAddBoolean(vDesign.Booleans)
+	SchemaAddDate(vDesign.Dates)
+	SchemaAddFloat(vDesign.Doubles)
+	SchemaAddInt(vDesign.Integers)
+	SchemaAddText(vDesign.Strings)
+	Return Me
+End Sub
 
 
 Sub SchemaAddInt(bools As List) As BANanoMySQL

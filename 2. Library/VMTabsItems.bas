@@ -255,22 +255,22 @@ End Sub
 
 
 Sub Hide As VMTabsItems
-	vue.SetStateSingle($"${ID}show"$, False)
+	TabsItems.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTabsItems
-	vue.SetStateSingle($"${ID}show"$, True)
+	TabsItems.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTabsItems
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	TabsItems.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTabsItems
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	TabsItems.Disable(True)
 	Return Me
 End Sub
 
@@ -325,4 +325,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMTabsItems
 	TabsItems.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTabsItems
+TabsItems.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

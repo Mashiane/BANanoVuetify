@@ -257,3 +257,7 @@ End Sub
 Sub Pop(px As VMElement)
 	px.SetText(ToString)
 End Sub
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMVueCal
+VueCal.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

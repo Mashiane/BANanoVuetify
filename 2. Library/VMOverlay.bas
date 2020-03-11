@@ -183,25 +183,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMOverlay
-	vue.SetStateSingle($"${ID}show"$, False)
+	Overlay.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMOverlay
-	vue.SetStateSingle($"${ID}show"$, True)
+	Overlay.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMOverlay
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Overlay.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMOverlay
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Overlay.Disable(True)
 	Return Me
 End Sub
 
@@ -293,4 +293,9 @@ End Sub
 Sub BindStyleSingle(prop As String, value As String) As VMOverlay
 	Overlay.BindStyleSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMOverlay
+Overlay.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

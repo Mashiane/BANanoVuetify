@@ -120,9 +120,9 @@ End Sub
 '
 Sub SetOnChange(methodName As String) As VMExpansionPanel
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -132,9 +132,9 @@ End Sub
 '
 Sub SetOnClick(methodName As String) As VMExpansionPanel
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -144,25 +144,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMExpansionPanel
-	vue.SetStateSingle($"${ID}show"$, False)
+	ExpansionPanel.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMExpansionPanel
-	vue.SetStateSingle($"${ID}show"$, True)
+	ExpansionPanel.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMExpansionPanel
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ExpansionPanel.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMExpansionPanel
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ExpansionPanel.Disable(True)
 	Return Me
 End Sub
 
@@ -333,4 +333,8 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMExpansionPanel
+ExpansionPanel.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

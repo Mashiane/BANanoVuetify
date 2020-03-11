@@ -391,22 +391,22 @@ End Sub
 
 
 Sub Hide As VMTabs
-	vue.SetStateSingle($"${ID}show"$, False)
+	Tabs.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTabs
-	vue.SetStateSingle($"${ID}show"$, True)
+	Tabs.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTabs
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Tabs.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTabs
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Tabs.Disable(True)
 	Return Me
 End Sub
 
@@ -468,3 +468,7 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTabs
+Tabs.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

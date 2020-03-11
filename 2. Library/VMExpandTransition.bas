@@ -129,22 +129,22 @@ End Sub
 
 
 Sub Hide As VMExpandTransition
-	vue.SetStateSingle($"${ID}show"$, False)
+	ExpandTransition.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMExpandTransition
-	vue.SetStateSingle($"${ID}show"$, True)
+	ExpandTransition.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMExpandTransition
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ExpandTransition.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMExpandTransition
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ExpandTransition.Disable(True)
 	Return Me
 End Sub
 
@@ -199,4 +199,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMExpandTransition
 	ExpandTransition.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMExpandTransition
+ExpandTransition.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

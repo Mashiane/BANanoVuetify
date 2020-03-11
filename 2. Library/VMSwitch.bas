@@ -519,22 +519,22 @@ End Sub
 
 
 Sub Hide As VMSwitch
-	vue.SetStateSingle($"${ID}show"$, False)
+	SwitchBox.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMSwitch
-	vue.SetStateSingle($"${ID}show"$, True)
+	SwitchBox.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMSwitch
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	SwitchBox.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMSwitch
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	SwitchBox.Disable(True)
 	Return Me
 End Sub
 
@@ -596,3 +596,8 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSwitch
+SwitchBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

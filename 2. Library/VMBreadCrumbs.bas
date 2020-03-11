@@ -148,25 +148,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMBreadCrumbs
-	vue.SetStateSingle($"${ID}show"$, False)
+	BreadCrumbs.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMBreadCrumbs
-	vue.SetStateSingle($"${ID}show"$, True)
+	BreadCrumbs.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMBreadCrumbs
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	BreadCrumbs.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMBreadCrumbs
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	BreadCrumbs.Disable(True)
 	Return Me
 End Sub
 
@@ -337,4 +337,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBreadCrumbs
+BreadCrumbs.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

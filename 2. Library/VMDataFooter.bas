@@ -206,7 +206,7 @@ Sub SetShowFirstLastPage(varShowFirstLastPage As Object) As VMDataFooter
 End Sub
 
 '
-Sub SetSlotPageText(b As boolean) As VMDataFooter    'ignore
+Sub SetSlotPageText(b As Boolean) As VMDataFooter    'ignore
 	SetAttr(CreateMap("slot": "page-text"))
 	Return Me
 End Sub
@@ -214,9 +214,9 @@ End Sub
 '
 Sub SetOnUpdateOptions(methodName As String) As VMDataFooter
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:options": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -226,25 +226,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMDataFooter
-	vue.SetStateSingle($"${ID}show"$, False)
+	DataFooter.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMDataFooter
-	vue.SetStateSingle($"${ID}show"$, True)
+	DataFooter.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMDataFooter
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	DataFooter.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMDataFooter
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	DataFooter.Disable(True)
 	Return Me
 End Sub
 
@@ -415,4 +415,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDataFooter
+DataFooter.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

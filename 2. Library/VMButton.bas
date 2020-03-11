@@ -720,22 +720,22 @@ End Sub
 
 
 Sub Hide As VMButton
-	vue.SetStateSingle($"${ID}show"$, False)
+	Button.SetVisible(False)
     Return Me
 End Sub
 
 Sub Show As VMButton
-	vue.SetStateSingle($"${ID}show"$, True)
+	Button.SetVisible(True)
     Return Me
 End Sub
 
 Sub Enable As VMButton
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Button.Enable(True)
     Return Me
 End Sub
 
 Sub Disable As VMButton
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Button.Disable(True)
     Return Me
 End Sub
 
@@ -793,4 +793,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMButton
+Button.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -121,22 +121,22 @@ End Sub
 
 
 Sub Hide As VMTabsSlider
-	vue.SetStateSingle($"${ID}show"$, False)
+	TabsSlider.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTabsSlider
-	vue.SetStateSingle($"${ID}show"$, True)
+	TabsSlider.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTabsSlider
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	TabsSlider.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTabsSlider
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	TabsSlider.Disable(True)
 	Return Me
 End Sub
 
@@ -191,4 +191,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMTabsSlider
 	TabsSlider.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTabsSlider
+TabsSlider.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

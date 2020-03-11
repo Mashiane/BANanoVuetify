@@ -368,22 +368,22 @@ End Sub
 
 
 Sub Hide As VMImage
-	vue.SetStateSingle($"${ID}show"$, False)
+	Image.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMImage
-	vue.SetStateSingle($"${ID}show"$, True)
+	Image.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMImage
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Image.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMImage
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Image.Disable(True)
 	Return Me
 End Sub
 
@@ -443,4 +443,8 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMImage
+Image.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

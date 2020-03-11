@@ -983,22 +983,22 @@ End Sub
 
 
 Sub Hide As VMAutoComplete
-	vue.SetStateSingle($"${ID}show"$, False)
+	AutoComplete.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMAutoComplete
-	vue.SetStateSingle($"${ID}show"$, True)
+	AutoComplete.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMAutoComplete
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	AutoComplete.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMAutoComplete
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	AutoComplete.Disable(True)
 	Return Me
 End Sub
 
@@ -1056,4 +1056,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAutoComplete
+AutoComplete.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

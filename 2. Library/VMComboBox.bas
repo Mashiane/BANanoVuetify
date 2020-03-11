@@ -948,7 +948,7 @@ Sub SetOnUpdateListIndex(methodName As String) As VMComboBox
 	methodName = methodName.tolowercase
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:list-index": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -958,9 +958,9 @@ End Sub
 '
 Sub SetOnUpdateSearchInput(methodName As String) As VMComboBox
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:search-input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -969,22 +969,22 @@ End Sub
 
 
 Sub Hide As VMComboBox
-	vue.SetStateSingle($"${ID}show"$, False)
+	ComboBox.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMComboBox
-	vue.SetStateSingle($"${ID}show"$, True)
+	ComboBox.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMComboBox
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ComboBox.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMComboBox
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ComboBox.Disable(True)
 	Return Me
 End Sub
 
@@ -1043,4 +1043,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMComboBox
+ComboBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

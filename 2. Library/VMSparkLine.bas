@@ -246,25 +246,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMSparkLine
-	vue.SetStateSingle($"${ID}show"$, False)
+	SparkLine.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMSparkLine
-	vue.SetStateSingle($"${ID}show"$, True)
+	SparkLine.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMSparkLine
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	SparkLine.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMSparkLine
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	SparkLine.Disable(True)
 	Return Me
 End Sub
 
@@ -435,4 +435,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSparkLine
+SparkLine.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

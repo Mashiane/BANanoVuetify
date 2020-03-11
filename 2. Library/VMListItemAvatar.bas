@@ -207,22 +207,22 @@ End Sub
 
 
 Sub Hide As VMListItemAvatar
-	vue.SetStateSingle($"${ID}show"$, False)
+	ListItemAvatar.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMListItemAvatar
-	vue.SetStateSingle($"${ID}show"$, True)
+	ListItemAvatar.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMListItemAvatar
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ListItemAvatar.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMListItemAvatar
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ListItemAvatar.Disable(True)
 	Return Me
 End Sub
 
@@ -277,4 +277,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMListItemAvatar
 	ListItemAvatar.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItemAvatar
+ListItemAvatar.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

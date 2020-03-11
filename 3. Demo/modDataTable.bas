@@ -87,7 +87,7 @@ Sub Code
 	dt1.AddColumn1("name", "Desset (100g serving)", dt1.COLUMN_TEXT, 0, False, dt1.ALIGN_LEFT)
 	dt1.AddColumns(CreateMap("calories": "Calories", "fat": "Fat (g)", "carbs": "Carbs (g)", "protein": "Protein (g)", "iron": "Iron (%)"))
 	dt1.AddColumn("glutenfree", "Gluten-Free")
-	dt1.AddEditTrash
+	dt1.AddEditThrash
 	dt1.AddDownload
 	dt1.AddMenuV
 	dt1.AddClone

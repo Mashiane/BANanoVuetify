@@ -208,9 +208,9 @@ End Sub
 '
 Sub SetOnChange(methodName As String) As VMChipGroup
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -220,25 +220,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMChipGroup
-	vue.SetStateSingle($"${ID}show"$, False)
+	ChipGroup.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMChipGroup
-	vue.SetStateSingle($"${ID}show"$, True)
+	ChipGroup.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMChipGroup
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ChipGroup.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMChipGroup
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ChipGroup.Disable(True)
 	Return Me
 End Sub
 
@@ -409,4 +409,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMChipGroup
+ChipGroup.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

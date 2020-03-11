@@ -273,3 +273,8 @@ End Sub
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMInfoBox
+InfoBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

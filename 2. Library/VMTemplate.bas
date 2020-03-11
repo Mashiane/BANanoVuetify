@@ -190,22 +190,22 @@ End Sub
 
 
 Sub Hide As VMTemplate
-	vue.SetStateSingle($"${ID}show"$, False)
+	Template.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTemplate
-	vue.SetStateSingle($"${ID}show"$, True)
+	Template.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTemplate
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Template.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTemplate
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Template.Disable(True)
 	Return Me
 End Sub
 
@@ -260,4 +260,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMTemplate
 	Template.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTemplate
+Template.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

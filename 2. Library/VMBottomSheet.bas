@@ -301,25 +301,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMBottomSheet
-	vue.SetStateSingle($"${ID}show"$, False)
+	BottomSheet.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMBottomSheet
-	vue.SetStateSingle($"${ID}show"$, True)
+	BottomSheet.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMBottomSheet
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	BottomSheet.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMBottomSheet
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	BottomSheet.Disable(True)
 	Return Me
 End Sub
 
@@ -474,4 +474,9 @@ End Sub
 Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMBottomSheet
 	BottomSheet.SetDeviceSizes(SS, SM, SL, SX)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBottomSheet
+BottomSheet.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

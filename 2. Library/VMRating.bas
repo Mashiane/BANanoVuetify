@@ -296,25 +296,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMRating
-	vue.SetStateSingle($"${ID}show"$, False)
+	Rating.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMRating
-	vue.SetStateSingle($"${ID}show"$, True)
+	Rating.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMRating
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Rating.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMRating
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Rating.Disable(True)
 	Return Me
 End Sub
 
@@ -443,4 +443,9 @@ Sub SetKey(k As String) As VMRating
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMRating
+Rating.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

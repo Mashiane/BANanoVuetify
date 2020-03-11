@@ -101,7 +101,7 @@ Sub AddClass(c As String) As VMListItemAction
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMListItemAction
+Sub SetAttr(attr As Map) As VMListItemAction
 	ListItemAction.SetAttr(attr)
 	Return Me
 End Sub
@@ -121,22 +121,22 @@ End Sub
 
 
 Sub Hide As VMListItemAction
-	vue.SetStateSingle($"${ID}show"$, False)
+	ListItemAction.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMListItemAction
-	vue.SetStateSingle($"${ID}show"$, True)
+	ListItemAction.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMListItemAction
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ListItemAction.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMListItemAction
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ListItemAction.Disable(True)
 	Return Me
 End Sub
 
@@ -191,4 +191,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMListItemAction
 	ListItemAction.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItemAction
+ListItemAction.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

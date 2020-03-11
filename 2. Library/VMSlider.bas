@@ -608,22 +608,22 @@ End Sub
 
 
 Sub Hide As VMSlider
-	vue.SetStateSingle($"${ID}show"$, False)
+	Slider.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMSlider
-	vue.SetStateSingle($"${ID}show"$, True)
+	Slider.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMSlider
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Slider.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMSlider
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Slider.Disable(True)
 	Return Me
 End Sub
 
@@ -683,4 +683,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSlider
+Slider.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

@@ -168,22 +168,22 @@ End Sub
 
 
 Sub Hide As VMTabItem
-	vue.SetStateSingle($"${ID}show"$, False)
+	TabItem.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTabItem
-	vue.SetStateSingle($"${ID}show"$, True)
+	TabItem.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTabItem
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	TabItem.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTabItem
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	TabItem.Disable(True)
 	Return Me
 End Sub
 
@@ -238,4 +238,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMTabItem
 	TabItem.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTabItem
+TabItem.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

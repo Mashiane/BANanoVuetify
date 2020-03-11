@@ -202,22 +202,22 @@ End Sub
 
 
 Sub Hide As VMForm
-	vue.SetStateSingle($"${ID}show"$, False)
+	Form.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMForm
-	vue.SetStateSingle($"${ID}show"$, True)
+	Form.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMForm
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Form.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMForm
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Form.Disable(True)
 	Return Me
 End Sub
 
@@ -296,3 +296,8 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMForm
+Form.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

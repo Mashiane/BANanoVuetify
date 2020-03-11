@@ -230,22 +230,22 @@ End Sub
 
 
 Sub Hide As VMListGroup
-	vue.SetStateSingle($"${ID}show"$, False)
+	ListGroup.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMListGroup
-	vue.SetStateSingle($"${ID}show"$, True)
+	ListGroup.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMListGroup
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	ListGroup.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMListGroup
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	ListGroup.Disable(True)
 	Return Me
 End Sub
 
@@ -302,3 +302,8 @@ Sub SetAttrSingle(prop As String, value As String) As VMListGroup
 	Return Me
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListGroup
+ListGroup.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

@@ -332,12 +332,12 @@ Sub Show As VMSnackBar
 End Sub
 
 Sub Enable As VMSnackBar
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	SnackBar.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMSnackBar
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	SnackBar.Disable(True)
 	Return Me
 End Sub
 
@@ -397,4 +397,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSnackBar
+SnackBar.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

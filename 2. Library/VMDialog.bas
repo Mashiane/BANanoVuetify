@@ -432,12 +432,12 @@ Sub Show As VMDialog
 End Sub
 
 Sub Enable As VMDialog
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Dialog.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMDialog
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Dialog.Disable(True)
 	Return Me
 End Sub
 
@@ -499,3 +499,8 @@ Sub SetHeight(h As String) As VMDialog
 	Return Me
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDialog
+Dialog.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

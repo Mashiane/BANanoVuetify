@@ -224,25 +224,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMCalendarMonthly
-	vue.SetStateSingle($"${ID}show"$, False)
+	CalendarMonthly.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMCalendarMonthly
-	vue.SetStateSingle($"${ID}show"$, True)
+	CalendarMonthly.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMCalendarMonthly
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	CalendarMonthly.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMCalendarMonthly
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	CalendarMonthly.Disable(True)
 	Return Me
 End Sub
 
@@ -413,4 +413,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMCalendarMonthly
+CalendarMonthly.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

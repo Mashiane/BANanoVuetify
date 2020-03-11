@@ -102,25 +102,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMStepperItems
-	vue.SetStateSingle($"${ID}show"$, False)
+	StepperItems.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMStepperItems
-	vue.SetStateSingle($"${ID}show"$, True)
+	StepperItems.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMStepperItems
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	StepperItems.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMStepperItems
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	StepperItems.Disable(True)
 	Return Me
 End Sub
 
@@ -245,4 +245,9 @@ Sub SetKey(k As String) As VMStepperItems
 	k = k.tolowercase
 	SetAttrSingle(":key", k)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMStepperItems
+StepperItems.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

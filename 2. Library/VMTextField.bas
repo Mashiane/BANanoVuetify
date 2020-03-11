@@ -39,6 +39,32 @@ Sub SetPassword(b As Boolean, toggle As Boolean) As VMTextField
 	Return Me
 End Sub
 
+Sub SetTypeNumber(b As Boolean) As VMTextField
+	SetType("number")
+	Return Me
+End Sub
+
+Sub SetTypeEmail(b As Boolean) As VMTextField
+	SetType("email")
+	Return Me
+End Sub
+
+Sub SetTypePassword(b As Boolean) As VMTextField
+	SetType("password")
+	Return Me
+End Sub
+
+Sub SetTypeText(b As Boolean) As VMTextField
+	SetType("text")
+	Return Me
+End Sub
+
+Sub SetTypeDate(b As Boolean) As VMTextField
+	SetType("date")
+	Return Me
+End Sub
+
+
 Sub SetErrorText(errText As String) As VMTextField
 	ErrorText = errText
 	Return Me
@@ -783,24 +809,23 @@ Sub SetOnUpdateError(methodName As String) As VMTextField
 	Return Me
 End Sub
 
-
 Sub Hide As VMTextField
-	vue.SetStateSingle($"${ID}show"$, False)
+	TextField.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMTextField
-	vue.SetStateSingle($"${ID}show"$, True)
+	TextField.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMTextField
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	TextField.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMTextField
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	TextField.Disable(True)
 	Return Me
 End Sub
 
@@ -861,3 +886,8 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTextField
+TextField.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub

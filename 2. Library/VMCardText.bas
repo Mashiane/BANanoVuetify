@@ -145,22 +145,22 @@ End Sub
 
 
 Sub Hide As VMCardText
-	vue.SetStateSingle($"${ID}show"$, False)
+	CardText.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMCardText
-	vue.SetStateSingle($"${ID}show"$, True)
+	CardText.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMCardText
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	CardText.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMCardText
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	CardText.Disable(True)
 	Return Me
 End Sub
 
@@ -215,4 +215,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMCardText
 	CardText.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMCardText
+CardText.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

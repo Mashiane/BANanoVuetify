@@ -328,22 +328,22 @@ End Sub
 
 
 Sub Hide As VMStepper
-	vue.SetStateSingle($"${ID}show"$, False)
+	Stepper.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMStepper
-	vue.SetStateSingle($"${ID}show"$, True)
+	Stepper.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMStepper
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Stepper.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMStepper
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Stepper.Disable(True)
 	Return Me
 End Sub
 
@@ -402,4 +402,9 @@ End Sub
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMStepper
+Stepper.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

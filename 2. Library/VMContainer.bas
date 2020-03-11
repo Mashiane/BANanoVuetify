@@ -97,6 +97,32 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetEmpty
+	vue.SetStateListValues(Fields)
+End Sub
+
+Sub SetDefaults
+	vue.SetState(Defaults)
+	vue.SetState(visibility)
+	For Each k As String In Required.Keys
+		HideError(k)
+	Next
+End Sub
+
+Sub AddRequired(r As String) As VMContainer
+	Required.put(r,r)
+	Return Me
+End Sub
+
+Sub RemoveRequired(r As String) As VMContainer
+	Required.Remove(r)
+	Return Me
+End Sub
+
+'add control sizes only
+Sub AddControlS(ctl As VMElement, template As String, r As String, c As String, s As String, m As String, l As String, xl As String)
+	AddControl(ctl, template, r, c, 0,0,0,0,s,m,l,xl)
+End Sub
 
 'set booleans from checked and unchecked values
 Sub SetBooleans(rec As Map, xFields As List, checkedValue As String, UnCheckedValue As String) As Map
@@ -200,36 +226,6 @@ private Sub CreateDatePicker(sid As String, eventHandler As Object) As VMDatePic
 	el.Initialize(vue, sid, eventHandler)
 	el.SetDesignMode(DesignMode)
 	Return el
-End Sub
-'
-'Sub CreateControl(sname As String) As VMInputControl
-'	sname = sname.tolowercase
-'	Dim el As VMInputControl
-'	el.Initialize(sname)
-'	el.SetDesignMode(DesignMode)
-'	Return el
-'End Sub
-
-Sub SetEmpty
-	vue.SetStateListValues(Fields)
-End Sub
-
-Sub SetDefaults
-	vue.SetState(Defaults)
-	vue.SetState(visibility)
-	For Each k As String In Required.Keys
-		HideError(k)
-	Next
-End Sub
-
-Sub AddRequired(r As String) As VMContainer
-	Required.put(r,r)
-	Return Me
-End Sub
-
-Sub RemoveRequired(r As String) As VMContainer
-	Required.Remove(r)
-	Return Me
 End Sub
 
 Sub LinkRecordTypes(rec As Map) As Map
@@ -780,6 +776,12 @@ Sub AddControl(el As VMElement, template As String, r As String, c As String, os
 End Sub
 
 'add a control that will be automatically grid designed
+Sub AddControlOnly(el As VMElement, template As String) As VMContainer
+	AddControl1(el, template)
+	Return Me
+End Sub
+
+'add a control that will be automatically grid designed
 Sub AddControl1(el As VMElement, template As String)
 	bControls = True
 	'get the row
@@ -941,22 +943,22 @@ Sub SetTag(varTag As Object) As VMContainer
 End Sub
 
 Sub Hide As VMContainer
-	vue.SetStateSingle($"${ID}show"$, False)
+	Container.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMContainer
-	vue.SetStateSingle($"${ID}show"$, True)
+	Container.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMContainer
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	Container.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMContainer
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	Container.Disable(True)
 	Return Me
 End Sub
 
@@ -1057,6 +1059,34 @@ private Sub CreateGrid
 	'get the keys and sort them
 	sortItL.Initialize
 	For Each k As String In sortitM.Keys
+		Dim el As VMElement = sortitM.Get(k)
+		'
+		If el.Exclude = True Then Exclusions.Add(el.id)
+		'check exclusions
+		Dim idxpos As Int = Exclusions.IndexOf(el.id)
+		If idxpos = -1 Then
+			Select Case el.typeOf
+				Case "button", "list"
+					el.fieldType = ""
+					el.IsRequired = False
+				Case Else
+					Fields.Add(el.id)
+					Defaults.Put(el.id, el.defaultValue)
+			End Select
+			If el.isrequired Then Required.put(el.id, el.id)
+			Select Case el.fieldType
+				Case "int"
+					Integers.Add(el.id)
+				Case "bool"
+					Booleans.Add(el.id)
+				Case "string"
+					Strings.Add(el.id)
+				Case "date"
+					Dates.Add(el.id)
+				Case "dbl"
+					Doubles.Add(el.id)
+			End Select
+		End If
 		sortItL.Add(k)
 	Next
 	' sort the rcs
@@ -1234,4 +1264,8 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	SetRC(srow, scell)
 	SetDeviceSizes(small,medium, large, xlarge)
 	Return Me
+End Sub
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMContainer
+Container.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

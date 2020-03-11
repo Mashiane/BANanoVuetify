@@ -467,12 +467,12 @@ Sub Show As VMNavigationDrawer
 End Sub
 
 Sub Enable As VMNavigationDrawer
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	NavigationDrawer.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMNavigationDrawer
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	NavigationDrawer.Disable(True)
 	Return Me
 End Sub
 
@@ -527,4 +527,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMNavigationDrawer
 	NavigationDrawer.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMNavigationDrawer
+NavigationDrawer.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

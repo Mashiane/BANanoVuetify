@@ -119,22 +119,22 @@ End Sub
 
 
 Sub Hide As VMStepperContent
-	vue.SetStateSingle($"${ID}show"$, False)
+	StepperContent.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMStepperContent
-	vue.SetStateSingle($"${ID}show"$, True)
+	StepperContent.SetVisible(True)
 	Return Me
 End Sub
 
 Sub Enable As VMStepperContent
-	vue.SetStateSingle($"${ID}disabled"$, False)
+	StepperContent.Enable(True)
 	Return Me
 End Sub
 
 Sub Disable As VMStepperContent
-	vue.SetStateSingle($"${ID}disabled"$, True)
+	StepperContent.Disable(True)
 	Return Me
 End Sub
 
@@ -189,4 +189,9 @@ End Sub
 Sub SetAttrSingle(prop As String, value As String) As VMStepperContent
 	StepperContent.SetAttrSingle(prop, value)
 	Return Me
+End Sub
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMStepperContent
+StepperContent.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
 End Sub

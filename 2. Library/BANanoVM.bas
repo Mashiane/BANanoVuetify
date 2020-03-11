@@ -440,24 +440,8 @@ Public Sub MonthNow() As String
 End Sub
 
 Sub NewEmail(sname As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, serrorText As String, iTabIndex As Int) As VMTextField
-	sname = sname.tolowercase
-	Dim actName As String = sname
-	Dim actID As String = sname
-	If sname.IndexOf(".") >= 0 Then
-		actName = MvField(sname,2,".")
-	End If
-	Dim el As VMTextField
-	el.Initialize(vue, actName, module)
-	el.TextField.ActualID = actID
-	el.SetClearable(True)
-	el.TextField.ActualID = actID
-	el.SetErrorText(serrorText)
-	el.SetLabel(slabel)
-	el.SetRequired(bRequired)
-	el.SetPrependIcon(sIcon)
-	el.SetPlaceHolder(splaceholder)
-	el.SetHint(shelpertext)
-	el.SetTabIndex(iTabIndex)
+	Dim el As VMTextField = NewTextField(sname, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, serrorText, iTabIndex)
+	el.SetType("email")
 	Return el
 End Sub
 
@@ -1972,16 +1956,19 @@ Sub NewTextField(sname As String, slabel As String, splaceholder As String, bReq
 	el.SetTabIndex(iTabIndex)
 	el.SetVModel(actName)
 	el.SetErrorText(sErrorText)
+	el.SetType("text")
 	Return el
 End Sub
 '
 Sub NewTel(sname As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
 	Dim el As VMTextField = NewTextField(sname, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, sErrorText, iTabIndex)
+	el.SetType("tel")
 	Return el
 End Sub
 
 Sub NewNumber(sname As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
 	Dim el As VMTextField = NewTextField(sname, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, sErrorText, iTabIndex)
+	el.SetType("number")
 	Return el
 End Sub
 
@@ -2156,7 +2143,7 @@ Sub NewButton(sname As String, sLabel As String, bTransparent As Boolean, bPrima
 End Sub
 '
 'define a select from a datasource
-Sub NewSelect(sname As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, iTabIndex As Int) As VMSelect
+Sub NewSelect1(sname As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, iTabIndex As Int) As VMSelect
 	sname = sname.tolowercase
 	Dim actName As String = sname
 	Dim actID As String = sname
@@ -2177,8 +2164,17 @@ Sub NewSelect(sname As String, sLabel As String, bRequired As Boolean, bMultiple
 	Return el
 End Sub
 '
+Sub NewSelectDataSource(sname As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, iTabIndex As Int) As VMSelect
+	return NewSelect1(sname, sLabel, bRequired, bMultiple, sPlaceHolder, sourceTable, sourcefield, displayField, returnObject, sHelperText, iTabIndex)
+End Sub
+
 'use select with map
-Sub NewSelect1(sname As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, iTabIndex As Int) As VMSelect
+Sub NewSelectOptions(sname As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, iTabIndex As Int) As VMSelect
+	Return NewSelect(sname, sLabel, bRequired, bMultiple, sPlaceHolder, optionsm, sourceField, displayField, returnObject, sHelperText, iTabIndex)
+End Sub
+
+'use select with map
+Sub NewSelect(sname As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, iTabIndex As Int) As VMSelect
 	sname = sname.tolowercase
 	Dim actName As String = sname
 	Dim actID As String = sname
