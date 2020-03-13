@@ -294,3 +294,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Row.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMRow
+Row.SetVisible(b)
+Return Me
+End Sub

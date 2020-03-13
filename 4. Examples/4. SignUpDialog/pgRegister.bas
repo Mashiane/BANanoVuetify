@@ -9,6 +9,7 @@ Sub Process_Globals
 	Private vm As BANanoVM
 	Public name As String = "signupcode"
 	Private mdlRegister As VMDialog
+	Private BANano As BANano
 End Sub
 
 
@@ -20,7 +21,7 @@ Sub Code(vmx As BANanoVM)
 	'dont show the backdrop
 	mdlRegister.SetBackdrop(False)
 	'set width of the modal
-	mdlRegister.SetWidth("700px")
+	mdlRegister.SetWidth("800px")
 	'
 	'set the title of the modal
 	mdlRegister.SetTitle("Sign Up")
@@ -29,29 +30,33 @@ Sub Code(vmx As BANanoVM)
 	'add a login button
 	mdlRegister.AddOk("btnOkSignUp", "Sign In")
 	'create the controls
-	Dim txtfirstname As VMTextField = vm.NewText("firstname", "First Name", "First Name", True, "", 0, "", "The first name is required!", 0)
-	Dim txtlastname As VMTextField = vm.NewText("lastname", "Last Name", "Last Name", True, "", 0, "", "The last name is required!", 0)
+	Dim txtfirstname As VMTextField = vm.NewText(Me,"txtfirstname", "firstname", "First Name", "First Name", True, "", 0, "", "The first name is required!", 0)
+	Dim txtlastname As VMTextField = vm.NewText(Me,"txtlastname", "lastname", "Last Name", "Last Name", True, "", 0, "", "The last name is required!", 0)
 	'
-	Dim dpDOB As VMDatePicker = vm.NewDatePicker("dateofbirth", "Date of Birth", True, "Date of Birth","","",0)
-	Dim tpTOB As VMTimePicker = vm.NewTimePicker("timeofbirth", "Time of Birth", True, "", "", "",0)
+	Dim dpDOB As VMDatePicker = vm.NewDatePicker(Me,"dpdateofbirth", "dob", "Date of Birth", True, "Date of Birth","","",0)
+	Dim tpTOB As VMTimePicker = vm.NewTimePicker(Me,"tptimeofbirth", "tob", "Time of Birth", True, "", "", "",0)
 	'
-	Dim txtTel As VMTextField = vm.NewTel("telephone", "Telephone", "Telephone Number", True, "", "", "",0)
-	Dim txtEmail As VMTextField = vm.NewEmail("email","Email Address","Email Address",True,"","", "The email address is required!",0)
+	Dim txtTel As VMTextField = vm.NewTel(Me,"txttelephone", "telephone", "Telephone", "Telephone Number", True, "", "", "",0)
+	Dim txtEmail As VMTextField = vm.NewEmail(Me,"txtemail", "email", "Email Address","Email Address",True,"","", "The email address is required!",0)
 	'
-	Dim radGender As VMRadioGroup = vm.NewRadioGroup("gender", "Gender", "M", CreateMap("M":"Male","F":"Female"), True, True, 0)
-	'Dim chipSkills As VMTextField = vm.NewChips("skills", "Skills", "", False, False, "","", 0)
+	Dim radGender As VMRadioGroup = vm.NewRadioGroup(Me,"rggender", "gender", "Gender", "Male", CreateMap("Male":"Male","Female":"Female"), True, True, 0)
+	'Dim chipSkills As VMTextField = vm.NewChips(me,"skills", "Skills", "", False, False, "","", 0)
 	'
-	Dim children As VMTextField = vm.NewNumber("children", "Total Children", "", False, "", "","", 0)
-	Dim notifications As VMSwitch = vm.NewSwitch("notifications", "Receive Notifications", "true", "false",True, 0)
+	Dim children As VMTextField = vm.NewNumber(Me,"txtchildren", "children", "Total Children", "", False, "", "","", 0)
+	Dim notifications As VMSwitch = vm.NewSwitch(Me,"swtnotifications", "notifications", "Receive Notifications", "Yes", "No",True, 0).SetString
 	'
-	Dim profilepic As VMImage = vm.NewImage("displaypic", "./assets/sponge.png", "SpongeBob", "80px", "80px", "")
-	Dim uploadprofile As VMFileInput = vm.NewFile("uploadpic", "Upload Profile Image", "", False, "", "", 0)
+	Dim profilepic As VMImage = vm.NewImage(Me,"displaypic", "dp", "./assets/sponge.png", "SpongeBob", "80px", "80px")
+	profilepic.SetBorder("1px", vm.COLOR_BLUE, vm.BORDER_RIDGE)
+	profilepic.SetBorderRadius("50%")
 	
-	Dim notes As VMTextArea = vm.NewTextArea("notes", "Notes", "", True, True, "", 0,"", "Notes are required!", 0)
-	Dim agree As VMCheckBox = vm.NewCheckBox("agree", "I agree with terms of use", "true", "false", True, 0)
 	
-	Dim txtPassword As VMTextField = vm.NewPassword("password","Password","",True,False,"",15,"", "The password is required!",0)
-	Dim txtconfirmPassword As VMTextField = vm.NewPassword("confirmpassword","Confirm Password","",True,False,"",15,"", "The password is required!",0)
+	Dim uploadprofile As VMFileInput = vm.NewFile(Me,"fiuploadpic", "upload", "Upload Profile Image", "", False, "", "", 0)
+	
+	Dim notes As VMTextArea = vm.NewTextArea(Me,"txtnotes", "notes", "Notes", "", True, True, "", 0,"", "Notes are required!", 0)
+	Dim agree As VMCheckBox = vm.NewCheckBox(Me,"chkagree", "agree", "I agree with terms of use", "Yes", "No", True, 0).SetString
+	
+	Dim txtPassword As VMTextField = vm.NewPassword(Me,"txtpassword", "password", "Password","",True,True,"",15,"", "The password is required!",0)
+	Dim txtconfirmPassword As VMTextField = vm.NewPassword(Me,"txtconfirmpassword", "confirmpassword", "Confirm Password","",True,True,"",15,"", "The password is required!",0)
 	
 	'add the controls, the grid will be automatically created
 	mdlRegister.Container.AddControl(profilepic.Image, profilepic.tostring,1,1,0,0,0,0,12,6,6,6)
@@ -82,6 +87,13 @@ Sub Code(vmx As BANanoVM)
 	vm.adddialog(mdlRegister)
 End Sub
 
+Sub fiuploadpic_change(fileList As List)
+	If fileList = Null Then Return 
+	'get the file object
+	Dim fo As FileObject = fileList.Get(0)
+	vm.setdata("dp", $"./assets/${fo.FileName}"$)
+End Sub
+
 Sub btnCancelSignUp_click(e As BANanoEvent)
 	'hide the registration modal
 	vm.HideDialog("mdlregister")
@@ -95,6 +107,29 @@ Sub btnOkSignUp_click(e As BANanoEvent)
 	'validate the details
 	Dim bValid As Boolean = mdlRegister.Container.Validate(rec)
 	If bValid = False Then Return
-	Log(rec)
+	vm.ShowAlert("register", "Register", BANano.tojson(rec), "Ok")
 	'process further
+End Sub
+
+Sub Random
+	Dim fake As VMFake
+	fake.initialize
+	'
+	Dim structure As Map = CreateMap()
+	structure.put("firstname", fake.DT_FIRST_NAME)
+	structure.put("lastname", fake.DT_LAST_NAME)
+	structure.put("dob", fake.DT_DATE)
+	structure.put("tob", fake.DT_TIME)
+	structure.put("telephone", fake.DT_PHONE)
+	structure.put("email", fake.DT_EMAIL)
+	structure.put("gender", fake.DT_GENDER)
+	structure.put("children",fake.DT_AGE)
+	structure.put("notifications", fake.DT_YES_NO)
+	structure.put("notes", fake.DT_LOREM_IPSUM)
+	structure.put("agree", fake.DT_YES_NO)
+	structure.put("password", fake.DT_PASSWORD)
+	structure.put("confirmpassword", fake.DT_PASSWORD)
+	'
+	Dim rec As Map = fake.GetRecord(structure)
+	vm.setstate(rec)
 End Sub

@@ -411,3 +411,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 SlideGroup.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMSlideGroup
+SlideGroup.SetVisible(b)
+Return Me
+End Sub

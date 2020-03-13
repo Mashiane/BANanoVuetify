@@ -21,11 +21,11 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(10).AddColumns2x6
 	'
-	vm.CreateImage("img1", Me).SetSrc("https://picsum.photos/510/300?random").SetHeight("125").SetAspectRatio("1.7").AddToContainer(cont, 1, 1)
+	vm.CreateImage("img1", Me).SetVModel("img1", "https://picsum.photos/510/300?random").SetHeight("125").SetAspectRatio("1.7").AddToContainer(cont, 1, 1)
 	'
-	vm.CreateImage("img2", Me).SetLazySrc("https://picsum.photos/id/11/100/60").SetMaxWidth("500").SetMaxHeight("300").SetSrc("https://picsum.photos/510/300?random").SetAspectRatio("2").AddToContainer(cont, 1, 2)
+	vm.CreateImage("img2", Me).SetLazySrc("https://picsum.photos/id/11/100/60").SetMaxWidth("500").SetMaxHeight("300").SetVModel("img2", "https://picsum.photos/510/300?random").SetAspectRatio("2").AddToContainer(cont, 1, 2)
 	'
-	vm.CreateImage("img3", Me).SetSrc("https://picsum.photos/510/300?random").SetContain("125").SetMaxHeight("125").SetAspectRatio("1.4").AddToContainer(cont, 2, 1)
+	vm.CreateImage("img3", Me).SetVModel("img3", "https://picsum.photos/510/300?random").SetContain("125").SetMaxHeight("125").SetAspectRatio("1.4").AddToContainer(cont, 2, 1)
 	
 	vm.AddContainer(cont)
 End Sub

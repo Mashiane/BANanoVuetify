@@ -97,6 +97,28 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub AddExclusion(them As List) As VMContainer
+	For Each k As String In them
+		Exclusions.Add(k)
+	Next
+	Return Me
+End Sub
+
+Sub SetElevation(elx As string) As VMContainer
+	Container.SetElevation(elx)
+	Return Me
+End Sub
+
+Sub SetMargins(sMT As String, sMB As String, sML As String, sMR As String) As VMContainer
+	Container.SetMargins(sMT, sMB, sML, sMR)
+	Return Me
+End Sub
+
+Sub SetPadding(sPT As String, sPB As String, sPL As String, sPR As String) As VMContainer
+	Container.SetPadding(sPT, sPB, sPL, sPR)
+	Return Me
+End Sub
+
 Sub SetEmpty
 	vue.SetStateListValues(Fields)
 End Sub
@@ -307,7 +329,7 @@ Sub AddButtonPrimary(eventHandler As Object, row As Int, col As Int, btnID As St
 	el.SetPrimary(True)
 	el.SetBlock(btnFitWidth)
 	el.SetToolTip(btnTooltip)
-	'el.SetRaised(btnRaised)
+	If btnRaised = False Then el.SetTransparent(True)
 	AddComponent(row, col, el.ToString)
 	Return Me
 End Sub
@@ -319,7 +341,7 @@ Sub AddButtonAccent(eventHandler As Object, row As Int, col As Int, btnID As Str
 	el.SetAccent(True)
 	el.SetBlock(btnFitWidth)
 	el.SetToolTip(btnTooltip)
-	'el.SetRaised(btnRaised)
+	If btnRaised = False Then el.SetTransparent(True)
 	AddComponent(row, col, el.ToString)
 	Return Me
 End Sub
@@ -783,6 +805,7 @@ End Sub
 
 'add a control that will be automatically grid designed
 Sub AddControl1(el As VMElement, template As String)
+	Controls.Add(el)
 	bControls = True
 	'get the row
 	Dim r As String = el.R
@@ -798,22 +821,31 @@ Sub AddControl1(el As VMElement, template As String)
 		TotalRows = BANano.parseInt(r)
 	End If
 	'
-	Dim showKey As String = $"${el.name}show"$
-	Dim disKey As String = $"${el.name}disabled"$
-	Dim enaKey As String = $"${el.name}required"$
-	Dim errKey As String = $"${el.name}error"$
+	Dim showKey As String = $"${el.vmodel}show"$
+	Dim disKey As String = $"${el.vmodel}disabled"$
+	Dim enaKey As String = $"${el.vmodel}required"$
+	Dim errKey As String = $"${el.vmodel}error"$
 	visibility.Put(showKey, el.Isvisible)
 	'
 	AddComponent(el.r, el.C, template)
+	Select Case el.typeOf
+	Case "checkbox", "switchbox"
+		Dim newoption As CheckedUnchecked
+		newoption.Initialize
+		newoption.fieldname = el.vmodel
+		newoption.checkedValue = el.Value
+		newoption.uncheckedValue = el.UncheckedValue 
+		afewoptions.Add(newoption)
+	End Select
 	'
 	If DesignMode = False Then
 		vue.SetStateSingle(showKey, el.Isvisible)
 		vue.SetStateSingle(disKey, el.IsDisabled)
 		vue.SetStateSingle(enaKey, el.IsRequired)
 		If el.isarray Then
-			vue.SetStateSingle(el.name, Array())
+			vue.SetStateSingle(el.vmodel, Array())
 		Else
-			vue.SetStateSingle(el.name, el.defaultValue)
+			vue.SetStateSingle(el.vmodel, el.defaultValue)
 		End If
 		vue.SetStateSingle(errKey, False)
 	End If	
@@ -1015,9 +1047,6 @@ Sub SetAttrSingle(prop As String, value As String) As VMContainer
 	Return Me
 End Sub
 
-
-
-
 private Sub CreateImage(img As String, eventHandler As Object) As VMImage
 	Dim el As VMImage
 	el.Initialize(vue, img, eventHandler)
@@ -1057,36 +1086,39 @@ End Sub
 ' build the grid for a container
 private Sub CreateGrid
 	'get the keys and sort them
-	sortItL.Initialize
-	For Each k As String In sortitM.Keys
-		Dim el As VMElement = sortitM.Get(k)
-		'
+	'build the controls
+	For Each el As VMElement In Controls
 		If el.Exclude = True Then Exclusions.Add(el.id)
 		'check exclusions
 		Dim idxpos As Int = Exclusions.IndexOf(el.id)
 		If idxpos = -1 Then
 			Select Case el.typeOf
-				Case "button", "list"
+				Case "button", "list", "image", "label"
 					el.fieldType = ""
 					el.IsRequired = False
 				Case Else
-					Fields.Add(el.id)
-					Defaults.Put(el.id, el.defaultValue)
+					Fields.Add(el.vmodel)
+					Defaults.Put(el.vmodel, el.defaultValue)
 			End Select
-			If el.isrequired Then Required.put(el.id, el.id)
+			If el.isrequired Then Required.put(el.vmodel, el.vmodel)
 			Select Case el.fieldType
 				Case "int"
-					Integers.Add(el.id)
+					Integers.Add(el.vmodel)
 				Case "bool"
-					Booleans.Add(el.id)
+					Booleans.Add(el.vmodel)
 				Case "string"
-					Strings.Add(el.id)
+					Strings.Add(el.vmodel)
 				Case "date"
-					Dates.Add(el.id)
+					Dates.Add(el.vmodel)
 				Case "dbl"
-					Doubles.Add(el.id)
+					Doubles.Add(el.vmodel)
 			End Select
 		End If
+	Next
+	
+	'define sort order of grid
+	sortItL.Initialize
+	For Each k As String In sortitM.Keys
 		sortItL.Add(k)
 	Next
 	' sort the rcs
@@ -1200,7 +1232,7 @@ End Sub
 
 private Sub CreateNumber(sid As String, eventHandler As Object) As VMTextField
 	Dim el As VMTextField
-	'el = CreateTextField(sid,eventHandler).SetTypeNumber(True)
+	el = CreateTextField(sid, eventHandler).SetTypeNumber(True)
 	Return el
 End Sub
 
@@ -1226,10 +1258,9 @@ private Sub CreateCheckBox(sid As String, eventHandler As Object) As VMCheckBox
 	Return el
 End Sub
 
-
-private Sub CreateIcon(sid As String) As VMIcon
+private Sub CreateIcon(sid As String, eventHandler As Object) As VMIcon
 	Dim el As VMIcon
-	'el.Initialize(vue, sid)
+	el.Initialize(vue, sid, eventHandler)
 	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
@@ -1265,7 +1296,13 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	SetDeviceSizes(small,medium, large, xlarge)
 	Return Me
 End Sub
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMContainer
-Container.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Container.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+Sub SetVisible(b As Boolean) As VMContainer
+	Container.SetVisible(b)
+	Return Me
 End Sub

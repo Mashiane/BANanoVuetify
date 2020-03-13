@@ -261,3 +261,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 VueCal.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+'Sub SetVisible(b As Boolean) As VMVueCal
+VueCal.SetVisible(b)
+Return Me
+End Sub

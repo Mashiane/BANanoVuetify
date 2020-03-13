@@ -21,7 +21,7 @@ Sub Init
 	vm.NavBar.SetHasMenuButton(True)
 	vm.NavBar.UpdateLogo("./assets/sponge.png")
 	vm.NavBar.UpdateTitle("BANanoVuetify 3")
-	vm.NavBar.Logo.BindStyleSingle("borderRadius", "50%")
+	vm.NavBar.Logo.SetBorderRadius("50%")
 	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
 	
 	'vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)

@@ -75,6 +75,9 @@ Sub Class_Globals
 	Public ActualID As String
 	Public Host As String
 	Public Exclude As Boolean
+	Public vmodel As String
+	Public UncheckedValue As Object
+	Public Value As Object
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -90,12 +93,15 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	PB = ""
 	PL = ""
 	PR = ""
+	Value = Null
+	UncheckedValue = Null
 	Template = ""
 	hasContent = False
 	bUsesStyles = False
 	bUsesRequired = False
 	bUsedDisabled = False
 	bUsesShow = False
+	vmodel = ""
 	
 	showKey = $"${ID}show"$
 	disKey = $"${ID}disabled"$
@@ -181,6 +187,11 @@ Sub SetDeviceSizes(sSizeSmall As String, sSizeMedium As String, sSizeLarge As St
 	SM = sSizeMedium
 	SL = sSizeLarge
 	SX = sSizeXLarge
+	Return Me
+End Sub
+
+Sub SetUncheckedValue(suncheckedValue As Object) As VMElement
+	UncheckedValue = suncheckedValue
 	Return Me
 End Sub
 
@@ -287,7 +298,7 @@ Sub SetDense As VMElement
 	Return Me
 End Sub
 
-Sub SetElevation(elNum As Int) As VMElement
+Sub SetElevation(elNum As String) As VMElement
 	Element.SetAttrSingle("elevation",elNum)
 	Return Me
 End Sub
@@ -656,6 +667,7 @@ Sub SetValue(valueName As String, bbind As Boolean) As VMElement
 		valueName = valueName.tolowercase
 		SetAttr(CreateMap(":value":valueName))
 	Else
+		Value = valueName
 		RemoveAttr(":value")	
 		SetAttr(CreateMap("value":valueName))
 	End If
@@ -941,10 +953,9 @@ End Sub
 
 Sub SetVModel(k As String) As VMElement
 	k = k.tolowercase
+	vmodel = k
 	If vue.HasState(k) = False Then
-		Dim opt As Map = CreateMap()
-		opt.Put(k, Null)
-		vue.SetState(opt)
+		vue.SetData(k, Null)
 	End If
 	Element.SetAttr("v-model", k)
 	Return Me
@@ -1136,6 +1147,7 @@ End Sub
 'set onclick event
 Sub SetOnClick(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
+	If SubExists(module, methodName) = False Then Return Me
 	SetAttrSingle("v-on:click", methodName)
 	vue.SetMethod(module, methodName)
 	Return Me
@@ -1144,6 +1156,7 @@ End Sub
 'set onclick stop
 Sub SetOnClickStop(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
+	If SubExists(module, methodName) = False Then Return Me
 	SetAttrSingle("v-on:click.stop", methodName)
 	vue.SetMethod(module, methodName)
 	Return Me

@@ -630,13 +630,13 @@ Sub SetSlotPrepend(b As Boolean) As VMTextField    'ignore
 End Sub
 
 '
-Sub SetSlotPrependInner(b As boolean) As VMTextField    'ignore
+Sub SetSlotPrependInner(b As Boolean) As VMTextField    'ignore
 	SetAttr(CreateMap("slot": "prepend-inner"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotProgress(b As boolean) As VMTextField    'ignore
+Sub SetSlotProgress(b As Boolean) As VMTextField    'ignore
 	SetAttr(CreateMap("slot": "progress"))
 	Return Me
 End Sub
@@ -644,9 +644,9 @@ End Sub
 '
 Sub SetOnBlur(methodName As String) As VMTextField
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:blur": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -656,9 +656,9 @@ End Sub
 '
 Sub SetOnChange(methodName As String) As VMTextField
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -889,5 +889,36 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTextField
 TextField.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+
+Sub SetDouble As VMTextField
+	TextField.fieldType = "dbl"
+	Return Me
+End Sub
+
+Sub SetString As VMTextField
+	TextField.fieldType = "string"
+	Return Me
+End Sub
+
+Sub SetNumber As VMTextField
+	TextField.typeOf = "number"
+	Return Me
+End Sub
+
+Sub SetBool As VMTextField
+	TextField.fieldType = "bool"
+	Return Me
+End Sub
+
+Sub SetInt As VMTextField
+	TextField.fieldType = "int"
+	Return Me
+End Sub
+
+
+Sub SetVisible(b As Boolean) As VMTextField
+TextField.SetVisible(b)
 Return Me
 End Sub

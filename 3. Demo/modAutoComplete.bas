@@ -58,7 +58,7 @@ Sub Card_4 As VMCard
 	'
 	Card.AddComponent(tmp.ToString)
 	'
-	Dim img As VMImage = vm.CreateImage("card4img", Me).SetHeight(200).SetSrc("./assets/dark-beach.jpg")
+	Dim img As VMImage = vm.CreateImage("card4img", Me).SetHeight(200).SetVmodel("card4img", "./assets/dark-beach.jpg")
 	Card.AddComponent(img.tostring)
 	'
 	Dim cont As VMContainer = vm.CreateContainer("card4cont", Me)

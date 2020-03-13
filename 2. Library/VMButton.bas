@@ -36,6 +36,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
 	span.Initialize(vue, "").SetSpan
 	Button.SetVShow($"${ID}show"$)
+	Button.typeOf = "button"
 	txt = ""
 	Return Me
 End Sub
@@ -797,5 +798,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMButton
 Button.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMButton
+Button.SetVisible(b)
 Return Me
 End Sub

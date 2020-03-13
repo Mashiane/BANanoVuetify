@@ -44,6 +44,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+Sub SetDate As VMDatePicker
+	DatePicker.fieldType = "date"
+	Return Me
+End Sub
+
 Sub SetErrorText(Error As String) As VMDatePicker
 	ErrorText = Error
 	Return Me
@@ -147,7 +152,7 @@ End Sub
 
 'set placeholder
 Sub SetHint(varHint As Object) As VMDatePicker
-	shint = varHint
+	sHint = varHint
 	Return Me
 End Sub
 
@@ -728,5 +733,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDatePicker
 DatePicker.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMDatePicker
+DatePicker.SetVisible(b)
 Return Me
 End Sub

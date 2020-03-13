@@ -9,12 +9,22 @@ Sub Class_Globals
 	Public Label As VMElement
 	Public ID As String
 	Private vue As BANanoVue
+	Public vmodel As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	ID = sid.ToLowerCase
 	vue = v
 	Label.Initialize(vue, ID).SetTag("label")
+	vmodel = ""
+	Label.typeOf = "label"
+	Return Me
+End Sub
+
+Sub SetVModel(svmodel As String, value As String) As VMLabel
+	svmodel = svmodel.tolowercase
+	vue.SetData(svmodel, value)
+	SetText($"{{ ${svmodel} }}"$)
 	Return Me
 End Sub
 
@@ -335,8 +345,7 @@ End Sub
 '	Return Me
 'End Sub
 
-Sub ToString As String
-	
+Sub ToString As String	
 	Return Label.tostring
 End Sub
 
@@ -411,5 +420,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMLabel
 Label.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMLabel
+Label.SetVisible(b)
 Return Me
 End Sub

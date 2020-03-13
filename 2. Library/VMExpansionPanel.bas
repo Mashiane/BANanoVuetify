@@ -338,3 +338,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 ExpansionPanel.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMExpansionPanel
+ExpansionPanel.SetVisible(b)
+Return Me
+End Sub

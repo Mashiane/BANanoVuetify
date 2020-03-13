@@ -9,6 +9,7 @@ Sub Process_Globals
 	Private vm As BANanoVM
 	Public name As String = "signincode"
 	Private mdlSignIn As VMDialog
+	Private BANano As BANano
 End Sub
 
 
@@ -29,14 +30,14 @@ Sub Code(vmx As BANanoVM)
 	'add a login button
 	mdlSignIn.AddOk("btnOkSignIn", "Sign In")
 	'create the controls
-	Dim txtEmail As VMTextField = vm.NewEmail("email","Email Address","",True,"email","Enter email address here", "The email address is required!",0)
-	Dim txtPassword As VMTextField = vm.NewPassword("password","Password","",True, True, "lock",10,"Enter password here","The password is required!",0)
-	Dim chkRemember As VMCheckBox = vm.NewCheckBox("remember", "Remember Me", "1","0", True, -1)
+	Dim txtEmail As VMTextField = vm.NewEmail(Me,"txtemail", "email", "Email Address","",True,"email","Enter email address here", "The email address is required!",0)
+	Dim txtPassword As VMTextField = vm.NewPassword(Me,"txtpassword", "password", "Password","",True, True, "lock",10,"Enter password here","The password is required!",0)
+	Dim chkRemember As VMCheckBox = vm.NewCheckBox(Me,"chkremember", "remember", "Remember Me", "1","0", True, -1)
 	
 	'add the controls, the grid will be automatically created
 	mdlSignIn.Container.AddControl(txtEmail.TextField, txtEmail.ToString, 1,1,0,0,0,0,12,12,12,12)
-	mdlSignIn.Container.AddControl(txtPassword.TextField, txtPassword.ToString,2,1,0,0,0,0,12,12,12,12)
-	mdlSignIn.Container.AddControl(chkRemember.CheckBox, chkRemember.ToString,3,1,0,0,0,0,12,12,12,12)
+	mdlSignIn.Container.AddControl(txtPassword.TextField, txtPassword.ToString,1,1,0,0,0,0,12,12,12,12)
+	mdlSignIn.Container.AddControl(chkRemember.CheckBox, chkRemember.ToString,1,1,0,0,0,0,12,12,12,12)
 	
 	'add this modal to the page
 	vm.adddialog(mdlSignIn)
@@ -47,6 +48,7 @@ Sub btnRegister_click(e As BANanoEvent)
 	vm.HideDialog("mdlsignin")
 	'show the register dialog
 	vm.ShowDialog("mdlregister")
+	pgRegister.Random
 End Sub
 
 Sub btnOkSignIn_click(e As BANanoEvent)
@@ -55,6 +57,6 @@ Sub btnOkSignIn_click(e As BANanoEvent)
 	'validate the details
 	Dim bValid As Boolean = mdlSignIn.Container.Validate(rec)
 	If bValid = False Then Return
-	Log(rec)
+	vm.ShowSnackBar(BANano.tojson(rec))
 	'process further
 End Sub

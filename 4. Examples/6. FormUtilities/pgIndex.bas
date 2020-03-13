@@ -20,7 +20,7 @@ Sub Init
 	'the navbar will be visible
 	vm.NavBar.Show
 	'set primary color for the navbar
-	vm.NavBar.SetPrimary(True)
+	'vm.NavBar.SetPrimary(True)
 	'fix the navbar so that it does not move
 	vm.NavBar.SetModeFixed(True)
 	'hide the back button

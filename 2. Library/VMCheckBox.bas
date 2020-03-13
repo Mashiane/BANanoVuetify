@@ -27,6 +27,33 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetUncheckedValue(suncheckedValue As Object) As VMCheckBox
+	CheckBox.SetUncheckedValue(suncheckedValue)
+	Return Me
+End Sub
+
+'set vshow
+Sub SetVisible(b As Boolean) As VMCheckBox
+	CheckBox.SetVisible(b)
+	Return Me
+End Sub
+
+Sub SetString As VMCheckBox
+	CheckBox.fieldType = "string"
+	Return Me
+End Sub
+
+Sub SetBool As VMCheckBox
+	CheckBox.fieldType = "bool"
+	Return Me
+End Sub
+
+Sub SetInt As VMCheckBox
+	CheckBox.fieldType = "int"
+	Return Me
+End Sub
+
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMCheckBox
 	CheckBox.SetRC(sRow, sCol)
@@ -105,8 +132,6 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMCheckBox
-	k = k.tolowercase
-	vue.SetStateSingle(k, False)
 	CheckBox.SetVModel(k)
 	Return Me
 End Sub
@@ -241,9 +266,7 @@ End Sub
 
 'set false-value
 Sub SetFalseValue(varFalseValue As Object) As VMCheckBox
-	Dim pp As String = $"${ID}FalseValue"$
-	vue.SetStateSingle(pp, varFalseValue)
-	CheckBox.Bind(":false-value", pp)
+	CheckBox.Bind("false-value", varFalseValue)
 	Return Me
 End Sub
 
@@ -289,9 +312,7 @@ End Sub
 
 'set input-value
 Sub SetInputValue(varInputValue As Object) As VMCheckBox
-	Dim pp As String = $"${ID}InputValue"$
-	vue.SetStateSingle(pp, varInputValue)
-	CheckBox.Bind(":input-value", pp)
+	CheckBox.Bind("input-value", varInputValue)
 	Return Me
 End Sub
 
@@ -409,9 +430,7 @@ End Sub
 
 'set true-value
 Sub SetTrueValue(varTrueValue As Object) As VMCheckBox
-	Dim pp As String = $"${ID}TrueValue"$
-	vue.SetStateSingle(pp, varTrueValue)
-	CheckBox.Bind(":true-value", pp)
+	CheckBox.Bind("true-value", varTrueValue)
 	Return Me
 End Sub
 
@@ -425,7 +444,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMCheckBox
-	CheckBox.SetAttrSingle("value", varValue)
+	CheckBox.SetValue(varValue,False)
 	Return Me
 End Sub
 
@@ -628,3 +647,4 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 CheckBox.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+

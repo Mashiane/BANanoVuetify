@@ -403,3 +403,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 SnackBar.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMSnackBar
+SnackBar.SetVisible(b)
+Return Me
+End Sub

@@ -45,6 +45,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+'set defaults of the container
+Sub SetDefaults
+	Container.SetDefaults
+End Sub
+
+'get data from the container
+Sub GetData As Map
+	Return Container.GetData
+End Sub
+
+'get required fields
+Sub Required As Map
+	Return Container.required
+End Sub
+
+
 'set single style
 Sub BindStyleSingle(prop As String, value As String) As VMDialog
 	Dialog.BindStyleSingle(prop, value)
@@ -502,5 +518,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDialog
 Dialog.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMDialog
+Dialog.SetVisible(b)
 Return Me
 End Sub

@@ -91,7 +91,7 @@ End Sub
 
 private Sub SetLogo(url As String) As VMAppBar
 	Logo.Initialize(vue, $"${ID}logo"$, module)
-	Logo.SetSrc(url)
+	Logo.SetVModel("logo", url)
 	Logo.SetSize("46", "46")
 	Logo.AddClass("ma-2")  'margin all 8px
 	Logo.Pop(AppBar)
@@ -100,7 +100,7 @@ private Sub SetLogo(url As String) As VMAppBar
 End Sub
 
 Sub UpdateLogo(URL As String) As VMAppBar
-	Logo.SetSrc(URL)
+	vue.SetData("logo", URL)
 	Logo.Show
 	Return Me
 End Sub
@@ -598,5 +598,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAppBar
 AppBar.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMAppBar
+AppBar.SetVisible(b)
 Return Me
 End Sub

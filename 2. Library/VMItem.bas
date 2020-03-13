@@ -315,3 +315,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Item.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMItem
+Item.SetVisible(b)
+Return Me
+End Sub

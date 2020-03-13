@@ -9,6 +9,7 @@ Sub Process_Globals
 	Private vm As BANanoVM
 	Public name As String = "signincode"
 	Private mdlSignIn As VMDialog
+	Private BANano As BANano
 End Sub
 
 
@@ -29,8 +30,8 @@ Sub Code(vmx As BANanoVM)
 	'add a login button
 	mdlSignIn.AddOk("btnOkSignIn", "Sign In")
 	'create the controls
-	Dim txtEmail As VMTextField = vm.NewEmail("email", "Email Address","", True, "email", "Enter email address here", "The email address is required!", 0)
-	Dim txtPassword As VMTextField = vm.NewPassword("password", "Password","", True, True, "lock", 10, "Enter password here", "The password is required!", 0)
+	Dim txtEmail As VMTextField = vm.NewEmail(Me,"txtemail", "email", "Email Address","", True, "email", "Enter email address here", "The email address is required!", 0)
+	Dim txtPassword As VMTextField = vm.NewPassword(Me,"txtpassword", "password", "Password","", True, True, "lock", 10, "Enter password here", "The password is required!", 0)
 	'add the controls, the grid will be automatically created
 	mdlSignIn.Container.AddControl(txtEmail.TextField, txtEmail.ToString, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	mdlSignIn.Container.AddControl(txtPassword.TextField, txtPassword.ToString, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
@@ -41,7 +42,7 @@ End Sub
 
 Sub btnCancelLogin_click(e As BANanoEvent)
 	'hide the dialog using its name
-	vm.HideDialog("mdlsignin")
+	'vm.HideDialog("mdlsignin")
 End Sub
 
 Sub btnOkSignIn_click(e As BANanoEvent)
@@ -50,6 +51,6 @@ Sub btnOkSignIn_click(e As BANanoEvent)
 	'validate the details
 	Dim bValid As Boolean = mdlSignIn.Container.Validate(rec)
 	If bValid = False Then Return
-	Log(rec)
+	vm.ShowSnackBar(BANano.tojson(rec))
 	'process further
 End Sub

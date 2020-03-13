@@ -205,3 +205,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 ExpandTransition.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMExpandTransition
+ExpandTransition.SetVisible(b)
+Return Me
+End Sub

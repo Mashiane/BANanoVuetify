@@ -13,6 +13,12 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private ErrorText As String
+	Private targetVModel As String
+	Private numFiles As Int
+	Private totFiles As Int
+	Private fd As List
+	Private bMultiple As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the FileInput
@@ -24,7 +30,38 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	ErrorText = ""
+	SetOnChange(Me, "change")
+	bMultiple = False
+	vmodel = ""
 	Return Me
+End Sub
+
+'the list of files have changed
+Sub change(fileList As List)
+	numFiles = 0
+	fd.Initialize 		
+	Select Case bMultiple
+	Case True	
+		totFiles = fileList.Size
+		'upload the files to the server	
+		For Each fileObj As Object In fileList
+			vue.HTTPUpload(fileObj, Me, "filedone")
+		Next	
+	Case Else
+		totFiles = 1
+		vue.HTTPUpload(fileList, Me, "filedone")
+	End Select	
+End Sub
+
+Sub filedone(fileObj As Map, json As String)
+	numFiles = numFiles + 1
+	Dim fde As FileObject = vue.GetFileDetails(fileObj)
+	fd.Add(fde)
+	If numFiles = totFiles Then
+		vue.SetData(vmodel, fd)
+		If SubExists(Module, $"${ID}_change"$) = False Then Return
+		BANano.CallSub(Module, $"${ID}_change"$, Array(fd))
+	End If
 End Sub
 
 Sub SetErrorText(error As String) As VMFileInput
@@ -106,10 +143,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	RemoveAttr("v-model")
 	Return FileInput.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMFileInput
+	vmodel = k.tolowercase
 	FileInput.SetVModel(k)
 	Return Me
 End Sub
@@ -285,7 +324,7 @@ Sub SetDense(varDense As Object) As VMFileInput
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMFileInput
+Sub SetDisabled(varDisabled As Boolean) As VMFileInput
 	FileInput.SetDisabled(varDisabled)
 	Return Me
 End Sub
@@ -411,10 +450,11 @@ Sub SetMessages(varMessages As Object) As VMFileInput
 End Sub
 
 'set multiple
-Sub SetMultiple(varMultiple As Object) As VMFileInput
+Sub SetMultiple(varMultiple As Boolean) As VMFileInput
 	Dim pp As String = $"${ID}Multiple"$
 	vue.SetStateSingle(pp, varMultiple)
 	FileInput.Bind(":multiple", pp)
+	bMultiple = varMultiple
 	Return Me
 End Sub
 
@@ -595,13 +635,13 @@ Sub SetValue(varValue As Object) As VMFileInput
 End Sub
 
 '
-Sub SetSlotAppend(b As boolean) As VMFileInput    'ignore
+Sub SetSlotAppend(b As Boolean) As VMFileInput    'ignore
 	SetAttr(CreateMap("slot": "append"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotAppendOuter(b As boolean) As VMFileInput    'ignore
+Sub SetSlotAppendOuter(b As Boolean) As VMFileInput    'ignore
 	SetAttr(CreateMap("slot": "append-outer"))
 	Return Me
 End Sub
@@ -655,11 +695,11 @@ Sub SetOnBlur(methodName As String) As VMFileInput
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMFileInput
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMFileInput
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim fileList As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(fileList))
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -669,9 +709,9 @@ End Sub
 '
 Sub SetOnClick(methodName As String) As VMFileInput
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -681,9 +721,9 @@ End Sub
 '
 Sub SetOnClickAppend(methodName As String) As VMFileInput
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:click:append": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -895,6 +935,11 @@ End Sub
 
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMFileInput
-FileInput.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	FileInput.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+Sub SetVisible(b As Boolean) As VMFileInput
+	FileInput.SetVisible(b)
+	Return Me
 End Sub

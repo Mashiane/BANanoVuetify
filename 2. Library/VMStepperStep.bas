@@ -273,3 +273,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 StepperStep.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+Sub SetVisible(b As Boolean) As VMStepperStep
+StepperStep.SetVisible(b)
+Return Me
+End Sub

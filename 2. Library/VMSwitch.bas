@@ -24,6 +24,27 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	SwitchBox.typeOf = "switchbox"
 	SwitchBox.fieldType = "bool"
+	SetOnChange($"${ID}_change"$)
+	Return Me
+End Sub
+
+Sub SetUncheckedValue(suncheckedValue As Object) As VMSwitch
+	SwitchBox.SetUncheckedValue(suncheckedValue)
+	Return Me
+End Sub
+
+Sub SetString As VMSwitch
+	SwitchBox.fieldType = "string"
+	Return Me
+End Sub
+
+Sub SetBool As VMSwitch
+	SwitchBox.fieldType = "bool"
+	Return Me
+End Sub
+
+Sub SetInt As VMSwitch
+	SwitchBox.fieldType = "int"
 	Return Me
 End Sub
 
@@ -239,9 +260,7 @@ End Sub
 
 'set false-value
 Sub SetFalseValue(varFalseValue As Object) As VMSwitch
-	Dim pp As String = $"${ID}FalseValue"$
-	vue.SetStateSingle(pp, varFalseValue)
-	SwitchBox.Bind(":false-value", pp)
+	SwitchBox.Bind("false-value", varFalseValue)
 	Return Me
 End Sub
 
@@ -279,9 +298,7 @@ End Sub
 
 'set input-value
 Sub SetInputValue(varInputValue As Object) As VMSwitch
-	Dim pp As String = $"${ID}InputValue"$
-	vue.SetStateSingle(pp, varInputValue)
-	SwitchBox.Bind(":input-value", pp)
+	SwitchBox.Bind("input-value", varInputValue)
 	Return Me
 End Sub
 
@@ -391,9 +408,7 @@ End Sub
 
 'set true-value
 Sub SetTrueValue(varTrueValue As Object) As VMSwitch
-	Dim pp As String = $"${ID}TrueValue"$
-	vue.SetStateSingle(pp, varTrueValue)
-	SwitchBox.Bind(":true-value", pp)
+	SwitchBox.Bind("true-value", varTrueValue)
 	Return Me
 End Sub
 
@@ -407,9 +422,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSwitch
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	SwitchBox.Bind(":value", pp)
+	SwitchBox.SetValue(varValue,False)
 	Return Me
 End Sub
 
@@ -599,5 +612,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSwitch
 SwitchBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMSwitch
+SwitchBox.SetVisible(b)
 Return Me
 End Sub

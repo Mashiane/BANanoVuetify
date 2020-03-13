@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private ErrorText As String
 End Sub
 
 'initialize the AutoComplete
@@ -22,6 +23,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	ErrorText = ""
 	Return Me
 End Sub
 
@@ -31,9 +33,52 @@ Sub SetDataSource(sourceName As String, sourceField As String, displayField As S
 	sourceField = sourceField.ToLowerCase
 	displayField = displayField.ToLowerCase
 	AutoComplete.Bind(":items", sourceName)
+	If vue.StateExists(sourceName) = False Then
+		vue.SetData(sourceName, Array())
+	End If
 	SetItemText(displayField)
 	SetItemValue(sourceField)
 	SetReturnObject(returnObject)
+	Return Me
+End Sub
+
+Sub SetOptions(sourceName As String, options As Map, sourcefield As String, displayfield As String, returnObject As Boolean) As VMAutoComplete
+	sourceName = sourceName.tolowercase
+	sourcefield = sourcefield.ToLowerCase
+	displayfield = displayfield.ToLowerCase
+	Dim recs As List
+	recs.Initialize
+	For Each k As String In options.Keys
+		Dim v As String = options.Get(k)
+		Dim nrec As Map = CreateMap()
+		nrec.Put(sourcefield, k)
+		nrec.Put(displayfield, v)
+		recs.Add(nrec)
+	Next
+	'save the options
+	vue.SetStateSingle(sourceName, recs)
+	SetItems(sourceName)
+	SetItemText(displayfield)
+	SetItemValue(sourcefield)
+	SetReturnObject(returnObject)
+	Return Me
+End Sub
+
+
+
+Sub SetErrorText(error As String) As VMAutoComplete
+	ErrorText = error
+	Return Me
+End Sub
+
+Sub SetString As VMAutoComplete
+	AutoComplete.fieldType = "string"
+	Return Me
+End Sub
+
+
+Sub SetInt As VMAutoComplete
+	AutoComplete.fieldType = "int"
 	Return Me
 End Sub
 
@@ -1060,5 +1105,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAutoComplete
 AutoComplete.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMAutoComplete
+AutoComplete.SetVisible(b)
 Return Me
 End Sub

@@ -414,17 +414,17 @@ private Sub BuildControls
 		'
 		Select Case ct
 		Case COLUMN_CHECKBOX	
-			Dim tmp As VMTemplate
-			tmp.Initialize(vue, "" , Module)
+			Dim tmpc As VMTemplate
+			tmpc.Initialize(vue, "" , Module)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
-			tmp.SetAttrLoose(sline)
+			tmpc.SetAttrLoose(sline)
 			'
 			Dim scb As VMSimpleCheckBox
 			scb.Initialize(vue, "", Module).SetVModel($"item.${value}"$).SetAttributes(Array("disabled"))
 			If nf.extra <> "" Then scb.SetAttrLoose(nf.extra)
 			'
-			tmp.AddComponent(scb.ToString)
-			sb.Append(tmp.ToString) 
+			tmpc.AddComponent(scb.ToString)
+			sb.Append(tmpc.ToString) 
 		Case COLUMN_CHIP
 			Dim tmp As VMTemplate
 			tmp.Initialize(vue, "" , Module)
@@ -452,32 +452,33 @@ private Sub BuildControls
 			sb.Append(tmp.ToString)
 			vue.SetMethod(Module, $"${ID}_edit"$)
 		Case COLUMN_DELETE
-			Dim tmp As VMTemplate
-			tmp.Initialize(vue, "" , Module)
+			Dim tmpd As VMTemplate
+			tmpd.Initialize(vue, "" , Module)
 			Dim sline As String = $"v-slot:item.delete="{ item }""$
-			tmp.SetAttrLoose(sline)
+			tmpd.SetAttrLoose(sline)
 			'
 			Dim eIcon As VMIcon
 			eIcon.Initialize(vue, "", Module).AddClass("mr-2")
 			eIcon.SetAttrSingle("@click", $"${ID}_delete(item)"$)
 			eIcon.SetText("mdi-delete")
-			tmp.AddComponent(eIcon.ToString)
+			tmpd.AddComponent(eIcon.ToString)
 			'
-			sb.Append(tmp.ToString)
+			sb.Append(tmpd.ToString)
 			vue.SetMethod(Module, $"${ID}_delete"$)
 		Case COLUMN_ACTION
-			Dim tmp As VMTemplate
-			tmp.Initialize(vue, "" , Module)
+			Dim tmpa As VMTemplate
+			tmpa.Initialize(vue, "" , Module)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
-			tmp.SetAttrLoose(sline)
+			tmpa.SetAttrLoose(sline)
 			'
 			Dim eIcon As VMIcon
 			eIcon.Initialize(vue, "", Module).AddClass("mr-2")
-			eIcon.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
+			Dim clickCode As String = $"${ID}_${value}(item)"$
+			eIcon.SetAttrSingle("@click", clickCode)
 			eIcon.SetText(nf.icon)
-			tmp.AddComponent(eIcon.ToString)
+			tmpa.AddComponent(eIcon.ToString)
 			'
-			sb.Append(tmp.ToString)
+			sb.Append(tmpa.ToString)
 			vue.SetMethod(Module, $"${ID}_${value}"$)
 		End Select	
 	Next
@@ -1418,3 +1419,107 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 DataTable.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
+Sub SetVisible(b As Boolean) As VMDataTable
+DataTable.SetVisible(b)
+Return Me
+End Sub
+
+
+'center align columns
+Sub SetCenterAlignColumns(flds As List) As VMDataTable
+	For Each k As String In flds
+		SetColumnAlignment(k, ALIGN_CENTER)
+	Next
+	Return Me
+End Sub
+
+'right align columns
+Sub SetColumnsAlignmentCenter(flds As List) As VMDataTable
+	SetCenterAlignColumns(flds)
+	Return Me
+End Sub
+
+
+'right align columns
+Sub SetColumnsAlignmentRight(flds As List) As VMDataTable
+	SetRightAlignColumns(flds)
+	Return Me
+End Sub
+
+'right align columns
+Sub SetRightAlignColumns(flds As List) As VMDataTable
+	For Each k As String In flds
+		SetColumnAlignment(k, ALIGN_RIGHT)
+	Next
+	Return Me
+End Sub
+
+'set the column type to date for these columns
+Sub SetDateColumns(dates As List) As VMDataTable
+	For Each k As String In dates
+		SetColumnType(k, COLUMN_DATE)
+	Next
+	Return Me
+End Sub
+
+Sub SetColumnsFormatDate(dates As List) As VMDataTable
+	SetDateColumns(dates)
+	Return Me
+End Sub
+
+'set the column type to date time for these columns
+Sub SetDateTimeColumns(dates As List) As VMDataTable
+	For Each k As String In dates
+		SetColumnType(k, COLUMN_DATETIME)
+	Next
+	Return Me
+End Sub
+
+Sub SetColumnsFormatDateTime(dates As List) As VMDataTable
+	SetDateTimeColumns(dates)
+	Return Me
+End Sub
+
+
+'set the column type to date time for these columns
+Sub SetFileSizeColumns(dates As List) As VMDataTable
+	For Each k As String In dates
+		SetColumnType(k, COLUMN_FILESIZE)
+	Next
+	Return Me
+End Sub
+
+Sub SetColumnsFormatFileSize(dates As List) As VMDataTable
+	SetFileSizeColumns(dates)
+	Return Me
+End Sub
+
+
+'set the column type to time for these columns
+Sub SetTimeColumns(dates As List) As VMDataTable
+	For Each k As String In dates
+		SetColumnType(k, COLUMN_TIME)
+	Next
+	Return Me
+End Sub
+
+Sub SetColumnsFormatTime(dates As List) As VMDataTable
+	SetTimeColumns(dates)
+	Return Me
+End Sub
+
+Sub SetColumnsFormatMoney(dates As List) As VMDataTable
+	SetMoneyColumns(dates)
+	Return Me
+End Sub
+
+'set the column type to time for these columns
+Sub SetMoneyColumns(dates As List) As VMDataTable
+	For Each k As String In dates
+		SetColumnType(k, COLUMN_MONEY)
+	Next
+	Return Me
+End Sub
+
+

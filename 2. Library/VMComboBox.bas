@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private ErrorText As String
 End Sub
 
 'initialize the ComboBox
@@ -22,6 +23,67 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	ErrorText = ""
+	Return Me
+End Sub
+
+
+'use an existing state
+Sub SetDataSource(sourceName As String, sourceField As String, displayField As String, returnObject As Boolean) As VMComboBox
+	sourceName = sourceName.tolowercase
+	sourceField = sourceField.ToLowerCase
+	displayField = displayField.ToLowerCase
+	SetItems(sourceName)
+	SetItemText(displayField)
+	SetItemValue(sourceField)
+	SetReturnObject(returnObject)
+	If vue.StateExists(sourceName) = False Then
+		vue.SetData(sourceName, Array())
+	End If
+	Return Me
+End Sub
+
+Sub SetOptions(sourceName As String, options As Map, sourcefield As String, displayfield As String, returnObject As Boolean) As VMComboBox
+	sourceName = sourceName.tolowercase
+	Dim recs As List
+	recs.Initialize
+	For Each k As String In options.Keys
+		Dim v As String = options.Get(k)
+		Dim nrec As Map = CreateMap()
+		nrec.Put(sourcefield, k)
+		nrec.Put(displayfield, v)
+		recs.Add(nrec)
+	Next
+	'save the options
+	vue.SetStateSingle(sourceName, recs)
+	SetItems(sourceName)
+	SetItemText(displayfield)
+	SetItemValue(sourcefield)
+	SetReturnObject(returnObject)
+	Return Me
+End Sub
+
+
+'set required
+Sub SetRequired(varRequired As Boolean) As VMComboBox
+	ComboBox.SetRequired(varRequired)
+	Return Me
+End Sub
+
+
+Sub SetErrorText(Error As String) As VMComboBox
+	ErrorText = Error
+	Return Me
+End Sub
+
+Sub SetString As VMComboBox
+	ComboBox.fieldType = "string"
+	Return Me
+End Sub
+
+
+Sub SetInt As VMComboBox
+	ComboBox.fieldType = "int"
 	Return Me
 End Sub
 
@@ -275,7 +337,7 @@ Sub SetDisableLookup(varDisableLookup As Object) As VMComboBox
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMComboBox
+Sub SetDisabled(varDisabled As Boolean) As VMComboBox
 	ComboBox.SetDisabled(varDisabled)
 	Return Me
 End Sub
@@ -1047,5 +1109,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMComboBox
 ComboBox.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMComboBox
+ComboBox.SetVisible(b)
 Return Me
 End Sub

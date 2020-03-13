@@ -93,6 +93,10 @@ Sub SetDataSource(sourceName As String, sourceField As String, displayField As S
 	Radio.SetAttrSingle(":value", kRow)
 	Radio.SetAttrSingle(":label", dRow)
 	Radio.Pop(RadioGroup)
+	If vue.StateExists(sourceName) = False Then
+		vue.SetData(sourceName, Array())
+	End If
+	
 	Return Me
 End Sub
 
@@ -634,5 +638,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMRadioGroup
 RadioGroup.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMRadioGroup
+RadioGroup.SetVisible(b)
 Return Me
 End Sub

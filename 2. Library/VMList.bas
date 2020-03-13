@@ -143,6 +143,10 @@ End Sub
 
 'define a template to load items from
 Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMList
+	If vue.StateExists(datasource) = False Then
+		vue.SetData(datasource, Array())
+	End If
+	
 	Dim tmp As VMTemplate
 	tmp.Initialize(vue, $"${ID}tmpl"$, Module)
 	tmp.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
@@ -666,5 +670,9 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMList
 List.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMList
+List.SetVisible(b)
 Return Me
 End Sub

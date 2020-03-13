@@ -26,6 +26,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetBorderRadius(br As String) As VMImage
+	If br = "" Then Return Me
+	BindStyleSingle("borderRadius", br)
+	Return Me
+End Sub
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMImage
 	Image.SetRC(sRow, sCol)
@@ -54,6 +60,14 @@ End Sub
 
 Sub BindStyleSingle(prop As String, optm As String) As VMImage
 	Image.BindStyleSingle(prop, optm)
+	Return Me
+End Sub
+
+'set elevation
+Sub SetElevation(varElevation As Object) As VMImage
+	Dim pp As String = $"${ID}Elevation"$
+	vue.SetStateSingle(pp, varElevation)
+	Bind(":elevation", pp)
 	Return Me
 End Sub
 
@@ -124,13 +138,14 @@ Sub AddComponent(scomp As String) As VMImage
 End Sub
 
 'get component
-Sub ToString As String
-	
+Sub ToString As String	
 	Return Image.ToString
 End Sub
 
-Sub SetVModel(k As String) As VMImage
-	Image.SetVModel(k)
+Sub SetVModel(k As String, value As String) As VMImage
+	k = k.tolowercase
+	vue.SetData(k, value)
+	SetSrc(k)	
 	Return Me
 End Sub
 
@@ -304,11 +319,9 @@ Sub SetSizes(varSizes As Object) As VMImage
 	Return Me
 End Sub
 
-'set src
-Sub SetSrc(varSrc As Object) As VMImage
-	Dim pp As String = $"${ID}Src"$
-	vue.SetStateSingle(pp, varSrc)
-	Image.Bind(":src", pp)
+'set src via vmodel
+private Sub SetSrc(varSrc As String) As VMImage
+	Image.Bind(":src", varSrc)
 	Return Me
 End Sub
 
@@ -446,5 +459,9 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMImage
 Image.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMImage
+Image.SetVisible(b)
 Return Me
 End Sub

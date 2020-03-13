@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private ErrorText As String
 End Sub
 
 'initialize the Combo
@@ -23,6 +24,24 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Combo.typeOf = "selectbox"
+	ErrorText = ""
+	Return Me
+End Sub
+
+
+Sub SetErrorText(Error As String) As VMSelect
+	ErrorText = Error
+	Return Me
+End Sub
+
+Sub SetString As VMSelect
+	Combo.fieldType = "string"
+	Return Me
+End Sub
+
+
+Sub SetInt As VMSelect
+	Combo.fieldType = "int"
 	Return Me
 End Sub
 
@@ -85,6 +104,9 @@ Sub SetDataSource(sourceName As String, sourceField As String, displayField As S
 	SetItemText(displayField)
 	SetItemValue(sourceField)
 	SetReturnObject(returnObject)
+	If vue.StateExists(sourceName) = False Then
+		vue.SetData(sourceName, Array())
+	End If
 	Return Me
 End Sub
 
@@ -1084,5 +1106,10 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSelect
 Combo.BuildModel(mprops, mstyles, lclasses, loose)
+Return Me
+End Sub
+
+Sub SetVisible(b As Boolean) As VMSelect
+Combo.SetVisible(b)
 Return Me
 End Sub

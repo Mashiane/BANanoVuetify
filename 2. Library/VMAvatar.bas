@@ -27,7 +27,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Icon.Initialize(vue, $"${ID}icon"$, Module)
-	Image.Initialize(vue, $"${ID}image"$, Module) 
+	Image.Initialize(vue, $"${ID}image"$, Module)
 	hasIcon = False
 	hasImage = False
 	Return Me
@@ -145,7 +145,8 @@ End Sub
 
 Sub SetImage(url As String, alt As String, props As Map, classes As List, attributes As List) As VMAvatar
 	hasImage = True
-	Image.SetSrc(url).SetAlt(alt)
+	Image.SetVModel($"${ID}image"$, url) 
+	Image.SetAlt(alt)
 	If attributes <> Null Then
 		Image.SetAttributes(attributes)
 	End If
@@ -412,4 +413,8 @@ End Sub
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAvatar
 	Avatar.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
+End Sub
+Sub SetVisible(b As Boolean) As VMAvatar
+Avatar.SetVisible(b)
+Return Me
 End Sub
