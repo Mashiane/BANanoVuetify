@@ -1,0 +1,80 @@
+Migrating to BANanoVuetify from BANanoVueMaterial
+
+1. NavBar
+.SetHasBackButton - removed
+.SetTitle - replace with .UpdateTitle as .SetTitle has been built in already
+.Show - this is the default method, can be removed, only use .Hide when you dont want to hide navbar
+
+2. Drawer
+
+.SetTitle no longer exists
+.UpdateTitle no longer exists
+.SetPersistentFill no longer exists
+
+- previously we had to create single events for each drawer item, now one event is returned where we get the id of the selected item.
+
+The new event is draweritems_click(e as bananoevent)
+
+Example:
+
+vm.Drawer.AddItem("page1","done", "Page 1")
+	vm.Drawer.AddItem("page2","done_all", "Page 2")
+
+'*IMPORTANT
+Sub draweritems_click(e As BANanoEvent)
+	'get the id from the event
+	Dim elID As String = vm.GetIDFromEvent(e)
+	Select Case elID
+	Case "page1"
+		'update the title of the navigation bar
+		vm.navbar.UpdateTitle("Navigation - Page 1")
+		'show page 1
+		vm.showpage(modPage1.name)
+		'hide the navbar button
+		vm.Hide("npage1")
+		'show the navbar button
+		vm.Show("npage2")
+	Case "page2"
+		'update the title of the navigation bar
+		vm.navbar.UpdateTitle("Navigation - Page 2")
+		'show page 2
+		vm.showpage(modPage2.name)
+		vm.Show("npage1")
+		vm.Hide("npage2")
+	End Select
+End Sub
+
+3. Container
+
+the Grid object is incorporated into the container so you can remove .Grid calls
+cont.Grid.SetBorder > cont.SetBorderRC
+
+4. Dialog
+
+.SetCloseOnEsc no longer exists
+.SetClickOutsideToClose no longer exists
+.SetBackdrop is included for backward compatibility use .SetHideOverlay for future
+.SetFullScreen makes the dialog fullscreen in all devices (prev was only for small devices), use it in place of .SetMaximise
+
+.AddControl has been extended to receive an extra parameter. This was necessary to remove the VMInputControl
+VMInputControl class no longer exists
+.SetScrollBar no longer exists for Dialogs
+In NewDatePicker, bOpenOnFocus and bImmediately parameters have been removed.
+VMText is now VMTextField
+.Container.AddControlS - an extra parameter has been added just like .AddControl above.
+
+5. Gijgo Table
+
+The gijgo table is no longer used as we now have VMDataTable.
+.CreateGijgoTable is now .CreateDataTable
+When editing tables with _edit(e As BANanoEvent), this now should be _edit(item As Map)
+When deleting on the tables with _delete(e As BANanoEvent), this now should be _delete(item As Map)
+The .Refresh method for the DataTable is no longer applicable and has been removed
+.Container.SetPosition becomes .Container.SetDevicePosition
+.SetVisible(False) becomes .Hide
+.SetVisible(True) becomes .Show - this is the default for all components
+.Container.AddControlOnly becomes .Container.AddControl1
+
+6. Toolbar
+.SetTitle has been changed to AddTitle
+.AddButton has been changed to AddButton1
