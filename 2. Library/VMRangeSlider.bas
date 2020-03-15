@@ -5,638 +5,67 @@ Type=Class
 Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
+'https://nightcatsama.github.io/vue-slider-component
 Sub Class_Globals
 	Public RangeSlider As VMElement
 	Public ID As String
 	Private vue As BANanoVue
-	Private BANano As BANano  'ignore
+	Private InputInt As VMElement
+	Private lbl As VMLabel
+	Private vmodelText As String
+	Private labelOnTop As Boolean
+	Private module As Object
 	Private DesignMode As Boolean
-	Private Module As Object
-	Private xmodel As String
+	Private showLabel As Boolean
+	Private BANano As BANano  'ignore
 End Sub
 
-'initialize the RangeSlider
+#if css
+	.vue-slider-dot-tooltip-inner { background-color: #3498db !important; }
+	.vue-slider-dot-handle::after { background-color: rgba(52, 152, 219, 0.36) !important; }
+	.vue-slider-dot-handle { background-color: #3498db !important; }
+	.vue-slider-mark-step { background-color: #3498db !important; }
+	.vue-slider-process { background-color: #3498db !important; }
+	.vue-slider-rail { background-color: #ccc !important; }
+	.vue-slider-mark-step-active { background-color: #bda1f3 !important; }
+#End If
+
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMRangeSlider
-	ID = sid.tolowercase
-	RangeSlider.Initialize(v, ID)
-	RangeSlider.SetTag("v-range-slider")
-	DesignMode = False
-	Module = eventHandler
+	ID = sid.ToLowerCase
 	vue = v
-	xmodel = ""
-	Return Me
-End Sub
-
-'set the row and column position
-Sub SetRC(sRow As String, sCol As String) As VMRangeSlider
-	RangeSlider.SetRC(sRow, sCol)
-	Return Me
-End Sub
-
-'set the offsets for this item
-Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMRangeSlider
-	RangeSlider.SetDeviceOffsets(OS, OM, OL, OX)
-	Return Me
-End Sub
-
-'set the sizes for this item
-Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMRangeSlider
-	RangeSlider.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-'set the position: row and column and sizes
-Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMRangeSlider
-	SetRC(srow, scell)
-	SetDeviceSizes(small,medium, large, xlarge)
-	Return Me
-End Sub
-
-Sub SetAttrLoose(loose As String) As VMRangeSlider
-	RangeSlider.SetAttrLoose(loose)
-	Return Me
-End Sub
-
-Sub SetAttributes(attrs As List) As VMRangeSlider
-	For Each stra As String In attrs
-		SetAttrLoose(stra)
-	Next
-	Return Me
-End Sub
-
-Sub SetRange(iStart As Int, iEnd As Int) As VMRangeSlider
-	If xmodel = "" Then
-		Log($"VMRangeSlier.SetRange - you need to set the v-model for '${ID}'"$)
-	End If
-	Dim lValue As List
-	lValue.Initialize 
-	lValue.Add(iStart)
-	lValue.Add(iEnd)
-	vue.SetStateList(xmodel, lValue)
-	Return Me
-End Sub
-
-'apply a theme to an element
-Sub UseTheme(themeName As String) As VMRangeSlider
-	themeName = themeName.ToLowerCase
-	Dim themes As Map = vue.themes
-	If themes.ContainsKey(themeName) Then
-		Dim sclass As String = themes.Get(themeName)
-		AddClass(sclass)
-	End If
+	module = eventHandler
+	RangeSlider.Initialize(vue, ID).SetTag("vue-slider")
+	InputInt.Initialize(v,$"${ID}field"$).SetTag("div")
+	lbl.Initialize(vue, $"${ID}label"$)
+	labelOnTop = True
+	DesignMode = False
+	showLabel = False
+	SetVModel(ID)
+	SetLazy(True)		' only update when the drag is over.
+	SetEnableCross(False)
+	SetOnFocus
+	SetOnBlur
 	Return Me
 End Sub
 
 
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMRangeSlider
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	RangeSlider.Bind(":color", pp)
-	Return Me
-End Sub
-
-
-'set required
-Sub SetRequired(varRequired As Boolean) As VMRangeSlider
-	RangeSlider.SetRequired(varRequired)
-	Return Me
-End Sub
-
-
-'get component
-Sub ToString As String
-	Return RangeSlider.ToString
-End Sub
-
-Sub SetVModel(k As String) As VMRangeSlider
-	k = k.ToLowerCase
-	xmodel = k
-	vue.SetStateSingle(k, 0)
-	RangeSlider.SetVModel(k)
-	Return Me
-End Sub
-
-Sub SetVIf(vif As Object) As VMRangeSlider
-	RangeSlider.SetVIf(vif)
-	Return Me
-End Sub
-
-Sub SetVShow(vif As Object) As VMRangeSlider
-	RangeSlider.SetVShow(vif)
-	Return Me
-End Sub
-
-'add to app template
-Sub Render
-	vue.SetTemplate(ToString)
-End Sub
-
-'add a child
-Sub AddChild(child As VMElement) As VMRangeSlider
-	Dim childHTML As String = child.ToString
-	RangeSlider.SetText(childHTML)
-	Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMRangeSlider
-	RangeSlider.SetText(t)
-	Return Me
-End Sub
-
-'add to parent
-Sub Pop(p As VMElement)
-	p.SetText(ToString)
-End Sub
-
-'add a class
-Sub AddClass(c As String) As VMRangeSlider
-	RangeSlider.AddClass(c)
-	Return Me
-End Sub
-
-'set an attribute
-Sub SetAttr(attr As Map) As VMRangeSlider
-	RangeSlider.SetAttr(attr)
-	Return Me
-End Sub
-
-'set style
-Sub SetStyle(sm As Map) As VMRangeSlider
-	RangeSlider.SetStyle(sm)
-	Return Me
-End Sub
-
-'add children
-Sub AddChildren(children As List)
-	For Each childx As VMElement In children
-		AddChild(childx)
-	Next
-End Sub
-
-'set append-icon
-Sub SetAppendIcon(varAppendIcon As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}AppendIcon"$
-	vue.SetStateSingle(pp, varAppendIcon)
-	RangeSlider.Bind(":append-icon", pp)
-	Return Me
-End Sub
-
-'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}BackgroundColor"$
-	vue.SetStateSingle(pp, varBackgroundColor)
-	RangeSlider.Bind(":background-color", pp)
-	Return Me
-End Sub
-
-'set color
-Sub SetColor(varColor As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, varColor)
-	RangeSlider.Bind(":color", pp)
-	Return Me
-End Sub
-
-'set dark
-Sub SetDark(varDark As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	RangeSlider.Bind(":dark", pp)
-	Return Me
-End Sub
-
-'set dense
-Sub SetDense(varDense As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Dense"$
-	vue.SetStateSingle(pp, varDense)
-	RangeSlider.Bind(":dense", pp)
-	Return Me
-End Sub
-
-'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMRangeSlider
-	RangeSlider.SetDisabled(varDisabled)
-	Return Me
-End Sub
-
-'set error
-Sub SetError(varError As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Error"$
-	vue.SetStateSingle(pp, varError)
-	RangeSlider.Bind(":error", pp)
-	Return Me
-End Sub
-
-'set error-count
-Sub SetErrorCount(varErrorCount As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}ErrorCount"$
-	vue.SetStateSingle(pp, varErrorCount)
-	RangeSlider.Bind(":error-count", pp)
-	Return Me
-End Sub
-
-'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}ErrorMessages"$
-	vue.SetStateSingle(pp, varErrorMessages)
-	RangeSlider.Bind(":error-messages", pp)
-	Return Me
-End Sub
-
-'set height
-Sub SetHeight(varHeight As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Height"$
-	vue.SetStateSingle(pp, varHeight)
-	RangeSlider.Bind(":height", pp)
-	Return Me
-End Sub
-
-'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}HideDetails"$
-	vue.SetStateSingle(pp, varHideDetails)
-	RangeSlider.Bind(":hide-details", pp)
-	Return Me
-End Sub
-
-'set hint
-Sub SetHint(varHint As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Hint"$
-	vue.SetStateSingle(pp, varHint)
-	RangeSlider.Bind(":hint", pp)
-	Return Me
-End Sub
-
-'set id
-Sub SetId(varId As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Id"$
-	vue.SetStateSingle(pp, varId)
-	RangeSlider.Bind(":id", pp)
-	Return Me
-End Sub
-
-'set inverse-label
-Sub SetInverseLabel(varInverseLabel As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}InverseLabel"$
-	vue.SetStateSingle(pp, varInverseLabel)
-	RangeSlider.Bind(":inverse-label", pp)
-	Return Me
-End Sub
-
-'set label
-Sub SetLabel(varLabel As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Label"$
-	vue.SetStateSingle(pp, varLabel)
-	RangeSlider.Bind(":label", pp)
-	Return Me
-End Sub
-
-'set light
-Sub SetLight(varLight As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Light"$
-	vue.SetStateSingle(pp, varLight)
-	RangeSlider.Bind(":light", pp)
-	Return Me
-End Sub
-
-'set loader-height
-Sub SetLoaderHeight(varLoaderHeight As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}LoaderHeight"$
-	vue.SetStateSingle(pp, varLoaderHeight)
-	RangeSlider.Bind(":loader-height", pp)
-	Return Me
-End Sub
-
-'set loading
-Sub SetLoading(varLoading As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Loading"$
-	vue.SetStateSingle(pp, varLoading)
-	RangeSlider.Bind(":loading", pp)
-	Return Me
-End Sub
-
-'set max
-Sub SetMax(varMax As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Max"$
-	vue.SetStateSingle(pp, varMax)
-	RangeSlider.Bind(":max", pp)
-	Return Me
-End Sub
-
-'set messages
-Sub SetMessages(varMessages As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Messages"$
-	vue.SetStateSingle(pp, varMessages)
-	RangeSlider.Bind(":messages", pp)
-	Return Me
-End Sub
-
-'set min
-Sub SetMin(varMin As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Min"$
-	vue.SetStateSingle(pp, varMin)
-	RangeSlider.Bind(":min", pp)
-	Return Me
-End Sub
-
-'set persistent-hint
-Sub SetPersistentHint(varPersistentHint As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}PersistentHint"$
-	vue.SetStateSingle(pp, varPersistentHint)
-	RangeSlider.Bind(":persistent-hint", pp)
-	Return Me
-End Sub
-
-'set prepend-icon
-Sub SetPrependIcon(varPrependIcon As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}PrependIcon"$
-	vue.SetStateSingle(pp, varPrependIcon)
-	RangeSlider.Bind(":prepend-icon", pp)
-	Return Me
-End Sub
-
-'set readonly
-Sub SetReadonly(varReadonly As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Readonly"$
-	vue.SetStateSingle(pp, varReadonly)
-	RangeSlider.Bind(":readonly", pp)
-	Return Me
-End Sub
-
-'set rules
-Sub SetRules(varRules As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
-	RangeSlider.Bind(":rules", pp)
-	Return Me
-End Sub
-
-'set step
-Sub SetStep(varStep As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Step"$
-	vue.SetStateSingle(pp, varStep)
-	RangeSlider.Bind(":step", pp)
-	Return Me
-End Sub
-
-'set success
-Sub SetSuccess(varSuccess As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Success"$
-	vue.SetStateSingle(pp, varSuccess)
-	RangeSlider.Bind(":success", pp)
-	Return Me
-End Sub
-
-'set success-messages
-Sub SetSuccessMessages(varSuccessMessages As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}SuccessMessages"$
-	vue.SetStateSingle(pp, varSuccessMessages)
-	RangeSlider.Bind(":success-messages", pp)
-	Return Me
-End Sub
-
-'set thumb-color
-Sub SetThumbColor(varThumbColor As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}ThumbColor"$
-	vue.SetStateSingle(pp, varThumbColor)
-	RangeSlider.Bind(":thumb-color", pp)
-	Return Me
-End Sub
-
-'set thumb-label
-Sub SetThumbLabel(varThumbLabel As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}ThumbLabel"$
-	vue.SetStateSingle(pp, varThumbLabel)
-	RangeSlider.Bind(":thumb-label", pp)
-	Return Me
-End Sub
-
-'set thumb-size
-Sub SetThumbSize(varThumbSize As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}ThumbSize"$
-	vue.SetStateSingle(pp, varThumbSize)
-	RangeSlider.Bind(":thumb-size", pp)
-	Return Me
-End Sub
-
-'set tick-labels
-Sub SetTickLabels(varTickLabels As String) As VMRangeSlider
-	varTickLabels = varTickLabels.tolowercase
-	RangeSlider.SetAttrSingle(":tick-labels", varTickLabels)
-	Return Me
-End Sub
-
-'set tick-size
-Sub SetTickSize(varTickSize As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}TickSize"$
-	vue.SetStateSingle(pp, varTickSize)
-	RangeSlider.Bind(":tick-size", pp)
-	Return Me
-End Sub
-
-'set ticks
-Sub SetTicks(varTicks As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Ticks"$
-	vue.SetStateSingle(pp, varTicks)
-	RangeSlider.Bind(":ticks", pp)
-	Return Me
-End Sub
-
-'set track-color
-Sub SetTrackColor(varTrackColor As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}TrackColor"$
-	vue.SetStateSingle(pp, varTrackColor)
-	RangeSlider.Bind(":track-color", pp)
-	Return Me
-End Sub
-
-'set track-fill-color
-Sub SetTrackFillColor(varTrackFillColor As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}TrackFillColor"$
-	vue.SetStateSingle(pp, varTrackFillColor)
-	RangeSlider.Bind(":track-fill-color", pp)
-	Return Me
-End Sub
-
-'set validate-on-blur
-Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}ValidateOnBlur"$
-	vue.SetStateSingle(pp, varValidateOnBlur)
-	RangeSlider.Bind(":validate-on-blur", pp)
-	Return Me
-End Sub
-
-'set value
-Sub SetValue(varValue As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	RangeSlider.Bind(":value", pp)
-	Return Me
-End Sub
-
-'set vertical
-Sub SetVertical(varVertical As Object) As VMRangeSlider
-	Dim pp As String = $"${ID}Vertical"$
-	vue.SetStateSingle(pp, varVertical)
-	RangeSlider.Bind(":vertical", pp)
-	Return Me
-End Sub
-
-'
-Sub SetSlotAppend(b As Boolean) As VMRangeSlider    'ignore
-	SetAttr(CreateMap("slot": "append"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotMessage(b As Boolean) As VMRangeSlider    'ignore
-	SetAttr(CreateMap("slot": "message"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotPrepend(b As Boolean) As VMRangeSlider    'ignore
-	SetAttr(CreateMap("slot": "prepend"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotProgress(b As Boolean) As VMRangeSlider    'ignore
-	SetAttr(CreateMap("slot": "progress"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotThumbLabel(b As Boolean) As VMRangeSlider    'ignore
-	SetAttr(CreateMap("slot": "thumb-label"))
-	Return Me
-End Sub
-
-'
-Sub SetOnClick(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+private Sub SetOnFocus As VMRangeSlider
+	Dim oninput As String = $"${ID}_focus"$
+	If SubExists(module, oninput) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
+	Dim cb As BANanoObject = BANano.CallBack(module, oninput, Array(e))
+	SetAttr(CreateMap("@focus":oninput))
+	vue.SetCallBack(oninput, cb)
 	Return Me
 End Sub
 
-'
-Sub SetOnClickAppend(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+private Sub SetOnBlur As VMRangeSlider
+	Dim oninput As String = $"${ID}_blur"$
+	If SubExists(module, oninput) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:append": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnClickPrepend(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:prepend": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnEnd(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:end": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousedown(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mousedown": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseup(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseup": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnStart(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:start": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnUpdateError(methodName As String) As VMRangeSlider
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:update:error": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-
-Sub Hide As VMRangeSlider
-	RangeSlider.SetVisible(False)
-	Return Me
-End Sub
-
-Sub Show As VMRangeSlider
-	RangeSlider.SetVisible(True)
-	Return Me
-End Sub
-
-Sub Enable As VMRangeSlider
-	RangeSlider.Enable(True)
-	Return Me
-End Sub
-
-Sub Disable As VMRangeSlider
-	RangeSlider.Disable(True)
-	Return Me
-End Sub
-
-
-'bind a property to state
-Sub Bind(prop As String, stateprop As String) As VMRangeSlider
-	stateprop = stateprop.ToLowerCase
-	SetAttrSingle(prop, stateprop)
+	Dim cb As BANanoObject = BANano.CallBack(module, oninput, Array(e))
+	SetAttr(CreateMap("@blur":oninput))
+	vue.SetCallBack(oninput, cb)
 	Return Me
 End Sub
 
@@ -646,6 +75,206 @@ public Sub RemoveAttr(sName As String) As VMRangeSlider
 	Return Me
 End Sub
 
+Sub SetDotSize(dotSize As Int) As VMRangeSlider
+	Dim pp As String = $"${ID}dotsize"$
+	vue.SetStateSingle(pp, dotSize)
+	RangeSlider.SetAttrSingle(":dotSize", pp)
+	Return Me
+End Sub
+
+Sub SetWidth(width As String) As VMRangeSlider
+	Dim pp As String = $"${ID}width"$
+	vue.SetStateSingle(pp, width)
+	RangeSlider.SetAttrSingle(":width", pp)
+	Return Me
+End Sub
+
+
+Sub SetSilent(silent As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}silent"$
+	vue.SetStateSingle(pp, silent)
+	RangeSlider.SetAttrSingle(":silent", pp)
+	Return Me
+End Sub
+
+
+Sub SetFixed(fixed As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}fixed"$
+	vue.SetStateSingle(pp, fixed)
+	RangeSlider.SetAttrSingle(":fixed", pp)
+	Return Me
+End Sub
+
+Sub SetDragOnClick(dragOnClick As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}dragonclick"$
+	vue.SetStateSingle(pp, dragOnClick)
+	RangeSlider.SetAttrSingle(":dragOnClick", pp)
+	Return Me
+End Sub
+
+
+Sub SetAdSorb(adsorb As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}adsorb"$
+	vue.SetStateSingle(pp, adsorb)
+	RangeSlider.SetAttrSingle(":adsorb", pp)
+	Return Me
+End Sub
+
+
+Sub SetLazy(lazy As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}lazy"$
+	vue.SetStateSingle(pp, lazy)
+	RangeSlider.SetAttrSingle(":lazy", pp)
+	Return Me
+End Sub
+
+'enable values to cross for the range
+Sub SetEnableCross(enableCross As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}enableCross"$
+	vue.SetStateSingle(pp, enableCross)
+	RangeSlider.Bind(":enable-cross", pp)
+	Return Me
+End Sub
+
+Sub SetTooltip(tooltip As String) As VMRangeSlider
+	Dim pp As String = $"${ID}tooltip"$
+	vue.SetStateSingle(pp, tooltip)
+	RangeSlider.SetAttrSingle(":tooltip", pp)
+	Return Me
+End Sub
+
+Sub SetTooltipPlacement(tooltipPlacement As String) As VMRangeSlider
+	Dim pp As String = $"${ID}tooltipplacement"$
+	vue.SetStateSingle(pp, tooltipPlacement)
+	RangeSlider.SetAttrSingle(":tooltipPlacement", pp)
+	Return Me
+End Sub
+
+Sub SetTooltipFormatter(tooltipFormatter As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}tooltipFormatter"$
+	vue.SetStateSingle(pp, tooltipFormatter)
+	RangeSlider.Bind(":tooltip-formatter", pp)
+	Return Me
+End Sub
+
+
+Sub SetMinRange(minRange As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}minRange"$
+	vue.SetStateSingle(pp, minRange)
+	RangeSlider.Bind(":min-range", pp)
+	Return Me
+End Sub
+
+Sub SetMaxRange(maxRange As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}maxRange"$
+	vue.SetStateSingle(pp, maxRange)
+	RangeSlider.Bind(":max-range", pp)
+	Return Me
+End Sub
+
+Sub SetTooltipPlacementTop As VMRangeSlider
+	SetTooltipPlacement("top")
+	Return Me
+End Sub
+
+Sub SetTooltipPlacementBottom As VMRangeSlider
+	SetTooltipPlacement("bottom")
+	Return Me
+End Sub
+
+Sub SetTooltipPlacementRight As VMRangeSlider
+	SetTooltipPlacement("right")
+	Return Me
+End Sub
+
+Sub SetTooltipPlacementLeft As VMRangeSlider
+	SetTooltipPlacement("left")
+	Return Me
+End Sub
+
+
+Sub SetTooltipNone As VMRangeSlider
+	SetTooltip("none")
+	Return Me
+End Sub
+
+Sub SetTooltipHover As VMRangeSlider
+	SetTooltip("hover")
+	Return Me
+End Sub
+
+Sub SetTooltipFocus As VMRangeSlider
+	SetTooltip("focus")
+	Return Me
+End Sub
+
+Sub SetTooltipActive As VMRangeSlider
+	SetTooltip("active")
+	Return Me
+End Sub
+
+Sub SetTooltipAlways As VMRangeSlider
+	SetTooltip("always")
+	Return Me
+End Sub
+
+
+Sub SetContained(contained As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}contained"$
+	vue.SetStateSingle(pp, contained)
+	RangeSlider.SetAttrSingle(":contained", pp)
+	Return Me
+End Sub
+
+'hide label markers
+Sub SetHideLabel(hideLabel As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}hideLabel"$
+	vue.SetStateSingle(pp, hideLabel)
+	RangeSlider.Bind(":hideLabel", pp)
+	Return Me
+End Sub
+
+
+Sub SetProcess(process As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}process"$
+	vue.SetStateSingle(pp, process)
+	RangeSlider.Bind(":process", pp)
+	Return Me
+End Sub
+
+
+'
+Sub SetIncluded(included As Boolean) As VMRangeSlider
+	Dim pp As String = $"${ID}included"$
+	vue.SetStateSingle(pp, included)
+	RangeSlider.Bind(":included", pp)
+	Return Me
+End Sub
+
+Sub SetData(data As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}data"$
+	vue.SetStateSingle(pp, data)
+	RangeSlider.SetAttrSingle(":data", pp)
+	Return Me
+End Sub
+
+
+Sub SetMarks(data As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}marks"$
+	vue.SetStateSingle(pp, data)
+	RangeSlider.SetAttrSingle(":marks", pp)
+	Return Me
+End Sub
+
+
+Sub SetShowMarks As VMRangeSlider
+	Dim pp As String = $"${ID}marks"$
+	vue.SetStateSingle(pp, True)
+	RangeSlider.SetAttrSingle(":marks", pp)
+	Return Me
+End Sub
+
+
 'set padding
 Sub SetPaddingAll(p As String) As VMRangeSlider
 	RangeSlider.SetPaddingAll(p)
@@ -654,6 +283,38 @@ End Sub
 
 Sub SetMarginAll(p As String) As VMRangeSlider
 	RangeSlider.setmarginall(p)
+	Return Me
+End Sub
+
+Sub SetDirection(direction As String) As VMRangeSlider
+	Dim pp As String = $"${ID}direction"$
+	vue.SetStateSingle(pp, direction)
+	RangeSlider.SetAttrSingle(":direction", pp)
+	Return Me
+End Sub
+
+Sub SetDirectionLTR As VMRangeSlider
+	SetDirection("ltr")
+	Return Me
+End Sub
+
+Sub SetDirectionBTT As VMRangeSlider
+	SetDirection("btt")
+	Return Me
+End Sub
+
+Sub SetDirectionTTB As VMRangeSlider
+	SetDirection("ttb")
+	Return Me
+End Sub
+
+Sub SetDirectionRTL As VMRangeSlider
+	SetDirection("rtl")
+	Return Me
+End Sub
+
+Sub SetShowLabel(b As Boolean) As VMRangeSlider
+	showLabel = b
 	Return Me
 End Sub
 
@@ -668,34 +329,118 @@ Sub SetTabIndex(ti As String) As VMRangeSlider
 	Return Me
 End Sub
 
+Sub SetLabelOnTop(b As Boolean) As VMRangeSlider
+	labelOnTop = b
+	Return Me
+End Sub
+
+Sub SetLabel(lblText As String) As VMRangeSlider
+	lbl.SetText(lblText)
+	Return Me
+End Sub
+
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMRangeSlider
-	RangeSlider.SetName(varName, bbind)
+Sub SetName(varName As Object, bind As Boolean) As VMRangeSlider
+	RangeSlider.SetName(varName, bind)
+	Return Me
+End Sub
+
+Sub SetMin(minv As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}min"$
+	vue.SetStateSingle(pp, minv)
+	RangeSlider.SetAttrSingle(":min", pp)
 	Return Me
 End Sub
 
 
-Sub SetStyleSingle(prop As String, value As String) As VMRangeSlider
-	RangeSlider.SetStyleSingle(prop, value)
+Sub SetMax(maxv As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}max"$
+	vue.SetStateSingle(pp, maxv)
+	RangeSlider.SetAttrSingle(":max", pp)
 	Return Me
 End Sub
 
-Sub SetAttrSingle(prop As String, value As String) As VMRangeSlider
-	RangeSlider.SetAttrSingle(prop, value)
+
+Sub SetInterval(interval As Object) As VMRangeSlider
+	Dim pp As String = $"${ID}interval"$
+	vue.SetStateSingle(pp, interval)
+	RangeSlider.SetAttrSingle(":interval", pp)
 	Return Me
+End Sub
+
+
+Sub SetDisabled(b As Boolean) As VMRangeSlider
+	RangeSlider.SetDisabled(b)
+	Return Me
+End Sub
+
+Sub SetVIf(vif As Object) As VMRangeSlider
+	RangeSlider.SetVIf(vif)
+	Return Me
+End Sub
+
+Sub SetVShow(vif As Object) As VMRangeSlider
+	RangeSlider.SetVShow(vif)
+	Return Me
+End Sub
+
+Sub SetValue(v As Object) As VMRangeSlider
+	vue.SetStateSingle(vmodelText, v)
+	Return Me
+End Sub
+
+'set a range of values
+Sub SetValueMulti(startv As Object, endv As Object) As VMRangeSlider
+	Dim vals As List
+	vals.Initialize
+	vals.Add(startv)
+	vals.Add(endv)
+	SetValue(vals)
+	Return Me
+End Sub
+
+private Sub SetVModel(k As String) As VMRangeSlider
+	RangeSlider.SetVModel(k)
+	vmodelText = k
+	Return Me
+End Sub
+
+'add a class
+Sub AddClass(c As String) As VMRangeSlider
+	RangeSlider.AddClass(c)
+	Return Me
+End Sub
+
+
+Sub SetStyle(m As Map) As VMRangeSlider
+	InputInt.SetStyle(m)
+	Return Me
+End Sub
+
+'set an attribute
+Sub SetAttr(attr As Map) As VMRangeSlider
+	RangeSlider.SetAttr(attr)
+	Return Me
+End Sub
+
+Sub ToString As String
+	lbl.SetDesignMode(DesignMode)
+	InputInt.SetDesignMode(DesignMode)
+	If labelOnTop Then InputInt.AddClass("dontwrap")
+	If showLabel Then lbl.Pop(InputInt)
+	RangeSlider.Pop(InputInt)
+	Return InputInt.tostring
+End Sub
+
+Sub Render
+	vue.SetTemplate(ToString)
+End Sub
+
+Sub Pop(p As VMElement)
+	p.SetText(ToString)
 End Sub
 
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
-End Sub
-
-
-Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMRangeSlider
-RangeSlider.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMRangeSlider
-RangeSlider.SetVisible(b)
-Return Me
 End Sub

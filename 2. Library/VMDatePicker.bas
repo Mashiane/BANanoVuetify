@@ -49,6 +49,12 @@ Sub SetDate As VMDatePicker
 	Return Me
 End Sub
 
+'backward compatibility
+Sub SetInvalidMessage(ErrText As String) As VMDatePicker
+	ErrorText = ErrText
+	Return Me
+End Sub
+
 Sub SetErrorText(Error As String) As VMDatePicker
 	ErrorText = Error
 	Return Me

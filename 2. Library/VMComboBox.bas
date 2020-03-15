@@ -70,6 +70,11 @@ Sub SetRequired(varRequired As Boolean) As VMComboBox
 	Return Me
 End Sub
 
+'backward compatibility
+Sub SetInvalidMessage(ErrText As String) As VMComboBox
+	ErrorText = ErrText
+	Return Me
+End Sub
 
 Sub SetErrorText(Error As String) As VMComboBox
 	ErrorText = Error

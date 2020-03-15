@@ -27,6 +27,7 @@ Sub Code
 	'
 	expenseType = vm.CreateDataTable("expensetype", "id", Me)
 	expenseType.SetTitle("Expense Types")
+	expenseType.AddNew("btnNewExpenseType", "mdi-plus", "Add a new expense type")
 	expenseType.AddColumn("text","Name")   ' 20
 	expenseType.AddColumn("description","Description")   '100
 	expenseType.AddEditThrash
@@ -60,6 +61,10 @@ Sub Add
 	mdlExpenseType.Container.SetDefaults
 	mdlExpenseType.SetTitle("New Expense Type")
 	vm.ShowDialog("mdlExpenseType")
+End Sub
+
+Sub btnNewExpenseType_click(e As BANanoEvent)
+	Add
 End Sub
 
 'load all existing expense types
@@ -151,4 +156,24 @@ Sub expensetype_delete(rec As Map)
 	'indicate confirm dialog
 	vm.ShowConfirm("delete_expensetype", $"Confirm Delete: ${stext}"$, _
 	"Are you sure that you want to delete this expense type. You will not be able to undo your actions. Continue?","Ok","Cancel")
+End Sub
+
+Sub Delete
+	'get the expense type to be deleted
+	Dim sid As String = vm.getstate("expensetypeid", "")
+	If sid = "" Then Return
+	'connect to the database
+	Dim dbsql As BANanoMySQL
+	dbsql.Initialize(Main.dbase, "expensetypes", "id")
+	dbsql.Delete(sid)
+	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
+	dbsql.FromJSON
+	If dbsql.OK Then
+		vm.ShowSnackBar("Expense Type deleted successfully!")
+		'refresh the table listing
+		Refresh
+	Else
+		Log("phIndex.confirm_ok.delete_expensetype: Error - " & dbsql.error)
+		vm.ShowSnackBar(dbsql.error)
+	End If
 End Sub

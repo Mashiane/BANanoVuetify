@@ -28,6 +28,7 @@ Sub Class_Globals
 	Public COLUMN_EDIT As String = "edit"
 	Public COLUMN_DELETE As String = "delete"
 	Public COLUMN_ACTION As String = "action"
+	
 	'alignment
 	Public ALIGN_CENTER As String = "center"
 	Public ALIGN_RIGHT As String = "end"
@@ -164,7 +165,7 @@ Sub AddMenuV
 End Sub
 
 Sub AddClone
-	AddIcon("clone", "Clone", "done_all")
+	AddIcon("clone","Clone","done_all")
 End Sub
 
 Sub AddPrint
@@ -466,20 +467,24 @@ private Sub BuildControls
 			sb.Append(tmpd.ToString)
 			vue.SetMethod(Module, $"${ID}_delete"$)
 		Case COLUMN_ACTION
+			Dim methodName As String = $"${ID}_${value}"$
+			'
 			Dim tmpa As VMTemplate
 			tmpa.Initialize(vue, "" , Module)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
 			tmpa.SetAttrLoose(sline)
 			'
-			Dim eIcon As VMIcon
-			eIcon.Initialize(vue, "", Module).AddClass("mr-2")
-			Dim clickCode As String = $"${ID}_${value}(item)"$
-			eIcon.SetAttrSingle("@click", clickCode)
-			eIcon.SetText(nf.icon)
-			tmpa.AddComponent(eIcon.ToString)
+			Dim aIcon As VMIcon
+			aIcon.Initialize(vue, "", Module).AddClass("mr-2")
+			aIcon.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
+			aIcon.SetText(nf.icon)
+			tmpa.AddComponent(aIcon.ToString)
 			'
 			sb.Append(tmpa.ToString)
-			vue.SetMethod(Module, $"${ID}_${value}"$)
+			
+			Dim item As Map
+			Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
+			vue.SetCallBack(methodName, cb)
 		End Select	
 	Next
 	DataTable.SetText(sb.ToString)
@@ -1255,12 +1260,12 @@ End Sub
 Sub SetOnUpdateSortDesc(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
-Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-SetAttr(CreateMap("v-on:update:sort-desc": methodName))
-'add to methods
-		vue.SetCallBack(methodName, cb)
-		Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	SetAttr(CreateMap("v-on:update:sort-desc": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
 End Sub
 
 
@@ -1416,15 +1421,14 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDataTable
-DataTable.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	DataTable.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 
 Sub SetVisible(b As Boolean) As VMDataTable
-DataTable.SetVisible(b)
-Return Me
+	DataTable.SetVisible(b)
+	Return Me
 End Sub
-
 
 'center align columns
 Sub SetCenterAlignColumns(flds As List) As VMDataTable
@@ -1481,7 +1485,6 @@ Sub SetColumnsFormatDateTime(dates As List) As VMDataTable
 	Return Me
 End Sub
 
-
 'set the column type to date time for these columns
 Sub SetFileSizeColumns(dates As List) As VMDataTable
 	For Each k As String In dates
@@ -1521,5 +1524,3 @@ Sub SetMoneyColumns(dates As List) As VMDataTable
 	Next
 	Return Me
 End Sub
-
-

@@ -112,7 +112,8 @@ Sub Class_Globals
 	Public Dark As Boolean
 	Private Options As Map
 	Private lang As String
-	public Fake As VMFake
+	Public Fake As VMFake
+	Private VuePrismEditor As BANanoObject
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -126,17 +127,14 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	JQuery = vue.jquery
 	module = eventHandler
 	lang = "en"
-	'load other libraries
-	'VueLoading.initialize("VueLoading")
-	'vue.Use(VueLoading)
-	'vue.AddComponentBO("loading",VueLoading)
 	
 	Chartkick.initialize("Chartkick")
 	Chart.Initialize("Chart")
 	vue.Use(Chartkick.RunMethod("use", Chart))
 	'zircleBO.Initialize("zircle")
 	'vue.Use(zircleBO)
-	
+	VuePrismEditor.Initialize("VuePrismEditor")
+	vue.AddComponentBO("vue-prism-editor", VuePrismEditor)
 	
 	'initialize the pages
 	Pages.initialize
@@ -264,6 +262,18 @@ Sub CreateAlert(eID As String, eventHandler As Object, typeOf As String) As VMAl
 	Return el
 End Sub
 
+
+Sub CreatePrism(eID As String, eventHandler As Object) As VMPrism
+	Dim el As VMPrism
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateQuill(eID As String, eventHandler As Object) As VMQuill
+	Dim el As VMQuill
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
 
 Sub CreateBanner(eID As String, eventHandler As Object) As VMBanner
 	Dim el As VMBanner

@@ -64,7 +64,11 @@ Sub SetOptions(sourceName As String, options As Map, sourcefield As String, disp
 	Return Me
 End Sub
 
-
+'backward compatibility
+Sub SetInvalidMessage(ErrText As String) As VMAutoComplete
+	ErrorText = ErrText
+	Return Me
+End Sub
 
 Sub SetErrorText(error As String) As VMAutoComplete
 	ErrorText = error

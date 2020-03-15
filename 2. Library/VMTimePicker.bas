@@ -44,6 +44,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'backward compatibility
+Sub SetInvalidMessage(ErrText As String) As VMTimePicker
+	ErrorText = ErrText
+	Return Me
+End Sub
+
 Sub SetErrorText(error As String) As VMTimePicker
 	ErrorText = error
 	Return Me

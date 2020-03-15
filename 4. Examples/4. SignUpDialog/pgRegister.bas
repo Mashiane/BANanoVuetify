@@ -59,6 +59,7 @@ Sub Code(vmx As BANanoVM)
 	Dim txtconfirmPassword As VMTextField = vm.NewPassword(Me,"txtconfirmpassword", "confirmpassword", "Confirm Password","",True,True,"",15,"", "The password is required!",0)
 	
 	'add the controls, the grid will be automatically created
+	mdlregister.container.SetAlignSelfRC(1, 1, "center")
 	mdlRegister.Container.AddControl(profilepic.Image, profilepic.tostring,1,1,0,0,0,0,12,6,6,6)
 	mdlRegister.Container.AddControl(uploadprofile.FileInput, uploadprofile.tostring,1,2,0,0,0,0,12,6,6,6)
 	

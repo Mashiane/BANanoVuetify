@@ -104,7 +104,7 @@ Sub AddExclusion(them As List) As VMContainer
 	Return Me
 End Sub
 
-Sub SetElevation(elx As string) As VMContainer
+Sub SetElevation(elx As String) As VMContainer
 	Container.SetElevation(elx)
 	Return Me
 End Sub
@@ -559,6 +559,40 @@ Sub SetStyleRC(rowPos As Int, colPos As Int, prop As String, value As String) As
 	End If
 	rowc.Put(prop,value)
 	rowStyles.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+'align row content
+Sub SetAlignContentRC(rowPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, 0, "align-content", align)
+	Return Me
+End Sub
+
+'jusrify row
+Sub SetJustifyRC(rowPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, 0, "justify", align)
+	Return Me
+End Sub
+
+'align row
+Sub SetAlignRC(rowPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, 0, "align", align)
+	Return Me
+End Sub
+
+'align column
+Sub SetAlignSelfRC(rowPos As Int, colPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, colPos, "align-self", align)
+	Return Me
+End Sub
+
+Sub SetDenseRC(rowPos As Int) As VMContainer
+	SetAttrRC(rowPos, 0, "dense", True)
+	Return Me
+End Sub
+
+Sub SetNoGuttersRC(rowPos As Int) As VMContainer
+	SetAttrRC(rowPos, 0, "no-gutters", True)
 	Return Me
 End Sub
 

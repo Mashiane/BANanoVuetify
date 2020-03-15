@@ -24,8 +24,8 @@ Sub Init
 	vm.NavBar.Logo.SetBorderRadius("50%")
 	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
 	
-	'vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
-	'vm.NavBar.SetDark(True)
+	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
+	vm.NavBar.SetDark(True)
 	'
 	vm.NavBar.AddSearch("txtsearch")
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")
@@ -126,6 +126,12 @@ Sub BuildDrawer
 	'vm.Drawer.AddItem("tooltips", "", "Tooltips")
 	vm.Drawer.AddItem("treeview", "", "TreeView")
 	vm.Drawer.AddItem("design", "", "Grid Design")
+	vm.Drawer.AddItem("chartkick", "", "Chart Kick")
+	vm.Drawer.AddItem("device", "", "Device")
+	vm.drawer.AddItem("gmap", "", "Google Map")
+	vm.drawer.AddItem("quill", "", "Quill")
+	vm.drawer.AddItem("infobox", "", "Info Box")
+	vm.drawer.AddItem("prism", "", "Prism")
 End Sub
 
 Sub confirm_ok(e As BANanoEvent)
@@ -149,6 +155,27 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
 	Select Case elID
+	Case "prism"
+		vm.NavBar.UpdateTitle(modPrism.title)
+		vm.ShowPage(modprism.name)
+	Case "quill"
+		vm.NavBar.UpdateTitle(modQuill.title)
+		vm.ShowPage(modQuill.name)
+	Case "infobox"
+		vm.NavBar.UpdateTitle(modInfoBox.title)
+		vm.ShowPage(modInfoBox.name)
+	Case "gmap"
+		vm.NavBar.UpdateTitle(modGMap.title)
+		vm.ShowPage(modGMap.name)
+	Case "rangeslider"
+		vm.NavBar.UpdateTitle(modRangeSlider.title)
+		vm.ShowPage(modRangeSlider.name)
+	Case "device"
+		vm.NavBar.UpdateTitle(modDevice.title)
+		vm.ShowPage(modDevice.name)
+	Case "chartkick"
+		vm.NavBar.UpdateTitle(modChartKick.title)
+		vm.ShowPage(modChartKick.name)
 	Case "alerts"
 		vm.NavBar.UpdateTitle(modAlert.title)
 		vm.ShowPage(modAlert.name)
@@ -330,4 +357,11 @@ Sub AddPages
 	vm.AddPage(modBottomNavigation.name, modBottomNavigation)
 	vm.AddPage(modBottomSheet.name, modBottomSheet)
 	vm.AddPage(modAlert.name, modAlert)
+	vm.addpage(modChartKick.name, modChartKick)
+	vm.addpage(modDevice.name, modDevice)
+	vm.addpage(modGMap.name, modGMap)
+	vm.addpage(modRangeSlider.name, modRangeSlider)
+	vm.addpage(modInfoBox.name, modInfoBox)
+	vm.AddPage(modQuill.name, modQuill)
+	vm.addpage(modPrism.name, modPrism)
 End Sub

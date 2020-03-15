@@ -12,11 +12,10 @@ Module1=modDashboard
 Module2=modExpenseCategories
 Module3=modExpenses
 Module4=modExpenseTypes
-Module5=modStats
-Module6=pgIndex
+Module5=pgIndex
 NumberOfFiles=1
 NumberOfLibraries=5
-NumberOfModules=6
+NumberOfModules=5
 Version=8.1
 @EndOfDesignText@
 '#Region Project Attributes 

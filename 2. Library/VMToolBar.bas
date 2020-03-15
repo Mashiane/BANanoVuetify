@@ -94,6 +94,18 @@ Sub AddButton(btn As VMButton) As VMToolBar
 	Return Me
 End Sub
 
+
+Sub AddButton1(key As String, iconName As String, text As String, toolTip As String, badge As String) As VMToolBar
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module).SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
+	If badge <> "" Then
+		'btn.SetBadgeContent(badge)
+	End If
+	btn.Pop(ToolBar)
+	hasContent = True
+	Return Me
+End Sub
+
 Sub AddMenu(menu As VMMenu) As VMToolBar
 	menu.Pop(ToolBar)
 	hasContent = True
@@ -532,10 +544,12 @@ End Sub
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMToolBar
 ToolBar.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMToolBar
 ToolBar.SetVisible(b)
 Return Me

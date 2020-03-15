@@ -64,6 +64,11 @@ Sub SetTypeDate(b As Boolean) As VMTextField
 	Return Me
 End Sub
 
+'backward compatibility
+Sub SetInvalidMessage(ErrText As String) As VMTextField
+	ErrorText = ErrText
+	Return Me
+End Sub
 
 Sub SetErrorText(errText As String) As VMTextField
 	ErrorText = errText

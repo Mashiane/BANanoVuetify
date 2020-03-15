@@ -26,13 +26,15 @@ Sub Code
 	'
 	expenses = vm.CreateDataTable("expensetable", "id", Me)
 	expenses.SetTitle("Expenses")
+	expenses.AddSearch
+	expenses.AddNew("btnNewExpense", "mdi-plus", "Add a new expense")
 	expenses.AddColumn("expense_date","Date")   
 	expenses.AddColumn("expense_category","Category")
 	expenses.AddColumn("expense_type","Type")   
 	expenses.AddColumn("expense_description","Description")  
 	expenses.AddColumn("expense_amount","Amount")
 	expenses.AddEditThrash
-	'expenses.AddClone
+	expenses.AddClone
 	expenses.SetMoneyColumns(Array("expense_amount"))
 	expenses.SetDataSource(Array())
 	cont.AddComponent(1,1, expenses.tostring)
@@ -120,6 +122,9 @@ Sub Add
 	vm.ShowDialog("mdlExpenses")
 End Sub
 
+Sub btnNewExpense_click(e As BANanoEvent)
+	Add
+End Sub
 
 'load all existing expenses
 Sub Refresh
@@ -164,9 +169,9 @@ Sub expensetable_edit(rec As Map)
 	End If
 End Sub
 
-Sub expensetable_clone(rec As Map)
+Sub expensetable_clone(item As Map)
 	'get the record corresponding to the row
-	Dim sid As String = rec.GetDefault("id","")
+	Dim sid As String = item.GetDefault("id","")
 	If sid = "" Then Return
 	'turn the mode to edit
 	Mode = "A"
@@ -198,4 +203,21 @@ Sub expensetable_delete(rec As Map)
 	'indicate confirm dialog
 	vm.ShowConfirm("delete_expense", $"Confirm Delete: ${sid}"$, _
 	"Are you sure that you want to delete this expense. You will not be able to undo your actions. Continue?","Ok","Cancel")
+End Sub
+
+Sub Delete
+	Dim sid As String = vm.getstate("expenseid", "")
+	If sid = "" Then Return
+	Dim dbsql As BANanoMySQL
+	dbsql.Initialize(Main.dbase, "expenses", "id")
+	dbsql.Delete(sid)
+	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
+	dbsql.FromJSON
+	If dbsql.OK Then
+		vm.ShowSnackBar("Expense deleted successfully!")
+		Refresh
+	Else
+		Log("phIndex.confirm_ok.delete_expense: Error - " & dbsql.error)
+		vm.ShowSnackBar(dbsql.error)
+	End If
 End Sub

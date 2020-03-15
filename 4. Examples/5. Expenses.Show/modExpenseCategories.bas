@@ -27,6 +27,7 @@ Sub Code
 	'
 	expensecategory = vm.CreateDataTable("expensecategory", "id", Me)
 	expensecategory.SetTitle("Expense Categories")
+	expensecategory.AddNew("btnNewExpenseCategory", "mdi-plus", "Add a new expense category")
 	expensecategory.AddColumn("text","Name")
 	expensecategory.AddColumn("description","Description")
 	expensecategory.AddColumn("budget","Monthly Budget")
@@ -82,6 +83,10 @@ Sub Add
 	mdlExpenseCategory.SetTitle("New Expense Category")
 	mdlExpenseCategory.Container.setdefaults
 	vm.showdialog("mdlExpenseCategory")
+End Sub
+
+Sub btnNewExpenseCategory_click(e As BANanoEvent)
+	Add
 End Sub
 
 Sub btnCancelCategory_click(e As BANanoEvent)
@@ -156,4 +161,23 @@ Sub expensecategory_delete(rec As Map)
 	'indicate confirm dialog
 	vm.ShowConfirm("delete_category", $"Confirm Delete: ${stext}"$, _
 	"Are you sure that you want to delete this expense category. You will not be able to undo your actions. Continue?","Ok","Cancel")
+End Sub
+
+Sub Delete
+	'delete a category
+	'get the category to be deleted
+	Dim sid As String = vm.getstate("categoryid", "")
+	If sid = "" Then Return
+	Dim dbsql As BANanoMySQL
+	dbsql.Initialize(Main.dbase, "expensecategories", "id")
+	dbsql.Delete(sid)
+	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
+	dbsql.FromJSON
+	If dbsql.OK Then
+		vm.ShowSnackBar("Expense Category deleted successfully!")
+		Refresh
+	Else
+		Log("phIndex.confirm_ok.delete_category: Error - " & dbsql.error)
+		vm.ShowSnackBar(dbsql.error)
+	End If
 End Sub

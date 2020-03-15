@@ -9,56 +9,61 @@ File14=fileSaver.min.js
 File15=fonts.zip
 File16=frappe-gantt.css
 File17=frappe-gantt.js
-File18=gijgo.min.css
-File19=gijgo.min.js
+File18=gray.png
+File19=green.png
 File2=2.png
-File20=gray.png
-File21=green.png
-File22=happyface.png
-File23=hashes.min.js
-File24=helpers.css
-File25=icons.svg
-File26=info-box.css
-File27=jquery.countTo.js
-File28=jquery.knob.min.js
-File29=jquery.media.js
+File20=happyface.png
+File21=hashes.min.js
+File22=helpers.css
+File23=icons.svg
+File24=info-box.css
+File25=jquery.countTo.js
+File26=jquery.knob.min.js
+File27=jquery.media.js
+File28=jquery.timeago.min.js
+File29=jquery-3.4.1.min.js
 File3=bCrypt.js
-File30=jquery.timeago.min.js
-File31=jquery-3.4.1.min.js
-File32=jszip.min.js
-File33=materialdesignicons.min.css
-File34=materialfont.css
-File35=md5.min.js
-File36=moment.js
-File37=neutralface.png
-File38=numeral.min.js
-File39=orange.png
+File30=jszip.min.js
+File31=materialdesignicons.min.css
+File32=materialfont.css
+File33=md5.min.js
+File34=moment.js
+File35=neutralface.png
+File36=numeral.min.js
+File37=orange.png
+File38=oxml.min.js
+File39=pdfmake.js
 File4=Chart.min.css
-File40=oxml.min.js
-File41=pdfmake.js
-File42=printThis.js
+File40=printThis.js
+File41=prism.css
+File42=prism.js
 File43=progresscircle.css
 File44=progresscircle.js
-File45=red.png
-File46=renderstring.js
-File47=roboto.css
-File48=sadface.png
-File49=tron-knob.js
+File45=quill.bubble.css
+File46=quill.min.js
+File47=quill.snow.css
+File48=red.png
+File49=renderstring.js
 File5=Chart.min.js
-File50=upload.php
-File51=vfs_fonts.js
-File52=vue.min.js
-File53=vue2-animate.min.css
-File54=vue-chartkick.min.js
-File55=vue-google-maps.js
-File56=vue-loading.css
-File57=vue-loading.min.js
-File58=vue-router.min.js
-File59=vue-slider-component.umd.min.js
+File50=roboto.css
+File51=sadface.png
+File52=tron-knob.js
+File53=upload.php
+File54=vfs_fonts.js
+File55=vue.min.js
+File56=vue2-animate.min.css
+File57=vue2-editor.css
+File58=vue2-editor.umd.js
+File59=vue-chartkick.min.js
 File6=clipboard.min.js
-File60=vue-slider-material.css
-File61=vuetify.js
-File62=vuetify.min.css
+File60=vue-google-maps.js
+File61=VuePrismEditor.css
+File62=VuePrismEditor.umd.min.js
+File63=vue-router.min.js
+File64=vue-slider-component.umd.min.js
+File65=vue-slider-material.css
+File66=vuetify.js
+File67=vuetify.min.css
 File7=collect.min.js
 File8=colors.js
 File9=createWaterBall-jquery.js
@@ -121,6 +126,11 @@ FileGroup6=Default Group
 FileGroup60=Default Group
 FileGroup61=Default Group
 FileGroup62=Default Group
+FileGroup63=Default Group
+FileGroup64=Default Group
+FileGroup65=Default Group
+FileGroup66=Default Group
+FileGroup67=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
 FileGroup9=Default Group
@@ -130,39 +140,41 @@ Library2=jfx
 Library3=banano
 Module1=BANanoAlaSQL
 Module10=VMAvatar
-Module100=VMSlideGroup
-Module101=VMSlider
-Module102=VMSnackBar
-Module103=VMSparkLine
-Module104=VMSpeedDial
-Module105=VMStepper
-Module106=VMStepperContent
-Module107=VMStepperHeader
-Module108=VMStepperItems
-Module109=VMStepperStep
+Module100=VMSkeleton
+Module101=VMSkeletonLoader
+Module102=VMSlideGroup
+Module103=VMSlider
+Module104=VMSnackBar
+Module105=VMSparkLine
+Module106=VMSpeedDial
+Module107=VMStepper
+Module108=VMStepperContent
+Module109=VMStepperHeader
 Module11=VMBadge
-Module110=VMSubHeader
-Module111=VMSwitch
-Module112=VMTab
-Module113=VMTabItem
-Module114=VMTabs
-Module115=VMTabsItems
-Module116=VMTabsSlider
-Module117=VMTemplate
-Module118=VMTextArea
-Module119=VMTextField
+Module110=VMStepperItems
+Module111=VMStepperStep
+Module112=VMSubHeader
+Module113=VMSwitch
+Module114=VMTab
+Module115=VMTabItem
+Module116=VMTabs
+Module117=VMTabsItems
+Module118=VMTabsSlider
+Module119=VMTemplate
 Module12=VMBanner
-Module120=VMTimeline
-Module121=VMTimelineItem
-Module122=VMTimePicker
-Module123=VMToolBar
-Module124=VMToolTip
-Module125=VMTreeView
-Module126=VMWaterBall
-Module127=VMWindow
-Module128=VMWindowItem
-Module129=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module120=VMTextArea
+Module121=VMTextField
+Module122=VMTimeline
+Module123=VMTimelineItem
+Module124=VMTimePicker
+Module125=VMToolBar
+Module126=VMToolTip
+Module127=VMTreeView
+Module128=VMWaterBall
+Module129=VMWindow
 Module13=VMBottomNavigation
+Module130=VMWindowItem
+Module131=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
 Module14=VMBottomSheet
 Module15=VMBreadCrumbs
 Module16=VMBreadCrumbsItem
@@ -241,25 +253,25 @@ Module81=VMPagination
 Module82=VMParallax
 Module83=VMPDF
 Module84=VMPrettyPrint
-Module85=VMProgressCircle
-Module86=VMProgressCircular
-Module87=VMProgressLinear
-Module88=VMRadio
-Module89=VMRadioGroup
+Module85=VMPrism
+Module86=VMProgressCircle
+Module87=VMProgressCircular
+Module88=VMProgressLinear
+Module89=VMQuill
 Module9=VMAutoComplete
-Module90=VMRangeSlider
-Module91=VMRating
-Module92=VMResponsive
-Module93=VMRow
-Module94=VMSelect
-Module95=VMSheet
-Module96=VMSimpleCheckBox
-Module97=VMSimpleTable
-Module98=VMSkeleton
-Module99=VMSkeletonLoader
-NumberOfFiles=62
+Module90=VMRadio
+Module91=VMRadioGroup
+Module92=VMRangeSlider
+Module93=VMRating
+Module94=VMResponsive
+Module95=VMRow
+Module96=VMSelect
+Module97=VMSheet
+Module98=VMSimpleCheckBox
+Module99=VMSimpleTable
+NumberOfFiles=67
 NumberOfLibraries=3
-NumberOfModules=129
+NumberOfModules=131
 Version=8.1
 @EndOfDesignText@
 '
@@ -285,10 +297,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = AppName
 	BANano.JAVASCRIPT_NAME = appFile
-	BANano.TranspilerOptions.UseServiceWorker = False
-	BANano.TranspilerOptions.MergeAllCSSFiles = True
-	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
-	'
 	'
 	BANano.Header.AddCSSFile("roboto.css")
 	BANano.Header.AddCSSFile("materialfont.css")
@@ -322,9 +330,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("vfs_fonts.js")
 	BANano.Header.AddJavascriptFile("jquery.media.js")
 	'
-	BANano.Header.AddCSSFile("vue-loading.css")
-	BANano.Header.AddJavascriptFile("vue-loading.min.js")
-	'
 	BANano.Header.AddCSSFile("frappe-gantt.css")
 	BANano.Header.AddJavascriptFile("frappe-gantt.js")
 	BANano.Header.AddJavascriptFile("createWaterBall-jquery.js")
@@ -340,12 +345,31 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("vue-google-maps.js")
 	BANano.Header.Addcssfile("devices.min.css")
 	'
+	BANano.Header.AddCSSFile("vue-slider-material.css")
+	BANano.Header.AddJavascriptFile("vue-slider-component.umd.min.js")
+	'
 	BANano.Header.AddCSSFile("enjoyhint.min.css")
 	BANano.Header.AddJavascriptFile("enjoyhint.min.js")
 	
 	'BANano.Header.AddCSSFile("zircle.css")
 	'BANano.Header.AddJavascriptFile("zircle.umd.js")
-		
+	'
+	BANano.Header.AddCSSFile("quill.bubble.css")
+	BANano.Header.AddCSSFile("quill.snow.css")
+	BANano.Header.AddJavascriptFile("quill.min.js")
+	BANano.Header.AddCSSFile("vue2-editor.css")
+	BANano.Header.AddJavascriptFile("vue2-editor.umd.js")
+	'
+	
+	BANano.Header.AddJavascriptFile("clipboard.min.js")
+	
+	BANano.Header.AddCSSFile("prism.css")		
+	BANano.Header.AddCSSFile("VuePrismEditor.css")
+	
+	BANano.Header.AddJavascriptFile("prism.js")
+	BANano.Header.AddJavascriptFile("VuePrismEditor.umd.min.js")
+	
+	
 	BANano.BuildAsB4XLib("3.00")
 	ExitApplication
 End Sub

@@ -64,6 +64,12 @@ Sub filedone(fileObj As Map, json As String)
 	End If
 End Sub
 
+'backward compatibility
+Sub SetInvalidMessage(ErrText As String) As VMFileInput
+	ErrorText = ErrText
+	Return Me
+End Sub
+
 Sub SetErrorText(error As String) As VMFileInput
 	ErrorText = error
 	Return Me

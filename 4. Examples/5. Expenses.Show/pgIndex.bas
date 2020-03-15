@@ -22,9 +22,6 @@ Sub Init
 	'hide the back button
 	'show the hamburger button
 	vm.NavBar.SetHasMenuButton(True)
-	vm.NavBar.AddIcon("btnAddExpenseType", "add", "Add expense type", "")
-	vm.NavBar.AddIcon("btnAddExpenseCategory", "add", "Add expense category", "")
-	vm.NavBar.AddIcon("btnAddExpense", "add", "Add expense", "")
 	'
 	'build the page
 	vm.SetMethod(Me, "LoadTypes")
@@ -32,8 +29,7 @@ Sub Init
 	'
 	BuildDrawer
 	AddPages
-	HideButtons
-	
+		
 	vm.ux
 	'
 	ShowDashboard
@@ -63,24 +59,6 @@ Sub LoadCategories
 	End If	
 End Sub
 
-Sub btnAddExpense_click(e As BANanoEvent)
-	modExpenses.add 
-End Sub
-
-Sub btnAddExpenseType_click(e As BANanoEvent)
-	modExpenseTypes.Add
-End Sub
-
-Sub btnAddExpenseCategory_click(e As BANanoEvent)
-	modExpenseCategories.Add
-End Sub
-
-Sub HideButtons
-	vm.hide("btnAddExpenseCategory")
-	vm.Hide("btnAddExpenseType")
-	vm.hide("btnAddExpense")
-End Sub
-
 Sub BuildDrawer
 	vm.Drawer.AddItem("dashboard","","Dashboard")
 	vm.Drawer.AddItem("expenses","","Expenses")
@@ -97,8 +75,6 @@ Sub draweritems_click(e As BANanoEvent)
 		dashboard
 	Case "expenses"	
 		expenses
-	Case "stats"
-		stats
 	Case "expensetypes"
 		expensetypes
 	Case "expensecategories"
@@ -117,30 +93,18 @@ Sub AddPages
 End Sub
 
 Sub expensetypes
-	HideButtons
-	vm.Show("btnAddExpenseType")
 	vm.NavBar.UpdateTitle("Expenses.Show - Settings")
 	vm.showpage(modExpenseTypes.name)
 	modExpenseTypes.refresh
 End Sub
 
 Sub expensecategories
-	HideButtons
-	vm.show("btnAddExpenseCategory")
 	vm.NavBar.UpdateTitle("Expenses.Show - Settings")
 	vm.showpage(modExpenseCategories.name)
 	modExpenseCategories.refresh
 End Sub
 
-Sub stats
-	HideButtons
-	vm.NavBar.UpdateTitle("Expenses.Show - Stats")
-	vm.showpage(modStats.name)
-End Sub
-
 Sub expenses
-	HideButtons
-	vm.Show("btnAddExpense")
 	vm.NavBar.UpdateTitle("Expenses.Show - Expenses")
 	vm.showpage(modExpenses.name)
 	modExpenses.refresh
@@ -151,7 +115,6 @@ Sub dashboard
 End Sub
 
 Sub ShowDashboard
-	HideButtons
 	' show the dashboard
 	vm.CallMethod("LoadTypes")
 	vm.CallMethod("LoadCategories")
@@ -169,55 +132,11 @@ Sub confirm_ok
 	Dim sconfirm As String = vm.GetConfirm
 	Select Case sconfirm
 	Case "delete_expensetype"
-		'get the expense type to be deleted
-		Dim sid As String = vm.getstate("expensetypeid", "")
-		If sid = "" Then Return
-		'connect to the database
-		Dim dbsql As BANanoMySQL
-		dbsql.Initialize(Main.dbase, "expensetypes", "id")
-		dbsql.Delete(sid)
-		dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
-		dbsql.FromJSON
-		If dbsql.OK Then
-			vm.ShowSnackBar("Expense Type deleted successfully!")
-			'refresh the table listing
-			modExpenseTypes.Refresh
-		Else
-			Log("phIndex.confirm_ok.delete_expensetype: Error - " & dbsql.error)
-			vm.ShowSnackBar(dbsql.error)
-		End If
+		modExpenseTypes.delete
 	Case "delete_category"
-		'delete a category
-		'get the category to be deleted
-		Dim sid As String = vm.getstate("categoryid", "")
-		If sid = "" Then Return
-		Dim dbsql As BANanoMySQL
-		dbsql.Initialize(Main.dbase, "expensecategories", "id")
-		dbsql.Delete(sid)
-		dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
-		dbsql.FromJSON
-		If dbsql.OK Then
-			vm.ShowSnackBar("Expense Category deleted successfully!")
-			modExpenseCategories.Refresh
-		Else
-			Log("phIndex.confirm_ok.delete_category: Error - " & dbsql.error)
-			vm.ShowSnackBar(dbsql.error)
-		End If
+		modExpenseCategories.delete
 	Case "delete_expense"
-		Dim sid As String = vm.getstate("expenseid", "")
-		If sid = "" Then Return
-		Dim dbsql As BANanoMySQL
-		dbsql.Initialize(Main.dbase, "expenses", "id")
-		dbsql.Delete(sid)
-		dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
-		dbsql.FromJSON
-		If dbsql.OK Then
-			vm.ShowSnackBar("Expense deleted successfully!")
-			modExpenses.Refresh
-		Else
-			Log("phIndex.confirm_ok.delete_expense: Error - " & dbsql.error)
-			vm.ShowSnackBar(dbsql.error)
-		End If
+		modExpenses.delete
 	End Select	
 End Sub
 
