@@ -354,6 +354,23 @@ Sub SetBottom(varBottom As Object) As VMButton
 	Return Me
 End Sub
 
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMButton
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMButton
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
+End Sub
+
 'set color
 Sub SetColor(varColor As Object) As VMButton
 	Dim pp As String = $"${ID}Color"$

@@ -19,6 +19,7 @@ Sub Class_Globals
 	Public Logo As VMImage
 	Private Extension As VMTemplate
 	Public Tabs As VMTabs
+	Private compx As Int
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMAppBar
@@ -43,9 +44,54 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Extension.Initialize(vue, $"${ID}tmpl"$, module).SetSlotExtension
 	Tabs.Initialize(vue, $"${ID}tabls"$, module)
 	Tabs.OnToolBar = True
+	compx = 0
 	Return Me
 End Sub
 
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMAppBar
+	Dim pp As String = $"${ID}Color"$
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	vue.SetStateSingle(pp, scolor)
+	AppBar.Bind(":color", pp)
+	Return Me
+End Sub
+
+Sub AddDivider(bVertical As Boolean, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAppBar
+	compx = compx + 1
+	Dim skey As String = $"item${compx}"$
+	Dim d As VMDivider
+	d.Initialize(vue)
+	If bVertical Then d.SetVertical
+	d.BuildModel(mprops, mstyles, lclasses, loose)
+	AddComponent(skey, d.ToString)
+	Return Me
+End Sub
+
+Sub AddSubHeading(sText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAppBar
+	Dim skey As String = $"${ID}subheading"$
+	Dim d As VMLabel
+	d.Initialize(vue, skey).SetSpan.SetText($"{{ ${skey} }}"$).AddClass("subheading")
+	d.BuildModel(mprops, mstyles, lclasses, loose)
+	AddComponent(skey, d.ToString)
+	vue.SetData(skey, sText)
+	Return Me
+End Sub
+
+Sub UpdateSubTitle(sText As String) As VMAppBar
+	Dim skey As String = $"${ID}subheading"$
+	vue.SetData(skey, sText)
+	Return Me
+End Sub
+
+'add a component to the toolbar
+Sub AddComponent(key As String, comp As String) As VMAppBar
+	AppBar.SetText(comp)
+	objects.Add(key)
+	HasContent = True
+	Return Me
+End Sub
 
 'set primary
 Sub SetPrimary(b As Boolean) As VMAppBar
@@ -102,15 +148,6 @@ End Sub
 Sub UpdateLogo(URL As String) As VMAppBar
 	vue.SetData("logo", URL)
 	Logo.Show
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMAppBar
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	AppBar.Bind(":color", pp)
 	Return Me
 End Sub
 
@@ -603,4 +640,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMAppBar
 AppBar.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMAppBar
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMAppBar
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

@@ -299,7 +299,7 @@ Sub SetDense As VMElement
 End Sub
 
 Sub SetElevation(elNum As String) As VMElement
-	Element.SetAttrSingle("elevation",elNum)
+	Element.SetAttrSingle("elevation", BANano.parseInt(elNum))
 	Return Me
 End Sub
 
@@ -1502,5 +1502,21 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMElement
 	Element.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMElement
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMElement
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
 	Return Me
 End Sub

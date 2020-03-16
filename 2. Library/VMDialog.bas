@@ -44,6 +44,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'make the container a div
+Sub MakeDiv As VMDialog
+	Dialog.SetTag("div")
+	Return Me
+End Sub
 
 'set defaults of the container
 Sub SetDefaults
@@ -130,6 +135,7 @@ Sub AddOK(okID As String, okCaption As String) As VMDialog
 	btnOK.Initialize(vue, okID, Module)
 	btnOK.SetPrimary(True)
 	btnOK.SetLabel(okCaption)
+	btnOK.SetTransparent(True)
 	btnOK.Pop(Actions.CardActions)
 	Return Me
 End Sub
@@ -139,6 +145,7 @@ Sub AddCANCEL(cancelID As String, cancelCaption As String) As VMDialog
 	btnCancel.Initialize(vue, cancelID, Module)
 	btnCancel.SetLabel(cancelCaption)
 	btnCancel.SetAccent(True)
+	btnCancel.SetTransparent(True)
 	btnCancel.Pop(Actions.CardActions)
 	Return Me
 End Sub
@@ -523,4 +530,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMDialog
 Dialog.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMDialog
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMDialog
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

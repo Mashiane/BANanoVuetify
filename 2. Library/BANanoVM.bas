@@ -16,7 +16,7 @@ Sub Class_Globals
 	Public BOVuetify As BANanoObject
 	Public Drawer As VMNavigationDrawer
 	Public NavBar As VMAppBar
-	Public Footer As VMElement
+	Public Footer As VMFooter
 	Private module As Object
 	Public Elevation As Map
 	Private HasKnob As Boolean
@@ -59,6 +59,14 @@ Sub Class_Globals
 	Public const COLOR_WHITE As String = "white"
 	Public const COLOR_YELLOW As String = "yellow"
 	Public const COLOR_NONE As String = ""
+	Public const COLOR_PRIMARY As String = "primary"	
+	Public const COLOR_SECONDARY As String = "secondary"
+	Public const COLOR_ACCENT As String = "accent"
+	Public const COLOR_ERROR As String = "error"
+	Public const COLOR_INFO As String = "info"
+	Public const COLOR_SUCCESS As String = "success"
+	Public const COLOR_WARNING As String = "warning"
+	
 	'
 	Public const INTENSITY_NORMAL As String = ""
 	Public const INTENSITY_LIGHTEN5 As String = "lighten-5"
@@ -96,6 +104,7 @@ Sub Class_Globals
 	Public const SIZE_P As String = "p"
 	Public const SIZE_SPAN As String = "span"
 	Public const SIZE_BLOCKQUOTE As String = "blockquote"
+	Public const SIZE_DIV As String = "div"
 	'
 	Public const ICON_SMALL As String = "small"
 	Public const ICON_LARGE As String = "large"
@@ -106,6 +115,41 @@ Sub Class_Globals
 	Public const BUTTON_LARGE As String = "large"
 	Public const BUTTON_XSMALL As String = "x-small"
 	Public const BUTTON_XLARGE As String = "x-large"
+	
+	Public const TRANSITION_SLIDE_X As String = "slide-x-transition"
+	Public const TRANSITION_SLIDE_X_REVERSE As String = "slide-x-reverse-transition"
+	Public const TRANSITION_SLIDE_Y As String = "slide-y-transition"
+	Public const TRANSITION_SLIDE_Y_REVERSE As String = "slide-y-reverse-transition"
+	Public const TRANSITION_SCROLL_X As String = "scroll-x-transition"
+	Public const TRANSITION_SCROLL_X_REVERSE As String = "scroll-x-reverse-transition"
+	Public const TRANSITION_SCROLL_Y As String = "scroll-y-transition"
+	Public const TRANSITION_SCROLL_Y_REVERSE As String = "scroll-y-reverse-transition"
+	Public const TRANSITION_SCALE As String = "scale-transition"
+	Public const TRANSITION_PADE As String = "fade-transition"
+	'
+	Public const JUSTIFY_CENTER As String = "center"
+	Public const JUSTIFY_START As String = "start"
+	Public const JUSTIFY_END As String = "end"
+	'
+	Public const ALIGN_CENTER As String = "center"
+	Public const ALIGN_START As String = "start"
+	Public const ALIGN_END As String = "end"
+	Public const ALIGN_STRETCH As String = "stretch"
+	'
+	Public const FLEX_GROW_0 As String = "flex-grow-0"
+	Public const FLEX_GROW_1 As String = "flex-grow-1"
+	Public const FLEX_SHRINK_0 As String = "flex-shrink-0"
+	Public const FLEX_SHRINK_1 As String = "flex-shrink-1"
+	'
+	Public const TEXT_LEFT As String = "text-left"
+	Public const TEXT_CENTER As String = "text-center"
+	Public const TEXT_RIGHT As String = "text-right"
+	Public const TEXT_NO_WRAP As String = "text-no-wrap"
+	Public const TEXT_TRUNCATE As String = "text-truncate"
+	Public const TEXT_LOWERCASE As String = "text-lowercase"
+	Public const TEXT_UPPERCASE As String = "text-uppercase"
+	Public const TEXT_CAPITALIZE As String = "text-capitalize"
+	
 		
 	Public SnackBar As VMSnackBar
 	Public RTL As Boolean
@@ -114,6 +158,8 @@ Sub Class_Globals
 	Private lang As String
 	Public Fake As VMFake
 	Private VuePrismEditor As BANanoObject
+	Private drawers As List
+	Private placeHolder As Int
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -121,7 +167,9 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'initialize vue
 	Fake.Initialize
 	vue.Initialize
+	placeHolder = 0
 	Options.Initialize 
+	drawers.Initialize 
 	RTL = False
 	Dark = False
 	JQuery = vue.jquery
@@ -146,7 +194,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Container.Initialize(vue, $"${appName}container"$, eventHandler)
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	NavBar.Initialize(vue, "appbar", eventHandler)
-	Footer.Initialize(vue, $"${appName}footer"$).SetTag("v-footer").SetAttrSingle("app", True).SetVModel(Footer.ID)
+	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
 	'
 	NavBar.Show
 	'
@@ -207,6 +255,13 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 
 End Sub
 
+Sub CreatePlaceholder() As VMLabel
+	placeHolder = placeHolder + 1
+	Dim sKey As String = $"placeholder${placeHolder}"$
+	Dim lbl As VMLabel = CreateLabel(sKey).SetText("Placeholder").SetVisible(False).SetParagraph
+	Return lbl
+End Sub
+
 Sub ShowConfirm(process As String, Title As String, Message As String,ConfirmText As String, CancelText As String)
 	process = process.tolowercase
 	vue.SetState(CreateMap("confirmtitle":Title,"confirmcontent":Message,"confirmkey":process,"btnconfirmoklabel":ConfirmText,"btnconfirmcancellabel":CancelText))
@@ -262,6 +317,11 @@ Sub CreateAlert(eID As String, eventHandler As Object, typeOf As String) As VMAl
 	Return el
 End Sub
 
+Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
+	Dim el As VMParallax
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
 
 Sub CreatePrism(eID As String, eventHandler As Object) As VMPrism
 	Dim el As VMPrism
@@ -532,6 +592,30 @@ End Sub
 Sub ShowDialog(dID As String)
 	dID = dID.tolowercase
 	SetStateTrue(dID)
+End Sub
+
+Sub HideDrawer(dID As String)
+	dID = dID.tolowercase
+	SetStateFalse(dID)
+End Sub
+
+'show a specific drawer and hide all others
+Sub ShowDrawer(dID As String)
+	dID = dID.tolowercase
+	For Each k As String In drawers
+		If dID = k Then
+			SetStateTrue(dID)
+		Else	
+			SetStateFalse(k)
+		End If
+	Next
+End Sub
+
+'show a specific drawer and hide all others
+Sub HideDrawers
+	For Each k As String In drawers
+		SetStateFalse(k)
+	Next
 End Sub
 
 Sub HideDialog(dID As String)
@@ -868,6 +952,11 @@ Sub CreateAvatar(sid As String, moduleObj As Object) As VMAvatar
 	Return el
 End Sub
 
+Sub CreateCarousel(sid As String, moduleObj As Object) As VMCarousel
+	Dim el As VMCarousel
+	el.Initialize(vue,sid, moduleObj)
+	Return el
+End Sub
 
 Sub CreateBadge(sid As String, moduleObj As Object) As VMBadge
 	Dim el As VMBadge
@@ -1343,6 +1432,7 @@ End Sub
 
 'show a page for the app
 Sub ShowPage(name As String)
+	HideDrawers
 	If Pages.IndexOf(name) = -1 Then
 		Log($"ShowPage: ${name} does not exist!"$)
 	End If
@@ -1451,6 +1541,14 @@ Sub CreateAutoComplete(sid As String, eventHandler As Object) As VMAutoComplete
 	Return el
 End Sub
 
+Sub CreateExpansionPanels(sid As String, eventHandler As Object) As VMExpansionPanels
+	Dim el As VMExpansionPanels
+	el.Initialize(vue, sid, eventHandler)	
+	el.SetVModel(sid)
+	Return el
+End Sub
+
+
 Sub CreateForm(sid As String, eventHandler As Object) As VMForm
 	Dim el As VMForm
 	el.Initialize(vue, sid, eventHandler)
@@ -1474,6 +1572,12 @@ Sub CreateChip(sid As String, eventHandler As Object) As VMChip
 	Dim el As VMChip
 	el.Initialize(vue, sid, eventHandler)
 	
+	Return el
+End Sub
+
+Sub CreateCarouselItem(sid As String, eventHandler As Object) As VMCarouselItem
+	Dim el As VMCarouselItem
+	el.Initialize(vue, sid, eventHandler)	
 	Return el
 End Sub
 
@@ -1729,6 +1833,20 @@ Sub SetLocale(slang As String) As BANanoVM
 		Log(LastException)
 	End Try
 	Return Me
+End Sub
+
+Sub CreateDrawer(sid As String, eventHandler As Object) As VMNavigationDrawer
+	Dim el As VMNavigationDrawer
+	el.Initialize(vue, sid, eventHandler)
+	el.RemoveAttr("app")
+	Return el 
+End Sub
+
+'add a container
+Sub AddDrawer(cont As VMNavigationDrawer)
+	drawers.Add(cont.ID)
+	Dim scont As String = cont.tostring
+	Container.SetText(scont)
 End Sub
 
 'add a container

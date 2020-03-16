@@ -14,6 +14,8 @@ Sub Class_Globals
 	Private Module As Object
 	Public List As VMList
 	Public BottomSection As VMTemplate
+	Private mini As String
+	Public Container As VMContainer
 End Sub
 
 'initialize the NavigationDrawer
@@ -25,11 +27,25 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	List.Initialize(vue, $"${ID}items"$, Module) 
-	BottomSection.Initialize(vue, $"${ID}bottom"$, Module)
-	BottomSection.SetAttrSingle("v-slot", "append")
+	BottomSection.Initialize(vue, $"${ID}bottom"$, Module).SetSlotAppend
+	mini = $"${ID}mini"$
+	SetMiniVariant(False)
+	SetPermanent(False)
+	Container.Initialize(vue, $"${ID}cont"$, Module)
+	Hide
 	Return Me
 End Sub
 
+Sub AddComponent(comp As String) As VMNavigationDrawer
+	SetText(comp)
+	Return Me
+End Sub
+
+Sub SetMini(b As Boolean) As VMNavigationDrawer
+	SetMiniVariant(b)
+	SetPermanent(b)
+	Return Me
+End Sub
 
 Sub SetAttrLoose(loose As String) As VMNavigationDrawer
 	NavigationDrawer.SetAttrLoose(loose)
@@ -113,6 +129,7 @@ End Sub
 'get component
 Sub ToString As String
 	vue.SetStateSingle("item", 1)
+	SetText(Container.ToString)
 	If List.HasContent Then 
 		List.Pop(NavigationDrawer)
 	End If
@@ -296,10 +313,9 @@ Sub SetLight(varLight As Object) As VMNavigationDrawer
 End Sub
 
 'set mini-variant
-Sub SetMiniVariant(varMiniVariant As Object) As VMNavigationDrawer
-	Dim pp As String = $"${ID}MiniVariant"$
-	vue.SetStateSingle(pp, varMiniVariant)
-	NavigationDrawer.Bind(":mini-variant", pp)
+Sub SetMiniVariant(b As Boolean) As VMNavigationDrawer
+	vue.SetData(mini, b)
+	NavigationDrawer.Bind(":mini-variant.sync", mini)
 	Return Me
 End Sub
 
@@ -536,4 +552,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMNavigationDrawer
 NavigationDrawer.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMNavigationDrawer
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMNavigationDrawer
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

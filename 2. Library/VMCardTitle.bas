@@ -65,6 +65,34 @@ Sub UseTheme(themeName As String) As VMCardTitle
 End Sub
 
 
+'add a component to the toolbar
+Sub AddComponent(comp As String) As VMCardTitle
+	CardTitle.SetText(comp)
+	Return Me
+End Sub
+
+
+Sub AddButton(btn As VMButton) As VMCardTitle
+	CardTitle.SetText(btn.tostring)
+	Return Me
+End Sub
+
+
+Sub AddButton1(key As String, iconName As String, text As String, toolTip As String, badge As String) As VMCardTitle
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module).SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
+	If badge <> "" Then
+		'btn.SetBadgeContent(badge)
+	End If
+	CardTitle.SetText(btn.tostring)
+	Return Me
+End Sub
+
+Sub AddMenu(menu As VMMenu) As VMCardTitle
+	AddComponent(menu.ToString)
+	Return Me
+End Sub
+
 Sub AddSpacer As VMCardTitle
 	CardTitle.AddSpacer
 	Return Me
@@ -229,4 +257,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMCardTitle
 CardTitle.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMCardTitle
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCardTitle
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

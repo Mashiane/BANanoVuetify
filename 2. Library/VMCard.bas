@@ -98,6 +98,7 @@ Sub AddExtraContent(scontent As String) As VMCard
 	Return Me
 End Sub
 
+'add a component to the root of the card
 Sub AddComponent(comp As String) As VMCard
 	Card.SetText(comp)
 	Return Me
@@ -561,4 +562,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMCard
 Card.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMCard
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCard
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

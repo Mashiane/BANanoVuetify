@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Public Container As VMContainer
 End Sub
 
 'initialize the Footer
@@ -23,9 +24,23 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	SetVModel(ID)
+	Container.Initialize(vue, $"${ID}content"$, Module) 
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMFooter
+	Dim pp As String = $"${ID}Color"$
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	vue.SetStateSingle(pp, scolor)
+	Footer.Bind(":color", pp)
+	Return Me
+End Sub
+
+Sub AddSpacer As VMFooter
+	Footer.AddSpacer
+	Return Me
+End Sub
 
 Sub SetAttrLoose(loose As String) As VMFooter
 	Footer.SetAttrLoose(loose)
@@ -51,8 +66,13 @@ End Sub
 
 'get component
 Sub ToString As String
-	
+	AddComponent(Container.ToString)
 	Return Footer.ToString
+End Sub
+
+Sub AddComponent(comp As String) As VMFooter
+	Footer.SetText(comp)
+	Return Me
 End Sub
 
 Sub SetVModel(k As String) As VMFooter
@@ -321,4 +341,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMFooter
 Footer.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMFooter
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMFooter
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

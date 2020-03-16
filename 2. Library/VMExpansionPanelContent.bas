@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Public Container As VMContainer
 End Sub
 
 'initialize the ExpansionPanelContent
@@ -22,11 +23,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Container.Initialize(vue, $"${ID}content"$, Module) 
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	AddComponent(Container.ToString)
 	Return ExpansionPanelContent.ToString
 End Sub
 
@@ -310,4 +313,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMExpansionPanelContent
 ExpansionPanelContent.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMExpansionPanelContent
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanelContent
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

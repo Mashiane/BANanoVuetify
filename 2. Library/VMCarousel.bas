@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Public Item As VMCarouselItem
 End Sub
 
 'initialize the Carousel
@@ -22,11 +23,18 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Item.Initialize(vue, "",Module)
+	Return Me
+End Sub
+
+Sub AddItem(ci As VMCarouselItem) As VMCarousel
+	AddComponent(ci.ToString)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	AddComponent(Item.ToString)
 	Return Carousel.ToString
 End Sub
 
@@ -75,7 +83,7 @@ Sub AddClass(c As String) As VMCarousel
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMCarousel
+Sub SetAttr(attr As Map) As VMCarousel
 	Carousel.SetAttr(attr)
 	Return Me
 End Sub
@@ -443,10 +451,10 @@ Sub SetAttributes(attrs As List) As VMCarousel
 End Sub
 
 'set for
-Sub SetVFor(item As String, dataSource As String) As VMCarousel
+Sub SetVFor(sItem As String, dataSource As String) As VMCarousel
 	dataSource = dataSource.tolowercase
-	item = item.tolowercase
-	Dim sline As String = $"${item} in ${dataSource}"$
+	sItem = sItem.tolowercase
+	Dim sline As String = $"${sItem} in ${dataSource}"$
 	SetAttrSingle("v-for", sline)
 	Return Me
 End Sub
@@ -506,4 +514,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMCarousel
 Carousel.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMCarousel
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCarousel
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

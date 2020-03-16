@@ -693,3 +693,19 @@ Sub SetVisible(b As Boolean) As VMSlider
 Slider.SetVisible(b)
 Return Me
 End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMSlider
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSlider
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
+End Sub

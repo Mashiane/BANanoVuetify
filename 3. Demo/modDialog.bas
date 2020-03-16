@@ -20,12 +20,15 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(2).AddColumns(2, 12, 6, 6, 6)
+	cont.AddRows(3).AddColumns2x6
 	'
 	vm.CreateButton("btnDialog", Me).SetLabel("Show Dialog").AddToContainer(cont, 1, 1)
 	vm.CreateButton("btnPersistent", Me).SetLabel("Persistent").AddToContainer(cont, 1, 2)
 	vm.CreateButton("btnHideOverlay", Me).SetLabel("Hide Overlay").AddToContainer(cont, 2, 1)
 	vm.CreateButton("btnInputDialog", Me).SetLabel("Input Dialog").AddToContainer(cont, 2, 2)
+	vm.CreateButton("btnPrompt1", Me).SetLabel("Alert Dialog").AddToContainer(cont, 3, 1)
+	vm.CreateButton("btnConfirm1", Me).SetLabel("Confirm Dialog").AddToContainer(cont, 3, 2)
+	
 	
 	Dim diag As VMDialog = vm.CreateDialog("diag1", Me)
 	diag.SetWidth("500")
@@ -53,6 +56,16 @@ Sub Code
 	Dim diagx As VMDialog = InputDialog
 	vm.AddDialog(diagx)
 	
+End Sub
+
+'see pgIndex.confirm_ok
+Sub btnConfirm1_click(e As BANanoEvent)
+	vm.ShowConfirm("promptuser", "Confirm Vuetify", "Are you sure that you want to use Vuetify?", "Yep", "Nada")
+End Sub
+
+'see pgIndex.alert_ok
+Sub btnPrompt1_click(e As BANanoEvent)
+	vm.ShowAlert("alertuser", "Alert User", "This is an alert!", "Yippie!")
 End Sub
 
 Sub btnInputDialog_click(e As BANanoEvent)

@@ -155,6 +155,7 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	vli.Initialize(vue, "", Module)
 	vli.SetVIf($"item.${key}"$)
 	vli.Bind(":key", $"item.${key}"$)
+	vli.SetAttrSingle(":id", $"item.${key}"$)
 	vli.SetOnClick($"${ID}_click"$)
 	'
 	If avatar <> "" Then
@@ -202,16 +203,15 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 		la.Initialize(vue, "", Module).AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
 		la.Pop(vli.ListItem)
 	End If
-	vli.Pop(tmp.Template)
+	vli.Pop(tmp.Template)	
 	'add the divider
 	Dim dvd As VMDivider
-	dvd.Initialize(vue).SetVElseIf("item.divider").Bind(":key", "i")
+	dvd.Initialize(vue).SetVElseIf("item.divider").Bind(":key", "i").SetInset
 	dvd.Pop(tmp.Template)
 	'add sub heading
 	Dim sh As VMSubHeader
-	sh.Initialize(vue).SetVElseIf("item.header").Bind(":key", "item.header").SetText("{{ item.header }}")
+	sh.Initialize(vue).SetVElseIf("item.header").Bind(":key", "item.header").SetText("{{ item.header }}").SetInset(True)
 	sh.Pop(tmp.Template)
-	'
 	tmp.Pop(List)
 	HasContent = True
 	Return Me
@@ -227,6 +227,12 @@ Sub SetDataSource(datasource As String, key As String, avatar As String, iconNam
 End Sub
 
 Sub AddItem(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMList
+	key = key.tolowercase
+	If key = "" Then
+		key = items.size
+	End If
+	title = BANano.SF(title)
+	subtitle = BANano.SF(subtitle)
 	Dim item As Map = CreateMap()
 	item.Put("id", key)
 	item.Put("avatar", avatar)
@@ -235,6 +241,21 @@ Sub AddItem(key As String, avatar As String, iconName As String, title As String
 	item.Put("subtitle", subtitle)
 	item.Put("action", actionIcon)
 	items.Put(key, item)
+	HasContent = True
+	Return Me
+End Sub
+
+'add item from json
+Sub AddItemJSON(json As String) As VMList
+	Dim m As Map = vue.Json2Map(json)
+	items.Put(items.size, m)
+	HasContent = True
+	Return Me
+End Sub
+
+'add an item from a map
+Sub AddItemMap(m As Map) As VMList
+	items.Put(items.size, m)
 	HasContent = True
 	Return Me
 End Sub
@@ -259,6 +280,8 @@ End Sub
 
 'NOT IMPLEMENTED
 Sub AddSubItem(parent As String, key As String, avatar As String, iconName As String, title As String, subtitle As String) As VMList
+	parent = parent.ToLowerCase
+	key = key.tolowercase
 	If items.ContainsKey(parent) Then
 		'read the item
 		Dim pItem As Map = items.Get(parent)
@@ -325,8 +348,7 @@ End Sub
 
 
 'get component
-Sub ToString As String
-	
+Sub ToString As String	
 	If items.Size > 0 Then
 		Dim listKey As String = $"${ID}ds"$
 		'
@@ -337,7 +359,7 @@ Sub ToString As String
 			xitems.Add(v)
 		Next
 		vue.SetStateSingle(listKey, xitems)
-		AddItemGroup(listKey, "id", "avatar", "icon", "title", "subtitle", "action")
+		SetDataSourceTemplate(listKey, "id", "avatar", "icon", "title", "subtitle", "action")
 	End If
 	Return List.ToString
 End Sub
@@ -440,7 +462,7 @@ Sub SetDense(varDense As Object) As VMList
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMList
+Sub SetDisabled(varDisabled As Boolean) As VMList
 	List.SetDisabled(varDisabled)
 	Return Me
 End Sub
@@ -675,4 +697,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMList
 List.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMList
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMList
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

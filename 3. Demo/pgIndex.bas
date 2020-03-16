@@ -57,7 +57,19 @@ Sub Init
 	vm.AddTheme("white-text-only", vm.vue.COLOR_WHITE, vm.vue.INTENSITY_NORMAL, vm.vue.COLOR_NONE, vm.vue.INTENSITY_NORMAL)
 	'
 	AddPages
+	'
+	'footer links
+	Dim footerLinks As List = Array("Home", "About Us", "Team", "Services", "Blog", "Contact Us")
+	vm.SetData("footerlinks", footerLinks)
 	
+	vm.Footer.SetAbsolute(True).SetPadless(True).SetColorIntensity(vm.COLOR_PRIMARY, vm.INTENSITY_LIGHTEN1)
+	'
+	vm.Footer.Container.AddRows(2).AddColumns12
+	vm.Footer.Container.SetColorIntensityRC(2, 0, vm.COLOR_PRIMARY, vm.INTENSITY_LIGHTEN2)
+	vm.Footer.Container.SetJustifyRC(2, vm.JUSTIFY_CENTER)
+	vm.Footer.Container.SetAlignRC(2, vm.JUSTifY_CENTER)
+	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
+	'
 	vm.UX
 	
 End Sub
@@ -132,11 +144,20 @@ Sub BuildDrawer
 	vm.drawer.AddItem("quill", "", "Quill")
 	vm.drawer.AddItem("infobox", "", "Info Box")
 	vm.drawer.AddItem("prism", "", "Prism")
+	vm.drawer.AddItem("carousel", "", "Carousel")
+	vm.drawer.AddItem("messageboard", "", "Message Board")
+	vm.Drawer.AddItem("expansionpanel", "", "Expansion Panel")
+	vm.Drawer.AddItem("parallax", "", "Parallax")
 End Sub
 
 Sub confirm_ok(e As BANanoEvent)
 	Dim sproc As String = vm.GetConfirm
-	vm.ShowSnackBar(sproc)
+	Select Case sproc
+	Case "promptuser"
+		vm.ShowSnackBar("Yes, use Vuetify!")
+	Case Else
+		vm.ShowSnackBar(sproc)
+	End Select
 End Sub
 
 Sub confirm_cancel(e As BANanoEvent)
@@ -146,7 +167,12 @@ End Sub
 
 Sub alert_ok(e As BANanoEvent)
 	Dim sproc As String = vm.GetAlert
-	vm.ShowSnackBar(sproc)
+	Select Case sproc
+	Case "alertuser"
+		vm.ShowSnackBar("Selected alert user!")
+	Case Else
+		vm.ShowSnackBar(sproc)
+	End Select		
 End Sub
 
 '*IMPORTANT
@@ -155,9 +181,21 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
 	Select Case elID
+	Case "parallax"
+		vm.NavBar.UpdateTitle(modParallax.title)
+		vm.ShowPage(modParallax.name)
+	Case "expansionpanel"
+		vm.NavBar.UpdateTitle(modExpansionPanels.title)
+		vm.ShowPage(modExpansionPanels.name)
+	Case "messageboard"
+		vm.NavBar.UpdateTitle(modMessageBoard.title)
+		vm.ShowPage(modMessageBoard.name)
+	Case "carousel"
+		vm.NavBar.UpdateTitle(modCarousel.title)
+		vm.ShowPage(modCarousel.name)
 	Case "prism"
 		vm.NavBar.UpdateTitle(modPrism.title)
-		vm.ShowPage(modprism.name)
+		vm.ShowPage(modPrism.name)
 	Case "quill"
 		vm.NavBar.UpdateTitle(modQuill.title)
 		vm.ShowPage(modQuill.name)
@@ -222,7 +260,6 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "buttons"
 			vm.NavBar.UpdateTitle(modButtons.title)
 		vm.ShowPage(modButtons.name)
-	Case "cards"
 	Case "chips"
 			vm.NavBar.UpdateTitle(modChips.title)
 		vm.ShowPage(modChips.name)
@@ -364,4 +401,8 @@ Sub AddPages
 	vm.addpage(modInfoBox.name, modInfoBox)
 	vm.AddPage(modQuill.name, modQuill)
 	vm.addpage(modPrism.name, modPrism)
+	vm.AddPage(modCarousel.name, modCarousel)
+	vm.AddPage(modMessageBoard.name, modMessageBoard)
+	vm.AddPage(modExpansionPanels.name, modExpansionPanels)
+	vm.addpage(modParallax.name, modParallax)
 End Sub

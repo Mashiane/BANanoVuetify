@@ -39,8 +39,7 @@ Sub SetAttributes(attrs As List) As VMCol
 End Sub
 
 'get component
-Sub ToString As String
-	
+Sub ToString As String	
 	Return Col.ToString
 End Sub
 
@@ -296,4 +295,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMCol
 Col.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMCol
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCol
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

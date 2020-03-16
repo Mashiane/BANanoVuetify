@@ -97,6 +97,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'set transition
+Sub SetTransition(varTransition As Object) As VMContainer
+	Container.Bind("transition", varTransition)
+	Return Me
+End Sub
+
 Sub AddExclusion(them As List) As VMContainer
 	For Each k As String In them
 		Exclusions.Add(k)
@@ -191,26 +197,7 @@ End Sub
 
 'validate the records
 Sub Validate(rec As Map) As Boolean
-	Dim iv As Int = 0
-	For Each k As String In Required.Keys
-		If rec.ContainsKey(k) Then
-			Dim v As String = rec.GetDefault(k,"")
-			v = vue.CStr(v)
-			v = v.trim
-			If v = "" Then
-				Log("Validate: " & k)
-				iv = iv + 1
-				ShowError(k)
-			Else
-				HideError(k)
-			End If
-		End If
-	Next
-	If iv = 0 Then
-		Return True
-	Else
-		Return False
-	End If
+	Return vue.Validate(rec, Required)
 End Sub
 
 Sub ShowError(elID As String)
@@ -431,6 +418,45 @@ Sub AddClassRC(row As Int, col As Int, classNames As List) As VMContainer
 	For Each clsName As String In classNames
 		SetClassRC(row, col, clsName)
 	Next
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetColorIntensityRC(row As Int, col As Int, varColor As String, varIntensity As String) As VMContainer
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	SetClassRC(row, col, scolor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetColorRC(row As Int, col As Int, varColor As String) As VMContainer
+	SetClassRC(row, col, varColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorRC(row As Int, col As Int, varColor As String) As VMContainer
+	Dim sColor As String = $"${varColor}--text"$
+	SetClassRC(row, col, sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensityRC(row As Int, col As Int, varColor As String, varIntensity As String) As VMContainer
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	SetClassRC(row, col, mcolor)
+	Return Me
+End Sub
+
+Sub SetTextCenterRC(row As Int, col As Int) As VMContainer
+	AddClassRC(row, col, Array("text-center"))
+	Return Me
+End Sub
+
+Sub SetTextRightRC(row As Int, col As Int) As VMContainer
+	AddClassRC(row, col, Array("text-right"))
 	Return Me
 End Sub
 
@@ -1338,5 +1364,21 @@ End Sub
 
 Sub SetVisible(b As Boolean) As VMContainer
 	Container.SetVisible(b)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMContainer
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMContainer
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
 	Return Me
 End Sub

@@ -18,10 +18,16 @@ End Sub
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMQuill
 ID = sid.tolowercase
 	Quill.Initialize(v, ID)
-	Quill.SetTag("vue-editor")
+	Quill.SetTag("vue-editor").AddClass("mb-2")
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Return Me
+End Sub
+
+'set required
+Sub SetRequired(varRequired As Boolean) As VMQuill
+	Quill.SetRequired(varRequired)
 	Return Me
 End Sub
 
@@ -346,4 +352,21 @@ End Sub
 Sub SetVisible(b As Boolean) As VMQuill
 Quill.SetVisible(b)
 Return Me
+End Sub
+
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMQuill
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMQuill
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

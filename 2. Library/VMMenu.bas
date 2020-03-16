@@ -89,13 +89,15 @@ Sub SetIcon(iconName As String) As VMMenu
 	Return Me
 End Sub
 
+'set the button to activate the menu
 Sub SetButton(iconName As String, btnText As String) As VMMenu
 	Dim btn As VMButton
-	btn.Initialize(vue, $"${ID}button"$, Module).AddIcon(iconName,"left","").SetLabel(btnText).SetMenuTrigger(True)
+	btn.Initialize(vue, $"${ID}button"$, Module).AddIcon(iconName,"left","").SetLabel(btnText).SetMenuTrigger(True).SetTransparent(True)
 	btn.Pop(act.Template)
 	Return Me
 End Sub
 
+'add an item to the menu content
 Sub AddItem(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String)
 	MenuContent.AddItem(key, avatar, iconName, title, subtitle, actionIcon)
 End Sub
@@ -589,4 +591,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMMenu
 Menu.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMMenu
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMMenu
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

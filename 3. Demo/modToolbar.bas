@@ -18,7 +18,7 @@ Sub Code
 	Dim cont As VMContainer = vm.CreateContainer(name, Me)
 	'hide this container
 	cont.Hide
-	cont.AddRows(2).AddColumns12
+	cont.AddRows(5).AddColumns12
 	'
 	Dim tbl1 As VMToolBar = vm.CreateToolbar("tbl1", Me)
 	tbl1.SetProminent(True).SetExtended(True).SetDark(True)
@@ -41,9 +41,26 @@ Sub Code
 	'
 	tbl1.AddToContainer(cont, 1, 1)
 	'
+	Dim tbx As VMToolBar = vm.createtoolbar("tbx", Me).SetDark(True).SetColor(vm.COLOR_PURPLE)
+	tbx.AddTitle("My Toolbar X","")
+	tbx.AddDivider(True, Null, Null, Array("mx-4"), Null)
+	tbx.AddSubHeading("My Sub Heading X", Null, Null, Null, Null)
+	tbx.AddSpacer
+	tbx.AddButton(vm.CreateButton("btnx1", Me).SetAttrLoose("text").SetLabel("News"))
+	tbx.AddButton(vm.CreateButton("btnx2", Me).SetAttrLoose("text").SetLabel("Blog"))
+	tbx.AddButton(vm.CreateButton("btnx3", Me).SetAttrLoose("text").SetLabel("Music"))
+	tbx.AddHamburger   'tbxmenu
+	
+	cont.AddComponent(3,1, tbx.ToString)
+	'
 	'add container to page
 	vm.AddContainer(cont)
 End Sub
+
+Sub tbxmenu_click(e As BANanoEvent)
+	vm.ShowSnackBar("Menu clicked!")
+End Sub
+
 
 Sub btnexport_click(e As BANanoEvent)
 	vm.ShowSnackBar("Export!")

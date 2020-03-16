@@ -108,6 +108,6 @@ Sub Pop(p As VMElement)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMPDF
-PDF.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	PDF.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub

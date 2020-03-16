@@ -16,6 +16,7 @@ Sub Class_Globals
 	Private Extension As VMTemplate
 	Public hasContent As Boolean
 	Public Tabs As VMTabs
+	Private compx As Int
 End Sub
 
 'initialize the ToolBar
@@ -31,6 +32,27 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Tabs.Initialize(vue, $"${ID}tabls"$, Module)
 	Tabs.OnToolBar = True
 	hasContent = False
+	compx = 0
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMToolBar
+	Dim pp As String = $"${ID}Color"$
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	vue.SetStateSingle(pp, scolor)
+	ToolBar.Bind(":color", pp)
+	Return Me
+End Sub
+
+Sub AddDivider(bVertical As Boolean, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMToolBar
+	compx = compx + 1
+	Dim skey As String = $"item${compx}"$
+	Dim d As VMDivider
+	d.Initialize(vue)
+	If bVertical Then d.SetVertical
+	d.BuildModel(mprops, mstyles, lclasses, loose)
+	AddComponent(skey, d.ToString)
 	Return Me
 End Sub
 
@@ -132,6 +154,22 @@ Sub AddComponent(key As String, comp As String) As VMToolBar
 	Return Me
 End Sub
 
+Sub AddSubHeading(sText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMToolBar
+	Dim skey As String = $"${ID}subheading"$
+	Dim d As VMLabel
+	d.Initialize(vue, skey).SetSpan.SetText($"{{ ${skey} }}"$).AddClass("subheading")
+	d.BuildModel(mprops, mstyles, lclasses, loose)
+	AddComponent(skey, d.ToString)
+	vue.SetData(skey, sText)
+	Return Me
+End Sub
+
+Sub UpdateSubTitle(sText As String) As VMToolBar
+	Dim skey As String = $"${ID}subheading"$
+	vue.SetData(skey, sText)
+	Return Me
+End Sub
+
 Sub AddIcon(key As String, iconName As String, toolTip As String, badge As String) As VMToolBar
 	key = key.tolowercase
 	Dim btn As VMButton
@@ -172,6 +210,7 @@ Sub AddHamburger As VMToolBar
 	'will help place items on the right
 	Dim Spacer As VMElement
 	Spacer.Initialize(vue, $"${ID}menu"$).SetTag("v-app-bar-nav-icon")
+	Spacer.SetOnClick(Module, $"${ID}menu_click"$)
 	Spacer.Pop(ToolBar)
 	hasContent = True
 	Return Me
@@ -553,4 +592,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMToolBar
 ToolBar.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMToolBar
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMToolBar
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub

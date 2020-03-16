@@ -12,6 +12,9 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Public Panel As VMExpansionPanel
+	Public Header As VMExpansionPanelHeader
+	Public Content As VMExpansionPanelContent
 End Sub
 
 'initialize the ExpansionPanels
@@ -22,11 +25,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Panel.Initialize(vue, $"${ID}panel"$, Module)
+	Header.Initialize(vue, $"${ID}header"$, Module)
+	Content.Initialize(vue, $"${ID}content"$, Module) 
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	Panel.AddComponent(Header.ToString)
+	Panel.AddComponent(Content.ToString)
+	AddComponent(Panel.ToString)
 	Return ExpansionPanels.ToString
 End Sub
 
@@ -75,7 +84,7 @@ Sub AddClass(c As String) As VMExpansionPanels
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMExpansionPanels
+Sub SetAttr(attr As Map) As VMExpansionPanels
 	ExpansionPanels.SetAttr(attr)
 	Return Me
 End Sub
@@ -422,4 +431,20 @@ End Sub
 Sub SetVisible(b As Boolean) As VMExpansionPanels
 ExpansionPanels.SetVisible(b)
 Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMExpansionPanels
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanels
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
 End Sub
