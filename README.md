@@ -2,6 +2,8 @@
 
 [Watch Video](https://youtu.be/cLbyAqwR-DQ)
 
+[B4X Blog about BANanoVuetify](https://www.b4x.com/android/forum/threads/bananovuematerial-the-first-complete-opensource-vuejs-ux-based-framework-for-banano.113789/#content)
+
 BANanoVuetify is a wrapper for the Vuetify framework for one to create websites, webapps, SPAs, PWAs using B4X and get their SPA/PWA out using the BANano. [Vuetify](https://vuetifyjs.com/en/) is a Material based framework for VueJS.
 
 With BANano, one is able to code using VB like syntax using B4J from Anywhere Software and the result is a PWA (Progressive Web App) in SPA (Single Page Application) format.
@@ -21,8 +23,6 @@ With BANano, one is able to code using VB like syntax using B4J from Anywhere So
 
 - I have written a very nice tutorial here on [BANano for Dummies by example](https://www.b4x.com/android/forum/threads/banano-for-dummies-by-example.108722/#content)
 - Join the B4X forum for more details.
-
-[B4X Blog about BANanoVuetify](https://www.b4x.com/android/forum/threads/bananovuematerial-the-first-complete-opensource-vuejs-ux-based-framework-for-banano.113789/#content)
 
 MD created with [Online Markdown Editor](https://mkdown.now.sh/)
 
