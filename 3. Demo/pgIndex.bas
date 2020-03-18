@@ -80,8 +80,6 @@ Sub BuildDrawer
 	vm.Drawer.AddTitleSubTitle("BANanoVuetify", "Version 3.00")
 	vm.Drawer.AddDivider
 	vm.Drawer.AddItem("alerts", "", "Alerts")
-	'vm.Drawer.AddItem("application", "", "Application")
-	'vm.Drawer.AddItem("aspectratio", "", "Aspect Ratio")
 	vm.Drawer.AddItem("toolbars", "", "Toolbars")
 	vm.Drawer.AddItem("grids", "", "Grids")
 	vm.Drawer.AddItem("avatars", "", "Avatars")
@@ -93,12 +91,8 @@ Sub BuildDrawer
 	vm.Drawer.AddItem("buttons", "", "Buttons")
 	'vm.Drawer.AddItem("calendars", "", "Calendars")
 	'vm.Drawer.AddItem("cards", "", "Cards")
-	'vm.Drawer.AddItem("carousel", "", "Carousel")
 	vm.Drawer.AddItem("chips", "", "Chips")
 	vm.Drawer.AddItem("dialogs", "", "Dialogs")
-	'vm.Drawer.AddItem("dividers", "", "Dividers")
-	'vm.Drawer.AddItem("expansionpanels", "", "Expansion Panels")
-	'vm.Drawer.AddItem("footer", "", "Footer")
 	vm.Drawer.AddItem("autocomplete", "", "Auto Complete")
 	vm.Drawer.AddItem("checkbox", "", "Check Box")
 	vm.Drawer.AddItem("combo", "", "Combo Box")
@@ -119,15 +113,11 @@ Sub BuildDrawer
 	'vm.Drawer.AddItem("lazy", "", "Lazy")
 	vm.Drawer.AddItem("lists", "", "Lists")
 	vm.Drawer.AddItem("menus", "", "Menus")
-	'vm.Drawer.AddItem("navdrawer", "", "Navigation Drawer")
 	vm.Drawer.AddItem("overlays", "", "Overlays")
 	'vm.Drawer.AddItem("pagination", "", "Paginations")
-	'vm.Drawer.AddItem("parallax", "", "Parallax")
-	'vm.Drawer.AddItem("pickers", "", "Pickers")
 	'vm.Drawer.AddItem("progress", "", "Progress")
-	'vm.Drawer.AddItem("ratings", "", "Ratings")
 	'vm.Drawer.AddItem("sheets", "", "Sheets")
-	'vm.Drawer.AddItem("skeletonloaders", "", "Skeleton Loaders")
+	vm.Drawer.AddItem("modLoadingSkeleton", "", "Skeleton Loaders")
 	vm.Drawer.AddItem("snackbars", "", "Snackbars")
 	'vm.Drawer.AddItem("sparklines", "", "Sparklines")
 	vm.Drawer.AddItem("steppers", "", "Steppers")
@@ -148,6 +138,9 @@ Sub BuildDrawer
 	vm.drawer.AddItem("messageboard", "", "Message Board")
 	vm.Drawer.AddItem("expansionpanel", "", "Expansion Panel")
 	vm.Drawer.AddItem("parallax", "", "Parallax")
+	vm.Drawer.AddItem("colorpicker", "", "Color Picker")
+	vm.drawer.AddItem("rating", "", "Rating")
+	vm.drawer.additem("echarts", "", "ECharts")
 End Sub
 
 Sub confirm_ok(e As BANanoEvent)
@@ -181,6 +174,18 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
 	Select Case elID
+	Case "echarts"
+		vm.NavBar.UpdateTitle(modECharts.title)
+		vm.ShowPage(modECharts.name)
+	Case "modloadingskeleton"
+		vm.NavBar.UpdateTitle(modLoadingSkeleton.title)
+		vm.ShowPage(modLoadingSkeleton.name)
+	Case "rating"
+		vm.NavBar.UpdateTitle(modRating.title)
+		vm.ShowPage(modRating.name)
+	Case "colorpicker"
+		vm.NavBar.UpdateTitle(modColorPicker.title)
+		vm.ShowPage(modColorPicker.name)
 	Case "parallax"
 		vm.NavBar.UpdateTitle(modParallax.title)
 		vm.ShowPage(modParallax.name)
@@ -202,12 +207,10 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "infobox"
 		vm.NavBar.UpdateTitle(modInfoBox.title)
 		vm.ShowPage(modInfoBox.name)
+		modInfoBox.refresh
 	Case "gmap"
 		vm.NavBar.UpdateTitle(modGMap.title)
 		vm.ShowPage(modGMap.name)
-	Case "rangeslider"
-		vm.NavBar.UpdateTitle(modRangeSlider.title)
-		vm.ShowPage(modRangeSlider.name)
 	Case "device"
 		vm.NavBar.UpdateTitle(modDevice.title)
 		vm.ShowPage(modDevice.name)
@@ -397,7 +400,6 @@ Sub AddPages
 	vm.addpage(modChartKick.name, modChartKick)
 	vm.addpage(modDevice.name, modDevice)
 	vm.addpage(modGMap.name, modGMap)
-	vm.addpage(modRangeSlider.name, modRangeSlider)
 	vm.addpage(modInfoBox.name, modInfoBox)
 	vm.AddPage(modQuill.name, modQuill)
 	vm.addpage(modPrism.name, modPrism)
@@ -405,4 +407,8 @@ Sub AddPages
 	vm.AddPage(modMessageBoard.name, modMessageBoard)
 	vm.AddPage(modExpansionPanels.name, modExpansionPanels)
 	vm.addpage(modParallax.name, modParallax)
+	vm.addpage(modColorPicker.name, modColorPicker)
+	vm.addpage(modRating.name, modRating)
+	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
+	vm.addpage(modECharts.name, modECharts)
 End Sub

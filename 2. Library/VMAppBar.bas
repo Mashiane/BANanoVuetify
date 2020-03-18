@@ -159,7 +159,6 @@ End Sub
 
 
 Sub menu_click(e As BANanoEvent)
-	Log("Menu_Click")
 	vue.ToggleState("drawer")
 	'Drawer.Toggle
 	'NavBar.ToggleMenu

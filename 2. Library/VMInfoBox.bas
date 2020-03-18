@@ -12,17 +12,16 @@ Sub Class_Globals
 	Private Icon As VMElement
 	Private Content As VMElement
 	Private Text As VMElement
-	Private CountIt As VMElement
+	Public CountIt As VMCountTo
 	Private i As VMElement
 	Private hasIcon As Boolean
 	Private banano As BANano   'ignore
 	Private module As Object
+	Private banano As BANano
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMInfoBox
-	banano.DependsOnAsset("jquery-3.4.1.min.js")
 	banano.DependsOnAsset("info-box.css")
-	banano.DependsOnAsset("jquery.countTo.js")
 	module = eventHandler
 	ID = sid.ToLowerCase
 	vue = v
@@ -30,12 +29,18 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Icon.Initialize(vue, $"${ID}icn"$).SetTag("div").AddClass("icon")
 	Content.Initialize(vue,$"${ID}content"$).SetTag("div").AddClass("content")
 	Text.Initialize(vue,$"${ID}text"$).SetTag("div").AddClass("text") 
-	CountIt.Initialize(vue,$"${ID}number"$).SetTag("div").AddClass("number")
+	CountIt.Initialize(vue, $"${ID}number"$, module).AddClass("number")
+	CountIt.CountTo.SetRef($"${ID}number"$)
 	i.Initialize(vue,$"${ID}i"$).SetTag("i").AddClass("material-icons")
 	hasIcon = False
 	InfoBox.SetOnClick(module, $"${ID}_click"$)
 	SetKey(ID)
 	Return Me
+End Sub
+
+Sub Start
+	Dim bo As BANanoObject = vue.refs.Getfield($"${ID}number"$)
+	bo.RunMethod("start", Null)
 End Sub
 
 'set the row and column position
@@ -87,30 +92,20 @@ Sub SetKey(k As Object) As VMInfoBox
 	Return Me
 End Sub
 
-
-'
-'Sub UpdateText(txt As String) As VMInfoBox
-'	banano.GetElement($"#${ID}text"$).SetText(txt)
-'	Return Me
-'End Sub
-'
-'Sub UpdateTo(txt As String) As VMInfoBox
-'	banano.GetElement($"#${ID}number"$).SetAttr("data-to", txt)
-'	banano.GetElement($"#${ID}number"$).SetText(txt)
-'	Return Me
-'End Sub
-
 Sub SetStyle2(b As Boolean) As VMInfoBox
+	If b = False Then Return Me
 	InfoBox.removeclass("info-box").addclass("info-box-2")
 	Return Me
 End Sub
 
 Sub SetStyle3(b As Boolean) As VMInfoBox
+	If b = False Then Return Me
 	InfoBox.removeclass("info-box").addclass("info-box-3")
 	Return Me
 End Sub
 
 Sub SetStyle4(b As Boolean) As VMInfoBox
+	If b = False Then Return Me
 	InfoBox.removeclass("info-box").addclass("info-box-4")
 	Return Me
 End Sub
@@ -150,52 +145,18 @@ Sub SetText(txt As String) As VMInfoBox
 End Sub
 
 Sub SetFrom(startFrom As String) As VMInfoBox
-	Dim pp As String = $"${ID}from"$
-	vue.SetStateSingle(pp, startFrom)
-	CountIt.AddClass("count-to")
-	CountIt.AddClass(ID)
-	CountIt.SetAttr(CreateMap(":data-from": pp))
+	CountIt.SetStartVal(startFrom)
 	Return Me
 End Sub
 
 Sub SetTo(endTo As String) As VMInfoBox
-	Dim pp As String = $"${ID}to"$
-	vue.SetStateSingle(pp,endTo)
-	CountIt.AddClass("count-to")
-	CountIt.AddClass(ID)
-	CountIt.SetAttr(CreateMap(":data-to": pp))
-	SetNumber(endTo)
+	CountIt.SetEndval(endTo)
 	Return Me
 End Sub
 
-'for infor box
-Sub Refresh
-	'redraw the control
-	SetKey(DateTime.Now)
-	vue.JQuery.Selector($".${ID}"$).RunMethod("countTo", Null)
-End Sub
-
-Sub SetNumber(numo As String) As VMInfoBox
-	Dim pp As String = $"${ID}number"$
-	vue.SetStateSingle(pp, numo)
-	CountIt.SetText($"{{ ${pp} }}"$)
-	Return Me
-End Sub
-
-Sub SetSpeed(speed As String) As VMInfoBox
-	Dim pp As String = $"${ID}speed"$
-	vue.SetStateSingle(pp, speed)
-	CountIt.AddClass("count-to")
-	CountIt.AddClass(ID)
-	CountIt.SetAttr(CreateMap(":data-speed":pp))
-	Return Me
-End Sub
-
-Sub SetRefreshInterval(interval As String) As VMInfoBox
-	If interval = "" Then Return Me
-	CountIt.AddClass("count-to")
-	CountIt.AddClass(ID)
-	CountIt.SetAttr(CreateMap("data-fresh-interval":interval))
+Sub SetDuration(speed As String) As VMInfoBox
+	speed = banano.parseInt(speed)
+	CountIt.SetDuration(speed)
 	Return Me
 End Sub
 
@@ -206,14 +167,14 @@ Sub SetIcon(matIcon As String) As VMInfoBox
 	Return Me
 End Sub
 
-Sub ToString As String
-	
+Sub ToString As String	
 	If hasIcon Then i.Pop(Icon)
 	Icon.Pop(InfoBox)
 	Text.Pop(Content)
 	CountIt.Pop(Content)
 	Content.Pop(InfoBox)
-	Return InfoBox.tostring
+	Dim scode As String = InfoBox.ToString
+	Return scode
 End Sub
 
 Sub SetHoverZoomEffect(b As Boolean) As VMInfoBox

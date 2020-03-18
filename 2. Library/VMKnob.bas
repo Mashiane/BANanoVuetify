@@ -14,7 +14,6 @@ Sub Class_Globals
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMKnob
-	BANano.DependsOnAsset("jquery.knob.min.js")
 	BANano.DependsOnAsset("tron-knob.js")
 	
 	ID = sid.ToLowerCase

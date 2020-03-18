@@ -22,13 +22,13 @@ Sub Code
 	cont.addrows(2).AddColumns2x6
 	cont.AddRows(1).AddColumns12
 	'
-	vm.CreateDevice("iphoneX", Me).SetIphoneX.SetURL("https://www.b4x.com/").AddToContainer(cont, 1, 1)
-	vm.CreateDevice("iphoneXl", Me).SetIphoneX.SetURL("https://www.b4x.com/").SetLandScape.AddToContainer(cont, 1, 2)
+	vm.CreateDevice("iphoneX", Me).SetIphoneX.SetURL("https://www.google.com/").AddToContainer(cont, 1, 1)
+	vm.CreateDevice("iphoneXl", Me).SetIphoneX.SetURL("https://www.google.com/").SetLandScape.AddToContainer(cont, 1, 2)
 	'
-	vm.CreateDevice("ipad", Me).SetIpad.SetURL("https://www.b4x.com/").AddToContainer(cont, 2, 1)
-	vm.CreateDevice("ipadl", Me).SetIpad.SetURL("https://www.b4x.com/").SetLandScape.AddToContainer(cont, 2, 1)
+	vm.CreateDevice("ipad", Me).SetIpad.SetURL("https://www.google.com/").AddToContainer(cont, 2, 1)
+	vm.CreateDevice("ipadl", Me).SetIpad.SetURL("https://www.google.com/").SetLandScape.AddToContainer(cont, 2, 1)
 	'
-	vm.CreateDevice("mac", Me).SetMacbook.SetURL("https://www.b4x.com/").AddToContainer(cont, 3, 1)
+	vm.CreateDevice("mac", Me).SetMacbook.SetURL("https://www.google.com/").AddToContainer(cont, 3, 1)
 	'
 	'add container to page
 	vm.AddContainer(cont)

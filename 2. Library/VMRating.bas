@@ -353,6 +353,17 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMRating
 	Return Me
 End Sub
 
+
+'set background-color
+Sub SetBackgroundColorIntensity(varBackgroundColor As Object, varIntensity As String) As VMRating
+	Dim pp As String = $"${ID}BackgroundColor"$
+	Dim scolor As String = $"${varBackgroundColor} ${varIntensity}"$
+	vue.SetStateSingle(pp, scolor)
+	Rating.Bind(":background-color", pp)
+	Return Me
+End Sub
+
+
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMRating
 	Rating.RemoveAttr(sName)

@@ -19,8 +19,6 @@ Sub Class_Globals
 	Public Footer As VMFooter
 	Private module As Object
 	Public Elevation As Map
-	Private HasKnob As Boolean
-	Private HasInfoBox As Boolean
 	Private Chartkick As BANanoObject
 	Private Chart As BANanoObject
 	Private VueGoogleMaps As BANanoObject
@@ -183,11 +181,9 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'vue.Use(zircleBO)
 	VuePrismEditor.Initialize("VuePrismEditor")
 	vue.AddComponentBO("vue-prism-editor", VuePrismEditor)
-	
+	'
 	'initialize the pages
 	Pages.initialize
-	HasKnob = False
-	HasInfoBox = False
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
 	VContent.Initialize(vue, $"${appName}content"$).SetTag("v-content")
@@ -268,7 +264,6 @@ Sub ShowConfirm(process As String, Title As String, Message As String,ConfirmTex
 	Confirm.Show
 End Sub
 
-
 Sub ShowAlert(process As String, Title As String, Message As String, ConfirmText As String)
 	process = process.tolowercase
 	vue.SetState(CreateMap("alertkey":process, "alerttitle":Title,"alertcontent":Message,"btnalertoklabel":ConfirmText))
@@ -328,6 +323,33 @@ Sub CreatePrism(eID As String, eventHandler As Object) As VMPrism
 	el.Initialize(vue, eID, eventHandler)
 	Return el
 End Sub
+
+Sub CreateEChart(eID As String, eventHandler As Object) As VMEChart
+	Dim el As VMEChart
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateColorPicker(eID As String, eventHandler As Object) As VMColorPicker
+	Dim el As VMColorPicker
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+
+Sub CreateRating(eID As String, eventHandler As Object) As VMRating
+	Dim el As VMRating
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+
+Sub CreateSkeletonLoader(eID As String, eventHandler As Object) As VMSkeletonLoader
+	Dim el As VMSkeletonLoader
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
 
 Sub CreateQuill(eID As String, eventHandler As Object) As VMQuill
 	Dim el As VMQuill
@@ -511,12 +533,6 @@ End Sub
 
 Sub CreateGMap(sid As String, eventHandler As Object) As VMGMap
 	Dim el As VMGMap
-	el.Initialize(vue, sid, eventHandler)
-	Return el
-End Sub
-
-Sub CreateRangeSlider(sid As String, eventHandler As Object) As VMRangeSlider
-	Dim el As VMRangeSlider
 	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub
@@ -851,18 +867,21 @@ Sub MergeMaps(oldm As Map, newm As Map) As Map
 End Sub
 
 Sub CreateInfoBox(sid As String, eventHandler As Object) As VMInfoBox
-	HasInfoBox = True
 	Dim el As VMInfoBox
 	el.Initialize(vue, sid, eventHandler)
-	
 	Return el
 End Sub
 
+Sub CreateCountTo(sid As String, eventHandler As Object) As VMCountTo
+	Dim el As VMCountTo
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+
 Sub CreateKnob(sid As String, eventHandler As Object) As VMKnob
-	HasKnob = True
 	Dim el As VMKnob
 	el.Initialize(vue, sid, eventHandler)
-	
 	Return el
 End Sub
 
@@ -1220,12 +1239,6 @@ Sub CreateCheckBox(sid As String, eventHandler As Object) As VMCheckBox
 	el.Initialize(vue, sid, eventHandler)
 	
 	Return el
-End Sub
-
-'refresh jquery stuff, infobox and knob
-Sub PageRefresh
-	If HasInfoBox Then SetInfoBox
-	If HasKnob Then SetKnob
 End Sub
 
 Sub CreateDynamicContent(sid As String) As VMElement
@@ -1755,15 +1768,6 @@ Sub GetFileDetails(fileObj As Map) As FileObject
 	Return vue.GetFileDetails(fileObj)
 End Sub
 
-'for infor box
-Sub SetInfoBox
-	JQuery.Selector(".count-to").RunMethod("countTo", Null)
-End Sub
-
-Sub SetKnob
-	BANano.RunJavascriptMethod("tron", Null)
-End Sub
-
 'show hour glass
 Sub PagePause
 	vue.SetStateSingle("pageloader", True)
@@ -1819,10 +1823,6 @@ Sub UX
 	'
 	Dim svuetify As String = "$vuetify"
 	vuetify = vue.BOVue.GetField(svuetify)
-	
-	If HasInfoBox Then SetInfoBox
-	If HasKnob Then SetKnob
-	
 End Sub
 
 Sub SetLocale(slang As String) As BANanoVM
@@ -1958,28 +1958,20 @@ End Sub
 'End Sub
 '
 
-'Sub NewInfoBox(sname As String, sText As String, sIcon As String, sIconBackgroundColor As String, iStart As Int, iFinish As Int) As VMInputControl
-'	sname = sname.tolowercase
-'	Dim actName As String = sname
-'	Dim actID As String = sname
-'	If sname.IndexOf(".") >= 0 Then
-'		actName = MvField(sname,2,".")
-'	End If
-'	Dim el As VMInputControl
-'	el.Initialize(actName)
-'	el.ActualID = actID
-'	el.typeof = "infobox"
-'	el.fieldType = "string"
-'	el.bSetCounter = True
-'	el.Start = iStart
-'	el.Finish = iFinish
-'	el.IconName = sIcon
-'	el.IconBackgroundColor = sIconBackgroundColor
-'	el.Text = sText
-'	el.Host = actName
-'	Return el
-'End Sub
-'
+Sub NewInfoBox(eventHandler As Object, sname As String, sText As String, sIcon As String, sIconBackgroundColor As String, iStart As String, iFinish As String) As VMInfoBox
+	Dim el As VMInfoBox = CreateInfoBox(sname, eventHandler)
+	el.InfoBox.typeof = "infobox"
+	el.InfoBox.fieldType = "string"
+	If iStart <> Null Then el.SetFrom(iStart)
+	If iFinish <> Null Then el.SetTo(iFinish)
+	If sIcon <> Null Then el.SetIcon(sIcon)
+	If sIconBackgroundColor <> Null Then el.SetIconBackgroundColor(sIconBackgroundColor)
+	el.SetText(sText)
+	If iFinish <> Null Then el.Countit.SetText(iFinish)
+	el.SetDuration("1000")
+	Return el
+End Sub
+
 ''
 Sub NewSlider(eventHandler As Object,sid As String, vmodel As String, slabel As String, iMinValue As Int, iMaxValue As String,iTabIndex As Int) As VMSlider
 	Dim el As VMSlider = CreateSlider(sid, eventHandler)
