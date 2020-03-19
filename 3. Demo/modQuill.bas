@@ -27,7 +27,7 @@ Sub Code
 Dim sCode As String = $"Dim q As VMQuill = vm.CreateQuill("q1", Me).SetVModel("quill") 
 cont.AddComponent(1, 1, q.tostring)"$
 	
-	Dim p As VMPrism = vm.CreatePrism("p2", Me).SetLanguage("vb").SetLineNumbers(True).SetCode(sCode)
+	Dim p As VMPrism = vm.CreatePrism("p2", Me).SetLanguage("vb").SetCode(sCode)
 	cont.AddComponent(3, 1, p.tostring)
 	
 	

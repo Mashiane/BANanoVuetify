@@ -53,6 +53,8 @@ Sub Class_Globals
 	Private attributes As Map
 	Private afewoptions As List
 	Private bControls As Boolean
+	Public HasBorder As Boolean
+	Public ShowMatrix As Boolean
 End Sub
 
 'initialize the Container
@@ -69,7 +71,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	LastRow = 0
 	Rows.Initialize
-	Module = eventHandler
 	RC.Initialize
 	Columns.Initialize
 	Components.Initialize
@@ -94,6 +95,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	HasInfoBox = False
 	Container.SetVShow($"${ID}show"$)
 	bControls = False
+	HasBorder = False
+	ShowMatrix = False
 	Return Me
 End Sub
 
@@ -735,6 +738,7 @@ private Sub BuildRow(row As GridRow) As String
 		'
 		Dim tRow As VMRow
 		tRow.Initialize(vue, rowKey, Module)
+		tRow.SetDesignMode(DesignMode)
 		'detect if we have styles for the Row
 		If rowStyles.ContainsKey(rowKey) Then
 			Dim cm As Map = rowStyles.Get(rowKey)
@@ -780,18 +784,26 @@ private Sub BuildRow(row As GridRow) As String
 				'add to RC map, this is used to check if Matrix Position Exist
 				RC.Put(cellKey,cellKey)
 				'if showid
+				If HasBorder Then
+					SetBorderRC(LastRow, LastColumn, "1px", vue.COLOR_GREY, vue.BORDER_SOLID)
+				End If
 				
 				Dim tColumn As VMCol
 				tColumn.Initialize(vue,cellKey,Module)
+				tColumn.SetDesignMode(DesignMode)
 				tColumn.SetLg(column.lg)
 				tColumn.SetSm(column.sm)
 				tColumn.SetMd(column.md)
-				tColumn.SetXl(column.xl)
+'				tColumn.SetXl(column.xl)
 				tColumn.SetOffsetSm(column.ofsm)
 				tColumn.SetOffsetMd(column.ofmd)
 				tColumn.SetOffsetLg(column.oflg)
 				tColumn.SetOffsetXl(column.ofxl)
 				'
+				If ShowMatrix Then
+					Dim matrix As String = $"R${LastRow}.C${LastColumn}"$
+					tColumn.SetText(matrix)
+				End If
 				'detect if we have styles for the rc
 				If rowStyles.ContainsKey(cellKey) Then
 					Dim cm As Map = rowStyles.Get(cellKey)
@@ -1380,5 +1392,172 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMConta
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
+	Return Me
+End Sub
+
+'set onclick event
+Sub SetOnClickRC(rowpos As Int, colpos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowpos)}c${CStr(colpos)}"$
+	If colpos = 0 Then
+		rowKey = $"${ID}r${CStr(rowpos)}"$
+	End If
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:click",methodName)
+	attributes.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+'set ontouch start event
+Sub SetOnTouchStartRC(rowpos As Int, colpos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowpos)}c${CStr(colpos)}"$
+	If colpos = 0 Then
+		rowKey = $"${ID}r${CStr(rowpos)}"$
+	End If
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:touchstart",methodName)
+	attributes.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+Sub SetOnDragOverRC(rowPos As Int, colPos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:dragover",methodName)
+	attributes.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+Sub SetOnDragStartRC(rowPos As Int, colPos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:dragstart",methodName)
+	attributes.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+Sub SetOnDragEndRC(rowPos As Int, colPos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:dragend",methodName)
+	attributes.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+Sub SetOnDragEnterRC(rowPos As Int, colPos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:dragenter",methodName)
+	attributes.Put(rowKey,rowc)
+	Return Me
+End Sub
+
+Sub SetOnDropRC(rowPos As Int, colPos As Int, methodName As String) As VMContainer
+	methodName = methodName.tolowercase
+	Dim rowc As Map
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	
+	If attributes.ContainsKey(rowKey) Then
+		rowc = attributes.Get(rowKey)
+	Else
+		rowc.Initialize
+		rowc.clear
+	End If
+	rowc.Put("v-on:drop",methodName)
+	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub

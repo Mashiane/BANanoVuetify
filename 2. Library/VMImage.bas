@@ -44,6 +44,26 @@ Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VM
 	Return Me
 End Sub
 
+Sub SetDraggable(b As Boolean) As VMImage
+	Image.SetDraggable(b)
+	Return Me
+End Sub
+
+Sub SetDroppable(b As Boolean) As VMImage
+	Image.SetDroppable(b)
+	Return Me	
+End Sub
+
+
+Sub SetCursorMove As VMImage
+	Image.SetCursorMove
+	Return Me
+End Sub
+
+Sub SetCursorPointer As VMImage
+	Image.SetCursorPointer
+	Return Me
+End Sub
 
 'set the position: row and column and sizes
 Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMImage

@@ -143,24 +143,28 @@ End Sub
 
 'set offset-lg
 Sub SetOffsetLg(varOffsetLg As String) As VMCol
+	If varOffsetLg = "0" Then Return Me
 	Col.SetAttrSingle("offset-lg", varOffsetLg)
 	Return Me
 End Sub
 
 'set offset-md
 Sub SetOffsetMd(varOffsetMd As String) As VMCol
+	If varOffsetMd = "0" Then Return Me
 	Col.SetAttrSingle("offset-md", varOffsetMd)
 	Return Me
 End Sub
 
 'set offset-sm
 Sub SetOffsetSm(varOffsetSm As String) As VMCol
+	If varOffsetSm = "0" Then Return Me
 	Col.SetAttrSingle("offset-sm", varOffsetSm)
 	Return Me
 End Sub
 
 'set offset-xl
 Sub SetOffsetXl(varOffsetXl As String) As VMCol
+	If varOffsetXl = "0" Then Return Me
 	Col.SetAttrSingle("offset-xl", varOffsetXl)
 	Return Me
 End Sub

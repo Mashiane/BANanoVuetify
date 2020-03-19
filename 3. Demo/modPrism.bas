@@ -22,7 +22,7 @@ Sub Code
 	cont.addrows(1).AddColumns12
 	'
 	Dim sCode As String = $"var strName ='';"$
-	Dim p As VMPrism = vm.CreatePrism("p1", Me).SetLanguage("js").SetLineNumbers(True).SetCode(sCode)
+	Dim p As VMPrism = vm.CreatePrism("p1", Me).SetLanguage("js").SetCode(sCode)
 	cont.AddComponent(1, 1, p.tostring)
 	
 	vm.AddContainer(cont)

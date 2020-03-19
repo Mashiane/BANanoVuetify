@@ -155,9 +155,9 @@ Sub Class_Globals
 	Private Options As Map
 	Private lang As String
 	Public Fake As VMFake
-	Private VuePrismEditor As BANanoObject
 	Private drawers As List
 	Private placeHolder As Int
+	Private PrismComponent As BANanoObject
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -179,8 +179,9 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	vue.Use(Chartkick.RunMethod("use", Chart))
 	'zircleBO.Initialize("zircle")
 	'vue.Use(zircleBO)
-	VuePrismEditor.Initialize("VuePrismEditor")
-	vue.AddComponentBO("vue-prism-editor", VuePrismEditor)
+	'
+	PrismComponent.Initialize("PrismComponent")
+	vue.AddComponentBO("prism", PrismComponent)
 	'
 	'initialize the pages
 	Pages.initialize
@@ -304,7 +305,6 @@ Sub CreateExpandTransition(eID As String, eventHandler As Object) As VMExpandTra
 	Return el
 End Sub
 
-
 Sub CreateAlert(eID As String, eventHandler As Object, typeOf As String) As VMAlert
 	Dim el As VMAlert
 	el.Initialize(vue, eID, eventHandler)
@@ -326,6 +326,16 @@ End Sub
 
 Sub CreateEChart(eID As String, eventHandler As Object) As VMEChart
 	Dim el As VMEChart
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateDiv(sid As String) As VMElement
+	Return vue.CreateDiv(sid)
+End Sub
+
+Sub CreateExpansionPanel(eID As String, eventHandler As Object) As VMExpansionPanel
+	Dim el As VMExpansionPanel
 	el.Initialize(vue, eID, eventHandler)
 	Return el
 End Sub
@@ -874,13 +884,6 @@ End Sub
 
 Sub CreateCountTo(sid As String, eventHandler As Object) As VMCountTo
 	Dim el As VMCountTo
-	el.Initialize(vue, sid, eventHandler)
-	Return el
-End Sub
-
-
-Sub CreateKnob(sid As String, eventHandler As Object) As VMKnob
-	Dim el As VMKnob
 	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub

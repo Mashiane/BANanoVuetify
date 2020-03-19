@@ -12,6 +12,9 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Public Header As VMExpansionPanelHeader
+	Public Content As VMExpansionPanelContent
+	Public Container As VMContainer
 End Sub
 
 'initialize the ExpansionPanel
@@ -22,11 +25,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Header.Initialize(vue, $"${ID}hdr"$, Module)
+	Content.Initialize(vue, $"${ID}cnt"$, Module) 
+	Container.Initialize(vue, $"${ID}cont"$, Module) 
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	Content.AddComponent(Container.ToString)
+	AddComponent(Header.ToString)
+	AddComponent(Content.ToString)
 	Return ExpansionPanel.ToString
 End Sub
 
@@ -75,7 +84,7 @@ Sub AddClass(c As String) As VMExpansionPanel
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMExpansionPanel
+Sub SetAttr(attr As Map) As VMExpansionPanel
 	ExpansionPanel.SetAttr(attr)
 	Return Me
 End Sub

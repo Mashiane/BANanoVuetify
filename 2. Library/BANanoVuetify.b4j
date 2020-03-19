@@ -19,52 +19,48 @@ File23=helpers.css
 File24=icons.svg
 File25=info-box.css
 File26=jquery.media.js
-File27=jquery.timeago.min.js
-File28=jquery-3.4.1.min.js
-File29=jszip.min.js
+File27=jquery-3.4.1.min.js
+File28=jszip.min.js
+File29=materialdesignicons.min.css
 File3=bCrypt.js
-File30=materialdesignicons.min.css
-File31=materialfont.css
-File32=md5.min.js
-File33=moment.js
-File34=neutralface.png
-File35=numeral.min.js
-File36=orange.png
-File37=oxml.min.js
-File38=pdfmake.js
-File39=printThis.js
+File30=materialfont.css
+File31=md5.min.js
+File32=moment.js
+File33=neutralface.png
+File34=numeral.min.js
+File35=orange.png
+File36=oxml.min.js
+File37=pdfmake.js
+File38=printThis.js
+File39=prism.css
 File4=bmap.min.js
-File40=prism.css
-File41=prism.js
-File42=progresscircle.css
-File43=progresscircle.js
-File44=quill.bubble.css
-File45=quill.min.js
-File46=quill.snow.css
-File47=red.png
-File48=renderstring.js
-File49=roboto.css
+File40=prism.js
+File41=progresscircle.css
+File42=progresscircle.js
+File43=quill.bubble.css
+File44=quill.min.js
+File45=quill.snow.css
+File46=red.png
+File47=renderstring.js
+File48=roboto.css
+File49=sadface.png
 File5=Chart.min.css
-File50=sadface.png
-File51=tron-knob.js
-File52=upload.php
-File53=v-chart.js
-File54=v-chart.min.css
-File55=vfs_fonts.js
-File56=vue.min.js
-File57=vue2-animate.min.css
-File58=vue2-editor.css
-File59=vue2-editor.umd.js
+File50=upload.php
+File51=v-chart.js
+File52=v-chart.min.css
+File53=vfs_fonts.js
+File54=vue.min.js
+File55=vue2-animate.min.css
+File56=vue2-editor.css
+File57=vue2-editor.umd.js
+File58=vue-chartkick.min.js
+File59=vue-count-to.min.js
 File6=Chart.min.js
-File60=vue-chartkick.min.js
-File61=vue-codemirror.js
-File62=vue-count-to.min.js
-File63=vue-google-maps.js
-File64=VuePrismEditor.css
-File65=VuePrismEditor.umd.min.js
-File66=vue-router.min.js
-File67=vuetify.js
-File68=vuetify.min.css
+File60=vue-google-maps.js
+File61=vue-prism-component.min.js
+File62=vue-router.min.js
+File63=vuetify.js
+File64=vuetify.min.css
 File7=clipboard.min.js
 File8=colors.js
 File9=createWaterBall-jquery.js
@@ -129,10 +125,6 @@ FileGroup61=Default Group
 FileGroup62=Default Group
 FileGroup63=Default Group
 FileGroup64=Default Group
-FileGroup65=Default Group
-FileGroup66=Default Group
-FileGroup67=Default Group
-FileGroup68=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
 FileGroup9=Default Group
@@ -142,54 +134,53 @@ Library2=jfx
 Library3=banano
 Module1=BANanoAlaSQL
 Module10=VMAvatar
-Module100=VMScrollXReverseTransition
-Module101=VMScrollXTransition
-Module102=VMScrollYReverseTransition
-Module103=VMScrollYTransition
-Module104=VMSelect
-Module105=VMSheet
-Module106=VMSimpleCheckBox
-Module107=VMSimpleTable
-Module108=VMSkeleton
-Module109=VMSkeletonLoader
+Module100=VMScrollXTransition
+Module101=VMScrollYReverseTransition
+Module102=VMScrollYTransition
+Module103=VMSelect
+Module104=VMSheet
+Module105=VMSimpleCheckBox
+Module106=VMSimpleTable
+Module107=VMSkeleton
+Module108=VMSkeletonLoader
+Module109=VMSlideGroup
 Module11=VMBadge
-Module110=VMSlideGroup
-Module111=VMSlider
-Module112=VMSlideXReverseTransition
-Module113=VMSlideXTransition
-Module114=VMSlideYReverseTransition
-Module115=VMSlideYTransition
-Module116=VMSnackBar
-Module117=VMSparkLine
-Module118=VMSpeedDial
-Module119=VMStepper
+Module110=VMSlider
+Module111=VMSlideXReverseTransition
+Module112=VMSlideXTransition
+Module113=VMSlideYReverseTransition
+Module114=VMSlideYTransition
+Module115=VMSnackBar
+Module116=VMSparkLine
+Module117=VMSpeedDial
+Module118=VMStepper
+Module119=VMStepperContent
 Module12=VMBanner
-Module120=VMStepperContent
-Module121=VMStepperHeader
-Module122=VMStepperItems
-Module123=VMStepperStep
-Module124=VMSubHeader
-Module125=VMSwitch
-Module126=VMTab
-Module127=VMTabItem
-Module128=VMTabs
-Module129=VMTabsItems
+Module120=VMStepperHeader
+Module121=VMStepperItems
+Module122=VMStepperStep
+Module123=VMSubHeader
+Module124=VMSwitch
+Module125=VMTab
+Module126=VMTabItem
+Module127=VMTabs
+Module128=VMTabsItems
+Module129=VMTabsSlider
 Module13=VMBottomNavigation
-Module130=VMTabsSlider
-Module131=VMTemplate
-Module132=VMTextArea
-Module133=VMTextField
-Module134=VMTimeline
-Module135=VMTimelineItem
-Module136=VMTimePicker
-Module137=VMToolBar
-Module138=VMToolTip
-Module139=VMTreeView
+Module130=VMTemplate
+Module131=VMTextArea
+Module132=VMTextField
+Module133=VMTimeline
+Module134=VMTimelineItem
+Module135=VMTimePicker
+Module136=VMToolBar
+Module137=VMToolTip
+Module138=VMTreeView
+Module139=VMWaterBall
 Module14=VMBottomSheet
-Module140=VMWaterBall
-Module141=VMWindow
-Module142=VMWindowItem
-Module143=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module140=VMWindow
+Module141=VMWindowItem
+Module142=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
 Module15=VMBreadCrumbs
 Module16=VMBreadCrumbsItem
 Module17=VMButton
@@ -249,43 +240,43 @@ Module65=VMInfoBox
 Module66=VMInput
 Module67=VMItem
 Module68=VMItemGroup
-Module69=VMKnob
+Module69=VMLabel
 Module7=VMAlert
-Module70=VMLabel
-Module71=VMLazy
-Module72=VMList
-Module73=VMListGroup
-Module74=VMListItem
-Module75=VMListItemAction
-Module76=VMListItemAvatar
-Module77=VMListItemContent
-Module78=VMListItemGroup
-Module79=VMListItemIcon
+Module70=VMLazy
+Module71=VMList
+Module72=VMListGroup
+Module73=VMListItem
+Module74=VMListItemAction
+Module75=VMListItemAvatar
+Module76=VMListItemContent
+Module77=VMListItemGroup
+Module78=VMListItemIcon
+Module79=VMListItemSubTitle
 Module8=VMAppBar
-Module80=VMListItemSubTitle
-Module81=VMListItemTitle
-Module82=VMMenu
-Module83=VMNavigationDrawer
-Module84=VMOverlay
-Module85=VMPagination
-Module86=VMParallax
-Module87=VMPDF
-Module88=VMPrettyPrint
-Module89=VMPrism
+Module80=VMListItemTitle
+Module81=VMMenu
+Module82=VMNavigationDrawer
+Module83=VMOverlay
+Module84=VMPagination
+Module85=VMParallax
+Module86=VMPDF
+Module87=VMPrettyPrint
+Module88=VMPrism
+Module89=VMProgressCircle
 Module9=VMAutoComplete
-Module90=VMProgressCircle
-Module91=VMProgressCircular
-Module92=VMProgressLinear
-Module93=VMQuill
-Module94=VMRadio
-Module95=VMRadioGroup
-Module96=VMRating
-Module97=VMResponsive
-Module98=VMRow
-Module99=VMScaleTransition
-NumberOfFiles=68
+Module90=VMProgressCircular
+Module91=VMProgressLinear
+Module92=VMQuill
+Module93=VMRadio
+Module94=VMRadioGroup
+Module95=VMRating
+Module96=VMResponsive
+Module97=VMRow
+Module98=VMScaleTransition
+Module99=VMScrollXReverseTransition
+NumberOfFiles=64
 NumberOfLibraries=3
-NumberOfModules=143
+NumberOfModules=142
 Version=8.1
 @EndOfDesignText@
 '
@@ -293,7 +284,7 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 3.00
+	#LibraryVersion: 3.01
 	#LibraryName: BANanoVuetify
 #End Region
 
@@ -333,7 +324,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("vue-count-to.min.js")
 	BANano.Header.AddCSSFile("info-box.css")
 	BANano.Header.AddCSSFile("helpers.css")
-	BANano.Header.AddJavascriptFile("tron-knob.js")
 	BANano.Header.AddJavascriptFile("md5.min.js")
 	BANano.Header.AddJavascriptFile("hashes.min.js")
 	BANano.Header.AddJavascriptFile("bCrypt.js")
@@ -373,17 +363,15 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("clipboard.min.js")
 	
 	BANano.Header.AddCSSFile("prism.css")		
-	BANano.Header.AddCSSFile("VuePrismEditor.css")
-	
 	BANano.Header.AddJavascriptFile("prism.js")
-	BANano.Header.AddJavascriptFile("VuePrismEditor.umd.min.js")
+	BANano.Header.AddJavascriptFile("vue-prism-component.min.js")
 	'
 	BANano.Header.AddJavascriptFIle("echarts.min.js")
 	BANano.Header.AddJavascriptFile("bmap.min.js")
 	BANano.Header.AddJavascriptFile("v-chart.js")
 	BANano.Header.AddCSSFile("v-chart.min.css")
-	
-	BANano.BuildAsB4XLib("3.00")
+	'
+	BANano.BuildAsB4XLib("3.01")
 	ExitApplication
 End Sub
 

@@ -21,11 +21,12 @@ Sub Code
 	cont.AddRows(1).AddColumns12
 	' make accordion
 	Dim ep As VMExpansionPanels = vm.CreateExpansionPanels("ep", Me).SetAccordion(True)
-	ep.Panel.SetVFor("(item, i)", "5")
-	ep.Panel.Bind(":key", "i")
-	'
-	ep.Header.SetText("Item")
-	ep.Content.SetText(vm.Fake.Rand_LoremIpsum(1))
+	Dim expx As VMExpansionPanel = vm.CreateExpansionPanel("ep1", Me)
+	expx.SetVFor("(item, i)", "5")
+	expx.Bind(":key", "i")
+	expx.Header.SetText("Item")
+	expx.Content.SetText(vm.Fake.Rand_LoremIpsum(1))
+	ep.AddPanel(expx)
 	
 	cont.AddComponent(1, 1, ep.tostring)
 	'

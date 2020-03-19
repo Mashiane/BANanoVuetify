@@ -358,8 +358,7 @@ public Sub CreateTable(tblFields As Map) As BANanoAlaSQLE
 	Next
 	sb.Append(")")
 	'define the qry to execute
-	Dim query As String = "CREATE TABLE IF NOT EXISTS " & EscapeField(TableName) & " " & sb.ToString
-	query = query
+	query = "CREATE TABLE IF NOT EXISTS " & EscapeField(TableName) & " " & sb.ToString
 	args = Null
 	types = Null
 	command = "createtable"
@@ -404,8 +403,7 @@ End Sub
 'return sql command to drop a table
 public Sub DropTable As BANanoAlaSQLE
 	'define the qry to execute
-	Dim query As String = "DROP TABLE " & EscapeField(TableName)
-	query = query
+	query = "DROP TABLE " & EscapeField(TableName)
 	args = Null
 	types = Null
 	response = ""
