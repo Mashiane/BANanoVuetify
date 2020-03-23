@@ -223,9 +223,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSparkLine
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Sparkline.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
@@ -246,7 +244,7 @@ End Sub
 
 'hide the component
 Sub Hide As VMSparkLine
-	SparkLine.SetVisible(False)
+	Sparkline.SetVisible(False)
 	Return Me
 End Sub
 

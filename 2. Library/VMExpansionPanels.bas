@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private vmodel As String
 End Sub
 
 'initialize the ExpansionPanels
@@ -22,6 +23,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	vmodel = ""
+	Return Me
+End Sub
+
+Sub SetActive(activeID As String) As VMExpansionPanels
+	vue.SetData($"${ID}active"$, activeID)
 	Return Me
 End Sub
 
@@ -32,20 +39,22 @@ End Sub
 
 'get component
 Sub ToString As String
+	RemoveAttr("ref")
 	Return ExpansionPanels.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMExpansionPanels
 	ExpansionPanels.SetVModel(k)
+	vmodel = k.tolowercase
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMExpansionPanels
+Sub SetVIf(vif As String) As VMExpansionPanels
 	ExpansionPanels.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMExpansionPanels
+Sub SetVShow(vif As String) As VMExpansionPanels
 	ExpansionPanels.SetVShow(vif)
 	Return Me
 End Sub
@@ -220,9 +229,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMExpansionPanels
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ExpansionPanels.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the CheckBox
@@ -24,6 +25,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	CheckBox.typeOf = "checkbox"
 	CheckBox.fieldType = "bool"
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMCheckBox
+	bStatic = b
+	CheckBox.SetStatic(b)
 	Return Me
 End Sub
 
@@ -111,10 +120,14 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCheckBox
-	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+	Else
+	Dim pp As String = $"${ID}Color"$	
 	vue.SetStateSingle(pp, scolor)
 	CheckBox.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
@@ -196,41 +209,61 @@ End Sub
 
 'set append-icon
 Sub SetAppendIcon(varAppendIcon As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("append-icon", varAppendIcon)
+	Else
 	Dim pp As String = $"${ID}AppendIcon"$
 	vue.SetStateSingle(pp, varAppendIcon)
 	CheckBox.Bind(":append-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set background-color
 Sub SetBackgroundColor(varBackgroundColor As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+	Else
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, varBackgroundColor)
 	CheckBox.Bind(":background-color", pp)
+	End If
 	Return Me
 End Sub
 
 'set color
 Sub SetColor(varColor As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+	Else
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	CheckBox.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 'set dark
 Sub SetDark(varDark As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+	Else
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	CheckBox.Bind(":dark", pp)
+	End If
 	Return Me
 End Sub
 
 'set dense
 Sub SetDense(varDense As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+	Else
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	CheckBox.Bind(":dense", pp)
+	End If
 	Return Me
 End Sub
 
@@ -242,25 +275,37 @@ End Sub
 
 'set error
 Sub SetError(varError As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("error", varError)
+	Else
 	Dim pp As String = $"${ID}Error"$
 	vue.SetStateSingle(pp, varError)
 	CheckBox.Bind(":error", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-count
 Sub SetErrorCount(varErrorCount As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("error-count", varErrorCount)
+	Else
 	Dim pp As String = $"${ID}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	CheckBox.Bind(":error-count", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-messages
 Sub SetErrorMessages(varErrorMessages As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("error-messages", varErrorMessages)
+	Else
 	Dim pp As String = $"${ID}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	CheckBox.Bind(":error-messages", pp)
+	End If
 	Return Me
 End Sub
 
@@ -271,42 +316,62 @@ Sub SetFalseValue(varFalseValue As Object) As VMCheckBox
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMCheckBox
+Sub SetHideDetails(varHideDetails As boolean) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("hide-details", varHideDetails)
+	Else
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	CheckBox.Bind(":hide-details", pp)
+	End If
 	Return Me
 End Sub
 
 'set hint
 Sub SetHint(varHint As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("hint", varHint)
+	Else
 	Dim pp As String = $"${ID}Hint"$
 	vue.SetStateSingle(pp, varHint)
 	CheckBox.Bind(":hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set id
 Sub SetId(varId As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("id", varId)
+	Else
 	Dim pp As String = $"${ID}Id"$
 	vue.SetStateSingle(pp, varId)
 	CheckBox.Bind(":id", pp)
+	End If
 	Return Me
 End Sub
 
 'set indeterminate
 Sub SetIndeterminate(varIndeterminate As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("indeterminate", varIndeterminate)
+	Else
 	Dim pp As String = $"${ID}Indeterminate"$
 	vue.SetStateSingle(pp, varIndeterminate)
 	CheckBox.Bind(":indeterminate", pp)
+	End If
 	Return Me
 End Sub
 
 'set indeterminate-icon
 Sub SetIndeterminateIcon(varIndeterminateIcon As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("indeterminate-icon", varIndeterminateIcon)
+	Else
 	Dim pp As String = $"${ID}IndeterminateIcon"$
 	vue.SetStateSingle(pp, varIndeterminateIcon)
 	CheckBox.Bind(":indeterminate-icon", pp)
+	End If
 	Return Me
 End Sub
 
@@ -318,113 +383,163 @@ End Sub
 
 'set label
 Sub SetLabel(varLabel As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+	Else
 	Dim pp As String = $"${ID}Label"$
 	vue.SetStateSingle(pp, varLabel)
 	CheckBox.Bind(":label", pp)
+	End If
 	Return Me
 End Sub
 
 'set light
 Sub SetLight(varLight As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+	Else
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	CheckBox.Bind(":light", pp)
+	End If
 	Return Me
 End Sub
 
 'set loading
 Sub SetLoading(varLoading As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("loading", varLoading)
+	Else
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	CheckBox.Bind(":loading", pp)
+	End If
 	Return Me
 End Sub
 
 'set messages
 Sub SetMessages(varMessages As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("messages", varMessages)
+	Else
 	Dim pp As String = $"${ID}Messages"$
 	vue.SetStateSingle(pp, varMessages)
 	CheckBox.Bind(":messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set multiple
 Sub SetMultiple(varMultiple As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("multiple", varMultiple)
+	Else
 	Dim pp As String = $"${ID}Multiple"$
 	vue.SetStateSingle(pp, varMultiple)
 	CheckBox.Bind(":multiple", pp)
+	End If
 	Return Me
 End Sub
 
 'set off-icon
 Sub SetOffIcon(varOffIcon As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("off-icon", varOffIcon)
+	Else
 	Dim pp As String = $"${ID}OffIcon"$
 	vue.SetStateSingle(pp, varOffIcon)
 	CheckBox.Bind(":off-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set on-icon
 Sub SetOnIcon(varOnIcon As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("on-icon", varOnIcon)
+	Else
 	Dim pp As String = $"${ID}OnIcon"$
 	vue.SetStateSingle(pp, varOnIcon)
 	CheckBox.Bind(":on-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set persistent-hint
 Sub SetPersistentHint(varPersistentHint As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("persistent-hint", varPersistentHint)
+	Else
 	Dim pp As String = $"${ID}PersistentHint"$
 	vue.SetStateSingle(pp, varPersistentHint)
 	CheckBox.Bind(":persistent-hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set preped-icon
 Sub SetPrepedIcon(varPrepedIcon As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("prepend-icon", varPrepedIcon)
+	Else
 	Dim pp As String = $"${ID}PrepedIcon"$
 	vue.SetStateSingle(pp, varPrepedIcon)
-	CheckBox.Bind(":preped-icon", pp)
+	CheckBox.Bind(":prepend-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set readonly
 Sub SetReadonly(varReadonly As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+	Else
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	CheckBox.Bind(":readonly", pp)
+	End If
 	Return Me
 End Sub
 
 'set ripple
 Sub SetRipple(varRipple As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+	Else
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	CheckBox.Bind(":ripple", pp)
+	End If
 	Return Me
 End Sub
 
 'set rules
 Sub SetRules(varRules As Object) As VMCheckBox
-	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
-	CheckBox.Bind(":rules", pp)
+	CheckBox.Bind("rules", varRules)
 	Return Me
 End Sub
 
 'set success
 Sub SetSuccess(varSuccess As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("success", varSuccess)
+	Else
 	Dim pp As String = $"${ID}Success"$
 	vue.SetStateSingle(pp, varSuccess)
 	CheckBox.Bind(":success", pp)
+	End If
 	Return Me
 End Sub
 
 'set success-messages
 Sub SetSuccessMessages(varSuccessMessages As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("success-messages", varSuccessMessages)
+	Else
 	Dim pp As String = $"${ID}SuccessMessages"$
 	vue.SetStateSingle(pp, varSuccessMessages)
 	CheckBox.Bind(":success-messages", pp)
+	End If
 	Return Me
 End Sub
 
@@ -436,9 +551,13 @@ End Sub
 
 'set validate-on-blur
 Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("validate-on-blur", varValidateOnBlur)
+	Else
 	Dim pp As String = $"${ID}ValidateOnBlur"$
 	vue.SetStateSingle(pp, varValidateOnBlur)
 	CheckBox.Bind(":validate-on-blur", pp)
+	End If
 	Return Me
 End Sub
 
@@ -450,9 +569,13 @@ End Sub
 
 'set value-comparator
 Sub SetValueComparator(varValueComparator As Object) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("value-comparator", varValueComparator)
+	Else
 	Dim pp As String = $"${ID}ValueComparator"$
 	vue.SetStateSingle(pp, varValueComparator)
 	CheckBox.Bind(":value-comparator", pp)
+	End If
 	Return Me
 End Sub
 

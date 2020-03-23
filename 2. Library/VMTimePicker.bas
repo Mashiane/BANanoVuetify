@@ -20,6 +20,10 @@ Sub Class_Globals
 	Private sHint As String
 	Private bClearable As Boolean
 	Private ErrorText As String
+	Private bDense As Boolean
+	Private bOutlined As Boolean
+	Private bHideDetails As Boolean
+	Private TextField As VMTextField
 End Sub
 
 'initialize the TimePicker
@@ -41,6 +45,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	sHint = ""
 	bClearable = False
 	ErrorText = ""
+	bDense = False
+	bOutlined = False
+	bHideDetails = False
+	TextField.Initialize(vue, $"${ID}txt"$, Module)
+	Return Me
+End Sub
+
+
+Sub SetHideDetails(b As Boolean) As VMTimePicker
+	bHideDetails = b
+	Return Me
+End Sub
+
+Sub SetOutlined(b As Boolean) As VMTimePicker
+	bOutlined = b
 	Return Me
 End Sub
 
@@ -162,6 +181,13 @@ Sub Set24 As VMTimePicker
 	Return Me
 End Sub
 
+
+'set dense
+Sub SetDense(b As Boolean) As VMTimePicker
+	bDense = b
+	Return Me
+End Sub
+
 'get component
 Sub ToString As String
 	If bForInput Then
@@ -178,21 +204,25 @@ Sub ToString As String
 		dMenu.SetAttrloose("offset-y")
 		dMenu.SetAttrSingle("min-width", "290px")
 		dMenu.SetAttrSingle("max-width", "290px")
+		dMenu.SetDesignMode(DesignMode)
 		'
 		Dim tmpl As VMTemplate
 		tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetSlotActivatorOn
+		tmpl.SetDesignMode(DesignMode)
 		'
-		Dim txt As VMTextField
-		txt.Initialize(vue, $"${ID}txt"$, Module)
-		txt.SetPrependIcon("access_time").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
-		txt.SetLabel(vLabel)
-		txt.SetVModel(vmodel)
-		txt.SetRequired(bRequired)
-		txt.SetPlaceholder(splaceholder)
-		txt.SetHint(sHint)
-		txt.SetClearable(bClearable)
+		TextField.SetPrependIcon("access_time").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
+		TextField.SetLabel(vLabel)
+		TextField.SetVModel(vmodel)
+		TextField.SetRequired(bRequired)
+		TextField.SetPlaceholder(splaceholder)
+		TextField.SetHint(sHint)
+		TextField.SetClearable(bClearable)
+		TextField.SetDesignMode(DesignMode)
+		TextField.SetDense(bDense)
+		TextField.SetOutlined(bOutlined)
+		TextField.SetHideDetails(bHideDetails)
 		
-		txt.Pop(tmpl.Template)
+		TextField.Pop(tmpl.Template)
 		dMenu.SetText(tmpl.ToString)
 		'
 		TimePicker.SetVIf($"${ID}menu2"$)
@@ -418,9 +448,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMTimePicker
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	TimePicker.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

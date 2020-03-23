@@ -420,7 +420,7 @@ Sub SetHeight(varHeight As Object) As VMAutoComplete
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMAutoComplete
+Sub SetHideDetails(varHideDetails As boolean) As VMAutoComplete
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	AutoComplete.Bind(":hide-details", pp)
@@ -752,9 +752,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMAutoComplete
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	AutoComplete.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

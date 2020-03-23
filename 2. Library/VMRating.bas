@@ -271,9 +271,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMRating
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Rating.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

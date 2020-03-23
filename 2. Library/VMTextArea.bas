@@ -287,7 +287,7 @@ Sub SetDense(varDense As Object) As VMTextArea
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMTextArea
+Sub SetDisabled(varDisabled As Boolean) As VMTextArea
 	TextArea.SetDisabled(varDisabled)
 	Return Me
 End Sub
@@ -349,7 +349,7 @@ Sub SetHeight(varHeight As Object) As VMTextArea
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMTextArea
+Sub SetHideDetails(varHideDetails As boolean) As VMTextArea
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	TextArea.Bind(":hide-details", pp)

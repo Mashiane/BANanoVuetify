@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Radio
@@ -23,6 +24,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Radio.typeOf = "radio"
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMRadio
+	bStatic = b
+	Radio.SetStatic(b)
 	Return Me
 End Sub
 
@@ -89,23 +97,22 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMRadio
-	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	Radio.Bind(":color", pp)
-	Return Me
-End Sub
-
-
-'set required
-Sub SetRequired(varRequired As Boolean) As VMRadio
-	Radio.SetRequired(varRequired)
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+	Else
+		Dim pp As String = $"${ID}Color"$
+		vue.SetStateSingle(pp, scolor)
+		Radio.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 
 'get component
 Sub ToString As String
+	RemoveAttr("required")
+	RemoveAttr(":required")
 	Return Radio.ToString
 End Sub
 
@@ -174,25 +181,37 @@ End Sub
 
 'set active-class
 Sub SetActiveClass(varActiveClass As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+	Else
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	Radio.Bind(":active-class", pp)
+	End If
 	Return Me
 End Sub
 
 'set color
 Sub SetColor(varColor As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+	Else
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Radio.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 'set dark
 Sub SetDark(varDark As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+	Else
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Radio.Bind(":dark", pp)
+	End If
 	Return Me
 End Sub
 
@@ -204,65 +223,91 @@ End Sub
 
 'set id
 Sub SetId(varId As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("id", varId)
+	Else
 	Dim pp As String = $"${ID}Id"$
 	vue.SetStateSingle(pp, varId)
 	Radio.Bind(":id", pp)
+	End If
 	Return Me
 End Sub
 
 'set label
 Sub SetLabel(varLabel As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+	Else
 	Dim pp As String = $"${ID}Label"$
 	vue.SetStateSingle(pp, varLabel)
 	Radio.Bind(":label", pp)
+	End If
 	Return Me
 End Sub
 
 'set light
 Sub SetLight(varLight As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+	Else
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Radio.Bind(":light", pp)
+	End If
 	Return Me
 End Sub
 
 'set name
 Sub SetName(varName As Object) As VMRadio
-	Dim pp As String = $"${ID}Name"$
-	vue.SetStateSingle(pp, varName)
-	Radio.Bind(":name", pp)
+	SetAttrSingle("name", varName)
 	Return Me
 End Sub
 
 'set off-icon
 Sub SetOffIcon(varOffIcon As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("off-icon", varOffIcon)
+	Else
 	Dim pp As String = $"${ID}OffIcon"$
 	vue.SetStateSingle(pp, varOffIcon)
 	Radio.Bind(":off-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set on-icon
 Sub SetOnIcon(varOnIcon As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("on-icon", varOnIcon)
+	Else
 	Dim pp As String = $"${ID}OnIcon"$
 	vue.SetStateSingle(pp, varOnIcon)
 	Radio.Bind(":on-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set readonly
 Sub SetReadonly(varReadonly As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+	Else
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	Radio.Bind(":readonly", pp)
+	End If
 	Return Me
 End Sub
 
 'set ripple
 Sub SetRipple(varRipple As Object) As VMRadio
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+	Else
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	Radio.Bind(":ripple", pp)
+	End If
 	Return Me
 End Sub
 

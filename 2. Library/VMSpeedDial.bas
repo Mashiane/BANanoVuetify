@@ -80,9 +80,11 @@ Sub AddItem(key As String, iconName As String, color As String) As VMSpeedDial
 	Dim btn As VMButton
 	btn.Initialize(vue, key, Module).SetFab(True).SetDark(True).SetSmall(True)
 	btn.SetColor(color)
+	btn.SetDesignMode(DesignMode)
 	'
 	Dim icn As VMIcon
 	icn.Initialize(vue, $"${key}icon"$, Module).SetText(iconName)
+	icn.SetDesignMode(DesignMode)
 	btn.AddComponent(icn.ToString)
 	'
 	items.Add(btn.ToString)
@@ -285,9 +287,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSpeedDial
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	SpeedDial.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

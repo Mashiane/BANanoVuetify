@@ -10,6 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Public vmodel As String
+	Private orig As String
+	Private DesignMode As Boolean
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
@@ -18,10 +20,13 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Label.Initialize(vue, ID).SetTag("label")
 	vmodel = ""
 	Label.typeOf = "label"
+	orig = ""
+	DesignMode = False
 	Return Me
 End Sub
 
 Sub SetVModel(svmodel As String, value As String) As VMLabel
+	orig = value
 	svmodel = svmodel.tolowercase
 	vue.SetData(svmodel, value)
 	SetText($"{{ ${svmodel} }}"$)
@@ -145,6 +150,7 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMLabel
 	Label.SetDesignMode(b)
+	DesignMode = b
 	Return Me
 End Sub
 
@@ -345,7 +351,11 @@ End Sub
 '	Return Me
 'End Sub
 
-Sub ToString As String	
+Sub ToString As String
+	If DesignMode Then
+		Label.clear
+		SetText(orig)	
+	End If
 	Return Label.tostring
 End Sub
 

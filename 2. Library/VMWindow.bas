@@ -208,9 +208,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMWindow
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Window.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

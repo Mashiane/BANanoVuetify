@@ -21,7 +21,7 @@ Sub Code
 	cont.AddRows(1).AddColumns12
 	' make accordion
 	Dim ep As VMExpansionPanels = vm.CreateExpansionPanels("ep", Me).SetAccordion(True)
-	Dim expx As VMExpansionPanel = vm.CreateExpansionPanel("ep1", Me)
+	Dim expx As VMExpansionPanel = vm.CreateExpansionPanel("ep1", "ep", Me)
 	expx.SetVFor("(item, i)", "5")
 	expx.Bind(":key", "i")
 	expx.Header.SetText("Item")

@@ -183,20 +183,18 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSlideGroup
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	SlideGroup.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 '
-Sub SetSlotNext(b As boolean) As VMSlideGroup    'ignore
+Sub SetSlotNext(b As Boolean) As VMSlideGroup    'ignore
 	SetAttr(CreateMap("slot": "next"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotPrev(b As boolean) As VMSlideGroup    'ignore
+Sub SetSlotPrev(b As Boolean) As VMSlideGroup    'ignore
 	SetAttr(CreateMap("slot": "prev"))
 	Return Me
 End Sub
@@ -204,9 +202,9 @@ End Sub
 '
 Sub SetOnClickLocation(methodName As String) As VMSlideGroup
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:click:location": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -420,7 +420,7 @@ Sub SetHeight(varHeight As Object) As VMComboBox
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMComboBox
+Sub SetHideDetails(varHideDetails As boolean) As VMComboBox
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	ComboBox.Bind(":hide-details", pp)
@@ -756,9 +756,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMComboBox
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ComboBox.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

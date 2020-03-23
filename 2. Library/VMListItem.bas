@@ -298,9 +298,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMListItem
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ListItem.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

@@ -192,9 +192,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMListGroup
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ListGroup.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

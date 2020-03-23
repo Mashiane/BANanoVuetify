@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private ErrorText As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Combo
@@ -25,8 +26,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	Combo.typeOf = "selectbox"
 	ErrorText = ""
+	bStatic = False
 	Return Me
 End Sub
+
+
+Sub SetStatic(b As Boolean) As VMSelect
+	bStatic = b
+	Combo.SetStatic(b)
+	Return Me
+End Sub
+
 
 'backward compatibility
 Sub SetInvalidMessage(ErrText As String) As VMSelect
@@ -121,13 +131,15 @@ Sub SetOptions(sourceName As String, options As Map, sourcefield As String, disp
 	recs.Initialize
 	For Each k As String In options.Keys
 		Dim v As String = options.Get(k)
+		k = vue.CStr(k)
+		v = vue.CStr(v)
 		Dim nrec As Map = CreateMap()
 		nrec.Put(sourcefield, k)
 		nrec.Put(displayfield, v)
 		recs.Add(nrec)
 	Next
 	'save the options
-	vue.SetStateSingle(sourceName, recs)
+	vue.SetData(sourceName, recs)
 	SetItems(sourceName)
 	SetItemText(displayfield)
 	SetItemValue(sourcefield)
@@ -162,10 +174,14 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSelect
-	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	Combo.Bind(":color", pp)
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+	Else
+		Dim pp As String = $"${ID}Color"$
+		vue.SetStateSingle(pp, scolor)
+		Combo.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
@@ -234,129 +250,193 @@ End Sub
 
 'set append-icon
 Sub SetAppendIcon(varAppendIcon As Object) As VMSelect
-	Dim pp As String = $"${ID}AppendIcon"$
-	vue.SetStateSingle(pp, varAppendIcon)
-	Combo.Bind(":append-icon", pp)
+	If bStatic Then
+		SetAttrSingle("append-icon", varAppendIcon)
+	Else
+		Dim pp As String = $"${ID}AppendIcon"$
+		vue.SetStateSingle(pp, varAppendIcon)
+		Combo.Bind(":append-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set append-outer-icon
 Sub SetAppendOuterIcon(varAppendOuterIcon As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("append-outer-icon", varAppendOuterIcon)
+	Else
 	Dim pp As String = $"${ID}AppendOuterIcon"$
 	vue.SetStateSingle(pp, varAppendOuterIcon)
 	Combo.Bind(":append-outer-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set attach
 Sub SetAttach(varAttach As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("attach", varAttach)
+	Else
 	Dim pp As String = $"${ID}Attach"$
 	vue.SetStateSingle(pp, varAttach)
 	Combo.Bind(":attach", pp)
+	End If
 	Return Me
 End Sub
 
 'set autofocus
 Sub SetAutofocus(varAutofocus As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("autofocus", varAutofocus)
+	Else
 	Dim pp As String = $"${ID}Autofocus"$
 	vue.SetStateSingle(pp, varAutofocus)
 	Combo.Bind(":autofocus", pp)
+	End If
 	Return Me
 End Sub
 
 'set background-color
 Sub SetBackgroundColor(varBackgroundColor As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+	Else
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, varBackgroundColor)
 	Combo.Bind(":background-color", pp)
+	End If
 	Return Me
 End Sub
 
 'set cache-items
 Sub SetCacheItems(varCacheItems As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("cache-items", varCacheItems)
+	Else
 	Dim pp As String = $"${ID}CacheItems"$
 	vue.SetStateSingle(pp, varCacheItems)
 	Combo.Bind(":cache-items", pp)
+	End If
 	Return Me
 End Sub
 
 'set chips
 Sub SetChips(varChips As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("chips", varChips)
+	Else
 	Dim pp As String = $"${ID}Chips"$
 	vue.SetStateSingle(pp, varChips)
 	Combo.Bind(":chips", pp)
+	End If
 	Return Me
 End Sub
 
 'set clear-icon
 Sub SetClearIcon(varClearIcon As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("clear-icon", varClearIcon)
+	Else
 	Dim pp As String = $"${ID}ClearIcon"$
 	vue.SetStateSingle(pp, varClearIcon)
 	Combo.Bind(":clear-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set clearable
 Sub SetClearable(varClearable As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("clearable", varClearable)
+	Else
 	Dim pp As String = $"${ID}Clearable"$
 	vue.SetStateSingle(pp, varClearable)
 	Combo.Bind(":clearable", pp)
+	End If
 	Return Me
 End Sub
 
 'set color
 Sub SetColor(varColor As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+	Else
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Combo.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 'set counter
 Sub SetCounter(varCounter As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("counter", varCounter)
+	Else
 	Dim pp As String = $"${ID}Counter"$
 	vue.SetStateSingle(pp, varCounter)
 	Combo.Bind(":counter", pp)
+	End If
 	Return Me
 End Sub
 
 'set counter-value
 Sub SetCounterValue(varCounterValue As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("counter-value", varCounterValue)
+	Else
 	Dim pp As String = $"${ID}CounterValue"$
 	vue.SetStateSingle(pp, varCounterValue)
 	Combo.Bind(":counter-value", pp)
+	End If
 	Return Me
 End Sub
 
 'set dark
 Sub SetDark(varDark As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+	Else
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Combo.Bind(":dark", pp)
+	End If
 	Return Me
 End Sub
 
 'set deletable-chips
 Sub SetDeletableChips(varDeletableChips As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("deletable-chips", varDeletableChips)
+	Else
 	Dim pp As String = $"${ID}DeletableChips"$
 	vue.SetStateSingle(pp, varDeletableChips)
 	Combo.Bind(":deletable-chips", pp)
+	End If
 	Return Me
 End Sub
 
 'set dense
 Sub SetDense(varDense As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+	Else
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	Combo.Bind(":dense", pp)
+	End If
 	Return Me
 End Sub
 
 'set disable-lookup
 Sub SetDisableLookup(varDisableLookup As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("disable-lookup", varDisableLookup)
+	Else
 	Dim pp As String = $"${ID}DisableLookup"$
 	vue.SetStateSingle(pp, varDisableLookup)
 	Combo.Bind(":disable-lookup", pp)
+	End If
 	Return Me
 End Sub
 
@@ -368,297 +448,417 @@ End Sub
 
 'set eager
 Sub SetEager(varEager As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("eager", varEager)
+	Else
 	Dim pp As String = $"${ID}Eager"$
 	vue.SetStateSingle(pp, varEager)
 	Combo.Bind(":eager", pp)
+	End If
 	Return Me
 End Sub
 
 'set error
 Sub SetError(varError As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("error", varError)
+	Else
 	Dim pp As String = $"${ID}Error"$
 	vue.SetStateSingle(pp, varError)
 	Combo.Bind(":error", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-count
 Sub SetErrorCount(varErrorCount As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("error-count", varErrorCount)
+	Else
 	Dim pp As String = $"${ID}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	Combo.Bind(":error-count", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-messages
 Sub SetErrorMessages(varErrorMessages As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("error-messages", varErrorMessages)
+	Else
 	Dim pp As String = $"${ID}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	Combo.Bind(":error-messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set filled
 Sub SetFilled(varFilled As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("filled", varFilled)
+	Else
 	Dim pp As String = $"${ID}Filled"$
 	vue.SetStateSingle(pp, varFilled)
 	Combo.Bind(":filled", pp)
+	End If
 	Return Me
 End Sub
 
 'set filter
 Sub SetFilter(varFilter As Object) As VMSelect
-	Dim pp As String = $"${ID}Filter"$
-	vue.SetStateSingle(pp, varFilter)
-	Combo.Bind(":filter", pp)
+	SetAttrSingle("filter", varFilter)
 	Return Me
 End Sub
 
 'set flat
 Sub SetFlat(varFlat As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("flat", varFlat)
+	Else
 	Dim pp As String = $"${ID}Flat"$
 	vue.SetStateSingle(pp, varFlat)
 	Combo.Bind(":flat", pp)
+	End If
 	Return Me
 End Sub
 
 'set full-width
 Sub SetFullWidth(varFullWidth As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("full-width", varFullWidth)
+	Else
 	Dim pp As String = $"${ID}FullWidth"$
 	vue.SetStateSingle(pp, varFullWidth)
 	Combo.Bind(":full-width", pp)
+	End If
 	Return Me
 End Sub
 
 'set height
 Sub SetHeight(varHeight As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+	Else
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Combo.Bind(":height", pp)
+	End If
 	Return Me
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMSelect
+Sub SetHideDetails(varHideDetails As boolean) As VMSelect
+	If bStatic Then
+		SetAttrSingle("hide-details", varHideDetails)
+	Else
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	Combo.Bind(":hide-details", pp)
+	End If
 	Return Me
 End Sub
 
 'set hide-selected
 Sub SetHideSelected(varHideSelected As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("hide-selected", varHideSelected)
+	Else
 	Dim pp As String = $"${ID}HideSelected"$
 	vue.SetStateSingle(pp, varHideSelected)
 	Combo.Bind(":hide-selected", pp)
+	End If
 	Return Me
 End Sub
 
 'set hint
 Sub SetHint(varHint As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("hint", varHint)
+	Else
 	Dim pp As String = $"${ID}Hint"$
 	vue.SetStateSingle(pp, varHint)
 	Combo.Bind(":hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set id
 Sub SetId(varId As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("id", varId)
+	Else
 	Dim pp As String = $"${ID}Id"$
 	vue.SetStateSingle(pp, varId)
 	Combo.Bind(":id", pp)
+	End If
 	Return Me
 End Sub
 
 'set item-color
 Sub SetItemColor(varItemColor As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("item-color", varItemColor)
+	Else
 	Dim pp As String = $"${ID}ItemColor"$
 	vue.SetStateSingle(pp, varItemColor)
 	Combo.Bind(":item-color", pp)
+	End If
 	Return Me
 End Sub
 
 'set item-disabled
 Sub SetItemDisabled(varItemDisabled As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("item-disabled", varItemDisabled)
+	Else
 	Dim pp As String = $"${ID}ItemDisabled"$
 	vue.SetStateSingle(pp, varItemDisabled)
 	Combo.Bind(":item-disabled", pp)
+	End If
 	Return Me
 End Sub
 
 'set item-text
 Sub SetItemText(varItemText As Object) As VMSelect
-	Dim pp As String = $"${ID}ItemText"$
-	vue.SetStateSingle(pp, varItemText)
-	Combo.Bind(":item-text", pp)
+	SetAttrSingle("item-text", varItemText)
 	Return Me
 End Sub
 
 'set item-value
 Sub SetItemValue(varItemValue As Object) As VMSelect
-	Dim pp As String = $"${ID}ItemValue"$
-	vue.SetStateSingle(pp, varItemValue)
-	Combo.Bind(":item-value", pp)
+	SetAttrSingle("item-value", varItemValue)
 	Return Me
 End Sub
 
 'set items
 Sub SetItems(varItems As String) As VMSelect
 	varItems = varItems.tolowercase
-	Combo.setattrsingle(":items", varItems)
+	Combo.SetAttrsingle(":items", varItems)
 	Return Me
 End Sub
 
 'set label
 Sub SetLabel(varLabel As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+	Else
 	Dim pp As String = $"${ID}Label"$
 	vue.SetStateSingle(pp, varLabel)
 	Combo.Bind(":label", pp)
+	End If
 	Return Me
 End Sub
 
 'set light
 Sub SetLight(varLight As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+	Else
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Combo.Bind(":light", pp)
+	End If
 	Return Me
 End Sub
 
 'set loader-height
 Sub SetLoaderHeight(varLoaderHeight As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("loader-height", varLoaderHeight)
+	Else
 	Dim pp As String = $"${ID}LoaderHeight"$
 	vue.SetStateSingle(pp, varLoaderHeight)
 	Combo.Bind(":loader-height", pp)
+	End If
 	Return Me
 End Sub
 
 'set loading
 Sub SetLoading(varLoading As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("loading", varLoading)
+	Else
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	Combo.Bind(":loading", pp)
+	End If
 	Return Me
 End Sub
 
 'set menu-props
 Sub SetMenuProps(varMenuProps As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("menu-props", varMenuProps)
+	Else
 	Dim pp As String = $"${ID}MenuProps"$
 	vue.SetStateSingle(pp, varMenuProps)
 	Combo.Bind(":menu-props", pp)
+	End If
 	Return Me
 End Sub
 
 'set messages
 Sub SetMessages(varMessages As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("messages", varMessages)
+	Else
 	Dim pp As String = $"${ID}Messages"$
 	vue.SetStateSingle(pp, varMessages)
 	Combo.Bind(":messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set multiple
 Sub SetMultiple(varMultiple As Boolean) As VMSelect
+	If varMultiple Then Combo.IsArray = True
+	If bStatic Then
+		SetAttrSingle("multiple", varMultiple)
+	Else
 	Dim pp As String = $"${ID}Multiple"$
 	vue.SetStateSingle(pp, varMultiple)
-	Combo.Bind(":multiple", pp)
-	If varMultiple Then Combo.IsArray = True
+	Combo.Bind(":multiple", pp)	
+	End If
 	Return Me
 End Sub
 
 'set no-data-text
 Sub SetNoDataText(varNoDataText As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("no-data-text", varNoDataText)
+	Else
 	Dim pp As String = $"${ID}NoDataText"$
 	vue.SetStateSingle(pp, varNoDataText)
 	Combo.Bind(":no-data-text", pp)
+	End If
 	Return Me
 End Sub
 
 'set open-on-clear
 Sub SetOpenOnClear(varOpenOnClear As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("open-on-clear", varOpenOnClear)
+	Else
 	Dim pp As String = $"${ID}OpenOnClear"$
 	vue.SetStateSingle(pp, varOpenOnClear)
 	Combo.Bind(":open-on-clear", pp)
+	End If
 	Return Me
 End Sub
 
 'set outlined
 Sub SetOutlined(varOutlined As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("outlined", varOutlined)
+	Else
 	Dim pp As String = $"${ID}Outlined"$
 	vue.SetStateSingle(pp, varOutlined)
 	Combo.Bind(":outlined", pp)
+	End If
 	Return Me
 End Sub
 
 'set persistent-hint
 Sub SetPersistentHint(varPersistentHint As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("persistent-hint", varPersistentHint)
+	Else
 	Dim pp As String = $"${ID}PersistentHint"$
 	vue.SetStateSingle(pp, varPersistentHint)
 	Combo.Bind(":persistent-hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set placeholder
 Sub SetPlaceholder(varPlaceholder As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("placeholder", varPlaceholder)
+	Else
 	Dim pp As String = $"${ID}Placeholder"$
 	vue.SetStateSingle(pp, varPlaceholder)
 	Combo.Bind(":placeholder", pp)
+	End If
 	Return Me
 End Sub
 
 'set prefix
 Sub SetPrefix(varPrefix As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("prefix", varPrefix)
+	Else
 	Dim pp As String = $"${ID}Prefix"$
 	vue.SetStateSingle(pp, varPrefix)
 	Combo.Bind(":prefix", pp)
+	End If
 	Return Me
 End Sub
 
 'set prepend-icon
 Sub SetPrependIcon(varPrependIcon As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("prepend-icon", varPrependIcon)
+	Else
 	Dim pp As String = $"${ID}PrependIcon"$
 	vue.SetStateSingle(pp, varPrependIcon)
 	Combo.Bind(":prepend-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set prepend-inner-icon
 Sub SetPrependInnerIcon(varPrependInnerIcon As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("prepend-inner-icon", varPrependInnerIcon)
+	Else
 	Dim pp As String = $"${ID}PrependInnerIcon"$
 	vue.SetStateSingle(pp, varPrependInnerIcon)
 	Combo.Bind(":prepend-inner-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set readonly
 Sub SetReadonly(varReadonly As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+	Else
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	Combo.Bind(":readonly", pp)
+	End If
 	Return Me
 End Sub
 
 'set return-object
 Sub SetReturnObject(varReturnObject As Object) As VMSelect
-	Dim pp As String = $"${ID}ReturnObject"$
-	vue.SetStateSingle(pp, varReturnObject)
-	Combo.Bind(":return-object", pp)
+	SetAttrSingle("return-object", varReturnObject)
 	Return Me
 End Sub
 
 'set reverse
 Sub SetReverse(varReverse As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("reverse", varReverse)
+	Else
 	Dim pp As String = $"${ID}Reverse"$
 	vue.SetStateSingle(pp, varReverse)
 	Combo.Bind(":reverse", pp)
+	End If
 	Return Me
 End Sub
 
 'set rounded
 Sub SetRounded(varRounded As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("rounded", varRounded)
+	Else
 	Dim pp As String = $"${ID}Rounded"$
 	vue.SetStateSingle(pp, varRounded)
 	Combo.Bind(":rounded", pp)
+	End If
 	Return Me
 End Sub
 
@@ -672,97 +872,139 @@ End Sub
 
 'set shaped
 Sub SetShaped(varShaped As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("shaped", varShaped)
+	Else
 	Dim pp As String = $"${ID}Shaped"$
 	vue.SetStateSingle(pp, varShaped)
 	Combo.Bind(":shaped", pp)
+	End If
 	Return Me
 End Sub
 
 'set single-line
 Sub SetSingleLine(varSingleLine As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("single-line", varSingleLine)
+	Else
 	Dim pp As String = $"${ID}SingleLine"$
 	vue.SetStateSingle(pp, varSingleLine)
 	Combo.Bind(":single-line", pp)
+	End If
 	Return Me
 End Sub
 
 'set small-chips
 Sub SetSmallChips(varSmallChips As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("small-chips", varSmallChips)
+	Else
 	Dim pp As String = $"${ID}SmallChips"$
 	vue.SetStateSingle(pp, varSmallChips)
 	Combo.Bind(":small-chips", pp)
+	End If
 	Return Me
 End Sub
 
 'set solo
 Sub SetSolo(varSolo As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("solo", varSolo)
+	Else
 	Dim pp As String = $"${ID}Solo"$
 	vue.SetStateSingle(pp, varSolo)
 	Combo.Bind(":solo", pp)
+	End If
 	Return Me
 End Sub
 
 'set solo-inverted
 Sub SetSoloInverted(varSoloInverted As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("solo-inverted", varSoloInverted)
+	Else
 	Dim pp As String = $"${ID}SoloInverted"$
 	vue.SetStateSingle(pp, varSoloInverted)
 	Combo.Bind(":solo-inverted", pp)
+	End If
 	Return Me
 End Sub
 
 'set success
 Sub SetSuccess(varSuccess As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("success", varSuccess)
+	Else
 	Dim pp As String = $"${ID}Success"$
 	vue.SetStateSingle(pp, varSuccess)
 	Combo.Bind(":success", pp)
+	End If
 	Return Me
 End Sub
 
 'set success-messages
 Sub SetSuccessMessages(varSuccessMessages As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("success-messages", varSuccessMessages)
+	Else
 	Dim pp As String = $"${ID}SuccessMessages"$
 	vue.SetStateSingle(pp, varSuccessMessages)
 	Combo.Bind(":success-messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set suffix
 Sub SetSuffix(varSuffix As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("suffix", varSuffix)
+	Else
 	Dim pp As String = $"${ID}Suffix"$
 	vue.SetStateSingle(pp, varSuffix)
 	Combo.Bind(":suffix", pp)
+	End If
 	Return Me
 End Sub
 
 'set type
 Sub SetType(varType As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("type", varType)
+	Else
 	Dim pp As String = $"${ID}Type"$
 	vue.SetStateSingle(pp, varType)
 	Combo.Bind(":type", pp)
+	End If
 	Return Me
 End Sub
 
 'set validate-on-blur
 Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("validate-on-blur", varValidateOnBlur)
+	Else
 	Dim pp As String = $"${ID}ValidateOnBlur"$
 	vue.SetStateSingle(pp, varValidateOnBlur)
 	Combo.Bind(":validate-on-blur", pp)
+	End If
 	Return Me
 End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSelect
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Combo.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 'set value-comparator
 Sub SetValueComparator(varValueComparator As Object) As VMSelect
+	If bStatic Then
+		SetAttrSingle("value-comparator", varValueComparator)
+	Else
 	Dim pp As String = $"${ID}ValueComparator"$
 	vue.SetStateSingle(pp, varValueComparator)
 	Combo.Bind(":value-comparator", pp)
+	End If
 	Return Me
 End Sub
 

@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Private password As String
 	Public ErrorText As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the TextField
@@ -25,6 +26,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	password = $"${ID}password"$
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMTextField
+	bStatic = b
+	TextField.SetStatic(b)
 	Return Me
 End Sub
 
@@ -140,23 +148,34 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTextField
-	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	TextField.Bind(":color", pp)
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+	Else
+		Dim pp As String = $"${ID}Color"$
+		vue.SetStateSingle(pp, scolor)
+		TextField.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 
 Sub SetMaxLength(varMaxLen As String) As VMTextField
-	Dim pp As String = $"${ID}varMaxLen"$
-	vue.SetStateSingle(pp, varMaxLen)
-	TextField.Bind(":maxlength", pp)
+	If varMaxLen = "0" Then Return Me
+	If varMaxLen = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("maxlength", varMaxLen)
+	Else
+		Dim pp As String = $"${ID}varMaxLen"$
+		vue.SetStateSingle(pp, varMaxLen)
+		TextField.Bind(":maxlength", pp)
+	End If
 	Return Me
 End Sub
 
 'set required
 Sub SetRequired(varRequired As Boolean) As VMTextField
+	If varRequired = False Then Return Me
 	TextField.SetRequired(varRequired)
 	Return Me
 End Sub
@@ -231,370 +250,582 @@ Sub AddChildren(children As List)
 End Sub
 
 'set append-icon
-Sub SetAppendIcon(varAppendIcon As Object) As VMTextField
-	Dim pp As String = $"${ID}AppendIcon"$
-	vue.SetStateSingle(pp, varAppendIcon)
-	TextField.Bind(":append-icon", pp)
+Sub SetAppendIcon(varAppendIcon As String) As VMTextField
+	If varAppendIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("append-icon", varAppendIcon)
+	Else
+		Dim pp As String = $"${ID}AppendIcon"$
+		vue.SetStateSingle(pp, varAppendIcon)
+		TextField.Bind(":append-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set append-outer-icon
-Sub SetAppendOuterIcon(varAppendOuterIcon As Object) As VMTextField
-	Dim pp As String = $"${ID}AppendOuterIcon"$
-	vue.SetStateSingle(pp, varAppendOuterIcon)
-	TextField.Bind(":append-outer-icon", pp)
+Sub SetAppendOuterIcon(varAppendOuterIcon As String) As VMTextField
+	If varAppendOuterIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("append-outer-icon", varAppendOuterIcon)
+	Else
+		Dim pp As String = $"${ID}AppendOuterIcon"$
+		vue.SetStateSingle(pp, varAppendOuterIcon)
+		TextField.Bind(":append-outer-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set autofocus
-Sub SetAutofocus(varAutofocus As Object) As VMTextField
-	Dim pp As String = $"${ID}Autofocus"$
-	vue.SetStateSingle(pp, varAutofocus)
-	TextField.Bind(":autofocus", pp)
+Sub SetAutofocus(varAutofocus As Boolean) As VMTextField
+	If varAutofocus = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("autofocus", varAutofocus)
+	Else
+		Dim pp As String = $"${ID}Autofocus"$
+		vue.SetStateSingle(pp, varAutofocus)
+		TextField.Bind(":autofocus", pp)
+	End If
 	Return Me
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMTextField
-	Dim pp As String = $"${ID}BackgroundColor"$
-	vue.SetStateSingle(pp, varBackgroundColor)
-	TextField.Bind(":background-color", pp)
+Sub SetBackgroundColor(varBackgroundColor As String) As VMTextField
+	If varBackgroundColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+	Else
+		Dim pp As String = $"${ID}BackgroundColor"$
+		vue.SetStateSingle(pp, varBackgroundColor)
+		TextField.Bind(":background-color", pp)
+	End If
 	Return Me
 End Sub
 
 'set clear-icon
-Sub SetClearIcon(varClearIcon As Object) As VMTextField
-	Dim pp As String = $"${ID}ClearIcon"$
-	vue.SetStateSingle(pp, varClearIcon)
-	TextField.Bind(":clear-icon", pp)
+Sub SetClearIcon(varClearIcon As String) As VMTextField
+	If varClearIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("clear-icon", varClearIcon)
+	Else
+		Dim pp As String = $"${ID}ClearIcon"$
+		vue.SetStateSingle(pp, varClearIcon)
+		TextField.Bind(":clear-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set clearable
-Sub SetClearable(varClearable As Object) As VMTextField
-	Dim pp As String = $"${ID}Clearable"$
-	vue.SetStateSingle(pp, varClearable)
-	TextField.Bind(":clearable", pp)
+Sub SetClearable(varClearable As Boolean) As VMTextField
+	If varClearable = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("clearable", varClearable)
+	Else
+		Dim pp As String = $"${ID}Clearable"$
+		vue.SetStateSingle(pp, varClearable)
+		TextField.Bind(":clearable", pp)
+	End If
 	Return Me
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMTextField
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, varColor)
-	TextField.Bind(":color", pp)
+Sub SetColor(varColor As String) As VMTextField
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+	Else
+		Dim pp As String = $"${ID}Color"$
+		vue.SetStateSingle(pp, varColor)
+		TextField.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 'set counter
-Sub SetCounter(varCounter As Object) As VMTextField
-	Dim pp As String = $"${ID}Counter"$
-	vue.SetStateSingle(pp, varCounter)
-	TextField.Bind(":counter", pp)
+Sub SetCounter(varCounter As Boolean) As VMTextField
+	If varCounter = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("counter", varCounter)
+	Else
+		Dim pp As String = $"${ID}Counter"$
+		vue.SetStateSingle(pp, varCounter)
+		TextField.Bind(":counter", pp)
+	End If
 	Return Me
 End Sub
 
 'set counter-value
-Sub SetCounterValue(varCounterValue As Object) As VMTextField
-	Dim pp As String = $"${ID}CounterValue"$
-	vue.SetStateSingle(pp, varCounterValue)
-	TextField.Bind(":counter-value", pp)
+Sub SetCounterValue(varCounterValue As String) As VMTextField
+	If varCounterValue = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("counter-value", varCounterValue)
+	Else
+		Dim pp As String = $"${ID}CounterValue"$
+		vue.SetStateSingle(pp, varCounterValue)
+		TextField.Bind(":counter-value", pp)
+	End If
 	Return Me
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMTextField
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	TextField.Bind(":dark", pp)
+Sub SetDark(varDark As Boolean) As VMTextField
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+	Else
+		Dim pp As String = $"${ID}Dark"$
+		vue.SetStateSingle(pp, varDark)
+		TextField.Bind(":dark", pp)
+	End If
 	Return Me
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMTextField
-	Dim pp As String = $"${ID}Dense"$
-	vue.SetStateSingle(pp, varDense)
-	TextField.Bind(":dense", pp)
+Sub SetDense(varDense As Boolean) As VMTextField
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+	Else
+		Dim pp As String = $"${ID}Dense"$
+		vue.SetStateSingle(pp, varDense)
+		TextField.Bind(":dense", pp)
+	End If
 	Return Me
 End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMTextField
+	If varDisabled = False Then Return Me
 	TextField.SetDisabled(varDisabled)
 	Return Me
 End Sub
 
 'set error
 Sub SetError(varError As Object) As VMTextField
+	If bStatic Then
+		SetAttrSingle("error", varError)
+	Else
 	Dim pp As String = $"${ID}Error"$
 	vue.SetStateSingle(pp, varError)
 	TextField.Bind(":error", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-count
 Sub SetErrorCount(varErrorCount As Object) As VMTextField
+	If bStatic Then
+		SetAttrSingle("error-count", varErrorCount)
+	Else
 	Dim pp As String = $"${ID}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	TextField.Bind(":error-count", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-messages
 Sub SetErrorMessages(varErrorMessages As Object) As VMTextField
+	If bStatic Then
+		SetAttrSingle("error-messages", varErrorMessages)
+	Else
 	Dim pp As String = $"${ID}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	TextField.Bind(":error-messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set filled
-Sub SetFilled(varFilled As Object) As VMTextField
+Sub SetFilled(varFilled As Boolean) As VMTextField
+	If varFilled = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("filled", varFilled)
+	Else
 	Dim pp As String = $"${ID}Filled"$
 	vue.SetStateSingle(pp, varFilled)
 	TextField.Bind(":filled", pp)
+	End If
 	Return Me
 End Sub
 
 'set flat
-Sub SetFlat(varFlat As Object) As VMTextField
+Sub SetFlat(varFlat As Boolean) As VMTextField
+	If varFlat = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("flat", varFlat)
+	Else
 	Dim pp As String = $"${ID}Flat"$
 	vue.SetStateSingle(pp, varFlat)
 	TextField.Bind(":flat", pp)
+	End If
 	Return Me
 End Sub
 
 'set full-width
-Sub SetFullWidth(varFullWidth As Object) As VMTextField
+Sub SetFullWidth(varFullWidth As Boolean) As VMTextField
+	If varFullWidth = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("full-width", varFullWidth)
+	Else
 	Dim pp As String = $"${ID}FullWidth"$
 	vue.SetStateSingle(pp, varFullWidth)
 	TextField.Bind(":full-width", pp)
+	End If
 	Return Me
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMTextField
+Sub SetHeight(varHeight As String) As VMTextField
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+	Else
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	TextField.Bind(":height", pp)
+	End If
 	Return Me
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMTextField
+Sub SetHideDetails(varHideDetails As Boolean) As VMTextField
+	If varHideDetails = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-details", varHideDetails)
+	Else
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	TextField.Bind(":hide-details", pp)
+	End If
 	Return Me
 End Sub
 
 'set hint
-Sub SetHint(varHint As Object) As VMTextField
+Sub SetHint(varHint As String) As VMTextField
+	If varHint = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("hint", varHint)
+	Else
 	Dim pp As String = $"${ID}Hint"$
 	vue.SetStateSingle(pp, varHint)
 	TextField.Bind(":hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set id
 Sub SetId(varId As Object) As VMTextField
+	If bStatic Then
+		SetAttrSingle("id", varId)
+	Else
 	Dim pp As String = $"${ID}Id"$
 	vue.SetStateSingle(pp, varId)
 	TextField.Bind(":id", pp)
+	End If
 	Return Me
 End Sub
 
 'set label
-Sub SetLabel(varLabel As Object) As VMTextField
+Sub SetLabel(varLabel As String) As VMTextField
+	If varLabel = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+	Else
 	Dim pp As String = $"${ID}Label"$
 	vue.SetStateSingle(pp, varLabel)
 	TextField.Bind(":label", pp)
+	End If
 	Return Me
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMTextField
+Sub SetLight(varLight As Boolean) As VMTextField
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+	Else
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	TextField.Bind(":light", pp)
+	End If
 	Return Me
 End Sub
 
 'set loader-height
-Sub SetLoaderHeight(varLoaderHeight As Object) As VMTextField
+Sub SetLoaderHeight(varLoaderHeight As String) As VMTextField
+	If varLoaderHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("loader-height", varLoaderHeight)
+	Else
 	Dim pp As String = $"${ID}LoaderHeight"$
 	vue.SetStateSingle(pp, varLoaderHeight)
 	TextField.Bind(":loader-height", pp)
+	End If
 	Return Me
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMTextField
+Sub SetLoading(varLoading As Boolean) As VMTextField
+	If varLoading = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("loading", varLoading)
+	Else
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	TextField.Bind(":loading", pp)
+	End If
 	Return Me
 End Sub
 
 'set messages
 Sub SetMessages(varMessages As Object) As VMTextField
+	If bStatic Then
+		SetAttrSingle("messages", varMessages)
+	Else
 	Dim pp As String = $"${ID}Messages"$
 	vue.SetStateSingle(pp, varMessages)
 	TextField.Bind(":messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set outlined
-Sub SetOutlined(varOutlined As Object) As VMTextField
+Sub SetOutlined(varOutlined As Boolean) As VMTextField
+	If varOutlined = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("outlined", varOutlined)
+	Else
 	Dim pp As String = $"${ID}Outlined"$
 	vue.SetStateSingle(pp, varOutlined)
 	TextField.Bind(":outlined", pp)
+	End If
 	Return Me
 End Sub
 
 'set persistent-hint
-Sub SetPersistentHint(varPersistentHint As Object) As VMTextField
+Sub SetPersistentHint(varPersistentHint As Boolean) As VMTextField
+	If varPersistentHint = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("persistent-hint", varPersistentHint)
+	Else
 	Dim pp As String = $"${ID}PersistentHint"$
 	vue.SetStateSingle(pp, varPersistentHint)
 	TextField.Bind(":persistent-hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set placeholder
-Sub SetPlaceholder(varPlaceholder As Object) As VMTextField
+Sub SetPlaceholder(varPlaceholder As String) As VMTextField
+	If varPlaceholder = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("placeholder", varPlaceholder)
+	Else
 	Dim pp As String = $"${ID}Placeholder"$
 	vue.SetStateSingle(pp, varPlaceholder)
 	TextField.Bind(":placeholder", pp)
+	End If
 	Return Me
 End Sub
 
 
 
 'set prefix
-Sub SetPrefix(varPrefix As Object) As VMTextField
+Sub SetPrefix(varPrefix As String) As VMTextField
+	If varPrefix = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("prefix", varPrefix)
+	Else
 	Dim pp As String = $"${ID}Prefix"$
 	vue.SetStateSingle(pp, varPrefix)
 	TextField.Bind(":prefix", pp)
+	End If
 	Return Me
 End Sub
 
 'set prepend-icon
-Sub SetPrependIcon(varPrependIcon As Object) As VMTextField
+Sub SetPrependIcon(varPrependIcon As String) As VMTextField
+	If varPrependIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("prepend-icon", varPrependIcon)
+	Else
 	Dim pp As String = $"${ID}PrependIcon"$
 	vue.SetStateSingle(pp, varPrependIcon)
 	TextField.Bind(":prepend-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set prepend-inner-icon
-Sub SetPrependInnerIcon(varPrependInnerIcon As Object) As VMTextField
+Sub SetPrependInnerIcon(varPrependInnerIcon As String) As VMTextField
+	If varPrependInnerIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("prepend-inner-icon", varPrependInnerIcon)
+	Else
 	Dim pp As String = $"${ID}PrependInnerIcon"$
 	vue.SetStateSingle(pp, varPrependInnerIcon)
 	TextField.Bind(":prepend-inner-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMTextField
+Sub SetReadonly(varReadonly As Boolean) As VMTextField
+	If varReadonly = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+	Else
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	TextField.Bind(":readonly", pp)
+	End If
 	Return Me
 End Sub
 
 'set reverse
-Sub SetReverse(varReverse As Object) As VMTextField
+Sub SetReverse(varReverse As Boolean) As VMTextField
+	If varReverse = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("reverse", varReverse)
+	Else
 	Dim pp As String = $"${ID}Reverse"$
 	vue.SetStateSingle(pp, varReverse)
 	TextField.Bind(":reverse", pp)
+	End If
 	Return Me
 End Sub
 
 'set rounded
-Sub SetRounded(varRounded As Object) As VMTextField
+Sub SetRounded(varRounded As Boolean) As VMTextField
+	If varRounded = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("rounded", varRounded)
+	Else
 	Dim pp As String = $"${ID}Rounded"$
 	vue.SetStateSingle(pp, varRounded)
 	TextField.Bind(":rounded", pp)
+	End If
 	Return Me
 End Sub
 
 'set rules
 Sub SetRules(varRules As Object) As VMTextField
-	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
-	TextField.Bind(":rules", pp)
+	SetAttrSingle("rules", varRules)
 	Return Me
 End Sub
 
 'set shaped
-Sub SetShaped(varShaped As Object) As VMTextField
+Sub SetShaped(varShaped As Boolean) As VMTextField
+	If varShaped = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("shaped", varShaped)
+	Else
 	Dim pp As String = $"${ID}Shaped"$
 	vue.SetStateSingle(pp, varShaped)
 	TextField.Bind(":shaped", pp)
+	End If
 	Return Me
 End Sub
 
 'set single-line
-Sub SetSingleLine(varSingleLine As Object) As VMTextField
+Sub SetSingleLine(varSingleLine As Boolean) As VMTextField
+	If varSingleLine = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("single-line", varSingleLine)
+	Else
 	Dim pp As String = $"${ID}SingleLine"$
 	vue.SetStateSingle(pp, varSingleLine)
 	TextField.Bind(":single-line", pp)
+	End If
 	Return Me
 End Sub
 
 'set solo
-Sub SetSolo(varSolo As Object) As VMTextField
+Sub SetSolo(varSolo As Boolean) As VMTextField
+	If varSolo = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("solo", varSolo)
+	Else
 	Dim pp As String = $"${ID}Solo"$
 	vue.SetStateSingle(pp, varSolo)
 	TextField.Bind(":solo", pp)
+	End If
 	Return Me
 End Sub
 
 'set solo-inverted
-Sub SetSoloInverted(varSoloInverted As Object) As VMTextField
+Sub SetSoloInverted(varSoloInverted As Boolean) As VMTextField
+	If varSoloInverted = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("solo-inverted", varSoloInverted)
+	Else
 	Dim pp As String = $"${ID}SoloInverted"$
 	vue.SetStateSingle(pp, varSoloInverted)
 	TextField.Bind(":solo-inverted", pp)
+	End If
 	Return Me
 End Sub
 
 'set success
-Sub SetSuccess(varSuccess As Object) As VMTextField
+Sub SetSuccess(varSuccess As Boolean) As VMTextField
+	If varSuccess = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("success", varSuccess)
+	Else
 	Dim pp As String = $"${ID}Success"$
 	vue.SetStateSingle(pp, varSuccess)
 	TextField.Bind(":success", pp)
+	End If
 	Return Me
 End Sub
 
 'set success-messages
 Sub SetSuccessMessages(varSuccessMessages As Object) As VMTextField
+	If bStatic Then
+		SetAttrSingle("success-messages", varSuccessMessages)
+	Else
 	Dim pp As String = $"${ID}SuccessMessages"$
 	vue.SetStateSingle(pp, varSuccessMessages)
 	TextField.Bind(":success-messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set suffix
-Sub SetSuffix(varSuffix As Object) As VMTextField
+Sub SetSuffix(varSuffix As String) As VMTextField
+	If varSuffix = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("suffix", varSuffix)
+	Else
 	Dim pp As String = $"${ID}Suffix"$
 	vue.SetStateSingle(pp, varSuffix)
 	TextField.Bind(":suffix", pp)
+	End If
 	Return Me
 End Sub
 
 'set type
-Sub SetType(varType As Object) As VMTextField
+Sub SetType(varType As String) As VMTextField
+	If bStatic Then
+		SetAttrSingle("type", varType)
+	Else
 	Dim pp As String = $"${ID}Type"$
 	vue.SetStateSingle(pp, varType)
 	TextField.Bind(":type", pp)
+	End If
 	Return Me
 End Sub
 
 'set validate-on-blur
-Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMTextField
+Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMTextField
+	If varValidateOnBlur = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("validate-on-blur", varValidateOnBlur)
+	Else
 	Dim pp As String = $"${ID}ValidateOnBlur"$
 	vue.SetStateSingle(pp, varValidateOnBlur)
 	TextField.Bind(":validate-on-blur", pp)
+	End If
 	Return Me
 End Sub
 
@@ -899,6 +1130,11 @@ End Sub
 
 Sub SetDouble As VMTextField
 	TextField.fieldType = "dbl"
+	Return Me
+End Sub
+
+Sub SetFieldType(ftype As String) As VMTextField
+	TextField.fieldType = ftype
 	Return Me
 End Sub
 

@@ -383,9 +383,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMChip
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Chip.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

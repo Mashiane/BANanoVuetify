@@ -235,7 +235,7 @@ Sub RefreshInfoBoxes(cYear As String)
 		Dim rec As Map = dball.result.Get(0)
 		Dim samount As String = rec.Get("amount")
 		allspent.SetTo(samount)
-		allspent.refresh
+		'allspent.refresh
 	End If
 	'
 	'most spent on
@@ -254,7 +254,7 @@ Sub RefreshInfoBoxes(cYear As String)
 		'
 		mostspenton.SetTo(samount)
 		mostspenton.SetText(scat)
-		mostspenton.refresh
+		'mostspenton.refresh
 	End If
 	'
 	'most spent by
@@ -273,7 +273,7 @@ Sub RefreshInfoBoxes(cYear As String)
 		'
 		mostspentby.SetTo(samount)
 		mostspentby.SetText(scat)
-		mostspentby.refresh
+		'mostspentby.refresh
 	End If
 	'
 	'spent this year
@@ -288,7 +288,7 @@ Sub RefreshInfoBoxes(cYear As String)
 		Dim samount As String = rec.Get("amount")
 		'
 		spentthisyear.SetTo(samount)
-		spentthisyear.refresh
+		'spentthisyear.refresh
 	End If
 End Sub
 

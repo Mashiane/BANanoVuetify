@@ -399,9 +399,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMCalendar
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Calendar.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
@@ -422,7 +420,7 @@ Sub SetWeekdays(varWeekdays As Object) As VMCalendar
 End Sub
 
 '
-Sub SetSlotDay(b As boolean) As VMCalendar    'ignore
+Sub SetSlotDay(b As Boolean) As VMCalendar    'ignore
 	SetAttr(CreateMap("slot": "day"))
 	Return Me
 End Sub

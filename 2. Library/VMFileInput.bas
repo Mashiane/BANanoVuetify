@@ -392,7 +392,7 @@ Sub SetHeight(varHeight As Object) As VMFileInput
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMFileInput
+Sub SetHideDetails(varHideDetails As boolean) As VMFileInput
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	FileInput.Bind(":hide-details", pp)
@@ -634,9 +634,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMFileInput
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	FileInput.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

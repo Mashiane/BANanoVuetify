@@ -932,9 +932,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMDataTable
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	DataTable.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

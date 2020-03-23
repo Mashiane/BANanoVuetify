@@ -78,11 +78,29 @@ Sub Class_Globals
 	Public vmodel As String
 	Public UncheckedValue As Object
 	Public Value As Object
+	Private bStatic As Boolean
+End Sub
+
+Sub IsValidID(idName As String) As Boolean
+	If idName = "" Then Return True
+	Dim slen As Int = idName.Length
+	Dim i As Int = 0
+	For i = 0 To slen - 1
+		Dim mout As String = idName.CharAt(i)
+		If "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".IndexOf(mout) = -1 Then
+			Return False
+		End If
+	Next
+	Return True
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	ID = sid.ToLowerCase
 	ID = ID.trim
+	If IsValidID(ID) = False Then
+		Log($"Your component ID '${ID}' should contain alphanumeric ONLY!"$)
+	End If
+	
 	Element.Initialize(ID,"div")
 	vue = v
 	MT = ""
@@ -93,6 +111,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	PB = ""
 	PL = ""
 	PR = ""
+	bStatic = False
 	Value = Null
 	UncheckedValue = Null
 	Template = ""
@@ -117,7 +136,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 		vue.SetStateSingle(reqKey, False)
 		vue.SetStateSingle(errKey, False)
 		vue.SetStateSingle(styleKey, SMp)
-		SetAttrSingle(":style", styleKey)
 	End If
 	'	
 	
@@ -162,6 +180,10 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMElement
+	bStatic = b
+	Return Me
+End Sub
 
 Sub SetRow(sRow As String) As VMElement
 	R = sRow
@@ -403,6 +425,7 @@ Sub SetAttrSingle(prop As String, vals As String) As VMElement
 End Sub
 
 Sub Required(b As Boolean) As VMElement
+	If ID = "" Then Return Me
 	IsRequired = b
 	vue.SetStateSingle(reqKey, b)
 	Bind(":required", reqKey)
@@ -410,6 +433,7 @@ Sub Required(b As Boolean) As VMElement
 End Sub
 
 Sub Enable(b As Boolean) As VMElement
+	If ID = "" Then Return Me
 	Dim n As Boolean = Not(b)
 	IsDisabled = n
 	vue.SetStateSingle(disKey, n)
@@ -740,6 +764,7 @@ Sub SetVShow(vif As String) As VMElement
 End Sub
 
 Sub BindStyle(optm As Map) As VMElement
+	If ID = "" Then Return Me
 	bUsesStyles = True
 	Dim nm As Map = CreateMap()
 	Dim oldm As Map = vue.GetState(styleKey, nm)
@@ -748,10 +773,13 @@ Sub BindStyle(optm As Map) As VMElement
 		oldm.Put(k, v)
 	Next
 	vue.SetStateSingle(styleKey, oldm)
+	SetAttrSingle(":style", styleKey)
 	Return Me
 End Sub
 
 Sub BindStyleSingle(prop As String, optm As String) As VMElement
+	If ID = "" Then Return Me
+	Log("BindStyleSingle: " & $"${prop}.${optm} - ${ID}"$)
 	Dim nm As Map = CreateMap()
 	nm.Put(prop, optm)
 	BindStyle(nm)
@@ -848,6 +876,7 @@ Sub SetHREF(h As String) As VMElement
 End Sub
 
 Sub SetDisabled(b As Boolean) As VMElement
+	If ID = "" Then Return Me
 	bUsedDisabled = b
 	vue.SetStatesingle(disKey, b)
 	Element.SetAttr(":disabled", disKey)
@@ -855,6 +884,7 @@ Sub SetDisabled(b As Boolean) As VMElement
 End Sub
 
 Sub SetRequired(b As Boolean) As VMElement
+	If ID = "" Then Return Me
 	IsRequired = b
 	bUsesRequired = True
 	vue.SetStateSingle(reqKey, b)
@@ -1188,6 +1218,7 @@ End Sub
 Sub SetOnDragStart(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
 	If SubExists(module, methodName) = False Then Return Me
+	SetDraggable(True)
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	SetAttr(CreateMap("v-on:dragstart": methodName))

@@ -119,9 +119,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMHover
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Hover.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

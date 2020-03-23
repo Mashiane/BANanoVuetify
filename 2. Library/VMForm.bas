@@ -170,9 +170,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMForm
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Form.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

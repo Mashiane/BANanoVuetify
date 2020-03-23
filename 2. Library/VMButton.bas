@@ -30,8 +30,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'link click event
 	SetOnClick($"${ID}_click"$)
 	hasToolTip = False
-	tooltip.Initialize(vue, "", Me)
-	'
+	tooltip.Initialize(vue, "", Module)
 	tmpl.Initialize(vue, "", Module)
 	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
 	span.Initialize(vue, "").SetSpan
@@ -245,8 +244,10 @@ End Sub
 
 'get component
 Sub ToString As String
-	
-	
+	tooltip.SetDesignMode(DesignMode)
+	tmpl.SetDesignMode(DesignMode)
+	span.SetDesignMode(DesignMode)
+		
 	If hasToolTip Then
 		Button.Pop(tmpl.Template)
 		tmpl.Pop(tooltip.tooltip)
@@ -635,12 +636,16 @@ Sub SetLabel(varText As String) As VMButton
 End Sub
 
 'set text
-Sub SetText(varText As String) As VMButton
+private Sub SetText(varText As String) As VMButton
 	txt = varText
 	Dim pp As String = $"${ID}label"$
 	pp = pp.tolowercase
 	vue.SetStateSingle(pp, varText)
-	Button.SetText($"{{ ${pp} }}"$)
+	If DesignMode Then
+		Button.SetText(varText)
+	Else
+		Button.SetText($"{{ ${pp} }}"$)
+	End If
 	Return Me
 End Sub
 

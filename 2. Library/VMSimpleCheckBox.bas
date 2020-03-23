@@ -194,9 +194,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSimpleCheckBox
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	SimpleCheckBox.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

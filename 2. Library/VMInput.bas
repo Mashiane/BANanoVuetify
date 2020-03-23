@@ -209,7 +209,7 @@ Sub SetHeight(varHeight As Object) As VMInput
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMInput
+Sub SetHideDetails(varHideDetails As boolean) As VMInput
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	Input.Bind(":hide-details", pp)
@@ -322,9 +322,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMInput
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Input.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

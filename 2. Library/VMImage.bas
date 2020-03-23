@@ -12,6 +12,14 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private imgLink As String
+	Private hasTooltip As Boolean
+	Private tooltip As VMToolTip
+	Private tmpl As VMTemplate
+	Private span As VMLabel
+	Private orig As String
+	Private width As String
+	Private height As String
 End Sub
 
 'initialize the Image
@@ -23,6 +31,38 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Image.SetVShow($"${ID}show"$)
+	imgLink = $"${ID}url"$
+	hasTooltip = False
+	tooltip.Initialize(vue, "", Module)
+	tmpl.Initialize(vue, "", Module)
+	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
+	span.Initialize(vue, "").SetSpan
+	orig = ""
+	width = ""
+	height = ""
+	'default
+	BindStyleSingle("opacity", "1")
+	Return Me
+End Sub
+
+Sub SetCenterOnParent As VMImage
+	BindStyleSingle("display", "block")
+	BindStyleSingle("marginLeft", "auto")
+	BindStyleSingle("marginRight", "auto")
+	Return Me
+End Sub
+
+Sub SetTooltip(tt As String) As VMImage
+	If tt = "" Then Return Me
+	hasTooltip = True
+	tooltip.SetRight(True)
+	Image.SetAttrSingle("v-on", "on")
+	span.SetText(tt)
+	Return Me
+End Sub
+
+Sub SetVerticalAlignMiddle As VMImage
+	Image.SetVerticalAlignMiddle
 	Return Me
 End Sub
 
@@ -54,6 +94,10 @@ Sub SetDroppable(b As Boolean) As VMImage
 	Return Me	
 End Sub
 
+Sub SetOnDragStart(eventHandler As Object, methodName As String) As VMImage
+	Image.SetOnDragStart(eventHandler, methodName)
+	Return Me
+End Sub
 
 Sub SetCursorMove As VMImage
 	Image.SetCursorMove
@@ -96,10 +140,10 @@ Sub BindStyle(optm As Map) As VMImage
 	Return Me
 End Sub
 
-Sub SetBorder(width As String, color As String, bstyle As String) As VMImage
+Sub SetBorder(swidth As String, color As String, bstyle As String) As VMImage
 	Dim b As Map = CreateMap()
 	b.Put("borderStyle", bstyle)
-	b.Put("borderWidth", width)
+	b.Put("borderWidth", swidth)
 	b.Put("borderColor", color)
 	BindStyle(b)
 	Return Me
@@ -117,11 +161,11 @@ Sub SetAttributes(attrs As List) As VMImage
 	Return Me
 End Sub
 
-Sub SetSize(width As String, height As String) As VMImage
-	SetHeight(height)
-	SetWidth(width)
-	SetMaxHeight(height)
-	SetMaxWidth(width)
+Sub SetSize(swidth As String, sheight As String) As VMImage
+	SetHeight(sheight)
+	SetWidth(swidth)
+	SetMaxHeight(sheight)
+	SetMaxWidth(swidth)
 	Return Me
 End Sub
 
@@ -158,11 +202,29 @@ Sub AddComponent(scomp As String) As VMImage
 End Sub
 
 'get component
-Sub ToString As String	
-	Return Image.ToString
+Sub ToString As String
+	If DesignMode Then
+		SetAttrSingle("src", orig)
+		If width <> "" Then SetAttrSingle("width", width)
+		If height <> "" Then SetAttrSingle("height", height)
+	End If	
+	If hasTooltip Then
+		Image.Pop(tmpl.Template)
+		tmpl.Pop(tooltip.tooltip)
+		span.Pop(tooltip.ToolTip)
+		Return tooltip.ToString
+	Else	
+		Return Image.ToString
+	End If
+End Sub
+
+Sub SetValue(url As String) As VMImage
+	SetVModel(imgLink, url)
+	Return Me
 End Sub
 
 Sub SetVModel(k As String, value As String) As VMImage
+	orig = value
 	k = k.tolowercase
 	vue.SetData(k, value)
 	SetSrc(k)	
@@ -269,6 +331,7 @@ End Sub
 
 'set height
 Sub SetHeight(varHeight As Object) As VMImage
+	height = varHeight
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Image.Bind(":height", pp)
@@ -363,6 +426,7 @@ End Sub
 
 'set width
 Sub SetWidth(varWidth As Object) As VMImage
+	width = varWidth
 	Dim pp As String = $"${ID}Width"$
 	vue.SetStateSingle(pp, varWidth)
 	Image.Bind(":width", pp)

@@ -93,6 +93,11 @@ Sub AddComponent(key As String, comp As String) As VMAppBar
 	Return Me
 End Sub
 
+Sub AddButton(btn As VMButton) As VMAppBar
+	AddComponent(btn.ID, btn.ToString)
+	Return Me
+End Sub
+
 'set primary
 Sub SetPrimary(b As Boolean) As VMAppBar
 	If b = False Then Return Me
@@ -548,9 +553,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMAppBar
-Dim pp As String = $"${ID}Value"$
-vue.SetStateSingle(pp, varValue)
-AppBar.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 Return Me
 End Sub
 

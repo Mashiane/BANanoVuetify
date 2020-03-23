@@ -29,7 +29,10 @@ End Sub
 
 'get component
 Sub ToString As String
-	AddComponent(Container.ToString)
+	Container.RemoveAttr("v-show")
+	Container.RemoveAttr("ref")
+	Container.RemoveAttr(":style")
+	If Container.HasContent Then AddComponent(Container.ToString)
 	Return ExpansionPanelContent.ToString
 End Sub
 
@@ -78,7 +81,7 @@ Sub AddClass(c As String) As VMExpansionPanelContent
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMExpansionPanelContent
+Sub SetAttr(attr As Map) As VMExpansionPanelContent
 	ExpansionPanelContent.SetAttr(attr)
 	Return Me
 End Sub

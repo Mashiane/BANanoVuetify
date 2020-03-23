@@ -272,9 +272,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMBottomSheet
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	BottomSheet.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

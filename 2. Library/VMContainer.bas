@@ -55,6 +55,7 @@ Sub Class_Globals
 	Private bControls As Boolean
 	Public HasBorder As Boolean
 	Public ShowMatrix As Boolean
+	Public NoGutters As Boolean
 End Sub
 
 'initialize the Container
@@ -97,7 +98,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bControls = False
 	HasBorder = False
 	ShowMatrix = False
+	NoGutters = False
 	Return Me
+End Sub
+
+Sub HasContent As Boolean
+	Return Container.hascontent
 End Sub
 
 'set transition
@@ -625,6 +631,17 @@ Sub SetNoGuttersRC(rowPos As Int) As VMContainer
 	Return Me
 End Sub
 
+Sub SetKeyRC(rowPos As Int, colPos As Int, keyName As String) As VMContainer
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	keyName = keyName.tolowercase
+	vue.SetData(keyName, rowKey)
+	SetAttrRC(rowPos, colPos, ":key", keyName)
+	Return Me
+End Sub
+
 'add an attribute to rc
 Sub SetAttrRC(rowPos As Int, colPos As Int, prop As String, value As String) As VMContainer
 	Dim rowc As Map
@@ -735,6 +752,10 @@ private Sub BuildRow(row As GridRow) As String
 		LastRow = LastRow + 1
 		row.Row = CStr(LastRow)
 		Dim rowKey As String = $"${ID}r${LastRow}"$
+		'
+		If NoGutters Then
+			SetAttrRC(LastRow, 0, "no-gutters", True)
+		End If
 		'
 		Dim tRow As VMRow
 		tRow.Initialize(vue, rowKey, Module)
@@ -1305,6 +1326,7 @@ End Sub
 private Sub CreateNumber(sid As String, eventHandler As Object) As VMTextField
 	Dim el As VMTextField
 	el = CreateTextField(sid, eventHandler).SetTypeNumber(True)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -1560,4 +1582,19 @@ Sub SetOnDropRC(rowPos As Int, colPos As Int, methodName As String) As VMContain
 	rowc.Put("v-on:drop",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
+End Sub
+
+'overwrite contents at rc
+Sub BANanoReplaceRC(rowPos As Int, colPos As Int, elHTML As String)
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	Dim cellKey As String = $"#${rowKey}"$
+	Dim elBody As BANanoElement
+	elBody = BANano.GetElement(cellKey)
+	If elBody <> Null Then
+		elBody.Empty
+		elBody.SetHTML(elHTML)
+	End If
 End Sub

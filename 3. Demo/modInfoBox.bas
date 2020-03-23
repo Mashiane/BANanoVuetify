@@ -54,21 +54,21 @@ Sub Code
 	spentthisyear.SetIconBackgroundColor(vm.COLOR_PINK).SetHoverExpandEffect(True).SetDuration("500")
 	cont.AddComponent(1,4,spentthisyear.tostring)
 	'
-	orders = vm.NewInfoBox(Me, "orders", "NEW ORDERS", "shopping_cart", Null, "0", "125")
+	orders = vm.NewInfoBox(Me, True, "orders", "NEW ORDERS", "shopping_cart", Null, "0", "125")
 	orders.SetHoverExpandEffect(True).SetStyle4(True)
 	cont.AddComponent(2,1,orders.tostring)
 	'
-	alarm = vm.NewInfoBox(Me, "alarm", "ALARM", "access_alarm", Null, Null, "7:00")
+	alarm = vm.NewInfoBox(Me, True, "alarm", "ALARM", "access_alarm", Null, Null, "7:00")
 	alarm.SetBackgroundCOlor(vm.COLOR_LIGHTBLUE)
 	alarm.SetHoverZoomEffect(True)
 	cont.AddComponent(2,2,alarm.tostring)
 	'
-	kids = vm.NewInfoBox(Me, "kids", "BOOKMARKS", "bookmark", "", "0", "117")
+	kids = vm.NewInfoBox(Me, True, "kids", "BOOKMARKS", "bookmark", "", "0", "117")
 	kids.SetBackgroundCOlor(vm.COLOR_PURPLE).SetStyle2(True)
 	kids.SetHoverZoomEffect(True)
 	cont.AddComponent(2,3,kids.tostring)
 	'
-	newusers = vm.NewInfoBox(Me, "newusers", "NEW USERS", "face", "", "0", "257")
+	newusers = vm.NewInfoBox(Me, True, "newusers", "NEW USERS", "face", "", "0", "257")
 	newusers.SetBackgroundCOlor(vm.COLOR_INDIGO).SetStyle3(True).SetIconColor(vm.COLOR_WHITE)
 	newusers.SetHoverZoomEffect(True)
 	cont.AddComponent(2,4,newusers.tostring)

@@ -387,9 +387,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMDialog
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Dialog.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

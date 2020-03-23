@@ -207,9 +207,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMButtonToggle
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ButtonToggle.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

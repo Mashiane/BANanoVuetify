@@ -12,7 +12,8 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	
+	Private items As Map
+	Private bStatic As Boolean
 End Sub
 
 'initialize the RadioGroup
@@ -23,8 +24,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v	
-	SetMandatory(False)
 	RadioGroup.typeOf = "radiogroup"
+	items.Initialize 
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMRadioGroup
+	bStatic = b
+	RadioGroup.SetStatic(b)
 	Return Me
 End Sub
 
@@ -74,10 +82,9 @@ End Sub
 Sub SetOptions(options As Map)
 	For Each k As String In options.Keys
 		Dim v As String = options.Get(k)
-		AddItem(k, v)
+		items.Put(k, v)
 	Next
 End Sub
-
 
 'use an existing state
 Sub SetDataSource(sourceName As String, sourceField As String, displayField As String) As VMRadioGroup
@@ -88,10 +95,13 @@ Sub SetDataSource(sourceName As String, sourceField As String, displayField As S
 	'
 	Dim Radio As VMRadio
 	Radio.Initialize(vue, "", Module)
+	Radio.SetStatic(bStatic)
 	Radio.SetAttrSingle("v-for", $"row in ${sourceName}"$)
 	Radio.SetAttrSingle(":key", kRow)	
 	Radio.SetAttrSingle(":value", kRow)
 	Radio.SetAttrSingle(":label", dRow)
+	Radio.SetDesignMode(DesignMode)
+	
 	Radio.Pop(RadioGroup)
 	If vue.StateExists(sourceName) = False Then
 		vue.SetData(sourceName, Array())
@@ -103,7 +113,7 @@ End Sub
 Sub AddItems(m As Map) As VMRadioGroup
 	For Each k As String In m.Keys
 		Dim v As Object = m.Get(k)
-		AddItem(k, v)
+		items.Put(k, v)
 	Next
 	Return Me
 End Sub
@@ -111,10 +121,13 @@ End Sub
 private Sub AddItem(k As String, v As String) As VMRadioGroup
 	Dim el As VMRadio
 	el.Initialize(vue, "", Module)
+	el.SetStatic(bStatic)
 	el.SetAttrSingle("label", v)
 	el.SetAttrSingle("value", k)
 	el.SetAttrSingle("key", k)
 	el.SetPrimary(True)
+	el.SetDesignMode(DesignMode)
+	
 	el.Pop(RadioGroup)	'
 	Return Me
 End Sub
@@ -126,11 +139,14 @@ Sub SetVFor(item As String, dataSource As String, keyField As String, valueField
 	item = item.tolowercase
 	Dim Radio As VMRadio
 	Radio.Initialize(vue, "", Module)
+	Radio.SetStatic(bStatic)
 	Dim sline As String = $"${item} in ${dataSource}"$
 	Radio.SetAttrSingle("v-for", sline)
 	Radio.SetAttrSingle(":key", keyField)
 	Radio.SetAttrSingle(":value", valueField)
 	Radio.SetAttrSingle(":label", labelField)
+	Radio.SetDesignMode(DesignMode)
+	
 	Radio.Pop(RadioGroup)
 	Return Me
 End Sub
@@ -150,32 +166,39 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMRadioGroup
-	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	RadioGroup.Bind(":color", pp)
-	Return Me
-End Sub
-
-
-'set required
-Sub SetRequired(varRequired As Boolean) As VMRadioGroup
-	RadioGroup.SetRequired(varRequired)
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+	Else	
+		Dim pp As String = $"${ID}Color"$
+		vue.SetStateSingle(pp, scolor)
+		RadioGroup.Bind(":color", pp)
+	End If
 	Return Me
 End Sub
 
 
 'set mandatory
 Sub SetMandatory(varMandatory As Boolean) As VMRadioGroup
+	If bStatic Then
+	SetAttrSingle("mandatory", varMandatory)
+	Else
 	Dim pp As String = $"${ID}varMandatory"$
 	vue.SetStateSingle(pp, varMandatory)
 	RadioGroup.Bind(":mandatory", pp)
+	End If
 	Return Me
 End Sub
 
 
 'get component
 Sub ToString As String
+	RemoveAttr("required")
+	RemoveAttr(":required")
+	For Each k As String In items.Keys
+		Dim v As String = items.Get(k)
+		AddItem(k, v)
+	Next
 	Return RadioGroup.ToString
 End Sub
 
@@ -244,41 +267,61 @@ End Sub
 
 'set active-class
 Sub SetActiveClass(varActiveClass As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+	Else
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	RadioGroup.Bind(":active-class", pp)
+	End If
 	Return Me
 End Sub
 
 'set append-icon
 Sub SetAppendIcon(varAppendIcon As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("append-icon", varAppendIcon)
+	Else
 	Dim pp As String = $"${ID}AppendIcon"$
 	vue.SetStateSingle(pp, varAppendIcon)
 	RadioGroup.Bind(":append-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set background-color
 Sub SetBackgroundColor(varBackgroundColor As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+	Else
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, varBackgroundColor)
 	RadioGroup.Bind(":background-color", pp)
+	End If
 	Return Me
 End Sub
 
 'set dark
 Sub SetDark(varDark As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+	Else
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	RadioGroup.Bind(":dark", pp)
+	End If
 	Return Me
 End Sub
 
 'set dense
 Sub SetDense(varDense As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+	Else
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	RadioGroup.Bind(":dense", pp)
+	End If
 	Return Me
 End Sub
 
@@ -290,185 +333,259 @@ End Sub
 
 'set error
 Sub SetError(varError As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("error", varError)
+	Else
 	Dim pp As String = $"${ID}Error"$
 	vue.SetStateSingle(pp, varError)
 	RadioGroup.Bind(":error", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-count
 Sub SetErrorCount(varErrorCount As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("error-count", varErrorCount)
+	Else
 	Dim pp As String = $"${ID}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	RadioGroup.Bind(":error-count", pp)
+	End If
 	Return Me
 End Sub
 
 'set error-messages
 Sub SetErrorMessages(varErrorMessages As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("error-messages", varErrorMessages)
+	Else
 	Dim pp As String = $"${ID}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	RadioGroup.Bind(":error-messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMRadioGroup
+Sub SetHideDetails(varHideDetails As boolean) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("hide-details", varHideDetails)
+	Else
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	RadioGroup.Bind(":hide-details", pp)
+	End If
 	Return Me
 End Sub
 
 'set hint
 Sub SetHint(varHint As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("hint", varHint)
+	Else
 	Dim pp As String = $"${ID}Hint"$
 	vue.SetStateSingle(pp, varHint)
 	RadioGroup.Bind(":hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set id
 Sub SetId(varId As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("id", varId)
+	Else
 	Dim pp As String = $"${ID}Id"$
 	vue.SetStateSingle(pp, varId)
 	RadioGroup.Bind(":id", pp)
+	End If
 	Return Me
 End Sub
 
 'set label
 Sub SetLabel(varLabel As Object) As VMRadioGroup
-	Dim pp As String = $"${ID}Label"$
-	vue.SetStateSingle(pp, varLabel)
-	RadioGroup.Bind(":label", pp)
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+	Else
+		Dim pp As String = $"${ID}Label"$
+		vue.SetStateSingle(pp, varLabel)
+		RadioGroup.Bind(":label", pp)
+	End If
 	Return Me
 End Sub
 
 'set light
 Sub SetLight(varLight As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+	Else
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	RadioGroup.Bind(":light", pp)
+	End If
 	Return Me
 End Sub
 
 'set loading
 Sub SetLoading(varLoading As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("loading", varLoading)
+	Else
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	RadioGroup.Bind(":loading", pp)
+	End If
 	Return Me
 End Sub
 
 'set max
 Sub SetMax(varMax As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("max", varMax)
+	Else
 	Dim pp As String = $"${ID}Max"$
 	vue.SetStateSingle(pp, varMax)
 	RadioGroup.Bind(":max", pp)
+	End If
 	Return Me
 End Sub
 
 'set messages
 Sub SetMessages(varMessages As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("messages", varMessages)
+	Else
 	Dim pp As String = $"${ID}Messages"$
 	vue.SetStateSingle(pp, varMessages)
 	RadioGroup.Bind(":messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set multiple
 Sub SetMultiple(varMultiple As Object) As VMRadioGroup
-	Dim pp As String = $"${ID}Multiple"$
-	vue.SetStateSingle(pp, varMultiple)
-	RadioGroup.Bind(":multiple", pp)
+	SetAttrSingle("multiple", varMultiple)
 	Return Me
 End Sub
 
 'set name
 Sub SetName(varName As Object) As VMRadioGroup
-	Dim pp As String = $"${ID}Name"$
-	vue.SetStateSingle(pp, varName)
-	RadioGroup.Bind(":name", pp)
+	SetAttrSingle("name", varName)
 	Return Me
 End Sub
 
 'set persistent-hint
 Sub SetPersistentHint(varPersistentHint As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("persistent-hint", varPersistentHint)
+	Else
 	Dim pp As String = $"${ID}PersistentHint"$
 	vue.SetStateSingle(pp, varPersistentHint)
 	RadioGroup.Bind(":persistent-hint", pp)
+	End If
 	Return Me
 End Sub
 
 'set prepend-icon
 Sub SetPrependIcon(varPrependIcon As Object) As VMRadioGroup
+	If bStatic Then
+	SetAttrSingle("prepend-icon", varPrependIcon)
+	Else
 	Dim pp As String = $"${ID}PrependIcon"$
 	vue.SetStateSingle(pp, varPrependIcon)
 	RadioGroup.Bind(":prepend-icon", pp)
+	End If
 	Return Me
 End Sub
 
 'set readonly
 Sub SetReadonly(varReadonly As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+	Else
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	RadioGroup.Bind(":readonly", pp)
+	End If
 	Return Me
 End Sub
 
 'set row
 Sub SetRow(varRow As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("row", varRow)
+	Else
 	Dim pp As String = $"${ID}Row"$
 	vue.SetStateSingle(pp, varRow)
 	RadioGroup.Bind(":row", pp)
+	End If
 	Return Me
 End Sub
 
 'set rules
 Sub SetRules(varRules As Object) As VMRadioGroup
-	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
-	RadioGroup.Bind(":rules", pp)
+	If bStatic Then
+		SetAttrSingle("rules", varRules)
+	Else
+		Dim pp As String = $"${ID}Rules"$
+		vue.SetStateSingle(pp, varRules)
+		RadioGroup.Bind(":rules", pp)
+	End If
 	Return Me
 End Sub
 
 'set success
 Sub SetSuccess(varSuccess As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("success", varSuccess)
+	Else
 	Dim pp As String = $"${ID}Success"$
 	vue.SetStateSingle(pp, varSuccess)
 	RadioGroup.Bind(":success", pp)
+	End If
 	Return Me
 End Sub
 
 'set success-messages
 Sub SetSuccessMessages(varSuccessMessages As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("success-messages", varSuccessMessages)
+	Else
 	Dim pp As String = $"${ID}SuccessMessages"$
 	vue.SetStateSingle(pp, varSuccessMessages)
 	RadioGroup.Bind(":success-messages", pp)
+	End If
 	Return Me
 End Sub
 
 'set validate-on-blur
 Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("validate-on-blur", varValidateOnBlur)
+	Else
 	Dim pp As String = $"${ID}ValidateOnBlur"$
 	vue.SetStateSingle(pp, varValidateOnBlur)
 	RadioGroup.Bind(":validate-on-blur", pp)
+	End If
 	Return Me
 End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMRadioGroup
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	RadioGroup.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 'set value-comparator
 Sub SetValueComparator(varValueComparator As Object) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("value-comparator", varValueComparator)
+	Else
 	Dim pp As String = $"${ID}ValueComparator"$
 	vue.SetStateSingle(pp, varValueComparator)
 	RadioGroup.Bind(":value-comparator", pp)
+	End If
 	Return Me
 End Sub
 

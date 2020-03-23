@@ -294,9 +294,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSnackBar
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	SnackBar.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

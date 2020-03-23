@@ -142,8 +142,11 @@ Sub BuildDrawer
 	vm.Drawer.AddItem("colorpicker", "", "Color Picker")
 	vm.drawer.AddItem("rating", "", "Rating")
 	vm.drawer.additem("echarts", "", "ECharts")
+	vm.drawer.additem("arccounter", "", "Arc Counter")
+	'vm.drawer.Additem("selectsides", "", "Select Sides")
 End Sub
 
+'when the ok button is clicked for a confirm dialog
 Sub confirm_ok(e As BANanoEvent)
 	Dim sproc As String = vm.GetConfirm
 	Select Case sproc
@@ -154,11 +157,16 @@ Sub confirm_ok(e As BANanoEvent)
 	End Select
 End Sub
 
+'when the cancel button is clicked for a confirm dialog
 Sub confirm_cancel(e As BANanoEvent)
 	Dim sproc As String = vm.GetConfirm
+	Select Case sproc
+	Case ""
+	End Select
 	vm.ShowSnackBar(sproc)
 End Sub
 
+'when the ok button of an alert is clicked
 Sub alert_ok(e As BANanoEvent)
 	Dim sproc As String = vm.GetAlert
 	Select Case sproc
@@ -175,6 +183,12 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
 	Select Case elID
+	Case "selectsides"
+		vm.NavBar.UpdateTitle(modSelectSides.title)
+		vm.ShowPage(modSelectSides.name)
+	Case "arccounter"
+		vm.NavBar.UpdateTitle(modArcCounter.title)
+		vm.ShowPage(modArcCounter.name)
 	Case "designer"
 		vm.pagepause
 		modDesigner.init
@@ -355,8 +369,6 @@ End Sub
 Sub sent_click(e As BANanoEvent)
 	vm.ShowSnackBar("Sent!")
 End Sub
-	
-
 
 Sub btnHeart_click(e As BANanoEvent)
 	vm.ShowSnackBar("My heart...")
@@ -415,4 +427,6 @@ Sub AddPages
 	vm.addpage(modRating.name, modRating)
 	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
 	vm.addpage(modECharts.name, modECharts)
+	vm.AddPage(modArcCounter.name, modArcCounter)
+	vm.addpage(modSelectSides.name, modSelectSides)
 End Sub

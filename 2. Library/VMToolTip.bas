@@ -363,9 +363,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMToolTip
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ToolTip.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

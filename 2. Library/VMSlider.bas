@@ -250,7 +250,7 @@ Sub SetHeight(varHeight As Object) As VMSlider
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As Object) As VMSlider
+Sub SetHideDetails(varHideDetails As boolean) As VMSlider
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	Slider.Bind(":hide-details", pp)
@@ -466,9 +466,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSlider
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	Slider.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

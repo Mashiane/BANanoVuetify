@@ -20,6 +20,10 @@ Sub Class_Globals
 	Private bRequired As Boolean
 	Private sHint As String
 	Private ErrorText As String
+	Private bDense As Boolean
+	Private bOutlined As Boolean
+	Private TextField As VMTextField
+	Private bHideDetails As Boolean
 End Sub
 
 'initialize the DatePicker
@@ -40,9 +44,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bRequired = False
 	sHint = ""
 	ErrorText = ""
+	bDense = False
+	bOutlined = False
+	bHideDetails = False
+	TextField.Initialize(vue, $"${ID}txt"$, Module)
 	Return Me
 End Sub
 
+Sub SetHideDetails(b As Boolean) As VMDatePicker
+	bHideDetails = b
+	Return Me
+End Sub
+
+Sub SetOutlined(b As Boolean) As VMDatePicker
+	bOutlined = b
+	Return Me
+End Sub
 
 Sub SetDate As VMDatePicker
 	DatePicker.fieldType = "date"
@@ -162,6 +179,13 @@ Sub SetHint(varHint As Object) As VMDatePicker
 	Return Me
 End Sub
 
+
+'set dense
+Sub SetDense(b As Boolean) As VMDatePicker
+	bDense = b
+	Return Me
+End Sub
+
 'get component
 Sub ToString As String
 	If bForInput Then
@@ -176,20 +200,26 @@ Sub ToString As String
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
 		dMenu.SetAttrSingle("min-width", "290px")
+		dMenu.SetDesignMode(DesignMode)
 		'
 		Dim tmpl As VMTemplate
 		tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetSlotActivatorOn
+		tmpl.SetDesignMode(DesignMode)
 		'
-		Dim txt As VMTextField
-		txt.Initialize(vue, $"${ID}txt"$, Module)
-		txt.SetPrependIcon("event").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
-		txt.SetLabel(vLabel)
-		txt.SetVModel(vmodel)
-		txt.SetRequired(bRequired)
-		txt.SetPlaceholder(splaceholder)
-		txt.SetHint(sHint)
-		txt.SetClearable(bClearable)
-		txt.Pop(tmpl.Template)
+		
+		TextField.SetPrependIcon("event").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
+		TextField.SetLabel(vLabel)
+		TextField.SetVModel(vmodel)
+		TextField.SetRequired(bRequired)
+		TextField.SetPlaceholder(splaceholder)
+		TextField.SetHint(sHint)
+		TextField.SetClearable(bClearable)
+		TextField.SetDesignMode(DesignMode)
+		TextField.SetDense(bDense)
+		TextField.SetOutlined(bOutlined)
+		TextField.SetHideDetails(bHideDetails)
+		'
+		TextField.Pop(tmpl.Template)
 				'
 		dMenu.SetText(tmpl.ToString)
 		'
@@ -200,15 +230,19 @@ Sub ToString As String
 		'
 		Dim btnCancel As VMButton
 		btnCancel.Initialize(vue, $"${ID}cancel"$, Me).SetTransparent(True).SetColor("primary")
+		btnCancel.SetDesignMode(DesignMode)
 		btnCancel.setattrsingle("@click", $"${ID}menu = false"$)
 		btnCancel.SetLabel("Cancel")
+		
 		DatePicker.SetText(btnCancel.ToString)
 		'
 		Dim btnOk As VMButton
 		btnOk.Initialize(vue, $"${ID}ok"$, Me).SetTransparent(True).SetColor("primary")
+		btnOk.SetDesignMode(DesignMode)
 		Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
 		btnOk.SetAttrSingle("@click", ssave)
 		btnOk.SetLabel("Ok")
+		
 		DatePicker.SetText(btnOk.ToString)
 			
 		'
@@ -536,9 +570,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMDatePicker
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	DatePicker.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

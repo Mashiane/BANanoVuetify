@@ -18,7 +18,7 @@ Sub Class_Globals
 End Sub
 
 'initialize the ExpansionPanel
-Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMExpansionPanel
+Public Sub Initialize(v As BANanoVue, sparent As String, sid As String, eventHandler As Object) As VMExpansionPanel
 	ID = sid.tolowercase
 	ExpansionPanel.Initialize(v, ID)
 	ExpansionPanel.SetTag("v-expansion-panel")
@@ -26,14 +26,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Header.Initialize(vue, $"${ID}hdr"$, Module)
-	Content.Initialize(vue, $"${ID}cnt"$, Module) 
-	Container.Initialize(vue, $"${ID}cont"$, Module) 
+	Header.SetOnClick($"${sparent}_click"$)
+	Content.Initialize(vue, $"${ID}cnt"$, Module)
+	Container = Content.container 
+	SetAttrSingle("key", ID) 
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-	Content.AddComponent(Container.ToString)
+	Content.RemoveAttr("v-show")
+	Content.RemoveAttr("ref")
+	Content.RemoveAttr(":style")
+	ExpansionPanel.RemoveAttr("v-show")
+	ExpansionPanel.RemoveAttr(":style")
+	ExpansionPanel.RemoveAttr("ref")
 	AddComponent(Header.ToString)
 	AddComponent(Content.ToString)
 	Return ExpansionPanel.ToString

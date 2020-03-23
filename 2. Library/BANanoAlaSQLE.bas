@@ -387,7 +387,7 @@ End Sub
 
 'return a sql to delete record of table where one exists
 Sub GetMax As BANanoAlaSQLE
-	Dim sb As String = $"SELECT MAX(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
+	Dim sb As String = $"SELECT MAX([${PrimaryKey}]) As [${PrimaryKey}] FROM ${EscapeField(TableName)}"$
 	query = sb
 	args = Null
 	types = Null
@@ -689,7 +689,7 @@ Sub GetMaxWhere(fldName As String, tblWhere As Map, operators As List) As BANano
 	'
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append($"SELECT MAX(${fldName}) As ${fldName} FROM ${EscapeField(TableName)} WHERE "$)
+	sb.Append($"SELECT MAX([${fldName}]) As [${fldName}] FROM ${EscapeField(TableName)} WHERE "$)
 	Dim i As Int
 	Dim iWhere As Int = tblWhere.Size - 1
 	For i = 0 To iWhere

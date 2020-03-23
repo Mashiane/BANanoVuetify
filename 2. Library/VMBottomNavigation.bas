@@ -281,9 +281,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMBottomNavigation
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	BottomNavigation.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

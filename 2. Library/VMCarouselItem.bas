@@ -223,9 +223,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Value"$
-vue.SetStateSingle(pp, varValue)
-CarouselItem.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 Return Me
 End Sub
 

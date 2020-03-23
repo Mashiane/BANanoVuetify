@@ -227,9 +227,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMTabsItems
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	TabsItems.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
@@ -244,9 +242,9 @@ End Sub
 '
 Sub SetOnChange(methodName As String) As VMTabsItems
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

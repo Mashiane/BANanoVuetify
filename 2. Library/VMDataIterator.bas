@@ -351,26 +351,24 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMDataIterator
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	DataIterator.Bind(":value", pp)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 '
-Sub SetSlotFooter(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotFooter(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "footer"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotFooterPageText(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotFooterPageText(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "footer.page-text"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotHeader(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotHeader(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "header"))
 	Return Me
 End Sub
