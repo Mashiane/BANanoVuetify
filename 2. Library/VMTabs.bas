@@ -30,6 +30,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	children.Initialize 
 	hasContent = False
 	OnToolBar = False
+	items.Initialize(vue, $"${ID}items"$, Module)
 	Return Me
 End Sub
 
@@ -66,14 +67,21 @@ Sub AddTabSlider As VMTabs
 End Sub
 
 'the stepLabelVModel is the vmodel to have the caption
-Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As String)
+Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
 	tabID = tabID.tolowercase
 	'
 	Dim item As Map = CreateMap()
 	item.Put("key", tabID)
 	item.Put("label", tabLabel)
-	item.Put("icon", tabIcon)
-	item.Put("content", tabContent)
+	item.Put("icon", tabIcon)'
+	'
+	Dim tabitem As VMTabItem
+	tabitem.Initialize(vue, tabID, Module)
+	If tabContent <> Null Then
+		tabitem.AddComponent(tabContent.ToString)
+	End If
+	'	
+	items.AddComponent(tabitem.ToString)
 	children.Add(item)
 	hasContent = True
 End Sub
@@ -105,40 +113,23 @@ Sub ToString As String
 	vtab.Initialize(vue, "", Module)
 	vtab.SetAttrSingle("v-for", $"item in ${ID}items"$)
 	vtab.Bind(":key", "item.key")
+	vtab.Bind(":href", "`#${item.key}`")
 	vtab.SetText("{{ item.label }}")
 	vtab.SetText($"<v-icon>{{ item.icon }}</v-icon>"$)
 	vtab.Pop(Tabs)
 	'
-	items.Initialize(vue, "", Module).SetVModel($"${ID}ds"$)
-	Dim vtabi As VMTabItem
-	vtabi.Initialize(vue, "", Module)
-	vtabi.SetAttrSingle("v-for", $"item in ${ID}items"$)
-	vtabi.Bind(":key", "item.key")
-	'
-	Dim vcard As VMElement
-	vcard.Initialize(vue, "").SetAttributes(Array("flat", "tile"))
-	'
-	Dim vtext As VMElement
-	vtext.Initialize(vue, "").SetVText("item.content")
-	vtext.Pop(vcard)
-	vcard.Pop(vtabi.TabItem)
-	'
-	vtabi.Pop(items.TabsItems)
-	
-	Dim sb As StringBuilder
-	sb.Initialize 
-	sb.Append(Tabs.ToString)
-	sb.Append(items.ToString)
+	Tabs.SetText(items.ToString)
 	'
 	If OnToolBar = False Then
-		Return $"<v-card>${sb.tostring}</v-card>"$
+		Return $"<v-card>${Tabs.tostring}</v-card>"$
 	Else
-		Return sb.ToString
+		Return Tabs.ToString
 	End If
 End Sub
 
 Sub SetVModel(k As String) As VMTabs
 	Tabs.SetVModel(k)
+	items.SetVModel(k)
 	Return Me
 End Sub
 
@@ -467,12 +458,13 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTabs
-Tabs.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
+	Tabs.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+	End Sub
+	
 Sub SetVisible(b As Boolean) As VMTabs
-Tabs.SetVisible(b)
-Return Me
+	Tabs.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

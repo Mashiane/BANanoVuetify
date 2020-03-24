@@ -71,7 +71,6 @@ Sub Init
 	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
 	'
 	vm.UX
-	
 End Sub
 
 Sub BuildDrawer

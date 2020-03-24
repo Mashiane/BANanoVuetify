@@ -264,6 +264,10 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 
 End Sub
 
+Sub BeautifySourceCode(slang As String, sourceCode As String) As String
+	Return vue.BeautifySourceCode(slang, sourceCode)
+End Sub
+
 Sub LogState(stateName As String)
 	stateName = stateName.ToLowerCase
 	Dim rec As Object = vue.GetData(stateName)
@@ -927,6 +931,13 @@ private Sub InitColors
 	ColorOptions.Put("white", "White")
 	ColorOptions.Put("yellow", "Yellow")
 	ColorOptions.Put("none", "")
+	ColorOptions.Put("primary","primary")
+	ColorOptions.Put("secondary","secondary")
+	ColorOptions.Put("accent","accent")
+	ColorOptions.Put("error","error")
+	ColorOptions.Put("info","info")
+	ColorOptions.Put("success","success")
+	ColorOptions.Put("warning","warning")
 	'
 	BorderOptions.Initialize
 	BorderOptions.Put("dashed", "Dashed")
@@ -1521,6 +1532,7 @@ End Sub
 
 'add a page to the template of the app
 Sub AddPage(name As String, moduleObj As Object)
+	name = name.tolowercase
 	Pages.add(name)
 	BANano.CallSub(moduleObj, "Code", Array(Me))   'ignore
 	Hide(name)
@@ -1534,9 +1546,9 @@ Sub ShowPage(name As String)
 	HideDrawers
 	Dim nm As Map = CreateMap()
 	For Each page As String In Pages
-		nm.Put(page, False)	
+		nm.Put($"${page}show"$, False)	
 	Next
-	nm.Put(page, True)
+	nm.Put($"${name}show"$, True)
 	SetState(nm)
 End Sub
 
@@ -1682,9 +1694,10 @@ Sub CreateInput(sid As String, eventHandler As Object) As VMInput
 	Return el
 End Sub
 
-Sub CreateFileInput(sid As String, eventHandler As Object) As VMFileInput
-	Dim el As VMFileInput
+Sub CreateFileInput(sid As String, eventHandler As Object) As VMTextField
+	Dim el As VMTextField
 	el.Initialize(vue, sid, eventHandler)
+	el.SetFileInput
 	Return el
 End Sub
 
@@ -2167,13 +2180,13 @@ Sub NewPassword(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 End Sub
 
 'backward compatibility
-Sub NewFile(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMFileInput
+Sub NewFile(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
 	Return NewFileInput(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
 End Sub
 '
-Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMFileInput
-	Dim el As VMFileInput = CreateFileInput(sname, eventHandler)
-	'el.setbstatic(bStatic)
+Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateFileInput(sname, eventHandler)
+	el.setstatic(bStatic)
 	el.SetHint(shelperText)
 	el.SetErrorText(sErrorText)
 	el.SetTabIndex(iTabIndex)
@@ -2187,7 +2200,7 @@ End Sub
 Sub NewImage(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, src As String, salt As String, swidth As String, sheight As String) As VMImage
 	vmodel = vmodel.ToLowerCase
 	Dim el As VMImage = CreateImage(sname, eventHandler)
-	'el.setstatic(bStatic)
+	el.setstatic(bStatic)
 	el.SetWidth(swidth)
 	el.SetHeight(sheight)
 	el.SetAlt(salt)
@@ -2221,7 +2234,7 @@ End Sub
 '
 Sub NewButton(eventHandler As Object,bStatic As Boolean,sname As String, sLabel As String, bRaised As Boolean, bPrimary As Boolean, bAccent As Boolean, bFitWidth As Boolean) As VMButton
 	Dim el As VMButton = CreateButton(sname, eventHandler)
-	'el.setstatic(bStatic)
+	el.setstatic(bStatic)
 	el.SetLabel(sLabel)
 	If bRaised = False Then el.SetTransparent(True)
 	If bPrimary Then el.SetPrimary(bPrimary)
@@ -2314,7 +2327,7 @@ End Sub
 '
 Sub NewIconButton(eventHandler As Object,bStatic As Boolean,sname As String, iconName As String, sColor As String, sTooltip As String) As VMButton
 	Dim el As VMButton = CreateButton(sname, eventHandler)
-	'el.SetStatic(bStatic)
+	el.SetStatic(bStatic)
 	el.SetIconButton(iconName)
 	el.SetColor(sColor)
 	el.SetTooltip(sTooltip)
@@ -2323,7 +2336,7 @@ End Sub
 
 Sub NewFABButton(eventHandler As Object,bStatic As Boolean,sname As String, iconName As String, sColor As String, sTooltip As String) As VMButton
 	Dim el As VMButton = CreateFABButton(sname, eventHandler, iconName)
-	'el.SetStatic(bStatic)
+	el.SetStatic(bStatic)
 	el.SetColor(sColor)
 	el.SetTooltip(sTooltip)
 	Return el

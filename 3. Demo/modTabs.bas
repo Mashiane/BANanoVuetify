@@ -23,11 +23,11 @@ Sub Code
 	'
 	Dim b As VMTabs = vm.CreateTabs("b", Me).SetGrow(True).SetIconsAndText(True).SetDark(True).SetCentered(True)
 	'
-	b.AddTab("b1", "Item 1", "mdi-phone", "This is item 1")
-	b.AddTab("b2", "Item 2", "mdi-heart", "This is item 2")
-	b.AddTab("b3", "Item 3", "mdi-account-box", "This is item 2")
-	b.AddTab("b4", "Item 4", "", "This is item 4")
-	b.AddTab("b5", "Item 5", "", "This is item 5")
+	b.AddTab("b1", "Item 1", "mdi-phone", Null)
+	b.AddTab("b2", "Item 2", "mdi-heart", Null)
+	b.AddTab("b3", "Item 3", "mdi-account-box", Null)
+	b.AddTab("b4", "Item 4", "", Null)
+	b.AddTab("b5", "Item 5", "", Null)
 	b.AddToContainer(cont, 1, 1)
 	'
 '	Dim tblBar As VMToolBar = vm.CreateToolbar("tbl1", Me).SetColor(vm.COLOR_CYAN).SetDark(True).SetFlat(True)

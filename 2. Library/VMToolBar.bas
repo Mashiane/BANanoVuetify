@@ -229,7 +229,7 @@ Sub UseTheme(themeName As String) As VMToolBar
 End Sub
 
 'the stepLabelVModel is the vmodel to have the caption
-Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As String)
+Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
 	Tabs.AddTab(tabID, tabLabel, tabIcon, tabContent)
 End Sub
 

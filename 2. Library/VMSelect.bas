@@ -190,7 +190,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSelect
-	If varColor = "" And varIntensity = "" Then Return Me
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)

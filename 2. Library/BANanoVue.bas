@@ -608,6 +608,19 @@ Sub GetFileDetails(fileObj As Map) As FileObject
 	Return ff
 End Sub
 
+
+Sub BeautifySourceCode(slang As String, sourceCode As String) As String
+	Select Case slang
+	Case "js"
+		Dim res As String = BANAno.RunJavascriptMethod("js_beautify", Array(sourceCode))
+	Case "css"
+		Dim res As String = BANAno.RunJavascriptMethod("css_beautify", Array(sourceCode))
+	Case "html"
+		Dim res As String = BANAno.RunJavascriptMethod("html_beautify", Array(sourceCode))
+	End Select
+	Return res
+End Sub
+
 Sub AddStyle(sID As String, opt As Map) As BANanoVue
 	Dim nm As Map = CreateMap()
 	sID = sID.ToLowerCase

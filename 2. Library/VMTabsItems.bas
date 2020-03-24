@@ -95,7 +95,7 @@ Sub AddClass(c As String) As VMTabsItems
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMTabsItems
+Sub SetAttr(attr As Map) As VMTabsItems
 	TabsItems.SetAttr(attr)
 	Return Me
 End Sub

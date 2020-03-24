@@ -102,6 +102,35 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetHasBorder(b As Boolean) As VMContainer
+	HasBorder = b
+	Return Me
+End Sub
+
+Sub SetShowMatrix(b As Boolean) As VMContainer
+	ShowMatrix = b
+	Return Me
+End Sub
+
+Sub SetNoGutters(b As Boolean) As VMContainer
+	NoGutters = b
+	Return Me
+End Sub
+
+Sub SetWidth(w As String) As VMContainer
+	Container.SetStyleSingle("width", w)
+	Container.SetStyleSingle("max-width", w)
+	Return Me
+End Sub
+
+
+Sub SetHeight(h As String) As VMContainer
+	Container.SetStyleSingle("height", h)
+	Container.SetStyleSingle("max-height", h)
+	Return Me
+End Sub
+
+
 Sub HasContent As Boolean
 	Return Container.hascontent
 End Sub

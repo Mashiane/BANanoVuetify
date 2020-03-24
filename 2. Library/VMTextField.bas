@@ -15,6 +15,12 @@ Sub Class_Globals
 	Private password As String
 	Public ErrorText As String
 	Private bStatic As Boolean
+	Private targetVModel As String
+	Private numFiles As Int
+	Private totFiles As Int
+	Private fd As List
+	Private bMultiple As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the TextField
@@ -27,6 +33,57 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	password = $"${ID}password"$
 	bStatic = False
+	vmodel = ""
+	bMultiple = False
+	Return Me
+End Sub
+
+Sub SetFileInput As VMTextField
+	TextField.SetTag("v-file-input")
+	TextField.typeOf = "textarea"
+	SetOnChange(Me, "change")
+	Return Me
+End Sub
+
+
+'the list of files have changed
+Sub change(fileList As List)
+	numFiles = 0
+	fd.Initialize
+	Select Case bMultiple
+		Case True
+			totFiles = fileList.Size
+			'upload the files to the server
+			For Each fileObj As Object In fileList
+				vue.HTTPUpload(fileObj, Me, "filedone")
+			Next
+		Case Else
+			totFiles = 1
+			vue.HTTPUpload(fileList, Me, "filedone")
+	End Select
+End Sub
+
+Sub filedone(fileObj As Map, json As String)
+	numFiles = numFiles + 1
+	Dim fde As FileObject = vue.GetFileDetails(fileObj)
+	fd.Add(fde)
+	If numFiles = totFiles Then
+		vue.SetData(vmodel, fd)
+		If SubExists(Module, $"${ID}_change"$) = False Then Return
+		BANano.CallSub(Module, $"${ID}_change"$, Array(fd))
+	End If
+End Sub
+
+'set accept
+Sub SetAccept(varAccept As String) As VMTextField
+	If varAccept = "" Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("accept", varAccept)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}varAccept"$
+	vue.SetStateSingle(pp, varAccept)
+	TextField.Bind(":accept", pp)
 	Return Me
 End Sub
 
@@ -154,7 +211,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTextField
-	If varColor = "" And varIntensity = "" Then Return Me
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)
@@ -194,6 +251,7 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMTextField
+	vmodel = k.tolowercase
 	TextField.SetVModel(k)
 	Return Me
 End Sub
@@ -898,11 +956,11 @@ Sub SetOnBlur(methodName As String) As VMTextField
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMTextField
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMTextField
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -1174,6 +1232,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMTextField
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -1181,6 +1240,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTextField
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
@@ -1189,7 +1249,12 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTextF
 End Sub
 
 'set auto-grow
-Sub SetAutoGrow(varAutoGrow As Object) As VMTextField
+Sub SetAutoGrow(varAutoGrow As Boolean) As VMTextField
+	If varAutoGrow = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("auto-grow", varAutoGrow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}AutoGrow"$
 	vue.SetStateSingle(pp, varAutoGrow)
 	TextField.Bind(":auto-grow", pp)
@@ -1197,7 +1262,12 @@ Sub SetAutoGrow(varAutoGrow As Object) As VMTextField
 End Sub
 
 'set no-resize
-Sub SetNoResize(varNoResize As Object) As VMTextField
+Sub SetNoResize(varNoResize As Boolean) As VMTextField
+	If varNoResize = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("no-resize", varNoResize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NoResize"$
 	vue.SetStateSingle(pp, varNoResize)
 	TextField.Bind(":no-resize", pp)
@@ -1205,7 +1275,12 @@ Sub SetNoResize(varNoResize As Object) As VMTextField
 End Sub
 
 'set row-height
-Sub SetRowHeight(varRowHeight As Object) As VMTextField
+Sub SetRowHeight(varRowHeight As String) As VMTextField
+	If varRowHeight = "" Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle(":row-height", varRowHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}RowHeight"$
 	vue.SetStateSingle(pp, varRowHeight)
 	TextField.Bind(":row-height", pp)
@@ -1213,7 +1288,12 @@ Sub SetRowHeight(varRowHeight As Object) As VMTextField
 End Sub
 
 'set rows
-Sub SetRows(varRows As Object) As VMTextField
+Sub SetRows(varRows As String) As VMTextField
+	If varRows = "" Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("rows", varRows)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Rows"$
 	vue.SetStateSingle(pp, varRows)
 	TextField.Bind(":rows", pp)
@@ -1240,5 +1320,96 @@ Sub SetBackgroundColorIntensity(varBackgroundColor As Object, varIntensity As St
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, scolor)
 	TextField.Bind(":background-color", pp)
+	Return Me
+End Sub
+
+'set chips
+Sub SetChips(varChips As Boolean) As VMTextField
+	If varChips = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("chips", varChips)
+		Return Me
+	End If	
+	Dim pp As String = $"${ID}Chips"$
+	vue.SetStateSingle(pp, varChips)
+	TextField.Bind(":chips", pp)
+	Return Me
+End Sub
+
+'set counter-size-string
+Sub SetCounterSizeString(varCounterSizeString As String) As VMTextField
+	If varCounterSizeString = "" Then Return Me
+	TextField.SetAttrSingle(":counter-size-string", varCounterSizeString)
+	Return Me
+End Sub
+
+'set counter-string
+Sub SetCounterString(varCounterString As String) As VMTextField
+	If varCounterString = "" Then Return Me
+	TextField.SetAttrSingle(":counter-string", varCounterString)
+	Return Me
+End Sub
+
+'set multiple
+Sub SetMultiple(varMultiple As Boolean) As VMTextField
+	If varMultiple = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("multiple", varMultiple)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Multiple"$
+	vue.SetStateSingle(pp, varMultiple)
+	TextField.Bind(":multiple", pp)
+	bMultiple = varMultiple
+	Return Me
+End Sub
+
+'set show-size
+Sub SetShowSize(varShowSize As Boolean) As VMTextField
+	If varShowSize = False Then Return Me
+	If bStatic Then
+		TextField.Bind("show-size", varShowSize)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ShowSize"$
+	vue.SetStateSingle(pp, varShowSize)
+	TextField.Bind(":show-size", pp)
+	Return Me
+End Sub
+
+'set small-chips
+Sub SetSmallChips(varSmallChips As Boolean) As VMTextField
+	If varSmallChips = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("small-chips", varSmallChips)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}SmallChips"$
+	vue.SetStateSingle(pp, varSmallChips)
+	TextField.Bind(":small-chips", pp)
+	Return Me
+End Sub
+
+'set truncate-length
+Sub SetTruncateLength(varTruncateLength As Boolean) As VMTextField
+	If varTruncateLength = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle(":truncate-length", varTruncateLength)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}TruncateLength"$
+	vue.SetStateSingle(pp, varTruncateLength)
+	TextField.Bind(":truncate-length", pp)
+	Return Me
+End Sub
+
+Sub SetSlotSelection(b As Boolean) As VMTextField    'ignore
+	SetAttr(CreateMap("slot": "selection"))
+	Return Me
+End Sub
+
+Sub SetWidth(w As String) As VMTextField
+	If w = "" Then Return Me
+	TextField.SetStyleSingle("width", w)
 	Return Me
 End Sub

@@ -230,7 +230,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMImage
-	If varColor = "" And varIntensity = "" Then Return Me
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", varColor)
@@ -277,6 +277,10 @@ Sub SetValue(url As String) As VMImage
 End Sub
 
 Sub SetVModel(k As String, value As String) As VMImage
+	If bStatic Then
+		SetSrc(value)
+		Return Me
+	End If
 	orig = value
 	k = k.tolowercase
 	vue.SetData(k, value)

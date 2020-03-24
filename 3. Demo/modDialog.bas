@@ -84,7 +84,7 @@ Sub InputDialog As VMDialog
 	'
 	Dim chkAgree As VMCheckBox = vm.CreateCheckBox("chkAgree1", Me).SetVModel("user.agree").SetLabel("I agree")
 	Dim dob As VMDateTimePicker = vm.CreateDatePicker("dob", Me).SetVModel("user.dob").SetLabel("Date of Birth").SetForInput
-	Dim fi As VMFileInput = vm.CreateFileInput("myfile", Me).SetAccept("image/*").SetLabel("File input").SetVModel("user.myfile")
+	Dim fi As VMTextField = vm.CreateFileInput("myfile", Me).SetAccept("image/*").SetLabel("File input").SetVModel("user.myfile")
 	Dim rg1 As VMRadioGroup = vm.CreateRadioGroup("gender", Me).SetVModel("user.gender").SetHorizontal(True).SetLabel("Gender")
 	rg1.SetOptions(CreateMap("m":"Male","f":"Female"))
 	Dim selx As VMSelect = vm.CreateSelect("code", Me).SetItems("items").SetLabel("Code").SetVModel("user.code")

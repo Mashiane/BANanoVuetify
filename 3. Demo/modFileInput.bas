@@ -37,7 +37,7 @@ Sub Code
 	'
 	vm.CreateFileInput("fi8", Me).SetOutlined(True).SetDense(True).SetLabel("File input (custom)").AddToContainer(cont, 8, 1)
 	'
-	Dim fi9 As VMFileInput = vm.CreateFileInput("fi9", Me).SetVModel("files").SetColorIntensity(vm.vue.COLOR_DEEPPURPLE, vm.vue.INTENSITY_ACCENT4)
+	Dim fi9 As VMTextField = vm.CreateFileInput("fi9", Me).SetVModel("files").SetColorIntensity(vm.vue.COLOR_DEEPPURPLE, vm.vue.INTENSITY_ACCENT4)
 	fi9.SetCounter(True).SetLabel("File Input").SetMultiple(True).SetPlaceholder("Select your files")
 	fi9.SetPrependIcon("mdi-paperclip").SetOutlined(True).SetShowSize("1000").AddToContainer(cont, 9, 1)
 	

@@ -51,6 +51,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bHideDetails = False
 	TextField.Initialize(vue, $"${ID}txt"$, Module)
 	bTimePicker = False
+	bStatic = False
 	Return Me
 End Sub
 
@@ -161,7 +162,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMDateTimePicker
-	If varColor = "" And varIntensity = "" Then Return Me
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		DateTimePicker.SetAttrSingle("color", scolor)
@@ -174,7 +175,7 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMDateTimeP
 End Sub
 
 Sub SetHeaderColorIntensity(varColor As String, varIntensity As String) As VMDateTimePicker
-	If varColor = "" And varIntensity = "" Then Return Me
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		DateTimePicker.SetAttrSingle("header-color", scolor)

@@ -17,6 +17,7 @@ Sub Class_Globals
 	Private tmpl As VMTemplate
 	Private span As VMLabel
 	Private txt As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Button
@@ -37,6 +38,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Button.SetVShow($"${ID}show"$)
 	Button.typeOf = "button"
 	txt = ""
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMButton
+	bStatic = b
+	Button.SetStatic(b)
 	Return Me
 End Sub
 
@@ -316,7 +325,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set absolute
-Sub SetAbsolute(varAbsolute As Object) As VMButton
+Sub SetAbsolute(varAbsolute As Boolean) As VMButton
+	If varAbsolute = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("absolute", varAbsolute)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Absolute"$
 	vue.SetStateSingle(pp, varAbsolute)
 	Button.Bind(":absolute", pp)
@@ -324,7 +338,12 @@ Sub SetAbsolute(varAbsolute As Object) As VMButton
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMButton
+Sub SetActiveClass(varActiveClass As String) As VMButton
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	Button.Bind(":active-class", pp)
@@ -332,7 +351,12 @@ Sub SetActiveClass(varActiveClass As Object) As VMButton
 End Sub
 
 'set append
-Sub SetAppend(varAppend As Object) As VMButton
+Sub SetAppend(varAppend As Boolean) As VMButton
+	If varAppend = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("append", varAppend)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Append"$
 	vue.SetStateSingle(pp, varAppend)
 	Button.Bind(":append", pp)
@@ -341,6 +365,11 @@ End Sub
 
 'set block
 Sub SetBlock(varBlock As Boolean) As VMButton
+	If varBlock = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("block", varBlock)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Block"$
 	vue.SetStateSingle(pp, varBlock)
 	Button.Bind(":block", pp)
@@ -348,16 +377,21 @@ Sub SetBlock(varBlock As Boolean) As VMButton
 End Sub
 
 'set bottom
-Sub SetBottom(varBottom As Object) As VMButton
+Sub SetBottom(varBottom As Boolean) As VMButton
+	If varBottom = False Then Return Me
+	If bStatic Then
+		Button.Setattrsingle("bottom", varBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bottom"$
 	vue.SetStateSingle(pp, varBottom)
 	Button.Bind(":bottom", pp)
 	Return Me
 End Sub
 
-
 'set color intensity
 Sub SetTextColor(varColor As String) As VMButton
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -365,6 +399,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMButton
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
@@ -373,7 +408,12 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMButto
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMButton
+Sub SetColor(varColor As String) As VMButton
+	If varColor = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Button.Bind(":color", pp)
@@ -384,6 +424,11 @@ End Sub
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMButton
 	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If varColor = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	vue.SetStateSingle(pp, scolor)
 	Button.Bind(":color", pp)
 	Return Me
@@ -398,6 +443,11 @@ End Sub
 
 'set depressed
 Sub SetDepressed(varDepressed As Boolean) As VMButton
+	If varDepressed = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("depressed", varDepressed)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Depressed"$
 	vue.SetStateSingle(pp, varDepressed)
 	Button.Bind(":depressed", pp)
@@ -411,7 +461,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMButton
 End Sub
 
 'set elevation
-Sub SetElevation(varElevation As Object) As VMButton
+Sub SetElevation(varElevation As String) As VMButton
+	If varElevation = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("elevation", varElevation)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Elevation"$
 	vue.SetStateSingle(pp, varElevation)
 	Button.Bind(":elevation", pp)
@@ -419,7 +474,12 @@ Sub SetElevation(varElevation As Object) As VMButton
 End Sub
 
 'set exact
-Sub SetExact(varExact As Object) As VMButton
+Sub SetExact(varExact As Boolean) As VMButton
+	If varExact = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("exact", varExact)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Exact"$
 	vue.SetStateSingle(pp, varExact)
 	Button.Bind(":exact", pp)
@@ -427,7 +487,12 @@ Sub SetExact(varExact As Object) As VMButton
 End Sub
 
 'set exact-active-class
-Sub SetExactActiveClass(varExactActiveClass As Object) As VMButton
+Sub SetExactActiveClass(varExactActiveClass As String) As VMButton
+	If varExactActiveClass = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSIngle("exact-active-class", varExactActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ExactActiveClass"$
 	vue.SetStateSingle(pp, varExactActiveClass)
 	Button.Bind(":exact-active-class", pp)
@@ -442,7 +507,12 @@ Sub SetFab(varFab As Boolean) As VMButton
 End Sub
 
 'set fixed
-Sub SetFixed(varFixed As Object) As VMButton
+Sub SetFixed(varFixed As Boolean) As VMButton
+	If varFixed = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("fixed", varFixed)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Fixed"$
 	vue.SetStateSingle(pp, varFixed)
 	Button.Bind(":fixed", pp)
@@ -450,7 +520,12 @@ Sub SetFixed(varFixed As Object) As VMButton
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMButton
+Sub SetHeight(varHeight As String) As VMButton
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Button.Bind(":height", pp)
@@ -458,32 +533,30 @@ Sub SetHeight(varHeight As Object) As VMButton
 End Sub
 
 'set href
-Sub SetHref(varHref As Object) As VMButton
-	Dim pp As String = $"${ID}Href"$
-	vue.SetStateSingle(pp, varHref)
-	Button.Bind(":href", pp)
+Sub SetHref(varHref As String) As VMButton
+	If varHref = "" Then Return Me
+	Button.SetAttrSingle("href", varHref)
 	Return Me
 End Sub
 
 'set icon
 Sub SetIcon(varIcon As Boolean) As VMButton
+	If varIcon = False Then Return Me
 	Button.SetAttrSingle("icon", varIcon)
 	Return Me
 End Sub
 
 'set input-value
-Sub SetInputValue(varInputValue As Object) As VMButton
-	Dim pp As String = $"${ID}InputValue"$
-	vue.SetStateSingle(pp, varInputValue)
-	Button.Bind(":input-value", pp)
+Sub SetInputValue(varInputValue As String) As VMButton
+	If varInputValue = "" Then Return Me
+	Button.SetAttrSingle("input-value", varInputValue)
 	Return Me
 End Sub
 
 'set large
 Sub SetLarge(varLarge As Boolean) As VMButton
-	Dim pp As String = $"${ID}Large"$
-	vue.SetStateSingle(pp, varLarge)
-	Button.Bind(":large", pp)
+	If varLarge = False Then Return Me
+	Button.SetAttrSIngle("large", varLarge)
 	Return Me
 End Sub
 
@@ -495,7 +568,12 @@ Sub SetLeft(varLeft As Boolean) As VMButton
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMButton
+Sub SetLight(varLight As Boolean) As VMButton
+	If varLight = False Then Return Me
+	If bStatic Then
+		Button.SetAttrsingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Button.Bind(":light", pp)
@@ -503,7 +581,12 @@ Sub SetLight(varLight As Object) As VMButton
 End Sub
 
 'set link
-Sub SetLink(varLink As Object) As VMButton
+Sub SetLink(varLink As Boolean) As VMButton
+	If varLink = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSIngle("link", varLink)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Link"$
 	vue.SetStateSingle(pp, varLink)
 	Button.Bind(":link", pp)
@@ -511,7 +594,12 @@ Sub SetLink(varLink As Object) As VMButton
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMButton
+Sub SetLoading(varLoading As Boolean) As VMButton
+	If varLoading = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("loading", varLoading)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	Button.Bind(":loading", pp)
@@ -519,7 +607,12 @@ Sub SetLoading(varLoading As Object) As VMButton
 End Sub
 
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMButton
+Sub SetMaxHeight(varMaxHeight As String) As VMButton
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	Button.Bind(":max-height", pp)
@@ -527,7 +620,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMButton
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMButton
+Sub SetMaxWidth(varMaxWidth As String) As VMButton
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then 
+		Button.SetAttrSIngle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	Button.Bind(":max-width", pp)
@@ -535,7 +633,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMButton
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMButton
+Sub SetMinHeight(varMinHeight As String) As VMButton
+	If varMinHeight = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinHeight"$
 	vue.SetStateSingle(pp, varMinHeight)
 	Button.Bind(":min-height", pp)
@@ -543,7 +646,12 @@ Sub SetMinHeight(varMinHeight As Object) As VMButton
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMButton
+Sub SetMinWidth(varMinWidth As String) As VMButton
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	Button.Bind(":min-width", pp)
@@ -551,15 +659,19 @@ Sub SetMinWidth(varMinWidth As Object) As VMButton
 End Sub
 
 'set nuxt
-Sub SetNuxt(varNuxt As Object) As VMButton
-	Dim pp As String = $"${ID}Nuxt"$
-	vue.SetStateSingle(pp, varNuxt)
-	Button.Bind(":nuxt", pp)
+Sub SetNuxt(varNuxt As Boolean) As VMButton
+	If varNuxt = False Then Return Me
+	Button.SetAttrSingle("nuxt", varNuxt)
 	Return Me
 End Sub
 
 'set outlined
 Sub SetOutlined(varOutlined As Boolean) As VMButton
+	If varOutlined = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSIngle("outlined", varOutlined)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Outlined"$
 	vue.SetStateSingle(pp, varOutlined)
 	Button.Bind(":outlined", pp)
@@ -567,7 +679,12 @@ Sub SetOutlined(varOutlined As Boolean) As VMButton
 End Sub
 
 'set replace
-Sub SetReplace(varReplace As Object) As VMButton
+Sub SetReplace(varReplace As Boolean) As VMButton
+	If varReplace = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("replace", varReplace)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Replace"$
 	vue.SetStateSingle(pp, varReplace)
 	Button.Bind(":replace", pp)
@@ -575,7 +692,12 @@ Sub SetReplace(varReplace As Object) As VMButton
 End Sub
 
 'set retain-focus-on-click
-Sub SetRetainFocusOnClick(varRetainFocusOnClick As Object) As VMButton
+Sub SetRetainFocusOnClick(varRetainFocusOnClick As Boolean) As VMButton
+	If varRetainFocusOnClick = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("retain-focus-on-click", varRetainFocusOnClick)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}RetainFocusOnClick"$
 	vue.SetStateSingle(pp, varRetainFocusOnClick)
 	Button.Bind(":retain-focus-on-click", pp)
@@ -590,7 +712,12 @@ Sub SetRight(varRight As Boolean) As VMButton
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMButton
+Sub SetRipple(varRipple As Boolean) As VMButton
+	If varRipple = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	Button.Bind(":ripple", pp)
@@ -599,6 +726,11 @@ End Sub
 
 'set rounded
 Sub SetRounded(varRounded As Boolean) As VMButton
+	If varRounded = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("rounded", varRounded)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Rounded"$
 	vue.SetStateSingle(pp, varRounded)
 	Button.Bind(":rounded", pp)
@@ -606,26 +738,23 @@ Sub SetRounded(varRounded As Boolean) As VMButton
 End Sub
 
 'set small
-Sub SetSmall(varSmall As Object) As VMButton
-	Dim pp As String = $"${ID}Small"$
-	vue.SetStateSingle(pp, varSmall)
-	Button.Bind(":small", pp)
+Sub SetSmall(varSmall As Boolean) As VMButton
+	If varSmall = False Then Return Me
+	Button.SetAttrsingle("small", varSmall)
 	Return Me
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMButton
-	Dim pp As String = $"${ID}Tag"$
-	vue.SetStateSingle(pp, varTag)
-	Button.Bind(":tag", pp)
+Sub SetTag(varTag As String) As VMButton
+	If varTag = "" Then Return Me
+	Button.SetAttrSingle("tag", varTag)
 	Return Me
 End Sub
 
 'set target
-Sub SetTarget(varTarget As Object) As VMButton
-	Dim pp As String = $"${ID}Target"$
-	vue.SetStateSingle(pp, varTarget)
-	Button.Bind(":target", pp)
+Sub SetTarget(varTarget As String) As VMButton
+	If varTarget = "" Then Return Me
+	Button.SetAttrSingle("target", varTarget)
 	Return Me
 End Sub
 
@@ -651,22 +780,31 @@ End Sub
 
 'set tile
 Sub SetTile(varTile As Boolean) As VMButton
-Dim pp As String = $"${ID}Tile"$
-vue.SetStateSingle(pp, varTile)
-Button.Bind(":tile", pp)
-Return Me
+	If varTile = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("tile", varTile)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Tile"$
+	vue.SetStateSingle(pp, varTile)
+	Button.Bind(":tile", pp)
+	Return Me
 End Sub
 
 'set to
-Sub SetTo(varTo As Object) As VMButton
-Dim pp As String = $"${ID}To"$
-vue.SetStateSingle(pp, varTo)
-Button.Bind(":to", pp)
-Return Me
+Sub SetTo(varTo As String) As VMButton
+	If varTo = "" Then Return Me
+	Button.SetAttrSingle("to", varTo)
+	Return Me
 End Sub
 
 'set top
-Sub SetTop(varTop As Object) As VMButton
+Sub SetTop(varTop As Boolean) As VMButton
+	If varTop = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("top", varTop)
+		Return Me
+	End If
 Dim pp As String = $"${ID}Top"$
 vue.SetStateSingle(pp, varTop)
 Button.Bind(":top", pp)
@@ -674,14 +812,23 @@ Return Me
 End Sub
 
 'set type
-Sub SetType(varType As Object) As VMButton
-Dim pp As String = $"${ID}Type"$
-vue.SetStateSingle(pp, varType)
-Button.Bind(":type", pp)
-Return Me
+Sub SetType(varType As String) As VMButton
+	If varType = "" Then Return Me
+	Button.Bind("type", varType)
+	Return Me
+End Sub
+
+Sub SetIsText(b As Boolean) As VMButton
+	SetTransparent(b)
+	Return Me
 End Sub
 
 Sub SetTransparent(varType As Boolean) As VMButton
+	If varType = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("text", varType)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}text"$
 	vue.SetStateSingle(pp, varType)
 	Button.Bind(":text", pp)
@@ -700,7 +847,12 @@ Sub SetValue(varValue As String) As VMButton
 End Sub
 
 'set width
-Sub SetWidth(varWidth As Object) As VMButton
+Sub SetWidth(varWidth As String) As VMButton
+	If varWidth = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("width", varWidth)
+		Return Me
+	End If
 Dim pp As String = $"${ID}Width"$
 vue.SetStateSingle(pp, varWidth)
 Button.Bind(":width", pp)
@@ -708,19 +860,17 @@ Return Me
 End Sub
 
 'set x-large
-Sub SetXLarge(varXLarge As Object) As VMButton
-Dim pp As String = $"${ID}XLarge"$
-vue.SetStateSingle(pp, varXLarge)
-Button.Bind(":x-large", pp)
-Return Me
+Sub SetXLarge(varXLarge As Boolean) As VMButton
+	If varXLarge = False Then Return Me
+	Button.SetAttrSingle(":x-large", varXLarge)
+	Return Me
 End Sub
 
 'set x-small
-Sub SetXSmall(varXSmall As Object) As VMButton
-Dim pp As String = $"${ID}XSmall"$
-vue.SetStateSingle(pp, varXSmall)
-Button.Bind(":x-small", pp)
-Return Me
+Sub SetXSmall(varXSmall As Boolean) As VMButton
+	If varXSmall = False Then Return Me
+	Button.SetAttrSingle(":x-small", varXSmall)
+	Return Me
 End Sub
 
 '

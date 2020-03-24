@@ -14,7 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 End Sub
 
-'initialize the TabItem
+'initialize the TabItem, ensure its same as AddTab
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMTabItem
 	ID = sid.tolowercase
 	TabItem.Initialize(v, ID)
@@ -22,6 +22,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	SetAttrSingle("key", ID)
+	SetAttrSingle("value", ID)
 	Return Me
 End Sub
 
@@ -45,7 +47,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	Return TabItem.ToString
 End Sub
 
@@ -94,7 +95,7 @@ Sub AddClass(c As String) As VMTabItem
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMTabItem
+Sub SetAttr(attr As Map) As VMTabItem
 	TabItem.SetAttr(attr)
 	Return Me
 End Sub
