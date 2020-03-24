@@ -157,6 +157,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modDesigner,btnhtml_click,187,0,modDesigner,PropertyBag_Slider,1177,0,modDesigner,SavePropertyBag,1594,6,modDesigner,YesNoToBoolean,193,1,modDesigner,PropertyBag_Label,1480,0,modDesigner,PropertyBag_TextField,1516,0,modDesigner,ItemDragStart,1208,0,modDesigner,Init,50,0,modDesigner,btnRefresh_click,696,0,modDesigner,CreateUX,677,6
+NavigationStack=modAutoComplete,Card_1,181,1,modAutoComplete,Card_2,138,0,modAutoComplete,Card_4,72,0,modAutoComplete,Card_3,77,0,modCombo,Code,23,0,modDialog,InputDialog,90,0,modDesign,Code,28,0,modTextArea,Code,34,0,modTimePicker,Code,22,0,modDatePicker,Code,13,0
 SelectedBuild=0
 VisibleModules=

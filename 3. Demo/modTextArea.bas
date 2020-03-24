@@ -27,7 +27,7 @@ Sub Code
 	'
 	vm.CreateTextArea("ta3", Me).SetLabel("Prepend Outer Icon").SetAppendOuterIcon("comment").AddToContainer(cont, 2, 1)
 	'
-	Dim ta4 As VMTextArea = vm.CreateTextArea("ta4", Me)
+	Dim ta4 As VMTextField = vm.CreateTextArea("ta4", Me)
 	ta4.SetLabel("Label").SetAutoGrow(True).SetName("ta4", False).SetFilled(True)
 	ta4.SetValue("The Woodman set to work at once, and so sharp was his axe that the tree was soon chopped nearly through.").AddToContainer(cont, 2, 2)
 	'

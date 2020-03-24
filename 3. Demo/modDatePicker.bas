@@ -21,20 +21,20 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(5).AddColumns2x6
 	'
-	Dim dp4 As VMDatePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetLabel("Date of Birth").SetForInput
+	Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetLabel("Date of Birth").SetForInput
 	dp4.AddToContainer(cont, 1, 1)
 	
 	vm.CreateLabel("lbl2").SetParagraph.SetText("Dates: {{ dp4 }}").AddToContainer(cont, 1, 2)
 	'
-	Dim dp As VMDatePicker = vm.CreateDatePicker("dp1", Me).SetVModel("dp1")
+	Dim dp As VMDateTimePicker = vm.CreateDatePicker("dp1", Me).SetVModel("dp1")
 	dp.AddToContainer(cont, 2, 1)
 	'
 	vm.CreateLabel("lbl1").SetParagraph.SetText("Date: {{ dp1 }}").AddToContainer(cont, 2, 2)
 	'
-	Dim dp2 As VMDatePicker = vm.CreateDatePicker("dp2", Me).SetVModel("dp2").SetFullWidth(True)
+	Dim dp2 As VMDateTimePicker = vm.CreateDatePicker("dp2", Me).SetVModel("dp2").SetFullWidth(True)
 	dp2.AddToContainer(cont, 3, 1)
 	'
-	Dim dp3 As VMDatePicker = vm.CreateDatePicker("dp3", Me).SetVModel("dp3").SetMonthPicker
+	Dim dp3 As VMDateTimePicker = vm.CreateDatePicker("dp3", Me).SetVModel("dp3").SetMonthPicker
 	dp3.AddToContainer(cont, 3, 2)
 	'
 	

@@ -217,35 +217,6 @@ Sub HideError(elID As String)
 	vue.SetStateSingle($"${elID}error"$, False)
 End Sub
 
-
-private Sub CreateList(sid As String,eventHandler As Object) As VMList
-	Dim el As VMList
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateListItem(sid As String, eventHandler As Object) As VMListItem
-	Dim el As VMListItem
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateButton(sid As String, eventHandler As Object) As VMButton
-	Dim el As VMButton
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateDatePicker(sid As String, eventHandler As Object) As VMDatePicker
-	Dim el As VMDatePicker
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
 Sub LinkRecordTypes(rec As Map) As Map
 	Dim nrec As Map = CreateMap()
 	For Each k As String In rec.keys
@@ -313,7 +284,8 @@ Sub AddDoubles(d As List) As VMContainer
 End Sub
 
 Sub AddLabel(row As Int, col As Int, elID As String, elSize As String, elText As String) As VMContainer
-	Dim lbl As VMLabel = CreateLABEL(elID).SetTag(elSize).SetText(elText)
+	Dim lbl As VMLabel
+	lbl.Initialize(vue, elID).SetTag(elSize).SetText(elText)
 	AddComponent(row, col, lbl.ToString)
 	Return Me
 End Sub
@@ -1140,42 +1112,6 @@ Sub SetAttrSingle(prop As String, value As String) As VMContainer
 	Return Me
 End Sub
 
-private Sub CreateImage(img As String, eventHandler As Object) As VMImage
-	Dim el As VMImage
-	el.Initialize(vue, img, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateLABEL(lblID As String) As VMLabel
-	Dim el As VMLabel
-	el.Initialize(vue, lblID)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateChip(sid As String, eventHandler As Object) As VMChip
-	Dim el As VMChip
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateRadioGroup(sid As String, eventHandler As Object) As VMRadioGroup
-	Dim el As VMRadioGroup
-	el.Initialize(vue, sid, eventHandler)
-	el.SetVModel(sid)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateTimePicker(sid As String, eventHandler As Object) As VMTimePicker
-	Dim el As VMTimePicker
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
 ' build the grid for a container
 private Sub CreateGrid
 	'get the keys and sort them
@@ -1186,7 +1122,7 @@ private Sub CreateGrid
 		Dim idxpos As Int = Exclusions.IndexOf(el.id)
 		If idxpos = -1 Then
 			Select Case el.typeOf
-				Case "button", "list", "image", "label"
+				Case "button", "list", "image", "label", "profile"
 					el.fieldType = ""
 					el.IsRequired = False
 				Case Else
@@ -1232,8 +1168,6 @@ private Sub CreateGrid
 		For Each strRC As String In missingRC
 			Log("VMContainer.CreateGrid: "& strRC & ": RC is NOT defined")
 		Next
-		'nothing will be drawn if there is a missing element
-		Return
 	End If
 	'add the grid definition
 	'link related columns to the rows use the sorted list
@@ -1281,89 +1215,6 @@ private Sub CreateGrid
 			ec(cellSize).ss, ec(cellSize).sm, ec(cellSize).sl, ec(cellSize).sx)
 		Next
 	Next
-End Sub
-
-
-private Sub CreateInfoBox(sid As String, eventHandler As Object) As VMInfoBox
-	HasInfoBox = True
-	Dim el As VMInfoBox
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateTextArea(sid As String, eventHandler As Object) As VMTextArea
-	Dim el As VMTextArea
-	el.Initialize(vue, sid,eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-
-private Sub CreateFileInput(sid As String, eventHandler As Object) As VMFileInput
-	Dim el As VMFileInput
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateTextField(sid As String, eventHandler As Object) As VMTextField
-	Dim el As VMTextField
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-
-private Sub CreateSlider(sid As String, eventHandler As Object) As VMSlider
-	Dim el As VMSlider
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-
-private Sub CreateNumber(sid As String, eventHandler As Object) As VMTextField
-	Dim el As VMTextField
-	el = CreateTextField(sid, eventHandler).SetTypeNumber(True)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateSelect(sid As String, eventHandler As Object) As VMSelect
-	Dim el As VMSelect
-	el.Initialize(vue,sid,eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-
-private Sub CreateSwitch(sid As String, eventHandler As Object) As VMSwitch
-	Dim el As VMSwitch
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateCheckBox(sid As String, eventHandler As Object) As VMCheckBox
-	Dim el As VMCheckBox
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateIcon(sid As String, eventHandler As Object) As VMIcon
-	Dim el As VMIcon
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
-private Sub CreateAutoComplete(sid As String, eventHandler As Object) As VMAutoComplete
-	Dim el As VMAutoComplete
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
 End Sub
 
 'set the row and column position

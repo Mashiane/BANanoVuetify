@@ -32,8 +32,7 @@ End Sub
 
 
 Sub Init
-	Log("Init")
-	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file")
+	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image")
 	fieldtypes = CreateMap("string":"string", "int":"int", "bool":"bool", "date":"date","dbl":"float")
 				
 	lstBags.Initialize
@@ -66,6 +65,8 @@ Sub Init
 	avatarMap.put("time", "./assets/time.png")
 	avatarMap.put("combo", "./assets/combo.png")
 	avatarMap.put("auto", "./assets/autocomplete.png")
+	avatarMap.put("profile", "./assets/profilepic.png")
+	avatarMap.put("image", "./assets/image.png")
 	
 	bHasBorder = False
 	bShowMatrix = False
@@ -201,7 +202,6 @@ Sub YesNoToBoolean(xvalue As String) As Boolean
 End Sub
 
 Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
-	Log("CreateUX")
 	Dim sb As StringBuilder
 	sb.initialize
 	'
@@ -331,8 +331,6 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		
 		' get the attributes
 		Dim mattr As Map = BANano.FromJson(sattributes)
-		Log($"CreateUX.${controltype}.${sname}"$)
-		'
 		Dim os As String = mattr.get("offsetsmall")
 		Dim om As String = mattr.get("offsetmedium")
 		Dim ol As String = mattr.get("offsetlarge")
@@ -372,6 +370,16 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim bisrounded As Boolean = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
 		Dim bclearable As Boolean = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
 		Dim bishidedetails As Boolean = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
+		Dim bToggle As Boolean = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
+		'
+		Dim swidth As String = mattr.getdefault("width", "")
+		Dim sheight As String = mattr.getdefault("height", "")
+		Dim sminwidth As String = mattr.getdefault("minwidth", "")
+		Dim sminheight As String = mattr.getdefault("minheight", "")
+		Dim smaxwidth As String = mattr.getdefault("maxwidth", "")
+		Dim smaxheight As String = mattr.getdefault("maxheight", "")
+		'
+		dim stooltip as string = mattr.getdefault("tooltip", "")
 		'
 		Dim bShowLabel As Boolean = True
 		Dim bLabelOnTop As Boolean = True
@@ -382,12 +390,6 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim smaxvalue As String = "0"
 		Dim sminvalue As String = "100"
 		Dim labelsize As String = vm.SIZE_P
-		Dim bToggle As Boolean = True
-		Dim swidth As String = "100"
-		Dim sheight As String = "100"
-		Dim sradius As String = "50%"
-		Dim surl As String = "./assets/sponge.png"
-		Dim salt As String = "Sponge"
 		Dim bstatic As Boolean = True
 		'
 		Select Case controltype
@@ -425,7 +427,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 			.Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "textarea"
-				Dim txta As VMTextArea = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, brequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
+				Dim txta As VMTextField = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, brequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
 				txta.SetSolo(bissolo)
 				txta.SetOutlined(bisoutlined)
 				txta.SetFilled(bisfilled)
@@ -439,9 +441,9 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 				txta.SetClearable(bclearable)
 				txta.SetHideDetails(bishidedetails)
 				txta.SetAutoGrow(bautogrow)
-			ui.AddControl(txta.textarea, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim txta${sname} As VMTextArea = vm.NewTextArea(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})
+				sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})
 				txa${sname}.SetFieldType(${sfieldtype})
 			txa${sname}.SetSolo(${bissolo})
 			txa${sname}.SetOutlined(${bisoutlined})
@@ -455,7 +457,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 			txa${sname}.SetRounded(${bisrounded})
 			txa${sname}.SetClearable(${bclearable})
 			txa${sname}.SetHideDetails(${bishidedetails})
-			.Container.AddControl(txta${sname}.textarea, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
+			.Container.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "checkbox"
 			Dim chk As VMCheckBox = vm.NewCheckBox(Me, True, sname, svmodel, stitle, svalue, suncheckedvalue, bPrimary, stabindex)
@@ -466,12 +468,11 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 			.Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "date"
-			Dim dp As VMDatePicker = vm.NewDatePicker(Me, True, sname, svmodel, stitle, brequired, splaceholder, shelpertext, serrortext, stabindex)
-					'dp.setstatic(True)
-			ui.AddControl(dp.DatePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			Dim dp As VMDateTimePicker = vm.NewDatePicker(Me, True, sname, svmodel, stitle, brequired, splaceholder, shelpertext, serrortext, stabindex)
+			ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim dp${sname} As VMDatePicker = vm.NewDatePicker(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", ${brequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
-			.Container.AddControl(dp${sname}.DatePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
+				sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", ${brequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
+			.Container.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "file"
 				Dim fi As VMFileInput = vm.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, brequired, shelpertext, serrortext, stabindex)
@@ -646,40 +647,64 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 			.Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "combo"
-			Dim cbo As VMComboBox = vm.newComboOptions(Me, True, sname, svmodel,stitle, brequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
+			Dim cbo As VMSelect = vm.newComboOptions(Me, True, sname, svmodel,stitle, brequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
 					'cbo.setstatic(True)
-			ui.AddControl(cbo.ComboBox, cbo.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			ui.AddControl(cbo.Combo, cbo.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-			sb.append($"Dim cbo${sname} As VMComboBox = vm.newComboOptions(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", ${brequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
+			sb.append($"Dim cbo${sname} As VMSelect = vm.newComboOptions(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", ${brequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
 			.Container.AddControl(cbo${sname}.Combo, cbo${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "time"
-			Dim tp As VMTimePicker = vm.newtimepicker(Me, True, sname, svmodel, stitle, brequired, splaceholder, shelpertext, serrortext, stabindex)
+			Dim tp As VMDateTimePicker = vm.newtimepicker(Me, True, sname, svmodel, stitle, brequired, splaceholder, shelpertext, serrortext, stabindex)
 			'tp.setstatic(True)
-			ui.AddControl(tp.TimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			ui.AddControl(tp.DateTimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-			sb.append($"Dim tp${sname} As VMTimePicker = vm.newtimepicker(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", ${brequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
-			.Container.AddControl(tp${sname}.TimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
+				sb.append($"Dim tp${sname} As VMDateTimePicker = vm.newtimepicker(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", ${brequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
+			.Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
-		Case "profile"
-			Dim img As VMImage = vm.NewImage(Me, True, sname, svmodel, surl, salt, swidth, sheight)
-					'img.setstatic(True)
-			img.SetBorderRadius(sradius)
-			img.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_SOLID)
+		Case "profile", "image"
+			Dim ssrc As String = mattr.getdefault("src", "")
+			Dim slazysrc As String = mattr.getdefault("lazysrc", "")
+			Dim salt As String = mattr.getdefault("alt","")
+			Dim sborderradius As String = mattr.getdefault("borderradius","")
+			Dim sborderwidth As String = mattr.getdefault("borderwidth","")
+			Dim sbordercolor As String = mattr.getdefault("bordercolor", "")
+			Dim sborderstyle As String = mattr.getdefault("borderstyle", "")
+			Dim saspectratio As String = mattr.getdefault("aspectratio", "")
+						'	
+			Dim img As VMImage = vm.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
+			img.SetLazysrc(slazysrc)
+			img.SetBorderRadius(sborderradius)
+			img.SetBorderWidth(sborderwidth)
+			img.SetBorderColor(sbordercolor)
+			img.SetBorderStyle(sborderstyle)
+			img.SetAspectRatio(saspectratio)
+			img.SetMinWidth(sminwidth)
+			img.SetMaxWidth(smaxwidth)
+			img.SetMinHeight(sminheight)
+			img.SetMaxHeight(smaxheight)
 			ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-					sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bstatic}, "${sname}", "${svmodel}", "${surl}", "${salt}", "${swidth}", "${sheight}")
-			img${sname}.SetBorderRadius("${sradius}")
-			img${sname}.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_SOLID)
+			sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bstatic}, "${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")
+			img${sname}.SetLazysrc(slazysrc)
+			img${sname}.SetBorderRadius(sborderradius)
+			img${sname}.SetBorderWidth(sborderwidth)
+			img${sname}.SetBorderColor(sbordercolor)
+			img${sname}.SetBorderStyle(sborderstyle)
+			img${sname}.SetAspectRatio(saspectratio)
+			img${sname}.SetMinWidth(sminwidth)
+			img${sname}.SetMaxWidth(smaxwidth)
+			img${sname}.SetMinHeight(sminheight)
+			img${sname}.SetMaxHeight(smaxheight)
 			.Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		Case "auto"
-			Dim auto As VMAutoComplete = vm.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, splaceholder, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
+			Dim auto As VMSelect = vm.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, splaceholder, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
 					'auto.setstatic(True)
-			ui.AddControl(auto.Autocomplete, auto.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			ui.AddControl(auto.Combo, auto.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-					sb.append($"Dim auto${sname} As VMAutoComplete = vm.NewAutoCompleteOptions(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
-			.Container.AddControl(auto${sname}.AutoComplete, auto${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
+				sb.append($"Dim auto${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bstatic}, "${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
+			.Container.AddControl(auto${sname}.Combo, auto${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 			'
 		End Select
 Next
@@ -749,6 +774,11 @@ Sub gridMenuitems_click(e As BANanoEvent)
 	Case "btnremovelastgrid"
 		vm.ShowConfirm("removelastgrid", "Confirm Remove Last", "Are you sure that you want to remove the last grid row?", "Yes", "No")
 	End Select
+End Sub
+
+
+Sub confirm_cancel(e As BANanoEvent)
+
 End Sub
 
 Sub confirm_ok(e As BANanoEvent)
@@ -849,7 +879,6 @@ Sub AddPages
 End Sub
 
 Sub DesignLayout
-	Log("DesignLayout")
 	vm.Container.AddRows(1)
 	vm.Container.AddColumns(1,2,2,2,2)
 	vm.Container.AddColumns(1,7,7,7,7)
@@ -886,7 +915,6 @@ End Sub
 '
 
 Sub GridPage As VMExpansionPanel
-	Log("GridPage")
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep0grid", "ep1", Me)
 	grd.Header.SetText("My Components")
 	grd.Container.SetTag("div")
@@ -1007,6 +1035,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	Case "profile"
 		ShowBag("pbimage")
 		pbimage.SetDefaults
+		vm.setdata("controltype", "profile")
 		pbimage.hideitem("id")
 		pbimage.Hideitem("controltype")
 	Case "auto"
@@ -1021,12 +1050,18 @@ Sub mycomponents_click(e As BANanoEvent)
 		vm.setdata("controltype", "time")
 		pbdatepicker.hideitem("id")
 		pbdatepicker.Hideitem("controltype")
+	Case "image"
+		ShowBag("pbimage")
+		pbimage.SetDefaults
+		vm.setdata("controltype", "image")
+		pbimage.hideitem("id")
+		pbimage.Hideitem("controltype")
 	End Select
 	'
 	Dim mattr As Map = BANano.FromJson(sattributes)
 	'DONT OVERWRITE
 	Select Case stypeof
-	Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time"
+	Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile"
 		mattr.remove("controltype")		
 	End Select
 	vm.setstate(mattr)
@@ -1035,15 +1070,17 @@ Sub mycomponents_click(e As BANanoEvent)
 End Sub
 
 Sub DisplayPanel As VMExpansionPanel
-	Log("DisplayPanel")
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep3grid", "ep1", Me)
 	grd.Header.SetText("Display")
 	grd.Container.SetTag("div")
-	grd.Container.AddRows(8).AddColumns4X3
+	grd.Container.AddRows(1).AddColumns4X3
 	'
-	Dim profile As VMImage = vm.CreateImage("profile",Me).SetValue("./assets/profilepic.png").SetOnDragStart(Me, "ItemDragStart")
-	profile.SetHeight("32px").SetWidth("32px").SetCursorMove.SetTooltip("Profile Picture")
+	Dim profile As VMImage = ToolboxImage("profile", "./assets/profilepic.png", "Profile Picture")
 	grd.Container.AddComponent(1,1,profile.tostring)
+	'
+	Dim image As VMImage = ToolboxImage("image", "./assets/image.png", "Image")
+	grd.Container.AddComponent(1,2,image.tostring)
+	
 
 	Return grd
 End Sub
@@ -1055,7 +1092,6 @@ Sub ToolboxImage(eid As String, url As String, tt As String) As VMImage
 End Sub
 
 Sub FormPanel As VMExpansionPanel
-	Log("FormPanel")
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep2grid", "ep1", Me)
 	grd.Header.SetText("Form Inputs")
 	grd.Container.SetTag("div")
@@ -1120,7 +1156,6 @@ Sub ToolboxDiv(eid As String, text As String) As VMElement
 End Sub
 
 Sub GridPanel As VMExpansionPanel
-	Log("GridPanel")
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep1grid", "ep1", Me)
 	grd.Header.SetText("Grid")
 	grd.Container.SetTag("div")
@@ -1232,7 +1267,6 @@ End Sub
 
 'whenever we drop an item
 Sub ItemDrop(e As BANanoEvent)
-	Log("ItemDrop")
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	e.PreventDefault
@@ -1268,7 +1302,7 @@ Sub ItemDrop(e As BANanoEvent)
 			rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 			vm.pageresume
 		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", _
-			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time"
+			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image"
 			BANano.SetLocalStorage("selectedpanel", 2)
 			'
 			Dim rowPos As Int = 0
@@ -1319,7 +1353,22 @@ Sub ItemDrop(e As BANanoEvent)
 			attr.put("isautogrow","No")
 			attr.put("ontable", "Yes")
 			attr.put("maxlength", 0)
-			
+			'
+			Select Case savedid
+			Case "password"
+				attr.put("istoggle", "Yes")
+			Case "profile"
+				attr.put("borderradius", "50%")
+				attr.put("borderwidth", "1px")
+				attr.put("bordercolor", "black")
+				attr.put("borderstyle", "solid")
+				attr.put("src", "./assets/sponge.png")
+				attr.put("width", "150")
+				attr.put("height", "150")
+			Case "image"
+				attr.put("src", "./assets/bird.jpg")
+			End Select
+			'
 			'save just in case
 			vm.SetState(attr)
 			'
@@ -1495,27 +1544,32 @@ End Sub
 Sub PropertyBag_Image
 	vm.setdata("pbimage", False)
 	pbimage = vm.CreateProperty("ppbimage",Me)
-	pbimage.SetVShow("image")
+	pbimage.SetVShow("pbimage")
 	pbimage.AddHeading("d","Details")
 	pbimage.AddText("d","id","ID","","")
 	pbimage.AddText("d", "controltype", "Type", "", "image")
+	pbimage.AddSelect("d", "controltype", "Type", controltypes)
 	pbimage.AddText("d","vmodel","VModel","","")
 	pbimage.AddText("d","src","Src","","./assets/sponge.png")
+	pbimage.AddText("d","lazysrc","Lazy Src","","")
 	pbimage.AddText("d","alt","Alt","","")
-	pbimage.AddText("d","width","Width","","150")
-	pbimage.AddText("d","height","Height","","150")
-	
+	pbimage.AddText("d","tooltip","Tooltip","","")
 	pbimage.AddNumber("d","tabindex","Tab Index","","")
+	pbimage.AddText("d","borderradius","Border Radius","","")
+	pbimage.AddText("d","borderwidth","Border Width","","")
+	pbimage.AddSelect("d","bordercolor","Border Color", vm.ColorOptions)
+	pbimage.AddSelect("d","borderstyle","Border Style",vm.BorderOptions)
+	pbimage.AddText("d","aspectratio","Aspect Ratio","","")
+	pbimage.AddHeightWidths("d")
 	'
 	pbimage.AddCheck2(1, 1, "visible", "Visible")
 	pbimage.AddCheck2(1, 2, "ontable", "On Table")
-	pbimage.AddCheck2(2, 1, "round", "Round")
-	pbimage.AddCheck2(2, 2, "oncenter", "Center")
 	pbimage.SetChecks("d")
 	
 	pbimage.AddMatrix("d")
 	'
 	pbimage.AddButton("d", "btnSaveImage", "Save", "savePropertyBag")
+	pbimage.AddButton("d", "btnDeleteImage", "Delete", "deletePropertyBag")
 	vm.Container.AddComponent(1, 3, pbimage.tostring)
 End Sub
 #End Region
@@ -1674,11 +1728,12 @@ Sub PropertyBag_TextField
 	pbtextfield.AddCheck2(5, 2, "isdense", "Dense")
 	pbtextfield.AddCheck2(6, 1, "issingleline", "Single Line")
 	pbtextfield.AddCheck2(6, 2, "ispersistenthint", "Persistent Hint")
-	pbtextfield.AddCheck2(7, 1, "isshaped", "Shaped (FOS")
+	pbtextfield.AddCheck2(7, 1, "isshaped", "Shaped - FOS")
 	pbtextfield.AddCheck2(7, 2, "isloading", "Loading")
-	pbtextfield.AddCheck2(8, 1, "isflat", "Flat (Solo)")
-	pbtextfield.AddCheck2(8, 2, "isrounded", "Rounded (FOS")
+	pbtextfield.AddCheck2(8, 1, "isflat", "Flat - Solo")
+	pbtextfield.AddCheck2(8, 2, "isrounded", "Rounded - FOS")
 	pbtextfield.AddCheck2(9, 1, "ishidedetails", "Hide Details")
+	pbtextfield.AddCheck2(9, 2, "istoggle", "Show Toggle Icons")
 	pbtextfield.SetChecks("d")
 	
 	pbtextfield.AddMatrix("d")
@@ -1746,7 +1801,7 @@ Sub SavePropertyBag
 		props = pbswitchbox.properties
 	Case "label"
 		props = pblabel.properties
-	Case "profile"
+	Case "profile", "image"
 		props = pbimage.Properties
 	End Select
 	'
@@ -1756,6 +1811,16 @@ Sub SavePropertyBag
 	Dim stabindex As String = props.get("tabindex")
 	Dim slabel As String = props.get("label")
 	Dim svmodel As String = props.get("vmodel")
+	'
+	'is vmodel valid
+	Select Case svmodel
+	Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image"
+		vm.SnackBar.SetColor("red")
+		vm.SnackBar.SetTop(True)
+		vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")
+		Return
+	End Select
+	
 	'
 	sid = BANano.parseint(sid)
 	srow = BANano.parseint(srow)

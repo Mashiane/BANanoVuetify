@@ -22,9 +22,9 @@ Sub Class_Globals
 	Private Chartkick As BANanoObject
 	Private Chart As BANanoObject
 	Private VueGoogleMaps As BANanoObject
-	Private IntensityOptions As Map
-	Private ColorOptions As Map
-	Private BorderOptions As Map
+	Public IntensityOptions As Map
+	Public ColorOptions As Map
+	Public BorderOptions As Map
 	Public Overlay As VMOverlay
 	Public vuetify As BANanoObject
 	Public Confirm As VMDialog
@@ -66,6 +66,7 @@ Sub Class_Globals
 	Public const COLOR_INFO As String = "info"
 	Public const COLOR_SUCCESS As String = "success"
 	Public const COLOR_WARNING As String = "warning"
+	Public const COLOR_NONE As String = ""
 	
 	'
 	Public const INTENSITY_NORMAL As String = ""
@@ -341,6 +342,41 @@ Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	Return el
 End Sub
 
+Sub CreateAutoComplete(eID As String, eventHandler As Object) As VMSelect
+	Dim el As VMSelect
+	el.Initialize(vue, eID, eventHandler)
+	el.SetAutoComplete
+	Return el
+End Sub
+
+Sub CreateComboBox(eID As String, eventHandler As Object) As VMSelect
+	Dim el As VMSelect
+	el.Initialize(vue, eID, eventHandler)
+	el.SetComboBox
+	Return el
+End Sub
+
+Sub CreateTimePicker(eID As String, eventHandler As Object) As VMDateTimePicker
+	Dim el As VMDateTimePicker
+	el.Initialize(vue, eID, eventHandler)
+	el.SetTimePicker
+	Return el
+End Sub
+
+Sub CreateDatePicker(eID As String, eventHandler As Object) As VMDateTimePicker
+	Dim el As VMDateTimePicker
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateTextArea(eID As String, eventHandler As Object) As VMTextField
+	Dim el As VMTextField
+	el.Initialize(vue, eID, eventHandler)
+	el.SetTextArea
+	Return el
+End Sub
+
+
 Sub CreateSelectSides(eID As String, eventHandler As Object) As VMSelectSides
 	Dim el As VMSelectSides
 	el.Initialize(vue, eID, eventHandler)
@@ -549,13 +585,6 @@ Sub ShowMulti(lst As List)
 		Show(item)
 	Next
 End Sub
-
-Sub CreateComboBox(sid As String, moduleObj As Object) As VMComboBox
-	Dim el As VMComboBox
-	el.Initialize(vue, sid, moduleObj)
-	Return el
-End Sub
-
 
 Sub HideMulti(lst As List)
 	For Each item As String In lst
@@ -833,14 +862,6 @@ Sub CreatePDF(sid As String, url As String) As VMPDF
 	Return el
 End Sub
 
-Sub CreateTimePicker(sid As String, eventHandler As Object) As VMTimePicker
-	Dim el As VMTimePicker
-	el.Initialize(vue, sid, eventHandler)
-	
-	Return el
-End Sub
-
-
 Sub MvField(sValue As String, iPosition As Int, Delimiter As String) As String
 	Return vue.MvField(sValue, iPosition, Delimiter)
 End Sub
@@ -905,6 +926,7 @@ private Sub InitColors
 	ColorOptions.Put("transparent", "Transparent")
 	ColorOptions.Put("white", "White")
 	ColorOptions.Put("yellow", "Yellow")
+	ColorOptions.Put("none", "")
 	'
 	BorderOptions.Initialize
 	BorderOptions.Put("dashed", "Dashed")
@@ -1606,14 +1628,6 @@ Sub GetAlert As String
 	Return vue.getstate("alertkey","")
 End Sub
 
-Sub CreateAutoComplete(sid As String, eventHandler As Object) As VMAutoComplete
-	Dim el As VMAutoComplete
-	el.Initialize(vue, sid, eventHandler)
-	
-	el.SetVModel(sid)
-	Return el
-End Sub
-
 Sub CreateExpansionPanels(sid As String, eventHandler As Object) As VMExpansionPanels
 	Dim el As VMExpansionPanels
 	el.Initialize(vue, sid, eventHandler)	
@@ -1653,14 +1667,6 @@ Sub CreateCarouselItem(sid As String, eventHandler As Object) As VMCarouselItem
 	el.Initialize(vue, sid, eventHandler)	
 	Return el
 End Sub
-
-Sub CreateTextArea(sid As String, eventHandler As Object) As VMTextArea
-	Dim el As VMTextArea
-	el.Initialize(vue, sid,eventHandler)
-	
-	Return el
-End Sub
-
 
 Sub CreateTextField(sid As String, eventHandler As Object) As VMTextField
 	Dim el As VMTextField
@@ -1722,10 +1728,9 @@ Sub CreateRadio(sid As String, eventHandler As Object) As VMRadio
 	Return el
 End Sub
 
-Sub CreateDatePicker(sid As String, eventHandler As Object) As VMDatePicker
-	Dim el As VMDatePicker
+Sub CreateDateTimePicker(sid As String, eventHandler As Object) As VMDateTimePicker
+	Dim el As VMDateTimePicker
 	el.Initialize(vue, sid, eventHandler)
-	
 	Return el
 End Sub
 
@@ -1968,14 +1973,13 @@ Sub NewCheckBox(eventHandler As Object, bStatic As Boolean, sid As String, vmode
 	Return el
 End Sub
 
-Sub NewDatePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, bRequired As Boolean, sPlaceholder As String, sHint As String, sErrorText As String, iTabIndex As Int) As VMDatePicker
-	Dim el As VMDatePicker = CreateDatePicker(sid, eventHandler)
-	'el.setstatic(bStatic)
+Sub NewDatePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, bRequired As Boolean, sPlaceholder As String, sHint As String, sErrorText As String, iTabIndex As Int) As VMDateTimePicker
+	Dim el As VMDateTimePicker = CreateDateTimePicker(sid, eventHandler)
+	el.setstatic(bStatic)
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	el.SetTabIndex(iTabIndex)
 	el.SetVModel(vmodel)
-	el.Setclearable(True)
 	el.SetPlaceHolder(sPlaceholder)
 	el.SetHint(sHint)
 	el.SetErrorText(sErrorText)
@@ -1983,12 +1987,11 @@ Sub NewDatePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	Return el
 End Sub
 '
-Sub NewTimePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, bRequired As Boolean, sPlaceholder As String, sHint As String, sErrorText As String, iTabIndex As Int) As VMTimePicker
-	Dim el As VMTimePicker = CreateTimePicker(sid, eventHandler)
-	'el.setstatic(bStatic)
+Sub NewTimePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, bRequired As Boolean, sPlaceholder As String, sHint As String, sErrorText As String, iTabIndex As Int) As VMDateTimePicker
+	Dim el As VMDateTimePicker = CreateDateTimePicker(sid, eventHandler).SetTimePicker
+	el.setstatic(bStatic)
 	el.Setlabel(slabel)
 	el.SetVModel(vmodel)
-	el.Setclearable(True)
 	el.SetRequired(bRequired)
 	el.SetPlaceHolder(sPlaceholder)
 	el.SetHint(sHint)
@@ -2058,7 +2061,6 @@ End Sub
 Sub NewTextField(eventHandler As Object,bStatic As Boolean,sid As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
 	Dim el As VMTextField = CreateTextField(sid, eventHandler)
 	el.SetStatic(bStatic)
-	el.SetClearable(True)
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	el.SetPrependIcon(sIcon)
@@ -2089,10 +2091,9 @@ End Sub
 
 '
 'auto complete that uses a list as a source
-Sub NewAutoComplete(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, lOptions As List, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMAutoComplete
-	Dim el As VMAutoComplete = CreateAutoComplete(sname, eventHandler)
-	'el.setstatic(bStatic)
-	el.SetClearable(True)
+Sub NewAutoComplete(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, lOptions As List, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
+	el.setstatic(bStatic)
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	el.SetPlaceHolder(splaceholder)
@@ -2106,9 +2107,9 @@ Sub NewAutoComplete(eventHandler As Object,bStatic As Boolean,sname As String, v
 End Sub
 
 'use select with map
-Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMAutoComplete
-	Dim el As VMAutoComplete = CreateAutoComplete(sname, eventHandler)
-	'el.setstatic(bStatic)
+Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
+	el.setstatic(bStatic)
 	el.Setlabel(sLabel)
 	el.SetRequired(bRequired)
 	el.SetTabIndex(iTabIndex)
@@ -2123,10 +2124,9 @@ End Sub
 
 '
 'auto coomplete that uses objects as a source
-Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, dataSource As String, keyField As String, displayField As String, returnObject As Boolean, bRequired As Boolean, bMultiple As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMAutoComplete
-	Dim el As VMAutoComplete = CreateAutoComplete(sname, eventHandler)
-	'el.setstatic(bStatic)
-	el.SetClearable(True)
+Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, dataSource As String, keyField As String, displayField As String, returnObject As Boolean, bRequired As Boolean, bMultiple As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
+	el.setstatic(bStatic)
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	el.SetPlaceHolder(splaceholder)
@@ -2140,10 +2140,9 @@ Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As
 End Sub
 
 '
-Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, bAutoGrow As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextArea
-	Dim el As VMTextArea = CreateTextArea(sname, eventHandler)
-	'el.setstatic(bStatic)
-	el.SetClearable(True)
+Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, bAutoGrow As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateTextField(sname, eventHandler).SetTextArea
+	el.setstatic(bStatic)
 	el.Setlabel(slabel)
 	el.Setrequired(bRequired)
 	el.SetPrependIcon(sIcon)
@@ -2273,9 +2272,9 @@ private Sub NewSelect(eventHandler As Object,bStatic As Boolean,sname As String,
 End Sub
 
 'define a select from a datasource
-private Sub NewCombo1(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMComboBox
-	Dim el As VMComboBox = CreateComboBox(sname, eventHandler)
-	'el.setstatic(bStatic)
+private Sub NewCombo1(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetComboBox
+	el.setstatic(bStatic)
 	el.Setlabel(sLabel)
 	el.SetRequired(bRequired)
 	el.SetTabIndex(iTabIndex)
@@ -2288,19 +2287,19 @@ private Sub NewCombo1(eventHandler As Object,bStatic As Boolean,sname As String,
 	Return el
 End Sub
 '
-Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMComboBox
+Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Return NewCombo1(eventHandler,bStatic,sname, vmodel, sLabel, bRequired, bMultiple, sPlaceHolder, sourceTable, sourceField, displayField, returnObject, sHelperText, sErrorText, iTabIndex)
 End Sub
 
 'use select with map
-Sub NewComboOptions(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMComboBox
+Sub NewComboOptions(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Return NewCombo(eventHandler,bStatic,sname, vmodel, sLabel, bRequired, bMultiple, sPlaceHolder, optionsm, sourceField, displayField, returnObject, sHelperText, sErrorText, iTabIndex)
 End Sub
 
 'use select with map
-private Sub NewCombo(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMComboBox
-	Dim el As VMComboBox = CreateComboBox(sname, eventHandler)
-	'el.SetStatic(bStatic)
+private Sub NewCombo(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetComboBox
+	el.SetStatic(bStatic)
 	el.Setlabel(sLabel)
 	el.SetRequired(bRequired)
 	el.SetTabIndex(iTabIndex)

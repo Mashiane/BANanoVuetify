@@ -21,12 +21,12 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(5).AddColumns2x6
 	'
-	Dim tp2 As VMTimePicker = vm.CreateTimePicker("tp2", Me).SetVModel("tp2").SetLabel("Time of Birth").SetForInput
+	Dim tp2 As VMDateTimePicker = vm.CreateTimePicker("tp2", Me).SetVModel("tp2").SetLabel("Time of Birth").SetForInput
 	tp2.AddToContainer(cont, 1, 1)
 	'
 	vm.CreateLabel("lblt").SetParagraph.SetText("Time: {{ tp2 }}").AddToContainer(cont, 1, 2)
 	'
-	Dim tp1 As VMTimePicker = vm.CreateTimePicker("tp1", Me).SetVModel("tp1").Set24
+	Dim tp1 As VMDateTimePicker = vm.CreateTimePicker("tp1", Me).SetVModel("tp1").Set24
 	tp1.AddToContainer(cont, 2, 1)
 	
 	vm.CreateLabel("lblx").SetParagraph.SetText("Time: {{ tp1 }}").AddToContainer(cont, 2, 2)

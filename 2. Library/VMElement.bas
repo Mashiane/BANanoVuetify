@@ -425,6 +425,10 @@ Sub SetAttrSingle(prop As String, vals As String) As VMElement
 End Sub
 
 Sub Required(b As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("required", b)
+		Return Me
+	End If
 	If ID = "" Then Return Me
 	IsRequired = b
 	vue.SetStateSingle(reqKey, b)
@@ -433,8 +437,12 @@ Sub Required(b As Boolean) As VMElement
 End Sub
 
 Sub Enable(b As Boolean) As VMElement
-	If ID = "" Then Return Me
 	Dim n As Boolean = Not(b)
+	If bStatic Then
+		SetAttrSingle("disabled", n)
+		Return Me
+	End If
+	If ID = "" Then Return Me
 	IsDisabled = n
 	vue.SetStateSingle(disKey, n)
 	Bind(":disabled", disKey)
@@ -442,6 +450,10 @@ Sub Enable(b As Boolean) As VMElement
 End Sub
 
 Sub Disable(b As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("disabled", b)
+		Return Me
+	End If
 	IsDisabled = b
 	vue.SetStateSingle(disKey, b)
 	Bind(":disabled", disKey)
@@ -497,11 +509,6 @@ Sub SetVCloak As VMElement
 	Return Me
 End Sub
 
-Sub SetNotSelectible As VMElement
-	Element.AddClass("gj-unselectable")
-	Return Me
-End Sub
-
 Sub SetTabIndex(ti As String) As VMElement
 	If ti = "" Then Return Me
 	If ti = "0" Then Return Me
@@ -516,11 +523,19 @@ Sub SetMethodPost As VMElement
 End Sub
 
 Sub SetDraggable(b As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("draggable", b)
+		Return Me
+	End If
 	SetAttr(CreateMap(":draggable":b))
 	Return Me
 End Sub
 
 Sub SetDroppable(b As Boolean) As VMElement
+	If bStatic Then
+		SetAttr(CreateMap("droppable":b))
+		Return Me
+	End If
 	SetAttr(CreateMap(":droppable":b))
 	Return Me
 End Sub
@@ -779,7 +794,6 @@ End Sub
 
 Sub BindStyleSingle(prop As String, optm As String) As VMElement
 	If ID = "" Then Return Me
-	Log("BindStyleSingle: " & $"${prop}.${optm} - ${ID}"$)
 	Dim nm As Map = CreateMap()
 	nm.Put(prop, optm)
 	BindStyle(nm)
@@ -884,6 +898,10 @@ Sub SetDisabled(b As Boolean) As VMElement
 End Sub
 
 Sub SetRequired(b As Boolean) As VMElement
+	If bStatic Then
+		Element.SetAttr("required", b)
+		Return Me
+	End If
 	If ID = "" Then Return Me
 	IsRequired = b
 	bUsesRequired = True

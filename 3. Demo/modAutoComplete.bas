@@ -89,15 +89,15 @@ Sub Card_3 As VMCard	'
 	Dim Card As VMCard = vm.CreateCard("card3", Me)
 	Card.Container.AddRows(1).AddColumns(3,12,12,12,12)
 	'
-	Dim ac1 As VMAutoComplete = vm.CreateAutoComplete("ac31", Me).SetVModel("values").Bind(":items", "items")
+	Dim ac1 As VMSelect = vm.CreateAutoComplete("ac31", Me).SetVModel("values").Bind(":items", "items")
 	ac1.SetAttributes(Array("outlined", "dense", "chips", "small-chips", "multiple")).SetLabel("Outlined")
 	Card.Container.AddComponent(1, 1, ac1.ToString)
 	'
-	Dim ac2 As VMAutoComplete = vm.CreateAutoComplete("ac32", Me).SetVModel("values").Bind(":items", "items")
+	Dim ac2 As VMSelect = vm.CreateAutoComplete("ac32", Me).SetVModel("values").Bind(":items", "items")
 	ac2.SetAttributes(Array("dense", "chips", "small-chips", "multiple", "solo")).SetLabel("Solo")
 	Card.Container.AddComponent(1, 2, ac2.ToString)
 	'
-	Dim ac3 As VMAutoComplete = vm.CreateAutoComplete("ac33", Me).SetVModel("values").Bind(":items", "items")
+	Dim ac3 As VMSelect = vm.CreateAutoComplete("ac33", Me).SetVModel("values").Bind(":items", "items")
 	ac3.SetAttributes(Array("dense", "filled")).SetLabel("Filled")
 	Card.Container.AddComponent(1, 3, ac3.ToString)
 	
@@ -136,7 +136,7 @@ Sub Card_2 As VMCard
 	Dim txtName As VMTextField = vm.CreateTextField("txtName", Me).SetColor("white").SetLabel("Name").Bind(":disabled", "!isEditing")
 	Card.Text.AddContent(txtName.tostring)
 	'
-	Dim txtac As VMAutoComplete = vm.CreateAutoComplete("txtac", Me).Bind(":disabled","!isEditing").Bind(":items", "states1")
+	Dim txtac As VMSelect = vm.CreateSelect("txtac", Me).Bind(":disabled","!isEditing").Bind(":items", "states1")
 	'txtac.Bind(":filter", "customFilter")
 	txtac.SetColor("white").SetItemText("name").SetLabel("State")
 	Card.Text.AddContent(txtac.ToString)
@@ -185,7 +185,7 @@ Sub Card_1 As VMCard
 	lblNote.AddHyperLink("this Github repository", "https://github.com/toddmotto/public-apis")
 	Card1.Text.SetText(lblNote.ToString)
 	'
-	Dim ac As VMAutoComplete = vm.CreateAutoComplete("ac1", Me)
+	Dim ac As VMSelect = vm.CreateSelect("ac1", Me)
 	ac.SetVModel("model")
 	ac.SetItems("itemsa")
 	ac.SetLoading("isloading")

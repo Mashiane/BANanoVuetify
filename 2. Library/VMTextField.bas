@@ -30,6 +30,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetTextArea As VMTextField
+	TextField.SetTag("v-textarea")
+	TextField.typeOf = "textarea"
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMTextField
 	bStatic = b
 	TextField.SetStatic(b)
@@ -148,6 +154,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTextField
+	If varColor = "" And varIntensity = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)
@@ -806,6 +813,7 @@ End Sub
 
 'set type
 Sub SetType(varType As String) As VMTextField
+	If varType = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("type", varType)
 	Else
@@ -1160,8 +1168,8 @@ End Sub
 
 
 Sub SetVisible(b As Boolean) As VMTextField
-TextField.SetVisible(b)
-Return Me
+	TextField.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
@@ -1177,5 +1185,60 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTextF
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
+	Return Me
+End Sub
+
+'set auto-grow
+Sub SetAutoGrow(varAutoGrow As Object) As VMTextField
+	Dim pp As String = $"${ID}AutoGrow"$
+	vue.SetStateSingle(pp, varAutoGrow)
+	TextField.Bind(":auto-grow", pp)
+	Return Me
+End Sub
+
+'set no-resize
+Sub SetNoResize(varNoResize As Object) As VMTextField
+	Dim pp As String = $"${ID}NoResize"$
+	vue.SetStateSingle(pp, varNoResize)
+	TextField.Bind(":no-resize", pp)
+	Return Me
+End Sub
+
+'set row-height
+Sub SetRowHeight(varRowHeight As Object) As VMTextField
+	Dim pp As String = $"${ID}RowHeight"$
+	vue.SetStateSingle(pp, varRowHeight)
+	TextField.Bind(":row-height", pp)
+	Return Me
+End Sub
+
+'set rows
+Sub SetRows(varRows As Object) As VMTextField
+	Dim pp As String = $"${ID}Rows"$
+	vue.SetStateSingle(pp, varRows)
+	TextField.Bind(":rows", pp)
+	Return Me
+End Sub
+
+'set success-message
+Sub SetSuccessMessage(varSuccessMessage As Object) As VMTextField
+	Dim pp As String = $"${ID}SuccessMessage"$
+	vue.SetStateSingle(pp, varSuccessMessage)
+	TextField.Bind(":success-message", pp)
+	Return Me
+End Sub
+
+
+'set background-color
+Sub SetBackgroundColorIntensity(varBackgroundColor As Object, varIntensity As String) As VMTextField
+	Dim scolor As String = $"${varBackgroundColor} ${varIntensity}"$
+	If varBackgroundColor = "" And varIntensity = "" Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("background-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}BackgroundColor"$
+	vue.SetStateSingle(pp, scolor)
+	TextField.Bind(":background-color", pp)
 	Return Me
 End Sub

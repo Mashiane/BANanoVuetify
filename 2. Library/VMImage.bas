@@ -20,6 +20,7 @@ Sub Class_Globals
 	Private orig As String
 	Private width As String
 	Private height As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Image
@@ -40,12 +41,23 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	orig = ""
 	width = ""
 	height = ""
-	'default
-	BindStyleSingle("opacity", "1")
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMImage
+	bStatic = b
+	Image.SetStatic(b)
 	Return Me
 End Sub
 
 Sub SetCenterOnParent As VMImage
+	If bStatic Then
+		SetStyleSingle("display", "block")
+		SetStyleSingle("margin-left", "auto")
+		SetStyleSingle("margin-right", "auto")
+		Return Me
+	End If
 	BindStyleSingle("display", "block")
 	BindStyleSingle("marginLeft", "auto")
 	BindStyleSingle("marginRight", "auto")
@@ -68,6 +80,10 @@ End Sub
 
 Sub SetBorderRadius(br As String) As VMImage
 	If br = "" Then Return Me
+	If bStatic Then
+		SetStyleSingle("border-radius", br)
+		Return Me
+	End If		
 	BindStyleSingle("borderRadius", br)
 	Return Me
 End Sub
@@ -127,20 +143,48 @@ Sub BindStyleSingle(prop As String, optm As String) As VMImage
 	Return Me
 End Sub
 
-'set elevation
-Sub SetElevation(varElevation As Object) As VMImage
-	Dim pp As String = $"${ID}Elevation"$
-	vue.SetStateSingle(pp, varElevation)
-	Bind(":elevation", pp)
-	Return Me
-End Sub
-
 Sub BindStyle(optm As Map) As VMImage
 	Image.BindStyle(optm)
 	Return Me
 End Sub
 
+Sub SetBorderStyle(bStyle As String) As VMImage
+	If bStyle = "" Then Return Me
+	If bStatic Then
+		SetStyleSingle("border-style", bStyle)
+		Return Me
+	End If
+	BindStyleSingle("borderStyle", bStyle)
+	Return Me
+End Sub
+
+Sub SetBorderWidth(bWidth As String) As VMImage
+	If bWidth = "" Then Return Me
+	If bStatic Then
+		SetStyleSingle("border-width", bWidth)
+		Return Me
+	End If
+	BindStyleSingle("borderWidth", bWidth)
+	Return Me
+End Sub
+
+Sub SetBorderColor(bColor As String) As VMImage
+	If bColor = "" Then Return Me
+	If bStatic Then
+		SetStyleSingle("border-color", bColor)
+		Return Me
+	End If
+	BindStyleSingle("borderColor", bColor)
+	Return Me
+End Sub
+
 Sub SetBorder(swidth As String, color As String, bstyle As String) As VMImage
+	If bStatic Then
+		SetStyleSingle("border-style", bstyle)
+		SetStyleSingle("border-width", swidth)
+		SetStyleSingle("border-color", color)
+		Return Me
+	End If
 	Dim b As Map = CreateMap()
 	b.Put("borderStyle", bstyle)
 	b.Put("borderWidth", swidth)
@@ -162,10 +206,14 @@ Sub SetAttributes(attrs As List) As VMImage
 End Sub
 
 Sub SetSize(swidth As String, sheight As String) As VMImage
-	SetHeight(sheight)
-	SetWidth(swidth)
-	SetMaxHeight(sheight)
-	SetMaxWidth(swidth)
+	If swidth <> "" Then
+		SetWidth(swidth)
+		SetMaxWidth(swidth)
+	End If
+	If sheight <> "" Then
+		SetHeight(sheight)
+		SetMaxHeight(sheight)
+	End If
 	Return Me
 End Sub
 
@@ -182,16 +230,21 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMImage
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" And varIntensity = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	Image.Bind(":color", pp)
 	Return Me
 End Sub
 
-
 'set required
 Sub SetRequired(varRequired As Boolean) As VMImage
+	If varRequired = False Then Return Me
 	Image.SetRequired(varRequired)
 	Return Me
 End Sub
@@ -254,7 +307,7 @@ Sub AddChild(child As VMElement) As VMImage
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMImage
+Sub SetText(t As String) As VMImage
 	Image.SetText(t)
 	Return Me
 End Sub
@@ -290,7 +343,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set alt
-Sub SetAlt(varAlt As Object) As VMImage
+Sub SetAlt(varAlt As String) As VMImage
+	If varAlt = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("alt", varAlt)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Alt"$
 	vue.SetStateSingle(pp, varAlt)
 	Image.Bind(":alt", pp)
@@ -298,7 +356,12 @@ Sub SetAlt(varAlt As Object) As VMImage
 End Sub
 
 'set aspect-ratio
-Sub SetAspectRatio(varAspectRatio As Object) As VMImage
+Sub SetAspectRatio(varAspectRatio As String) As VMImage
+	If varAspectRatio = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("aspect-ratio", varAspectRatio)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}AspectRatio"$
 	vue.SetStateSingle(pp, varAspectRatio)
 	Image.Bind(":aspect-ratio", pp)
@@ -306,7 +369,12 @@ Sub SetAspectRatio(varAspectRatio As Object) As VMImage
 End Sub
 
 'set contain
-Sub SetContain(varContain As Object) As VMImage
+Sub SetContain(varContain As Boolean) As VMImage
+	If varContain = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("contain", varContain)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Contain"$
 	vue.SetStateSingle(pp, varContain)
 	Image.Bind(":contain", pp)
@@ -314,7 +382,12 @@ Sub SetContain(varContain As Object) As VMImage
 End Sub
 
 'set eager
-Sub SetEager(varEager As Object) As VMImage
+Sub SetEager(varEager As Boolean) As VMImage
+	If varEager = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("eager", varEager)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Eager"$
 	vue.SetStateSingle(pp, varEager)
 	Image.Bind(":eager", pp)
@@ -322,7 +395,12 @@ Sub SetEager(varEager As Object) As VMImage
 End Sub
 
 'set gradient
-Sub SetGradient(varGradient As Object) As VMImage
+Sub SetGradient(varGradient As String) As VMImage
+	If varGradient = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("gradient", varGradient)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Gradient"$
 	vue.SetStateSingle(pp, varGradient)
 	Image.Bind(":gradient", pp)
@@ -330,7 +408,12 @@ Sub SetGradient(varGradient As Object) As VMImage
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMImage
+Sub SetHeight(varHeight As String) As VMImage
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	height = varHeight
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
@@ -339,7 +422,12 @@ Sub SetHeight(varHeight As Object) As VMImage
 End Sub
 
 'set lazy-src
-Sub SetLazySrc(varLazySrc As Object) As VMImage
+Sub SetLazySrc(varLazySrc As String) As VMImage
+	If varLazySrc = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("lazy-src", varLazySrc)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}LazySrc"$
 	vue.SetStateSingle(pp, varLazySrc)
 	Image.Bind(":lazy-src", pp)
@@ -347,7 +435,12 @@ Sub SetLazySrc(varLazySrc As Object) As VMImage
 End Sub
 
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMImage
+Sub SetMaxHeight(varMaxHeight As String) As VMImage
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	Image.Bind(":max-height", pp)
@@ -355,7 +448,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMImage
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMImage
+Sub SetMaxWidth(varMaxWidth As String) As VMImage
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	Image.Bind(":max-width", pp)
@@ -363,7 +461,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMImage
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMImage
+Sub SetMinHeight(varMinHeight As String) As VMImage
+	If varMinHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinHeight"$
 	vue.SetStateSingle(pp, varMinHeight)
 	Image.Bind(":min-height", pp)
@@ -371,7 +474,12 @@ Sub SetMinHeight(varMinHeight As Object) As VMImage
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMImage
+Sub SetMinWidth(varMinWidth As String) As VMImage
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	Image.Bind(":min-width", pp)
@@ -387,7 +495,12 @@ Sub SetOptions(varOptions As Object) As VMImage
 End Sub
 
 'set position
-Sub SetPosition(varPosition As Object) As VMImage
+Sub SetPosition(varPosition As String) As VMImage
+	If varPosition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("position", varPosition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Position"$
 	vue.SetStateSingle(pp, varPosition)
 	Image.Bind(":position", pp)
@@ -395,7 +508,12 @@ Sub SetPosition(varPosition As Object) As VMImage
 End Sub
 
 'set sizes
-Sub SetSizes(varSizes As Object) As VMImage
+Sub SetSizes(varSizes As String) As VMImage
+	If varSizes = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("sizes", varSizes)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Sizes"$
 	vue.SetStateSingle(pp, varSizes)
 	Image.Bind(":sizes", pp)
@@ -404,12 +522,22 @@ End Sub
 
 'set src via vmodel
 private Sub SetSrc(varSrc As String) As VMImage
+	If varSrc = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("src", varSrc)
+		Return Me
+	End If
 	Image.Bind(":src", varSrc)
 	Return Me
 End Sub
 
 'set srcset
-Sub SetSrcset(varSrcset As Object) As VMImage
+Sub SetSrcSet(varSrcset As String) As VMImage
+	If varSrcset = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("srcset", varSrcset)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Srcset"$
 	vue.SetStateSingle(pp, varSrcset)
 	Image.Bind(":srcset", pp)
@@ -417,7 +545,12 @@ Sub SetSrcset(varSrcset As Object) As VMImage
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMImage
+Sub SetTransition(varTransition As String) As VMImage
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Transition"$
 	vue.SetStateSingle(pp, varTransition)
 	Image.Bind(":transition", pp)
@@ -425,8 +558,13 @@ Sub SetTransition(varTransition As Object) As VMImage
 End Sub
 
 'set width
-Sub SetWidth(varWidth As Object) As VMImage
+Sub SetWidth(varWidth As String) As VMImage
+	If varWidth = "" Then Return Me
 	width = varWidth
+	If bStatic Then
+		SetAttrSingle("width", varWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Width"$
 	vue.SetStateSingle(pp, varWidth)
 	Image.Bind(":width", pp)

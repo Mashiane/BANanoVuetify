@@ -30,6 +30,19 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'make this select an autocomplete
+Sub SetAutoComplete As VMSelect
+	Combo.SetTag("v-autocomplete")
+	Combo.typeOf = "auto"
+	Return Me
+End Sub
+
+'make this select a combo
+Sub SetComboBox As VMSelect
+	Combo.SetTag("v-combobox")
+	Combo.typeOf = "combo"
+	Return Me
+End Sub
 
 Sub SetStatic(b As Boolean) As VMSelect
 	bStatic = b
@@ -40,11 +53,13 @@ End Sub
 
 'backward compatibility
 Sub SetInvalidMessage(ErrText As String) As VMSelect
+	If ErrText = "" Then Return Me
 	ErrorText = ErrText
 	Return Me
 End Sub
 
 Sub SetErrorText(Error As String) As VMSelect
+	If Error = "" Then Return Me
 	ErrorText = Error
 	Return Me
 End Sub
@@ -167,6 +182,7 @@ End Sub
 
 'set required
 Sub SetRequired(varRequired As Boolean) As VMSelect
+	If varRequired = False Then Return Me
 	Combo.SetRequired(varRequired)
 	Return Me
 End Sub
@@ -174,6 +190,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSelect
+	If varColor = "" And varIntensity = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)
@@ -213,7 +230,7 @@ Sub AddChild(child As VMElement) As VMSelect
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMSelect
+Sub SetText(t As String) As VMSelect
 	Combo.SetText(t)
 	Return Me
 End Sub
@@ -249,7 +266,8 @@ Sub AddChildren(children As List)
 End Sub
 
 'set append-icon
-Sub SetAppendIcon(varAppendIcon As Object) As VMSelect
+Sub SetAppendIcon(varAppendIcon As String) As VMSelect
+	If varAppendIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("append-icon", varAppendIcon)
 	Else
@@ -261,7 +279,8 @@ Sub SetAppendIcon(varAppendIcon As Object) As VMSelect
 End Sub
 
 'set append-outer-icon
-Sub SetAppendOuterIcon(varAppendOuterIcon As Object) As VMSelect
+Sub SetAppendOuterIcon(varAppendOuterIcon As String) As VMSelect
+	If varAppendOuterIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("append-outer-icon", varAppendOuterIcon)
 	Else
@@ -273,7 +292,8 @@ Sub SetAppendOuterIcon(varAppendOuterIcon As Object) As VMSelect
 End Sub
 
 'set attach
-Sub SetAttach(varAttach As Object) As VMSelect
+Sub SetAttach(varAttach As String) As VMSelect
+	If varAttach = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("attach", varAttach)
 	Else
@@ -285,7 +305,8 @@ Sub SetAttach(varAttach As Object) As VMSelect
 End Sub
 
 'set autofocus
-Sub SetAutofocus(varAutofocus As Object) As VMSelect
+Sub SetAutofocus(varAutofocus As Boolean) As VMSelect
+	If varAutofocus = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("autofocus", varAutofocus)
 	Else
@@ -297,7 +318,8 @@ Sub SetAutofocus(varAutofocus As Object) As VMSelect
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMSelect
+Sub SetBackgroundColor(varBackgroundColor As String) As VMSelect
+	If varBackgroundColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("background-color", varBackgroundColor)
 	Else
@@ -309,7 +331,8 @@ Sub SetBackgroundColor(varBackgroundColor As Object) As VMSelect
 End Sub
 
 'set cache-items
-Sub SetCacheItems(varCacheItems As Object) As VMSelect
+Sub SetCacheItems(varCacheItems As Boolean) As VMSelect
+	If varCacheItems = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("cache-items", varCacheItems)
 	Else
@@ -321,7 +344,8 @@ Sub SetCacheItems(varCacheItems As Object) As VMSelect
 End Sub
 
 'set chips
-Sub SetChips(varChips As Object) As VMSelect
+Sub SetChips(varChips As Boolean) As VMSelect
+	If varChips = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("chips", varChips)
 	Else
@@ -333,7 +357,8 @@ Sub SetChips(varChips As Object) As VMSelect
 End Sub
 
 'set clear-icon
-Sub SetClearIcon(varClearIcon As Object) As VMSelect
+Sub SetClearIcon(varClearIcon As String) As VMSelect
+	If varClearIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("clear-icon", varClearIcon)
 	Else
@@ -345,7 +370,8 @@ Sub SetClearIcon(varClearIcon As Object) As VMSelect
 End Sub
 
 'set clearable
-Sub SetClearable(varClearable As Object) As VMSelect
+Sub SetClearable(varClearable As Boolean) As VMSelect
+	If varClearable = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("clearable", varClearable)
 	Else
@@ -357,7 +383,8 @@ Sub SetClearable(varClearable As Object) As VMSelect
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMSelect
+Sub SetColor(varColor As String) As VMSelect
+	If varColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("color", varColor)
 	Else
@@ -369,7 +396,8 @@ Sub SetColor(varColor As Object) As VMSelect
 End Sub
 
 'set counter
-Sub SetCounter(varCounter As Object) As VMSelect
+Sub SetCounter(varCounter As Boolean) As VMSelect
+	If varCounter = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("counter", varCounter)
 	Else
@@ -381,7 +409,8 @@ Sub SetCounter(varCounter As Object) As VMSelect
 End Sub
 
 'set counter-value
-Sub SetCounterValue(varCounterValue As Object) As VMSelect
+Sub SetCounterValue(varCounterValue As String) As VMSelect
+	If varCounterValue = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("counter-value", varCounterValue)
 	Else
@@ -393,7 +422,8 @@ Sub SetCounterValue(varCounterValue As Object) As VMSelect
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMSelect
+Sub SetDark(varDark As Boolean) As VMSelect
+	If varDark = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dark", varDark)
 	Else
@@ -405,7 +435,8 @@ Sub SetDark(varDark As Object) As VMSelect
 End Sub
 
 'set deletable-chips
-Sub SetDeletableChips(varDeletableChips As Object) As VMSelect
+Sub SetDeletableChips(varDeletableChips As Boolean) As VMSelect
+	If varDeletableChips = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("deletable-chips", varDeletableChips)
 	Else
@@ -417,7 +448,8 @@ Sub SetDeletableChips(varDeletableChips As Object) As VMSelect
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMSelect
+Sub SetDense(varDense As Boolean) As VMSelect
+	If varDense = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dense", varDense)
 	Else
@@ -429,7 +461,8 @@ Sub SetDense(varDense As Object) As VMSelect
 End Sub
 
 'set disable-lookup
-Sub SetDisableLookup(varDisableLookup As Object) As VMSelect
+Sub SetDisableLookup(varDisableLookup As Boolean) As VMSelect
+	If varDisableLookup = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("disable-lookup", varDisableLookup)
 	Else
@@ -447,7 +480,8 @@ Sub SetDisabled(varDisabled As Boolean) As VMSelect
 End Sub
 
 'set eager
-Sub SetEager(varEager As Object) As VMSelect
+Sub SetEager(varEager As Boolean) As VMSelect
+	If varEager = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("eager", varEager)
 	Else
@@ -495,7 +529,8 @@ Sub SetErrorMessages(varErrorMessages As Object) As VMSelect
 End Sub
 
 'set filled
-Sub SetFilled(varFilled As Object) As VMSelect
+Sub SetFilled(varFilled As Boolean) As VMSelect
+	If varFilled = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("filled", varFilled)
 	Else
@@ -513,7 +548,8 @@ Sub SetFilter(varFilter As Object) As VMSelect
 End Sub
 
 'set flat
-Sub SetFlat(varFlat As Object) As VMSelect
+Sub SetFlat(varFlat As Boolean) As VMSelect
+	If varFlat = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("flat", varFlat)
 	Else
@@ -525,7 +561,8 @@ Sub SetFlat(varFlat As Object) As VMSelect
 End Sub
 
 'set full-width
-Sub SetFullWidth(varFullWidth As Object) As VMSelect
+Sub SetFullWidth(varFullWidth As Boolean) As VMSelect
+	If varFullWidth = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("full-width", varFullWidth)
 	Else
@@ -537,7 +574,8 @@ Sub SetFullWidth(varFullWidth As Object) As VMSelect
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMSelect
+Sub SetHeight(varHeight As String) As VMSelect
+	If varHeight = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("height", varHeight)
 	Else
@@ -549,7 +587,8 @@ Sub SetHeight(varHeight As Object) As VMSelect
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As boolean) As VMSelect
+Sub SetHideDetails(varHideDetails As Boolean) As VMSelect
+	If varHideDetails = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("hide-details", varHideDetails)
 	Else
@@ -561,7 +600,8 @@ Sub SetHideDetails(varHideDetails As boolean) As VMSelect
 End Sub
 
 'set hide-selected
-Sub SetHideSelected(varHideSelected As Object) As VMSelect
+Sub SetHideSelected(varHideSelected As Boolean) As VMSelect
+	If varHideSelected = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("hide-selected", varHideSelected)
 	Else
@@ -573,7 +613,8 @@ Sub SetHideSelected(varHideSelected As Object) As VMSelect
 End Sub
 
 'set hint
-Sub SetHint(varHint As Object) As VMSelect
+Sub SetHint(varHint As String) As VMSelect
+	If varHint = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("hint", varHint)
 	Else
@@ -597,7 +638,8 @@ Sub SetId(varId As Object) As VMSelect
 End Sub
 
 'set item-color
-Sub SetItemColor(varItemColor As Object) As VMSelect
+Sub SetItemColor(varItemColor As String) As VMSelect
+	If varItemColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("item-color", varItemColor)
 	Else
@@ -609,7 +651,8 @@ Sub SetItemColor(varItemColor As Object) As VMSelect
 End Sub
 
 'set item-disabled
-Sub SetItemDisabled(varItemDisabled As Object) As VMSelect
+Sub SetItemDisabled(varItemDisabled As Boolean) As VMSelect
+	If varItemDisabled = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("item-disabled", varItemDisabled)
 	Else
@@ -621,26 +664,30 @@ Sub SetItemDisabled(varItemDisabled As Object) As VMSelect
 End Sub
 
 'set item-text
-Sub SetItemText(varItemText As Object) As VMSelect
+Sub SetItemText(varItemText As String) As VMSelect
+	If varItemText = "" Then Return Me
 	SetAttrSingle("item-text", varItemText)
 	Return Me
 End Sub
 
 'set item-value
-Sub SetItemValue(varItemValue As Object) As VMSelect
+Sub SetItemValue(varItemValue As String) As VMSelect
+	If varItemValue = "" Then Return Me
 	SetAttrSingle("item-value", varItemValue)
 	Return Me
 End Sub
 
 'set items
 Sub SetItems(varItems As String) As VMSelect
+	If varItems = "" Then Return Me
 	varItems = varItems.tolowercase
 	Combo.SetAttrsingle(":items", varItems)
 	Return Me
 End Sub
 
 'set label
-Sub SetLabel(varLabel As Object) As VMSelect
+Sub SetLabel(varLabel As String) As VMSelect
+	If varLabel = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("label", varLabel)
 	Else
@@ -652,7 +699,8 @@ Sub SetLabel(varLabel As Object) As VMSelect
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMSelect
+Sub SetLight(varLight As Boolean) As VMSelect
+	If varLight = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("light", varLight)
 	Else
@@ -664,7 +712,8 @@ Sub SetLight(varLight As Object) As VMSelect
 End Sub
 
 'set loader-height
-Sub SetLoaderHeight(varLoaderHeight As Object) As VMSelect
+Sub SetLoaderHeight(varLoaderHeight As String) As VMSelect
+	If varLoaderHeight = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("loader-height", varLoaderHeight)
 	Else
@@ -676,7 +725,8 @@ Sub SetLoaderHeight(varLoaderHeight As Object) As VMSelect
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMSelect
+Sub SetLoading(varLoading As Boolean) As VMSelect
+	If varLoading = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("loading", varLoading)
 	Else
@@ -713,6 +763,7 @@ End Sub
 
 'set multiple
 Sub SetMultiple(varMultiple As Boolean) As VMSelect
+	If varMultiple = False Then Return Me
 	If varMultiple Then Combo.IsArray = True
 	If bStatic Then
 		SetAttrSingle("multiple", varMultiple)
@@ -725,7 +776,8 @@ Sub SetMultiple(varMultiple As Boolean) As VMSelect
 End Sub
 
 'set no-data-text
-Sub SetNoDataText(varNoDataText As Object) As VMSelect
+Sub SetNoDataText(varNoDataText As String) As VMSelect
+	If varNoDataText = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("no-data-text", varNoDataText)
 	Else
@@ -737,7 +789,8 @@ Sub SetNoDataText(varNoDataText As Object) As VMSelect
 End Sub
 
 'set open-on-clear
-Sub SetOpenOnClear(varOpenOnClear As Object) As VMSelect
+Sub SetOpenOnClear(varOpenOnClear As Boolean) As VMSelect
+	If varOpenOnClear = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("open-on-clear", varOpenOnClear)
 	Else
@@ -749,7 +802,8 @@ Sub SetOpenOnClear(varOpenOnClear As Object) As VMSelect
 End Sub
 
 'set outlined
-Sub SetOutlined(varOutlined As Object) As VMSelect
+Sub SetOutlined(varOutlined As Boolean) As VMSelect
+	If varOutlined = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("outlined", varOutlined)
 	Else
@@ -761,7 +815,8 @@ Sub SetOutlined(varOutlined As Object) As VMSelect
 End Sub
 
 'set persistent-hint
-Sub SetPersistentHint(varPersistentHint As Object) As VMSelect
+Sub SetPersistentHint(varPersistentHint As Boolean) As VMSelect
+	If varPersistentHint = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("persistent-hint", varPersistentHint)
 	Else
@@ -773,7 +828,8 @@ Sub SetPersistentHint(varPersistentHint As Object) As VMSelect
 End Sub
 
 'set placeholder
-Sub SetPlaceholder(varPlaceholder As Object) As VMSelect
+Sub SetPlaceholder(varPlaceholder As String) As VMSelect
+	If varPlaceholder = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("placeholder", varPlaceholder)
 	Else
@@ -785,7 +841,8 @@ Sub SetPlaceholder(varPlaceholder As Object) As VMSelect
 End Sub
 
 'set prefix
-Sub SetPrefix(varPrefix As Object) As VMSelect
+Sub SetPrefix(varPrefix As String) As VMSelect
+	If varPrefix = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("prefix", varPrefix)
 	Else
@@ -797,7 +854,8 @@ Sub SetPrefix(varPrefix As Object) As VMSelect
 End Sub
 
 'set prepend-icon
-Sub SetPrependIcon(varPrependIcon As Object) As VMSelect
+Sub SetPrependIcon(varPrependIcon As String) As VMSelect
+	If varPrependIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("prepend-icon", varPrependIcon)
 	Else
@@ -809,7 +867,8 @@ Sub SetPrependIcon(varPrependIcon As Object) As VMSelect
 End Sub
 
 'set prepend-inner-icon
-Sub SetPrependInnerIcon(varPrependInnerIcon As Object) As VMSelect
+Sub SetPrependInnerIcon(varPrependInnerIcon As String) As VMSelect
+	If varPrependInnerIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("prepend-inner-icon", varPrependInnerIcon)
 	Else
@@ -821,7 +880,8 @@ Sub SetPrependInnerIcon(varPrependInnerIcon As Object) As VMSelect
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMSelect
+Sub SetReadonly(varReadonly As Boolean) As VMSelect
+	If varReadonly = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("readonly", varReadonly)
 	Else
@@ -833,13 +893,15 @@ Sub SetReadonly(varReadonly As Object) As VMSelect
 End Sub
 
 'set return-object
-Sub SetReturnObject(varReturnObject As Object) As VMSelect
+Sub SetReturnObject(varReturnObject As Boolean) As VMSelect
+	If varReturnObject = False Then Return Me
 	SetAttrSingle("return-object", varReturnObject)
 	Return Me
 End Sub
 
 'set reverse
-Sub SetReverse(varReverse As Object) As VMSelect
+Sub SetReverse(varReverse As Boolean) As VMSelect
+	If varReverse = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("reverse", varReverse)
 	Else
@@ -851,7 +913,8 @@ Sub SetReverse(varReverse As Object) As VMSelect
 End Sub
 
 'set rounded
-Sub SetRounded(varRounded As Object) As VMSelect
+Sub SetRounded(varRounded As Boolean) As VMSelect
+	If varRounded = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("rounded", varRounded)
 	Else
@@ -871,7 +934,8 @@ Sub SetRules(varRules As Object) As VMSelect
 End Sub
 
 'set shaped
-Sub SetShaped(varShaped As Object) As VMSelect
+Sub SetShaped(varShaped As Boolean) As VMSelect
+	If varShaped = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("shaped", varShaped)
 	Else
@@ -883,7 +947,8 @@ Sub SetShaped(varShaped As Object) As VMSelect
 End Sub
 
 'set single-line
-Sub SetSingleLine(varSingleLine As Object) As VMSelect
+Sub SetSingleLine(varSingleLine As Boolean) As VMSelect
+	If varSingleLine = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("single-line", varSingleLine)
 	Else
@@ -895,7 +960,8 @@ Sub SetSingleLine(varSingleLine As Object) As VMSelect
 End Sub
 
 'set small-chips
-Sub SetSmallChips(varSmallChips As Object) As VMSelect
+Sub SetSmallChips(varSmallChips As Boolean) As VMSelect
+	If varSmallChips = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("small-chips", varSmallChips)
 	Else
@@ -907,7 +973,8 @@ Sub SetSmallChips(varSmallChips As Object) As VMSelect
 End Sub
 
 'set solo
-Sub SetSolo(varSolo As Object) As VMSelect
+Sub SetSolo(varSolo As Boolean) As VMSelect
+	If varSolo = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("solo", varSolo)
 	Else
@@ -919,7 +986,8 @@ Sub SetSolo(varSolo As Object) As VMSelect
 End Sub
 
 'set solo-inverted
-Sub SetSoloInverted(varSoloInverted As Object) As VMSelect
+Sub SetSoloInverted(varSoloInverted As Boolean) As VMSelect
+	If varSoloInverted = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("solo-inverted", varSoloInverted)
 	Else
@@ -931,7 +999,8 @@ Sub SetSoloInverted(varSoloInverted As Object) As VMSelect
 End Sub
 
 'set success
-Sub SetSuccess(varSuccess As Object) As VMSelect
+Sub SetSuccess(varSuccess As Boolean) As VMSelect
+	If varSuccess = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("success", varSuccess)
 	Else
@@ -955,7 +1024,8 @@ Sub SetSuccessMessages(varSuccessMessages As Object) As VMSelect
 End Sub
 
 'set suffix
-Sub SetSuffix(varSuffix As Object) As VMSelect
+Sub SetSuffix(varSuffix As String) As VMSelect
+	If varSuffix = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("suffix", varSuffix)
 	Else
@@ -967,7 +1037,8 @@ Sub SetSuffix(varSuffix As Object) As VMSelect
 End Sub
 
 'set type
-Sub SetType(varType As Object) As VMSelect
+Sub SetType(varType As String) As VMSelect
+	If varType = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("type", varType)
 	Else
@@ -979,7 +1050,8 @@ Sub SetType(varType As Object) As VMSelect
 End Sub
 
 'set validate-on-blur
-Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMSelect
+Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMSelect
+	If varValidateOnBlur = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("validate-on-blur", varValidateOnBlur)
 	Else
@@ -991,7 +1063,7 @@ Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMSelect
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMSelect
+Sub SetValue(varValue As String) As VMSelect
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
@@ -1352,13 +1424,13 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSelect
-Combo.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Combo.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 
 Sub SetVisible(b As Boolean) As VMSelect
-Combo.SetVisible(b)
-Return Me
+	Combo.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
@@ -1374,5 +1446,73 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSelec
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
+	Return Me
+End Sub
+
+'******
+
+'set allow-overflow
+Sub SetAllowOverflow(varAllowOverflow As Boolean) As VMSelect
+	If varAllowOverflow = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("allow-overflow", varAllowOverflow)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}AllowOverflow"$
+	vue.SetStateSingle(pp, varAllowOverflow)
+	Combo.Bind(":allow-overflow", pp)
+	Return Me
+End Sub
+
+'set auto-select-first
+Sub SetAutoSelectFirst(varAutoSelectFirst As Boolean) As VMSelect
+	If varAutoSelectFirst = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("auto-select-first", varAutoSelectFirst)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}AutoSelectFirst"$
+	vue.SetStateSingle(pp, varAutoSelectFirst)
+	Combo.Bind(":auto-select-first", pp)
+	Return Me
+End Sub
+
+
+'set hide-no-data
+Sub SetHideNoData(varHideNoData As Boolean) As VMSelect
+	If varHideNoData = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-no-data", varHideNoData)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}HideNoData"$
+	vue.SetStateSingle(pp, varHideNoData)
+	Combo.Bind(":hide-no-data", pp)
+	Return Me
+End Sub
+
+'set no-filter
+Sub SetNoFilter(varNoFilter As Boolean) As VMSelect
+	If varNoFilter = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("no-filter", varNoFilter)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}NoFilter"$
+	vue.SetStateSingle(pp, varNoFilter)
+	Combo.Bind(":no-filter", pp)
+	Return Me
+End Sub
+
+'set search-input
+Sub SetSearchInput(varSearchInput As Boolean) As VMSelect
+	If varSearchInput = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("search-input", varSearchInput)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}SearchInput"$
+	vue.SetStateSingle(pp, varSearchInput)
+	Combo.Bind(":search-input", pp)
 	Return Me
 End Sub

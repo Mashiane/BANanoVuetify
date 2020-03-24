@@ -31,11 +31,11 @@ Sub Code
 	Dim checkbox As VMCheckBox = vm.NewCheckBox(Me, True, "checkbox", "checkbox", "I concur!", "Yes", "No", True, 0).SetDevicePositions(1, 3, 12, 6, 6, 6)
 	cont.AddControl1(checkbox.CheckBox, checkbox.ToString)
 	'
-	Dim datepicker As VMDatePicker = vm.NewDatePicker(Me, True, "datepicker", "datepicker", "Date Picker", True,  "Select a Date Picker", "This date", "", 0).SetDevicePositions(1, 4, 12, 6, 6, 6)
-	cont.AddControl1(datepicker.DatePicker, datepicker.ToString)
+	Dim datepicker As VMDateTimePicker = vm.NewDatePicker(Me, True, "datepicker", "datepicker", "Date Picker", True,  "Select a Date Picker", "This date", "", 0).SetDevicePositions(1, 4, 12, 6, 6, 6)
+	cont.AddControl1(datepicker.DateTimePicker, datepicker.ToString)
 	'
-	Dim timepicker As VMTimePicker = vm.NewTimePicker(Me, True, "timepicker", "timepicker", "Time Picker", True, "Select a time Picker", "This time", "", 0).SetDevicePositions(2, 1, 12, 6, 6, 6)
-	cont.AddControl1(timepicker.TimePicker, timepicker.ToString)
+	Dim timepicker As VMDateTimePicker = vm.NewTimePicker(Me, True, "timepicker", "timepicker", "Time Picker", True, "Select a time Picker", "This time", "", 0).SetDevicePositions(2, 1, 12, 6, 6, 6)
+	cont.AddControl1(timepicker.DateTimePicker, timepicker.ToString)
 	'
 	Dim slider As VMSlider = vm.NewSlider(Me, True, "slider", "slider", "Slider", 0, 100, 0).SetDevicePositions(2, 2, 12, 6, 6, 6)
 	cont.AddControl1(slider.Slider, slider.ToString)
@@ -55,14 +55,14 @@ Sub Code
 	Dim genderlist As Map = CreateMap("f":"Female", "m":"Male")
 	Dim genderlist1 As List = Array("Male", "Female")
 		
-	Dim ac1 As VMAutoComplete = vm.NewAutoCompleteDataSource(Me, True, "acx1", "acx1", "States", "States", "states2", "id", "name", False, True, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
-	cont.AddControl1(ac1.AutoComplete, ac1.ToString)
+	Dim ac1 As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "acx1", "acx1", "States", "States", "states2", "id", "name", False, True, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
+	cont.AddControl1(ac1.Combo, ac1.ToString)
 	'
-	Dim ac2 As VMAutoComplete = vm.NewAutoComplete(Me, True, "acx2", "acx2", "Gender", "Gender", genderlist1, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
-	cont.AddControl1(ac2.AutoComplete, ac2.ToString)
+	Dim ac2 As VMSelect = vm.NewAutoComplete(Me, True, "acx2", "acx2", "Gender", "Gender", genderlist1, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
+	cont.AddControl1(ac2.Combo, ac2.ToString)
 	'
-	Dim txta As VMTextArea = vm.NewTextArea(Me, True, "txtarea", "textarea", "Text Area", "A placeholder", True, False, "", 255, "Helper Text", "", 0).SetDevicePositions(4, 1, 12, 12, 12, 12)
-	cont.AddControl1(txta.TextArea, txta.ToString)
+	Dim txta As VMTextField = vm.NewTextArea(Me, True, "txtarea", "textarea", "Text Area", "A placeholder", True, False, "", 255, "Helper Text", "", 0).SetDevicePositions(4, 1, 12, 12, 12, 12)
+	cont.AddControl1(txta.TextField, txta.ToString)
 	'
 	Dim pwd As VMTextField = vm.NewPassword(Me, True, "pwd1", "pwd1", "Password", "Enter your password!", True, True, "mdi-lock", 10, "Password","", 0).SetDevicePositions(5, 1, 12, 6, 6, 6)
 	cont.AddControl1(pwd.TextFIeld, pwd.ToString)

@@ -255,6 +255,48 @@ Sub AddContainer(parent As String, cont As VMContainer)
 	controls.Put(parent, existing)
 End Sub
 
+Sub AddHeightWidths(parent As String)
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = "widths"
+	nc.text = "Widths"
+	nc.value = ""
+	nc.typeOf = "widths"
+	existing.Add(nc)
+	controls.Put(parent, existing)
+	fields.Add("width")
+	fields.Add("minwidth")
+	fields.Add("maxwidth")
+	'
+	fields.Add("height")
+	fields.Add("minheight")
+	fields.Add("maxheight")
+	'
+	Strings.Add("height")
+	Strings.Add("minheight")
+	Strings.Add("maxheight")
+	'
+	Strings.Add("width")
+	Strings.Add("minwidth")
+	Strings.Add("maxwidth")
+	'
+	defaults.Put("width","")
+	defaults.Put("minwidth","")
+	defaults.Put("maxwidth","")
+	defaults.Put("height","")
+	defaults.Put("minheight","")
+	defaults.Put("maxheight","")
+End Sub
+
 Sub AddMatrix(parent As String)
 	parent = parent.tolowercase
 	If parent = "" Then parent = "main"
@@ -572,6 +614,43 @@ Sub ToString As String
 		For Each nc As PropControls In items
 			vue.SetData(nc.vmodel, Null)
 			Select Case nc.typeOf
+			Case "widths"
+				Dim wcont As VMContainer
+				wcont.Initialize(vue, "w" & nc.vmodel, module).SetTag("div")
+				wcont.NoGutters = True
+				'
+				Dim w1 As VMTextField
+				w1.Initialize(vue, "txtwidth", module).SetStatic(True).SetClearable(True).Setlabel("Width")
+				w1.SetVModel("width").SetDense(True).SetOutlined(True).SetHideDetails(True)
+				wcont.AddControlS(w1.TextField, w1.ToString, 1, 1, 4, 4, 4, 4)
+				'
+				Dim w2 As VMTextField
+				w2.Initialize(vue, "txtminwidth", module).SetStatic(True).SetClearable(True).Setlabel("Min Width")
+				w2.SetVModel("minwidth").SetDense(True).SetOutlined(True).SetHideDetails(True)
+				wcont.AddControlS(w2.TextField, w2.ToString, 1, 2, 4, 4, 4, 4)
+				'
+				Dim w3 As VMTextField
+				w3.Initialize(vue, "txtmaxwidth", module).SetStatic(True).SetClearable(True).Setlabel("Max Width")
+				w3.SetVModel("maxwidth").SetDense(True).SetOutlined(True).SetHideDetails(True)
+				wcont.AddControlS(w3.TextField, w3.ToString, 1, 3, 4, 4, 4, 4)
+				'height
+				Dim h1 As VMTextField
+				h1.Initialize(vue, "txtheight", module).SetStatic(True).SetClearable(True).Setlabel("Height")
+				h1.SetVModel("height").SetDense(True).SetOutlined(True).SetHideDetails(True)
+				wcont.AddControlS(h1.TextField, h1.ToString, 2, 1, 4, 4, 4, 4)
+					'
+				Dim h2 As VMTextField
+				h2.Initialize(vue, "txtminheight", module).SetStatic(True).SetClearable(True).Setlabel("Min Height")
+				h2.SetVModel("minheight").SetDense(True).SetOutlined(True).SetHideDetails(True)
+				wcont.AddControlS(h2.TextField, h2.ToString, 2, 2, 4, 4, 4, 4)
+					'
+				Dim h3 As VMTextField
+				h3.Initialize(vue, "txtmaxheight", module).SetStatic(True).SetClearable(True).Setlabel("Max Height")
+				h3.SetVModel("maxheight").SetDense(True).SetOutlined(True).SetHideDetails(True)
+				wcont.AddControlS(h3.TextField, h3.ToString, 2, 3, 4, 4, 4, 4)
+				'
+				expanel.Container.AddControlS(wcont.Container, wcont.ToString, 1, 1, 12, 12, 12, 12)
+				
 			Case "container"
 				nc.cont.NoGutters = True
 				nc.cont.SetTag("div")
@@ -667,6 +746,7 @@ Sub ToString As String
 				btnx.SetRaised(True)
 				btnx.SetRounded(True)
 				btnx.SetPrimary(True)
+				btnx.SetBlock(True)
 				btnx.RemoveAttr("ref")
 				btnx.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
@@ -756,8 +836,9 @@ Sub ToString As String
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(email.TextField, email.ToString, 1, 1, 12, 12, 12, 12)
 			Case "textarea"
-				Dim txta As VMTextArea
+				Dim txta As VMTextField
 				txta.Initialize(vue, "ta" & nc.vmodel, module)
+				txta.SetTextArea
 				txta.SetClearable(True)
 				txta.Setlabel(nc.text)
 				txta.SetAutoGrow(True)
@@ -768,7 +849,7 @@ Sub ToString As String
 				txta.SetHideDetails(True)
 				txta.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
-				expanel.Container.AddControlS(txta.TextArea, txta.ToString, 1, 1, 12, 12, 12, 12)
+				expanel.Container.AddControlS(txta.TextField, txta.ToString, 1, 1, 12, 12, 12, 12)
 			Case "checkbox"
 				Dim chk As VMCheckBox
 				chk.Initialize(vue, "chk" & nc.vmodel, module)
@@ -800,8 +881,9 @@ Sub ToString As String
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(rg.RadioGroup, rg.ToString, 1, 1, 12, 12, 12, 12)
 			Case "timepicker"
-				Dim tp As VMTimePicker
-				tp.Initialize(vue, "tp" & nc.vmodel, module)  
+				Dim tp As VMDateTimePicker
+				tp.Initialize(vue, "tp" & nc.vmodel, module).SetTimePicker 
+				tp.SetStatic(True) 
 				tp.Setlabel(nc.text)
 				tp.SetVModel(nc.vmodel)
 				tp.Setclearable(True)
@@ -813,10 +895,11 @@ Sub ToString As String
 				tp.SetHideDetails(True)
 				tp.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
-				expanel.Container.AddControlS(tp.TimePicker, tp.ToString, 1, 1, 12, 12, 12, 12)
+				expanel.Container.AddControlS(tp.DateTimePicker, tp.ToString, 1, 1, 12, 12, 12, 12)
 			Case "datepicker"
-				Dim dp As VMDatePicker
+				Dim dp As VMDateTimePicker
 				dp.Initialize(vue, "dp" & nc.vmodel, module)
+				dp.SetStatic(True)
 				dp.Setlabel(nc.text)
 				dp.SetVModel(nc.vmodel)
 				dp.Setclearable(True)
@@ -828,7 +911,7 @@ Sub ToString As String
 				dp.SetHideDetails(True)
 				dp.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
-				expanel.Container.AddControlS(dp.DatePicker, dp.ToString, 1, 1, 12, 12, 12, 12)
+				expanel.Container.AddControlS(dp.DateTimePicker, dp.ToString, 1, 1, 12, 12, 12, 12)
 			End Select
 		Next
 		expnl.addpanel(expanel)

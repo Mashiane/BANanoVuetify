@@ -83,19 +83,19 @@ Sub InputDialog As VMDialog
 	diag.Container.AddRows(7).AddColumns2x6
 	'
 	Dim chkAgree As VMCheckBox = vm.CreateCheckBox("chkAgree1", Me).SetVModel("user.agree").SetLabel("I agree")
-	Dim dob As VMDatePicker = vm.CreateDatePicker("dob", Me).SetVModel("user.dob").SetLabel("Date of Birth").SetForInput
+	Dim dob As VMDateTimePicker = vm.CreateDatePicker("dob", Me).SetVModel("user.dob").SetLabel("Date of Birth").SetForInput
 	Dim fi As VMFileInput = vm.CreateFileInput("myfile", Me).SetAccept("image/*").SetLabel("File input").SetVModel("user.myfile")
 	Dim rg1 As VMRadioGroup = vm.CreateRadioGroup("gender", Me).SetVModel("user.gender").SetHorizontal(True).SetLabel("Gender")
 	rg1.SetOptions(CreateMap("m":"Male","f":"Female"))
 	Dim selx As VMSelect = vm.CreateSelect("code", Me).SetItems("items").SetLabel("Code").SetVModel("user.code")
 	Dim age As VMSlider = vm.CreateSlider("age", Me).SetVModel("user.age").SetMin("0").SetMax("100").SetLabel("Age").SetThumbLabel("always").SetValue("46")
 	Dim swt As VMSwitch = vm.CreateSwitch("notif", Me).SetLabel("Receive Notifications").SetVModel("user.notif")
-	Dim txtm As VMTextArea = vm.CreateTextArea("about", Me).SetLabel("About Yourself").SetVModel("user.about")
+	Dim txtm As VMTextField = vm.CreateTextArea("about", Me).SetLabel("About Yourself").SetVModel("user.about")
 	Dim txtfn As VMTextField = vm.CreateTextField("fn", Me).SetLabel("First Name").SetVModel("user.fn").SetHint("Enter a first name").SetPersistentHint(True).SetClearable(True).SetMaxLength(50)
-	Dim ac1 As VMAutoComplete = vm.CreateAutoComplete("ln", Me).SetVModel("user.ln").Bind(":items", "items").SetLabel("Last Name")
+	Dim ac1 As VMSelect = vm.CreateAutoComplete("ln", Me).SetVModel("user.ln").Bind(":items", "items").SetLabel("Last Name")
 	Dim a3 As VMAvatar = vm.CreateAvatar("dp", Me).SetImage("./assets/sponge.png", "Sponge", Null, Null, Null)
-	Dim tp2 As VMTimePicker = vm.CreateTimePicker("tob", Me).SetVModel("user.tob").SetLabel("Time of Birth").SetForInput
-	Dim cbo1 As VMComboBox = vm.CreateComboBox("combox", Me).SetVModel("user.combo").SetItems("items").SetLabel("Select a favourate activity or create a new one")
+	Dim tp2 As VMDateTimePicker = vm.CreateTimePicker("tob", Me).SetVModel("user.tob").SetLabel("Time of Birth").SetForInput
+	Dim cbo1 As VMSelect = vm.CreateComboBox("combox", Me).SetVModel("user.combo").SetItems("items").SetLabel("Select a favourate activity or create a new one")
 	Dim pwd As VMTextField = vm.CreateTextField("pwd", Me).SetLabel("Password").SetPassword(True, True).SetName("password",False).SetVModel("user.pwd").SetHint("At least enter 8 characters.")
 	pwd.SetCounter(8)
 	
