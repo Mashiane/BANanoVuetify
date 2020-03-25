@@ -26,9 +26,30 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	CheckBox.typeOf = "checkbox"
 	CheckBox.fieldType = "bool"
 	bStatic = False
+	SetOnChange($"${ID}_change"$)
 	Return Me
 End Sub
 
+
+'set inset
+Sub SetInset(varInset As Boolean) As VMCheckBox
+	If varInset = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("inset", varInset)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Inset"$
+	vue.SetStateSingle(pp, varInset)
+	CheckBox.Bind(":inset", pp)
+	Return Me
+End Sub
+
+Sub SetSwitch As VMCheckBox
+	CheckBox.SetTag("v-switch")
+	CheckBox.typeOf = "switchbox"
+	CheckBox.fieldType = "bool"
+	Return Me
+End Sub
 
 Sub SetStatic(b As Boolean) As VMCheckBox
 	bStatic = b
@@ -120,6 +141,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCheckBox
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)
@@ -134,6 +156,7 @@ End Sub
 
 'set required
 Sub SetRequired(varRequired As Boolean) As VMCheckBox
+	If varRequired = False Then Return Me
 	CheckBox.SetRequired(varRequired)
 	Return Me
 End Sub
@@ -149,12 +172,12 @@ Sub SetVModel(k As String) As VMCheckBox
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCheckBox
+Sub SetVIf(vif As String) As VMCheckBox
 	CheckBox.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCheckBox
+Sub SetVShow(vif As String) As VMCheckBox
 	CheckBox.SetVShow(vif)
 	Return Me
 End Sub
@@ -208,7 +231,8 @@ Sub AddChildren(children As List)
 End Sub
 
 'set append-icon
-Sub SetAppendIcon(varAppendIcon As Object) As VMCheckBox
+Sub SetAppendIcon(varAppendIcon As String) As VMCheckBox
+	If varAppendIcon= "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("append-icon", varAppendIcon)
 	Else
@@ -220,7 +244,8 @@ Sub SetAppendIcon(varAppendIcon As Object) As VMCheckBox
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMCheckBox
+Sub SetBackgroundColor(varBackgroundColor As String) As VMCheckBox
+	If varBackgroundColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("background-color", varBackgroundColor)
 	Else
@@ -232,7 +257,8 @@ Sub SetBackgroundColor(varBackgroundColor As Object) As VMCheckBox
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMCheckBox
+Sub SetColor(varColor As String) As VMCheckBox
+	If varColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("color", varColor)
 	Else
@@ -244,7 +270,8 @@ Sub SetColor(varColor As Object) As VMCheckBox
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMCheckBox
+Sub SetDark(varDark As Boolean) As VMCheckBox
+	If varDark = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dark", varDark)
 	Else
@@ -256,7 +283,8 @@ Sub SetDark(varDark As Object) As VMCheckBox
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMCheckBox
+Sub SetDense(varDense As Boolean) As VMCheckBox
+	If varDense = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dense", varDense)
 	Else
@@ -274,7 +302,8 @@ Sub SetDisabled(varDisabled As Boolean) As VMCheckBox
 End Sub
 
 'set error
-Sub SetError(varError As Object) As VMCheckBox
+Sub SetError(varError As Boolean) As VMCheckBox
+	If varError = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("error", varError)
 	Else
@@ -286,7 +315,8 @@ Sub SetError(varError As Object) As VMCheckBox
 End Sub
 
 'set error-count
-Sub SetErrorCount(varErrorCount As Object) As VMCheckBox
+Sub SetErrorCount(varErrorCount As String) As VMCheckBox
+	If varErrorCount = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("error-count", varErrorCount)
 	Else
@@ -316,7 +346,8 @@ Sub SetFalseValue(varFalseValue As Object) As VMCheckBox
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As boolean) As VMCheckBox
+Sub SetHideDetails(varHideDetails As Boolean) As VMCheckBox
+	If varHideDetails = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("hide-details", varHideDetails)
 	Else
@@ -328,7 +359,8 @@ Sub SetHideDetails(varHideDetails As boolean) As VMCheckBox
 End Sub
 
 'set hint
-Sub SetHint(varHint As Object) As VMCheckBox
+Sub SetHint(varHint As String) As VMCheckBox
+	If varHint = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("hint", varHint)
 	Else
@@ -352,7 +384,8 @@ Sub SetId(varId As Object) As VMCheckBox
 End Sub
 
 'set indeterminate
-Sub SetIndeterminate(varIndeterminate As Object) As VMCheckBox
+Sub SetIndeterminate(varIndeterminate As Boolean) As VMCheckBox
+	If varIndeterminate = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("indeterminate", varIndeterminate)
 	Else
@@ -364,7 +397,8 @@ Sub SetIndeterminate(varIndeterminate As Object) As VMCheckBox
 End Sub
 
 'set indeterminate-icon
-Sub SetIndeterminateIcon(varIndeterminateIcon As Object) As VMCheckBox
+Sub SetIndeterminateIcon(varIndeterminateIcon As String) As VMCheckBox
+	If varIndeterminateIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("indeterminate-icon", varIndeterminateIcon)
 	Else
@@ -382,7 +416,8 @@ Sub SetInputValue(varInputValue As Object) As VMCheckBox
 End Sub
 
 'set label
-Sub SetLabel(varLabel As Object) As VMCheckBox
+Sub SetLabel(varLabel As String) As VMCheckBox
+	If varLabel = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("label", varLabel)
 	Else
@@ -394,7 +429,8 @@ Sub SetLabel(varLabel As Object) As VMCheckBox
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMCheckBox
+Sub SetLight(varLight As Boolean) As VMCheckBox
+	If varLight = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("light", varLight)
 	Else
@@ -406,7 +442,8 @@ Sub SetLight(varLight As Object) As VMCheckBox
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMCheckBox
+Sub SetLoading(varLoading As String) As VMCheckBox
+	If varLoading = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("loading", varLoading)
 	Else
@@ -416,6 +453,21 @@ Sub SetLoading(varLoading As Object) As VMCheckBox
 	End If
 	Return Me
 End Sub
+
+'set flat
+Sub SetFlat(varLoading As Boolean) As VMCheckBox
+	If varLoading = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("flat", varLoading)
+	Else
+	Dim pp As String = $"${ID}flat"$
+	vue.SetStateSingle(pp, varLoading)
+	CheckBox.Bind(":flat", pp)
+	End If
+	Return Me
+End Sub
+
+
 
 'set messages
 Sub SetMessages(varMessages As Object) As VMCheckBox
@@ -430,7 +482,8 @@ Sub SetMessages(varMessages As Object) As VMCheckBox
 End Sub
 
 'set multiple
-Sub SetMultiple(varMultiple As Object) As VMCheckBox
+Sub SetMultiple(varMultiple As Boolean) As VMCheckBox
+	If varMultiple = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("multiple", varMultiple)
 	Else
@@ -442,7 +495,8 @@ Sub SetMultiple(varMultiple As Object) As VMCheckBox
 End Sub
 
 'set off-icon
-Sub SetOffIcon(varOffIcon As Object) As VMCheckBox
+Sub SetOffIcon(varOffIcon As String) As VMCheckBox
+	If varOffIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("off-icon", varOffIcon)
 	Else
@@ -454,7 +508,8 @@ Sub SetOffIcon(varOffIcon As Object) As VMCheckBox
 End Sub
 
 'set on-icon
-Sub SetOnIcon(varOnIcon As Object) As VMCheckBox
+Sub SetOnIcon(varOnIcon As String) As VMCheckBox
+	If varOnIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("on-icon", varOnIcon)
 	Else
@@ -466,7 +521,8 @@ Sub SetOnIcon(varOnIcon As Object) As VMCheckBox
 End Sub
 
 'set persistent-hint
-Sub SetPersistentHint(varPersistentHint As Object) As VMCheckBox
+Sub SetPersistentHint(varPersistentHint As Boolean) As VMCheckBox
+	If varPersistentHint = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("persistent-hint", varPersistentHint)
 	Else
@@ -478,7 +534,8 @@ Sub SetPersistentHint(varPersistentHint As Object) As VMCheckBox
 End Sub
 
 'set preped-icon
-Sub SetPrepedIcon(varPrepedIcon As Object) As VMCheckBox
+Sub SetPrepedIcon(varPrepedIcon As String) As VMCheckBox
+	If varPrepedIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("prepend-icon", varPrepedIcon)
 	Else
@@ -490,7 +547,8 @@ Sub SetPrepedIcon(varPrepedIcon As Object) As VMCheckBox
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMCheckBox
+Sub SetReadonly(varReadonly As Boolean) As VMCheckBox
+	If varReadonly = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("readonly", varReadonly)
 	Else
@@ -502,7 +560,8 @@ Sub SetReadonly(varReadonly As Object) As VMCheckBox
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMCheckBox
+Sub SetRipple(varRipple As Boolean) As VMCheckBox
+	If varRipple = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("ripple", varRipple)
 	Else
@@ -520,7 +579,8 @@ Sub SetRules(varRules As Object) As VMCheckBox
 End Sub
 
 'set success
-Sub SetSuccess(varSuccess As Object) As VMCheckBox
+Sub SetSuccess(varSuccess As Boolean) As VMCheckBox
+	If varSuccess = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("success", varSuccess)
 	Else
@@ -550,7 +610,8 @@ Sub SetTrueValue(varTrueValue As Object) As VMCheckBox
 End Sub
 
 'set validate-on-blur
-Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMCheckBox
+Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMCheckBox
+	If varValidateOnBlur = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("validate-on-blur", varValidateOnBlur)
 	Else
@@ -775,6 +836,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMCheckBox
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -782,9 +844,21 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCheckBox
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
+	Return Me
+End Sub
+
+Sub SetOnChange(methodName As String) As VMCheckBox
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	SetAttr(CreateMap("v-on:change": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub

@@ -145,6 +145,7 @@ private Sub SetLogo(url As String) As VMAppBar
 	Logo.SetVModel("logo", url)
 	Logo.SetSize("46", "46")
 	Logo.AddClass("ma-2")  'margin all 8px
+	Logo.BindStyleSingle("opacity", "1")
 	Logo.Pop(AppBar)
 	Logo.Hide
 	Return Me

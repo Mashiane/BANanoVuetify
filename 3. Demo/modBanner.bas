@@ -27,7 +27,7 @@ Sub Code
 	card.ToolBar.AddSpacer
 	card.ToolBar.SetFlat(True)
 	'
-	Dim sticky As VMSwitch = vm.CreateSwitch("switchsticky", Me).SetVModel("sticky").SetLabel("Sticky Banner").SetHideDetails(True)
+	Dim sticky As VMCheckBox = vm.CreateSwitch("switchsticky", Me).SetVModel("sticky").SetLabel("Sticky Banner").SetHideDetails(True)
 	card.ToolBar.AddComponent("sticky", sticky.ToString)
 	'
 	Dim banner As VMBanner = vm.CreateBanner("banner1", Me).SetSingleLine(True).Bind(":sticky", "sticky")

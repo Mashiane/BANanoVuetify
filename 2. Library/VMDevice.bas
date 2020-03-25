@@ -28,6 +28,9 @@ Sub Class_Globals
 	Private ovf As VMElement
 	Private dynamic As VMElement
 	Private hasFrame As Boolean
+	Private static As VMContainer
+	Private hasStatic As Boolean
+	Private hasDynamic As Boolean
 End Sub
 
 'initialize the device
@@ -57,6 +60,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	dynamic = CreateDynamicContent
 	hasFrame = False
 	Device.SetVShow($"${ID}show"$)
+	static.Initialize(vue, $"${ID}static"$, module)
+	static.SetStyleSingle("width", "98% !important")
+	static.SetStyleSingle("max-height", "100% !important")
+	static.SetStyleSingle("overflow-y", "auto !important")
+	static.SetStyleSingle("overflow-x", "hidden !important")
+	static.SetStyleSingle("float", "left !important")
+	hasStatic = False
+	hasDynamic = False
 	Return Me
 End Sub
 
@@ -110,12 +121,12 @@ Sub SetContainer(b As Boolean) As VMDevice
 End Sub
 
 Sub Hide As VMDevice
-	Device.hide
+	Device.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMDevice
-	Device.Show
+	Device.SetVisible(True)
 	Return Me
 End Sub
 
@@ -125,8 +136,9 @@ private Sub CreateDynamicContent As VMElement
 	vue.SetStateSingle(pp,"<div></div>")
 	Dim UI As VMElement = vue.CreateTag(ppx, "renderstring")
 	UI.Bind(":string", pp)
-	UI.SetStyleSingle("width", "100%")
+	UI.SetStyleSingle("width", "92% !important")
 	UI.SetStyleSingle("height", "100%")
+	hasDynamic = True
 	Return UI
 End Sub
 
@@ -174,7 +186,8 @@ Sub ToString As String
 			If hasFrame Then
 				scren.AddChild(frme)
 			Else
-				scren.AddChild(dynamic)
+				If hasStatic = False Then scren.AddChild(dynamic)
+				If hasDynamic = False Then scren.SetText(static.tostring)
 			End If
 			'
 			Device.AddChild(scren)
@@ -187,7 +200,8 @@ Sub ToString As String
 			If hasFrame Then
 				frme.Pop(scren)
 			Else
-				scren.AddChild(dynamic)
+				If hasStatic = False Then scren.AddChild(dynamic)
+				If hasDynamic = False Then scren.SetText(static.tostring)
 			End If
 			scren.Pop(Device)
 	
@@ -199,7 +213,8 @@ Sub ToString As String
 			If hasFrame Then
 				frme.Pop(scren)
 			Else
-				scren.AddChild(dynamic)
+				If hasStatic = False Then scren.AddChild(dynamic)
+				If hasDynamic = False Then scren.SetText(static.tostring)
 			End If
 			
 			scren.Pop(Device)
@@ -214,10 +229,17 @@ Sub SetURL(url As String) As VMDevice
 	Return Me
 End Sub
 
+Sub SetStatic(dynaContent As String)
+	static.SetText(dynaContent)
+	hasFrame = False
+	hasStatic = True
+End Sub
+
 Sub SetContent(dynaContent As String)
 	Dim pp As String = $"${ID}htmlcontent"$
 	vue.SetStateSingle(pp,dynaContent)
 	hasFrame = False
+	hasDynamic = True
 End Sub
 
 Sub SetIphoneX As VMDevice

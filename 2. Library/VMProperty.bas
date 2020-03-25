@@ -777,8 +777,8 @@ Sub ToString As String
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(lbl.label, lbl.ToString, 1, 1, 12, 12, 12, 12)
 			Case "switch"
-				Dim sw As VMSwitch
-				sw.Initialize(vue, "sw" & nc.vmodel, module)
+				Dim sw As VMCheckBox
+				sw.Initialize(vue, "sw" & nc.vmodel, module).SetSwitch
 				sw.SetVModel(nc.vmodel)
 				sw.Setlabel(nc.text)
 				sw.SetValue(nc.value)
@@ -790,7 +790,7 @@ Sub ToString As String
 				sw.SetHideDetails(True)
 				sw.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
-				expanel.Container.AddControlS(sw.Switchbox, sw.ToString, 1, 1, 12, 12, 12, 12)
+				expanel.Container.AddControlS(sw.CheckBox, sw.ToString, 1, 1, 12, 12, 12, 12)
 			Case "iconbutton"
 				Dim btnicon As VMButton
 				btnicon.Initialize(vue, nc.value, module)
@@ -935,8 +935,8 @@ Sub AddCheck1(pcont As VMContainer, r As Int, c As Int, k As String, v As String
 End Sub
 
 Sub AddSwitch1(pcont As VMContainer, r As Int, c As Int, k As String, v As String)
-	Dim chk As VMSwitch = BuildSwitch(k, v)
-	pcont.AddControlS(chk.SwitchBox, chk.ToString, r, c, 6, 6, 6, 6)
+	Dim chk As VMCheckBox = BuildSwitch(k, v)
+	pcont.AddControlS(chk.CheckBox, chk.ToString, r, c, 6, 6, 6, 6)
 End Sub
 
 Sub AddCheck2(r As Int, c As Int, k As String, v As String)
@@ -946,8 +946,8 @@ Sub AddCheck2(r As Int, c As Int, k As String, v As String)
 End Sub
 
 Sub AddSwitch2(r As Int, c As Int, k As String, v As String)
-	Dim chk As VMSwitch = BuildSwitch(k, v)
-	contChecks.AddControlS(chk.SwitchBox, chk.ToString, r, c, 6, 6, 6, 6)
+	Dim chk As VMCheckBox = BuildSwitch(k, v)
+	contChecks.AddControlS(chk.CheckBox, chk.ToString, r, c, 6, 6, 6, 6)
 	hasChecks = True
 End Sub
 
@@ -982,8 +982,8 @@ private Sub BuildCheckBox(k As String, v As String) As VMCheckBox
 	Return chk
 End Sub
 
-private Sub BuildSwitch(k As String, v As String) As VMSwitch
-	Dim sw As VMSwitch
+private Sub BuildSwitch(k As String, v As String) As VMCheckBox
+	Dim sw As VMCheckBox
 	sw.Initialize(vue, "sw" & k, module)
 	sw.SetVModel(k)
 	sw.Setlabel(v)

@@ -89,7 +89,7 @@ Sub InputDialog As VMDialog
 	rg1.SetOptions(CreateMap("m":"Male","f":"Female"))
 	Dim selx As VMSelect = vm.CreateSelect("code", Me).SetItems("items").SetLabel("Code").SetVModel("user.code")
 	Dim age As VMSlider = vm.CreateSlider("age", Me).SetVModel("user.age").SetMin("0").SetMax("100").SetLabel("Age").SetThumbLabel("always").SetValue("46")
-	Dim swt As VMSwitch = vm.CreateSwitch("notif", Me).SetLabel("Receive Notifications").SetVModel("user.notif")
+	Dim swt As VMCheckBox = vm.CreateSwitch("notif", Me).SetLabel("Receive Notifications").SetVModel("user.notif")
 	Dim txtm As VMTextField = vm.CreateTextArea("about", Me).SetLabel("About Yourself").SetVModel("user.about")
 	Dim txtfn As VMTextField = vm.CreateTextField("fn", Me).SetLabel("First Name").SetVModel("user.fn").SetHint("Enter a first name").SetPersistentHint(True).SetClearable(True).SetMaxLength(50)
 	Dim ac1 As VMSelect = vm.CreateAutoComplete("ln", Me).SetVModel("user.ln").Bind(":items", "items").SetLabel("Last Name")

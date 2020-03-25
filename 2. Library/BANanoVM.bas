@@ -1315,10 +1315,10 @@ Sub CreateTab(sid As String, eventHandler As Object) As VMTab
 	Return el
 End Sub
 
-Sub CreateSwitch(sid As String, eventHandler As Object) As VMSwitch
-	Dim el As VMSwitch
+Sub CreateSwitch(sid As String, eventHandler As Object) As VMCheckBox
+	Dim el As VMCheckBox
 	el.Initialize(vue, sid, eventHandler)
-	
+	el.SetSwitch
 	Return el
 End Sub
 
@@ -1943,16 +1943,16 @@ Sub NewEmail(eventHandler As Object, bStatic As Boolean, sid As String, vmodel A
 	Return el
 End Sub
 
-Sub NewSwitch(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, svalue As Object, sunchecked As Object, bPrimary As Boolean, iTabIndex As Int) As VMSwitch
-	Dim el As VMSwitch = CreateSwitch(sid, eventHandler)
-	'el.SetStatic(bStatic)
+Sub NewSwitch(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, svalue As Object, sunchecked As Object, bPrimary As Boolean, iTabIndex As Int) As VMCheckBox
+	Dim el As VMCheckBox = CreateSwitch(sid, eventHandler)
+	el.SetStatic(bStatic)
 	el.SetVModel(vmodel)
 	el.Setlabel(slabel)
 	el.SetValue(svalue)
-	el.SetUncheckedValue(sunchecked)
 	'el.SetTrueValue(svalue)
 	el.SetPrimary(bPrimary)
 	'el.SetFalseValue(sunchecked)
+	el.SetUncheckedValue(sunchecked)
 	el.SetTabIndex(iTabIndex)
 	vue.SetData(vmodel, sunchecked)
 	Return el

@@ -21,8 +21,8 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	Dim switch As VMSwitch = vm.NewSwitch(Me, True, "switch1", "switch1", "Radio", "Yes", "No", True, 0).SetDevicePositions(1, 1, 12, 6, 6, 6)
-	cont.AddControl1(switch.SwitchBox, switch.ToString)
+	Dim switch As VMCheckBox = vm.NewSwitch(Me, True, "switch1", "switch1", "Radio", "Yes", "No", True, 0).SetDevicePositions(1, 1, 12, 6, 6, 6)
+	cont.AddControl1(switch.CheckBox, switch.ToString)
 	'
 	Dim radiogroup As VMRadioGroup = vm.NewRadioGroup(Me, True, "radiogroup", "radiogroup", "Gender", "female", CreateMap("male":"Male","female":"Female"), True, True, 0).SetDevicePositions(1, 2, 12, 6, 6, 6)
 	radiogroup.SetHorizontal(True)

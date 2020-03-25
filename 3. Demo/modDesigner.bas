@@ -16,7 +16,6 @@ Sub Process_Globals
 	Private pbtextfield As VMProperty   	'done
 	Private pbdatepicker As VMProperty  	'done
 	Private pbcheckbox As VMProperty    	'done
-	Private pbswitchbox As VMProperty   	'done
 	Private pbradiogroup As VMProperty  	'done
 	Private pbselectbox As VMProperty		'done
 	Private pbslider As VMProperty			'done
@@ -32,6 +31,9 @@ Sub Process_Globals
 	Private tabs As VMTabs
 	Private b4x As VMContainer
 	Private html5 As VMContainer
+	Private mymac As VMDevice
+	Private myipad As VMDevice
+	Private myiphone As VMDevice
 End Sub
 
 
@@ -43,7 +45,6 @@ Sub Init
 	lstBags.Add("pbtextfield")
 	lstBags.Add("pbdatepicker")
 	lstBags.Add("pbcheckbox")
-	lstBags.add("pbswitchbox")
 	lstBags.Add("pbradiogroup")
 	lstBags.add("pbselectbox")
 	lstBags.add("pbslider")
@@ -140,7 +141,12 @@ Sub Init
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
 	vm.navbar.AddButton(vm.createbutton("btnhtml", Me).SetLabel("HTML").SetTransparent(True))
+	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
+	vm.NavBar.Addicon("btnmac", "mdi-laptop-mac", "Macbook","")
+	vm.navbar.AddIcon("btnipad","mdi-tablet-ipad", "iPad", "")
+	vm.NavBar.addicon("btniphone", "mdi-cellphone-iphone", "iPhone", "")
+		'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
 	vm.NavBar.AddIcon("btnBack", "chevron_left", "Back to demo", "")
@@ -171,7 +177,6 @@ Sub Init
 	PropertyBag_TextField   'ok
 	PropertyBag_DatePicker  'ok
 	PropertyBag_CheckBox
-	PropertyBag_Switch
 	PropertyBag_RadioGroup
 	PropertyBag_Select    'ok
 	PropertyBag_Slider
@@ -186,6 +191,25 @@ Sub Init
 		
 	vm.UX
 End Sub
+
+Sub btnmac_click(e As BANanoEvent)
+	mymac.Show
+	myipad.hide
+	myiphone.hide
+End Sub
+
+Sub btnipad_click(e As BANanoEvent)
+	mymac.hide
+	myipad.show
+	myiphone.hide
+End Sub
+
+Sub btniphone_click(e As BANanoEvent)
+	mymac.hide
+	myipad.hide
+	myiphone.show
+End Sub
+	
 
 Sub btnSourceCode_click(e As BANanoEvent)
 	Dim gridsource As String = BANano.GetSessionStorage("sourcecode")
@@ -350,7 +374,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim sx As String = mattr.get("sizexlarge")
 		'
 		Dim splaceholder As String = mattr.getdefault("placeholder", "")
-		Dim brequired As Boolean = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+		Dim bisrequired As Boolean = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
 		Dim sicon As String = mattr.GetDefault("icon", "")
 		Dim shelpertext As String = mattr.getdefault("helpertext", "")
 		Dim serrortext As String = mattr.getdefault("errortext", "")
@@ -359,13 +383,12 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		imaxlen = BANano.parseint(imaxlen)
 		Dim bautogrow As Boolean = YesNoToBoolean(mattr.getdefault("isautogrow", "No"))
 		Dim svalue As String = mattr.getdefault("defaultvalue", "")
-		Dim scheckedvalue As String = mattr.getdefault("checkedvalue", "Yes")
-		Dim suncheckedvalue As String = mattr.getdefault("checkedvalue", "No")
-		Dim bPrimary As Boolean = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
+		Dim bisPrimary As Boolean = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
 		Dim optionsm As Map = CreateMap("f":"Female","m":"Male")
 		Dim bisvisible As Boolean = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 		Dim bisdisabled As Boolean = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 		Dim bontable As Boolean = YesNoToBoolean(mattr.getdefault("ontable", "No"))
+		Dim bisdark As Boolean = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 			'
 		Dim bissolo As Boolean = YesNoToBoolean(mattr.getdefault("issolo", "No"))
 		Dim bisoutlined As Boolean = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
@@ -381,6 +404,25 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim bishidedetails As Boolean = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
 		Dim bToggle As Boolean = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
 		'
+		Dim struevalue As String = mattr.getdefault("truevalue", "")
+		Dim sfalsevalue As String = mattr.GetDefault("falsevalue", "")
+		Dim bislight As Boolean = YesNoToBoolean(mattr.getdefault("islight", "No"))
+		Dim bismultiple As Boolean = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+		Dim bisinset As Boolean = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+		Dim bisindeterminate As Boolean = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
+		'
+		Dim bfitwidth As Boolean = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
+		Dim shref As String = mattr.getdefault("href","")
+		Dim starget As String = mattr.getdefault("target","")
+		Dim sto As String = mattr.getdefault("to","")
+		Dim bistext As Boolean = YesNoToBoolean(mattr.getdefault("istext", "No"))
+		Dim biconbutton As Boolean = YesNoToBoolean(mattr.getdefault("isiconbutton", "No"))
+		Dim bfabbutton As Boolean = YesNoToBoolean(mattr.getdefault("isfabbutton", "No"))
+		Dim bisdepressed As Boolean = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
+		Dim bistile As Boolean = YesNoToBoolean(mattr.getdefault("istile", "No"))
+		Dim ssize As String = mattr.GetDefault("size", "")
+		Dim sswitchloading As String = mattr.getdefault("switchloading","")
+				'
 		Dim swidth As String = mattr.getdefault("width", "")
 		Dim sheight As String = mattr.getdefault("height", "")
 		Dim sminwidth As String = mattr.getdefault("minwidth", "")
@@ -408,7 +450,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		'
 		Select Case controltype
 		Case "text"
-			Dim txt As VMTextField = vm.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, brequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
+			Dim txt As VMTextField = vm.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
 			txt.SetFieldType(sfieldtype)
 			txt.SetSolo(bissolo)
 			txt.SetOutlined(bisoutlined)
@@ -424,7 +466,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 			txt.SetHideDetails(bishidedetails)
 			ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bstatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bstatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 '
 				CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 				CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
@@ -443,7 +485,7 @@ sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bstatic}, "tx
 				sb.append($".Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "textarea"
-				Dim txta As VMTextField = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, brequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
+				Dim txta As VMTextField = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
 				txta.SetSolo(bissolo)
 				txta.SetOutlined(bisoutlined)
 				txta.SetFilled(bisfilled)
@@ -459,7 +501,7 @@ sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bstatic}, "tx
 				txta.SetAutoGrow(bautogrow)
 			ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bstatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bstatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 				CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
 				CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
@@ -476,24 +518,77 @@ sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bstatic}, "tx
 				CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
 
 				sb.append($".Container.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+				'
+			
+			Case "switch"
+				Dim swt As VMCheckBox = vm.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+				swt.SetColorIntensity(scolor, sintensity)
+				swt.SetRequired(bisrequired)
+				swt.SetDisabled(bisdisabled)
+				swt.SetDark(bisdark)
+				swt.SetDense(bisdense)
+				swt.SetHideDetails(bishidedetails)
+				swt.SetLight(bislight)
+				swt.SetLoading(sswitchloading)
+				swt.SetMultiple(bismultiple)
+				swt.SetInset(bisinset)
+				swt.SetFlat(bisflat)
+				'
+				ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+				'
+				sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bstatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
+				CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
+				CodeLine(sb, bisdisabled, "b", "swt", sname, "SetDisabled")
+				CodeLine(sb, bisdark, "b", "swt", sname, "SetDark")
+				CodeLine(sb, bisdense, "b", "swt", sname, "SetDense")
+				CodeLine(sb, bishidedetails, "b", "swt", sname, "SetHideDetails")
+				CodeLine(sb, bisinset, "b", "swt", sname, "SetInset")
+				CodeLine(sb, bislight, "b", "swt", sname, "SetLight")
+				CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
+				CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
+				CodeLine(sb, bisflat, "b", "swt", sname, "SetFlat")
+				
+				If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+				'
+				sb.append($".Container.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+				'
+		
+			Case "checkbox"
+				Dim chk As VMCheckBox = vm.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+				chk.SetColorIntensity(scolor, sintensity)
+				chk.SetRequired(bisrequired)
+				chk.SetDisabled(bisdisabled)
+				chk.SetDark(bisdark)
+				chk.SetDense(bisdense)
+				chk.SetHideDetails(bishidedetails)
+				chk.SetIndeterminate(bisindeterminate)
+				chk.SetLight(bislight)
+				chk.SetMultiple(bismultiple)
+					
+				ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-		Case "checkbox"
-			Dim chk As VMCheckBox = vm.NewCheckBox(Me, True, sname, svmodel, stitle, svalue, suncheckedvalue, bPrimary, stabindex)
-					chk.setstatic(True)
-			ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bstatic}, "chk${sname}", "${svmodel}", "${stitle}", "${svalue}", "${suncheckedvalue}", ${bPrimary}, ${stabindex})
-.Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
+				sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bstatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
+				CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
+				CodeLine(sb, bisdisabled, "b", "chk", sname, "SetDisabled")
+				CodeLine(sb, bisdark, "b", "chk", sname, "SetDark")
+				CodeLine(sb, bisdense, "b", "chk", sname, "SetDense")
+				CodeLine(sb, bishidedetails, "b", "chk", sname, "SetHideDetails")
+				CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
+				CodeLine(sb, bislight, "b", "chk", sname, "SetLight")
+				CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
+				If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+				'
+				sb.append($".Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+				'
 		Case "date"
-			Dim dp As VMDateTimePicker = vm.NewDatePicker(Me, True, sname, svmodel, stitle, brequired, splaceholder, shelpertext, serrortext, stabindex)
+			Dim dp As VMDateTimePicker = vm.NewDatePicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 			ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bstatic}, "dp${sname}", "${svmodel}", "${stitle}", ${brequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
+sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bstatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
 .Container.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "file"
-				Dim fi As VMTextField = vm.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, brequired, shelpertext, serrortext, stabindex)
+				Dim fi As VMTextField = vm.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
 				fi.SetSolo(bissolo)
 				fi.SetOutlined(bisoutlined)
 				fi.SetFilled(bisfilled)
@@ -508,7 +603,7 @@ sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bstatic}
 				fi.SetHideDetails(bishidedetails)
 			ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			
-				sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bstatic}, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bstatic}, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 				CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
 				CodeLine(sb, bisoutlined, "b", "fi", sname, "SetOutlined")
 				CodeLine(sb, bisfilled, "b", "fi", sname, "SetFilled")
@@ -534,11 +629,11 @@ sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bstatic}, "r
 .Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "select"
-			Dim sel As VMSelect = vm.NewSelectOptions(Me, True, sname, svmodel, stitle, brequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
+			Dim sel As VMSelect = vm.NewSelectOptions(Me, True, sname, svmodel, stitle, bisrequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
 					sel.setstatic(True)
 			ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${brequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
+sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
 .Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "slider"
@@ -549,14 +644,6 @@ sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "s
 sb.append($"Dim sld${sname} As VMSlider = vm.newSlider(Me, ${bstatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})
 .Container.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
-		Case "switch"
-			Dim swt As VMSwitch = vm.NewSwitch(Me, True, sname, svmodel, stitle, svalue, suncheckedvalue, bPrimary, stabindex)
-					'swt.setstatic(True)
-			ui.AddControl(swt.SwitchBox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim swt${sname} As VMSwitch = vm.NewSwitch(Me, ${bstatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${suncheckedvalue}", ${bPrimary}, ${stabindex})
-.Container.AddControl(swt${sname}.SwitchBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
 		Case "label"
 			Dim lbl As VMLabel =vm.NewLabel(True, sname, svmodel, labelsize, stitle)
 					'lbl.setstatic(True)
@@ -566,7 +653,7 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 .Container.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 '
 		Case "email"
-				Dim email As VMTextField = vm.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, brequired, sicon, shelpertext, serrortext, stabindex)
+				Dim email As VMTextField = vm.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
 				email.SetFieldType(sfieldtype)
 				email.SetSolo(bissolo)
 				email.SetOutlined(bisoutlined)
@@ -582,7 +669,7 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 				email.SetHideDetails(bishidedetails)
 			ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bstatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
+				sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bstatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
 
 				CodeLine(sb, sfieldtype, "s", "email", sname, "SetFieldType")
 				CodeLine(sb, bissolo, "b", "email", sname, "SetSolo")
@@ -601,7 +688,7 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 				sb.append($".Container.AddControl(email${sname}.textfield, email${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 '
 		Case "password"
-				Dim pwd As VMTextField = vm.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, brequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
+				Dim pwd As VMTextField = vm.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
 				pwd.SetFieldType(sfieldtype)
 				pwd.SetSolo(bissolo)
 				pwd.SetOutlined(bisoutlined)
@@ -618,7 +705,7 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 				
 			ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bstatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, ${bToggle}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bstatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 				'
 				CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
 				CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
@@ -637,7 +724,7 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 				sb.append($".Container.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "tel"
-				Dim tel As VMTextField = vm.NewTel(Me, True, sname, svmodel, stitle, splaceholder, brequired, sicon, shelpertext, serrortext, stabindex)
+				Dim tel As VMTextField = vm.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
 				tel.SetFieldType(sfieldtype)
 				tel.SetSolo(bissolo)
 				tel.SetOutlined(bisoutlined)
@@ -653,7 +740,7 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 				tel.SetHideDetails(bishidedetails)
 			ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bstatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${brequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bstatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 				CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
 				CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
@@ -672,19 +759,19 @@ sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "
 				sb.append($".Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "combo"
-			Dim cbo As VMSelect = vm.newComboOptions(Me, True, sname, svmodel,stitle, brequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
+			Dim cbo As VMSelect = vm.newComboOptions(Me, True, sname, svmodel,stitle, bisrequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
 					'cbo.setstatic(True)
 			ui.AddControl(cbo.Combo, cbo.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-sb.append($"Dim cbo${sname} As VMSelect = vm.newComboOptions(Me, ${bstatic}, "cbo${sname}", "${svmodel}", "${stitle}", ${brequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
+sb.append($"Dim cbo${sname} As VMSelect = vm.newComboOptions(Me, ${bstatic}, "cbo${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
 .Container.AddControl(cbo${sname}.Combo, cbo${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "time"
-			Dim tp As VMDateTimePicker = vm.newtimepicker(Me, True, sname, svmodel, stitle, brequired, splaceholder, shelpertext, serrortext, stabindex)
+			Dim tp As VMDateTimePicker = vm.newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 			'tp.setstatic(True)
 			ui.AddControl(tp.DateTimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-				sb.append($"Dim tp${sname} As VMDateTimePicker = vm.newtimepicker(Me, ${bstatic}, "tp${sname}", "${svmodel}", "${stitle}", ${brequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
+				sb.append($"Dim tp${sname} As VMDateTimePicker = vm.newtimepicker(Me, ${bstatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
 			.Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "profile", "image"
@@ -732,21 +819,9 @@ sb.append($"Dim auto${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bstat
 .Container.AddControl(auto${sname}.Combo, auto${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 				'
 		Case "button"
-			Dim bfitwidth As Boolean = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
-			Dim shref As String = mattr.getdefault("href","")
-			Dim starget As String = mattr.getdefault("target","")
-			Dim sto As String = mattr.getdefault("to","")
-			Dim bistext As Boolean = YesNoToBoolean(mattr.getdefault("istext", "No"))
-			Dim biconbutton As String = YesNoToBoolean(mattr.getdefault("isiconbutton", "No"))
-			Dim bfabbutton As String = YesNoToBoolean(mattr.getdefault("isfabbutton", "No"))
-			Dim bisdepressed As String = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
-			Dim bisdark As String = YesNoToBoolean(mattr.getdefault("isdark", "No"))
-			Dim bistile As String = YesNoToBoolean(mattr.getdefault("istile", "No"))
-			Dim ssize As String = mattr.GetDefault("size", "")
-			
 			If biconbutton Then stitle = ""
 			If bfabbutton Then stitle = ""
-			Dim btn As VMButton = vm.NewButton(Me, True, sname, stitle, True, bPrimary, False, bfitwidth)
+			Dim btn As VMButton = vm.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
 			btn.Sethref(shref)
 			btn.SetTarget(starget)
 			btn.setto(sto)
@@ -782,7 +857,7 @@ sb.append($"Dim auto${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bstat
 			ui.AddControl(btn.button, btn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'build the source code
 				
-sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "${sname}", "${stitle}", True, ${bPrimary}, False, ${bfitwidth})"$).append(CRLF)
+sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
 If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
 				If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
 				If sto <> "" Then sb.append($"btn${sname}.setto("${sto}")"$).append(CRLF)
@@ -825,8 +900,24 @@ sb.append($".Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${sr
 	'save grid source code
 	BANano.SetSessionStorage("sourcecode", sb.tostring)
 	BANano.SetSessionStorage("html", shtml)
+	'
+	mymac = vm.CreateDevice("mymac", Me).SetMacbook
+	mymac.SetStatic(shtml)
+	'
+	myipad = vm.CreateDevice("myipad", Me).SetIpad
+	myipad.hide
+	myipad.SetStatic(shtml)
+	'
+	myiphone = vm.CreateDevice("myiphone", Me).SetIphoneX
+	myiphone.hide
+	myiphone.SetStatic(shtml)
+		
+	dnd.AddComponent(1, 1, mymac.tostring)
+	dnd.AddComponent(1, 1, myipad.tostring)
+	dnd.AddComponent(1, 1, myiphone.tostring)
+	
 	'drag and drop preview area
-	dnd.AddComponent(1, 1, shtml)
+	'dnd.AddComponent(1, 1, shtml)
 	'b4x code
 	Dim pc As VMPrism = vm.CreatePrism("b4xcode", Me)
 	pc.SetLanguage("vb").SetCode(sb.tostring)
@@ -1054,6 +1145,7 @@ Sub DesignLayout
 	dnd = vm.CreateContainer("dnd", Me).SetFluid(True)
 	dnd.AddRows(1).AddColumns12
 	'
+	'
 	b4x = vm.CreateContainer("b4x", Me).SetFluid(True)
 	b4x.AddRows(1).AddColumns12
 	'
@@ -1144,10 +1236,11 @@ Sub mycomponents_click(e As BANanoEvent)
 		pbslider.hideitem("id")
 		pbslider.Hideitem("controltype")
 	Case "switch"
-		ShowBag("pbswitchbox")
-		pbswitchbox.SetDefaults
-		pbswitchbox.hideitem("id")
-		pbswitchbox.Hideitem("controltype")
+		ShowBag("pbcheckbox")
+		pbcheckbox.SetDefaults
+		pbcheckbox.hideitem("id")
+		vm.setdata("controltype", "switch")
+		pbcheckbox.Hideitem("controltype")
 	Case "label"
 		ShowBag("pblabel")
 		pblabel.SetDefaults
@@ -1693,36 +1786,6 @@ Sub PropertyBag_Icon
 End Sub
 #End Region
 
-#Region Switch Property Bag
-Sub PropertyBag_Switch
-	vm.setdata("pbswitchbox", False)
-	pbswitchbox = vm.CreateProperty("ppbswitchbox", Me)
-	pbswitchbox.SetVShow("pbswitchbox")
-	pbswitchbox.AddHeading("d","Details")
-	pbswitchbox.AddText("d","id","ID","","")
-	pbswitchbox.AddText("d", "controltype", "Type", "", "switchbox")
-	pbswitchbox.AddText("d","vmodel","VModel","","")
-	pbswitchbox.AddText("d","label","Label","","")
-	pbswitchbox.AddText("d","checkedvalue","Checked Value","","")
-	pbswitchbox.AddText("d","uncheckedvalue","Unchecked Value","","")
-	
-	pbswitchbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
-	pbswitchbox.AddNumber("d","tabindex","Tab Index","","")
-	'
-	pbswitchbox.AddCheck2(1, 1, "isrequired", "Required")
-	pbswitchbox.AddCheck2(1, 2, "isprimary", "Primary")
-	pbswitchbox.AddCheck2(2, 1, "isvisible", "Visible")
-	pbswitchbox.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbswitchbox.AddCheck2(3, 1, "ontable", "On Table")
-	pbswitchbox.SetChecks("d")
-	
-	pbswitchbox.AddMatrix("d")
-	pbswitchbox.AddButton("d", "btnSaveSwitch", "Save", "savePropertyBag")
-	pbswitchbox.AddButton("d", "btnDeleteSwitch", "Delete", "deletePropertyBag")
-	vm.container.AddComponent(1, 3, pbswitchbox.tostring)
-End Sub
-#End Region
-
 #Region Image Property Bag
 Sub PropertyBag_Image
 	vm.setdata("pbimage", False)
@@ -1764,20 +1827,30 @@ Sub PropertyBag_CheckBox
 	pbcheckbox.SetVShow("pbcheckbox")
 	pbcheckbox.AddHeading("d","Details")
 	pbcheckbox.AddText("d","id","ID","","")
-	pbcheckbox.AddText("d", "controltype", "Type", "", "checkbox")
+	pbcheckbox.AddSelect("d", "controltype", "Type", controltypes)
+	pbcheckbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbcheckbox.AddText("d","vmodel","VModel","","")
 	pbcheckbox.AddText("d","label","Label","","")
-	pbcheckbox.AddText("d","checkedvalue","Checked Value","","")
-	pbcheckbox.AddText("d","uncheckedvalue","Unchecked Value","","")
-	
-	pbcheckbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
+	pbcheckbox.AddText("d","truevalue","True Value","","Yes")
+	pbcheckbox.AddText("d","falsevalue","False Value","","No")
 	pbcheckbox.AddNumber("d","tabindex","Tab Index","","")
+	pbcheckbox.AddSelect("d","color","Color", vm.ColorOptions)
+	pbcheckbox.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
+	pbcheckbox.AddSelect("d","switchloading","Loading", vm.ColorOptions)
 	'
 	pbcheckbox.AddCheck2(1, 1, "isrequired", "Required")
 	pbcheckbox.AddCheck2(1, 2, "isprimary", "Primary")
 	pbcheckbox.AddCheck2(2, 1, "isvisible", "Visible")
 	pbcheckbox.AddCheck2(2, 2, "isdisabled", "Disabled")
 	pbcheckbox.AddCheck2(3, 1, "ontable", "On Table")
+	pbcheckbox.AddCheck2(3, 2, "isdark", "Dark")
+	pbcheckbox.AddCheck2(4, 1, "isdense", "Dense")
+	pbcheckbox.AddCheck2(4, 2, "ishidedetails", "Hide Details")
+	pbcheckbox.AddCheck2(5, 1, "isindeterminate", "Indeterminate")
+	pbcheckbox.AddCheck2(5, 2, "islight", "Light")
+	pbcheckbox.AddCheck2(6, 1, "ismultiple", "Multiple")
+	pbcheckbox.AddCheck2(6, 2, "isinset", "Inset")
+	pbcheckbox.AddCheck2(7, 1, "isflat", "Flat")
 	pbcheckbox.SetChecks("d")
 	'
 	pbcheckbox.AddMatrix("d")
@@ -1985,7 +2058,7 @@ Sub SavePropertyBag
 	Case "slider"
 		props = pbslider.properties
 	Case "switch"
-		props = pbswitchbox.properties
+		props = pbcheckbox.properties
 	Case "label"
 		props = pblabel.properties
 	Case "profile", "image"
