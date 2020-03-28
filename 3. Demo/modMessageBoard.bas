@@ -20,7 +20,7 @@ Sub Code
 	cont.Hide
 	cont.AddRows(1).AddColumns(1, 12, 8, 6, 6)
 	'
-	cont.SetJustifyRC(1, vm.JUSTIFY_CENTER)
+	cont.SetJustifyRC(1, 0, vm.JUSTIFY_CENTER)
 	'
 	Dim mb As VMCard = vm.createcard("mb", Me)
 	mb.Toolbar.SetColorIntensity(vm.COLOR_ORANGE, vm.INTENSITY_LIGHTEN1).SetDark(True)

@@ -21,11 +21,11 @@ Sub Code
 	'
 	cont.AddRows(4).AddColumns(2, 12, 6, 6, 6)
 	'
-	vm.CreateIcon("icon1", Me, "home").AddToContainer(cont, 1, 1)
+	vm.CreateIcon("icon1", Me).SetText("home").AddToContainer(cont, 1, 1)
 	'
-	vm.CreateIcon("icon2", Me, "add").SetColor("red").SetLarge(True).AddToContainer(cont, 1, 2)
+	vm.CreateIcon("icon2", Me).SetText("add").SetColor("red").SetLarge(True).AddToContainer(cont, 1, 2)
 	'
-	vm.CreateIcon("icon3", Me, "mdi-email").SetColor("teal").SetXLarge(True).AddToContainer(cont, 2, 1)
+	vm.CreateIcon("icon3", Me).SetText("mdi-email").SetColor("teal").SetXLarge(True).AddToContainer(cont, 2, 1)
 	'
 	vm.CreateButton("btn1", Me).SetLabel("Accept").SetColor("purple").AddIcon("add", "left", "").AddToContainer(cont, 2, 2)
 	

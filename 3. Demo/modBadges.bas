@@ -27,7 +27,7 @@ Sub Code
 	cont.AddComponent(1, 1, im.ToString)
 	
 	Dim b1 As VMBadge = vm.CreateBadge("b1", Me).SetColor("green").SetOverlap(True).SetValue("messages").SetContent("messages")
-	Dim icon As VMIcon = vm.CreateIcon("icon1", Me, "mdi-email").SetLarge(True)
+	Dim icon As VMIcon = vm.CreateIcon("icon1", Me).SetText("mdi-email").SetLarge(True)
 	b1.AddComponent(icon.ToString)
 	cont.AddComponent(1, 2, b1.ToString)
 	'

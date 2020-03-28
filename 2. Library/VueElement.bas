@@ -115,3 +115,8 @@ Sub CreateElement
 		End If
 	End Select
 End Sub
+
+Sub SetInnerHTML(innerHTML As String) As VueElement
+	domProps.Put("innerHTML", innerHTML)
+	Return Me
+End Sub

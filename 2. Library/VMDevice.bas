@@ -71,6 +71,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+'the image should be centered on the RC
+Sub SetCenterOnParent(b As Boolean) As VMDevice
+	If b = False Then Return Me
+	Device.CenterOnParent = True
+	Return Me
+End Sub
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMDevice
 	Device.SetRC(sRow, sCol)

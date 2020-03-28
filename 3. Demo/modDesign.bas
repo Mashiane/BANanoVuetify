@@ -78,7 +78,7 @@ Sub Code
 	Dim lbl As VMLabel = vm.NewLabel(True, "labelz", "labelz", vm.SIZE_H1, "This is H1").SetDevicePositions(6, 2, 12, 6, 6, 6)
 	cont.AddControl1(lbl.Label, lbl.ToString)
 '	'
-	Dim icon As VMIcon = vm.NewIcon(Me, True, "icon", "mdi-chevron-right", vm.ICON_LARGE, vm.COLOR_AMBER).SetDevicePositions(7, 1, 12, 6, 6, 6)
+	Dim icon As VMIcon = vm.NewIcon(Me, True, "icon", "mdi-chevron-right", vm.ICON_LARGE, vm.COLOR_AMBER, "").SetDevicePositions(7, 1, 12, 6, 6, 6)
 	icon.SetDark(True)
 	cont.AddControl1(icon.Icon, icon.ToString)
 	'

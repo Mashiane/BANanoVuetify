@@ -79,19 +79,7 @@ Sub Class_Globals
 	Public UncheckedValue As Object
 	Public Value As Object
 	Private bStatic As Boolean
-End Sub
-
-Sub IsValidID(idName As String) As Boolean
-	If idName = "" Then Return True
-	Dim slen As Int = idName.Length
-	Dim i As Int = 0
-	For i = 0 To slen - 1
-		Dim mout As String = idName.CharAt(i)
-		If "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".IndexOf(mout) = -1 Then
-			Return False
-		End If
-	Next
-	Return True
+	Public CenterOnParent As Boolean
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -120,6 +108,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	bUsesRequired = False
 	bUsedDisabled = False
 	bUsesShow = False
+	CenterOnParent = False
 	vmodel = ""
 	
 	showKey = $"${ID}show"$
@@ -179,6 +168,20 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Exclude = False
 	Return Me
 End Sub
+
+Sub IsValidID(idName As String) As Boolean
+	If idName = "" Then Return True
+	Dim slen As Int = idName.Length
+	Dim i As Int = 0
+	For i = 0 To slen - 1
+		Dim mout As String = idName.CharAt(i)
+		If "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".IndexOf(mout) = -1 Then
+			Return False
+		End If
+	Next
+	Return True
+End Sub
+
 
 Sub SetStatic(b As Boolean) As VMElement
 	bStatic = b

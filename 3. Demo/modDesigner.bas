@@ -34,13 +34,15 @@ Sub Process_Globals
 	Private mymac As VMDevice
 	Private myipad As VMDevice
 	Private myiphone As VMDevice
+	Private iconsizes As Map
 End Sub
 
 
 Sub Init
 	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button")
 	fieldtypes = CreateMap("string":"string", "int":"int", "bool":"bool", "date":"date","dbl":"float")
-				
+	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
+	'
 	lstBags.Initialize
 	lstBags.Add("pbtextfield")
 	lstBags.Add("pbdatepicker")
@@ -73,6 +75,7 @@ Sub Init
 	avatarMap.put("profile", "./assets/profilepic.png")
 	avatarMap.put("image", "./assets/image.png")
 	avatarMap.put("button", "./assets/button.png")
+	avatarMap.put("icon", "./assets/icon.png")
 	
 	bHasBorder = False
 	bShowMatrix = False
@@ -193,18 +196,21 @@ Sub Init
 End Sub
 
 Sub btnmac_click(e As BANanoEvent)
+	vm.setdata("devspace", 0)
 	mymac.Show
 	myipad.hide
 	myiphone.hide
 End Sub
 
 Sub btnipad_click(e As BANanoEvent)
+	vm.setdata("devspace", 0)
 	mymac.hide
 	myipad.show
 	myiphone.hide
 End Sub
 
 Sub btniphone_click(e As BANanoEvent)
+	vm.setdata("devspace", 0)
 	mymac.hide
 	myipad.hide
 	myiphone.show
@@ -382,7 +388,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		If imaxlen = "" Then imaxlen = "0"
 		imaxlen = BANano.parseint(imaxlen)
 		Dim bautogrow As Boolean = YesNoToBoolean(mattr.getdefault("isautogrow", "No"))
-		Dim svalue As String = mattr.getdefault("defaultvalue", "")
+		Dim svalue As String = mattr.getdefault("value", "")
 		Dim bisPrimary As Boolean = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
 		Dim optionsm As Map = CreateMap("f":"Female","m":"Male")
 		Dim bisvisible As Boolean = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
@@ -403,6 +409,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim bclearable As Boolean = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
 		Dim bishidedetails As Boolean = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
 		Dim bToggle As Boolean = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
+		Dim bcenteronparent As Boolean = YesNoToBoolean(mattr.getdefault("centeronparent", "No"))
 		'
 		Dim struevalue As String = mattr.getdefault("truevalue", "")
 		Dim sfalsevalue As String = mattr.GetDefault("falsevalue", "")
@@ -410,6 +417,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim bismultiple As Boolean = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
 		Dim bisinset As Boolean = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 		Dim bisindeterminate As Boolean = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
+		Dim bisitalic As Boolean = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
 		'
 		Dim bfitwidth As Boolean = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
 		Dim shref As String = mattr.getdefault("href","")
@@ -437,6 +445,15 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim stextcolor As String = mattr.getdefault("textcolor", "")
 		Dim stextintensity As String = mattr.getdefault("textintensity", "")
 		'
+		Dim ssrc As String = mattr.getdefault("src", "")
+		Dim slazysrc As String = mattr.getdefault("lazysrc", "")
+		Dim salt As String = mattr.getdefault("alt","")
+		Dim sborderradius As String = mattr.getdefault("borderradius","")
+		Dim sborderwidth As String = mattr.getdefault("borderwidth","")
+		Dim sbordercolor As String = mattr.getdefault("bordercolor", "")
+		Dim sborderstyle As String = mattr.getdefault("borderstyle", "")
+		Dim saspectratio As String = mattr.getdefault("aspectratio", "")
+			
 		Dim bShowLabel As Boolean = True
 		Dim bLabelOnTop As Boolean = True
 		Dim bMultiple As Boolean = False
@@ -445,7 +462,6 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim bReturnObject As Boolean = False
 		Dim smaxvalue As String = "0"
 		Dim sminvalue As String = "100"
-		Dim labelsize As String = vm.SIZE_P
 		Dim bstatic As Boolean = True
 		'
 		Select Case controltype
@@ -645,12 +661,28 @@ sb.append($"Dim sld${sname} As VMSlider = vm.newSlider(Me, ${bstatic}, "sld${sna
 .Container.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "label"
-			Dim lbl As VMLabel =vm.NewLabel(True, sname, svmodel, labelsize, stitle)
-					'lbl.setstatic(True)
+			Dim slabelsize As String = mattr.GetDefault("labelsize", "")
+			Dim sdisplay As String = mattr.getdefault("display", "")
+			Dim salign As String = mattr.getdefault("align", "")
+			Dim sfontweight As String = mattr.getdefault("fontweight", "")
+			'
+			Dim lbl As VMLabel =vm.NewLabel(True, sname, svmodel, slabelsize, svalue)
+			lbl.AddClass(sdisplay)
+			lbl.AddClass(salign)
+			lbl.AddClass(sfontweight)
+			lbl.SetItalic(bisitalic)
+			lbl.SetTextColorIntensity(stextcolor, stextintensity)
+			
 			ui.AddControl(lbl.Label, lbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "${svmodel}", "${labelsize}", "${stitle}")
-.Container.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+			sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "${svmodel}", "${slabelsize}", "${svalue}")"$).append(CRLF)
+			CodeLine(sb, sdisplay, "s", "lbl", sname, "AddClass")
+			CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
+			CodeLine(sb, sfontweight, "s", "lbl", sname, "AddClass")
+			CodeLine(sb, bisitalic, "b", "lbl", sname, "SetItalic")
+			If stextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
+
+			sb.append($".Container.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 '
 		Case "email"
 				Dim email As VMTextField = vm.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
@@ -774,15 +806,22 @@ sb.append($"Dim cbo${sname} As VMSelect = vm.newComboOptions(Me, ${bstatic}, "cb
 				sb.append($"Dim tp${sname} As VMDateTimePicker = vm.newtimepicker(Me, ${bstatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
 			.Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
+		Case "icon"
+			Dim icn As VMIcon = vm.NewIcon(Me, True, sname, sicon, ssize, scolor, sintensity)
+			icn.SetDark(bisdark)
+			icn.SetDense(bisdense)
+			icn.SetDisabled(bisdisabled)
+			icn.SetCenterOnParent(bcenteronparent)
+			ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			'
+			sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${sicon}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
+			CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
+			CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
+			CodeLine(sb, bisdisabled, "b", "icn", sname, "SetDisabled")
+			CodeLine(sb, bcenteronparent, "b", "icn", sname, "SetCenterOnParent")
+			sb.append($".Container.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+			'
 		Case "profile", "image"
-			Dim ssrc As String = mattr.getdefault("src", "")
-			Dim slazysrc As String = mattr.getdefault("lazysrc", "")
-			Dim salt As String = mattr.getdefault("alt","")
-			Dim sborderradius As String = mattr.getdefault("borderradius","")
-			Dim sborderwidth As String = mattr.getdefault("borderwidth","")
-			Dim sbordercolor As String = mattr.getdefault("bordercolor", "")
-			Dim sborderstyle As String = mattr.getdefault("borderstyle", "")
-			Dim saspectratio As String = mattr.getdefault("aspectratio", "")
 						'	
 			Dim img As VMImage = vm.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
 			img.SetLazysrc(slazysrc)
@@ -795,6 +834,8 @@ sb.append($"Dim cbo${sname} As VMSelect = vm.newComboOptions(Me, ${bstatic}, "cb
 			img.SetMaxWidth(smaxwidth)
 			img.SetMinHeight(sminheight)
 			img.SetMaxHeight(smaxheight)
+			img.SetCenterOnParent(bcenteronparent)
+				
 			ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
 sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bstatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")"$).append(CRLF)
@@ -808,6 +849,7 @@ sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bstatic}, "img${sname
 				CodeLine(sb, smaxwidth, "s", "img", sname, "SetMaxWidth")
 				CodeLine(sb, sminheight, "s", "img", sname, "SetMinHeight")
 				CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
+				CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
 sb.append($".Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "auto"
@@ -1144,6 +1186,9 @@ Sub DesignLayout
 	'
 	dnd = vm.CreateContainer("dnd", Me).SetFluid(True)
 	dnd.AddRows(1).AddColumns12
+	dnd.SetJustifyRC(1, 1, "center")
+	dnd.SetAlignRC(1, 1, "center")
+	dnd.AddClassRC(1, 1, Array("mx-auto"))
 	'
 	'
 	b4x = vm.CreateContainer("b4x", Me).SetFluid(True)
@@ -1306,12 +1351,18 @@ Sub mycomponents_click(e As BANanoEvent)
 		vm.setdata("controltype", "button")
 		pbbutton.hideitem("id")
 		pbbutton.Hideitem("controltype")
+	Case "icon"
+		ShowBag("pbicon")
+		pbicon.SetDefaults
+		vm.setdata("controltype", "icon")
+		pbicon.hideitem("id")
+		pbicon.Hideitem("controltype")
 	End Select
 	'
 	Dim mattr As Map = BANano.FromJson(sattributes)
 	'DONT OVERWRITE
 	Select Case stypeof
-		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button"
+		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon"
 		mattr.remove("controltype")		
 	End Select
 	vm.setstate(mattr)
@@ -1343,7 +1394,9 @@ Sub DisplayPanel As VMExpansionPanel
 	'
 	Dim image As VMImage = ToolboxImage("image", "./assets/image.png", "Image")
 	grd.Container.AddComponent(1,2,image.tostring)
-	
+	'
+	Dim icon As VMImage = ToolboxImage("icon", "./assets/icon.png", "Icon")
+	grd.Container.AddComponent(1,3,icon.tostring)
 
 	Return grd
 End Sub
@@ -1565,7 +1618,7 @@ Sub ItemDrop(e As BANanoEvent)
 			rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 			vm.pageresume
 		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", _
-			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button"
+			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
 			BANano.SetLocalStorage("selectedpanel", 2)
 			'
 			Dim rowPos As Int = 0
@@ -1616,8 +1669,13 @@ Sub ItemDrop(e As BANanoEvent)
 			attr.put("isautogrow","No")
 			attr.put("ontable", "Yes")
 			attr.put("maxlength", 0)
+			attr.Put("icon", "mdi-account-circle")
+			attr.put("centeronparent", "No")
 			'
 			Select Case savedid
+			Case "label"
+				attr.put("labelsize", "p")
+				attr.put("value", slabel)
 			Case "password"
 				attr.put("istoggle", "Yes")
 			Case "profile"
@@ -1626,11 +1684,13 @@ Sub ItemDrop(e As BANanoEvent)
 				attr.put("bordercolor", "black")
 				attr.put("borderstyle", "solid")
 				attr.put("src", "./assets/sponge.png")
-				attr.put("width", "150")
-				attr.put("height", "150")
+				attr.put("width", "100")
+				attr.put("height", "100")
 				BANano.SetLocalStorage("selectedpanel", 1)
 			Case "image"
 				attr.put("src", "./assets/bird.jpg")
+				BANano.SetLocalStorage("selectedpanel", 1)
+			Case "icon"
 				BANano.SetLocalStorage("selectedpanel", 1)
 			Case "button"
 				BANano.SetLocalStorage("selectedpanel", 3)
@@ -1736,7 +1796,7 @@ Sub PropertyBag_Button
 	pbbutton.AddSelect("d","textcolor","Text Color", vm.ColorOptions)
 	pbbutton.AddSelect("d","textintensity","Text Intensity", vm.IntensityOptions)
 	'
-	pbbutton.AddSelect("d", "size", "Size", CreateMap("":"Normal","small":"Small", "large":"Large", "x-small":"X-Small", "x-large":"X-Large"))
+	pbbutton.AddSelect("d", "size", "Size", iconsizes)
 	pbbutton.AddNumber("d","tabindex","Tab Index","","")
 	'
 	pbbutton.AddCheck2(1, 1, "istext", "Text")
@@ -1750,6 +1810,8 @@ Sub PropertyBag_Button
 	pbbutton.AddCheck2(5, 1, "isdisabled", "Disabled")
 	pbbutton.AddCheck2(5, 2, "isdark", "Dark")
 	pbbutton.AddCheck2(6, 1, "istile", "Tile")
+	pbbutton.AddCheck2(6, 2, "centeronparent", "Center on Parent")
+	
 	pbbutton.SetChecks("d")
 	'
 	pbbutton.AddHeightWidths("d")
@@ -1769,14 +1831,17 @@ Sub PropertyBag_Icon
 	pbicon.AddHeading("d","Details")
 	pbicon.AddText("d","id","ID","","")
 	pbicon.AddText("d", "controltype", "Type", "", "icon")
-	pbicon.AddText("d","vmodel","VModel","","")
-	pbicon.AddText("d","icon","Icon Name","","thumb_up")
-	pbicon.AddSelect("d", "iconsize", "Icon Size", CreateMap("small":"small", "large":"large", "x-small":"x-small", "x-large":"x-large"))
-	
-	pbicon.AddNumber("d","tabindex","Tab Index","","")
-	'
+	pbicon.AddText("d","vmodel","ID","","")
+	pbicon.AddText("d","icon","Icon Name","","mdi-account-circle")
+	pbicon.AddSelect("d", "size", "Icon Size", iconsizes)
+	pbicon.AddSelect("d","color","Color", vm.ColorOptions)
+	pbicon.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
 	pbicon.AddCheck2(1, 1, "visible", "Visible")
 	pbicon.AddCheck2(1, 2, "ontable", "On Table")
+	pbicon.AddCheck2(2, 1, "isdark", "Dark")
+	pbicon.AddCheck2(2, 2, "isdense", "Dense")
+	pbicon.AddCheck2(3, 1, "isdisabled", "Disabled")
+	pbicon.AddCheck2(3, 2, "centeronparent", "Center on Parent")
 	pbicon.SetChecks("d")
 	
 	pbicon.AddMatrix("d")
@@ -1794,7 +1859,6 @@ Sub PropertyBag_Image
 	pbimage.AddHeading("d","Details")
 	pbimage.AddText("d","id","ID","","")
 	pbimage.AddText("d", "controltype", "Type", "", "image")
-	pbimage.AddSelect("d", "controltype", "Type", controltypes)
 	pbimage.AddText("d","vmodel","VModel","","")
 	pbimage.AddText("d","src","Src","","./assets/sponge.png")
 	pbimage.AddText("d","lazysrc","Lazy Src","","")
@@ -1810,6 +1874,7 @@ Sub PropertyBag_Image
 	'
 	pbimage.AddCheck2(1, 1, "visible", "Visible")
 	pbimage.AddCheck2(1, 2, "ontable", "On Table")
+	pbimage.AddCheck2(2, 1, "centeronparent", "Center on Parent")
 	pbimage.SetChecks("d")
 	
 	pbimage.AddMatrix("d")
@@ -1875,7 +1940,6 @@ Sub PropertyBag_RadioGroup
 	
 	pbradiogroup.AddTextArea("d","keys","Keys (,)","", "1,2,3")
 	pbradiogroup.AddTextArea("d","values","Values (,)","", "One,Two,Three")
-	pbradiogroup.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbradiogroup.AddNumber("d","tabindex","Tab Index","","")
 	'
 	pbradiogroup.AddCheck2(1, 1, "showlabel", "Show Label")
@@ -1901,11 +1965,11 @@ Sub PropertyBag_Select
 	pbselectbox.AddHeading("d","Details")
 	pbselectbox.AddText("d","id","ID","","")
 	pbselectbox.AddSelect("d", "controltype", "Type", controltypes)
+	pbselectbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbselectbox.AddText("d","vmodel","VModel","","")
 	pbselectbox.AddText("d","label","Label","","")
-	pbselectbox.AddText("d", "defaultvalue", "Default Value","","")
+	pbselectbox.AddText("d", "value", "Value","","")
 	pbselectbox.AddText("d","placeholder","Placeholder","","")	
-	pbselectbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbselectbox.AddNumber("d","tabindex","Tab Index","","")
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
 	pbselectbox.AddText("d","errortext","Error Text","","")
@@ -1941,11 +2005,19 @@ Sub PropertyBag_Label
 	pblabel.AddText("d","id","ID","","")
 	pblabel.AddText("d", "controltype", "Type", "","label")
 	pblabel.AddText("d","vmodel","VModel","","")
-	pblabel.AddSelect("d", "size", "Size", CreateMap("p":"Paragraph","h1":"H1", "h2":"H2", "h3":"H3", "h4":"H4", "h5":"H5","h6":"H6","span":"span","blockquote":"blockquote"))
-	pblabel.AddTextArea("d","text","Text","","")
+	pblabel.AddSelect("d", "labelsize", "Size", CreateMap("p":"Paragraph","h1":"H1", "h2":"H2", "h3":"H3", "h4":"H4", "h5":"H5","h6":"H6","span":"span","blockquote":"blockquote"))
 	
-	pblabel.AddNumber("d","tabindex","Tab Index","","")
-	pblabel.AddCheck("d", "visible","Visible", "Yes")
+	pblabel.AddTextArea("d","value","Text","","")
+	pblabel.AddSelect("d","textcolor","Text Color", vm.ColorOptions)
+	pblabel.AddSelect("d","textintensity","Text Intensity", vm.IntensityOptions)
+	pblabel.AddSelect("d", "display", "Display", vm.DisplayOptions)
+	pblabel.AddSelect("d", "align", "Text Align", vm.TextAlignmentOptions)
+	pblabel.AddSelect("d", "fontweight", "Font Weight", vm.FontWeightOptions)
+	
+	pblabel.AddCheck2(1, 1, "visible", "Visible")
+	pblabel.AddCheck2(1, 2, "ontable", "On Table")
+	pblabel.AddCheck2(2, 1, "isitalic", "Italic")
+	pblabel.SetChecks("d")
 	pblabel.AddMatrix("d")
 	'
 	pblabel.AddButton("d", "btnSaveLabel", "Save", "savePropertyBag")
@@ -1967,10 +2039,8 @@ Sub PropertyBag_TextField
 	pbtextfield.AddText("d","vmodel","VModel","","")
 	pbtextfield.AddText("d","label","Label","","")
 	pbtextfield.AddText("d","icon","Icon Name","","")
-	pbtextfield.AddText("d", "defaultvalue", "Default Value","","")
-	pbtextfield.AddText("d","placeholder","Placeholder","","")
-	
-	
+	pbtextfield.AddText("d", "value", "Value","","")
+	pbtextfield.AddText("d", "placeholder","Placeholder","","")
 	pbtextfield.AddNumber("d","tabindex","Tab Index","","")
 	pbtextfield.AddTel("d","maxlength","Max Length/Counter","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
@@ -2065,6 +2135,8 @@ Sub SavePropertyBag
 		props = pbimage.Properties
 	Case "button"
 		props = pbbutton.properties
+	Case "icon"
+		props = pbicon.properties
 	End Select
 	'
 	Dim sid As String = props.get("id")
@@ -2076,8 +2148,7 @@ Sub SavePropertyBag
 	'
 	'is vmodel valid
 	Select Case svmodel
-	Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", _
-	"button"
+	Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
 		vm.SnackBar.SetColor("red")
 		vm.SnackBar.SetTop(True)
 		vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")

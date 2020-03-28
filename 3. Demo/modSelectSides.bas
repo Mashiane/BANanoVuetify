@@ -22,6 +22,7 @@ Sub Code
 	cont.AddRows(5).AddColumns12
 	'
 	Dim ss As VMSelectSides = vm.CreateSelectSides("ss1", Me).SetVModel("myitems")
+	ss.SetStatic(True)
 	ss.SetSearch(False)
 	ss.SetTotal(False)
 	ss.SetDataList(Array("The Mash", "loves", "BANanoVuetify", "wrapping", "libraries"))

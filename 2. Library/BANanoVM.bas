@@ -31,7 +31,10 @@ Sub Class_Globals
 	Public Alert As VMDialog
 	Private arcCounter As BANanoObject
 	Private circleCounter As BANanoObject
-	Private vueSelectSides As BANanoObject
+	'Private vueSelectSides As BANanoObject
+	Public DisplayOptions As Map
+	Public TextAlignmentOptions As Map
+	Public FontWeightOptions As Map
 	
 	'Public zircleBO As BANanoObject
 	'Public zircle As BANanoObject
@@ -192,8 +195,8 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	circleCounter.Initialize("circleCounter")
 	vue.AddComponentBO("circle-counter", circleCounter)
 	'
-	vueSelectSides.Initialize("vueSelectSides")
-	vue.AddComponentBO("vue-select-sides", vueSelectSides)
+	'vueSelectSides.Initialize("vueSelectSides")
+	'vue.AddComponentBO("vue-select-sides", vueSelectSides)
 	'
 	'initialize the pages
 	Pages.initialize
@@ -379,13 +382,13 @@ Sub CreateTextArea(eID As String, eventHandler As Object) As VMTextField
 	el.SetTextArea
 	Return el
 End Sub
-
-
-Sub CreateSelectSides(eID As String, eventHandler As Object) As VMSelectSides
-	Dim el As VMSelectSides
-	el.Initialize(vue, eID, eventHandler)
-	Return el
-End Sub
+'
+'
+'Sub CreateSelectSides(eID As String, eventHandler As Object) As VMSelectSides
+'	Dim el As VMSelectSides
+'	el.Initialize(vue, eID, eventHandler)
+'	Return el
+'End Sub
 
 Sub CreateProperty(eID As String, eventHandler As Object) As VMProperty
 	Dim el As VMProperty
@@ -891,6 +894,37 @@ Sub StrParse(Delim As String, InputString As String) As List
 End Sub
 
 private Sub InitColors
+	DisplayOptions.Initialize
+	DisplayOptions.Put("", "None")
+	DisplayOptions.Put("display-4", "Display 4")
+	DisplayOptions.Put("display-3", "Display 3")
+	DisplayOptions.Put("display-2", "Display 2")
+	DisplayOptions.Put("display-1", "Display 1")
+	DisplayOptions.Put("headline", "Headline")
+	DisplayOptions.Put("title", "Title")
+	DisplayOptions.Put("subtitle-1", "Sub Title 1")
+	DisplayOptions.Put("subtitle-2", "Sub Title 2")
+	DisplayOptions.Put("body-1", "Body 2")
+	DisplayOptions.Put("body-2", "Body 1")
+	DisplayOptions.Put("caption", "Caption")
+	DisplayOptions.Put("overline", "Overline")
+	'
+	TextAlignmentOptions.Initialize 
+	TextAlignmentOptions.put("", "None")
+	TextAlignmentOptions.put("text-left", "Left")
+	TextAlignmentOptions.put("text-center", "Center")
+	TextAlignmentOptions.put("text-right", "Right")
+	TextAlignmentOptions.put("text-justify", "Justify")
+	'
+	FontWeightOptions.Initialize
+	FontWeightOptions.Put("", "None")
+	FontWeightOptions.Put("font-weight-black", "Black")
+	FontWeightOptions.Put("font-weight-bold","Bold")
+	FontWeightOptions.Put("font-weight-medium", "Medium")
+	FontWeightOptions.Put("font-weight-regular", "Regular")
+	FontWeightOptions.Put("font-weight-light", "Light")
+	FontWeightOptions.Put("font-weight-thin", "Thin")
+	'	
 	IntensityOptions.Initialize
 	IntensityOptions.put("","Normal")
 	IntensityOptions.put("lighten-1","Lighten 1")
@@ -1747,10 +1781,9 @@ Sub CreateDateTimePicker(sid As String, eventHandler As Object) As VMDateTimePic
 	Return el
 End Sub
 
-Sub CreateIcon(sid As String, moduleObj As Object, iconName As String) As VMIcon
+Sub CreateIcon(sid As String, moduleObj As Object) As VMIcon
 	Dim el As VMIcon
 	el.Initialize(vue, sid, moduleObj)
-	el.SetText(iconName)
 	Return el
 End Sub
 
@@ -2213,7 +2246,7 @@ Sub NewLabel(bStatic As Boolean,sname As String, vmodel As String, sSize As Stri
 	vmodel = vmodel.tolowercase
 	vue.SetStateSingle(vmodel, sText)
 	Dim el As VMLabel = CreateLabel(sname)
-	'el.setstatic(bStatic)
+	el.setstatic(bStatic)
 	el.SetTag(sSize)
 	el.SetVModel(vmodel, sText)
 	Select Case sSize
@@ -2224,11 +2257,12 @@ Sub NewLabel(bStatic As Boolean,sname As String, vmodel As String, sSize As Stri
 End Sub
 
 
-Sub NewIcon(eventHandler As Object,bStatic As Boolean,sname As String, sIcon As String, sSize As String, scolor As String) As VMIcon
-	Dim el As VMIcon = CreateIcon(sname, eventHandler, sIcon)
-	'el.setstatic(bStatic)
+Sub NewIcon(eventHandler As Object,bStatic As Boolean,sname As String, sIcon As String, sSize As String, scolor As String, sintensity As String) As VMIcon
+	Dim el As VMIcon = CreateIcon(sname, eventHandler)
+	el.SetStatic(bStatic)
+	el.SetText(sIcon)
 	el.SetAttributes(Array(sSize))
-	el.SetColor(scolor)
+	el.SetColorIntensity(scolor,sintensity)
 	Return el
 End Sub
 '

@@ -42,6 +42,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'the image should be centered on the RC
+Sub SetCenterOnParent(b As Boolean) As VMButton
+	If b = False Then Return Me
+	Button.CenterOnParent = True
+	Return Me
+End Sub
 
 Sub SetStatic(b As Boolean) As VMButton
 	bStatic = b

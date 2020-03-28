@@ -599,20 +599,20 @@ Sub SetStyleRC(rowPos As Int, colPos As Int, prop As String, value As String) As
 End Sub
 
 'align row content
-Sub SetAlignContentRC(rowPos As Int, align As String) As VMContainer
-	SetAttrRC(rowPos, 0, "align-content", align)
+Sub SetAlignContentRC(rowPos As Int, colPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, colPos, "align-content", align)
 	Return Me
 End Sub
 
 'jusrify row
-Sub SetJustifyRC(rowPos As Int, align As String) As VMContainer
-	SetAttrRC(rowPos, 0, "justify", align)
+Sub SetJustifyRC(rowPos As Int, colPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, colPos, "justify", align)
 	Return Me
 End Sub
 
 'align row
-Sub SetAlignRC(rowPos As Int, align As String) As VMContainer
-	SetAttrRC(rowPos, 0, "align", align)
+Sub SetAlignRC(rowPos As Int, colPos As Int, align As String) As VMContainer
+	SetAttrRC(rowPos, colPos, "align", align)
 	Return Me
 End Sub
 
@@ -622,13 +622,13 @@ Sub SetAlignSelfRC(rowPos As Int, colPos As Int, align As String) As VMContainer
 	Return Me
 End Sub
 
-Sub SetDenseRC(rowPos As Int) As VMContainer
-	SetAttrRC(rowPos, 0, "dense", True)
+Sub SetDenseRC(rowPos As Int, colPos As Int) As VMContainer
+	SetAttrRC(rowPos, colPos, "dense", True)
 	Return Me
 End Sub
 
-Sub SetNoGuttersRC(rowPos As Int) As VMContainer
-	SetAttrRC(rowPos, 0, "no-gutters", True)
+Sub SetNoGuttersRC(rowPos As Int, colPos As Int) As VMContainer
+	SetAttrRC(rowPos, colPos, "no-gutters", True)
 	Return Me
 End Sub
 
@@ -816,7 +816,7 @@ private Sub BuildRow(row As GridRow) As String
 				tColumn.SetLg(column.lg)
 				tColumn.SetSm(column.sm)
 				tColumn.SetMd(column.md)
-'				tColumn.SetXl(column.xl)
+				tColumn.SetXl(column.xl)
 				tColumn.SetOffsetSm(column.ofsm)
 				tColumn.SetOffsetMd(column.ofmd)
 				tColumn.SetOffsetLg(column.oflg)
@@ -906,6 +906,12 @@ Sub AddControl1(el As VMElement, template As String)
 	'get the column
 	Dim c As String = el.c
 	'
+	If el.CenterOnParent = True Then
+		SetJustifyRC(r, c, "center")
+		SetAlignRC(r, c, "center")
+		AddClassRC(r, c, Array("mx-auto"))
+	End If
+	
 	Dim sRow As String = vue.PadRight(r,2,"0")
 	Dim sCell As String = vue.PadRight(c,2,"0")
 	Dim rcKey As String = $"${sRow}.${sCell}"$
@@ -923,7 +929,7 @@ Sub AddControl1(el As VMElement, template As String)
 	'
 	AddComponent(el.r, el.C, template)
 	Select Case el.typeOf
-	Case "checkbox", "switchbox"
+	Case "checkbox", "checkbox", "switchbox", "switch"
 		Dim newoption As CheckedUnchecked
 		newoption.Initialize
 		newoption.fieldname = el.vmodel

@@ -12,6 +12,7 @@ Sub Class_Globals
 	Public vmodel As String
 	Private orig As String
 	Private DesignMode As Boolean
+	Private bStatic As Boolean
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
@@ -22,12 +23,23 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Label.typeOf = "label"
 	orig = ""
 	DesignMode = False
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMLabel
+	bStatic = b
+	Label.SetStatic(b)
 	Return Me
 End Sub
 
 Sub SetVModel(svmodel As String, value As String) As VMLabel
 	orig = value
 	svmodel = svmodel.tolowercase
+	If bStatic Then
+		SetText(value)
+		Return Me
+	End If
 	vue.SetData(svmodel, value)
 	SetText($"{{ ${svmodel} }}"$)
 	Return Me
@@ -60,12 +72,14 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMLabel
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	AddClass(scolor)
 	Return Me
 End Sub
 
 Sub SetColor(scolor As String) As VMLabel
+	If scolor = "" Then Return Me
 	AddClass(scolor)
 	Return Me
 End Sub
@@ -94,6 +108,7 @@ End Sub
 
 'apply a theme to an element
 Sub UseTheme(themeName As String) As VMLabel
+	If themeName = "" Then Return Me
 	themeName = themeName.ToLowerCase
 	Dim themes As Map = vue.themes
 	If themes.ContainsKey(themeName) Then
@@ -125,18 +140,21 @@ Sub SetTextRight As VMLabel
 	Return Me
 End Sub
 
-Sub SetTextLowerCase As VMLabel
+Sub SetTextLowerCase(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("text-lowercase")
 	Return Me
 End Sub
 
-Sub SetTextUpperCase As VMLabel
+Sub SetTextUpperCase(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("text-uppercase")
 	Return Me
 End Sub
 
 
-Sub SetTextCapitalize As VMLabel
+Sub SetTextCapitalize(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("text-capitalize")
 	Return Me
 End Sub
@@ -248,11 +266,13 @@ Sub SetA As VMLabel
 End Sub
 
 Sub SetHREF(href As String) As VMLabel
+	If href = "" Then Return Me
 	Label.SetAttrSingle("href", href)
 	Return Me
 End Sub
 
 Sub AddBold(value As String) As VMLabel
+	If value = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append("{B}").Append(value).Append("{/B}")
@@ -261,6 +281,7 @@ Sub AddBold(value As String) As VMLabel
 End Sub
 
 Sub AddItalic(value As String) As VMLabel
+	If value = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append("{I}").Append(value).Append("{/I}")
@@ -269,6 +290,7 @@ Sub AddItalic(value As String) As VMLabel
 End Sub
 
 Sub AddUnderline(value As String) As VMLabel
+	If value = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append("{U}").Append(value).Append("{/U}")
@@ -277,6 +299,7 @@ Sub AddUnderline(value As String) As VMLabel
 End Sub
 
 Sub AddSubScript(value As String) As VMLabel
+	If value = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append("{SUB}").Append(value).Append("{/SUB}")
@@ -285,6 +308,7 @@ Sub AddSubScript(value As String) As VMLabel
 End Sub
 
 Sub AddSuperScript(value As String) As VMLabel
+	If value = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append("{SUP}").Append(value).Append("{/SUP}")
@@ -293,6 +317,7 @@ Sub AddSuperScript(value As String) As VMLabel
 End Sub
 
 Sub AddColor(value As String, HexColor As String) As VMLabel
+	If value = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append($"{C:${HexColor}}${value}{/C}"$)
@@ -301,6 +326,7 @@ Sub AddColor(value As String, HexColor As String) As VMLabel
 End Sub
 
 Sub AddIconColor(icon As String,HexColor As String) As VMLabel
+	If icon = "" Then Return Me
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append($"{IC:${HexColor}}${icon}{/IC}"$)
@@ -314,14 +340,21 @@ Sub AddHyperLink(Title As String, URL As String) As VMLabel
 	Return Me
 End Sub
 
+Sub SetItalic(b As Boolean) As VMLabel
+	If b = False Then Return Me
+	AddClass("font-italic")
+	Return Me
+End Sub
 
 Sub SetElevation(e As Int) As VMLabel
-	Label.SetElevation(e)
+	Dim sele As String = $"elevation-${e}"$
+	AddClass(sele)
 	Return Me
 End Sub
 
 'add a class
 Sub AddClass(c As String) As VMLabel
+	If c = "" Then Return Me
 	Label.AddClass(c)
 	Return Me
 End Sub
@@ -369,56 +402,66 @@ End Sub
 
 
 Sub SetDisplay4(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("display-4")
 	Return Me
 End Sub
 
 Sub SetDisplay3(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("display-3")
 	Return Me
 End Sub
 
 Sub SetDisplay2(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("display-2")
 	Return Me
 End Sub
 
 Sub SetDisplay1(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("display-1")
 	Return Me
 End Sub
 
 'headline
 Sub SetHeadline(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("headline")
 	Return Me
 End Sub
 
 'title
 Sub SetTitle(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("title")
 	Return Me
 End Sub
 
 Sub SetSubTitle1(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("subtitle-1")
 	Return Me
 End Sub
 
 
 Sub SetSubTitle2(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("subtitle-2")
 	Return Me
 End Sub
 
 
 Sub SetCaption(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("caption")
 	Return Me
 End Sub
 
 
 Sub SetOverline(b As Boolean) As VMLabel
+	If b = False Then Return Me
 	Label.AddClass("overline")
 	Return Me
 End Sub
@@ -439,6 +482,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMLabel
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -446,6 +490,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMLabel
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

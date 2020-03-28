@@ -26,8 +26,8 @@ Sub Code
 	'
 	Dim par1 As VMParallax = vm.CreateParallax("p2", Me).SetSRC("./assets/bg-2.jpg").SetAttrLoose("dark")
 	par1.Container.AddRows(1).AddColumns12
-	par1.Container.SetAlignRC(1, vm.ALIGN_CENTER)
-	par1.Container.SetJustifyRC(1, vm.JUSTIFY_CENTER)
+	par1.Container.SetAlignRC(1, 0, vm.ALIGN_CENTER)
+	par1.Container.SetJustifyRC(1, 0, vm.JUSTIFY_CENTER)
 	par1.Container.SetTextCenterRC(1, 1)
 	'
 	Dim h1 As VMLabel = vm.CreateLabel("h1").AddClass("display-1 font-weight-thin mb-4").SetText("Vuetify.js").SetH1

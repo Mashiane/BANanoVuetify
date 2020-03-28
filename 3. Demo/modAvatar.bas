@@ -21,7 +21,8 @@ Sub Code
 	'
 	cont.AddRows(2).AddColumns(2, 12, 6, 6, 6)
 	'*** AVATARS
-	Dim a1 As VMAvatar = vm.CreateAvatar("a1", Me).SetSize("36").SetColor("indigo").SetText("36", "white-text-only")
+	Dim a1 As VMAvatar = vm.CreateAvatar("a1", Me).SetSize("36").SetColor("indigo").SetText("36", Null, Null, Null)
+	a1.Label.UseTheme("white-text-only")
 	cont.AddComponent(1, 1, a1.ToString)
 	'
 	Dim a2 As VMAvatar = vm.CreateAvatar("a2", Me).SetTile(True).SetColor("blue").SetIcon("mdi-alarm","",Null, Null, Null)

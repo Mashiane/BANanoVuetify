@@ -45,22 +45,16 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'the image should be centered on the RC
+Sub SetCenterOnParent(b As Boolean) As VMImage
+	If b = False Then Return Me
+	Image.CenterOnParent = True
+	Return Me	
+End Sub
+
 Sub SetStatic(b As Boolean) As VMImage
 	bStatic = b
 	Image.SetStatic(b)
-	Return Me
-End Sub
-
-Sub SetCenterOnParent As VMImage
-	If bStatic Then
-		SetStyleSingle("display", "block")
-		SetStyleSingle("margin-left", "auto")
-		SetStyleSingle("margin-right", "auto")
-		Return Me
-	End If
-	BindStyleSingle("display", "block")
-	BindStyleSingle("marginLeft", "auto")
-	BindStyleSingle("marginRight", "auto")
 	Return Me
 End Sub
 
@@ -683,13 +677,15 @@ End Sub
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMImage
-Image.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Image.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMImage
-Image.SetVisible(b)
-Return Me
+	Image.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

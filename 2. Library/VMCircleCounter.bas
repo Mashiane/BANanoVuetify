@@ -25,6 +25,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+'the image should be centered on the RC
+Sub SetCenterOnParent(b As Boolean) As VMCircleCounter
+	If b = False Then Return Me
+	CircleCounter.CenterOnParent = True
+	Return Me
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return CircleCounter.ToString

@@ -66,8 +66,8 @@ Sub Init
 	'
 	vm.Footer.Container.AddRows(2).AddColumns12
 	vm.Footer.Container.SetColorIntensityRC(2, 0, vm.COLOR_PRIMARY, vm.INTENSITY_LIGHTEN2)
-	vm.Footer.Container.SetJustifyRC(2, vm.JUSTIFY_CENTER)
-	vm.Footer.Container.SetAlignRC(2, vm.JUSTifY_CENTER)
+	vm.Footer.Container.SetJustifyRC(2, 0, vm.JUSTIFY_CENTER)
+	vm.Footer.Container.SetAlignRC(2, 0, vm.JUSTifY_CENTER)
 	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
 	'
 	vm.UX
@@ -183,8 +183,8 @@ Sub draweritems_click(e As BANanoEvent)
 	vm.pageresume
 	Select Case elID
 	Case "selectsides"
-		vm.NavBar.UpdateTitle(modSelectSides.title)
-		vm.ShowPage(modSelectSides.name)
+		'vm.NavBar.UpdateTitle(modSelectSides.title)
+		'vm.ShowPage(modSelectSides.name)
 	Case "arccounter"
 		vm.NavBar.UpdateTitle(modArcCounter.title)
 		vm.ShowPage(modArcCounter.name)
@@ -427,5 +427,5 @@ Sub AddPages
 	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
 	vm.addpage(modECharts.name, modECharts)
 	vm.AddPage(modArcCounter.name, modArcCounter)
-	vm.addpage(modSelectSides.name, modSelectSides)
+	'vm.addpage(modSelectSides.name, modSelectSides)
 End Sub

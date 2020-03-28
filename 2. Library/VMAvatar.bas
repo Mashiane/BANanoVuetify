@@ -16,6 +16,9 @@ Sub Class_Globals
 	Public Icon As VMIcon
 	Private hasIcon As Boolean
 	Private hasImage As Boolean
+	Private bStatic As Boolean
+	Public Label As VMLabel
+	Private hasLabel As Boolean
 End Sub
 
 'initialize the Avatar
@@ -28,8 +31,25 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	Icon.Initialize(vue, $"${ID}icon"$, Module)
 	Image.Initialize(vue, $"${ID}image"$, Module)
+	Label.Initialize(vue, $"${ID}label"$) 
 	hasIcon = False
 	hasImage = False
+	bStatic = False
+	hasLabel = False
+	Return Me
+End Sub
+
+
+'the image should be centered on the RC
+Sub SetCenterOnParent(b As Boolean) As VMAvatar
+	If b = False Then Return Me
+	Avatar.CenterOnParent = True
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMAvatar
+	bStatic = b
+	Avatar.SetStatic(b)
 	Return Me
 End Sub
 
@@ -119,6 +139,12 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMAvatar
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)	
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
@@ -133,13 +159,11 @@ Sub SetSlot(varSlot As String) As VMAvatar
 	Return Me
 End Sub
 
-Sub SetText(Text As String, txtTheme As String) As VMAvatar
-	Dim lIcon As VMLabel
-	lIcon.Initialize(vue, $"${ID}txt"$).SetText(Text).SetHeadline(True)
-	If txtTheme <> "" Then
-		lIcon.UseTheme(txtTheme)
-	End If	'
-	lIcon.Pop(Avatar)
+Sub SetText(Text As String, props As Map, classes As List, attributes As List) As VMAvatar
+	If Text = "" Then Return Me
+	hasLabel = True
+	Label.SetText(Text).SetHeadline(True)
+	Label.BuildModel(props,Null, classes, attributes) 
 	Return Me
 End Sub
 
@@ -147,22 +171,7 @@ Sub SetImage(url As String, alt As String, props As Map, classes As List, attrib
 	hasImage = True
 	Image.SetVModel($"${ID}image"$, url) 
 	Image.SetAlt(alt)
-	If attributes <> Null Then
-		Image.SetAttributes(attributes)
-	End If
-	'
-	If props <> Null Then
-		For Each k As String In props.Keys
-			Dim v As String = props.Get(k)
-			Image.SetAttrSingle(k, v)
-		Next
-	End If
-	'
-	If classes <> Null Then
-		For Each c As String In classes
-			Image.AddClass(c)
-		Next
-	End If
+	Image.BuildModel(props, Null, classes, attributes)
 	Return Me
 End Sub
 
@@ -184,9 +193,9 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	If hasImage Then Image.Pop(Avatar)
 	If hasIcon Then Icon.Pop(Avatar)
+	If hasLabel Then Label.Pop(Avatar)
 	Return Avatar.ToString
 End Sub
 
@@ -248,7 +257,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMAvatar
+Sub SetColor(varColor As String) As VMAvatar
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Avatar.Bind(":color", pp)
@@ -256,7 +270,12 @@ Sub SetColor(varColor As Object) As VMAvatar
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMAvatar
+Sub SetHeight(varHeight As String) As VMAvatar
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Avatar.Bind(":height", pp)
@@ -264,7 +283,12 @@ Sub SetHeight(varHeight As Object) As VMAvatar
 End Sub
 
 'set left
-Sub SetLeft(varLeft As Object) As VMAvatar
+Sub SetLeft(varLeft As Boolean) As VMAvatar
+	If varLeft = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("left", varLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Left"$
 	vue.SetStateSingle(pp, varLeft)
 	Avatar.Bind(":left", pp)
@@ -272,7 +296,12 @@ Sub SetLeft(varLeft As Object) As VMAvatar
 End Sub
 
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMAvatar
+Sub SetMaxHeight(varMaxHeight As String) As VMAvatar
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	Avatar.Bind(":max-height", pp)
@@ -280,7 +309,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMAvatar
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMAvatar
+Sub SetMaxWidth(varMaxWidth As String) As VMAvatar
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	Avatar.Bind(":max-width", pp)
@@ -288,7 +322,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMAvatar
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMAvatar
+Sub SetMinHeight(varMinHeight As String) As VMAvatar
+	If varMinHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinHeight"$
 	vue.SetStateSingle(pp, varMinHeight)
 	Avatar.Bind(":min-height", pp)
@@ -296,7 +335,12 @@ Sub SetMinHeight(varMinHeight As Object) As VMAvatar
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMAvatar
+Sub SetMinWidth(varMinWidth As String) As VMAvatar
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	Avatar.Bind(":min-width", pp)
@@ -304,7 +348,12 @@ Sub SetMinWidth(varMinWidth As Object) As VMAvatar
 End Sub
 
 'set right
-Sub SetRight(varRight As Object) As VMAvatar
+Sub SetRight(varRight As Boolean) As VMAvatar
+	If varRight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", varRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Right"$
 	vue.SetStateSingle(pp, varRight)
 	Avatar.Bind(":right", pp)
@@ -312,7 +361,12 @@ Sub SetRight(varRight As Object) As VMAvatar
 End Sub
 
 'set size
-Sub SetSize(varSize As Object) As VMAvatar
+Sub SetSize(varSize As String) As VMAvatar
+	If varSize = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("size", varSize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Size"$
 	vue.SetStateSingle(pp, varSize)
 	Avatar.Bind(":size", pp)
@@ -320,13 +374,17 @@ Sub SetSize(varSize As Object) As VMAvatar
 End Sub
 
 'set tile
-Sub SetTile(varTile As Object) As VMAvatar
+Sub SetTile(varTile As Boolean) As VMAvatar
+	If varTile = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("tile", varTile)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Tile"$
 	vue.SetStateSingle(pp, varTile)
 	Avatar.Bind(":tile", pp)
 	Return Me
 End Sub
-
 
 Sub Hide As VMAvatar
 	Avatar.SetVisible(False)
@@ -414,13 +472,15 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 	Avatar.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMAvatar
-Avatar.SetVisible(b)
-Return Me
+	Avatar.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMAvatar
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -428,6 +488,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMAvatar
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

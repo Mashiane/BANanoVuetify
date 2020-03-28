@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Icon
@@ -22,6 +23,20 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMIcon
+	bStatic = b
+	Icon.SetStatic(b)
+	Return Me
+End Sub
+
+'the image should be centered on the RC
+Sub SetCenterOnParent(b As Boolean) As VMIcon
+	If b = False Then Return Me
+	Icon.CenterOnParent = True
 	Return Me
 End Sub
 
@@ -75,28 +90,26 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	Return Icon.ToString
 End Sub
 
-
+'set the icon name
 Sub SetVText(vhtml As String) As VMIcon
 	Icon.SetVText(vhtml)
 	Return Me
 End Sub
 
-
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMIcon
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		Icon.SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	Icon.Bind(":color", pp)
-	Return Me
-End Sub
-
-Sub SetVModel(k As String) As VMIcon
-	Icon.SetVModel(k)
 	Return Me
 End Sub
 
@@ -128,8 +141,15 @@ Sub AddChild(child As VMElement) As VMIcon
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMIcon
-	Icon.SetText(t)
+Sub SetText(t As String) As VMIcon
+	If t = "" Then Return Me
+	If bStatic Then
+		Icon.SetText(t)
+		Return Me
+	End If
+	Dim iconName As String = $"${ID}icon"$
+	vue.SetData(iconName, t)
+	Icon.SetText($"{{ ${iconName} }}"$)
 	Return Me
 End Sub
 
@@ -175,24 +195,34 @@ Sub UseTheme(themeName As String) As VMIcon
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMIcon
+Sub SetColor(varColor As String) As VMIcon
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Icon.Bind(":color", pp)
 	Return Me
 End Sub
 
-'set color
-Sub SetIcon(varIcon As String) As VMIcon
-	Dim pp As String = $"${ID}icon"$
-	vue.SetStateSingle(pp, varIcon)
-	Icon.Bind(":icon", pp)
-	SetText($"{{ ${pp} }}"$)
-	Return Me
-End Sub
+''set color
+'Sub SetIcon(varIcon As String) As VMIcon
+'	Dim pp As String = $"${ID}icon"$
+'	vue.SetStateSingle(pp, varIcon)
+'	Icon.Bind(":icon", pp)
+'	SetText($"{{ ${pp} }}"$)
+'	Return Me
+'End Sub
 
 'set dark
 Sub SetDark(varDark As Boolean) As VMIcon
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Icon.Bind(":dark", pp)
@@ -201,6 +231,11 @@ End Sub
 
 'set dense
 Sub SetDense(varDense As Boolean) As VMIcon
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	Icon.Bind(":dense", pp)
@@ -214,7 +249,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMIcon
 End Sub
 
 'set large
-Sub SetLarge(varLarge As Object) As VMIcon
+Sub SetLarge(varLarge As Boolean) As VMIcon
+	If varLarge = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("large", varLarge)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Large"$
 	vue.SetStateSingle(pp, varLarge)
 	Icon.Bind(":large", pp)
@@ -244,7 +284,12 @@ Sub SetRight(varRight As Boolean) As VMIcon
 End Sub
 
 'set size
-Sub SetSize(varSize As Object) As VMIcon
+Sub SetSize(varSize As String) As VMIcon
+	If varSize = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("size", varSize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Size"$
 	vue.SetStateSingle(pp, varSize)
 	Icon.Bind(":size", pp)
@@ -252,7 +297,12 @@ Sub SetSize(varSize As Object) As VMIcon
 End Sub
 
 'set small
-Sub SetSmall(varSmall As Object) As VMIcon
+Sub SetSmall(varSmall As Boolean) As VMIcon
+	If varSmall = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("small", varSmall)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Small"$
 	vue.SetStateSingle(pp, varSmall)
 	Icon.Bind(":small", pp)
@@ -260,7 +310,12 @@ Sub SetSmall(varSmall As Object) As VMIcon
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMIcon
+Sub SetTag(varTag As String) As VMIcon
+	If varTag = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("tag", varTag)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Tag"$
 	vue.SetStateSingle(pp, varTag)
 	Icon.Bind(":tag", pp)
@@ -268,7 +323,12 @@ Sub SetTag(varTag As Object) As VMIcon
 End Sub
 
 'set x-large
-Sub SetXLarge(varXLarge As Object) As VMIcon
+Sub SetXLarge(varXLarge As Boolean) As VMIcon
+	If varXLarge = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("x-large", varXLarge)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}XLarge"$
 	vue.SetStateSingle(pp, varXLarge)
 	Icon.Bind(":x-large", pp)
@@ -276,10 +336,29 @@ Sub SetXLarge(varXLarge As Object) As VMIcon
 End Sub
 
 'set x-small
-Sub SetXSmall(varXSmall As Object) As VMIcon
+Sub SetXSmall(varXSmall As Boolean) As VMIcon
+	If varXSmall = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("x-small", varXSmall)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}XSmall"$
 	vue.SetStateSingle(pp, varXSmall)
 	Icon.Bind(":x-small", pp)
+	Return Me
+End Sub
+
+
+'set medium
+Sub SetMedium(varXSmall As Boolean) As VMIcon
+	If varXSmall = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("medium", varXSmall)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}XSmall"$
+	vue.SetStateSingle(pp, varXSmall)
+	Icon.Bind(":medium", pp)
 	Return Me
 End Sub
 
@@ -363,16 +442,18 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMIcon
-Icon.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Icon.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMIcon
-Icon.SetVisible(b)
-Return Me
+	Icon.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMIcon
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -380,6 +461,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMIcon
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

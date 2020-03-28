@@ -26,17 +26,17 @@ Sub Code
 	'
 	Dim btnRecent As VMButton = vm.CreateButton("btnRecent", Me).SetValue("recent")
 	btnRecent.AddComponent(vm.CreateLabel("").SetSpan.SetText("Recent").tostring)
-	btnRecent.AddComponent(vm.CreateIcon("", Me, "mdi-history").tostring)
+	btnRecent.AddComponent(vm.CreateIcon("", Me).SetText("mdi-history").tostring)
 	bn.AddComponent(btnRecent.ToString)
 	'
 	Dim btnFav As VMButton = vm.CreateButton("btnFav", Me).SetValue("favorites")
 	btnFav.AddComponent(vm.CreateLabel("").SetSpan.SetText("Favorites").tostring)
-	btnFav.AddComponent(vm.CreateIcon("", Me, "mdi-heart").tostring)
+	btnFav.AddComponent(vm.CreateIcon("", Me).SetText("mdi-heart").tostring)
 	bn.AddComponent(btnFav.ToString)
 	'
 	Dim btnNear As VMButton = vm.CreateButton("btnNear", Me).SetValue("nearby")
 	btnNear.AddComponent(vm.CreateLabel("").SetSpan.SetText("Nearby").tostring)
-	btnNear.AddComponent(vm.CreateIcon("", Me, "mdi-map-marker").tostring)
+	btnNear.AddComponent(vm.CreateIcon("", Me).SetText("mdi-map-marker").tostring)
 	bn.AddComponent(btnNear.ToString)
 	'	
 	cont.AddComponent(1, 1, bn.tostring)
@@ -46,17 +46,17 @@ Sub Code
 	'
 	Dim btnRecent1 As VMButton = vm.CreateButton("btnRecent1", Me).SetValue("recent")
 	btnRecent1.AddComponent(vm.CreateLabel("").SetSpan.SetText("Recent").tostring)
-	btnRecent1.AddComponent(vm.CreateIcon("", Me, "mdi-history").tostring)
+	btnRecent1.AddComponent(vm.CreateIcon("", Me).SetText("mdi-history").tostring)
 	bn2.AddComponent(btnRecent1.ToString)
 	'
 	Dim btnFav1 As VMButton = vm.CreateButton("btnFav1", Me).SetValue("favorites")
 	btnFav1.AddComponent(vm.CreateLabel("").SetSpan.SetText("Favorites").tostring)
-	btnFav1.AddComponent(vm.CreateIcon("", Me, "mdi-heart").tostring)
+	btnFav1.AddComponent(vm.CreateIcon("", Me).SetText("mdi-heart").tostring)
 	bn2.AddComponent(btnFav1.ToString)
 	'
 	Dim btnNear1 As VMButton = vm.CreateButton("btnNear1", Me).SetValue("nearby")
 	btnNear1.AddComponent(vm.CreateLabel("").SetSpan.SetText("Nearby").tostring)
-	btnNear1.AddComponent(vm.CreateIcon("", Me, "mdi-map-marker").tostring)
+	btnNear1.AddComponent(vm.CreateIcon("", Me).SetText("mdi-map-marker").tostring)
 	bn2.AddComponent(btnNear1.ToString)
 	'
 	cont.AddComponent(1, 2, bn2.tostring)
@@ -66,17 +66,17 @@ Sub Code
 	'
 	Dim btnRecent2 As VMButton = vm.CreateButton("btnRecent2", Me).SetValue("recent")
 	btnRecent2.AddComponent(vm.CreateLabel("").SetSpan.SetText("Recent").tostring)
-	btnRecent2.AddComponent(vm.CreateIcon("", Me, "mdi-history").tostring)
+	btnRecent2.AddComponent(vm.CreateIcon("", Me).SetText("mdi-history").tostring)
 	bn3.AddComponent(btnRecent2.ToString)
 	'
 	Dim btnFav2 As VMButton = vm.CreateButton("btnFav2", Me).SetValue("favorites")
 	btnFav2.AddComponent(vm.CreateLabel("").SetSpan.SetText("Favorites").tostring)
-	btnFav2.AddComponent(vm.CreateIcon("", Me, "mdi-heart").tostring)
+	btnFav2.AddComponent(vm.CreateIcon("", Me).SetText("mdi-heart").tostring)
 	bn3.AddComponent(btnFav2.ToString)
 	'
 	Dim btnNear2 As VMButton = vm.CreateButton("btnNear2", Me).SetValue("nearby")
 	btnNear2.AddComponent(vm.CreateLabel("").SetSpan.SetText("Nearby").tostring)
-	btnNear2.AddComponent(vm.CreateIcon("", Me, "mdi-map-marker").tostring)
+	btnNear2.AddComponent(vm.CreateIcon("", Me).SetText("mdi-map-marker").tostring)
 	bn3.AddComponent(btnNear2.ToString)
 	'
 	cont.AddComponent(2, 1, bn3.tostring)

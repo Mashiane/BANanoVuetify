@@ -64,12 +64,10 @@ File64=vue-count-to.min.js
 File65=vue-google-maps.js
 File66=vue-prism-component.min.js
 File67=vue-router.min.js
-File68=vueSelectSides.css
-File69=vueSelectSides.umd.min.js
+File68=vuetify.min.css
+File69=vuetify.min.js
 File7=beautify-html.js
-File70=vuetify.js
-File71=vuetify.min.css
-File72=vuex.min.js
+File70=vuex.min.js
 File8=bmap.min.js
 File9=Chart.min.css
 FileGroup1=Default Group
@@ -140,8 +138,6 @@ FileGroup68=Default Group
 FileGroup69=Default Group
 FileGroup7=Default Group
 FileGroup70=Default Group
-FileGroup71=Default Group
-FileGroup72=Default Group
 FileGroup8=Default Group
 FileGroup9=Default Group
 Group=Default Group
@@ -154,48 +150,47 @@ Module100=VMScrollXTransition
 Module101=VMScrollYReverseTransition
 Module102=VMScrollYTransition
 Module103=VMSelect
-Module104=VMSelectSides
-Module105=VMSheet
-Module106=VMSimpleCheckBox
-Module107=VMSimpleTable
-Module108=VMSkeleton
-Module109=VMSkeletonLoader
+Module104=VMSheet
+Module105=VMSimpleCheckBox
+Module106=VMSimpleTable
+Module107=VMSkeleton
+Module108=VMSkeletonLoader
+Module109=VMSlideGroup
 Module11=VMBadge
-Module110=VMSlideGroup
-Module111=VMSlider
-Module112=VMSlideXReverseTransition
-Module113=VMSlideXTransition
-Module114=VMSlideYReverseTransition
-Module115=VMSlideYTransition
-Module116=VMSnackBar
-Module117=VMSparkLine
-Module118=VMSpeedDial
-Module119=VMStepper
+Module110=VMSlider
+Module111=VMSlideXReverseTransition
+Module112=VMSlideXTransition
+Module113=VMSlideYReverseTransition
+Module114=VMSlideYTransition
+Module115=VMSnackBar
+Module116=VMSparkLine
+Module117=VMSpeedDial
+Module118=VMStepper
+Module119=VMStepperContent
 Module12=VMBanner
-Module120=VMStepperContent
-Module121=VMStepperHeader
-Module122=VMStepperItems
-Module123=VMStepperStep
-Module124=VMSubHeader
-Module125=VMTab
-Module126=VMTabItem
-Module127=VMTabs
-Module128=VMTabsItems
-Module129=VMTabsSlider
+Module120=VMStepperHeader
+Module121=VMStepperItems
+Module122=VMStepperStep
+Module123=VMSubHeader
+Module124=VMTab
+Module125=VMTabItem
+Module126=VMTabs
+Module127=VMTabsItems
+Module128=VMTabsSlider
+Module129=VMTemplate
 Module13=VMBottomNavigation
-Module130=VMTemplate
-Module131=VMTextField
-Module132=VMTimeline
-Module133=VMTimelineItem
-Module134=VMToolBar
-Module135=VMToolTip
-Module136=VMTreeView
-Module137=VMWaterBall
-Module138=VMWindow
-Module139=VMWindowItem
+Module130=VMTextField
+Module131=VMTimeline
+Module132=VMTimelineItem
+Module133=VMToolBar
+Module134=VMToolTip
+Module135=VMTreeView
+Module136=VMWaterBall
+Module137=VMWindow
+Module138=VMWindowItem
+Module139=VueElement
 Module14=VMBottomSheet
-Module140=VueElement
-Module141=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module140=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
 Module15=VMBreadCrumbs
 Module16=VMBreadCrumbsItem
 Module17=VMButton
@@ -289,9 +284,9 @@ Module96=VMResponsive
 Module97=VMRow
 Module98=VMScaleTransition
 Module99=VMScrollXReverseTransition
-NumberOfFiles=72
+NumberOfFiles=70
 NumberOfLibraries=3
-NumberOfModules=141
+NumberOfModules=140
 Version=8.1
 @EndOfDesignText@
 '
@@ -324,7 +319,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddCSSFile("vuetify.min.css")
 	'
 	BANano.Header.AddJavascriptFile("vue.min.js")
-	BANano.Header.AddJavascriptFile("vuetify.js")
+	BANano.Header.AddJavascriptFile("vuetify.min.js")
 	BANano.Header.AddJavascriptFile("vue-router.min.js")
 	
 	BANano.Header.AddJavascriptFile("jquery-3.4.1.min.js")
@@ -388,9 +383,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'
 	BANano.Header.AddJavascriptFile("arcCounter.umd.min.js")
 	BANano.Header.AddJavascriptFile("circleCounter.umd.min.js")
-	'
-	BANano.Header.AddCSSFile("vueSelectSides.css")
-	BANano.Header.AddJavascriptFile("vueSelectSides.umd.min.js")
 	'
 	BANano.Header.AddJavascriptFile("beautify.js")
 	BANano.Header.AddJavascriptFile("beautify-css.js")
