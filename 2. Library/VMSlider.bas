@@ -130,8 +130,8 @@ End Sub
 
 Sub SetVModel(k As String) As VMSlider
 	xmodel = k.tolowercase
-	vue.SetStateSingle(k, 0)
-	Slider.SetVModel(k)
+	vue.SetStateSingle(xmodel, 0)
+	Slider.SetVModel(xmodel)
 	Return Me
 End Sub
 
@@ -690,11 +690,11 @@ Sub SetValue(varValue As String) As VMSlider
 		values.Initialize 
 		values.Add(v1)
 		values.Add(v2)
-		vue.SetStateSingle(xmodel, values)
+		vue.SetData(xmodel, values)
 		Return Me
 	End If
 	varValue = BANano.parseFloat(varValue)
-	vue.SetStateSingle(xmodel, varValue)
+	vue.SetData(xmodel, varValue)
 	Return Me
 End Sub
 

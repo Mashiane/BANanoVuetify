@@ -105,6 +105,8 @@ Sub expensecategories
 End Sub
 
 Sub expenses
+	vm.CallMethod("LoadTypes")
+	vm.CallMethod("LoadCategories")
 	vm.NavBar.UpdateTitle("Expenses.Show - Expenses")
 	vm.showpage(modExpenses.name)
 	modExpenses.refresh

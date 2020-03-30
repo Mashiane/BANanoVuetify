@@ -537,6 +537,22 @@ Public Sub Initialize()
 	ColorMap.put("transparent", "transparent")
 End Sub
 
+'join list to mv string
+Sub Join(delimiter As String, lst As List) As String
+	Dim i As Int
+	Dim sb As StringBuilder
+	Dim fld As String
+	sb.Initialize
+	fld = lst.Get(0)
+	sb.Append(fld)
+	For i = 1 To lst.size - 1
+		Dim fld As String = lst.Get(i)
+		sb.Append(delimiter).Append(fld)
+	Next
+	Return sb.ToString
+End Sub
+
+
 'javascript getElementById
 Sub getElementById(sid As String) As BANanoObject
 	Dim el As BANanoObject = BANAno.Window.GetField("document").RunMethod("getElementById", Array(sid))
@@ -767,21 +783,6 @@ Sub JoinNonBlanks(delimiter As String, lst As List) As String
 End Sub
 
 
-'join list to mv string
-Sub Join(delimiter As String, lst As List) As String
-	Dim i As Int
-	Dim sb As StringBuilder
-	Dim fld As String
-	sb.Initialize
-	fld = lst.Get(0)
-	sb.Append(fld)
-	For i = 1 To lst.size - 1
-		Dim fld As String = lst.Get(i)
-		sb.Append(delimiter).Append(fld)
-	Next
-	Return sb.ToString
-End Sub
-
 'join maps
 Sub JoinMaps(lst As List) As Map
 	Dim nm As Map = CreateMap()
@@ -953,6 +954,17 @@ Sub PadRight(Value As String, MaxLen As Int, PadChar As String) As String
 		Value = PadChar & Value
 	Next
 	Return Value
+End Sub
+
+Sub GetListOfMapsProperty(lst As List, prop As String) As List
+	prop = prop.tolowercase
+	Dim kc As List
+	kc.initialize
+	For Each rec As Map In lst
+		Dim v As String = rec.Get(prop)
+		kc.add(v)
+	Next
+	Return kc
 End Sub
 
 'sum list of maps property

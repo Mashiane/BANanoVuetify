@@ -12,6 +12,7 @@ Sub Process_Globals
 	Public mdlExpenses As VMDialog
 	Private BANano As BANano
 	Private expenses As VMDataTable
+	Private ef As VMContainer
 End Sub
 
 Sub Code
@@ -22,8 +23,11 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'create 1 columns each spanning 12 columns
-	cont.AddRows(1).AddColumns12
+	cont.AddRows(2).AddColumns12
 	'
+	ef = ExpenseFilter
+	cont.AddComponent(1,1,ef.tostring)
+	
 	expenses = vm.CreateDataTable("expensetable", "id", Me)
 	expenses.SetTitle("Expenses")
 	expenses.AddSearch
@@ -37,7 +41,7 @@ Sub Code
 	expenses.AddClone
 	expenses.SetMoneyColumns(Array("expense_amount"))
 	expenses.SetDataSource(Array())
-	cont.AddComponent(1,1, expenses.tostring)
+	cont.AddComponent(2,1, expenses.tostring)
 	
 	'add container to the page content
 	vm.AddContainer(cont)
@@ -67,22 +71,117 @@ Sub Code
 	
 End Sub
 
+Sub ExpenseFilter As VMContainer
+	Dim ec As VMContainer = vm.CreateContainer("ec", Me)
+	'
+	Dim dpstartdate As VMDateTimePicker = vm.NewDatePicker(Me, True, "dpstartdate", "startdate", "Start Date", True, "", "", "", 0).SetClearable(True)
+	ec.AddControl(dpstartdate.DateTimePicker, dpstartdate.tostring, 1, 1, 0, 0, 0, 0, 12, 2, 2, 2)
+
+	Dim dpfinishdate As VMDateTimePicker = vm.NewDatePicker(Me, True, "dpfinishdate", "finishdate", "Finish Date", True, "", "", "", 0).SetClearable(True)
+	ec.AddControl(dpfinishdate.DateTimePicker, dpfinishdate.tostring, 1, 2, 0, 0, 0, 0, 12, 2, 2, 2)
+
+	Dim cbocategory As VMSelect = vm.NewComboDataSource(Me, True, "cbocategory", "category", "Category", True, True, "", "categories", "id", "text", True, "", "", 0)
+	cbocategory.SetSmallChips(True).SetClearable(True).SetDeletablechips(True)
+	ec.AddControl(cbocategory.Combo, cbocategory.tostring, 1, 3, 0, 0, 0, 0, 12, 2, 2, 2)
+
+	Dim cboexpensetype As VMSelect = vm.NewComboDataSource(Me, True, "cboexpensetype", "expensetype", "Type", True, True, "", "types", "id", "text", True, "", "", 0)
+	cboexpensetype.setsmallchips(True).SetClearable(True).SetDeletablechips(True)
+	ec.AddControl(cboexpensetype.Combo, cboexpensetype.tostring, 1, 4, 0, 0, 0, 0, 12, 2, 2, 2)
+
+	Dim btnbtnApplyFilter As VMButton = vm.NewButton(Me, True, "btnApplyFilter", "Apply", True, False, False, True)
+	btnbtnApplyFilter.SetTooltip("Apply filter")
+	btnbtnApplyFilter.SetColorIntensity("green", "darken-1")
+	ec.AddControl(btnbtnApplyFilter.Button, btnbtnApplyFilter.tostring, 1, 5, 0, 0, 0, 0, 12, 2, 2, 2)
+
+	Dim btnbtnResetFilter As VMButton = vm.NewButton(Me, True, "btnResetFilter", "Reset", True, False, False, True)
+	btnbtnResetFilter.SetTooltip("Reset filter")
+	btnbtnResetFilter.SetColorIntensity("red", "darken-1")
+	ec.AddControl(btnbtnResetFilter.Button, btnbtnResetFilter.tostring, 1, 6, 0, 0, 0, 0, 12, 2, 2, 2)
+
+	Return ec
+End Sub
+
+'apply a filter to the records
+Sub btnApplyFilter_click(e As BANanoEvent)
+	Dim sstartdate As String = vm.getdata("startdate")
+	Dim sfinishdate As String = vm.getdata("finishdate")
+	Dim lcategory As List = vm.getdata("category")
+	Dim lexpensetype As List = vm.getdata("expensetype")
+	'
+	If sstartdate = "" Then
+		vm.ShowSnackBar("Start date should be specified!")
+		Return
+	End If
+	'
+	If sfinishdate = "" Then
+		vm.ShowSnackBar("Finish date should be specified!")
+		Return
+	End If
+	'
+	If lcategory.size = 0 Then
+		vm.ShowSnackBar("Category should be specified!")
+		Return
+	End If
+	'
+	If lexpensetype.size = 0 Then
+		vm.ShowSnackBar("Expense type should be specified!")
+		Return
+	End If
+	
+	'get the ids, we have returned objects
+	Dim kc As List = vm.GetListOfMapsProperty(lcategory, "id")
+	Dim kt As List = vm.GetListOfMapsProperty(lexpensetype, "id")
+	
+	' join for query
+	Dim scat As String = vm.Join(",", kc)
+	Dim styp As String = vm.join(",", kt)
+	'
+	vm.pagepause
+	Dim qry As String = "select expenses.id, expenses.expense_date, expenses.expense_description, expenses.expense_amount, expensecategories.text as expense_category,"
+	qry = qry & "expensetypes.text As expense_type from expenses, expensecategories, expensetypes where expenses.expense_category = expensecategories.id and expenses.expense_type = "
+	qry = qry & $"expensetypes.id and expenses.expense_date >= '${sstartdate}' and expenses.expense_date <= '${sfinishdate}' and expensecategories.id in (${scat}) and expensetypes.id in (${styp}) order by expenses.expense_date desc"$
+	Dim dbsql As BANanoMySQL
+	dbsql.Initialize(Main.dbase, "expenses", "id")
+	dbsql.Execute(qry)
+	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
+	dbsql.FromJSON
+	If dbsql.OK Then
+		expenses.SetDataSource(dbsql.result)
+	Else
+		Log("modExpenses.btnApplyFilter: Error - " & dbsql.error)
+	End If
+	vm.pageresume
+End Sub
+
+'reset the filter
+Sub btnResetFilter_click(e As BANanoEvent)
+	vm.pagepause
+	Dim mp As Map = CreateMap()
+	mp.put("startdate", Null)
+	mp.put("finishdate", Null)
+	mp.put("category", Array())
+	mp.put("expensetype", Array())
+	vm.setstate(mp)
+	Refresh
+	vm.pageresume
+End Sub
+
 Sub btnCancelExpense_click(e As BANanoEvent)
 	vm.hidedialog("mdlExpenses")
 End Sub
 
 Sub btnSaveExpense_click(e As BANanoEvent)
 	'get the data
-	Dim expense As Map = mdlExpenses.Container.GetData
+	Dim Expense As Map = mdlExpenses.Container.GetData
 	'validate the data
-	Dim bValid As Boolean = vm.Validate(expense, mdlExpenses.Container.Required)
+	Dim bValid As Boolean = vm.Validate(Expense, mdlExpenses.Container.Required)
 	If bValid = False Then Return
 	'
 	'expense is valid
 	Dim dbsql As BANanoMySQL
 	dbsql.Initialize(Main.dbase, "expenses", "id")
 	dbsql.SchemaFromDesign(mdlExpenses.Container)
-	dbsql.RecordFromMap(expense)
+	dbsql.RecordFromMap(Expense)
 	Select Case Mode
 	Case "A"
 		dbsql.Insert
@@ -97,7 +196,7 @@ Sub btnSaveExpense_click(e As BANanoEvent)
 			vm.ShowSnackBar(dbsql.error)
 		End If
 	Case "E"
-		Dim sid As String = expense.Get("id")
+		Dim sid As String = Expense.Get("id")
 		dbsql.Update(sid)
 		dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 		dbsql.FromJSON

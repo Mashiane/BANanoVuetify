@@ -400,7 +400,7 @@ Sub SetOpenOnClick(varOpenOnClick As Object) As VMTreeView
 End Sub
 
 'set return-object
-Sub SetReturnObject(varReturnObject As Object) As VMTreeView
+Sub SetReturnObject(varReturnObject As Boolean) As VMTreeView
 	Dim pp As String = $"${ID}ReturnObject"$
 	vue.SetStateSingle(pp, varReturnObject)
 	TreeView.Bind(":return-object", pp)

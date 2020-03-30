@@ -894,7 +894,6 @@ End Sub
 
 'set return-object
 Sub SetReturnObject(varReturnObject As Boolean) As VMSelect
-	If varReturnObject = False Then Return Me
 	SetAttrSingle("return-object", varReturnObject)
 	Return Me
 End Sub

@@ -267,6 +267,18 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 
 End Sub
 
+'get a property from a list of maps
+Sub GetListOfMapsProperty(lst As List, prop As String) As List
+	prop = prop.tolowercase
+	Dim kc As List
+	kc.initialize
+	For Each rec As Map In lst
+		Dim v As String = rec.Get(prop)
+		kc.add(v)
+	Next
+	Return kc
+End Sub
+
 Sub BeautifySourceCode(slang As String, sourceCode As String) As String
 	Return vue.BeautifySourceCode(slang, sourceCode)
 End Sub
@@ -649,6 +661,12 @@ Sub SetGMapKey(key As String)
 	opt.Put("load", load)
 	opt.Put("installComponents", True)
 	vue.Use1(VueGoogleMaps, opt)
+End Sub
+
+
+'join list to mv string
+Sub Join(delimiter As String, lst As List) As String
+	Return vue.Join(delimiter, lst)
 End Sub
 
 
