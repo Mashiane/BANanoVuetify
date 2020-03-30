@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ListItemAction
@@ -22,15 +23,23 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMListItemAction
+	bStatic = b
+	ListItemAction.SetStatic(b)
 	Return Me
 End Sub
 
 Sub AddIcon(key As String, iconName As String) As VMListItemAction
 	key = key.tolowercase
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module).SetAttributes(Array("icon"))
+	btn.Initialize(vue, key, Module).SetAttributes(Array("icon")).SetStatic(bStatic)
 	Dim icon As VMIcon
-	icon.Initialize(vue, $"${key}icon"$, Module).SetVText(iconName)
+	icon.Initialize(vue, $"${key}icon"$, Module).SetVText(iconName).SetStatic(bStatic)
 	btn.AddComponent(icon.ToString)
 	btn.Pop(ListItemAction)
 	Return Me
@@ -50,9 +59,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	
-	
-	
 	Return ListItemAction.ToString
 End Sub
 
@@ -211,6 +217,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMListItemAction
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

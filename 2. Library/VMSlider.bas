@@ -13,13 +13,14 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private xmodel As String = ""
+	Private bStatic As Boolean
+	Private bIsRange As Boolean
 End Sub
 
 'initialize the Slider
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMSlider
 	ID = sid.tolowercase
-	Slider.Initialize(v, ID)
-	Slider.SetTag("v-slider")
+	Slider.Initialize(v, ID).SetTag("v-slider")
 	DesignMode = False
 	Module = eventHandler
 	vue = v
@@ -27,6 +28,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetOnClickPrepend($"${ID}_prepend"$)
 	xmodel = ""
 	Slider.typeOf = "slide"
+	bStatic = False
+	bIsRange = False
+	Return Me
+End Sub
+
+Sub SetRangeSlider(b As Boolean) As VMSlider
+	If b = False Then Return Me
+	Slider.SetTag("v-range-slider")
+	bIsRange = True
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMSlider
+	bStatic = b
+	Slider.SetStatic(b)
 	Return Me
 End Sub
 
@@ -69,6 +85,7 @@ End Sub
 
 'apply a theme to an element
 Sub UseTheme(themeName As String) As VMSlider
+	If themeName = "" Then Return Me
 	themeName = themeName.ToLowerCase
 	Dim themes As Map = vue.themes
 	If themes.ContainsKey(themeName) Then
@@ -87,13 +104,18 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSlider
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Slider.Bind(":color", pp)
 	Return Me
 End Sub
-
 
 'set required
 Sub SetRequired(varRequired As Boolean) As VMSlider
@@ -172,7 +194,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set append-icon
-Sub SetAppendIcon(varAppendIcon As Object) As VMSlider
+Sub SetAppendIcon(varAppendIcon As String) As VMSlider
+	If varAppendIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("append-icon", varAppendIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}AppendIcon"$
 	vue.SetStateSingle(pp, varAppendIcon)
 	Slider.Bind(":append-icon", pp)
@@ -180,7 +207,12 @@ Sub SetAppendIcon(varAppendIcon As Object) As VMSlider
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMSlider
+Sub SetBackgroundColor(varBackgroundColor As String) As VMSlider
+	If varBackgroundColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, varBackgroundColor)
 	Slider.Bind(":background-color", pp)
@@ -188,7 +220,12 @@ Sub SetBackgroundColor(varBackgroundColor As Object) As VMSlider
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMSlider
+Sub SetColor(varColor As String) As VMSlider
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Slider.Bind(":color", pp)
@@ -196,7 +233,12 @@ Sub SetColor(varColor As Object) As VMSlider
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMSlider
+Sub SetDark(varDark As Boolean) As VMSlider
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Slider.Bind(":dark", pp)
@@ -204,7 +246,12 @@ Sub SetDark(varDark As Object) As VMSlider
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMSlider
+Sub SetDense(varDense As Boolean) As VMSlider
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	Slider.Bind(":dense", pp)
@@ -218,7 +265,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMSlider
 End Sub
 
 'set error
-Sub SetError(varError As Object) As VMSlider
+Sub SetError(varError As Boolean) As VMSlider
+	If varError = False Then Return Me
+	If bStatic = False Then
+		SetAttrSingle("error", varError)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Error"$
 	vue.SetStateSingle(pp, varError)
 	Slider.Bind(":error", pp)
@@ -226,7 +278,11 @@ Sub SetError(varError As Object) As VMSlider
 End Sub
 
 'set error-count
-Sub SetErrorCount(varErrorCount As Object) As VMSlider
+Sub SetErrorCount(varErrorCount As Int) As VMSlider
+	If bStatic Then
+		SetAttrSingle("error-count", varErrorCount)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	Slider.Bind(":error-count", pp)
@@ -242,7 +298,12 @@ Sub SetErrorMessages(varErrorMessages As Object) As VMSlider
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMSlider
+Sub SetHeight(varHeight As String) As VMSlider
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Slider.Bind(":height", pp)
@@ -250,7 +311,12 @@ Sub SetHeight(varHeight As Object) As VMSlider
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As boolean) As VMSlider
+Sub SetHideDetails(varHideDetails As Boolean) As VMSlider
+	If varHideDetails = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-details", varHideDetails)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	Slider.Bind(":hide-details", pp)
@@ -258,7 +324,12 @@ Sub SetHideDetails(varHideDetails As boolean) As VMSlider
 End Sub
 
 'set hint
-Sub SetHint(varHint As Object) As VMSlider
+Sub SetHint(varHint As String) As VMSlider
+	If varHint = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("hint", varHint)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Hint"$
 	vue.SetStateSingle(pp, varHint)
 	Slider.Bind(":hint", pp)
@@ -266,7 +337,7 @@ Sub SetHint(varHint As Object) As VMSlider
 End Sub
 
 'set id
-Sub SetId(varId As Object) As VMSlider
+Sub SetId(varId As String) As VMSlider
 	Dim pp As String = $"${ID}Id"$
 	vue.SetStateSingle(pp, varId)
 	Slider.Bind(":id", pp)
@@ -274,7 +345,12 @@ Sub SetId(varId As Object) As VMSlider
 End Sub
 
 'set inverse-label
-Sub SetInverseLabel(varInverseLabel As Object) As VMSlider
+Sub SetInverseLabel(varInverseLabel As Boolean) As VMSlider
+	If varInverseLabel = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("inverse-label", varInverseLabel)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}InverseLabel"$
 	vue.SetStateSingle(pp, varInverseLabel)
 	Slider.Bind(":inverse-label", pp)
@@ -282,7 +358,12 @@ Sub SetInverseLabel(varInverseLabel As Object) As VMSlider
 End Sub
 
 'set label
-Sub SetLabel(varLabel As Object) As VMSlider
+Sub SetLabel(varLabel As String) As VMSlider
+	If varLabel = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Label"$
 	vue.SetStateSingle(pp, varLabel)
 	Slider.Bind(":label", pp)
@@ -290,7 +371,12 @@ Sub SetLabel(varLabel As Object) As VMSlider
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMSlider
+Sub SetLight(varLight As Boolean) As VMSlider
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Slider.Bind(":light", pp)
@@ -298,7 +384,12 @@ Sub SetLight(varLight As Object) As VMSlider
 End Sub
 
 'set loader-height
-Sub SetLoaderHeight(varLoaderHeight As Object) As VMSlider
+Sub SetLoaderHeight(varLoaderHeight As String) As VMSlider
+	If varLoaderHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("loader-height", varLoaderHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}LoaderHeight"$
 	vue.SetStateSingle(pp, varLoaderHeight)
 	Slider.Bind(":loader-height", pp)
@@ -306,7 +397,12 @@ Sub SetLoaderHeight(varLoaderHeight As Object) As VMSlider
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMSlider
+Sub SetLoading(varLoading As Boolean) As VMSlider
+	If varLoading = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("loading", varLoading)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	Slider.Bind(":loading", pp)
@@ -314,7 +410,12 @@ Sub SetLoading(varLoading As Object) As VMSlider
 End Sub
 
 'set max
-Sub SetMax(varMax As Object) As VMSlider
+Sub SetMax(varMax As Double) As VMSlider
+	varMax = BANano.parseFloat(varMax)
+	If bStatic Then
+		SetAttrSingle("max", varMax)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Max"$
 	vue.SetStateSingle(pp, varMax)
 	Slider.Bind(":max", pp)
@@ -330,7 +431,12 @@ Sub SetMessages(varMessages As Object) As VMSlider
 End Sub
 
 'set min
-Sub SetMin(varMin As Object) As VMSlider
+Sub SetMin(varMin As Double) As VMSlider
+	varMin = BANano.parseFloat(varMin)
+	If bStatic Then
+		SetAttrSingle("min", varMin)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Min"$
 	vue.SetStateSingle(pp, varMin)
 	Slider.Bind(":min", pp)
@@ -338,7 +444,12 @@ Sub SetMin(varMin As Object) As VMSlider
 End Sub
 
 'set persistent-hint
-Sub SetPersistentHint(varPersistentHint As Object) As VMSlider
+Sub SetPersistentHint(varPersistentHint As Boolean) As VMSlider
+	If varPersistentHint = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("persistent-hint", varPersistentHint)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PersistentHint"$
 	vue.SetStateSingle(pp, varPersistentHint)
 	Slider.Bind(":persistent-hint", pp)
@@ -346,7 +457,12 @@ Sub SetPersistentHint(varPersistentHint As Object) As VMSlider
 End Sub
 
 'set prepend-icon
-Sub SetPrependIcon(varPrependIcon As Object) As VMSlider
+Sub SetPrependIcon(varPrependIcon As String) As VMSlider
+	If varPrependIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("prepend-icon", varPrependIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PrependIcon"$
 	vue.SetStateSingle(pp, varPrependIcon)
 	Slider.Bind(":prepend-icon", pp)
@@ -354,7 +470,12 @@ Sub SetPrependIcon(varPrependIcon As Object) As VMSlider
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMSlider
+Sub SetReadonly(varReadonly As Boolean) As VMSlider
+	If varReadonly = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	Slider.Bind(":readonly", pp)
@@ -370,7 +491,12 @@ Sub SetRules(varRules As Object) As VMSlider
 End Sub
 
 'set step
-Sub SetStep(varStep As Object) As VMSlider
+Sub SetStep(varStep As Double) As VMSlider
+	varStep = BANano.parseFloat(varStep)
+	If bStatic Then
+		SetAttrSingle("step", varStep)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Step"$
 	vue.SetStateSingle(pp, varStep)
 	Slider.Bind(":step", pp)
@@ -378,7 +504,12 @@ Sub SetStep(varStep As Object) As VMSlider
 End Sub
 
 'set success
-Sub SetSuccess(varSuccess As Object) As VMSlider
+Sub SetSuccess(varSuccess As Boolean) As VMSlider
+	If varSuccess = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("success", varSuccess)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Success"$
 	vue.SetStateSingle(pp, varSuccess)
 	Slider.Bind(":success", pp)
@@ -394,15 +525,46 @@ Sub SetSuccessMessages(varSuccessMessages As Object) As VMSlider
 End Sub
 
 'set thumb-color
-Sub SetThumbColor(varThumbColor As Object) As VMSlider
+Sub SetThumbColor(varThumbColor As String) As VMSlider
+	If varThumbColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("thumb-color", varThumbColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ThumbColor"$
 	vue.SetStateSingle(pp, varThumbColor)
 	Slider.Bind(":thumb-color", pp)
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetThumbColorIntensity(varColor As String, varIntensity As String) As VMSlider
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("thumb-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	vue.SetStateSingle(pp, scolor)
+	Slider.Bind(":thumb-color", pp)
+	Return Me
+End Sub
+
+Sub SetThumbLabelAlways(b As Boolean) As VMSlider
+	If b = False Then Return Me
+	SetThumbLabel("always")
+	Return Me
+End Sub
+
 'set thumb-label
-Sub SetThumbLabel(varThumbLabel As Object) As VMSlider
+Sub SetThumbLabel(varThumbLabel As String) As VMSlider
+	If varThumbLabel = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("thumb-label", varThumbLabel)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ThumbLabel"$
 	vue.SetStateSingle(pp, varThumbLabel)
 	Slider.Bind(":thumb-label", pp)
@@ -410,7 +572,12 @@ Sub SetThumbLabel(varThumbLabel As Object) As VMSlider
 End Sub
 
 'set thumb-size
-Sub SetThumbSize(varThumbSize As Object) As VMSlider
+Sub SetThumbSize(varThumbSize As Int) As VMSlider
+	varThumbSize = BANano.parseInt(varThumbSize)
+	If bStatic Then
+		SetAttrSingle("thumb-size", varThumbSize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ThumbSize"$
 	vue.SetStateSingle(pp, varThumbSize)
 	Slider.Bind(":thumb-size", pp)
@@ -418,14 +585,21 @@ Sub SetThumbSize(varThumbSize As Object) As VMSlider
 End Sub
 
 'set tick-labels
-Sub SetTickLabels(varTickLabels As String) As VMSlider
-	varTickLabels = varTickLabels.tolowercase
-	Slider.SetAttrSingle(":tick-labels", varTickLabels)
+Sub SetTickLabels(varTickLabels As List) As VMSlider
+	If varTickLabels = Null Then Return Me
+	Dim pp As String = $"${ID}TickLabels"$
+	vue.SetData(pp, varTickLabels)
+	Slider.Bind(":tick-labels", pp)
 	Return Me
 End Sub
 
 'set tick-size
-Sub SetTickSize(varTickSize As Object) As VMSlider
+Sub SetTickSize(varTickSize As Int) As VMSlider
+	varTickSize = BANano.parseInt(varTickSize)
+	If bStatic Then
+		SetAttrSingle("tick-size", varTickSize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}TickSize"$
 	vue.SetStateSingle(pp, varTickSize)
 	Slider.Bind(":tick-size", pp)
@@ -433,7 +607,12 @@ Sub SetTickSize(varTickSize As Object) As VMSlider
 End Sub
 
 'set ticks
-Sub SetTicks(varTicks As Object) As VMSlider
+Sub SetTicks(varTicks As String) As VMSlider
+	If varTicks = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("ticks", varTicks)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ticks"$
 	vue.SetStateSingle(pp, varTicks)
 	Slider.Bind(":ticks", pp)
@@ -441,15 +620,41 @@ Sub SetTicks(varTicks As Object) As VMSlider
 End Sub
 
 'set track-color
-Sub SetTrackColor(varTrackColor As Object) As VMSlider
+Sub SetTrackColor(varTrackColor As String) As VMSlider
+	If varTrackColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("track-color", varTrackColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}TrackColor"$
 	vue.SetStateSingle(pp, varTrackColor)
 	Slider.Bind(":track-color", pp)
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetTrackColorIntensity(varColor As String, varIntensity As String) As VMSlider
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("track-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	vue.SetStateSingle(pp, scolor)
+	Slider.Bind(":track-color", pp)
+	Return Me
+End Sub
+
+
 'set track-fill-color
-Sub SetTrackFillColor(varTrackFillColor As Object) As VMSlider
+Sub SetTrackFillColor(varTrackFillColor As String) As VMSlider
+	If varTrackFillColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("track-fill-color", varTrackFillColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}TrackFillColor"$
 	vue.SetStateSingle(pp, varTrackFillColor)
 	Slider.Bind(":track-fill-color", pp)
@@ -457,21 +662,49 @@ Sub SetTrackFillColor(varTrackFillColor As Object) As VMSlider
 End Sub
 
 'set validate-on-blur
-Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMSlider
+Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMSlider
+	If varValidateOnBlur = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("validate-on-blur", varValidateOnBlur)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ValidateOnBlur"$
 	vue.SetStateSingle(pp, varValidateOnBlur)
 	Slider.Bind(":validate-on-blur", pp)
 	Return Me
 End Sub
 
-'set value
-Sub SetValue(varValue As Object) As VMSlider
-	SetAttrSingle("value", varValue)
+'set value, updated the vmodel
+Sub SetValue(varValue As String) As VMSlider
+	If xmodel = "" Then
+		Log($"VMSlider.SetValue '${ID}' - please set the vmodel first!"$)
+	End If
+	If bIsRange Then
+		Dim v1 As String = vue.MvField(varValue,1,",")
+		Dim v2 As String = vue.MvField(varValue,2,",")
+		'
+		v1 = BANano.parseFloat(v1)
+		v2 = BANano.parseFloat(v2)
+		'
+		Dim values As List
+		values.Initialize 
+		values.Add(v1)
+		values.Add(v2)
+		vue.SetStateSingle(xmodel, values)
+		Return Me
+	End If
+	varValue = BANano.parseFloat(varValue)
+	vue.SetStateSingle(xmodel, varValue)
 	Return Me
 End Sub
 
 'set vertical
-Sub SetVertical(varVertical As Object) As VMSlider
+Sub SetVertical(varVertical As Boolean) As VMSlider
+	If varVertical = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("vertical", varVertical)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Vertical"$
 	vue.SetStateSingle(pp, varVertical)
 	Slider.Bind(":vertical", pp)
@@ -684,16 +917,18 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSlider
-Slider.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Slider.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMSlider
-Slider.SetVisible(b)
-Return Me
+	Slider.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMSlider
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -701,6 +936,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSlider
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

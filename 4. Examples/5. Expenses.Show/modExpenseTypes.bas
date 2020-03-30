@@ -42,14 +42,14 @@ Sub Code
 	mdlExpenseType.AddCancel("btnCancelExpenseType", "Cancel")
 	mdlExpenseType.AddOK("btnSaveExpenseType", "Save")
 	'
-	Dim etID As VMTextField = vm.NewText(Me, "txtid","id","#","",False,"",0,"","",0)
+	Dim etID As VMTextField = vm.NewText(Me, True, "txtid","id","#","",False,"",0,"","",0)
 	etID.SetVisible(False).SetInt
-	Dim etText As VMTextField = vm.NewText(Me,"txttext","text","Name","",True,"",20,"","The expense type is required!",0)
-	Dim etDescription As VMTextArea = vm.NewTextArea(Me,"txtdescription","description","Description","",False,False,"",100,"","",0)
+	Dim etText As VMTextField = vm.NewText(Me, True, "txttext","text","Name","",True,"",20,"","The expense type is required!",0)
+	Dim etDescription As VMTextField = vm.NewTextArea(Me, True, "txtdescription","description","Description","",False,False,"",100,"","",0)
 	
 	mdlExpenseType.Container.AddControlS(etID.TextField, etID.ToString, 1, 1, 12, 12, 12, 12)
 	mdlExpenseType.Container.AddControlS(etText.TextField, etText.ToString, 2, 1, 12, 12, 12, 12)
-	mdlExpenseType.Container.AddControlS(etDescription.TextArea, etDescription.ToString, 3, 1, 12, 12, 12, 12)
+	mdlExpenseType.Container.AddControlS(etDescription.TextField, etDescription.ToString, 3, 1, 12, 12, 12, 12)
 	'
 	mdlExpenseType.SetWidth("500px")
 	vm.AddDialog(mdlExpenseType)

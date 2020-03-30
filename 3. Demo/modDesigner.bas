@@ -39,7 +39,7 @@ End Sub
 
 
 Sub Init
-	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button")
+	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider")
 	fieldtypes = CreateMap("string":"string", "int":"int", "bool":"bool", "date":"date","dbl":"float")
 	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
 	'
@@ -418,6 +418,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim bisinset As Boolean = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 		Dim bisindeterminate As Boolean = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
 		Dim bisitalic As Boolean = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
+		Dim bisreadonly As Boolean = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
 		'
 		Dim bfitwidth As Boolean = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
 		Dim shref As String = mattr.getdefault("href","")
@@ -453,6 +454,21 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim sbordercolor As String = mattr.getdefault("bordercolor", "")
 		Dim sborderstyle As String = mattr.getdefault("borderstyle", "")
 		Dim saspectratio As String = mattr.getdefault("aspectratio", "")
+		'
+		Dim bisreadonly As Boolean = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
+		Dim bisvertical As Boolean = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
+		Dim bisthumbalways As Boolean = YesNoToBoolean(mattr.getdefault("isthumbalways", "No"))
+		Dim bisthumblabel As Boolean = YesNoToBoolean(mattr.getdefault("isthumblabel", "No"))
+		Dim sminvalue As String = mattr.getdefault("minvalue", "0")
+		Dim sstepvalue As String = mattr.getdefault("stepvalue","1")
+		Dim smaxvalue As String = mattr.getdefault("maxvalue", "100")
+		Dim sprependicon As String = mattr.getdefault("prependicon", "")
+		Dim sappendicon As String = mattr.getdefault("appendicon","")
+		Dim sthumbsize As String = mattr.getdefault("thumbsize","32")
+		Dim sthumbcolor As String = mattr.getdefault("thumbcolor", "")
+		Dim sthumbintensity As String = mattr.getdefault("thumbintensity", "")
+		Dim strackcolor As String = mattr.GetDefault("trackcolor", "")
+		Dim strackintensity As String = mattr.getdefault("trackintensity","")
 			
 		Dim bShowLabel As Boolean = True
 		Dim bLabelOnTop As Boolean = True
@@ -460,8 +476,6 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim sidfield As String = "id"
 		Dim sdisplayfield As String = "text"
 		Dim bReturnObject As Boolean = False
-		Dim smaxvalue As String = "0"
-		Dim sminvalue As String = "100"
 		Dim bstatic As Boolean = True
 		'
 		Select Case controltype
@@ -651,13 +665,27 @@ sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bstatic}, "r
 			'
 sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
 .Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+				'
+			Case "slider"
+				Dim sld As VMSlider = vm.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
+				sld.SetValue(svalue)
+				sld.SetColorIntensity(scolor, sintensity)
+				sld.SetHideDetails(bishidedetails)
+				sld.SetDark(bisdark)
+				sld.SetReadonly(bisreadonly)
+				sld.SetVertical(bisvertical)
+				sld.SetStep(sstepvalue)
+				sld.SetPrependIcon(sprependicon)
+				sld.SetAppendIcon(sappendicon)
+				sld.SetDense(bisdense)
+				sld.SetThumbSize(sthumbsize)
+				sld.SetThumbColorIntensity(sthumbcolor,sthumbintensity)
+				sld.SetTrackColorIntensity(strackcolor,strackintensity)
+				If bisthumblabel Then sld.SetThumbLabel(bisthumblabel)
+				If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
+				ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-		Case "slider"
-			Dim sld As VMSlider = vm.newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
-					'sld.setstatic(True)
-			ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim sld${sname} As VMSlider = vm.newSlider(Me, ${bstatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})
+sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bstatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})
 .Container.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "label"
@@ -1720,21 +1748,35 @@ Sub PropertyBag_Slider
 	pbslider.SetVShow("pbslider")
 	pbslider.AddHeading("d","Details")
 	pbslider.AddText("d","id","ID","","")
-	pbslider.AddText("d", "controltype", "Type", "", "slider")
-	pbslider.AddText("d","vmodel","VModel","","")
-	pbslider.AddText("d","label","Label","","")
-	pbslider.AddText("d", "value", "Value","","20")
-	pbslider.AddText("d", "minvalue", "Min Value","","0")
-	pbslider.AddText("d", "maxvalue", "Max Value","","100")
-		
+	pbslider.AddSelect("d", "controltype", "Type", controltypes)
 	pbslider.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
+	pbslider.AddText("d", "vmodel","VModel","","")
+	pbslider.AddText("d", "label","Label","","")
+	pbslider.AddText("d", "value", "Value(s)","","20")
+	pbslider.AddText("d", "minvalue", "Min Value","","0")
+	pbslider.AddText("d", "stepvalue", "Step","","1")
+	pbslider.AddText("d", "maxvalue", "Max Value","","100")
+	pbslider.AddText("d", "prependicon", "Prepend Icon","","volume_down")
+	pbslider.AddText("d", "appendicon", "Append Icon","","volume_up")
+	pbslider.AddText("d", "thumbsize", "Thumb Size","","32")
+	pbslider.AddSelect("d","color","Color", vm.ColorOptions)
+	pbslider.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
+	pbslider.AddSelect("d","thumbcolor","Thumb Color", vm.ColorOptions)
+	pbslider.AddSelect("d","thumbintensity","Thumb Intensity", vm.IntensityOptions)
+	pbslider.AddSelect("d","trackcolor","Track Color", vm.ColorOptions)
+	pbslider.AddSelect("d","trackintensity","Track Intensity", vm.IntensityOptions)
 	pbslider.AddNumber("d","tabindex","Tab Index","","")
 	'
 	pbslider.AddCheck2(1, 1, "isrequired", "Required")
 	pbslider.AddCheck2(1, 2, "isvisible", "Visible")
 	pbslider.AddCheck2(2, 1, "isdisabled", "Disabled")
-	pbslider.AddCheck2(2, 2, "ontable", "On Table")
-	pbslider.AddCheck2(3, 1, "thumblabel", "Show ThumbTable")
+	pbslider.AddCheck2(2, 2, "isreadonly", "Read Only")
+	pbslider.AddCheck2(3, 1, "isvertical", "Vertical")
+	pbslider.AddCheck2(3, 2, "isthumbalways", "Thumb Label Always")
+	pbslider.AddCheck2(4, 1, "isthumblabel", "Thumb Label")
+	pbslider.AddCheck2(4, 2, "ishidedetails", "Hide Details")
+	pbslider.AddCheck2(5, 1, "isdark", "Dark")
+	pbslider.AddCheck2(5, 2, "isdense", "Dense")
 	pbslider.SetChecks("d")
 	
 	pbslider.AddMatrix("d")

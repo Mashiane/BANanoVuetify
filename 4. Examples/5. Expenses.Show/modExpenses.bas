@@ -48,19 +48,19 @@ Sub Code
 	mdlExpenses.AddCancel("btnCancelExpense", "Cancel")
 	mdlExpenses.AddOK("btnSaveExpense", "Save")
 	'
-	Dim expense_id As VMTextField = vm.NewText(Me, "txtexpid", "id", "#","",False,"",0,"","",0).SetVisible(False).SetInt
-	Dim expense_date As VMDatePicker = vm.NewDatePicker(Me, "txtexpdate", "expense_date", "Date", True, "","","The expense date should be specified!",0)
-	Dim expense_category As VMSelect = vm.NewSelectDataSource(Me, "txtexpcategory","expense_category","Category",True,False,"","categories","id","text",False,"","The category should be specified!",0).SetInt
-	Dim expense_type As VMSelect = vm.NewSelectDataSource(Me, "txtexptype","expense_type","Type",True,False,"","types","id","text",False,"","The type should be specified!",0).SetInt
-	Dim expense_amount As VMTextField = vm.NewTel(Me, "txtexpamount", "expense_amount", "Amount", "", True, "", "","The amount should be specified!",0).SetDouble
-	Dim expense_description As VMTextArea = vm.NewTextArea(Me, "txtexpdescription", "expense_description", "Description", "", False, False, "",100, "","",0)
+	Dim expense_id As VMTextField = vm.NewText(Me, True, "txtexpid", "id", "#","",False,"",0,"","",0).SetVisible(False).SetInt
+	Dim expense_date As VMDateTimePicker = vm.NewDatePicker(Me, True, "txtexpdate", "expense_date", "Date", True, "","","The expense date should be specified!",0)
+	Dim expense_category As VMSelect = vm.NewSelectDataSource(Me, True, "txtexpcategory","expense_category","Category",True,False,"","categories","id","text",False,"","The category should be specified!",0).SetInt
+	Dim expense_type As VMSelect = vm.NewSelectDataSource(Me, True, "txtexptype","expense_type","Type",True,False,"","types","id","text",False,"","The type should be specified!",0).SetInt
+	Dim expense_amount As VMTextField = vm.NewTel(Me, True, "txtexpamount", "expense_amount", "Amount", "", True, "", "","The amount should be specified!",0).SetDouble
+	Dim expense_description As VMTextField = vm.NewTextArea(Me, True, "txtexpdescription", "expense_description", "Description", "", False, False, "",100, "","",0)
 	'
 	mdlExpenses.Container.AddControl(expense_id.TextField,expense_id.ToString, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
-	mdlExpenses.Container.AddControl(expense_date.DatePicker, expense_date.ToSTring, 2, 1, 0, 0, 0, 0, 12, 6, 6, 6)
+	mdlExpenses.Container.AddControl(expense_date.DateTimePicker, expense_date.ToSTring, 2, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 	mdlExpenses.Container.AddControl(expense_category.Combo, expense_category.ToSTring, 2, 2, 0, 0, 0, 0, 12, 6, 6, 6)
 	mdlExpenses.Container.AddControl(expense_type.Combo, expense_type.ToString, 3, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 	mdlExpenses.Container.AddControl(expense_amount.TextField,expense_amount.ToString, 3, 2, 0, 0, 0, 0, 12, 6, 6, 6)
-	mdlExpenses.Container.AddControl(expense_description.TextArea,expense_description.ToString, 4, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	mdlExpenses.Container.AddControl(expense_description.TextField, expense_description.ToString, 4, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	mdlExpenses.SetWidth("700px")
 	vm.AddDialog(mdlExpenses)

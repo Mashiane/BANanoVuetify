@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Public HasContent As Boolean
 	Private items As Map
+	Private bStatic As Boolean
 End Sub
 
 'initialize the List
@@ -26,6 +27,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	HasContent = False
 	items.Initialize
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMList
+	bStatic = b
+	List.SetStatic(b)
 	Return Me
 End Sub
 
@@ -107,6 +116,7 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 		vlii.Initialize(vue, "", Module).SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
 		icon.Initialize(vue,"", Module).SetVText($"item.${iconName}"$)
+		icon.SetStatic(bStatic)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If
@@ -172,6 +182,7 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 		vlii.Initialize(vue, "", Module).SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
 		icon.Initialize(vue,"", Module).SetVText($"item.${iconName}"$)
+		icon.SetStatic(bstatic)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If

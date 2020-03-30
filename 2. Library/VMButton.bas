@@ -31,10 +31,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'link click event
 	SetOnClick($"${ID}_click"$)
 	hasToolTip = False
-	tooltip.Initialize(vue, "", Module)
-	tmpl.Initialize(vue, "", Module)
+	tooltip.Initialize(vue, $"${ID}tt"$, Module)
+	tmpl.Initialize(vue, $"${ID}tmp"$, Module)
 	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
-	span.Initialize(vue, "").SetSpan
+	span.Initialize(vue, $"${ID}span"$).SetSpan
 	Button.SetVShow($"${ID}show"$)
 	Button.typeOf = "button"
 	txt = ""
@@ -52,6 +52,9 @@ End Sub
 Sub SetStatic(b As Boolean) As VMButton
 	bStatic = b
 	Button.SetStatic(b)
+	tooltip.setstatic(b)
+	tmpl.setstatic(b)
+	span.SetStatic(b)
 	Return Me
 End Sub
 
@@ -113,6 +116,7 @@ Sub SetIconButton(iconName As String) As VMButton
 	SetIcon(True)
 	Dim icon As VMIcon
 	icon.Initialize(vue, $"${ID}icon"$, Module).SetText(iconName)
+	icon.SetStatic(bStatic)
 	icon.Pop(Button)
 	Return Me
 End Sub
@@ -163,6 +167,7 @@ Sub SetFABButton(iconName As String) As VMButton
 	SetDark(True)
 	Dim icon As VMIcon
 	icon.Initialize(vue, $"${ID}icon"$, Module).SetText(iconName)
+	icon.SetStatic(bStatic)
 	icon.Pop(Button)
 	Return Me
 End Sub
@@ -183,6 +188,7 @@ End Sub
 Sub AddIconVIf(iconName As String, vif As String, theme As String) As VMButton
 	Dim icon As VMIcon
 	icon.Initialize(vue, "", Module).SetText(iconName).SetVIf(vif)
+	icon.SetStatic(bStatic)
 	If theme <> "" Then
 		icon.UseTheme(theme)
 	End If
@@ -194,6 +200,7 @@ End Sub
 Sub AddIconVElse(iconName As String, vif As String, theme As String) As VMButton
 	Dim icon As VMIcon
 	icon.Initialize(vue, "", Module).SetText(iconName).setvelse(vif)
+	icon.SetStatic(bStatic)
 	If theme <> "" Then
 		icon.UseTheme(theme)
 	End If
@@ -207,6 +214,7 @@ Sub AddIcon(iconName As String, iconPos As String, iconTheme As String) As VMBut
 	If iconName = "" Then Return Me
 	Dim icon As VMIcon
 	icon.Initialize(vue, $"${ID}icon"$, Module).SetText(iconName)
+	icon.SetStatic(bStatic)
 	Select Case iconPos
 	Case "left"
 		icon.SetLeft(True)

@@ -445,7 +445,7 @@ private Sub BuildControls
 			tmp.SetAttrLoose(sline)
 				'
 			Dim eIcon As VMIcon
-			eIcon.Initialize(vue, "", Module).AddClass("mr-2")
+			eIcon.Initialize(vue, $"${ID}edit"$, Module).AddClass("mr-2").SetStatic(True)
 			eIcon.SetAttrSingle("@click", $"${ID}_edit(item)"$)
 			eIcon.SetText("mdi-pencil")
 			tmp.AddComponent(eIcon.ToString)
@@ -459,7 +459,7 @@ private Sub BuildControls
 			tmpd.SetAttrLoose(sline)
 			'
 			Dim eIcon As VMIcon
-			eIcon.Initialize(vue, "", Module).AddClass("mr-2")
+			eIcon.Initialize(vue, $"${ID}delete"$, Module).AddClass("mr-2").SetStatic(True)
 			eIcon.SetAttrSingle("@click", $"${ID}_delete(item)"$)
 			eIcon.SetText("mdi-delete")
 			tmpd.AddComponent(eIcon.ToString)
@@ -475,7 +475,7 @@ private Sub BuildControls
 			tmpa.SetAttrLoose(sline)
 			'
 			Dim aIcon As VMIcon
-			aIcon.Initialize(vue, "", Module).AddClass("mr-2")
+			aIcon.Initialize(vue, $"${ID}${value}"$, Module).AddClass("mr-2").SetStatic(True)
 			aIcon.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
 			aIcon.SetText(nf.icon)
 			tmpa.AddComponent(aIcon.ToString)

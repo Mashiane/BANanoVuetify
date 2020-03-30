@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Public HasContent As Boolean
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Template
@@ -24,10 +25,16 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	HasContent = False
+	bStatic = False
 	Return Me
 End Sub
 
 
+Sub SetStatic(b As Boolean) As VMTemplate
+	bStatic = b
+	Template.SetStatic(b)
+	Return Me
+End Sub
 
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMTemplate
@@ -115,8 +122,13 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTemplate
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	Template.Bind(":color", pp)
 	Return Me
@@ -124,7 +136,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	Return Template.ToString
 End Sub
 
@@ -268,12 +279,13 @@ Sub SetAttrSingle(prop As String, value As String) As VMTemplate
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTemplate
-Template.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Template.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMTemplate
-Template.SetVisible(b)
-Return Me
+	Template.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
@@ -285,6 +297,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTemplate
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

@@ -50,6 +50,9 @@ End Sub
 Sub SetStatic(b As Boolean) As VMAvatar
 	bStatic = b
 	Avatar.SetStatic(b)
+	Icon.SetStatic(b)
+	Image.SetStatic(b)
+	Label.SetStatic(b)
 	Return Me
 End Sub
 
@@ -81,6 +84,7 @@ End Sub
 Sub AddIcon(iID As String, iconName As String, props As Map,  classes As List,  attributes As List) As VMAvatar
 	Dim vicon As VMIcon
 	vicon.Initialize(vue, iID, Module).SetText(iconName)
+	vicon.SetStatic(bStatic)
 	If attributes <> Null Then
 		vicon.SetAttributes(attributes)
 	End If

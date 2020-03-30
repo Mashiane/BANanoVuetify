@@ -23,7 +23,7 @@ Sub Code(vmx As BANanoVM)
 	' create a H1 label
 	Dim lbl As VMLabel = vm.CreateLABEL("lbl1").SetText("This is page 1!").SetH1
 	'create button
-	Dim btn As VMButton = vm.CreateButton("btn0", Me).SetText("Page 2").SetPrimary(True).SetRaised(True).SetToolTip("Go to page 2")
+	Dim btn As VMButton = vm.CreateButton("btn0", Me).SetLabel("Page 2").SetPrimary(True).SetRaised(True).SetToolTip("Go to page 2")
 	'add label to R1C1
 	cont.AddComponent(1,1, lbl.ToString)
 	'add button to r1c2

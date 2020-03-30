@@ -45,16 +45,16 @@ Sub Code
 	mdlExpenseCategory.AddCancel("btnCancelCategory", "Cancel")
 	mdlExpenseCategory.AddOK("btnSaveCategory", "Save")
 	'
-	Dim ecID As VMTextField = vm.NewText(Me,"txtid","id","#","",False,"",0,"","",0)
+	Dim ecID As VMTextField = vm.NewText(Me,True,"txtid","id","#","",False,"",0,"","",0)
 	ecID.SetVisible(False).SetInt
-	Dim ecText As VMTextField = vm.NewText(Me,"txttext","text","Name","",True,"",20,"","The category name is required!",0)
-	Dim ecDescription As VMTextArea = vm.NewTextArea(Me,"txtdescription","description","Description","",False,False,"",100,"","",0)
-	Dim ecBudget As VMTextField = vm.NewTel(Me,"txtbudget","budget","Monthly Budget","",True,"","","The monthly budget is required!",0)
+	Dim ecText As VMTextField = vm.NewText(Me,True,"txttext","text","Name","",True,"",20,"","The category name is required!",0)
+	Dim ecDescription As VMTextField = vm.NewTextArea(Me,True,"txtdescription","description","Description","",False,False,"",100,"","",0)
+	Dim ecBudget As VMTextField = vm.NewTel(Me,True,"txtbudget","budget","Monthly Budget","",True,"","","The monthly budget is required!",0)
 	ecBudget.SetDouble
 	
 	mdlExpenseCategory.Container.AddControlS(ecID.TextField,ecID.tostring, 1, 1, 12, 12, 12, 12)
 	mdlExpenseCategory.Container.AddControlS(ecText.TextField, ecText.tostring, 2, 1, 12, 12, 12, 12)
-	mdlExpenseCategory.Container.AddControlS(ecDescription.TextArea,ecDescription.ToString, 3, 1, 12, 12, 12, 12)
+	mdlExpenseCategory.Container.AddControlS(ecDescription.TextField,ecDescription.ToString, 3, 1, 12, 12, 12, 12)
 	mdlExpenseCategory.Container.AddControlS(ecBudget.TextField,ecBudget.ToString, 4, 1, 12, 12, 12, 12)
 	 
 	mdlExpenseCategory.SetWidth("500px")

@@ -30,44 +30,44 @@ Sub Code(vmx As BANanoVM)
 	'add a login button
 	mdlRegister.AddOk("btnOkSignUp", "Sign In")
 	'create the controls
-	Dim txtfirstname As VMTextField = vm.NewText(Me,"txtfirstname", "firstname", "First Name", "First Name", True, "", 0, "", "The first name is required!", 0)
-	Dim txtlastname As VMTextField = vm.NewText(Me,"txtlastname", "lastname", "Last Name", "Last Name", True, "", 0, "", "The last name is required!", 0)
+	Dim txtfirstname As VMTextField = vm.NewText(Me,True,"txtfirstname", "firstname", "First Name", "First Name", True, "", 0, "", "The first name is required!", 0)
+	Dim txtlastname As VMTextField = vm.NewText(Me,True,"txtlastname", "lastname", "Last Name", "Last Name", True, "", 0, "", "The last name is required!", 0)
 	'
-	Dim dpDOB As VMDatePicker = vm.NewDatePicker(Me,"dpdateofbirth", "dob", "Date of Birth", True, "Date of Birth","","",0)
-	Dim tpTOB As VMTimePicker = vm.NewTimePicker(Me,"tptimeofbirth", "tob", "Time of Birth", True, "", "", "",0)
+	Dim dpDOB As VMDateTimePicker = vm.NewDatePicker(Me,True,"dpdateofbirth", "dob", "Date of Birth", True, "Date of Birth","","",0)
+	Dim tpTOB As VMDateTimePicker = vm.NewTimePicker(Me,True,"tptimeofbirth", "tob", "Time of Birth", True, "", "", "",0)
 	'
-	Dim txtTel As VMTextField = vm.NewTel(Me,"txttelephone", "telephone", "Telephone", "Telephone Number", True, "", "", "",0)
-	Dim txtEmail As VMTextField = vm.NewEmail(Me,"txtemail", "email", "Email Address","Email Address",True,"","", "The email address is required!",0)
+	Dim txtTel As VMTextField = vm.NewTel(Me,True,"txttelephone", "telephone", "Telephone", "Telephone Number", True, "", "", "",0)
+	Dim txtEmail As VMTextField = vm.NewEmail(Me,True,"txtemail", "email", "Email Address","Email Address",True,"","", "The email address is required!",0)
 	'
-	Dim radGender As VMRadioGroup = vm.NewRadioGroup(Me,"rggender", "gender", "Gender", "Male", CreateMap("Male":"Male","Female":"Female"), True, True, 0)
+	Dim radGender As VMRadioGroup = vm.NewRadioGroup(Me,True,"rggender", "gender", "Gender", "Male", CreateMap("Male":"Male","Female":"Female"), True, True, 0)
 	'Dim chipSkills As VMTextField = vm.NewChips(me,"skills", "Skills", "", False, False, "","", 0)
 	'
-	Dim children As VMTextField = vm.NewNumber(Me,"txtchildren", "children", "Total Children", "", False, "", "","", 0)
-	Dim notifications As VMSwitch = vm.NewSwitch(Me,"swtnotifications", "notifications", "Receive Notifications", "Yes", "No",True, 0).SetString
+	Dim children As VMTextField = vm.NewNumber(Me,True,"txtchildren", "children", "Total Children", "", False, "", "","", 0)
+	Dim notifications As VMCheckBox = vm.NewSwitch(Me,True,"swtnotifications", "notifications", "Receive Notifications", "Yes", "No",True, 0).SetString
 	'
-	Dim profilepic As VMImage = vm.NewImage(Me,"displaypic", "dp", "./assets/sponge.png", "SpongeBob", "80px", "80px")
+	Dim profilepic As VMImage = vm.NewImage(Me,True,"displaypic", "dp", "./assets/sponge.png", "SpongeBob", "80px", "80px")
 	profilepic.SetBorder("1px", vm.COLOR_BLUE, vm.BORDER_RIDGE)
 	profilepic.SetBorderRadius("50%")
 	
 	
-	Dim uploadprofile As VMFileInput = vm.NewFile(Me,"fiuploadpic", "upload", "Upload Profile Image", "", False, "", "", 0)
+	Dim uploadprofile As VMTextField = vm.NewFile(Me,True,"fiuploadpic", "upload", "Upload Profile Image", "", False, "", "", 0)
 	
-	Dim notes As VMTextArea = vm.NewTextArea(Me,"txtnotes", "notes", "Notes", "", True, True, "", 0,"", "Notes are required!", 0)
-	Dim agree As VMCheckBox = vm.NewCheckBox(Me,"chkagree", "agree", "I agree with terms of use", "Yes", "No", True, 0).SetString
+	Dim notes As VMTextField = vm.NewTextArea(Me,True,"txtnotes", "notes", "Notes", "", True, True, "", 0,"", "Notes are required!", 0)
+	Dim agree As VMCheckBox = vm.NewCheckBox(Me,True,"chkagree", "agree", "I agree with terms of use", "Yes", "No", True, 0).SetString
 	
-	Dim txtPassword As VMTextField = vm.NewPassword(Me,"txtpassword", "password", "Password","",True,True,"",15,"", "The password is required!",0)
-	Dim txtconfirmPassword As VMTextField = vm.NewPassword(Me,"txtconfirmpassword", "confirmpassword", "Confirm Password","",True,True,"",15,"", "The password is required!",0)
+	Dim txtPassword As VMTextField = vm.NewPassword(Me,True,"txtpassword", "password", "Password","",True,True,"",15,"", "The password is required!",0)
+	Dim txtconfirmPassword As VMTextField = vm.NewPassword(Me,True,"txtconfirmpassword", "confirmpassword", "Confirm Password","",True,True,"",15,"", "The password is required!",0)
 	
 	'add the controls, the grid will be automatically created
-	mdlregister.container.SetAlignSelfRC(1, 1, "center")
+	mdlRegister.container.SetAlignSelfRC(1, 1, "center")
 	mdlRegister.Container.AddControl(profilepic.Image, profilepic.tostring,1,1,0,0,0,0,12,6,6,6)
-	mdlRegister.Container.AddControl(uploadprofile.FileInput, uploadprofile.tostring,1,2,0,0,0,0,12,6,6,6)
+	mdlRegister.Container.AddControl(uploadprofile.TextField, uploadprofile.tostring,1,2,0,0,0,0,12,6,6,6)
 	
 	mdlRegister.Container.AddControl(txtfirstname.TextField, txtfirstname.tostring,2,1,0,0,0,0,12,6,6,6)
 	mdlRegister.Container.AddControl(txtlastname.TextField, txtlastname.tostring,2,2,0,0,0,0,12,6,6,6)
 	'
-	mdlRegister.Container.AddControl(dpDOB.DatePicker, dpDOB.tostring,3,1,0,0,0,0,12,6,6,6)
-	mdlRegister.Container.AddControl(tpTOB.TimePicker, tpTOB.ToString,3,2,0,0,0,0,12,6,6,6)
+	mdlRegister.Container.AddControl(dpDOB.DateTimePicker, dpDOB.tostring,3,1,0,0,0,0,12,6,6,6)
+	mdlRegister.Container.AddControl(tpTOB.DateTimePicker, tpTOB.ToString,3,2,0,0,0,0,12,6,6,6)
 	'
 	mdlRegister.Container.AddControl(txtTel.TextField,txtTel.ToString,4,1,0,0,0,0,12,6,6,6)
 	mdlRegister.Container.AddControl(txtEmail.TextField, txtEmail.ToString,4,2,0,0,0,0,12,6,6,6)
@@ -76,12 +76,12 @@ Sub Code(vmx As BANanoVM)
 	'mdlRegister.Container.AddControl(chipSkills,5,2,0,0,0,0,12,6,6,6)
 	'
 	mdlRegister.Container.AddControl(children.TextField, children.ToString,6,1,0,0,0,0,12,6,6,6)
-	mdlRegister.Container.AddControl(notifications.SwitchBox, notifications.ToString,6,2,0,0,0,0,12,6,6,6)
+	mdlRegister.Container.AddControl(notifications.CheckBox, notifications.ToString,6,2,0,0,0,0,12,6,6,6)
 	'
 	mdlRegister.Container.AddControl(txtPassword.TextField, txtPassword.ToString,7,1,0,0,0,0,12,6,6,6)
 	mdlRegister.Container.AddControl(txtconfirmPassword.TextField, txtconfirmPassword.ToString,7,2,0,0,0,0,12,6,6,6)
 	'
-	mdlRegister.Container.AddControl(notes.TextArea, notes.ToString,8,1,0,0,0,0,12,12,12,12)
+	mdlRegister.Container.AddControl(notes.TextField, notes.ToString,8,1,0,0,0,0,12,12,12,12)
 	mdlRegister.Container.AddControl(agree.CheckBox, agree.ToString,9,1,0,0,0,0,12,12,12,12)
 	
 	'add this modal to the page

@@ -25,7 +25,6 @@ Sub Code
 	Dim seasons As List
 	seasons.Initialize 
 	seasons.AddAll(Array("Winter", "Spring", "Summer", "Fall"))
-	vm.SetStateList("seasons", seasons)
 	
 	vm.CreateSlider("sl1", Me).SetVModel("min").SetMin("-100").SetMax("100").SetLabel("Min").AddToContainer(cont, 1, 1)
 	'
@@ -39,7 +38,7 @@ Sub Code
 	'
 	vm.CreateSlider("sl6", Me).SetPrependIcon("zoom_out").SetAppendIcon("zoom_in").SetVModel("zoom").SetMin("0").SetMax("10").SetValue("5").AddToContainer(cont, 6, 1)
 	'
-	Dim sldx As VMSlider = vm.CreateSlider("sldx", Me).SetTickLabels("seasons").SetValue("0").SetVModel("season")
+	Dim sldx As VMSlider = vm.CreateSlider("sldx", Me).SetTickLabels(seasons).SetValue("0").SetVModel("season")
 	sldx.SetMin("0").SetMax("3").SetTicks("always").SetTickSize("4").SetStep("1")
 	sldx.AddToContainer(cont, 7, 1)
 	'

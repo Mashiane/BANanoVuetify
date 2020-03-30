@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ToolTip
@@ -22,9 +23,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMToolTip
+	bStatic = b
+	ToolTip.SetStatic(b)
+	Return Me
+End Sub
 
 Sub SetAttrLoose(loose As String) As VMToolTip
 	ToolTip.SetAttrLoose(loose)
@@ -108,7 +115,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set absolute
-Sub SetAbsolute(varAbsolute As Object) As VMToolTip
+Sub SetAbsolute(varAbsolute As Boolean) As VMToolTip
+	If varAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("absolute", varAbsolute)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Absolute"$
 	vue.SetStateSingle(pp, varAbsolute)
 	ToolTip.Bind(":absolute", pp)
@@ -116,7 +128,12 @@ Sub SetAbsolute(varAbsolute As Object) As VMToolTip
 End Sub
 
 'set activator
-Sub SetActivator(varActivator As Object) As VMToolTip
+Sub SetActivator(varActivator As String) As VMToolTip
+	If varActivator = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("activator", varActivator)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Activator"$
 	vue.SetStateSingle(pp, varActivator)
 	ToolTip.Bind(":activator", pp)
@@ -124,7 +141,12 @@ Sub SetActivator(varActivator As Object) As VMToolTip
 End Sub
 
 'set allow-overflow
-Sub SetAllowOverflow(varAllowOverflow As Object) As VMToolTip
+Sub SetAllowOverflow(varAllowOverflow As Boolean) As VMToolTip
+	If varAllowOverflow = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("allow-overflow", varAllowOverflow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}AllowOverflow"$
 	vue.SetStateSingle(pp, varAllowOverflow)
 	ToolTip.Bind(":allow-overflow", pp)
@@ -132,7 +154,12 @@ Sub SetAllowOverflow(varAllowOverflow As Object) As VMToolTip
 End Sub
 
 'set attach
-Sub SetAttach(varAttach As Object) As VMToolTip
+Sub SetAttach(varAttach As Boolean) As VMToolTip
+	If varAttach = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("attach", varAttach)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Attach"$
 	vue.SetStateSingle(pp, varAttach)
 	ToolTip.Bind(":attach", pp)
@@ -140,7 +167,12 @@ Sub SetAttach(varAttach As Object) As VMToolTip
 End Sub
 
 'set bottom
-Sub SetBottom(varBottom As Object) As VMToolTip
+Sub SetBottom(varBottom As Boolean) As VMToolTip
+	If varBottom = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("bottom", varBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bottom"$
 	vue.SetStateSingle(pp, varBottom)
 	ToolTip.Bind(":bottom", pp)
@@ -148,7 +180,11 @@ Sub SetBottom(varBottom As Object) As VMToolTip
 End Sub
 
 'set close-delay
-Sub SetCloseDelay(varCloseDelay As Object) As VMToolTip
+Sub SetCloseDelay(varCloseDelay As Int) As VMToolTip
+	If bStatic Then
+		SetAttrSingle("close-delay", varCloseDelay)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CloseDelay"$
 	vue.SetStateSingle(pp, varCloseDelay)
 	ToolTip.Bind(":close-delay", pp)
@@ -156,7 +192,12 @@ Sub SetCloseDelay(varCloseDelay As Object) As VMToolTip
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMToolTip
+Sub SetColor(varColor As String) As VMToolTip
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	ToolTip.Bind(":color", pp)
@@ -164,7 +205,12 @@ Sub SetColor(varColor As Object) As VMToolTip
 End Sub
 
 'set content-class
-Sub SetContentClass(varContentClass As Object) As VMToolTip
+Sub SetContentClass(varContentClass As String) As VMToolTip
+	If varContentClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("content-class", varContentClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ContentClass"$
 	vue.SetStateSingle(pp, varContentClass)
 	ToolTip.Bind(":content-class", pp)
@@ -172,7 +218,12 @@ Sub SetContentClass(varContentClass As Object) As VMToolTip
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMToolTip
+Sub SetDark(varDark As Boolean) As VMToolTip
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	ToolTip.Bind(":dark", pp)
@@ -186,7 +237,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMToolTip
 End Sub
 
 'set eager
-Sub SetEager(varEager As Object) As VMToolTip
+Sub SetEager(varEager As Boolean) As VMToolTip
+	If varEager = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("eager", varEager)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Eager"$
 	vue.SetStateSingle(pp, varEager)
 	ToolTip.Bind(":eager", pp)
@@ -194,7 +250,12 @@ Sub SetEager(varEager As Object) As VMToolTip
 End Sub
 
 'set fixed
-Sub SetFixed(varFixed As Object) As VMToolTip
+Sub SetFixed(varFixed As Boolean) As VMToolTip
+	If varFixed = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fixed", varFixed)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Fixed"$
 	vue.SetStateSingle(pp, varFixed)
 	ToolTip.Bind(":fixed", pp)
@@ -202,7 +263,12 @@ Sub SetFixed(varFixed As Object) As VMToolTip
 End Sub
 
 'set internal-activator
-Sub SetInternalActivator(varInternalActivator As Object) As VMToolTip
+Sub SetInternalActivator(varInternalActivator As Boolean) As VMToolTip
+	If varInternalActivator = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("internal-activator", varInternalActivator)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}InternalActivator"$
 	vue.SetStateSingle(pp, varInternalActivator)
 	ToolTip.Bind(":internal-activator", pp)
@@ -210,7 +276,12 @@ Sub SetInternalActivator(varInternalActivator As Object) As VMToolTip
 End Sub
 
 'set left
-Sub SetLeft(varLeft As Object) As VMToolTip
+Sub SetLeft(varLeft As Boolean) As VMToolTip
+	If varLeft = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("left", varLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Left"$
 	vue.SetStateSingle(pp, varLeft)
 	ToolTip.Bind(":left", pp)
@@ -218,7 +289,12 @@ Sub SetLeft(varLeft As Object) As VMToolTip
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMToolTip
+Sub SetLight(varLight As Boolean) As VMToolTip
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	ToolTip.Bind(":light", pp)
@@ -226,7 +302,12 @@ Sub SetLight(varLight As Object) As VMToolTip
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMToolTip
+Sub SetMaxWidth(varMaxWidth As String) As VMToolTip
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	ToolTip.Bind(":max-width", pp)
@@ -234,7 +315,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMToolTip
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMToolTip
+Sub SetMinWidth(varMinWidth As String) As VMToolTip
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	ToolTip.Bind(":min-width", pp)
@@ -242,7 +328,12 @@ Sub SetMinWidth(varMinWidth As Object) As VMToolTip
 End Sub
 
 'set nudge-bottom
-Sub SetNudgeBottom(varNudgeBottom As Object) As VMToolTip
+Sub SetNudgeBottom(varNudgeBottom As String) As VMToolTip
+	If varNudgeBottom = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-bottom", varNudgeBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeBottom"$
 	vue.SetStateSingle(pp, varNudgeBottom)
 	ToolTip.Bind(":nudge-bottom", pp)
@@ -250,7 +341,12 @@ Sub SetNudgeBottom(varNudgeBottom As Object) As VMToolTip
 End Sub
 
 'set nudge-left
-Sub SetNudgeLeft(varNudgeLeft As Object) As VMToolTip
+Sub SetNudgeLeft(varNudgeLeft As String) As VMToolTip
+	If varNudgeLeft = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-left", varNudgeLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeLeft"$
 	vue.SetStateSingle(pp, varNudgeLeft)
 	ToolTip.Bind(":nudge-left", pp)
@@ -258,7 +354,12 @@ Sub SetNudgeLeft(varNudgeLeft As Object) As VMToolTip
 End Sub
 
 'set nudge-right
-Sub SetNudgeRight(varNudgeRight As Object) As VMToolTip
+Sub SetNudgeRight(varNudgeRight As String) As VMToolTip
+	If varNudgeRight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-right", varNudgeRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeRight"$
 	vue.SetStateSingle(pp, varNudgeRight)
 	ToolTip.Bind(":nudge-right", pp)
@@ -266,7 +367,12 @@ Sub SetNudgeRight(varNudgeRight As Object) As VMToolTip
 End Sub
 
 'set nudge-top
-Sub SetNudgeTop(varNudgeTop As Object) As VMToolTip
+Sub SetNudgeTop(varNudgeTop As String) As VMToolTip
+	If varNudgeTop = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-top", varNudgeTop)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeTop"$
 	vue.SetStateSingle(pp, varNudgeTop)
 	ToolTip.Bind(":nudge-top", pp)
@@ -274,7 +380,12 @@ Sub SetNudgeTop(varNudgeTop As Object) As VMToolTip
 End Sub
 
 'set nudge-width
-Sub SetNudgeWidth(varNudgeWidth As Object) As VMToolTip
+Sub SetNudgeWidth(varNudgeWidth As String) As VMToolTip
+	If varNudgeWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-width", varNudgeWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeWidth"$
 	vue.SetStateSingle(pp, varNudgeWidth)
 	ToolTip.Bind(":nudge-width", pp)
@@ -282,7 +393,12 @@ Sub SetNudgeWidth(varNudgeWidth As Object) As VMToolTip
 End Sub
 
 'set offset-overflow
-Sub SetOffsetOverflow(varOffsetOverflow As Object) As VMToolTip
+Sub SetOffsetOverflow(varOffsetOverflow As Boolean) As VMToolTip
+	If varOffsetOverflow = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("offset-overflow", varOffsetOverflow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffsetOverflow"$
 	vue.SetStateSingle(pp, varOffsetOverflow)
 	ToolTip.Bind(":offset-overflow", pp)
@@ -290,7 +406,12 @@ Sub SetOffsetOverflow(varOffsetOverflow As Object) As VMToolTip
 End Sub
 
 'set open-delay
-Sub SetOpenDelay(varOpenDelay As Object) As VMToolTip
+Sub SetOpenDelay(varOpenDelay As String) As VMToolTip
+	If varOpenDelay = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-delay", varOpenDelay)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenDelay"$
 	vue.SetStateSingle(pp, varOpenDelay)
 	ToolTip.Bind(":open-delay", pp)
@@ -298,7 +419,12 @@ Sub SetOpenDelay(varOpenDelay As Object) As VMToolTip
 End Sub
 
 'set open-on-click
-Sub SetOpenOnClick(varOpenOnClick As Object) As VMToolTip
+Sub SetOpenOnClick(varOpenOnClick As Boolean) As VMToolTip
+	If varOpenOnClick = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-on-click", varOpenOnClick)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenOnClick"$
 	vue.SetStateSingle(pp, varOpenOnClick)
 	ToolTip.Bind(":open-on-click", pp)
@@ -306,7 +432,12 @@ Sub SetOpenOnClick(varOpenOnClick As Object) As VMToolTip
 End Sub
 
 'set open-on-hover
-Sub SetOpenOnHover(varOpenOnHover As Object) As VMToolTip
+Sub SetOpenOnHover(varOpenOnHover As Boolean) As VMToolTip
+	If varOpenOnHover = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-on-hover", varOpenOnHover)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenOnHover"$
 	vue.SetStateSingle(pp, varOpenOnHover)
 	ToolTip.Bind(":open-on-hover", pp)
@@ -314,7 +445,11 @@ Sub SetOpenOnHover(varOpenOnHover As Object) As VMToolTip
 End Sub
 
 'set position-x
-Sub SetPositionX(varPositionX As Object) As VMToolTip
+Sub SetPositionX(varPositionX As Int) As VMToolTip
+	If bStatic Then
+		SetAttrSingle("position-x", varPositionX)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PositionX"$
 	vue.SetStateSingle(pp, varPositionX)
 	ToolTip.Bind(":position-x", pp)
@@ -322,7 +457,11 @@ Sub SetPositionX(varPositionX As Object) As VMToolTip
 End Sub
 
 'set position-y
-Sub SetPositionY(varPositionY As Object) As VMToolTip
+Sub SetPositionY(varPositionY As Int) As VMToolTip
+	If bStatic Then
+		SetAttrSingle("position-y", varPositionY)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PositionY"$
 	vue.SetStateSingle(pp, varPositionY)
 	ToolTip.Bind(":position-y", pp)
@@ -330,7 +469,12 @@ Sub SetPositionY(varPositionY As Object) As VMToolTip
 End Sub
 
 'set right
-Sub SetRight(varRight As Object) As VMToolTip
+Sub SetRight(varRight As Boolean) As VMToolTip
+	If varRight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", varRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Right"$
 	vue.SetStateSingle(pp, varRight)
 	ToolTip.Bind(":right", pp)
@@ -338,7 +482,12 @@ Sub SetRight(varRight As Object) As VMToolTip
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMToolTip
+Sub SetTag(varTag As String) As VMToolTip
+	If varTag = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("tag", varTag)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Tag"$
 	vue.SetStateSingle(pp, varTag)
 	ToolTip.Bind(":tag", pp)
@@ -346,7 +495,12 @@ Sub SetTag(varTag As Object) As VMToolTip
 End Sub
 
 'set top
-Sub SetTop(varTop As Object) As VMToolTip
+Sub SetTop(varTop As Boolean) As VMToolTip
+	If varTop = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("top", varTop)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Top"$
 	vue.SetStateSingle(pp, varTop)
 	ToolTip.Bind(":top", pp)
@@ -354,21 +508,31 @@ Sub SetTop(varTop As Object) As VMToolTip
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMToolTip
+Sub SetTransition(varTransition As String) As VMToolTip
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Transition"$
 	vue.SetStateSingle(pp, varTransition)
 	ToolTip.Bind(":transition", pp)
 	Return Me
 End Sub
 
-'set value
+'set value, visible / not visible
 Sub SetValue(varValue As Object) As VMToolTip
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 'set z-index
-Sub SetZIndex(varZIndex As Object) As VMToolTip
+Sub SetZIndex(varZIndex As String) As VMToolTip
+	If varZIndex = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("z-index", varZIndex)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ZIndex"$
 	vue.SetStateSingle(pp, varZIndex)
 	ToolTip.Bind(":z-index", pp)
@@ -461,12 +625,13 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMToolTip
-ToolTip.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	ToolTip.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMToolTip
-ToolTip.SetVisible(b)
-Return Me
+	ToolTip.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
@@ -478,6 +643,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMToolTip
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

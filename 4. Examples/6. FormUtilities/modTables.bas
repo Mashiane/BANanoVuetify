@@ -41,17 +41,17 @@ Sub Code
 	mdlTable.AddOK("btnCancelTable", "Cancel")
 	mdlTable.AddOK("btnSaveTable", "Save")
 	'
-	Dim txtTableName As VMTextField = vm.NewText(Me, "txttablename", "tablename", "Table Name", "", True, "", 20, "", "The table name is required", 0)
+	Dim txtTableName As VMTextField = vm.NewText(Me, True, "txttablename", "tablename", "Table Name", "", True, "", 20, "", "The table name is required", 0)
 	mdlTable.container.AddControlS(txtTableName.TextField, txtTableName.tostring, 1, 1, 12, 12, 12, 12)
 	'
-	Dim txtPrimaryKey As VMTextField = vm.NewText(Me, "txtprimarykey", "primarykey", "Primary Key", "", True, "", 20, "", "The primary key field is required", 0)
+	Dim txtPrimaryKey As VMTextField = vm.NewText(Me, True, "txtprimarykey", "primarykey", "Primary Key", "", True, "", 20, "", "The primary key field is required", 0)
 	mdlTable.container.AddControlS(txtPrimaryKey.TextField, txtPrimaryKey.ToString, 2, 1, 12, 12, 12, 12)
 	'
-	Dim chkAI As VMCheckBox = vm.NewCheckBox(Me, "txtautoincrement", "autoincrement", "Auto Increment", "Yes", "No", True, 0)
+	Dim chkAI As VMCheckBox = vm.NewCheckBox(Me, True, "txtautoincrement", "autoincrement", "Auto Increment", "Yes", "No", True, 0)
 	mdlTable.container.AddControlS(chkAI.CheckBox, chkAI.ToString, 3, 1, 12, 12, 12, 12)
 	'
-	Dim txtDescription As VMTextArea = vm.NewTextArea(Me, "txtdescription", "description", "Description", "", False, False, "", 100, "", "", 0)
-	mdlTable.container.AddControlS(txtDescription.TextArea, txtDescription.ToString, 4, 1, 12, 12, 12, 12)
+	Dim txtDescription As VMTextField = vm.NewTextArea(Me, True, "txtdescription", "description", "Description", "", False, False, "", 100, "", "", 0)
+	mdlTable.container.AddControlS(txtDescription.TextField, txtDescription.ToString, 4, 1, 12, 12, 12, 12)
 	
 	'add the dialog to the page
 	vm.AddDialog(mdlTable)

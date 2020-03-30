@@ -17,6 +17,7 @@ Sub Class_Globals
 	Public InitialIcon As VMIcon
 	Public FinalIcon As VMIcon
 	Private items As List
+	Private bStatic As Boolean
 End Sub
 
 'initialize the SpeedDial
@@ -36,6 +37,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetRight(True)
 	SetBottom(True)
 	items.Initialize
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMSpeedDial
+	bStatic = b
+	SpeedDial.SetStatic(b)
 	Return Me
 End Sub
 

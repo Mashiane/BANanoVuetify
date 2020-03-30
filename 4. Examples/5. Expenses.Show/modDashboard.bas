@@ -87,35 +87,35 @@ Sub AddExpense As VMContainer
 	expcont.SetElevation("2")
 	expcont.SetPaddingAll("20px")
 	
-	Dim expense_label As VMLabel = vm.NewH1("expense_label", "Add Expense")
+	Dim expense_label As VMLabel = vm.NewH1(True,"expense_label", "Add Expense")
 	expcont.AddControl(expense_label.Label,expense_label.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	
-	Dim expense_id As VMTextField = vm.NewText(Me,"did","id","#","",False,"",0,"","",0)
+	Dim expense_id As VMTextField = vm.NewText(Me,True,"did","id","#","",False,"",0,"","",0)
 	expense_id.SetVisible(False).SetInt
 	expcont.AddControl(expense_id.TextField, expense_id.ToString, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
-	Dim expense_date As VMDatePicker = vm.NewDatePicker(Me,"ddate", "expense_date", "Date", True, "","","The expense date should be specified!", 0)
-	expcont.AddControl(expense_date.DatePicker, expense_date.tostring, 2, 1, 0, 0, 0, 0, 12, 6, 6, 6)
+	Dim expense_date As VMDateTimePicker = vm.NewDatePicker(Me,True,"ddate", "expense_date", "Date", True, "","","The expense date should be specified!", 0)
+	expcont.AddControl(expense_date.DateTimePicker, expense_date.tostring, 2, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 	'
-	Dim expense_category As VMSelect = vm.NewSelectDataSource(Me,"dcategory","expense_category","Category",True,False,"","categories","id","text",False,"","The category should be specified!",0)
+	Dim expense_category As VMSelect = vm.NewSelectDataSource(Me,True,"dcategory","expense_category","Category",True,False,"","categories","id","text",False,"","The category should be specified!",0)
 	expense_category.setint
 	expcont.AddControl(expense_category.Combo,expense_category.tostring, 2, 2, 0, 0, 0, 0, 12, 6, 6, 6)
 	'
-	Dim expense_type As VMSelect = vm.NewSelectDataSource(Me,"dtype","expense_type","Type",True,False,"","types","id","text",False,"","The type should be specified!",0)
+	Dim expense_type As VMSelect = vm.NewSelectDataSource(Me,True,"dtype","expense_type","Type",True,False,"","types","id","text",False,"","The type should be specified!",0)
 	expense_type.setint
 	expcont.AddControl(expense_type.Combo,expense_type.ToString, 3, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 	'
-	Dim expense_amount As VMTextField = vm.NewTel(Me, "damount","expense_amount","Amount", "", True, "", "","The amount should be specified!",0)
+	Dim expense_amount As VMTextField = vm.NewTel(Me, True, "damount","expense_amount","Amount", "", True, "", "","The amount should be specified!",0)
 	expense_amount.setdouble
 	expcont.AddControl(expense_amount.TextField,expense_amount.ToString, 3, 2, 0, 0, 0, 0, 12, 6, 6, 6)
 	'
-	Dim expense_description As VMTextArea = vm.NewTextArea(Me, "ddescription", "expense_description", "Description", "", False, False, "",100, "","",0)
-	expcont.AddControl(expense_description.TextArea,expense_description.ToString, 4, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	Dim expense_description As VMTextField = vm.NewTextArea(Me, True, "ddescription", "expense_description", "Description", "", False, False, "",100, "","",0)
+	expcont.AddControl(expense_description.TextField, expense_description.ToString, 4, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
-	Dim labelx As VMLabel = vm.NewP("labelx", "Labelx").SetVisible(False)
+	Dim labelx As VMLabel = vm.NewP(True, "labelx", "Labelx").SetVisible(False)
 	expcont.AddControl(labelx.Label,labelx.tostring, 5, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 	
-	Dim btnSubmitExpense As VMButton = vm.NewButton(Me, "btnSubmitExpense", "Submit", True, True, False, True)
+	Dim btnSubmitExpense As VMButton = vm.NewButton(Me, True, "btnSubmitExpense", "Submit", True, True, False, True)
 	expcont.AddControl(btnSubmitExpense.Button,btnSubmitExpense.ToString, 5, 2, 0, 0, 0, 0, 12, 6, 6, 6)
 	'these should not be processed
 	expcont.AddExclusion(Array("expense_label","labelx"))

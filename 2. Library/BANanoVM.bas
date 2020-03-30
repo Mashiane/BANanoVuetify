@@ -1332,8 +1332,7 @@ End Sub
 
 Sub CreateSlider(sid As String, eventHandler As Object) As VMSlider
 	Dim el As VMSlider
-	el.Initialize(vue, sid, eventHandler)
-	
+	el.Initialize(vue, sid, eventHandler)	
 	Return el
 End Sub
 
@@ -2089,12 +2088,11 @@ End Sub
 ''
 Sub NewSlider(eventHandler As Object,bStatic As Boolean,sid As String, vmodel As String, slabel As String, iMinValue As String, iMaxValue As String,iTabIndex As Int) As VMSlider
 	Dim el As VMSlider = CreateSlider(sid, eventHandler)
-	'el.setstatic(bStatic)
-	el.Setmin(iMinValue)
-	el.Setmax(iMaxValue)
-	el.Setlabel(slabel)
+	el.SetStatic(bStatic)
+	el.SetMin(iMinValue)
+	el.SetMax(iMaxValue)
+	el.SetLabel(slabel)
 	el.SetVModel(vmodel)
-	el.SetThumbLabel("always")
 	el.SetTabIndex(iTabIndex)
 	Return el
 End Sub
