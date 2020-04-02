@@ -172,8 +172,8 @@ Sub Process_Globals
 	'
 	Private sfirstdayofweek As String 
 	Private stformat As String 
-	Private sheadercolor As String 
-	Private sheaderintensity As String
+	'Private sheadercolor As String 
+	'Private sheaderintensity As String
 	Private bStatic As Boolean
 	Private sb As StringBuilder
 End Sub
@@ -542,8 +542,8 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		'
 		sfirstdayofweek = mattr.GetDefault("firstdayofweek", "0")
 		stformat = mattr.getdefault("tformat", "ampm")
-		sheadercolor = mattr.getdefault("headercolor", "")
-		sheaderintensity = mattr.getdefault("headerintensity", "")
+		'sheadercolor = mattr.getdefault("headercolor", "")
+		'sheaderintensity = mattr.getdefault("headerintensity", "")
 						
 		bStatic = True
 		'
@@ -824,9 +824,9 @@ Sub Design_Date
 	dp.SetRange(bisrange)
 	dp.SetShowWeek(bisshowweek)
 	dp.SetDark(bisdark)
-	dp.SetNotitle(bisnotitle)
-	dp.SetColorIntensity(scolor, sintensity)
-	dp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
+	'dp.SetNotitle(bisnotitle)
+	'dp.SetColorIntensity(scolor, sintensity)
+	'dp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
 	dp.SetFirstDayOfWeek(sfirstdayofweek)
 	dp.SetMultiple(bismultiple)
 	dp.TextField.SetSolo(bissolo)
@@ -851,11 +851,11 @@ Sub Design_Date
 	CodeLine(sb, bisrange, "b", "dp", sname, "SetRange")
 	CodeLine(sb, bisshowweek, "b", "dp", sname, "SetShowWeek")
 	CodeLine(sb, bisdark, "b", "dp", sname, "SetDark")
-	CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
+	'CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
 	CodeLine(sb, sfirstdayofweek, "s", "dp", sname, "SetFirstDayOfWeek")
 	CodeLine(sb, bismultiple, "b", "dp", sname, "SetMultiple")
-	If scolor <> "" Then sb.append($"dp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
-	If sheadercolor <> "" Then sb.append($"dp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
+	'If scolor <> "" Then sb.append($"dp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	'If sheadercolor <> "" Then sb.append($"dp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
 	'
 	CodeLine(sb, bissolo, "b", "dp", sname, "TextField.SetSolo")
 	CodeLine(sb, bisoutlined, "b", "dp", sname, "TextField.SetOutlined")
@@ -1228,8 +1228,15 @@ End Sub
 
 Sub Design_Time
 	Dim tp As VMDateTimePicker = vm.Newtimepicker(Me, True, "tp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
-	tp.SetVisible(bisvisible).SetDisabled(bisdisabled).SetAmPmInTitle(bisampm).SetDark(bisdark).SetNotitle(bisnotitle)
-	tp.SetUSeSeconds(bisuseseconds).SetColorIntensity(scolor, sintensity).SetHeaderColorIntensity(sheadercolor, sheaderintensity).SetFormat(stformat)
+	tp.SetVisible(bisvisible)
+	tp.SetDisabled(bisdisabled)
+	tp.SetAmPmInTitle(bisampm)
+	tp.SetDark(bisdark)
+	'tp.SetNotitle(bisnotitle)
+	tp.SetUSeSeconds(bisuseseconds)
+	'tp.SetColorIntensity(scolor, sintensity)
+	'tp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
+	tp.SetFormat(stformat)
 			
 	tp.TextField.SetSolo(bissolo)
 	tp.TextField.SetOutlined(bisoutlined)
@@ -1252,10 +1259,10 @@ Sub Design_Time
 	CodeLine(sb, bisdisabled, "b", "tp", sname, "SetDisabled")
 	CodeLine(sb, bisampm, "b", "tp", sname, "SetAmPmInTitle")
 	CodeLine(sb, bisdark, "b", "tp", sname, "SetDark")
-	CodeLine(sb, bisnotitle, "b", "tp", sname, "SetNotitle")
+	'CodeLine(sb, bisnotitle, "b", "tp", sname, "SetNotitle")
 	CodeLine(sb, bisuseseconds, "b", "tp", sname, "SetUSeSeconds")
-	If scolor <> "" Then sb.append($"tp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
-	If sheadercolor <> "" Then sb.append($"tp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
+	'If scolor <> "" Then sb.append($"tp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	'If sheadercolor <> "" Then sb.append($"tp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
 	'
 	CodeLine(sb, bissolo, "b", "tp", sname, "TextField.SetSolo")
 	CodeLine(sb, bisoutlined, "b", "tp", sname, "TextField.SetOutlined")
@@ -2237,10 +2244,10 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddText("d","errortext","Error Text","","")
 	pbdatepicker.AddText("d","firstdayofweek","First Day of Week","","0")
 	pbdatepicker.AddRadioGroup("d", "tformat", "T:Format", CreateMap("ampm":"AM/PM","24hr":"24hr"))
-	pbdatepicker.AddSelect("d","headercolor","Header Color", vm.ColorOptions)
-	pbdatepicker.AddSelect("d","headerintensity","Header Intensity", vm.IntensityOptions)
-	pbdatepicker.AddSelect("d","color","T:Color", vm.ColorOptions)
-	pbdatepicker.AddSelect("d","intensity","T:Intensity", vm.IntensityOptions)
+	'pbdatepicker.AddSelect("d","headercolor","Header Color", vm.ColorOptions)
+	'pbdatepicker.AddSelect("d","headerintensity","Header Intensity", vm.IntensityOptions)
+	'pbdatepicker.AddSelect("d","color","T:Color", vm.ColorOptions)
+	'pbdatepicker.AddSelect("d","intensity","T:Intensity", vm.IntensityOptions)
 	pbdatepicker.AddNumber("d","tabindex","Tab Index","","")
 	'
 	pbdatepicker.AddCheck2(1, 1, "isrequired", "Required")

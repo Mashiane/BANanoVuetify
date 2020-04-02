@@ -427,6 +427,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMDateTimePicker,SetHeaderColorIntensity,157,0,VMDateTimePicker,SetPlaceholder,178,0,VMDateTimePicker,SetDense,194,0,VMTemplate,SetSlotActivatorOn,99,0,VMDateTimePicker,Class_Globals,14,0,VMDateTimePicker,Initialize,31,0,VMDateTimePicker,SetHideDetails,51,0,VMDateTimePicker,SetRC,75,0,VMDateTimePicker,SetDeviceOffsets,86,0,VMDateTimePicker,ToString,257,6
+NavigationStack=VMDevice,SetNote8,348,3,VMDevice,SetNexus5,367,1,VMContainer,AddControl1,903,0,VMContainer,AddControlOnly,893,0,VMDevice,SetS5White,373,2,VMDevice,SetIPhone4S,381,2,VMContainer,SetCenterContentRC,894,0,VMDevice,ToString,180,6,Main,AppStart,23,0,VMDevice,SetIPhone5S,401,1
 SelectedBuild=0
 VisibleModules=

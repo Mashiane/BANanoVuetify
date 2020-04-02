@@ -14,23 +14,28 @@ Sub Class_Globals
 	Private module As Object
 	Private DesignMode As Boolean
 	Private frme As VMElement
-	Private tb As VMElement
-	Private cam As VMElement
-	Private scren As VMElement
-	Private bb As VMElement
+	Private top_bar As VMElement
+	Private camera As VMElement
+	Private screen As VMElement
+	Private bottom_bar As VMElement
 	Private deviceNum As Int
-	Private hom As VMElement
+	Private home As VMElement
 	Private slep As VMElement
-	Private vol As VMElement
-	Private inners As VMElement
-	Private spek As VMElement
-	Private notc As VMElement
-	Private ovf As VMElement
+	Private volume As VMElement
+	Private inner_shadow As VMElement
+	Private speaker As VMElement
+	Private notch As VMElement
+	Private overflow As VMElement
 	Private dynamic As VMElement
 	Private hasFrame As Boolean
 	Private static As VMContainer
 	Private hasStatic As Boolean
 	Private hasDynamic As Boolean
+	Private shadow As VMElement
+	Private sensor As VMElement
+	Private more_sensors As VMElement
+	Private inner As VMElement
+	Private sensors As VMElement
 End Sub
 
 'initialize the device
@@ -38,17 +43,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	vue = v
 	Device.Initialize(v, ID).SetTag("div")
-	tb.Initialize(v, $"${ID}tb"$).SetTag("div").AddClass("top-bar")
-	bb.Initialize(v, $"${ID}tb"$).SetTag("div").AddClass("bottom-bar")
-	cam.Initialize(v, $"${ID}cam"$).SetTag("div").AddClass("camera")
-	scren.Initialize(v, $"${ID}scren"$).SetTag("div").AddClass("screen")
-	hom.Initialize(v, $"${ID}hom"$).SetTag("div").AddClass("home")
+	top_bar.Initialize(v, $"${ID}tb"$).SetTag("div").AddClass("top-bar")
+	bottom_bar.Initialize(v, $"${ID}bb"$).SetTag("div").AddClass("bottom-bar")
+	camera.Initialize(v, $"${ID}cam"$).SetTag("div").AddClass("camera")
+	screen.Initialize(v, $"${ID}scren"$).SetTag("div").AddClass("screen")
+	home.Initialize(v, $"${ID}hom"$).SetTag("div").AddClass("home")
 	slep.Initialize(v, $"${ID}slep"$).SetTag("div").AddClass("sleep")
-	vol.Initialize(v, $"${ID}vol"$).SetTag("div").AddClass("volume")
-	inners.Initialize(v, $"${ID}inners"$).SetTag("div").AddClass("inner-shadow")
-	spek.Initialize(v, $"${ID}spek"$).SetTag("div").AddClass("speaker")
-	notc.Initialize(v, $"${ID}notc"$).SetTag("div").AddClass("notch")
-	ovf.Initialize(v, $"${ID}ovf"$).SetTag("div").AddClass("overflow")
+	volume.Initialize(v, $"${ID}vol"$).SetTag("div").AddClass("volume")
+	inner_shadow.Initialize(v, $"${ID}inners"$).SetTag("div").AddClass("inner-shadow")
+	speaker.Initialize(v, $"${ID}spek"$).SetTag("div").AddClass("speaker")
+	notch.Initialize(v, $"${ID}notc"$).SetTag("div").AddClass("notch")
+	overflow.Initialize(v, $"${ID}ovf"$).SetTag("div").AddClass("overflow")
+	shadow.Initialize(v, $"${ID}shadow"$).SetTag("div").AddClass("shadow")
+	sensor.Initialize(v, $"${ID}sensor"$).SetTag("div").AddClass("sensor")
+	sensors.Initialize(v, $"${ID}sensors"$).SetTag("div").AddClass("sensors")
+	more_sensors.Initialize(v, $"${ID}moresensors"$).SetTag("div").AddClass("more-sensors")
+	inner.Initialize(v, $"${ID}inner"$).SetTag("div").AddClass("inner")
 	'
 	frme.Initialize(v, $"${ID}frme"$).SetTag("iframe")
 	frme.SetStyleSingle("width", "100%")
@@ -154,79 +164,184 @@ End Sub
 Sub ToString As String
 	
 	dynamic.SetDesignMode(DesignMode)
-	notc.SetDesignMode(DesignMode)
-	cam.SetDesignMode(DesignMode)
-	spek.SetDesignMode(DesignMode)
-	tb.SetDesignMode(DesignMode)
+	notch.SetDesignMode(DesignMode)
+	camera.SetDesignMode(DesignMode)
+	speaker.SetDesignMode(DesignMode)
+	top_bar.SetDesignMode(DesignMode)
 	slep.SetDesignMode(DesignMode)
-	bb.SetDesignMode(DesignMode)
-	vol.SetDesignMode(DesignMode)
-	ovf.SetDesignMode(DesignMode)
-	inners.SetDesignMode(DesignMode)
+	bottom_bar.SetDesignMode(DesignMode)
+	volume.SetDesignMode(DesignMode)
+	overflow.SetDesignMode(DesignMode)
+	inner_shadow.SetDesignMode(DesignMode)
 	frme.SetDesignMode(DesignMode)
-	scren.SetDesignMode(DesignMode)		
-	hom.SetDesignMode(DesignMode)
+	screen.SetDesignMode(DesignMode)		
+	home.SetDesignMode(DesignMode)
+	shadow.SetDesignMode(DesignMode)
+	more_sensors.SetDesignMode(DesignMode)
+	sensor.SetDesignMode(DesignMode)
+	sensors.SetDesignMode(DesignMode)
 	'
 	Select Case deviceNum
+		Case 9
+			'iphone 5s
+			Device.AddChild(top_bar)
+			Device.AddChild(slep)
+			Device.AddChild(volume)
+			Device.AddChild(camera)
+			Device.AddChild(sensor)
+			Device.AddChild(speaker)
+			'
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
+			Device.AddChild(home)
+			Device.AddChild(bottom_bar)
+		Case 8
+			'iphone 4s
+			Device.AddChild(top_bar)
+			Device.AddChild(slep)
+			Device.AddChild(volume)
+			Device.AddChild(camera)
+			Device.AddChild(sensor)
+			Device.AddChild(speaker)
+			'
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
+			Device.AddChild(home)
+			Device.AddChild(bottom_bar)
+		Case 7
+			'nexus
+			Device.AddChild(top_bar)
+			Device.AddChild(slep)
+			Device.AddChild(volume)
+			Device.AddChild(camera)
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
+		Case 6
+			's5 white
+			Device.AddChild(top_bar)
+			Device.AddChild(slep)
+			Device.AddChild(camera)
+			Device.AddChild(sensor)
+			Device.AddChild(speaker)
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
+			Device.AddChild(home)
+		Case 5
+			'iphone 8
+			Device.AddChild(top_bar)
+			Device.AddChild(slep)
+			Device.AddChild(volume)
+			Device.AddChild(camera)
+			Device.AddChild(sensor)
+			Device.AddChild(speaker)
+			'
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
+			Device.AddChild(home)
+			Device.AddChild(bottom_bar)
+		Case 4
+			'note 8
+			overflow.AddChild(shadow)
+			Device.AddChild(inner)
+			Device.AddChild(overflow)
+			Device.AddChild(speaker)
+			Device.AddChild(sensors)
+			Device.AddChild(more_sensors)
+			Device.AddChild(slep)
+			Device.AddChild(volume)
+			Device.AddChild(camera)
+			'
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
 		Case 3
 			'iphone x
-			notc.AddChild(cam)
-			notc.AddChild(spek)
+			notch.AddChild(camera)
+			notch.AddChild(speaker)
 			'
-			Device.AddChild(notc)
-			Device.AddChild(tb)
+			Device.AddChild(notch)
+			Device.AddChild(top_bar)
 			'
 			Device.addchild(slep)
 			'
-			Device.AddChild(bb)
+			Device.AddChild(bottom_bar)
 			'
-			Device.AddChild(vol)
+			Device.AddChild(volume)
 			'
-			ovf.AddChildDiv("ix1","shadow shadow--tr")
-			ovf.AddChildDiv("ix2","shadow shadow--tl")
-			ovf.AddChildDiv("ix3","shadow shadow--br")
-			ovf.AddChildDiv("ix4","shadow shadow--bl")
+			overflow.AddChildDiv("ix1","shadow shadow--tr")
+			overflow.AddChildDiv("ix2","shadow shadow--tl")
+			overflow.AddChildDiv("ix3","shadow shadow--br")
+			overflow.AddChildDiv("ix4","shadow shadow--bl")
 			'
-			Device.AddChild(ovf)
+			Device.AddChild(overflow)
 			'
-			Device.AddChild(inners)
+			Device.AddChild(inner_shadow)
 			'
 			If hasFrame Then
-				scren.AddChild(frme)
+				screen.AddChild(frme)
 			Else
-				If hasStatic = False Then scren.AddChild(dynamic)
-				If hasDynamic = False Then scren.SetText(static.tostring)
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
 			End If
 			'
-			Device.AddChild(scren)
+			Device.AddChild(screen)
 			
 		Case 1
 			'macbook
-			tb.Pop(Device)
-			cam.Pop(Device)
+			top_bar.Pop(Device)
+			camera.Pop(Device)
 			
 			If hasFrame Then
-				frme.Pop(scren)
+				frme.Pop(screen)
 			Else
-				If hasStatic = False Then scren.AddChild(dynamic)
-				If hasDynamic = False Then scren.SetText(static.tostring)
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
 			End If
-			scren.Pop(Device)
+			screen.Pop(Device)
 	
-			bb.Pop(Device)
+			bottom_bar.Pop(Device)
 		Case 2
 			'ipad
-			cam.Pop(Device)
+			camera.Pop(Device)
 			
 			If hasFrame Then
-				frme.Pop(scren)
+				frme.Pop(screen)
 			Else
-				If hasStatic = False Then scren.AddChild(dynamic)
-				If hasDynamic = False Then scren.SetText(static.tostring)
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
 			End If
 			
-			scren.Pop(Device)
-			hom.Pop(Device)
+			screen.Pop(Device)
+			home.Pop(Device)
 	End Select
 	Return Device.ToString
 End Sub
@@ -267,6 +382,46 @@ Sub SetMacBook As VMDevice
 	deviceNum = 1
 	Return Me
 End Sub
+
+Sub SetNote8 As VMDevice
+	Device.AddClass("marvel-device note8")
+	deviceNum = 4
+	Return Me
+End Sub
+
+Sub SetS5White As VMDevice
+	Device.AddClass("marvel-device s5 white")
+	deviceNum = 6
+	Return Me
+End Sub
+
+
+Sub SetIPhone4S As VMDevice
+	Device.AddClass("marvel-device iphone4s silver")
+	deviceNum = 8
+	Return Me
+End Sub
+
+
+Sub SetIPhone5S As VMDevice
+	Device.AddClass("marvel-device iphone5s gold")
+	deviceNum = 9
+	Return Me
+End Sub
+
+
+Sub SetNexus5 As VMDevice
+	Device.AddClass("marvel-device nexus5")
+	deviceNum = 7
+	Return Me
+End Sub
+
+Sub SetIPhone8 As VMDevice
+	Device.AddClass("marvel-device iphone8 gold")
+	deviceNum = 5
+	Return Me
+End Sub
+
 
 Sub SetDesignMode(b As Boolean) As VMDevice
 	Device.SetDesignMode(b)

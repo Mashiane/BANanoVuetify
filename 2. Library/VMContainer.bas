@@ -897,6 +897,14 @@ Sub AddControlOnly(el As VMElement, template As String) As VMContainer
 	Return Me
 End Sub
 
+'center content on RC
+Sub SetCenterContentRC(r As Int, c As Int) As VMContainer
+	SetJustifyRC(r, c, "center")
+	SetAlignRC(r, c, "center")
+	AddClassRC(r, c, Array("mx-auto"))
+	Return Me
+End Sub
+
 'add a control that will be automatically grid designed
 Sub AddControl1(el As VMElement, template As String)
 	Controls.Add(el)
