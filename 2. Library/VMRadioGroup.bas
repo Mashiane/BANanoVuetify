@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Private items As Map
 	Private bStatic As Boolean
+	Private xmodel As String
 End Sub
 
 'initialize the RadioGroup
@@ -27,6 +28,25 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	RadioGroup.typeOf = "radiogroup"
 	items.Initialize 
 	bStatic = False
+	xmodel = ""
+	Return Me
+End Sub
+
+
+'set for
+Sub SetVFor(item As String, dataSource As String, keyField As String, valueField As String, labelField As String) As VMRadioGroup
+	dataSource = dataSource.tolowercase
+	item = item.tolowercase
+	Dim Radio As VMRadio
+	Radio.Initialize(vue, "", Module)
+	Radio.SetStatic(bStatic)
+	Dim sline As String = $"${item} in ${dataSource}"$
+	Radio.SetAttrSingle("v-for", sline)
+	Radio.SetAttrSingle(":key", keyField)
+	Radio.SetAttrSingle(":value", valueField)
+	Radio.SetAttrSingle(":label", labelField)
+	Radio.SetDesignMode(DesignMode)
+	Radio.Pop(RadioGroup)
 	Return Me
 End Sub
 
@@ -88,6 +108,7 @@ End Sub
 
 'use an existing state
 Sub SetDataSource(sourceName As String, sourceField As String, displayField As String) As VMRadioGroup
+	items.Clear 
 	sourceName = sourceName.tolowercase
 	'get the details of the content
 	Dim kRow As String = $"row.${sourceField}"$
@@ -125,32 +146,10 @@ private Sub AddItem(k As String, v As String) As VMRadioGroup
 	el.SetAttrSingle("label", v)
 	el.SetAttrSingle("value", k)
 	el.SetAttrSingle("key", k)
-	el.SetPrimary(True)
-	el.SetDesignMode(DesignMode)
-	
+	el.SetDesignMode(DesignMode)	
 	el.Pop(RadioGroup)	'
 	Return Me
 End Sub
-
-
-'set for
-Sub SetVFor(item As String, dataSource As String, keyField As String, valueField As String, labelField As String) As VMRadioGroup
-	dataSource = dataSource.tolowercase
-	item = item.tolowercase
-	Dim Radio As VMRadio
-	Radio.Initialize(vue, "", Module)
-	Radio.SetStatic(bStatic)
-	Dim sline As String = $"${item} in ${dataSource}"$
-	Radio.SetAttrSingle("v-for", sline)
-	Radio.SetAttrSingle(":key", keyField)
-	Radio.SetAttrSingle(":value", valueField)
-	Radio.SetAttrSingle(":label", labelField)
-	Radio.SetDesignMode(DesignMode)
-	
-	Radio.Pop(RadioGroup)
-	Return Me
-End Sub
-
 
 'apply a theme to an element
 Sub UseTheme(themeName As String) As VMRadioGroup
@@ -166,6 +165,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMRadioGroup
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)
@@ -181,28 +181,30 @@ End Sub
 'set mandatory
 Sub SetMandatory(varMandatory As Boolean) As VMRadioGroup
 	If bStatic Then
-	SetAttrSingle("mandatory", varMandatory)
+		SetAttrSingle("mandatory", varMandatory)
 	Else
-	Dim pp As String = $"${ID}varMandatory"$
-	vue.SetStateSingle(pp, varMandatory)
-	RadioGroup.Bind(":mandatory", pp)
+		Dim pp As String = $"${ID}varMandatory"$
+		vue.SetStateSingle(pp, varMandatory)
+		RadioGroup.Bind(":mandatory", pp)
 	End If
 	Return Me
 End Sub
-
 
 'get component
 Sub ToString As String
 	RemoveAttr("required")
 	RemoveAttr(":required")
-	For Each k As String In items.Keys
-		Dim v As String = items.Get(k)
-		AddItem(k, v)
-	Next
+	If items.Size > 0 Then
+		For Each k As String In items.Keys
+			Dim v As String = items.Get(k)
+			AddItem(k, v)
+		Next
+	End If
 	Return RadioGroup.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMRadioGroup
+	xmodel = k.tolowercase
 	RadioGroup.SetVModel(k)
 	Return Me
 End Sub
@@ -266,7 +268,8 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMRadioGroup
+Sub SetActiveClass(varActiveClass As String) As VMRadioGroup
+	If varActiveClass = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("active-class", varActiveClass)
 	Else
@@ -278,7 +281,8 @@ Sub SetActiveClass(varActiveClass As Object) As VMRadioGroup
 End Sub
 
 'set append-icon
-Sub SetAppendIcon(varAppendIcon As Object) As VMRadioGroup
+Sub SetAppendIcon(varAppendIcon As String) As VMRadioGroup
+	If varAppendIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("append-icon", varAppendIcon)
 	Else
@@ -290,7 +294,8 @@ Sub SetAppendIcon(varAppendIcon As Object) As VMRadioGroup
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMRadioGroup
+Sub SetBackgroundColor(varBackgroundColor As String) As VMRadioGroup
+	If varBackgroundColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("background-color", varBackgroundColor)
 	Else
@@ -302,7 +307,8 @@ Sub SetBackgroundColor(varBackgroundColor As Object) As VMRadioGroup
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMRadioGroup
+Sub SetDark(varDark As Boolean) As VMRadioGroup
+	If varDark = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dark", varDark)
 	Else
@@ -314,7 +320,8 @@ Sub SetDark(varDark As Object) As VMRadioGroup
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMRadioGroup
+Sub SetDense(varDense As Boolean) As VMRadioGroup
+	If varDense = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dense", varDense)
 	Else
@@ -332,7 +339,7 @@ Sub SetDisabled(varDisabled As Boolean) As VMRadioGroup
 End Sub
 
 'set error
-Sub SetError(varError As Object) As VMRadioGroup
+Sub SetError(varError As Boolean) As VMRadioGroup
 	If bStatic Then
 		SetAttrSingle("error", varError)
 	Else
@@ -368,7 +375,8 @@ Sub SetErrorMessages(varErrorMessages As Object) As VMRadioGroup
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As boolean) As VMRadioGroup
+Sub SetHideDetails(varHideDetails As Boolean) As VMRadioGroup
+	If varHideDetails = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("hide-details", varHideDetails)
 	Else
@@ -380,7 +388,8 @@ Sub SetHideDetails(varHideDetails As boolean) As VMRadioGroup
 End Sub
 
 'set hint
-Sub SetHint(varHint As Object) As VMRadioGroup
+Sub SetHint(varHint As String) As VMRadioGroup
+	If varHint = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("hint", varHint)
 	Else
@@ -404,7 +413,8 @@ Sub SetId(varId As Object) As VMRadioGroup
 End Sub
 
 'set label
-Sub SetLabel(varLabel As Object) As VMRadioGroup
+Sub SetLabel(varLabel As String) As VMRadioGroup
+	If varLabel = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("label", varLabel)
 	Else
@@ -416,7 +426,8 @@ Sub SetLabel(varLabel As Object) As VMRadioGroup
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMRadioGroup
+Sub SetLight(varLight As Boolean) As VMRadioGroup
+	If varLight = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("light", varLight)
 	Else
@@ -428,7 +439,8 @@ Sub SetLight(varLight As Object) As VMRadioGroup
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMRadioGroup
+Sub SetLoading(varLoading As Boolean) As VMRadioGroup
+	If varLoading = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("loading", varLoading)
 	Else
@@ -464,7 +476,8 @@ Sub SetMessages(varMessages As Object) As VMRadioGroup
 End Sub
 
 'set multiple
-Sub SetMultiple(varMultiple As Object) As VMRadioGroup
+Sub SetMultiple(varMultiple As Boolean) As VMRadioGroup
+	If varMultiple = False Then Return Me
 	SetAttrSingle("multiple", varMultiple)
 	Return Me
 End Sub
@@ -476,7 +489,8 @@ Sub SetName(varName As Object) As VMRadioGroup
 End Sub
 
 'set persistent-hint
-Sub SetPersistentHint(varPersistentHint As Object) As VMRadioGroup
+Sub SetPersistentHint(varPersistentHint As Boolean) As VMRadioGroup
+	If varPersistentHint = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("persistent-hint", varPersistentHint)
 	Else
@@ -488,7 +502,8 @@ Sub SetPersistentHint(varPersistentHint As Object) As VMRadioGroup
 End Sub
 
 'set prepend-icon
-Sub SetPrependIcon(varPrependIcon As Object) As VMRadioGroup
+Sub SetPrependIcon(varPrependIcon As String) As VMRadioGroup
+	If varPrependIcon = "" Then Return Me
 	If bStatic Then
 	SetAttrSingle("prepend-icon", varPrependIcon)
 	Else
@@ -500,7 +515,8 @@ Sub SetPrependIcon(varPrependIcon As Object) As VMRadioGroup
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMRadioGroup
+Sub SetReadonly(varReadonly As Boolean) As VMRadioGroup
+	If varReadonly = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("readonly", varReadonly)
 	Else
@@ -512,13 +528,28 @@ Sub SetReadonly(varReadonly As Object) As VMRadioGroup
 End Sub
 
 'set row
-Sub SetRow(varRow As Object) As VMRadioGroup
+Sub SetRow(varRow As Boolean) As VMRadioGroup
+	If varRow = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("row", varRow)
 	Else
 	Dim pp As String = $"${ID}Row"$
 	vue.SetStateSingle(pp, varRow)
 	RadioGroup.Bind(":row", pp)
+	End If
+	Return Me
+End Sub
+
+
+'set column
+Sub SetColumn(varColumn As Boolean) As VMRadioGroup
+	If varColumn = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("column", varColumn)
+	Else
+		Dim pp As String = $"${ID}column"$
+		vue.SetStateSingle(pp, varColumn)
+		RadioGroup.Bind(":column", pp)
 	End If
 	Return Me
 End Sub
@@ -560,7 +591,8 @@ Sub SetSuccessMessages(varSuccessMessages As Object) As VMRadioGroup
 End Sub
 
 'set validate-on-blur
-Sub SetValidateOnBlur(varValidateOnBlur As Object) As VMRadioGroup
+Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMRadioGroup
+	If varValidateOnBlur = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("validate-on-blur", varValidateOnBlur)
 	Else
@@ -757,6 +789,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 RadioGroup.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMRadioGroup
 RadioGroup.SetVisible(b)
 Return Me

@@ -53,12 +53,11 @@ Sub Code
 	vm.SetData("states2", lst)
 	'
 	Dim genderlist As Map = CreateMap("f":"Female", "m":"Male")
-	Dim genderlist1 As List = Array("Male", "Female")
 		
 	Dim ac1 As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "acx1", "acx1", "States", "States", "states2", "id", "name", False, True, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
 	cont.AddControl1(ac1.Combo, ac1.ToString)
 	'
-	Dim ac2 As VMSelect = vm.NewAutoComplete(Me, True, "acx2", "acx2", "Gender", "Gender", genderlist1, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
+	Dim ac2 As VMSelect = vm.NewAutoCompleteOptions(Me, True, "acx2", "acx2", "Gender", True, False, "Gender", genderlist, "id", "text", False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
 	cont.AddControl1(ac2.Combo, ac2.ToString)
 	'
 	Dim txta As VMTextField = vm.NewTextArea(Me, True, "txtarea", "textarea", "Text Area", "A placeholder", True, False, "", 255, "Helper Text", "", 0).SetDevicePositions(4, 1, 12, 12, 12, 12)

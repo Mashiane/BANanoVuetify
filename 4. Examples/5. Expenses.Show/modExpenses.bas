@@ -320,3 +320,85 @@ Sub Delete
 		vm.ShowSnackBar(dbsql.error)
 	End If
 End Sub
+
+Sub PrintExpenses
+	Dim oxml As BANanoOXML
+	oxml.initialize("expenses.xlsx")
+	Dim rpt As BANanoObject = oxml.WorkSheet("Expenses")
+	'create a heading for the report
+	oxml.SetText(rpt, 1, 1, "Expenses Report")
+	'merge the heading
+	oxml.Merge(rpt, "A1:E1")
+	Dim rowH As BANanoObject = oxml.GetRow(rpt, 1, 1)
+	Dim hstyle As OXMLStyle = oxml.CreateStyle
+	hstyle.bold = True
+	hstyle.fontSize = 18
+	hstyle.hAlignment = "center"
+	hstyle.vAlignment = "center"
+	oxml.SetStyle(rowH, hstyle)
+	'put border on merged rc
+	Dim colCnt As Int
+	For colCnt = 1 To 5
+		Dim colH As BANanoObject = oxml.GetCell(rpt, 1, colCnt)
+		oxml.SetStyleBorder(colH, oxml.colors_black, oxml.BorderThin)
+	Next
+	
+	'add the headers
+	oxml.SetRow(rpt, 2, 1, Array("Date", "Category", "Type", "Description", "Amount"))
+	'get all the expenses we need to report on
+	Dim qry As String = "select expenses.id, expenses.expense_date, expenses.expense_description, expenses.expense_amount, expensecategories.text as expense_category,"
+	qry = qry & "expensetypes.text As expense_type from expenses, expensecategories, expensetypes where expenses.expense_category = expensecategories.id and expenses.expense_type = "
+	qry = qry & "expensetypes.id order by expenses.expense_date desc"
+	Dim dbsql As BANanoMySQL
+	dbsql.Initialize(Main.dbase, "expenses", "id")
+	dbsql.Execute(qry)
+	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
+	dbsql.FromJSON
+	If dbsql.OK Then
+		Dim rowCnt As Int = 3
+		'loop through each expense record
+		For Each expmap As Map In dbsql.result
+			Dim sexpense_date As String = expmap.Get("expense_date")
+			Dim sexpense_description As String = expmap.get("expense_description")
+			Dim sexpense_amount As String = expmap.get("expense_amount")
+			Dim sexpense_category As String = expmap.get("expense_category")
+			Dim expense_type As String = expmap.get("expense_type")
+			'
+			Dim rptLine As List
+			rptLine.initialize
+			rptLine.AddAll(Array(sexpense_date, sexpense_category, expense_type, sexpense_description, sexpense_amount))
+			oxml.SetRow(rpt, rowCnt, 1, rptLine)
+			rowCnt = rowCnt + 1
+		Next
+		'add a total for the amount
+		oxml.SetFormula(rpt, rowCnt + 1, 5, $"SUM(E3:E${rowCnt})"$)
+		'apply borders to all the rows
+		Dim rowStart As Int
+		Dim rstyle As OXMLStyle = oxml.CreateStyle
+		rstyle.borderColor = oxml.colors_black
+		rstyle.borderthickness = oxml.BorderThin
+		For rowStart = 2 To rowCnt
+			rstyle.bold = False
+			Dim rptr As BANanoObject = oxml.GetRow(rpt, rowStart, 1)
+			If rowStart = 2 Then rstyle.bold = True
+			oxml.setstyle(rptr, rstyle) 
+		Next
+		'number format column from where amounts start
+		Dim amt As BANanoObject = oxml.GetColumn(rpt, 3, 5)
+		Dim cstyle As OXMLStyle = oxml.CreateStyle
+		cstyle.numberFrmat = "#,##0.00 ;[Red](#,##0.00)"
+		cstyle.borderColor = oxml.colors_black
+		cstyle.borderthickness = oxml.BorderThin
+		oxml.SetStyle(amt, cstyle)
+	Else
+		Log("modExpenses.Refresh: Error - " & dbsql.error)
+	End If
+	
+	
+	oxml.download(Me, "onDownload")
+	
+End Sub
+
+Sub onDownload
+	vm.ShowSnackBar("Expenses report downloaded!")
+End Sub

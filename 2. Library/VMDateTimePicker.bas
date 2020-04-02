@@ -490,7 +490,7 @@ End Sub
 
 'set first-day-of-week
 Sub SetFirstDayOfWeek(varFirstDayOfWeek As String) As VMDateTimePicker
-	If varFirstDayOfWeek = "" Then Return
+	If varFirstDayOfWeek = "" Then Return Me
 	If bStatic Then
 		DateTimePicker.SetAttrSingle("first-day-of-week", varFirstDayOfWeek)
 		Return Me
@@ -519,7 +519,7 @@ Sub SetHeaderColor(varHeaderColor As String) As VMDateTimePicker
 	If varHeaderColor = "" Then Return Me
 	If bStatic Then
 		DateTimePicker.SetAttrSingle("header-color", varHeaderColor)
-		Return
+		Return Me
 	End If
 	Dim pp As String = $"${ID}HeaderColor"$
 	vue.SetStateSingle(pp, varHeaderColor)

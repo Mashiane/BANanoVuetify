@@ -21,13 +21,9 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(10).AddColumns2x6
 	'
-	Dim rg As VMRadioGroup = vm.CreateRadioGroup("rg1", Me).SetVModel("rg1").SetLabel("Radios")
-	rg.SetVFor("n", "3",  "n", "n", "`Radio ${n}`")
-	rg.AddToContainer(cont, 1, 1)
-	'
 	Dim rg1 As VMRadioGroup = vm.CreateRadioGroup("rg2", Me).SetVModel("rg2").SetHorizontal(True).SetLabel("Other Radios")
 	rg1.SetOptions(CreateMap("rad1":"Radio 1","rad2":"Radio 2"))
-	rg1.AddToContainer(cont, 1, 2)
+	rg1.AddToContainer(cont, 1, 1)
 	'
 	vm.AddContainer(cont)
 End Sub

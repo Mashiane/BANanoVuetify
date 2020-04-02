@@ -305,7 +305,7 @@ Sub draweritems_click(e As BANanoEvent)
 			vm.NavBar.UpdateTitle(modForm.title)
 		vm.ShowPage(modForm.name)
 	Case "radiogroups"
-			vm.NavBar.UpdateTitle(modRadioGroups.title)
+		vm.NavBar.UpdateTitle(modRadioGroups.title)
 		vm.ShowPage(modRadioGroups.name)
 	Case "selects"
 			vm.NavBar.UpdateTitle(modSelects.title)

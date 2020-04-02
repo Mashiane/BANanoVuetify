@@ -16,6 +16,6 @@ ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
-NavigationStack=modExpenses,btnSaveExpense_click,126,0,modExpenses,btnCancelExpense_click,142,0,modExpenses,expensetable_edit,250,0,modExpenses,Refresh,222,0,modExpenses,ExpenseFilter,97,4,pgIndex,ShowDashboard,112,0,Main,BANano_Ready,62,0,modExpenses,Code,16,1,modExpenses,btnResetFilter_click,162,1,modExpenses,btnApplyFilter_click,137,6
+NavigationStack=pgIndex,dashboard,113,0,pgIndex,ShowDashboard,119,1,pgIndex,expenses,110,2,pgIndex,btnPrint_click,113,0,modExpenses,Refresh,224,0,modExpenses,Code,20,0,modExpenses,expensetable_delete,299,0,modExpenses,onDownload,394,2,modExpenses,Delete,310,0,modExpenses,PrintExpenses,374,6
 SelectedBuild=0
 VisibleModules=3

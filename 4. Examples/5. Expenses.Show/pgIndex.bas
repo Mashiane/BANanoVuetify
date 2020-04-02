@@ -22,6 +22,7 @@ Sub Init
 	'hide the back button
 	'show the hamburger button
 	vm.NavBar.SetHasMenuButton(True)
+	vm.navbar.AddIcon("btnPrint", "print", "Print expenses", "")
 	'
 	'build the page
 	vm.SetMethod(Me, "LoadTypes")
@@ -105,6 +106,7 @@ Sub expensecategories
 End Sub
 
 Sub expenses
+	vm.Show("btnPrint")
 	vm.CallMethod("LoadTypes")
 	vm.CallMethod("LoadCategories")
 	vm.NavBar.UpdateTitle("Expenses.Show - Expenses")
@@ -112,11 +114,16 @@ Sub expenses
 	modExpenses.refresh
 End Sub
 
+Sub btnPrint_click(e As BANanoEvent)
+	modExpenses.printexpenses
+End Sub
+
 Sub dashboard
 	ShowDashboard
 End Sub
 
 Sub ShowDashboard
+	vm.Hide("btnPrint")
 	' show the dashboard
 	vm.CallMethod("LoadTypes")
 	vm.CallMethod("LoadCategories")

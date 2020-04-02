@@ -425,7 +425,7 @@ private Sub GetMapTypes(sourceMap As Map) As List
 End Sub
 
 
-Sub EQOperators(sm As Map) As List
+Sub EQOperators(sm As Map) As List   'ignore
 	Dim nl As List
 	nl.initialize
 	For Each k As String In sm.Keys

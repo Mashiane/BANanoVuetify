@@ -469,13 +469,22 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		Dim sthumbintensity As String = mattr.getdefault("thumbintensity", "")
 		Dim strackcolor As String = mattr.GetDefault("trackcolor", "")
 		Dim strackintensity As String = mattr.getdefault("trackintensity","")
-			
-		Dim bShowLabel As Boolean = True
-		Dim bLabelOnTop As Boolean = True
-		Dim bMultiple As Boolean = False
-		Dim sidfield As String = "id"
-		Dim sdisplayfield As String = "text"
-		Dim bReturnObject As Boolean = False
+		'
+		Dim ssourcefield As String = mattr.getdefault("sourcefield", "id")
+		Dim ssourcetable As String = mattr.getdefault("sourcetable", "datasource")
+		Dim sdisplayfield As String = mattr.getdefault("displayfield", "text")
+		Dim skeys As String = mattr.getdefault("keys", "")
+		Dim svalues As String = mattr.getdefault("values", "")
+		Dim bisreturnobject As Boolean = YesNoToBoolean(mattr.getdefault("isreturnobject", "No"))
+		Dim buseoptions As Boolean = YesNoToBoolean(mattr.getdefault("useoptions", "No"))
+		Dim bischips As Boolean = YesNoToBoolean(mattr.getdefault("ischips", "No"))
+		Dim bissmallchips As Boolean = YesNoToBoolean(mattr.getdefault("issmallchips", "No"))
+		Dim bisdeletablechips As Boolean = YesNoToBoolean(mattr.getdefault("isdeletablechips", "No"))
+		'
+		Dim bshowlabel As Boolean = YesNoToBoolean(mattr.getdefault("showlabel", "No"))
+		Dim blabelontop As Boolean = YesNoToBoolean(mattr.getdefault("labelontop", "No"))
+		Dim bismandatory As Boolean = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+					
 		Dim bstatic As Boolean = True
 		'
 		Select Case controltype
@@ -650,21 +659,152 @@ sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bstatic}
 				sb.append($".Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
 		Case "radio"
-			Dim rd As VMRadioGroup = vm.NewRadioGroup(Me, True, sname, svmodel, stitle, svalue, optionsm, bShowLabel, bLabelOnTop, stabindex)
-					rd.setstatic(True)
-			
-			ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+				If buseoptions Then
+					Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+					Dim rd As VMRadioGroup = vm.NewRadioGroup(Me, True, "rd" & sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
+				Else
+					Dim rd As VMRadioGroup = vm.NewRadioGroupDataSource(Me, True, "rd" & sname, svmodel, stitle, svalue, ssourcetable, _
+					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
+				End If
+				rd.SetMandatory(bismandatory)
+				rd.SetDisabled(bisdisabled)
+				rd.SetDense(bisdense)
+				rd.SetMultiple(bismultiple)
+				rd.SetHideDetails(bishidedetails)
+				ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			'
-sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bstatic}, "rd${sname}", "rd${svmodel}", "${stitle}", "${svalue}", optionsm, ${bShowLabel}, ${bLabelOnTop}, ${stabindex})
-.Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+			If buseoptions Then
+					sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+					sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+					sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)					
+				sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bstatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", ${svmodel}map, ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)
+				Else
+					sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bstatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)			
+			End If
+				CodeLine(sb, bismandatory, "b", "rd", sname, "SetMandatory")
+				CodeLine(sb, bisdisabled, "b", "rd", sname, "SetDisabled")
+				CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
+				CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
+				CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")				
+				
+sb.append($".Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 			'
-		Case "select"
-			Dim sel As VMSelect = vm.NewSelectOptions(Me, True, sname, svmodel, stitle, bisrequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
-					sel.setstatic(True)
-			ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
-.Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+			Case "select","auto", "combo"
+				Select Case controltype
+				Case "select"
+					If buseoptions Then
+						Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues) 
+						Dim sel As VMSelect = vm.NewSelectOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					Else
+						'use data source
+						Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					End If
+				Case "combo"
+					If buseoptions Then
+						Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+						Dim sel As VMSelect = vm.NewComboOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					Else
+						'use data source
+						Dim sel As VMSelect = vm.NewComboDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+						End If
+				Case "auto"
+					If buseoptions Then
+						Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+						Dim sel As VMSelect = vm.NewAutoCompleteOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					Else
+						'use data source
+						Dim sel As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					End If
+				End Select
+				'
+				sel.SetSolo(bissolo)
+				sel.SetOutlined(bisoutlined)
+				sel.SetFilled(bisfilled)
+				sel.SetDense(bisdense)
+				sel.SetSingleLine(bissingleline)
+				sel.SetPersistentHint(bispersistenthint)
+				sel.SetShaped(bisshaped)
+				sel.SetLoading(bisloading)
+				sel.SetFlat(bisflat)
+				sel.SetRounded(bisrounded)
+				sel.SetClearable(bclearable)
+				sel.SetHideDetails(bishidedetails)
+				sel.SetChips(bischips)
+				sel.SetSmallChips(bissmallchips)
+				sel.SetDeletableChips(bisdeletablechips)
+				ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+				'
+				'define the code for the control
+				Select Case controltype
+				Case "select"
+					If buseoptions Then
+						sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+						sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+						sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+					'
+						sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+					Else
+						'use data source
+						Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					
+						sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+					End If
+				Case "combo"
+						If buseoptions Then
+							sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+							sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+							sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+							'
+							sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+						Else
+							'use data source
+							Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					
+							sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+						End If
+
+				Case "auto"
+						If buseoptions Then
+							sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+							sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+							sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+							'
+							sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+						Else
+							'use data source
+							Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					
+							sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+						End If
+
+				End Select
+				'
+				CodeLine(sb, bissolo, "b", "sel", sname, "SetSolo")
+				CodeLine(sb, bisoutlined, "b", "sel", sname, "SetOutlined")
+				CodeLine(sb, bisfilled, "b", "sel", sname, "SetFilled")
+				CodeLine(sb, bisdense, "b", "sel", sname, "SetDense")
+				CodeLine(sb, bissingleline, "b", "sel", sname, "SetSingleLine")
+				CodeLine(sb, bispersistenthint, "b", "sel", sname, "SetPersistentHint")
+				CodeLine(sb, bisshaped, "b", "sel", sname, "SetShaped")
+				CodeLine(sb, bisloading, "b", "sel", sname, "SetLoading")
+				CodeLine(sb, bisflat, "b", "sel", sname, "SetFlat")
+				CodeLine(sb, bisrounded, "b", "sel", sname, "SetRounded")
+				CodeLine(sb, bclearable, "b", "sel", sname, "SetClearable")
+				CodeLine(sb, bishidedetails, "b", "sel", sname, "SetHideDetails")
+				CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
+				CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
+				CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
+
+sb.append($".Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 				'
 			Case "slider"
 				Dim sld As VMSlider = vm.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
@@ -817,15 +957,6 @@ sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bstatic}, "sld${sna
 				CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
 		
 				sb.append($".Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "combo"
-			Dim cbo As VMSelect = vm.newComboOptions(Me, True, sname, svmodel,stitle, bisrequired, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
-					'cbo.setstatic(True)
-			ui.AddControl(cbo.Combo, cbo.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim cbo${sname} As VMSelect = vm.newComboOptions(Me, ${bstatic}, "cbo${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
-.Container.AddControl(cbo${sname}.Combo, cbo${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
 		Case "time"
 			Dim tp As VMDateTimePicker = vm.newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 			'tp.setstatic(True)
@@ -879,15 +1010,6 @@ sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bstatic}, "img${sname
 				CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
 				CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
 sb.append($".Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "auto"
-			Dim auto As VMSelect = vm.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, splaceholder, bMultiple, splaceholder, optionsm, sidfield, sdisplayfield, bReturnObject, shelpertext, serrortext, stabindex)
-					'auto.setstatic(True)
-			ui.AddControl(auto.Combo, auto.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim auto${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bstatic}, "auto${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bMultiple}, "${splaceholder}", optionsm, "${sidfield}", "${sdisplayfield}", ${bReturnObject}, "${shelpertext}", "${serrortext}", ${stabindex})
-.Container.AddControl(auto${sname}.Combo, auto${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-				'
 		Case "button"
 			If biconbutton Then stitle = ""
 			If bfabbutton Then stitle = ""
@@ -1677,6 +1799,7 @@ Sub ItemDrop(e As BANanoEvent)
 			nrec.put("avatar", avatar)
 			'
 			Dim attr As Map = CreateMap()
+			attr.put("fieldtype", "string")
 			attr.put("id", sid)
 			attr.put("vmodel", slabel)
 			attr.put("row", rowPos)
@@ -1695,10 +1818,18 @@ Sub ItemDrop(e As BANanoEvent)
 			attr.put("isvisible","Yes")
 			attr.put("isdisabled","No")
 			attr.put("isautogrow","No")
-			attr.put("ontable", "Yes")
+			attr.put("ontable", "No")
 			attr.put("maxlength", 0)
 			attr.Put("icon", "mdi-account-circle")
 			attr.put("centeronparent", "No")
+			attr.put("sourcetable", "datasource")
+			attr.put("sourcefield", "id")
+			attr.put("displayfield", "text")
+			attr.put("useoptions", "Yes")
+			attr.put("showlabel", "Yes")
+			attr.put("labelontop", "Yes")
+			attr.put("keys", "1,2,3")
+			attr.put("values","One,Two,Three")
 			'
 			Select Case savedid
 			Case "label"
@@ -1975,20 +2106,27 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.SetVShow("pbradiogroup")
 	pbradiogroup.AddHeading("d","Details")
 	pbradiogroup.AddText("d","id","ID","","")
-	pbradiogroup.AddText("d", "controltype", "Type", "", "radiogroup")
+	pbradiogroup.AddText("d", "controltype", "Type", "", "radio")
 	pbradiogroup.AddText("d","vmodel","VModel","","")
 	pbradiogroup.AddText("d","label","Label","","")
 	pbradiogroup.AddText("d","value","Value","","")
-	
-	pbradiogroup.AddTextArea("d","keys","Keys (,)","", "1,2,3")
-	pbradiogroup.AddTextArea("d","values","Values (,)","", "One,Two,Three")
+	pbradiogroup.AddText("d","sourcetable","Data Source","","")
+	pbradiogroup.AddText("d","sourcefield","Item Value","","")
+	pbradiogroup.AddText("d","displayfield","Item Text","","")
+	pbradiogroup.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
+	pbradiogroup.AddTextArea("d","values","Item Texts (,)", "", "One,Two,Three")
 	pbradiogroup.AddNumber("d","tabindex","Tab Index","","")
 	'
 	pbradiogroup.AddCheck2(1, 1, "showlabel", "Show Label")
-	pbradiogroup.AddCheck2(1, 2, "labelontop", "Label on Top")
+	pbradiogroup.AddCheck2(1, 2, "labelontop", "Column")
 	pbradiogroup.AddCheck2(2, 1, "isvisible", "Visible")
 	pbradiogroup.AddCheck2(2, 2, "isdisabled", "Disabled")
 	pbradiogroup.AddCheck2(3, 1, "ontable", "On Table")
+	pbradiogroup.AddCheck2(3, 2, "ismandatory", "Mandatory")
+	pbradiogroup.AddCheck2(4, 1, "isdense", "Dense")
+	pbradiogroup.AddCheck2(4, 2, "ishidedetails", "Hide Details")
+	pbradiogroup.AddCheck2(5, 1, "ismultiple", "Multiple")
+	pbradiogroup.AddCheck2(5, 2, "useoptions", "Use Options")
 	pbradiogroup.SetChecks("d")
 	
 	pbradiogroup.AddMatrix("d")
@@ -2015,18 +2153,34 @@ Sub PropertyBag_Select
 	pbselectbox.AddNumber("d","tabindex","Tab Index","","")
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
 	pbselectbox.AddText("d","errortext","Error Text","","")
-	pbselectbox.AddText("d","sourcetable","Source Table","","")
-	pbselectbox.AddText("d","sourcefield","Source Field","","")
-	pbselectbox.AddText("d","displayfield","Display Field","","")
-	pbselectbox.AddTextArea("d","keys","Keys (,)","", "1,2,3")
-	pbselectbox.AddTextArea("d","values","Values (,)", "", "One,Two,Three")
+	pbselectbox.AddText("d","sourcetable","Data Source","","")
+	pbselectbox.AddText("d","sourcefield","Item Value","","")
+	pbselectbox.AddText("d","displayfield","Item Text","","")
+	pbselectbox.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
+	pbselectbox.AddTextArea("d","values","Item Texts (,)", "", "One,Two,Three")
 	'
 	pbselectbox.AddCheck2(1, 1, "isrequired", "Required")
-	pbselectbox.AddCheck2(1, 2, "ismultiple", "Multiple")
+	pbselectbox.AddCheck2(1, 2, "isclearable", "Clearable")
 	pbselectbox.AddCheck2(2, 1, "isvisible", "Visible")
 	pbselectbox.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbselectbox.AddCheck2(3, 1, "ontable", "On Table")
-	pbselectbox.AddCheck2(3, 2, "useoptions", "Use Options")
+	pbselectbox.AddCheck2(3, 1, "ismultiple", "Multiple")
+	pbselectbox.AddCheck2(3, 2, "ontable", "On Table")
+	pbselectbox.AddCheck2(4, 1, "issolo", "Solo")
+	pbselectbox.AddCheck2(4, 2, "isoutlined", "Outlined")
+	pbselectbox.AddCheck2(5, 1, "isfilled", "Filled")
+	pbselectbox.AddCheck2(5, 2, "isdense", "Dense")
+	pbselectbox.AddCheck2(6, 1, "issingleline", "Single Line")
+	pbselectbox.AddCheck2(6, 2, "ispersistenthint", "Persistent Hint")
+	pbselectbox.AddCheck2(7, 1, "isshaped", "Shaped - FOS")
+	pbselectbox.AddCheck2(7, 2, "isloading", "Loading")
+	pbselectbox.AddCheck2(8, 1, "isflat", "Flat - Solo")
+	pbselectbox.AddCheck2(8, 2, "isrounded", "Rounded - FOS")
+	pbselectbox.AddCheck2(9, 1, "ishidedetails", "Hide Details")
+	pbselectbox.AddCheck2(9, 2, "useoptions", "Use Options")
+	pbselectbox.AddCheck2(10, 1, "isreturnobject", "Return Object")
+	pbselectbox.AddCheck2(10, 2, "ischips", "Chips")
+	pbselectbox.AddCheck2(11, 1, "issmallchips", "Small Chips")
+	pbselectbox.AddCheck2(11, 2, "isdeletablechips", "Deletable Chips")
 	pbselectbox.SetChecks("d")
 	
 	pbselectbox.AddMatrix("d")

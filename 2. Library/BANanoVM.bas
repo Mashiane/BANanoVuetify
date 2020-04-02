@@ -264,19 +264,22 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	If SubExists(module, "alert_ok") = False Then
 		Log("Initialize.alert_ok - please add this event to trap alert dialog!")
 	End If
+End Sub
 
+'build the map to send an email to use in callinlinephp
+Sub BuildPHPEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
+	Dim se As Map = CreateMap("from":sfrom, "to":sto, "cc":scc, "subject":ssubject, "msg":smsg)
+	Return se
+End Sub
+
+'convert delimited values and keys to a map
+Sub KeyValues2Map(delim As String, keys As String, values As String) As Map
+	Return vue.KeyValues2Map(delim, keys, values)
 End Sub
 
 'get a property from a list of maps
 Sub GetListOfMapsProperty(lst As List, prop As String) As List
-	prop = prop.tolowercase
-	Dim kc As List
-	kc.initialize
-	For Each rec As Map In lst
-		Dim v As String = rec.Get(prop)
-		kc.add(v)
-	Next
-	Return kc
+	Return vue.GetListOfMapsProperty(lst, prop)
 End Sub
 
 Sub BeautifySourceCode(slang As String, sourceCode As String) As String
@@ -2017,7 +2020,29 @@ Sub NewRadioGroup(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.SetTabIndex(iTabIndex)
 	vue.SetData(vmodel, svalue)
 	If bShowLabel = False Then el.SetLabel("")
-	If bLabelOnTop = False Then el.SetHorizontal(True)
+	If bLabelOnTop Then
+		el.SetColumn(bLabelOnTop)
+	Else
+	 	el.SetRow(True)
+	End If
+	Return el
+End Sub
+
+
+Sub NewRadioGroupDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, svalue As String, sourceTable As String, sourceField As String, displayField As String, bShowLabel As Boolean, bLabelOnTop As Boolean, iTabIndex As Int) As VMRadioGroup
+	Dim el As VMRadioGroup = CreateRadioGroup(sname, eventHandler)
+	el.SetStatic(bStatic)
+	el.SetVModel(vmodel)
+	el.Setlabel(sLabel)
+	el.SetTabIndex(iTabIndex)
+	el.SetDataSource(sourceTable, sourceField, displayField)
+	vue.SetData(vmodel, svalue)
+	If bShowLabel = False Then el.SetLabel("")
+	If bLabelOnTop Then
+		el.SetColumn(bLabelOnTop)
+	Else
+		el.SetRow(True)
+	End If
 	Return el
 End Sub
 
@@ -2151,57 +2176,6 @@ Sub NewNumber(eventHandler As Object,bStatic As Boolean,sname As String, vmodel 
 	Return el
 End Sub
 
-'
-'auto complete that uses a list as a source
-Sub NewAutoComplete(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, lOptions As List, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
-	el.setstatic(bStatic)
-	el.Setlabel(slabel)
-	el.SetRequired(bRequired)
-	el.SetPlaceHolder(splaceholder)
-	el.SetHint(shelpertext)
-	el.SetTabIndex(iTabIndex)
-	el.SetErrorText(sErrorText)
-	el.SetVModel(vmodel)
-	el.Bind(":items", $"${vmodel}items"$)
-	vue.SetData($"${vmodel}items"$, lOptions)
-	Return el
-End Sub
-
-'use select with map
-Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
-	el.setstatic(bStatic)
-	el.Setlabel(sLabel)
-	el.SetRequired(bRequired)
-	el.SetTabIndex(iTabIndex)
-	el.Setplaceholder(sPlaceHolder)
-	el.SetHint(sHelperText)
-	el.Setmultiple(bMultiple)
-	el.SetVModel(vmodel)
-	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	el.SetErrorText(sErrorText)
-	Return el
-End Sub
-
-'
-'auto coomplete that uses objects as a source
-Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, dataSource As String, keyField As String, displayField As String, returnObject As Boolean, bRequired As Boolean, bMultiple As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
-	el.setstatic(bStatic)
-	el.Setlabel(slabel)
-	el.SetRequired(bRequired)
-	el.SetPlaceHolder(splaceholder)
-	el.SetHint(shelpertext)
-	el.SetTabIndex(iTabIndex)
-	el.SetVModel(vmodel)
-	el.Setmultiple(bMultiple)
-	el.SetDataSource(dataSource, keyField, displayField, returnObject)
-	el.SetErrorText(sErrorText)
-	Return el
-End Sub
-
-'
 Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, bAutoGrow As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
 	Dim el As VMTextField = CreateTextField(sname, eventHandler).SetTextArea
 	el.setstatic(bStatic)
@@ -2242,6 +2216,7 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmod
 	el.SetPlaceHolder(splaceholder)
 	el.SetVModel(vmodel)
 	el.Setlabel(slabel)
+	el.SetRequired(bRequired)
 	vue.SetData(vmodel, Null)
 	Return el
 End Sub
@@ -2293,8 +2268,38 @@ Sub NewButton(eventHandler As Object,bStatic As Boolean,sname As String, sLabel 
 	Return el
 End Sub
 '
-'define a select from a datasource
-private Sub NewSelect1(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+'use select with map
+Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
+	el.setstatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.Setplaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.Setmultiple(bMultiple)
+	el.SetVModel(vmodel)
+	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetAutoComplete
+	el.SetStatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.SetPlaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.SetMultiple(bMultiple)
+	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
+	el.SetVModel(vmodel)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+Sub NewSelectDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Dim el As VMSelect = CreateSelect(sname, eventHandler)
 	el.SetStatic(bStatic)
 	el.Setlabel(sLabel)
@@ -2308,18 +2313,9 @@ private Sub NewSelect1(eventHandler As Object,bStatic As Boolean,sname As String
 	el.SetErrorText(sErrorText)
 	Return el
 End Sub
-'
-Sub NewSelectDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Return NewSelect1(eventHandler,bStatic,sname, vmodel, sLabel, bRequired, bMultiple, sPlaceHolder, sourceTable, sourceField, displayField, returnObject, sHelperText, sErrorText, iTabIndex)
-End Sub
 
 'use select with map
 Sub NewSelectOptions(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Return NewSelect(eventHandler,bStatic,sname, vmodel, sLabel, bRequired, bMultiple, sPlaceHolder, optionsm, sourceField, displayField, returnObject, sHelperText, sErrorText, iTabIndex)
-End Sub
-
-'use select with map
-private Sub NewSelect(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Dim el As VMSelect = CreateSelect(sname, eventHandler)
 	el.SetStatic(bStatic)
 	el.Setlabel(sLabel)
@@ -2334,8 +2330,7 @@ private Sub NewSelect(eventHandler As Object,bStatic As Boolean,sname As String,
 	Return el
 End Sub
 
-'define a select from a datasource
-private Sub NewCombo1(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetComboBox
 	el.setstatic(bStatic)
 	el.Setlabel(sLabel)
@@ -2349,18 +2344,9 @@ private Sub NewCombo1(eventHandler As Object,bStatic As Boolean,sname As String,
 	el.SetErrorText(sErrorText)
 	Return el
 End Sub
-'
-Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Return NewCombo1(eventHandler,bStatic,sname, vmodel, sLabel, bRequired, bMultiple, sPlaceHolder, sourceTable, sourceField, displayField, returnObject, sHelperText, sErrorText, iTabIndex)
-End Sub
 
 'use select with map
 Sub NewComboOptions(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
-	Return NewCombo(eventHandler,bStatic,sname, vmodel, sLabel, bRequired, bMultiple, sPlaceHolder, optionsm, sourceField, displayField, returnObject, sHelperText, sErrorText, iTabIndex)
-End Sub
-
-'use select with map
-private Sub NewCombo(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Dim el As VMSelect = CreateSelect(sname, eventHandler).SetComboBox
 	el.SetStatic(bStatic)
 	el.Setlabel(sLabel)

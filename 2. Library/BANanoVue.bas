@@ -552,6 +552,26 @@ Sub Join(delimiter As String, lst As List) As String
 	Return sb.ToString
 End Sub
 
+'convert delimited values and keys to a map
+Sub KeyValues2Map(delim As String, keys As String, values As String) As Map
+	Dim rkeys As List = StrParse(delim, keys)
+	Dim rvalues As List = StrParse(delim, values)
+	'
+	Dim optm As Map = CreateMap()
+	
+	Dim rTot As Int = rkeys.Size -1
+	Dim vTot As Int = rvalues.Size - 1
+	If rTot <> vTot Then
+	Else
+		Dim rCnt As Int
+		For rCnt = 0 To rTot
+			Dim k As String = rkeys.Get(rCnt)
+			Dim v As String = rvalues.Get(rCnt)
+			optm.put(k, v)
+		Next
+	End If
+	Return optm
+End Sub
 
 'javascript getElementById
 Sub getElementById(sid As String) As BANanoObject

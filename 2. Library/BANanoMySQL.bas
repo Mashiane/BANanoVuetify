@@ -619,7 +619,7 @@ Sub DeleteAll As BANanoMySQL
 	Return Me
 End Sub
 
-private Sub EQOperators(sm As Map) As List
+private Sub EQOperators(sm As Map) As List     'ignore
 	Dim nl As List
 	nl.initialize
 	For Each k As String In sm.Keys
