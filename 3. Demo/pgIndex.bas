@@ -27,7 +27,7 @@ Sub Init
 	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	vm.NavBar.SetDark(True)
 	'
-	vm.NavBar.AddSearch("txtsearch")
+	'vm.NavBar.AddSearch("txtsearch")
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")
 	vm.NavBar.AddIcon("btnButton", "mdi-magnify", "My button", "")
 	'
@@ -71,6 +71,7 @@ Sub Init
 	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
 	'
 	vm.UX
+	vm.showpage(modInfoBox.name)
 End Sub
 
 Sub BuildDrawer

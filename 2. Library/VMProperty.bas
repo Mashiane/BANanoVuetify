@@ -146,7 +146,7 @@ Sub AddSelect(parent As String, vmodel As String, vText As String, options As Ma
 	nc.value = ""
 	nc.typeOf = "selectbox"
 	nc.sourceName = sourceName
-	nc.options = vue.CopyMap(options, Array("*"))
+	nc.options = options
 	nc.sourcefield = sourcefield
 	nc.displayfield = displayfield
 	existing.Add(nc)
@@ -587,7 +587,7 @@ Sub AddRadioGroup(parent As String, vmodel As String, vText As String, options A
 	nc.value = ""
 	nc.typeOf = "radiogroup"
 	nc.sourceName = sourceName
-	nc.options = vue.CopyMap(options, Array("*"))
+	nc.options = options
 	nc.sourcefield = sourcefield
 	nc.displayfield = displayfield
 	existing.Add(nc)
@@ -726,7 +726,6 @@ Sub ToString As String
 				cbo.RemoveAttr("ref")
 				cbo.SetDense(True)
 				cbo.SetOutlined(True)
-				cbo.SetReturnObject(False)
 				cbo.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
 				Dim scombo As String = cbo.tostring

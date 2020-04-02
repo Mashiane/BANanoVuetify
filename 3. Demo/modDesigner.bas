@@ -35,6 +35,147 @@ Sub Process_Globals
 	Private myipad As VMDevice
 	Private myiphone As VMDevice
 	Private iconsizes As Map
+	'
+	Private controltype As String
+	Private srow As String
+	Private scol As String
+	Private stabindex As String
+	Private sname As String 
+	Private svmodel As String
+	Private sattributes As String
+	Private sstyles As String 
+	Private sclasses As String 
+	Private sloose As String 
+	Private stitle As String 
+	Private sfieldtype As String 
+		
+	' get the attributes
+	Private mattr As Map 
+	Private os As String
+	Private om As String 
+	Private ol As String 
+	Private ox As String 
+	'
+	Private ss As String 
+	Private sm As String 
+	Private sl As String 
+	Private sx As String 
+	'
+	Private splaceholder As String
+	Private bisrequired As Boolean 
+	Private sicon As String 
+	Private shelpertext As String 
+	Private serrortext As String 
+	Private imaxlen As String 
+	Private bautogrow As Boolean 
+	Private svalue As String 
+	Private bisPrimary As Boolean 
+	Private bisvisible As Boolean 
+	Private bisdisabled As Boolean 
+	Private bontable As Boolean 
+	Private bisdark As Boolean 
+	'
+	Private bissolo As Boolean 
+	Private bisoutlined As Boolean 
+	Private bisfilled As Boolean 
+	Private bisdense As Boolean 
+	Private bissingleline As Boolean 
+	Private bispersistenthint As Boolean 
+	Private bisshaped As Boolean 
+	Private bisloading As Boolean 
+	Private bisflat As Boolean 
+	Private bisrounded As Boolean 
+	Private bclearable As Boolean 
+	Private bishidedetails As Boolean 
+	Private bToggle As Boolean 
+	Private bcenteronparent As Boolean 
+	'
+	Private struevalue As String 
+	Private sfalsevalue As String 
+	Private bislight As Boolean 
+	Private bismultiple As Boolean 
+	Private bisinset As Boolean 
+	Private bisindeterminate As Boolean 
+	Private bisitalic As Boolean 
+	Private bisreadonly As Boolean 
+	'
+	Private bfitwidth As Boolean 
+	Private shref As String 
+	Private starget As String 
+	Private sto As String 
+	Private bistext As Boolean 
+	Private biconbutton As Boolean 
+	Private bfabbutton As Boolean 
+	Private bisdepressed As Boolean 
+	Private bistile As Boolean 
+	Private ssize As String 
+	Private sswitchloading As String 
+	'
+	Private swidth As String 
+	Private sheight As String
+	Private sminwidth As String 
+	Private sminheight As String 
+	Private smaxwidth As String 
+	Private smaxheight As String 
+	'
+	Private stooltip As String 
+	Private scolor As String 
+	Private sintensity As String 
+	'
+	Private stextcolor As String 
+	Private stextintensity As String 
+	'
+	Private ssrc As String 
+	Private slazysrc As String 
+	Private salt As String 
+	Private sborderradius As String 
+	Private sborderwidth As String 
+	Private sbordercolor As String 
+	Private sborderstyle As String 
+	Private saspectratio As String
+	'
+	Private bisreadonly As Boolean 
+	Private bisvertical As Boolean 
+	Private bisthumbalways As Boolean 
+	Private bisthumblabel As Boolean
+	Private sminvalue As String
+	Private sstepvalue As String
+	Private smaxvalue As String
+	Private sprependicon As String
+	Private sappendicon As String
+	Private sthumbsize As String
+	Private sthumbcolor As String
+	Private sthumbintensity As String
+	Private strackcolor As String 
+	Private strackintensity As String 
+	'
+	Private ssourcefield As String 
+	Private ssourcetable As String 
+	Private sdisplayfield As String 
+	Private skeys As String 
+	Private svalues As String 
+	Private bisreturnobject As Boolean 
+	Private buseoptions As Boolean
+	Private bischips As Boolean
+	Private bissmallchips As Boolean 
+	Private bisdeletablechips As Boolean
+	'
+	Private bshowlabel As Boolean
+	Private blabelontop As Boolean
+	Private bismandatory As Boolean
+	'
+	Private bisrange As Boolean
+	Private bisshowweek As Boolean
+	Private bisampm As Boolean
+	Private bisnotitle As Boolean
+	Private bisuseseconds As Boolean
+	'
+	Private sfirstdayofweek As String 
+	Private stformat As String 
+	Private sheadercolor As String 
+	Private sheaderintensity As String
+	Private bStatic As Boolean
+	Private sb As StringBuilder
 End Sub
 
 
@@ -103,7 +244,7 @@ Sub Init
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
 	vm.NavBar.SetModeFixed(True)
-	vm.NavBar.SetHasMenuButton(True)
+	vm.NavBar.SetHasMenuButton(False)
 	vm.NavBar.UpdateLogo("./assets/sponge.png")
 	vm.NavBar.UpdateTitle("BANanoVuetify Designer 3")
 	vm.NavBar.Logo.SetBorderRadius("50%")
@@ -237,7 +378,6 @@ Sub YesNoToBoolean(xvalue As String) As Boolean
 End Sub
 
 Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
-	Dim sb As StringBuilder
 	sb.initialize
 	'
 	'make it a div
@@ -255,6 +395,238 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		ui.HasBorder = False
 	End If
 	'
+	Design_Grid(gridSQL)
+	
+	For Each rec As Map In compSQL.result
+		controltype = rec.get("controltype")
+		srow = rec.getdefault("row","1")
+		If srow = "" Then srow = "1"
+		srow = BANano.parseint(srow)
+		scol = rec.getdefault("col","1")
+		If scol = "" Then scol = "1"
+		scol = BANano.parseint(scol)
+		stabindex = rec.getdefault("tabindex","0")
+		If stabindex = "" Then stabindex = "0"
+		stabindex = BANano.parseint(stabindex)
+		sname = rec.get("name")
+		svmodel = rec.get("vmodel")
+		sattributes = rec.get("attributes")
+		sstyles = rec.get("styles")
+		sclasses = rec.get("classes")
+		sloose = rec.get("loose")
+		stitle = rec.get("label")
+		sfieldtype = rec.getdefault("fieldtype", "")
+		
+		' get the attributes
+		mattr = BANano.FromJson(sattributes)
+		os = mattr.get("offsetsmall")
+		om = mattr.get("offsetmedium")
+		ol = mattr.get("offsetlarge")
+		ox = mattr.get("offsetxlarge")
+		'
+		ss = mattr.get("sizesmall")
+		sm = mattr.get("sizemedium")
+		sl = mattr.get("sizelarge")
+		sx = mattr.get("sizexlarge")
+		'
+		splaceholder = mattr.getdefault("placeholder", "")
+		bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+		sicon = mattr.GetDefault("icon", "")
+		shelpertext = mattr.getdefault("helpertext", "")
+		serrortext = mattr.getdefault("errortext", "")
+		imaxlen = mattr.getdefault("maxlength", "0")
+		If imaxlen = "" Then imaxlen = "0"
+		imaxlen = BANano.parseint(imaxlen)
+		bautogrow = YesNoToBoolean(mattr.getdefault("isautogrow", "No"))
+		svalue = mattr.getdefault("value", "")
+		bisPrimary = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
+		bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+		bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+		bontable = YesNoToBoolean(mattr.getdefault("ontable", "No"))
+		bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+			'
+		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
+		bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
+		bisfilled = YesNoToBoolean(mattr.getdefault("isfilled", "No"))
+		bisdense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
+		bissingleline = YesNoToBoolean(mattr.getdefault("issingleline", "No"))
+		bispersistenthint = YesNoToBoolean(mattr.getdefault("ispersistenthint", "No"))
+		bisshaped = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
+		bisloading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
+		bisflat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
+		bisrounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
+		bclearable = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
+		bishidedetails = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
+		bToggle = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
+		bcenteronparent = YesNoToBoolean(mattr.getdefault("centeronparent", "No"))
+		'
+		struevalue = mattr.getdefault("truevalue", "")
+		sfalsevalue = mattr.GetDefault("falsevalue", "")
+		bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+		bismultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+		bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+		bisindeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
+		bisitalic = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
+		bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
+		'
+		bfitwidth = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
+		shref = mattr.getdefault("href","")
+		starget = mattr.getdefault("target","")
+		sto = mattr.getdefault("to","")
+		bistext = YesNoToBoolean(mattr.getdefault("istext", "No"))
+		biconbutton = YesNoToBoolean(mattr.getdefault("isiconbutton", "No"))
+		bfabbutton = YesNoToBoolean(mattr.getdefault("isfabbutton", "No"))
+		bisdepressed = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
+		bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+		ssize = mattr.GetDefault("size", "")
+		sswitchloading = mattr.getdefault("switchloading","")
+				'
+		swidth = mattr.getdefault("width", "")
+		sheight = mattr.getdefault("height", "")
+		sminwidth = mattr.getdefault("minwidth", "")
+		sminheight = mattr.getdefault("minheight", "")
+		smaxwidth = mattr.getdefault("maxwidth", "")
+		smaxheight = mattr.getdefault("maxheight", "")
+		'
+		stooltip = mattr.getdefault("tooltip", "")
+		scolor = mattr.getdefault("color", "")
+		sintensity = mattr.getdefault("intensity", "")
+		'
+		stextcolor = mattr.getdefault("textcolor", "")
+		stextintensity = mattr.getdefault("textintensity", "")
+		'
+		ssrc = mattr.getdefault("src", "")
+		slazysrc = mattr.getdefault("lazysrc", "")
+		salt = mattr.getdefault("alt","")
+		sborderradius = mattr.getdefault("borderradius","")
+		sborderwidth = mattr.getdefault("borderwidth","")
+		sbordercolor = mattr.getdefault("bordercolor", "")
+		sborderstyle = mattr.getdefault("borderstyle", "")
+		saspectratio = mattr.getdefault("aspectratio", "")
+		'
+		bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
+		bisvertical = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
+		bisthumbalways = YesNoToBoolean(mattr.getdefault("isthumbalways", "No"))
+		bisthumblabel = YesNoToBoolean(mattr.getdefault("isthumblabel", "No"))
+		sminvalue = mattr.getdefault("minvalue", "0")
+		sstepvalue = mattr.getdefault("stepvalue","1")
+		smaxvalue = mattr.getdefault("maxvalue", "100")
+		sprependicon = mattr.getdefault("prependicon", "")
+		sappendicon = mattr.getdefault("appendicon","")
+		sthumbsize = mattr.getdefault("thumbsize","32")
+		sthumbcolor = mattr.getdefault("thumbcolor", "")
+		sthumbintensity = mattr.getdefault("thumbintensity", "")
+		strackcolor = mattr.GetDefault("trackcolor", "")
+		strackintensity = mattr.getdefault("trackintensity","")
+		'
+		ssourcefield = mattr.getdefault("sourcefield", "id")
+		ssourcetable = mattr.getdefault("sourcetable", "datasource")
+		sdisplayfield = mattr.getdefault("displayfield", "text")
+		skeys = mattr.getdefault("keys", "")
+		svalues = mattr.getdefault("values", "")
+		bisreturnobject = YesNoToBoolean(mattr.getdefault("isreturnobject", "No"))
+		buseoptions = YesNoToBoolean(mattr.getdefault("useoptions", "No"))
+		bischips = YesNoToBoolean(mattr.getdefault("ischips", "No"))
+		bissmallchips = YesNoToBoolean(mattr.getdefault("issmallchips", "No"))
+		bisdeletablechips = YesNoToBoolean(mattr.getdefault("isdeletablechips", "No"))
+		'
+		bshowlabel = YesNoToBoolean(mattr.getdefault("showlabel", "No"))
+		blabelontop = YesNoToBoolean(mattr.getdefault("labelontop", "No"))
+		bismandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+		'
+		bisrange = YesNoToBoolean(mattr.getdefault("isrange", "No"))
+		bisshowweek = YesNoToBoolean(mattr.getdefault("isshowweek", "No"))
+		bisampm = YesNoToBoolean(mattr.getdefault("isampm", "No"))
+		bisnotitle = YesNoToBoolean(mattr.getdefault("isnotitle", "No"))
+		bisuseseconds = YesNoToBoolean(mattr.getdefault("isuseseconds", "No"))
+		'
+		sfirstdayofweek = mattr.GetDefault("firstdayofweek", "0")
+		stformat = mattr.getdefault("tformat", "ampm")
+		sheadercolor = mattr.getdefault("headercolor", "")
+		sheaderintensity = mattr.getdefault("headerintensity", "")
+						
+		bStatic = True
+		'
+		Select Case controltype
+		Case "text"
+			Design_TextField
+		Case "textarea"
+			Design_TextArea
+		Case "switch"
+			Design_Switch
+		Case "checkbox"
+			Design_CheckBox
+		Case "date"
+			Design_Date
+		Case "file"
+			Design_File
+		Case "radio"
+			Design_Radio
+		Case "select","auto", "combo"
+			Design_Select
+		Case "slider"
+			Design_Slider
+		Case "label"
+			Design_Label
+		Case "email"
+			Design_Email
+		Case "password"
+			Design_Password
+		Case "tel"
+			Design_Tel
+		Case "time"
+			Design_Time
+		Case "icon"
+			Design_Icon
+		Case "profile", "image"
+			Design_Image
+		Case "button"
+			Design_Button
+		End Select
+	Next
+	
+	Dim html As String = ui.tostring
+	Dim shtml As String = vm.BeautifySourceCode("html", html)
+	'save grid source code
+	BANano.SetSessionStorage("sourcecode", sb.tostring)
+	BANano.SetSessionStorage("html", shtml)
+	'
+	mymac = vm.CreateDevice("mymac", Me).SetMacbook
+	mymac.SetStatic(shtml)
+	'
+	myipad = vm.CreateDevice("myipad", Me).SetIpad
+	myipad.hide
+	myipad.SetStatic(shtml)
+	'
+	myiphone = vm.CreateDevice("myiphone", Me).SetIphoneX
+	myiphone.hide
+	myiphone.SetStatic(shtml)
+		
+	dnd.AddComponent(1, 1, mymac.tostring)
+	dnd.AddComponent(1, 1, myipad.tostring)
+	dnd.AddComponent(1, 1, myiphone.tostring)
+	
+	'drag and drop preview area
+	'dnd.AddComponent(1, 1, shtml)
+	'b4x code
+	Dim pc As VMPrism = vm.CreatePrism("b4xcode", Me)
+	pc.SetLanguage("vb").SetCode(sb.tostring)
+	b4x.AddComponent(1, 1, pc.tostring)
+	
+	'html code
+	Dim htm As VMPrism = vm.CreatePrism("htmlcode", Me)
+	htm.SetLanguage("html").SetCode(shtml)
+	html5.AddComponent(1, 1, htm.tostring)
+	'
+	tabs.AddTab("dndrea", "Drag n Drop / Preview", "mdi-drag-variant", dnd)
+	tabs.AddTab("b4xarea", "B4X", "code", b4x)
+	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
+	vm.container.AddComponent(1, 2, tabs.tostring)
+	
+	'vm.Container.AddComponent(1, 2, html)
+End Sub
+
+Sub Design_Grid(gridSQL As BANanoAlaSQLE)
 	For Each rec As Map In gridSQL.result
 		Dim controltype As String = rec.get("controltype")
 		Select Case controltype
@@ -347,793 +719,723 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 				sb.append($".Container.addrows(1).AddColumns2p10"$).append(CRLF)
 		End Select
 	Next
-	For Each rec As Map In compSQL.result
-		Dim controltype As String = rec.get("controltype")
-		Dim srow As String = rec.getdefault("row","0")
-		If srow = "" Then srow = "1"
-		srow = BANano.parseint(srow)
-		Dim scol As String = rec.getdefault("col","0")
-		If scol = "" Then scol = "1"
-		scol = BANano.parseint(scol)
-		Dim stabindex As String = rec.getdefault("tabindex","0")
-		If stabindex = "" Then stabindex = "0"
-		stabindex = BANano.parseint(stabindex)
-		Dim sname As String = rec.get("name")
-		Dim svmodel As String = rec.get("vmodel")
-		Dim sattributes As String = rec.get("attributes")
-		Dim sstyles As String = rec.get("styles")
-		Dim sclasses As String = rec.get("classes")
-		Dim sloose As String = rec.get("loose")
-		Dim stitle As String = rec.get("label")
-		Dim sfieldtype As String = rec.getdefault("fieldtype", "")
-		
-		' get the attributes
-		Dim mattr As Map = BANano.FromJson(sattributes)
-		Dim os As String = mattr.get("offsetsmall")
-		Dim om As String = mattr.get("offsetmedium")
-		Dim ol As String = mattr.get("offsetlarge")
-		Dim ox As String = mattr.get("offsetxlarge")
-		'
-		Dim ss As String = mattr.get("sizesmall")
-		Dim sm As String = mattr.get("sizemedium")
-		Dim sl As String = mattr.get("sizelarge")
-		Dim sx As String = mattr.get("sizexlarge")
-		'
-		Dim splaceholder As String = mattr.getdefault("placeholder", "")
-		Dim bisrequired As Boolean = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
-		Dim sicon As String = mattr.GetDefault("icon", "")
-		Dim shelpertext As String = mattr.getdefault("helpertext", "")
-		Dim serrortext As String = mattr.getdefault("errortext", "")
-		Dim imaxlen As String = mattr.getdefault("maxlength", "0")
-		If imaxlen = "" Then imaxlen = "0"
-		imaxlen = BANano.parseint(imaxlen)
-		Dim bautogrow As Boolean = YesNoToBoolean(mattr.getdefault("isautogrow", "No"))
-		Dim svalue As String = mattr.getdefault("value", "")
-		Dim bisPrimary As Boolean = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
-		Dim optionsm As Map = CreateMap("f":"Female","m":"Male")
-		Dim bisvisible As Boolean = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
-		Dim bisdisabled As Boolean = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
-		Dim bontable As Boolean = YesNoToBoolean(mattr.getdefault("ontable", "No"))
-		Dim bisdark As Boolean = YesNoToBoolean(mattr.getdefault("isdark", "No"))
-			'
-		Dim bissolo As Boolean = YesNoToBoolean(mattr.getdefault("issolo", "No"))
-		Dim bisoutlined As Boolean = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
-		Dim bisfilled As Boolean = YesNoToBoolean(mattr.getdefault("isfilled", "No"))
-		Dim bisdense As Boolean = YesNoToBoolean(mattr.getdefault("isdense", "No"))
-		Dim bissingleline As Boolean = YesNoToBoolean(mattr.getdefault("issingleline", "No"))
-		Dim bispersistenthint As Boolean = YesNoToBoolean(mattr.getdefault("ispersistenthint", "No"))
-		Dim bisshaped As Boolean = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
-		Dim bisloading As Boolean = YesNoToBoolean(mattr.getdefault("isloading", "No"))
-		Dim bisflat As Boolean = YesNoToBoolean(mattr.getdefault("isflat", "No"))
-		Dim bisrounded As Boolean = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
-		Dim bclearable As Boolean = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
-		Dim bishidedetails As Boolean = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
-		Dim bToggle As Boolean = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
-		Dim bcenteronparent As Boolean = YesNoToBoolean(mattr.getdefault("centeronparent", "No"))
-		'
-		Dim struevalue As String = mattr.getdefault("truevalue", "")
-		Dim sfalsevalue As String = mattr.GetDefault("falsevalue", "")
-		Dim bislight As Boolean = YesNoToBoolean(mattr.getdefault("islight", "No"))
-		Dim bismultiple As Boolean = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
-		Dim bisinset As Boolean = YesNoToBoolean(mattr.getdefault("isinset", "No"))
-		Dim bisindeterminate As Boolean = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
-		Dim bisitalic As Boolean = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
-		Dim bisreadonly As Boolean = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
-		'
-		Dim bfitwidth As Boolean = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
-		Dim shref As String = mattr.getdefault("href","")
-		Dim starget As String = mattr.getdefault("target","")
-		Dim sto As String = mattr.getdefault("to","")
-		Dim bistext As Boolean = YesNoToBoolean(mattr.getdefault("istext", "No"))
-		Dim biconbutton As Boolean = YesNoToBoolean(mattr.getdefault("isiconbutton", "No"))
-		Dim bfabbutton As Boolean = YesNoToBoolean(mattr.getdefault("isfabbutton", "No"))
-		Dim bisdepressed As Boolean = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
-		Dim bistile As Boolean = YesNoToBoolean(mattr.getdefault("istile", "No"))
-		Dim ssize As String = mattr.GetDefault("size", "")
-		Dim sswitchloading As String = mattr.getdefault("switchloading","")
-				'
-		Dim swidth As String = mattr.getdefault("width", "")
-		Dim sheight As String = mattr.getdefault("height", "")
-		Dim sminwidth As String = mattr.getdefault("minwidth", "")
-		Dim sminheight As String = mattr.getdefault("minheight", "")
-		Dim smaxwidth As String = mattr.getdefault("maxwidth", "")
-		Dim smaxheight As String = mattr.getdefault("maxheight", "")
-		'
-		Dim stooltip As String = mattr.getdefault("tooltip", "")
-		Dim scolor As String = mattr.getdefault("color", "")
-		Dim sintensity As String = mattr.getdefault("intensity", "")
-		'
-		Dim stextcolor As String = mattr.getdefault("textcolor", "")
-		Dim stextintensity As String = mattr.getdefault("textintensity", "")
-		'
-		Dim ssrc As String = mattr.getdefault("src", "")
-		Dim slazysrc As String = mattr.getdefault("lazysrc", "")
-		Dim salt As String = mattr.getdefault("alt","")
-		Dim sborderradius As String = mattr.getdefault("borderradius","")
-		Dim sborderwidth As String = mattr.getdefault("borderwidth","")
-		Dim sbordercolor As String = mattr.getdefault("bordercolor", "")
-		Dim sborderstyle As String = mattr.getdefault("borderstyle", "")
-		Dim saspectratio As String = mattr.getdefault("aspectratio", "")
-		'
-		Dim bisreadonly As Boolean = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
-		Dim bisvertical As Boolean = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
-		Dim bisthumbalways As Boolean = YesNoToBoolean(mattr.getdefault("isthumbalways", "No"))
-		Dim bisthumblabel As Boolean = YesNoToBoolean(mattr.getdefault("isthumblabel", "No"))
-		Dim sminvalue As String = mattr.getdefault("minvalue", "0")
-		Dim sstepvalue As String = mattr.getdefault("stepvalue","1")
-		Dim smaxvalue As String = mattr.getdefault("maxvalue", "100")
-		Dim sprependicon As String = mattr.getdefault("prependicon", "")
-		Dim sappendicon As String = mattr.getdefault("appendicon","")
-		Dim sthumbsize As String = mattr.getdefault("thumbsize","32")
-		Dim sthumbcolor As String = mattr.getdefault("thumbcolor", "")
-		Dim sthumbintensity As String = mattr.getdefault("thumbintensity", "")
-		Dim strackcolor As String = mattr.GetDefault("trackcolor", "")
-		Dim strackintensity As String = mattr.getdefault("trackintensity","")
-		'
-		Dim ssourcefield As String = mattr.getdefault("sourcefield", "id")
-		Dim ssourcetable As String = mattr.getdefault("sourcetable", "datasource")
-		Dim sdisplayfield As String = mattr.getdefault("displayfield", "text")
-		Dim skeys As String = mattr.getdefault("keys", "")
-		Dim svalues As String = mattr.getdefault("values", "")
-		Dim bisreturnobject As Boolean = YesNoToBoolean(mattr.getdefault("isreturnobject", "No"))
-		Dim buseoptions As Boolean = YesNoToBoolean(mattr.getdefault("useoptions", "No"))
-		Dim bischips As Boolean = YesNoToBoolean(mattr.getdefault("ischips", "No"))
-		Dim bissmallchips As Boolean = YesNoToBoolean(mattr.getdefault("issmallchips", "No"))
-		Dim bisdeletablechips As Boolean = YesNoToBoolean(mattr.getdefault("isdeletablechips", "No"))
-		'
-		Dim bshowlabel As Boolean = YesNoToBoolean(mattr.getdefault("showlabel", "No"))
-		Dim blabelontop As Boolean = YesNoToBoolean(mattr.getdefault("labelontop", "No"))
-		Dim bismandatory As Boolean = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
-					
-		Dim bstatic As Boolean = True
-		'
-		Select Case controltype
-		Case "text"
-			Dim txt As VMTextField = vm.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
-			txt.SetFieldType(sfieldtype)
-			txt.SetSolo(bissolo)
-			txt.SetOutlined(bisoutlined)
-			txt.SetFilled(bisfilled)
-			txt.SetDense(bisdense)
-			txt.SetSingleLine(bissingleline)
-			txt.SetPersistentHint(bispersistenthint)
-			txt.SetShaped(bisshaped)
-			txt.SetLoading(bisloading)
-			txt.SetFlat(bisflat)
-			txt.SetRounded(bisrounded)
-			txt.SetClearable(bclearable)
-			txt.SetHideDetails(bishidedetails)
-			ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bstatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-'
-				CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
-				CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "txt", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "txt", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "txt", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "txt", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "txt", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "txt", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "txt", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "txt", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
-
-				sb.append($".Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "textarea"
-				Dim txta As VMTextField = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
-				txta.SetSolo(bissolo)
-				txta.SetOutlined(bisoutlined)
-				txta.SetFilled(bisfilled)
-				txta.SetDense(bisdense)
-				txta.SetSingleLine(bissingleline)
-				txta.SetPersistentHint(bispersistenthint)
-				txta.SetShaped(bisshaped)
-				txta.SetLoading(bisloading)
-				txta.SetFlat(bisflat)
-				txta.SetRounded(bisrounded)
-				txta.SetClearable(bclearable)
-				txta.SetHideDetails(bishidedetails)
-				txta.SetAutoGrow(bautogrow)
-			ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-				sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bstatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-
-				CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
-				CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "txta", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "txta", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "txta", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "txta", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "txta", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "txta", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "txta", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "txta", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "txta", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "txta", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
-
-				sb.append($".Container.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-				'
-			
-			Case "switch"
-				Dim swt As VMCheckBox = vm.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
-				swt.SetColorIntensity(scolor, sintensity)
-				swt.SetRequired(bisrequired)
-				swt.SetDisabled(bisdisabled)
-				swt.SetDark(bisdark)
-				swt.SetDense(bisdense)
-				swt.SetHideDetails(bishidedetails)
-				swt.SetLight(bislight)
-				swt.SetLoading(sswitchloading)
-				swt.SetMultiple(bismultiple)
-				swt.SetInset(bisinset)
-				swt.SetFlat(bisflat)
-				'
-				ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-				'
-				sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bstatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
-				CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
-				CodeLine(sb, bisdisabled, "b", "swt", sname, "SetDisabled")
-				CodeLine(sb, bisdark, "b", "swt", sname, "SetDark")
-				CodeLine(sb, bisdense, "b", "swt", sname, "SetDense")
-				CodeLine(sb, bishidedetails, "b", "swt", sname, "SetHideDetails")
-				CodeLine(sb, bisinset, "b", "swt", sname, "SetInset")
-				CodeLine(sb, bislight, "b", "swt", sname, "SetLight")
-				CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
-				CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
-				CodeLine(sb, bisflat, "b", "swt", sname, "SetFlat")
-				
-				If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
-				'
-				sb.append($".Container.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-				'
-		
-			Case "checkbox"
-				Dim chk As VMCheckBox = vm.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
-				chk.SetColorIntensity(scolor, sintensity)
-				chk.SetRequired(bisrequired)
-				chk.SetDisabled(bisdisabled)
-				chk.SetDark(bisdark)
-				chk.SetDense(bisdense)
-				chk.SetHideDetails(bishidedetails)
-				chk.SetIndeterminate(bisindeterminate)
-				chk.SetLight(bislight)
-				chk.SetMultiple(bismultiple)
-					
-				ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-				sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bstatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
-				CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
-				CodeLine(sb, bisdisabled, "b", "chk", sname, "SetDisabled")
-				CodeLine(sb, bisdark, "b", "chk", sname, "SetDark")
-				CodeLine(sb, bisdense, "b", "chk", sname, "SetDense")
-				CodeLine(sb, bishidedetails, "b", "chk", sname, "SetHideDetails")
-				CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
-				CodeLine(sb, bislight, "b", "chk", sname, "SetLight")
-				CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
-				If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
-				'
-				sb.append($".Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-				'
-		Case "date"
-			Dim dp As VMDateTimePicker = vm.NewDatePicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
-			ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bstatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
-.Container.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "file"
-				Dim fi As VMTextField = vm.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
-				fi.SetSolo(bissolo)
-				fi.SetOutlined(bisoutlined)
-				fi.SetFilled(bisfilled)
-				fi.SetDense(bisdense)
-				fi.SetSingleLine(bissingleline)
-				fi.SetPersistentHint(bispersistenthint)
-				fi.SetShaped(bisshaped)
-				fi.SetLoading(bisloading)
-				fi.SetFlat(bisflat)
-				fi.SetRounded(bisrounded)
-				fi.SetClearable(bclearable)
-				fi.SetHideDetails(bishidedetails)
-			ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			
-				sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bstatic}, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-				CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "fi", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "fi", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "fi", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "fi", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "fi", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "fi", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "fi", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "fi", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "fi", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "fi", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
-				
-				sb.append($".Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "radio"
-				If buseoptions Then
-					Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-					Dim rd As VMRadioGroup = vm.NewRadioGroup(Me, True, "rd" & sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
-				Else
-					Dim rd As VMRadioGroup = vm.NewRadioGroupDataSource(Me, True, "rd" & sname, svmodel, stitle, svalue, ssourcetable, _
-					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
-				End If
-				rd.SetMandatory(bismandatory)
-				rd.SetDisabled(bisdisabled)
-				rd.SetDense(bisdense)
-				rd.SetMultiple(bismultiple)
-				rd.SetHideDetails(bishidedetails)
-				ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-			If buseoptions Then
-					sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
-					sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
-					sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)					
-				sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bstatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", ${svmodel}map, ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)
-				Else
-					sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bstatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)			
-			End If
-				CodeLine(sb, bismandatory, "b", "rd", sname, "SetMandatory")
-				CodeLine(sb, bisdisabled, "b", "rd", sname, "SetDisabled")
-				CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
-				CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
-				CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")				
-				
-sb.append($".Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-			Case "select","auto", "combo"
-				Select Case controltype
-				Case "select"
-					If buseoptions Then
-						Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues) 
-						Dim sel As VMSelect = vm.NewSelectOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					Else
-						'use data source
-						Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					End If
-				Case "combo"
-					If buseoptions Then
-						Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-						Dim sel As VMSelect = vm.NewComboOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					Else
-						'use data source
-						Dim sel As VMSelect = vm.NewComboDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-						End If
-				Case "auto"
-					If buseoptions Then
-						Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-						Dim sel As VMSelect = vm.NewAutoCompleteOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					Else
-						'use data source
-						Dim sel As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					End If
-				End Select
-				'
-				sel.SetSolo(bissolo)
-				sel.SetOutlined(bisoutlined)
-				sel.SetFilled(bisfilled)
-				sel.SetDense(bisdense)
-				sel.SetSingleLine(bissingleline)
-				sel.SetPersistentHint(bispersistenthint)
-				sel.SetShaped(bisshaped)
-				sel.SetLoading(bisloading)
-				sel.SetFlat(bisflat)
-				sel.SetRounded(bisrounded)
-				sel.SetClearable(bclearable)
-				sel.SetHideDetails(bishidedetails)
-				sel.SetChips(bischips)
-				sel.SetSmallChips(bissmallchips)
-				sel.SetDeletableChips(bisdeletablechips)
-				ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-				'
-				'define the code for the control
-				Select Case controltype
-				Case "select"
-					If buseoptions Then
-						sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
-						sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
-						sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
-					'
-						sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-					Else
-						'use data source
-						Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					
-						sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-					End If
-				Case "combo"
-						If buseoptions Then
-							sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
-							sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
-							sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
-							'
-							sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-						Else
-							'use data source
-							Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					
-							sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-						End If
-
-				Case "auto"
-						If buseoptions Then
-							sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
-							sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
-							sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
-							'
-							sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-						Else
-							'use data source
-							Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					
-							sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bstatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-						End If
-
-				End Select
-				'
-				CodeLine(sb, bissolo, "b", "sel", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "sel", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "sel", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "sel", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "sel", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "sel", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "sel", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "sel", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "sel", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "sel", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "sel", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "sel", sname, "SetHideDetails")
-				CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
-				CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
-				CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
-
-sb.append($".Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-				'
-			Case "slider"
-				Dim sld As VMSlider = vm.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
-				sld.SetValue(svalue)
-				sld.SetColorIntensity(scolor, sintensity)
-				sld.SetHideDetails(bishidedetails)
-				sld.SetDark(bisdark)
-				sld.SetReadonly(bisreadonly)
-				sld.SetVertical(bisvertical)
-				sld.SetStep(sstepvalue)
-				sld.SetPrependIcon(sprependicon)
-				sld.SetAppendIcon(sappendicon)
-				sld.SetDense(bisdense)
-				sld.SetThumbSize(sthumbsize)
-				sld.SetThumbColorIntensity(sthumbcolor,sthumbintensity)
-				sld.SetTrackColorIntensity(strackcolor,strackintensity)
-				If bisthumblabel Then sld.SetThumbLabel(bisthumblabel)
-				If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
-				ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bstatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})
-.Container.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "label"
-			Dim slabelsize As String = mattr.GetDefault("labelsize", "")
-			Dim sdisplay As String = mattr.getdefault("display", "")
-			Dim salign As String = mattr.getdefault("align", "")
-			Dim sfontweight As String = mattr.getdefault("fontweight", "")
-			'
-			Dim lbl As VMLabel =vm.NewLabel(True, sname, svmodel, slabelsize, svalue)
-			lbl.AddClass(sdisplay)
-			lbl.AddClass(salign)
-			lbl.AddClass(sfontweight)
-			lbl.SetItalic(bisitalic)
-			lbl.SetTextColorIntensity(stextcolor, stextintensity)
-			
-			ui.AddControl(lbl.Label, lbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-			sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bstatic}, "lbl${sname}", "${svmodel}", "${slabelsize}", "${svalue}")"$).append(CRLF)
-			CodeLine(sb, sdisplay, "s", "lbl", sname, "AddClass")
-			CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
-			CodeLine(sb, sfontweight, "s", "lbl", sname, "AddClass")
-			CodeLine(sb, bisitalic, "b", "lbl", sname, "SetItalic")
-			If stextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
-
-			sb.append($".Container.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-'
-		Case "email"
-				Dim email As VMTextField = vm.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
-				email.SetFieldType(sfieldtype)
-				email.SetSolo(bissolo)
-				email.SetOutlined(bisoutlined)
-				email.SetFilled(bisfilled)
-				email.SetDense(bisdense)
-				email.SetSingleLine(bissingleline)
-				email.SetPersistentHint(bispersistenthint)
-				email.SetShaped(bisshaped)
-				email.SetLoading(bisloading)
-				email.SetFlat(bisflat)
-				email.SetRounded(bisrounded)
-				email.SetClearable(bclearable)
-				email.SetHideDetails(bishidedetails)
-			ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-				sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bstatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
-
-				CodeLine(sb, sfieldtype, "s", "email", sname, "SetFieldType")
-				CodeLine(sb, bissolo, "b", "email", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "email", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "email", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "email", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "email", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "email", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "email", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "email", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "email", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "email", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "email", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "email", sname, "SetHideDetails")
-
-				sb.append($".Container.AddControl(email${sname}.textfield, email${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-'
-		Case "password"
-				Dim pwd As VMTextField = vm.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
-				pwd.SetFieldType(sfieldtype)
-				pwd.SetSolo(bissolo)
-				pwd.SetOutlined(bisoutlined)
-				pwd.SetFilled(bisfilled)
-				pwd.SetDense(bisdense)
-				pwd.SetSingleLine(bissingleline)
-				pwd.SetPersistentHint(bispersistenthint)
-				pwd.SetShaped(bisshaped)
-				pwd.SetLoading(bisloading)
-				pwd.SetFlat(bisflat)
-				pwd.SetRounded(bisrounded)
-				pwd.SetClearable(bclearable)
-				pwd.SetHideDetails(bishidedetails)
-				
-			ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-				sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bstatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-				'
-				CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
-				CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "pwd", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "pwd", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "pwd", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "pwd", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "pwd", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "pwd", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "pwd", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "pwd", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "pwd", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "pwd", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "pwd", sname, "SetHideDetails")
-
-				sb.append($".Container.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "tel"
-				Dim tel As VMTextField = vm.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
-				tel.SetFieldType(sfieldtype)
-				tel.SetSolo(bissolo)
-				tel.SetOutlined(bisoutlined)
-				tel.SetFilled(bisfilled)
-				tel.SetDense(bisdense)
-				tel.SetSingleLine(bissingleline)
-				tel.SetPersistentHint(bispersistenthint)
-				tel.SetShaped(bisshaped)
-				tel.SetLoading(bisloading)
-				tel.SetFlat(bisflat)
-				tel.SetRounded(bisrounded)
-				tel.SetClearable(bclearable)
-				tel.SetHideDetails(bishidedetails)
-			ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-				sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bstatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-
-				CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
-				CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
-				CodeLine(sb, bisoutlined, "b", "tel", sname, "SetOutlined")
-				CodeLine(sb, bisfilled, "b", "tel", sname, "SetFilled")
-				CodeLine(sb, bisdense, "b", "tel", sname, "SetDense")
-				CodeLine(sb, bissingleline, "b", "tel", sname, "SetSingleLine")
-				CodeLine(sb, bispersistenthint, "b", "tel", sname, "SetPersistentHint")
-				CodeLine(sb, bisshaped, "b", "tel", sname, "SetShaped")
-				CodeLine(sb, bisloading, "b", "tel", sname, "SetLoading")
-				CodeLine(sb, bisflat, "b", "tel", sname, "SetFlat")
-				CodeLine(sb, bisrounded, "b", "tel", sname, "SetRounded")
-				CodeLine(sb, bclearable, "b", "tel", sname, "SetClearable")
-				CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
-		
-				sb.append($".Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-		Case "time"
-			Dim tp As VMDateTimePicker = vm.newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
-			'tp.setstatic(True)
-			ui.AddControl(tp.DateTimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-				sb.append($"Dim tp${sname} As VMDateTimePicker = vm.newtimepicker(Me, ${bstatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})
-			.Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "icon"
-			Dim icn As VMIcon = vm.NewIcon(Me, True, sname, sicon, ssize, scolor, sintensity)
-			icn.SetDark(bisdark)
-			icn.SetDense(bisdense)
-			icn.SetDisabled(bisdisabled)
-			icn.SetCenterOnParent(bcenteronparent)
-			ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-			sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${sicon}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
-			CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
-			CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
-			CodeLine(sb, bisdisabled, "b", "icn", sname, "SetDisabled")
-			CodeLine(sb, bcenteronparent, "b", "icn", sname, "SetCenterOnParent")
-			sb.append($".Container.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-			'
-		Case "profile", "image"
-						'	
-			Dim img As VMImage = vm.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
-			img.SetLazysrc(slazysrc)
-			img.SetBorderRadius(sborderradius)
-			img.SetBorderWidth(sborderwidth)
-			img.SetBorderColor(sbordercolor)
-			img.SetBorderStyle(sborderstyle)
-			img.SetAspectRatio(saspectratio)
-			img.SetMinWidth(sminwidth)
-			img.SetMaxWidth(smaxwidth)
-			img.SetMinHeight(sminheight)
-			img.SetMaxHeight(smaxheight)
-			img.SetCenterOnParent(bcenteronparent)
-				
-			ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'
-sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bstatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")"$).append(CRLF)
-				CodeLine(sb, slazysrc, "s", "img", sname, "SetLazysrc")
-				CodeLine(sb, sborderradius, "s", "img", sname, "SetBorderRadius")
-				CodeLine(sb, sborderwidth, "s", "img", sname, "SetBorderWidth")
-				CodeLine(sb, sbordercolor, "s", "img", sname, "SetBorderColor")
-				CodeLine(sb, sborderstyle, "s", "img", sname, "SetBorderStyle")
-				CodeLine(sb, saspectratio, "s", "img", sname, "SetAspectRatio")
-				CodeLine(sb, sminwidth, "s", "img", sname, "SetMinWidth")
-				CodeLine(sb, smaxwidth, "s", "img", sname, "SetMaxWidth")
-				CodeLine(sb, sminheight, "s", "img", sname, "SetMinHeight")
-				CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
-				CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
-sb.append($".Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-		Case "button"
-			If biconbutton Then stitle = ""
-			If bfabbutton Then stitle = ""
-			Dim btn As VMButton = vm.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
-			btn.Sethref(shref)
-			btn.SetTarget(starget)
-			btn.setto(sto)
-			btn.SetTooltip(stooltip)
-			btn.SetColorIntensity(scolor, sintensity)
-			btn.SetTextColorIntensity(stextcolor, stextintensity)
-			btn.SetDisabled(bisdisabled)
-			btn.Setoutlined(bisoutlined)
-			btn.SetRounded(bisrounded)
-			btn.SetTransparent(bistext)
-			If biconbutton Then btn.SetIconButton(sicon)
-			If bfabbutton Then btn.Setfabbutton(sicon)
-			btn.SetDepressed(bisdepressed)
-			btn.SetDark(bisdark)
-			btn.SetTile(bistile)
-			btn.SetWidth(swidth)
-			btn.SetHeight(sheight)
-			btn.SetMinWidth(sminwidth)
-			btn.SetMaxWidth(smaxwidth)
-			btn.SetMinHeight(sminheight)
-			btn.SetMaxHeight(smaxheight)
-			Select Case ssize
-			Case "small"
-				btn.setsmall(True)
-			Case "large"
-				btn.SetLarge(True)
-			Case "x-small"
-				btn.SetXSmall(True)
-			Case "x-large"
-				btn.SetXLarge(True)
-			End Select
-			'
-			ui.AddControl(btn.button, btn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-			'build the source code
-				
-sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
-If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
-				If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
-				If sto <> "" Then sb.append($"btn${sname}.setto("${sto}")"$).append(CRLF)
-				If stooltip <> "" Then sb.append($"btn${sname}.SetTooltip("${stooltip}")"$).append(CRLF)
-				If scolor <> "" Then sb.append($"btn${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
-				If stextcolor <> "" Then sb.append($"btn${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
-				If bisdisabled Then sb.append($"btn${sname}.SetDisabled(${bisdisabled})"$).append(CRLF)
-				If bisoutlined Then sb.append($"btn${sname}.Setoutlined(${bisoutlined})"$).append(CRLF)
-				If bisrounded Then sb.append($"btn${sname}.SetRounded(${bisrounded})"$).append(CRLF)
-				If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
-				If biconbutton Then sb.append($"btn${sname}.SetIconButton("${sicon}")"$).append(CRLF)
-				If bfabbutton Then sb.append($"btn${sname}.SetFabButton("${sicon}")"$).append(CRLF)
-				If bisdepressed Then sb.append($"btn${sname}.SetDepressed(${bisdepressed})"$).append(CRLF)
-				If bisdark Then sb.append($"btn${sname}.SetDark(${bisdark})"$).append(CRLF)
-				If bistile Then sb.append($"btn${sname}.SetTile(${bistile})"$).append(CRLF)
-				If swidth <> "" Then sb.append($"btn${sname}.SetWidth("${swidth}")"$).append(CRLF)
-				If sheight <> "" Then sb.append($"btn${sname}.SetHeight("${sheight}")"$).append(CRLF)
-				If sminwidth <> "" Then sb.append($"btn${sname}.SetMinWidth("${sminwidth}")"$).append(CRLF)
-				If smaxwidth <> "" Then sb.append($"btn${sname}.SetMaxWidth("${smaxwidth}")"$).append(CRLF)
-				If sminheight <> "" Then sb.append($"btn${sname}.SetMinHeight("${sminheight}")"$).append(CRLF)
-				If smaxheight <> "" Then sb.append($"btn${sname}.SetMaxHeight("${smaxheight}")"$).append(CRLF)
-				'
-				Select Case ssize
-				Case "small"
-					CodeLine(sb, True, "b", "btn", sname, "SetSmall")
-				Case "large"
-					CodeLine(sb, True, "b", "btn", sname, "SetLarge")
-				Case "x-small"
-					CodeLine(sb, True, "b", "btn", sname, "SetXSmall")
-				Case "x-large"
-					CodeLine(sb, True, "b", "btn", sname, "SetXLarge")
-				End Select
-				
-sb.append($".Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-		End Select
-	Next
-	
-	Dim html As String = ui.tostring
-	Dim shtml As String = vm.BeautifySourceCode("html", html)
-	'save grid source code
-	BANano.SetSessionStorage("sourcecode", sb.tostring)
-	BANano.SetSessionStorage("html", shtml)
-	'
-	mymac = vm.CreateDevice("mymac", Me).SetMacbook
-	mymac.SetStatic(shtml)
-	'
-	myipad = vm.CreateDevice("myipad", Me).SetIpad
-	myipad.hide
-	myipad.SetStatic(shtml)
-	'
-	myiphone = vm.CreateDevice("myiphone", Me).SetIphoneX
-	myiphone.hide
-	myiphone.SetStatic(shtml)
-		
-	dnd.AddComponent(1, 1, mymac.tostring)
-	dnd.AddComponent(1, 1, myipad.tostring)
-	dnd.AddComponent(1, 1, myiphone.tostring)
-	
-	'drag and drop preview area
-	'dnd.AddComponent(1, 1, shtml)
-	'b4x code
-	Dim pc As VMPrism = vm.CreatePrism("b4xcode", Me)
-	pc.SetLanguage("vb").SetCode(sb.tostring)
-	b4x.AddComponent(1, 1, pc.tostring)
-	
-	'html code
-	Dim htm As VMPrism = vm.CreatePrism("htmlcode", Me)
-	htm.SetLanguage("html").SetCode(shtml)
-	html5.AddComponent(1, 1, htm.tostring)
-	'
-	tabs.AddTab("dndrea", "Drag n Drop / Preview", "mdi-drag-variant", dnd)
-	tabs.AddTab("b4xarea", "B4X", "code", b4x)
-	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
-	vm.container.AddComponent(1, 2, tabs.tostring)
-	
-	'vm.Container.AddComponent(1, 2, html)
 End Sub
 
-Sub CodeLine(sb As StringBuilder, varName As String, varType As String, prefix As String, sname As String, methodName As String)
+Sub Design_TextArea
+	Dim txta As VMTextField = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	txta.SetSolo(bissolo)
+	txta.SetOutlined(bisoutlined)
+	txta.SetFilled(bisfilled)
+	txta.SetDense(bisdense)
+	txta.SetSingleLine(bissingleline)
+	txta.SetPersistentHint(bispersistenthint)
+	txta.SetShaped(bisshaped)
+	txta.SetLoading(bisloading)
+	txta.SetFlat(bisflat)
+	txta.SetRounded(bisrounded)
+	txta.SetClearable(bclearable)
+	txta.SetHideDetails(bishidedetails)
+	txta.SetAutoGrow(bautogrow)
+	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+
+	CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
+	CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "txta", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "txta", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "txta", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "txta", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "txta", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "txta", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "txta", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "txta", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "txta", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "txta", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
+
+	sb.append($".Container.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_Switch
+	Dim swt As VMCheckBox = vm.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+	swt.SetColorIntensity(scolor, sintensity)
+	swt.SetRequired(bisrequired)
+	swt.SetDisabled(bisdisabled)
+	swt.SetDark(bisdark)
+	swt.SetDense(bisdense)
+	swt.SetHideDetails(bishidedetails)
+	swt.SetLight(bislight)
+	swt.SetLoading(sswitchloading)
+	swt.SetMultiple(bismultiple)
+	swt.SetInset(bisinset).SetFlat(bisflat)
+	ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bStatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
+	CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
+	CodeLine(sb, bisdisabled, "b", "swt", sname, "SetDisabled")
+	CodeLine(sb, bisdark, "b", "swt", sname, "SetDark")
+	CodeLine(sb, bisdense, "b", "swt", sname, "SetDense")
+	CodeLine(sb, bishidedetails, "b", "swt", sname, "SetHideDetails")
+	CodeLine(sb, bisinset, "b", "swt", sname, "SetInset")
+	CodeLine(sb, bislight, "b", "swt", sname, "SetLight")
+	CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
+	CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
+	CodeLine(sb, bisflat, "b", "swt", sname, "SetFlat")
+	
+	If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	'
+	sb.append($".Container.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_CheckBox
+	Dim chk As VMCheckBox = vm.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+	chk.SetColorIntensity(scolor, sintensity)
+	chk.SetRequired(bisrequired)
+	chk.SetDisabled(bisdisabled)
+	chk.SetDark(bisdark)
+	chk.SetDense(bisdense)
+	chk.SetHideDetails(bishidedetails)
+	chk.SetIndeterminate(bisindeterminate)
+	chk.SetLight(bislight)
+	chk.SetMultiple(bismultiple)
+	ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
+	CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
+	CodeLine(sb, bisdisabled, "b", "chk", sname, "SetDisabled")
+	CodeLine(sb, bisdark, "b", "chk", sname, "SetDark")
+	CodeLine(sb, bisdense, "b", "chk", sname, "SetDense")
+	CodeLine(sb, bishidedetails, "b", "chk", sname, "SetHideDetails")
+	CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
+	CodeLine(sb, bislight, "b", "chk", sname, "SetLight")
+	CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
+	If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	'
+	sb.append($".Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Date
+	Dim dp As VMDateTimePicker = vm.NewDatePicker(Me, True, "dp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	dp.SetVisible(bisvisible)
+	dp.SetDisabled(bisdisabled)
+	dp.SetRange(bisrange)
+	dp.SetShowWeek(bisshowweek)
+	dp.SetDark(bisdark)
+	dp.SetNotitle(bisnotitle)
+	dp.SetColorIntensity(scolor, sintensity)
+	dp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
+	dp.SetFirstDayOfWeek(sfirstdayofweek)
+	dp.SetMultiple(bismultiple)
+	dp.TextField.SetSolo(bissolo)
+	dp.TextField.SetOutlined(bisoutlined)
+	dp.TextField.SetFilled(bisfilled)
+	dp.TextField.SetDense(bisdense)
+	dp.TextField.SetSingleLine(bissingleline)
+	dp.TextField.SetPersistentHint(bispersistenthint)
+	dp.TextField.SetShaped(bisshaped)
+	dp.TextField.SetLoading(bisloading)
+	dp.TextField.SetFlat(bisflat)
+	dp.TextField.SetRounded(bisrounded)
+	dp.TextField.SetClearable(bclearable)
+	dp.TextField.SetHideDetails(bishidedetails)
+			
+	ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+		
+	CodeLine(sb, bisvisible, "b", "dp", sname, "SetVisible")
+	CodeLine(sb, bisdisabled, "b", "dp", sname, "SetDisabled")
+	CodeLine(sb, bisrange, "b", "dp", sname, "SetRange")
+	CodeLine(sb, bisshowweek, "b", "dp", sname, "SetShowWeek")
+	CodeLine(sb, bisdark, "b", "dp", sname, "SetDark")
+	CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
+	CodeLine(sb, sfirstdayofweek, "s", "dp", sname, "SetFirstDayOfWeek")
+	CodeLine(sb, bismultiple, "b", "dp", sname, "SetMultiple")
+	If scolor <> "" Then sb.append($"dp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	If sheadercolor <> "" Then sb.append($"dp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
+	'
+	CodeLine(sb, bissolo, "b", "dp", sname, "TextField.SetSolo")
+	CodeLine(sb, bisoutlined, "b", "dp", sname, "TextField.SetOutlined")
+	CodeLine(sb, bisfilled, "b", "dp", sname, "TextField.SetFilled")
+	CodeLine(sb, bisdense, "b", "dp", sname, "TextField.SetDense")
+	CodeLine(sb, bissingleline, "b", "dp", sname, "TextField.SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "dp", sname, "TextField.SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "dp", sname, "TextField.SetShaped")
+	CodeLine(sb, bisloading, "b", "dp", sname, "TextField.SetLoading")
+	CodeLine(sb, bisflat, "b", "dp", sname, "TextField.SetFlat")
+	CodeLine(sb, bisrounded, "b", "dp", sname, "TextField.SetRounded")
+	CodeLine(sb, bclearable, "b", "dp", sname, "TextField.SetClearable")
+	CodeLine(sb, bishidedetails, "b", "dp", sname, "TextField.SetHideDetails")
+
+	sb.append($".Container.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_File
+	Dim fi As VMTextField = vm.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
+	fi.SetSolo(bissolo)
+	fi.SetOutlined(bisoutlined)
+	fi.SetFilled(bisfilled)
+	fi.SetDense(bisdense)
+	fi.SetSingleLine(bissingleline)
+	fi.SetPersistentHint(bispersistenthint)
+	fi.SetShaped(bisshaped)
+	fi.SetLoading(bisloading)
+	fi.SetFlat(bisflat)
+	fi.SetRounded(bisrounded)
+	fi.SetClearable(bclearable)
+	fi.SetHideDetails(bishidedetails)
+	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+			
+	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "fi", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "fi", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "fi", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "fi", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "fi", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "fi", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "fi", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "fi", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "fi", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "fi", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
+				
+	sb.append($".Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Radio
+	If buseoptions Then
+		Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+		Dim rd As VMRadioGroup = vm.NewRadioGroup(Me, True, "rd" & sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
+	Else
+		Dim rd As VMRadioGroup = vm.NewRadioGroupDataSource(Me, True, "rd" & sname, svmodel, stitle, svalue, ssourcetable, _
+					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
+	End If
+	rd.SetMandatory(bismandatory)
+	rd.SetDisabled(bisdisabled)
+	rd.SetDense(bisdense)
+	rd.SetMultiple(bismultiple)
+	rd.SetHideDetails(bishidedetails)
+	ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	If buseoptions Then
+		sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+		sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+		sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", ${svmodel}map, ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)
+	Else
+		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)
+	End If
+	CodeLine(sb, bismandatory, "b", "rd", sname, "SetMandatory")
+	CodeLine(sb, bisdisabled, "b", "rd", sname, "SetDisabled")
+	CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
+	CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
+	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
+				
+	sb.append($".Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Select
+	Select Case controltype
+		Case "select"
+			If buseoptions Then
+				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+				Dim sel As VMSelect = vm.NewSelectOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+			Else
+				'use data source
+				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+			End If
+		Case "combo"
+			If buseoptions Then
+				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+				Dim sel As VMSelect = vm.NewComboOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+			Else
+				'use data source
+				Dim sel As VMSelect = vm.NewComboDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+			End If
+		Case "auto"
+			If buseoptions Then
+				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
+				Dim sel As VMSelect = vm.NewAutoCompleteOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+			Else
+				'use data source
+				Dim sel As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+			End If
+	End Select
+	'
+	sel.SetSolo(bissolo)
+	sel.SetOutlined(bisoutlined)
+	sel.SetFilled(bisfilled)
+	sel.SetDense(bisdense)
+	sel.SetSingleLine(bissingleline)
+	sel.SetPersistentHint(bispersistenthint)
+	sel.SetShaped(bisshaped)
+	sel.SetLoading(bisloading)
+	sel.SetFlat(bisflat)
+	sel.SetRounded(bisrounded)
+	sel.SetClearable(bclearable)
+	sel.SetHideDetails(bishidedetails)
+	sel.SetChips(bischips)
+	sel.SetSmallChips(bissmallchips)
+	sel.SetDeletableChips(bisdeletablechips)
+	ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	'define the code for the control
+	Select Case controltype
+		Case "select"
+			If buseoptions Then
+				sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+				'
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+			Else
+				'use data source
+				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+			End If
+		Case "combo"
+			If buseoptions Then
+				sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+				'
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+			Else
+				'use data source
+				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+			End If
+
+		Case "auto"
+			If buseoptions Then
+				sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
+				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
+				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
+				'
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+			Else
+				'use data source
+				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+					
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+			End If
+
+	End Select
+	'
+	CodeLine(sb, bissolo, "b", "sel", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "sel", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "sel", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "sel", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "sel", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "sel", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "sel", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "sel", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "sel", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "sel", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "sel", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "sel", sname, "SetHideDetails")
+	CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
+	CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
+	CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
+
+	sb.append($".Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_Slider
+	Dim sld As VMSlider = vm.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
+	sld.SetValue(svalue)
+	sld.SetColorIntensity(scolor, sintensity)
+	sld.SetHideDetails(bishidedetails)
+	sld.SetDark(bisdark)
+	sld.SetReadonly(bisreadonly)
+	sld.SetVertical(bisvertical)
+	sld.SetStep(sstepvalue)
+	sld.SetPrependIcon(sprependicon)
+	sld.SetAppendIcon(sappendicon)
+	sld.SetDense(bisdense)
+	sld.SetThumbSize(sthumbsize)
+	sld.SetThumbColorIntensity(sthumbcolor,sthumbintensity)
+	sld.SetTrackColorIntensity(strackcolor,strackintensity)
+	If bisthumblabel Then sld.SetThumbLabel(bisthumblabel)
+	If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
+	ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bStatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})
+.Container.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Label
+	Dim slabelsize As String = mattr.GetDefault("labelsize", "")
+	Dim sdisplay As String = mattr.getdefault("display", "")
+	Dim salign As String = mattr.getdefault("align", "")
+	Dim sfontweight As String = mattr.getdefault("fontweight", "")
+	'
+	Dim lbl As VMLabel =vm.NewLabel(True, sname, svmodel, slabelsize, svalue)
+	lbl.AddClass(sdisplay)
+	lbl.AddClass(salign)
+	lbl.AddClass(sfontweight)
+	lbl.SetItalic(bisitalic)
+	lbl.SetTextColorIntensity(stextcolor, stextintensity)
+	ui.AddControl(lbl.Label, lbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bStatic}, "lbl${sname}", "${svmodel}", "${slabelsize}", "${svalue}")"$).append(CRLF)
+	CodeLine(sb, sdisplay, "s", "lbl", sname, "AddClass")
+	CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
+	CodeLine(sb, sfontweight, "s", "lbl", sname, "AddClass")
+	CodeLine(sb, bisitalic, "b", "lbl", sname, "SetItalic")
+	If stextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
+
+	sb.append($".Container.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Email
+	Dim email As VMTextField = vm.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
+	email.SetFieldType(sfieldtype)
+	email.SetSolo(bissolo)
+	email.SetOutlined(bisoutlined)
+	email.SetFilled(bisfilled)
+	email.SetDense(bisdense)
+	email.SetSingleLine(bissingleline)
+	email.SetPersistentHint(bispersistenthint)
+	email.SetShaped(bisshaped)
+	email.SetLoading(bisloading)
+	email.SetFlat(bisflat)
+	email.SetRounded(bisrounded)
+	email.SetClearable(bclearable)
+	email.SetHideDetails(bishidedetails)
+	ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
+
+	CodeLine(sb, sfieldtype, "s", "email", sname, "SetFieldType")
+	CodeLine(sb, bissolo, "b", "email", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "email", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "email", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "email", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "email", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "email", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "email", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "email", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "email", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "email", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "email", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "email", sname, "SetHideDetails")
+
+	sb.append($".Container.AddControl(email${sname}.textfield, email${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Password
+	Dim pwd As VMTextField = vm.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	pwd.SetFieldType(sfieldtype)
+	pwd.SetSolo(bissolo)
+	pwd.SetOutlined(bisoutlined)
+	pwd.SetFilled(bisfilled)
+	pwd.SetDense(bisdense)
+	pwd.SetSingleLine(bissingleline)
+	pwd.SetPersistentHint(bispersistenthint)
+	pwd.SetShaped(bisshaped)
+	pwd.SetLoading(bisloading)
+	pwd.SetFlat(bisflat)
+	pwd.SetRounded(bisrounded)
+	pwd.SetClearable(bclearable)
+	pwd.SetHideDetails(bishidedetails)
+				
+	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	'
+	CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
+	CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "pwd", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "pwd", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "pwd", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "pwd", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "pwd", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "pwd", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "pwd", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "pwd", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "pwd", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "pwd", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "pwd", sname, "SetHideDetails")
+
+	sb.append($".Container.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Tel
+	Dim tel As VMTextField = vm.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
+	tel.SetFieldType(sfieldtype)
+	tel.SetSolo(bissolo)
+	tel.SetOutlined(bisoutlined)
+	tel.SetFilled(bisfilled)
+	tel.SetDense(bisdense)
+	tel.SetSingleLine(bissingleline)
+	tel.SetPersistentHint(bispersistenthint)
+	tel.SetShaped(bisshaped)
+	tel.SetLoading(bisloading)
+	tel.SetFlat(bisflat)
+	tel.SetRounded(bisrounded)
+	tel.SetClearable(bclearable)
+	tel.SetHideDetails(bishidedetails)
+	ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+
+	CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
+	CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "tel", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "tel", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "tel", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "tel", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "tel", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "tel", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "tel", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "tel", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "tel", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "tel", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
+		
+	sb.append($".Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+
+End Sub
+
+Sub Design_Time
+	Dim tp As VMDateTimePicker = vm.Newtimepicker(Me, True, "tp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	tp.SetVisible(bisvisible).SetDisabled(bisdisabled).SetAmPmInTitle(bisampm).SetDark(bisdark).SetNotitle(bisnotitle)
+	tp.SetUSeSeconds(bisuseseconds).SetColorIntensity(scolor, sintensity).SetHeaderColorIntensity(sheadercolor, sheaderintensity).SetFormat(stformat)
+			
+	tp.TextField.SetSolo(bissolo)
+	tp.TextField.SetOutlined(bisoutlined)
+	tp.TextField.SetFilled(bisfilled)
+	tp.TextField.SetDense(bisdense)
+	tp.TextField.SetSingleLine(bissingleline)
+	tp.TextField.SetPersistentHint(bispersistenthint)
+	tp.TextField.SetShaped(bisshaped)
+	tp.TextField.SetLoading(bisloading)
+	tp.TextField.SetFlat(bisflat)
+	tp.TextField.SetRounded(bisrounded)
+	tp.TextField.SetClearable(bclearable)
+	tp.TextField.SetHideDetails(bishidedetails)
+			
+	ui.AddControl(tp.DateTimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim tp${sname} As VMDateTimePicker = vm.NewTimePicker(Me, ${bStatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	'
+	CodeLine(sb, bisvisible, "b", "tp", sname, "SetVisible")
+	CodeLine(sb, bisdisabled, "b", "tp", sname, "SetDisabled")
+	CodeLine(sb, bisampm, "b", "tp", sname, "SetAmPmInTitle")
+	CodeLine(sb, bisdark, "b", "tp", sname, "SetDark")
+	CodeLine(sb, bisnotitle, "b", "tp", sname, "SetNotitle")
+	CodeLine(sb, bisuseseconds, "b", "tp", sname, "SetUSeSeconds")
+	If scolor <> "" Then sb.append($"tp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	If sheadercolor <> "" Then sb.append($"tp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
+	'
+	CodeLine(sb, bissolo, "b", "tp", sname, "TextField.SetSolo")
+	CodeLine(sb, bisoutlined, "b", "tp", sname, "TextField.SetOutlined")
+	CodeLine(sb, bisfilled, "b", "tp", sname, "TextField.SetFilled")
+	CodeLine(sb, bisdense, "b", "tp", sname, "TextField.SetDense")
+	CodeLine(sb, bissingleline, "b", "tp", sname, "TextField.SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "tp", sname, "TextField.SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "tp", sname, "TextField.SetShaped")
+	CodeLine(sb, bisloading, "b", "tp", sname, "TextField.SetLoading")
+	CodeLine(sb, bisflat, "b", "tp", sname, "TextField.SetFlat")
+	CodeLine(sb, bisrounded, "b", "tp", sname, "TextField.SetRounded")
+	CodeLine(sb, bclearable, "b", "tp", sname, "TextField.SetClearable")
+	CodeLine(sb, bishidedetails, "b", "tp", sname, "TextField.SetHideDetails")
+		
+	sb.append($".Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_Icon
+	Dim icn As VMIcon = vm.NewIcon(Me, True, sname, sicon, ssize, scolor, sintensity)
+	icn.SetDark(bisdark)
+	icn.SetDense(bisdense)
+	icn.SetDisabled(bisdisabled)
+	icn.SetCenterOnParent(bcenteronparent)
+	ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+		'
+	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${sicon}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
+	CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
+	CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
+	CodeLine(sb, bisdisabled, "b", "icn", sname, "SetDisabled")
+	CodeLine(sb, bcenteronparent, "b", "icn", sname, "SetCenterOnParent")
+	sb.append($".Container.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_Image
+	Dim img As VMImage = vm.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
+	img.SetLazysrc(slazysrc)
+	img.SetBorderRadius(sborderradius)
+	img.SetBorderWidth(sborderwidth)
+	img.SetBorderColor(sbordercolor)
+	img.SetBorderStyle(sborderstyle)
+	img.SetAspectRatio(saspectratio)
+	img.SetMinWidth(sminwidth)
+	img.SetMaxWidth(smaxwidth)
+	img.SetMinHeight(sminheight)
+	img.SetMaxHeight(smaxheight)
+	img.SetCenterOnParent(bcenteronparent)
+				
+	ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bStatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")"$).append(CRLF)
+	CodeLine(sb, slazysrc, "s", "img", sname, "SetLazysrc")
+	CodeLine(sb, sborderradius, "s", "img", sname, "SetBorderRadius")
+	CodeLine(sb, sborderwidth, "s", "img", sname, "SetBorderWidth")
+	CodeLine(sb, sbordercolor, "s", "img", sname, "SetBorderColor")
+	CodeLine(sb, sborderstyle, "s", "img", sname, "SetBorderStyle")
+	CodeLine(sb, saspectratio, "s", "img", sname, "SetAspectRatio")
+	CodeLine(sb, sminwidth, "s", "img", sname, "SetMinWidth")
+	CodeLine(sb, smaxwidth, "s", "img", sname, "SetMaxWidth")
+	CodeLine(sb, sminheight, "s", "img", sname, "SetMinHeight")
+	CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
+	CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
+	sb.append($".Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+End Sub
+
+Sub Design_Button
+	If biconbutton Then stitle = ""
+	If bfabbutton Then stitle = ""
+	Dim btn As VMButton = vm.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
+	btn.Sethref(shref)
+	btn.SetTarget(starget)
+	btn.setto(sto)
+	btn.SetTooltip(stooltip)
+	btn.SetColorIntensity(scolor, sintensity)
+	btn.SetTextColorIntensity(stextcolor, stextintensity)
+	btn.SetDisabled(bisdisabled).Setoutlined(bisoutlined)
+	btn.SetRounded(bisrounded).SetTransparent(bistext)
+	If biconbutton Then btn.SetIconButton(sicon)
+	If bfabbutton Then btn.Setfabbutton(sicon)
+	btn.SetDepressed(bisdepressed)
+	btn.SetDark(bisdark)
+	btn.SetTile(bistile)
+	btn.SetWidth(swidth)
+	btn.SetHeight(sheight)
+	btn.SetMinWidth(sminwidth)
+	btn.SetMaxWidth(smaxwidth)
+	btn.SetMinHeight(sminheight)
+	btn.SetMaxHeight(smaxheight)
+	Select Case ssize
+		Case "small"
+			btn.setsmall(True)
+		Case "large"
+			btn.SetLarge(True)
+		Case "x-small"
+			btn.SetXSmall(True)
+		Case "x-large"
+			btn.SetXLarge(True)
+	End Select
+	'
+	ui.AddControl(btn.button, btn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'build the source code
+				
+	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
+	If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
+	If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
+	If sto <> "" Then sb.append($"btn${sname}.setto("${sto}")"$).append(CRLF)
+	If stooltip <> "" Then sb.append($"btn${sname}.SetTooltip("${stooltip}")"$).append(CRLF)
+	If scolor <> "" Then sb.append($"btn${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	If stextcolor <> "" Then sb.append($"btn${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
+	If bisdisabled Then sb.append($"btn${sname}.SetDisabled(${bisdisabled})"$).append(CRLF)
+	If bisoutlined Then sb.append($"btn${sname}.Setoutlined(${bisoutlined})"$).append(CRLF)
+	If bisrounded Then sb.append($"btn${sname}.SetRounded(${bisrounded})"$).append(CRLF)
+	If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
+	If biconbutton Then sb.append($"btn${sname}.SetIconButton("${sicon}")"$).append(CRLF)
+	If bfabbutton Then sb.append($"btn${sname}.SetFabButton("${sicon}")"$).append(CRLF)
+	If bisdepressed Then sb.append($"btn${sname}.SetDepressed(${bisdepressed})"$).append(CRLF)
+	If bisdark Then sb.append($"btn${sname}.SetDark(${bisdark})"$).append(CRLF)
+	If bistile Then sb.append($"btn${sname}.SetTile(${bistile})"$).append(CRLF)
+	If swidth <> "" Then sb.append($"btn${sname}.SetWidth("${swidth}")"$).append(CRLF)
+	If sheight <> "" Then sb.append($"btn${sname}.SetHeight("${sheight}")"$).append(CRLF)
+	If sminwidth <> "" Then sb.append($"btn${sname}.SetMinWidth("${sminwidth}")"$).append(CRLF)
+	If smaxwidth <> "" Then sb.append($"btn${sname}.SetMaxWidth("${smaxwidth}")"$).append(CRLF)
+	If sminheight <> "" Then sb.append($"btn${sname}.SetMinHeight("${sminheight}")"$).append(CRLF)
+	If smaxheight <> "" Then sb.append($"btn${sname}.SetMaxHeight("${smaxheight}")"$).append(CRLF)
+	'
+	Select Case ssize
+		Case "small"
+			CodeLine(sb, True, "b", "btn", sname, "SetSmall")
+		Case "large"
+			CodeLine(sb, True, "b", "btn", sname, "SetLarge")
+		Case "x-small"
+			CodeLine(sb, True, "b", "btn", sname, "SetXSmall")
+		Case "x-large"
+			CodeLine(sb, True, "b", "btn", sname, "SetXLarge")
+	End Select				
+	sb.append($".Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_TextField
+	Dim txt As VMTextField = vm.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	txt.SetFieldType(sfieldtype)
+	txt.SetSolo(bissolo)
+	txt.SetOutlined(bisoutlined)
+	txt.SetFilled(bisfilled)
+	txt.SetDense(bisdense)
+	txt.SetSingleLine(bissingleline)
+	txt.SetPersistentHint(bispersistenthint)
+	txt.SetShaped(bisshaped)
+	txt.SetLoading(bisloading)
+	txt.SetFlat(bisflat)
+	txt.SetRounded(bisrounded)
+	txt.SetClearable(bclearable)
+	txt.SetHideDetails(bishidedetails)
+	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	'
+	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
+	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
+	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
+	CodeLine(sb, bisfilled, "b", "txt", sname, "SetFilled")
+	CodeLine(sb, bisdense, "b", "txt", sname, "SetDense")
+	CodeLine(sb, bissingleline, "b", "txt", sname, "SetSingleLine")
+	CodeLine(sb, bispersistenthint, "b", "txt", sname, "SetPersistentHint")
+	CodeLine(sb, bisshaped, "b", "txt", sname, "SetShaped")
+	CodeLine(sb, bisloading, "b", "txt", sname, "SetLoading")
+	CodeLine(sb, bisflat, "b", "txt", sname, "SetFlat")
+	CodeLine(sb, bisrounded, "b", "txt", sname, "SetRounded")
+	CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
+	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
+
+	sb.append($".Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub CodeLine(sbx As StringBuilder, varName As String, varType As String, prefix As String, ssname As String, methodName As String)
 	Select Case varType
 	Case "b"
-		If varName Then sb.append($"${prefix}${sname}.${methodName}(${varName})"$).append(CRLF)
+		If varName Then sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
 	Case "s"
-		If varName <> "" Then sb.append($"${prefix}${sname}.${methodName}("${varName}")"$).append(CRLF)
+		If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}")"$).append(CRLF)
 	End Select
 End Sub
 
@@ -1830,6 +2132,8 @@ Sub ItemDrop(e As BANanoEvent)
 			attr.put("labelontop", "Yes")
 			attr.put("keys", "1,2,3")
 			attr.put("values","One,Two,Three")
+			attr.put("tformat","24hr")
+			attr.put("isforinput", "Yes")
 			'
 			Select Case savedid
 			Case "label"
@@ -1929,16 +2233,40 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddText("d","vmodel","VModel","","")
 	pbdatepicker.AddText("d","label","Label","","")
 	pbdatepicker.AddText("d","placeholder","Placeholder","","")
-	
-	pbdatepicker.AddNumber("d","tabindex","Tab Index","","")
 	pbdatepicker.AddText("d","helpertext","Helper Text","","")
 	pbdatepicker.AddText("d","errortext","Error Text","","")
+	pbdatepicker.AddText("d","firstdayofweek","First Day of Week","","0")
+	pbdatepicker.AddRadioGroup("d", "tformat", "T:Format", CreateMap("ampm":"AM/PM","24hr":"24hr"))
+	pbdatepicker.AddSelect("d","headercolor","Header Color", vm.ColorOptions)
+	pbdatepicker.AddSelect("d","headerintensity","Header Intensity", vm.IntensityOptions)
+	pbdatepicker.AddSelect("d","color","T:Color", vm.ColorOptions)
+	pbdatepicker.AddSelect("d","intensity","T:Intensity", vm.IntensityOptions)
+	pbdatepicker.AddNumber("d","tabindex","Tab Index","","")
 	'
 	pbdatepicker.AddCheck2(1, 1, "isrequired", "Required")
 	pbdatepicker.AddCheck2(1, 2, "isclearable", "Clearable")
 	pbdatepicker.AddCheck2(2, 1, "isvisible", "Visible")
 	pbdatepicker.AddCheck2(2, 2, "isdisabled", "Disabled")
 	pbdatepicker.AddCheck2(3, 1, "ontable", "On Table")
+	pbdatepicker.AddCheck2(3, 2, "ismultiple", "Multiple")
+	pbdatepicker.AddCheck2(4, 1, "isrange", "Range")
+	pbdatepicker.AddCheck2(4, 2, "isshowweek", "Show Week")
+	pbdatepicker.AddCheck2(5, 1, "isampm", "T:AM/PM in Title")
+	pbdatepicker.AddCheck2(5, 2, "isdark", "Dark")
+	pbdatepicker.AddCheck2(6, 1, "isnotitle", "T:No Title")
+	pbdatepicker.AddCheck2(6, 2, "isuseseconds", "T:Use Seconds")
+	'
+	pbdatepicker.AddCheck2(7, 1, "issolo", "Solo")
+	pbdatepicker.AddCheck2(7, 2, "isoutlined", "Outlined")
+	pbdatepicker.AddCheck2(8, 1, "isfilled", "Filled")
+	pbdatepicker.AddCheck2(8, 2, "isdense", "Dense")
+	pbdatepicker.AddCheck2(9, 1, "issingleline", "Single Line")
+	pbdatepicker.AddCheck2(9, 2, "ispersistenthint", "Persistent Hint")
+	pbdatepicker.AddCheck2(10, 1, "isshaped", "Shaped - FOS")
+	pbdatepicker.AddCheck2(10, 2, "isloading", "Loading")
+	pbdatepicker.AddCheck2(11, 1, "isflat", "Flat - Solo")
+	pbdatepicker.AddCheck2(11, 2, "isrounded", "Rounded - FOS")
+	pbdatepicker.AddCheck2(12, 1, "ishidedetails", "Hide Details")
 	pbdatepicker.SetChecks("d")
 		
 	pbdatepicker.AddMatrix("d")
@@ -2237,10 +2565,10 @@ Sub PropertyBag_TextField
 	pbtextfield.AddText("d","icon","Icon Name","","")
 	pbtextfield.AddText("d", "value", "Value","","")
 	pbtextfield.AddText("d", "placeholder","Placeholder","","")
-	pbtextfield.AddNumber("d","tabindex","Tab Index","","")
-	pbtextfield.AddTel("d","maxlength","Max Length/Counter","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
 	pbtextfield.AddText("d","errortext","Error Text","","")
+	pbtextfield.AddNumber("d","tabindex","Tab Index","","")
+	pbtextfield.AddTel("d","maxlength","Max Length/Counter","","")
 	'
 	pbtextfield.AddCheck2(1, 1, "isrequired", "Required")
 	pbtextfield.AddCheck2(1, 2, "isclearable", "Clearable")

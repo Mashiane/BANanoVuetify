@@ -427,6 +427,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoOXML,SetStyleItalic,131,0,BANanoOXML,SetStyleUnderline,139,0,BANanoOXML,SetStyleFontSize,150,3,BANanoOXML,SetStyle,194,0,BANanoOXML,CreateFormula,233,0,BANanoOXML,GetColumn,213,0,BANanoOXML,Merge,200,0,BANanoOXML,SetStyleHAlignment,158,0,BANanoOXML,Class_Globals,9,0,BANanoOXML,CreateStyle,87,0,BANanoOXML,SetStyleBold,129,0
+NavigationStack=VMDateTimePicker,SetHeaderColorIntensity,157,0,VMDateTimePicker,SetPlaceholder,178,0,VMDateTimePicker,SetDense,194,0,VMTemplate,SetSlotActivatorOn,99,0,VMDateTimePicker,Class_Globals,14,0,VMDateTimePicker,Initialize,31,0,VMDateTimePicker,SetHideDetails,51,0,VMDateTimePicker,SetRC,75,0,VMDateTimePicker,SetDeviceOffsets,86,0,VMDateTimePicker,ToString,257,6
 SelectedBuild=0
 VisibleModules=

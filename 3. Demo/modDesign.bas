@@ -54,7 +54,7 @@ Sub Code
 	'
 	Dim genderlist As Map = CreateMap("f":"Female", "m":"Male")
 		
-	Dim ac1 As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "acx1", "acx1", "States", "States", "states2", "id", "name", False, True, False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
+	Dim ac1 As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "acx1", "acx1", "States", True, False, "States", "states2", "id", "name", False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)
 	cont.AddControl1(ac1.Combo, ac1.ToString)
 	'
 	Dim ac2 As VMSelect = vm.NewAutoCompleteOptions(Me, True, "acx2", "acx2", "Gender", True, False, "Gender", genderlist, "id", "text", False, "This is it!", "", 0).SetDevicePositions(3, 2, 12, 6, 6, 6)

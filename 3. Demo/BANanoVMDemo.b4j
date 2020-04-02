@@ -420,6 +420,6 @@ Sub BANano_Ready
 	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
-	'pgIndex.Init
-	modDesigner.init
+	pgIndex.Init
+	'modDesigner.init
 End Sub

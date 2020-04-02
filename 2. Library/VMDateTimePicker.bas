@@ -14,16 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Private bForInput As Boolean
 	Private vmodel As String
-	Private vLabel As String
-	Private bClearable As Boolean
-	Private splaceholder As String
-	Private bRequired As Boolean
-	Private sHint As String
-	Private ErrorText As String
-	Private bDense As Boolean
-	Private bOutlined As Boolean
-	Private TextField As VMTextField
-	Private bHideDetails As Boolean
+	Public TextField As VMTextField
 	Private bTimePicker As Boolean
 	Private bStatic As Boolean
 End Sub
@@ -38,17 +29,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	bForInput = False
 	vmodel = ""
-	vLabel = ""
 	DateTimePicker.typeOf = "datepicker"
 	DateTimePicker.fieldType = "date"
-	bClearable = False
-	splaceholder = ""
-	bRequired = False
-	sHint = ""
-	ErrorText = ""
-	bDense = False
-	bOutlined = False
-	bHideDetails = False
 	TextField.Initialize(vue, $"${ID}txt"$, Module)
 	bTimePicker = False
 	bStatic = False
@@ -70,14 +52,12 @@ Sub SetTimePicker As VMDateTimePicker
 End Sub
 
 Sub SetHideDetails(b As Boolean) As VMDateTimePicker
-	If b = False Then Return Me
-	bHideDetails = b
+	TextField.SetHideDetails(b)
 	Return Me
 End Sub
 
 Sub SetOutlined(b As Boolean) As VMDateTimePicker
-	If b = False Then Return Me
-	bOutlined = b
+	TextField.SetOutlined(b)
 	Return Me
 End Sub
 
@@ -88,14 +68,13 @@ End Sub
 
 'backward compatibility
 Sub SetInvalidMessage(ErrText As String) As VMDateTimePicker
-	If ErrText = "" Then Return Me
-	ErrorText = ErrText
+	TextField.SetErrorText(ErrText)
 	Return Me
 End Sub
 
 Sub SetErrorText(Error As String) As VMDateTimePicker
 	If Error = "" Then Return Me
-	ErrorText = Error
+	TextField.SetErrorText(Error)
 	Return Me
 End Sub
 
@@ -132,8 +111,7 @@ Sub SetAttributes(attrs As List) As VMDateTimePicker
 End Sub
 
 Sub SetLabel(dlabel As String) As VMDateTimePicker
-	If dlabel = "" Then Return Me
-	vLabel = dlabel
+	TextField.SetLabel(dlabel)
 	Return Me
 End Sub
 
@@ -189,38 +167,34 @@ End Sub
 
 'set required
 Sub SetRequired(varRequired As Boolean) As VMDateTimePicker
-	If varRequired = False Then Return Me
-	bRequired = varRequired
+	TextField.SetRequired(varRequired)
 	Return Me
 End Sub
 
 'set clearable
 Sub SetClearable(varClearable As Boolean) As VMDateTimePicker
-	If varClearable = False Then Return Me
-	bClearable = varClearable
+	TextField.SetClearable(varClearable)
 	Return Me
 End Sub
 
 'set placeholder
 Sub SetPlaceholder(varPlaceholder As String) As VMDateTimePicker
 	If varPlaceholder = "" Then Return Me
-	splaceholder = varPlaceholder
+	TextField.SetPlaceholder(varPlaceholder)
 	Return Me
 End Sub
 
 
 'set placeholder
 Sub SetHint(varHint As String) As VMDateTimePicker
-	If varHint = "" Then Return Me
-	sHint = varHint
+	TextField.SetHint(varHint)
 	Return Me
 End Sub
 
 
 'set dense
 Sub SetDense(b As Boolean) As VMDateTimePicker
-	If b = False Then Return Me
-	bDense = b
+	TextField.SetDense(b)
 	Return Me
 End Sub
 
@@ -248,17 +222,9 @@ Sub ToString As String
 			tmpl.SetDesignMode(DesignMode)
 			'
 			TextField.SetPrependIcon("access_time").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
-			TextField.SetLabel(vLabel)
 			TextField.SetVModel(vmodel)
-			TextField.SetRequired(bRequired)
-			TextField.SetPlaceholder(splaceholder)
-			TextField.SetHint(sHint)
-			TextField.SetClearable(bClearable)
 			TextField.SetDesignMode(DesignMode)
-			TextField.SetDense(bDense)
-			TextField.SetOutlined(bOutlined)
-			TextField.SetHideDetails(bHideDetails)
-		
+			
 			TextField.Pop(tmpl.Template)
 			dMenu.SetText(tmpl.ToString)
 			'
@@ -291,16 +257,8 @@ Sub ToString As String
 		'
 		
 		TextField.SetPrependIcon("event").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
-		TextField.SetLabel(vLabel)
 		TextField.SetVModel(vmodel)
-		TextField.SetRequired(bRequired)
-		TextField.SetPlaceholder(splaceholder)
-		TextField.SetHint(sHint)
-		TextField.SetClearable(bClearable)
 		TextField.SetDesignMode(DesignMode)
-		TextField.SetDense(bDense)
-		TextField.SetOutlined(bOutlined)
-		TextField.SetHideDetails(bHideDetails)
 		'
 		TextField.Pop(tmpl.Template)
 				'
@@ -312,7 +270,10 @@ Sub ToString As String
 		AddSpacer
 		'
 		Dim btnCancel As VMButton
-		btnCancel.Initialize(vue, $"${ID}cancel"$, Me).SetTransparent(True).SetColor("primary")
+		btnCancel.Initialize(vue, $"${ID}cancel"$, Me)
+		btnCancel.SetStatic(bStatic)
+		btnCancel.SetTransparent(True)
+		btnCancel.SetColor("primary")
 		btnCancel.SetDesignMode(DesignMode)
 		btnCancel.setattrsingle("@click", $"${ID}menu = false"$)
 		btnCancel.SetLabel("Cancel")
@@ -320,7 +281,10 @@ Sub ToString As String
 		DateTimePicker.SetText(btnCancel.ToString)
 		'
 		Dim btnOk As VMButton
-		btnOk.Initialize(vue, $"${ID}ok"$, Me).SetTransparent(True).SetColor("primary")
+		btnOk.Initialize(vue, $"${ID}ok"$, Me)
+		btnOk.SetStatic(bStatic)
+		btnOk.SetTransparent(True)
+		btnOk.SetColor("primary")
 		btnOk.SetDesignMode(DesignMode)
 		Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
 		btnOk.SetAttrSingle("@click", ssave)
@@ -1012,6 +976,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 DateTimePicker.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMDateTimePicker
 DateTimePicker.SetVisible(b)
 Return Me
@@ -1059,8 +1024,7 @@ Sub SetAllowedSeconds(varAllowedSeconds As Object) As VMDateTimePicker
 End Sub
 
 'set ampm-in-title
-Sub SetAmPmInTitle(varAmpmInTitle As String) As VMDateTimePicker
-	If varAmpmInTitle = "" Then Return Me
+Sub SetAmPmInTitle(varAmpmInTitle As Boolean) As VMDateTimePicker
 	If bStatic Then
 		DateTimePicker.SetAttrSingle("ampm-in-title", varAmpmInTitle)
 		Return Me

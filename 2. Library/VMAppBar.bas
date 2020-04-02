@@ -30,7 +30,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetAppBar(True)
 	'
 	'build the hamburger menu
-	Hamburger.Initialize(vue, "menu").SetTag("v-app-bar-nav-icon").SetOnClickStop(Me, "menu_click").SetVShow("menushow")
+	Hamburger.Initialize(vue, "menu").SetTag("v-app-bar-nav-icon").SetOnClickStop(Me, "menu_click").SetVisible(True)
 	Hamburger.Pop(AppBar)
 	'
 	'add the logo
@@ -48,6 +48,9 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub HamburgerShow(b As Boolean)
+	vue.SetData("menushow", b) 
+End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMAppBar
