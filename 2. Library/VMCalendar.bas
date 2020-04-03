@@ -444,29 +444,29 @@ Sub SetSlotDayLabel(b As boolean) As VMCalendar    'ignore
 End Sub
 
 '
-Sub SetSlotDayMonth(b As boolean) As VMCalendar    'ignore
+Sub SetSlotDayMonth(b As Boolean) As VMCalendar    'ignore
 	SetAttr(CreateMap("slot": "day-month"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotEvent(b As boolean) As VMCalendar    'ignore
+Sub SetSlotEvent(b As Boolean) As VMCalendar    'ignore
 	SetAttr(CreateMap("slot": "event"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotInterval(b As boolean) As VMCalendar    'ignore
+Sub SetSlotInterval(b As Boolean) As VMCalendar    'ignore
 	SetAttr(CreateMap("slot": "interval"))
 	Return Me
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMCalendar
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMCalendar
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -476,7 +476,7 @@ End Sub
 '
 Sub SetOnClickDate(methodName As String) As VMCalendar
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:click:date": methodName))

@@ -17,9 +17,6 @@ Sub Class_Globals
 	Private tooltip As VMToolTip
 	Private tmpl As VMTemplate
 	Private span As VMLabel
-	Private orig As String
-	Private width As String
-	Private height As String
 	Private bStatic As Boolean
 End Sub
 
@@ -38,9 +35,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	tmpl.Initialize(vue, "", Module)
 	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
 	span.Initialize(vue, "").SetSpan
-	orig = ""
-	width = ""
-	height = ""
 	bStatic = False
 	Return Me
 End Sub
@@ -250,11 +244,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	If DesignMode Then
-		SetAttrSingle("src", orig)
-		If width <> "" Then SetAttrSingle("width", width)
-		If height <> "" Then SetAttrSingle("height", height)
-	End If	
 	If hasTooltip Then
 		Image.Pop(tmpl.Template)
 		tmpl.Pop(tooltip.tooltip)
@@ -275,7 +264,6 @@ Sub SetVModel(k As String, value As String) As VMImage
 		SetSrc(value)
 		Return Me
 	End If
-	orig = value
 	k = k.tolowercase
 	vue.SetData(k, value)
 	SetSrc(k)	
@@ -412,7 +400,6 @@ Sub SetHeight(varHeight As String) As VMImage
 		SetAttrSingle("height", varHeight)
 		Return Me
 	End If
-	height = varHeight
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Image.Bind(":height", pp)
@@ -558,7 +545,6 @@ End Sub
 'set width
 Sub SetWidth(varWidth As String) As VMImage
 	If varWidth = "" Then Return Me
-	width = varWidth
 	If bStatic Then
 		SetAttrSingle("width", varWidth)
 		Return Me

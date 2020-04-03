@@ -154,8 +154,13 @@ private Sub CreateDynamicContent As VMElement
 	vue.SetStateSingle(pp,"<div></div>")
 	Dim UI As VMElement = vue.CreateTag(ppx, "renderstring")
 	UI.Bind(":string", pp)
-	UI.SetStyleSingle("width", "92% !important")
-	UI.SetStyleSingle("height", "100%")
+	UI.SetStyleSingle("width", "100% !important")
+	UI.SetStyleSingle("height", "100% !important")
+	UI.SetStyleSingle("max-height", "100% !important")
+	UI.SetStyleSingle("max-width", "100% !important")
+	UI.SetStyleSingle("overflow-y", "auto !important")
+	UI.SetStyleSingle("overflow-x", "hidden !important")
+	UI.SetStyleSingle("float", "left !important")
 	hasDynamic = True
 	Return UI
 End Sub

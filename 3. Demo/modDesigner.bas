@@ -40,103 +40,103 @@ Sub Process_Globals
 	Private srow As String
 	Private scol As String
 	Private stabindex As String
-	Private sname As String 
+	Private sname As String
 	Private svmodel As String
 	Private sattributes As String
-	Private sstyles As String 
-	Private sclasses As String 
-	Private sloose As String 
-	Private stitle As String 
-	Private sfieldtype As String 
+	Private sstyles As String
+	Private sclasses As String
+	Private sloose As String
+	Private stitle As String
+	Private sfieldtype As String
 		
 	' get the attributes
-	Private mattr As Map 
+	Private mattr As Map
 	Private os As String
-	Private om As String 
-	Private ol As String 
-	Private ox As String 
+	Private om As String
+	Private ol As String
+	Private ox As String
 	'
-	Private ss As String 
-	Private sm As String 
-	Private sl As String 
-	Private sx As String 
+	Private ss As String
+	Private sm As String
+	Private sl As String
+	Private sx As String
 	'
 	Private splaceholder As String
-	Private bisrequired As Boolean 
-	Private sicon As String 
-	Private shelpertext As String 
-	Private serrortext As String 
-	Private imaxlen As String 
-	Private bautogrow As Boolean 
-	Private svalue As String 
-	Private bisPrimary As Boolean 
-	Private bisvisible As Boolean 
-	Private bisdisabled As Boolean 
-	Private bontable As Boolean 
-	Private bisdark As Boolean 
+	Private bisrequired As Boolean
+	Private sicon As String
+	Private shelpertext As String
+	Private serrortext As String
+	Private imaxlen As String
+	Private bautogrow As Boolean
+	Private svalue As String
+	Private bisPrimary As Boolean
+	Private bisvisible As Boolean
+	Private bisdisabled As Boolean
+	Private bontable As Boolean
+	Private bisdark As Boolean
 	'
-	Private bissolo As Boolean 
-	Private bisoutlined As Boolean 
-	Private bisfilled As Boolean 
-	Private bisdense As Boolean 
-	Private bissingleline As Boolean 
-	Private bispersistenthint As Boolean 
-	Private bisshaped As Boolean 
-	Private bisloading As Boolean 
-	Private bisflat As Boolean 
-	Private bisrounded As Boolean 
-	Private bclearable As Boolean 
-	Private bishidedetails As Boolean 
-	Private bToggle As Boolean 
-	Private bcenteronparent As Boolean 
+	Private bissolo As Boolean
+	Private bisoutlined As Boolean
+	Private bisfilled As Boolean
+	Private bisdense As Boolean
+	Private bissingleline As Boolean
+	Private bispersistenthint As Boolean
+	Private bisshaped As Boolean
+	Private bisloading As Boolean
+	Private bisflat As Boolean
+	Private bisrounded As Boolean
+	Private bclearable As Boolean
+	Private bishidedetails As Boolean
+	Private bToggle As Boolean
+	Private bcenteronparent As Boolean
 	'
-	Private struevalue As String 
-	Private sfalsevalue As String 
-	Private bislight As Boolean 
-	Private bismultiple As Boolean 
-	Private bisinset As Boolean 
-	Private bisindeterminate As Boolean 
-	Private bisitalic As Boolean 
-	Private bisreadonly As Boolean 
+	Private struevalue As String
+	Private sfalsevalue As String
+	Private bislight As Boolean
+	Private bismultiple As Boolean
+	Private bisinset As Boolean
+	Private bisindeterminate As Boolean
+	Private bisitalic As Boolean
+	Private bisreadonly As Boolean
 	'
-	Private bfitwidth As Boolean 
-	Private shref As String 
-	Private starget As String 
-	Private sto As String 
-	Private bistext As Boolean 
-	Private biconbutton As Boolean 
-	Private bfabbutton As Boolean 
-	Private bisdepressed As Boolean 
-	Private bistile As Boolean 
-	Private ssize As String 
-	Private sswitchloading As String 
+	Private bfitwidth As Boolean
+	Private shref As String
+	Private starget As String
+	Private sto As String
+	Private bistext As Boolean
+	Private biconbutton As Boolean
+	Private bfabbutton As Boolean
+	Private bisdepressed As Boolean
+	Private bistile As Boolean
+	Private ssize As String
+	Private sswitchloading As String
 	'
-	Private swidth As String 
+	Private swidth As String
 	Private sheight As String
-	Private sminwidth As String 
-	Private sminheight As String 
-	Private smaxwidth As String 
-	Private smaxheight As String 
+	Private sminwidth As String
+	Private sminheight As String
+	Private smaxwidth As String
+	Private smaxheight As String
 	'
-	Private stooltip As String 
-	Private scolor As String 
-	Private sintensity As String 
+	Private stooltip As String
+	Private scolor As String
+	Private sintensity As String
 	'
-	Private stextcolor As String 
-	Private stextintensity As String 
+	Private stextcolor As String
+	Private stextintensity As String
 	'
-	Private ssrc As String 
-	Private slazysrc As String 
-	Private salt As String 
-	Private sborderradius As String 
-	Private sborderwidth As String 
-	Private sbordercolor As String 
-	Private sborderstyle As String 
+	Private ssrc As String
+	Private slazysrc As String
+	Private salt As String
+	Private sborderradius As String
+	Private sborderwidth As String
+	Private sbordercolor As String
+	Private sborderstyle As String
 	Private saspectratio As String
 	'
-	Private bisreadonly As Boolean 
-	Private bisvertical As Boolean 
-	Private bisthumbalways As Boolean 
+	Private bisreadonly As Boolean
+	Private bisvertical As Boolean
+	Private bisthumbalways As Boolean
 	Private bisthumblabel As Boolean
 	Private sminvalue As String
 	Private sstepvalue As String
@@ -146,18 +146,18 @@ Sub Process_Globals
 	Private sthumbsize As String
 	Private sthumbcolor As String
 	Private sthumbintensity As String
-	Private strackcolor As String 
-	Private strackintensity As String 
+	Private strackcolor As String
+	Private strackintensity As String
 	'
-	Private ssourcefield As String 
-	Private ssourcetable As String 
-	Private sdisplayfield As String 
-	Private skeys As String 
-	Private svalues As String 
-	Private bisreturnobject As Boolean 
+	Private ssourcefield As String
+	Private ssourcetable As String
+	Private sdisplayfield As String
+	Private skeys As String
+	Private svalues As String
+	Private bisreturnobject As Boolean
 	Private buseoptions As Boolean
 	Private bischips As Boolean
-	Private bissmallchips As Boolean 
+	Private bissmallchips As Boolean
 	Private bisdeletablechips As Boolean
 	'
 	Private bshowlabel As Boolean
@@ -170,14 +170,16 @@ Sub Process_Globals
 	Private bisnotitle As Boolean
 	Private bisuseseconds As Boolean
 	'
-	Private sfirstdayofweek As String 
-	Private stformat As String 
-	'Private sheadercolor As String 
+	Private sfirstdayofweek As String
+	Private stformat As String
+	'Private sheadercolor As String
 	'Private sheaderintensity As String
 	Private bStatic As Boolean
 	Private sb As StringBuilder
+	'
+	Private pc As VMPrism
+	Private htm As VMPrism
 End Sub
-
 
 Sub Init
 	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider")
@@ -244,7 +246,7 @@ Sub Init
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
 	vm.NavBar.SetModeFixed(True)
-	vm.NavBar.SetHasMenuButton(False)
+	vm.NavBar.SetHasMenuButton(True)
 	vm.NavBar.UpdateLogo("./assets/sponge.png")
 	vm.NavBar.UpdateTitle("BANanoVuetify Designer 3")
 	vm.NavBar.Logo.SetBorderRadius("50%")
@@ -290,7 +292,7 @@ Sub Init
 	vm.NavBar.Addicon("btnmac", "mdi-laptop-mac", "Macbook","")
 	vm.navbar.AddIcon("btnipad","mdi-tablet-ipad", "iPad", "")
 	vm.NavBar.addicon("btniphone", "mdi-cellphone-iphone", "iPhone", "")
-		'
+	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
 	vm.NavBar.AddIcon("btnBack", "chevron_left", "Back to demo", "")
@@ -298,23 +300,6 @@ Sub Init
 	BuildDrawer
 	'
 	vm.Container.SetFluid(True)
-	vm.setdata("myux", Array())
-	Dim db As BANanoSQL
-	Dim gridSQL As BANanoAlaSQLE
-	Dim compSQL As BANanoAlaSQLE
-	''start with the grid
-	db.OpenWait("bvmdesigner", "bvmdesigner")
-	
-	gridSQL.Initialize("grid", "id")
-	gridSQL.SelectAll(Array("*"), Array("id"))
-	gridSQL.result = db.executewait(gridSQL.query, gridSQL.args)
-	'
-	'add the components
-	compSQL.Initialize("components", "id")
-	compSQL.SelectAll(Array("*"), Array("id"))
-	compSQL.result = db.executewait(compSQL.query, compSQL.args)
-	'
-	vm.setdata("myux", compSQL.result)
 	
 	DesignLayout
 	'add property bags
@@ -329,11 +314,10 @@ Sub Init
 	PropertyBag_Icon
 	PropertyBag_Button
 	'
-	CreateUX(gridSQL, compSQL)
-	
 	AddPages
-		
 	vm.UX
+	'
+	CreateUX
 End Sub
 
 Sub btnmac_click(e As BANanoEvent)
@@ -370,23 +354,43 @@ End Sub
 
 Sub YesNoToBoolean(xvalue As String) As Boolean
 	Select Case xvalue
-	Case "Yes"
-		Return True
-	Case Else
-		Return False
+		Case "Yes"
+			Return True
+		Case Else
+			Return False
 	End Select
 End Sub
 
-Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
+Sub CreateUX
+	vm.pagepause
+	vm.setdata("myux", Array())
+	'
+	Dim db As BANanoSQL
+	Dim gridSQL As BANanoAlaSQLE
+	Dim compSQL As BANanoAlaSQLE
+	''start with the grid
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	
+	gridSQL.Initialize("grid", "id")
+	gridSQL.SelectAll(Array("*"), Array("id"))
+	gridSQL.result = db.executewait(gridSQL.query, gridSQL.args)
+	'
+	'add the components
+	compSQL.Initialize("components", "id")
+	compSQL.SelectAll(Array("*"), Array("id"))
+	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	'
+	vm.setdata("myux", compSQL.result)
+	
 	sb.initialize
 	'
 	'make it a div
-	ui = vm.CreateContainer("ui", Me).SetTag("div")
-	'ui.SetStatic(True)
+	ui = vm.CreateContainer("ui", Me)
+	ui.SetDesignMode(True)
 	If bShowMatrix = True Then
 		ui.ShowMatrix = True
 	Else
-		ui.showmatrix = False	
+		ui.showmatrix = False
 	End If
 	'
 	If bHasBorder = True Then
@@ -444,7 +448,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 		bontable = YesNoToBoolean(mattr.getdefault("ontable", "No"))
 		bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
-			'
+		'
 		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
 		bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
 		bisfilled = YesNoToBoolean(mattr.getdefault("isfilled", "No"))
@@ -480,7 +484,7 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 		ssize = mattr.GetDefault("size", "")
 		sswitchloading = mattr.getdefault("switchloading","")
-				'
+		'
 		swidth = mattr.getdefault("width", "")
 		sheight = mattr.getdefault("height", "")
 		sminwidth = mattr.getdefault("minwidth", "")
@@ -548,40 +552,40 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 		bStatic = True
 		'
 		Select Case controltype
-		Case "text"
-			Design_TextField
-		Case "textarea"
-			Design_TextArea
-		Case "switch"
-			Design_Switch
-		Case "checkbox"
-			Design_CheckBox
-		Case "date"
-			Design_Date
-		Case "file"
-			Design_File
-		Case "radio"
-			Design_Radio
-		Case "select","auto", "combo"
-			Design_Select
-		Case "slider"
-			Design_Slider
-		Case "label"
-			Design_Label
-		Case "email"
-			Design_Email
-		Case "password"
-			Design_Password
-		Case "tel"
-			Design_Tel
-		Case "time"
-			Design_Time
-		Case "icon"
-			Design_Icon
-		Case "profile", "image"
-			Design_Image
-		Case "button"
-			Design_Button
+			Case "text"
+				Design_TextField
+			Case "textarea"
+				Design_TextArea
+			Case "switch"
+				Design_Switch
+			Case "checkbox"
+				Design_CheckBox
+			Case "date"
+				Design_Date
+			Case "file"
+				Design_File
+			Case "radio"
+				Design_Radio
+			Case "select","auto", "combo"
+				Design_Select
+			Case "slider"
+				Design_Slider
+			Case "label"
+				Design_Label
+			Case "email"
+				Design_Email
+			Case "password"
+				Design_Password
+			Case "tel"
+				Design_Tel
+			Case "time"
+				Design_Time
+			Case "icon"
+				Design_Icon
+			Case "profile", "image"
+				Design_Image
+			Case "button"
+				Design_Button
 		End Select
 	Next
 	
@@ -591,39 +595,19 @@ Sub CreateUX(gridSQL As BANanoAlaSQLE, compSQL As BANanoAlaSQLE)
 	BANano.SetSessionStorage("sourcecode", sb.tostring)
 	BANano.SetSessionStorage("html", shtml)
 	'
-	mymac = vm.CreateDevice("mymac", Me).SetMacbook
-	mymac.SetStatic(shtml)
+	pc.SetCode(sb.tostring)
+	htm.setcode(shtml)
 	'
-	myipad = vm.CreateDevice("myipad", Me).SetIpad
-	myipad.hide
-	myipad.SetStatic(shtml)
+	mymac.SetContent(html)
+	myipad.SetContent(html)
+	myiphone.SetContent(html)
 	'
-	myiphone = vm.CreateDevice("myiphone", Me).SetIphoneX
-	myiphone.hide
-	myiphone.SetStatic(shtml)
-		
-	dnd.AddComponent(1, 1, mymac.tostring)
-	dnd.AddComponent(1, 1, myipad.tostring)
-	dnd.AddComponent(1, 1, myiphone.tostring)
+	'mymac.SetStatic(html)
+	'myipad.SetStatic(html)
+	'myiphone.SetStatic(html)
 	
-	'drag and drop preview area
-	'dnd.AddComponent(1, 1, shtml)
-	'b4x code
-	Dim pc As VMPrism = vm.CreatePrism("b4xcode", Me)
-	pc.SetLanguage("vb").SetCode(sb.tostring)
-	b4x.AddComponent(1, 1, pc.tostring)
-	
-	'html code
-	Dim htm As VMPrism = vm.CreatePrism("htmlcode", Me)
-	htm.SetLanguage("html").SetCode(shtml)
-	html5.AddComponent(1, 1, htm.tostring)
 	'
-	tabs.AddTab("dndrea", "Drag n Drop / Preview", "mdi-drag-variant", dnd)
-	tabs.AddTab("b4xarea", "B4X", "code", b4x)
-	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
-	vm.container.AddComponent(1, 2, tabs.tostring)
-	
-	'vm.Container.AddComponent(1, 2, html)
+	vm.pageresume
 End Sub
 
 Sub Design_Grid(gridSQL As BANanoAlaSQLE)
@@ -722,7 +706,7 @@ Sub Design_Grid(gridSQL As BANanoAlaSQLE)
 End Sub
 
 Sub Design_TextArea
-	Dim txta As VMTextField = vm.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
 	txta.SetSolo(bissolo)
 	txta.SetOutlined(bisoutlined)
 	txta.SetFilled(bisfilled)
@@ -758,7 +742,7 @@ Sub Design_TextArea
 End Sub
 
 Sub Design_Switch
-	Dim swt As VMCheckBox = vm.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
 	swt.SetColorIntensity(scolor, sintensity)
 	swt.SetRequired(bisrequired)
 	swt.SetDisabled(bisdisabled)
@@ -789,7 +773,7 @@ Sub Design_Switch
 End Sub
 
 Sub Design_CheckBox
-	Dim chk As VMCheckBox = vm.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
 	chk.SetColorIntensity(scolor, sintensity)
 	chk.SetRequired(bisrequired)
 	chk.SetDisabled(bisdisabled)
@@ -818,7 +802,7 @@ Sub Design_CheckBox
 End Sub
 
 Sub Design_Date
-	Dim dp As VMDateTimePicker = vm.NewDatePicker(Me, True, "dp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, "dp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 	dp.SetVisible(bisvisible)
 	dp.SetDisabled(bisdisabled)
 	dp.SetRange(bisrange)
@@ -874,7 +858,7 @@ Sub Design_Date
 End Sub
 
 Sub Design_File
-	Dim fi As VMTextField = vm.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
+	Dim fi As VMTextField = ui.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
 	fi.SetSolo(bissolo)
 	fi.SetOutlined(bisoutlined)
 	fi.SetFilled(bisfilled)
@@ -911,9 +895,9 @@ End Sub
 Sub Design_Radio
 	If buseoptions Then
 		Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-		Dim rd As VMRadioGroup = vm.NewRadioGroup(Me, True, "rd" & sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
+		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, "rd" & sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
 	Else
-		Dim rd As VMRadioGroup = vm.NewRadioGroupDataSource(Me, True, "rd" & sname, svmodel, stitle, svalue, ssourcetable, _
+		Dim rd As VMRadioGroup = ui.NewRadioGroupDataSource(Me, True, "rd" & sname, svmodel, stitle, svalue, ssourcetable, _
 					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
 	End If
 	rd.SetMandatory(bismandatory)
@@ -947,31 +931,31 @@ Sub Design_Select
 		Case "select"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = vm.NewSelectOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			End If
 		Case "combo"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = vm.NewComboOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewComboOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = vm.NewComboDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			End If
 		Case "auto"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = vm.NewAutoCompleteOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = vm.NewAutoCompleteDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			End If
 	End Select
@@ -1003,10 +987,6 @@ Sub Design_Select
 				'
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			Else
-				'use data source
-				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			End If
 		Case "combo"
@@ -1017,10 +997,6 @@ Sub Design_Select
 				'
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			Else
-				'use data source
-				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			End If
 
@@ -1032,13 +1008,8 @@ Sub Design_Select
 				'
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			Else
-				'use data source
-				Dim sel As VMSelect = vm.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
-					
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			End If
-
 	End Select
 	'
 	CodeLine(sb, bissolo, "b", "sel", sname, "SetSolo")
@@ -1061,7 +1032,7 @@ Sub Design_Select
 End Sub
 
 Sub Design_Slider
-	Dim sld As VMSlider = vm.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
+	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
 	sld.SetValue(svalue)
 	sld.SetColorIntensity(scolor, sintensity)
 	sld.SetHideDetails(bishidedetails)
@@ -1091,7 +1062,7 @@ Sub Design_Label
 	Dim salign As String = mattr.getdefault("align", "")
 	Dim sfontweight As String = mattr.getdefault("fontweight", "")
 	'
-	Dim lbl As VMLabel =vm.NewLabel(True, sname, svmodel, slabelsize, svalue)
+	Dim lbl As VMLabel = ui.NewLabel(True, sname, svmodel, slabelsize, svalue)
 	lbl.AddClass(sdisplay)
 	lbl.AddClass(salign)
 	lbl.AddClass(sfontweight)
@@ -1112,7 +1083,7 @@ Sub Design_Label
 End Sub
 
 Sub Design_Email
-	Dim email As VMTextField = vm.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
+	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
 	email.SetFieldType(sfieldtype)
 	email.SetSolo(bissolo)
 	email.SetOutlined(bisoutlined)
@@ -1150,7 +1121,7 @@ Sub Design_Email
 End Sub
 
 Sub Design_Password
-	Dim pwd As VMTextField = vm.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
 	pwd.SetFieldType(sfieldtype)
 	pwd.SetSolo(bissolo)
 	pwd.SetOutlined(bisoutlined)
@@ -1189,7 +1160,7 @@ Sub Design_Password
 End Sub
 
 Sub Design_Tel
-	Dim tel As VMTextField = vm.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
+	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
 	tel.SetFieldType(sfieldtype)
 	tel.SetSolo(bissolo)
 	tel.SetOutlined(bisoutlined)
@@ -1227,7 +1198,7 @@ Sub Design_Tel
 End Sub
 
 Sub Design_Time
-	Dim tp As VMDateTimePicker = vm.Newtimepicker(Me, True, "tp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, "tp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 	tp.SetVisible(bisvisible)
 	tp.SetDisabled(bisdisabled)
 	tp.SetAmPmInTitle(bisampm)
@@ -1281,13 +1252,13 @@ Sub Design_Time
 End Sub
 
 Sub Design_Icon
-	Dim icn As VMIcon = vm.NewIcon(Me, True, sname, sicon, ssize, scolor, sintensity)
+	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, sicon, ssize, scolor, sintensity)
 	icn.SetDark(bisdark)
 	icn.SetDense(bisdense)
 	icn.SetDisabled(bisdisabled)
 	icn.SetCenterOnParent(bcenteronparent)
 	ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-		'
+	'
 	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${sicon}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
 	CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
@@ -1297,7 +1268,7 @@ Sub Design_Icon
 End Sub
 
 Sub Design_Image
-	Dim img As VMImage = vm.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
+	Dim img As VMImage = ui.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
 	img.SetLazysrc(slazysrc)
 	img.SetBorderRadius(sborderradius)
 	img.SetBorderWidth(sborderwidth)
@@ -1331,7 +1302,7 @@ End Sub
 Sub Design_Button
 	If biconbutton Then stitle = ""
 	If bfabbutton Then stitle = ""
-	Dim btn As VMButton = vm.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
+	Dim btn As VMButton = ui.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
 	btn.Sethref(shref)
 	btn.SetTarget(starget)
 	btn.setto(sto)
@@ -1397,12 +1368,12 @@ Sub Design_Button
 			CodeLine(sb, True, "b", "btn", sname, "SetXSmall")
 		Case "x-large"
 			CodeLine(sb, True, "b", "btn", sname, "SetXLarge")
-	End Select				
+	End Select
 	sb.append($".Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_TextField
-	Dim txt As VMTextField = vm.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
 	txt.SetFieldType(sfieldtype)
 	txt.SetSolo(bissolo)
 	txt.SetOutlined(bisoutlined)
@@ -1439,10 +1410,10 @@ End Sub
 
 Sub CodeLine(sbx As StringBuilder, varName As String, varType As String, prefix As String, ssname As String, methodName As String)
 	Select Case varType
-	Case "b"
-		If varName Then sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
-	Case "s"
-		If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}")"$).append(CRLF)
+		Case "b"
+			If varName Then sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
+		Case "s"
+			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}")"$).append(CRLF)
 	End Select
 End Sub
 
@@ -1451,8 +1422,7 @@ Sub BuildDrawer
 End Sub
 
 Sub btnRefresh_click(e As BANanoEvent)
-	Init
-	'CreateUI
+	CreateUX
 End Sub
 
 Sub btnBack_click(e As BANanoEvent)
@@ -1462,24 +1432,24 @@ End Sub
 Sub optMenuitems_click(e As BANanoEvent)
 	Dim menuID As String = vm.getidfromevent(e)
 	Select Case menuID
-	Case "btnshowmatrix"
-		vm.ToggleState("showmatrix")
-		bShowMatrix = vm.getdata("showmatrix")
-		If bShowMatrix = True Then
-			BANano.setlocalstorage("showmatrix", True)
-		Else
-			BANano.setlocalstorage("showmatrix", False)
-		End If
-		Init	
-	Case "btnhasborder"
-		vm.togglestate("hasborder")
-		bHasBorder = vm.getdata("hasborder")
-		If bHasBorder = True Then
-			BANano.setlocalstorage("hasborder", True)
-		Else
-			BANano.setlocalstorage("hasborder", False)
-		End If
-		Init
+		Case "btnshowmatrix"
+			vm.ToggleState("showmatrix")
+			bShowMatrix = vm.getdata("showmatrix")
+			If bShowMatrix = True Then
+				BANano.setlocalstorage("showmatrix", True)
+			Else
+				BANano.setlocalstorage("showmatrix", False)
+			End If
+			CreateUX
+		Case "btnhasborder"
+			vm.togglestate("hasborder")
+			bHasBorder = vm.getdata("hasborder")
+			If bHasBorder = True Then
+				BANano.setlocalstorage("hasborder", True)
+			Else
+				BANano.setlocalstorage("hasborder", False)
+			End If
+			CreateUX
 	End Select
 End Sub
 
@@ -1497,10 +1467,10 @@ End Sub
 Sub gridMenuitems_click(e As BANanoEvent)
 	Dim menuID As String = vm.getidfromevent(e)
 	Select Case menuID
-	Case "btncleargrid"
-		vm.ShowConfirm("cleargrid", "Confirm Clear Grid", "Are you sure that you want to clear the grid?", "Yes", "No")
-	Case "btnremovelastgrid"
-		vm.ShowConfirm("removelastgrid", "Confirm Remove Last", "Are you sure that you want to remove the last grid row?", "Yes", "No")
+		Case "btncleargrid"
+			vm.ShowConfirm("cleargrid", "Confirm Clear Grid", "Are you sure that you want to clear the grid?", "Yes", "No")
+		Case "btnremovelastgrid"
+			vm.ShowConfirm("removelastgrid", "Confirm Remove Last", "Are you sure that you want to remove the last grid row?", "Yes", "No")
 	End Select
 End Sub
 
@@ -1512,16 +1482,16 @@ End Sub
 Sub confirm_ok(e As BANanoEvent)
 	Dim resp As String = vm.getconfirm
 	Select Case resp
-	Case "clearcomp"
-		ClearComp
-	Case "removelastcomp"
-		RemoveLastCompItem
-	Case "cleargrid"
-		ClearGrid
-	Case "removelastgrid"
-		RemoveLastGridItem
-	Case "deletepropbag"
-		DeleteIT
+		Case "clearcomp"
+			ClearComp
+		Case "removelastcomp"
+			RemoveLastCompItem
+		Case "cleargrid"
+			ClearGrid
+		Case "removelastgrid"
+			RemoveLastGridItem
+		Case "deletepropbag"
+			DeleteIT
 	End Select
 End Sub
 
@@ -1529,6 +1499,7 @@ End Sub
 'remove last comp item
 Sub RemoveLastCompItem
 	vm.pagepause
+	ShowBag("")
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -1546,13 +1517,13 @@ Sub RemoveLastCompItem
 		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	End If
 	vm.pageresume
-	Init
-	'CreateUI
+	CreateUX
 End Sub
 
 'clear the contents of the grid
 Sub ClearComp
 	vm.pagepause
+	ShowBag("")
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -1560,13 +1531,13 @@ Sub ClearComp
 	rsSQL.DeleteAll
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	vm.pageresume
-	Init
-	'CreateUI
+	CreateUX
 End Sub
 
 'remove last grid item
 Sub RemoveLastGridItem
 	vm.pagepause
+	ShowBag("")
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -1584,13 +1555,13 @@ Sub RemoveLastGridItem
 		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	End If
 	vm.pageresume
-	Init
-	'CreateUI
+	CreateUX
 End Sub
 
 'clear the contents of the grid
 Sub ClearGrid
 	vm.pagepause
+	ShowBag("")
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -1598,8 +1569,7 @@ Sub ClearGrid
 	rsSQL.DeleteAll
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	vm.pageresume
-	Init
-	'CreateUI
+	CreateUX
 End Sub
 
 Sub AddPages
@@ -1649,15 +1619,36 @@ Sub DesignLayout
 	dnd.SetAlignRC(1, 1, "center")
 	dnd.AddClassRC(1, 1, Array("mx-auto"))
 	'
+	mymac = vm.CreateDevice("mymac", Me).SetMacbook
+	'
+	myipad = vm.CreateDevice("myipad", Me).SetIpad
+	myipad.hide
+	'
+	myiphone = vm.CreateDevice("myiphone", Me).SetIphoneX
+	myiphone.hide
+		
+	dnd.AddComponent(1, 1, mymac.tostring)
+	dnd.AddComponent(1, 1, myipad.tostring)
+	dnd.AddComponent(1, 1, myiphone.tostring)
 	'
 	b4x = vm.CreateContainer("b4x", Me).SetFluid(True)
 	b4x.AddRows(1).AddColumns12
 	'
 	html5 = vm.CreateContainer("html5", Me).SetFluid(True)
 	html5.AddRows(1).AddColumns12
-	'	
-	'Dim dc As VMElement = vm.CreateDynamicContent("dc")
-	'vm.container.AddComponent(1, 2, dc.tostring)
+	'
+	'b4x code
+	pc = vm.CreatePrism("b4xcode", Me).SetLanguage("vb")
+	b4x.AddComponent(1, 1, pc.tostring)
+	
+	'html code
+	htm = vm.CreatePrism("htmlcode", Me).SetLanguage("html")
+	html5.AddComponent(1, 1, htm.tostring)
+	'
+	tabs.AddTab("dndrea", "Drag n Drop / Preview", "mdi-drag-variant", dnd)
+	tabs.AddTab("b4xarea", "B4X", "code", b4x)
+	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
+	vm.container.AddComponent(1, 2, tabs.tostring)
 End Sub
 '
 
@@ -1694,135 +1685,135 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim sattributes As String = rec.get("attributes")
 	'show the property bags
 	Select Case stypeof
-	Case "text"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "text")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "textarea"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "textarea")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "checkbox"
-		ShowBag("pbcheckbox")
-		pbcheckbox.SetDefaults
-		pbcheckbox.hideitem("id")
-		pbcheckbox.Hideitem("controltype")
-	Case "date"
-		ShowBag("pbdatepicker")
-		pbdatepicker.SetDefaults
-		vm.setdata("controltype", "date")
-		pbdatepicker.hideitem("id")
-		pbdatepicker.Hideitem("controltype")
-	Case "file"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "file")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "radio"
-		ShowBag("pbradiogroup")
-		pbradiogroup.SetDefaults
-		pbradiogroup.hideitem("id")
-		pbradiogroup.Hideitem("controltype")
-	Case "select"
-		ShowBag("pbselectbox")
-		pbselectbox.SetDefaults
-		vm.setdata("controltype", "select")
-		pbselectbox.hideitem("id")
-		pbselectbox.Hideitem("controltype")
-	Case "slider"
-		ShowBag("pbslider")
-		pbslider.SetDefaults
-		pbslider.hideitem("id")
-		pbslider.Hideitem("controltype")
-	Case "switch"
-		ShowBag("pbcheckbox")
-		pbcheckbox.SetDefaults
-		pbcheckbox.hideitem("id")
-		vm.setdata("controltype", "switch")
-		pbcheckbox.Hideitem("controltype")
-	Case "label"
-		ShowBag("pblabel")
-		pblabel.SetDefaults
-		pblabel.hideitem("id")
-		pblabel.Hideitem("controltype")
-	Case "email"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "email")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "password"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "password")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "tel"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "tel")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "combo"
-		ShowBag("pbselectbox")
-		pbselectbox.SetDefaults
-		vm.setdata("controltype", "combo")
-		pbselectbox.hideitem("id")
-		pbselectbox.Hideitem("controltype")
-	Case "number"
-		ShowBag("pbtextfield")
-		pbtextfield.SetDefaults
-		vm.setdata("controltype", "number")
-		pbtextfield.hideitem("id")
-		pbtextfield.Hideitem("controltype")
-	Case "profile"
-		ShowBag("pbimage")
-		pbimage.SetDefaults
-		vm.setdata("controltype", "profile")
-		pbimage.hideitem("id")
-		pbimage.Hideitem("controltype")
-	Case "auto"
-		ShowBag("pbselectbox")
-		pbselectbox.SetDefaults
-		vm.setdata("controltype", "auto")
-		pbselectbox.hideitem("id")
-		pbselectbox.Hideitem("controltype")
-	Case "time"
-		ShowBag("pbdatepicker")
-		pbdatepicker.SetDefaults
-		vm.setdata("controltype", "time")
-		pbdatepicker.hideitem("id")
-		pbdatepicker.Hideitem("controltype")
-	Case "image"
-		ShowBag("pbimage")
-		pbimage.SetDefaults
-		vm.setdata("controltype", "image")
-		pbimage.hideitem("id")
-		pbimage.Hideitem("controltype")
-	Case "button"
-		ShowBag("pbbutton")
-		pbbutton.SetDefaults
-		vm.setdata("controltype", "button")
-		pbbutton.hideitem("id")
-		pbbutton.Hideitem("controltype")
-	Case "icon"
-		ShowBag("pbicon")
-		pbicon.SetDefaults
-		vm.setdata("controltype", "icon")
-		pbicon.hideitem("id")
-		pbicon.Hideitem("controltype")
+		Case "text"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "text")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "textarea"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "textarea")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "checkbox"
+			ShowBag("pbcheckbox")
+			pbcheckbox.SetDefaults
+			pbcheckbox.hideitem("id")
+			pbcheckbox.Hideitem("controltype")
+		Case "date"
+			ShowBag("pbdatepicker")
+			pbdatepicker.SetDefaults
+			vm.setdata("controltype", "date")
+			pbdatepicker.hideitem("id")
+			pbdatepicker.Hideitem("controltype")
+		Case "file"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "file")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "radio"
+			ShowBag("pbradiogroup")
+			pbradiogroup.SetDefaults
+			pbradiogroup.hideitem("id")
+			pbradiogroup.Hideitem("controltype")
+		Case "select"
+			ShowBag("pbselectbox")
+			pbselectbox.SetDefaults
+			vm.setdata("controltype", "select")
+			pbselectbox.hideitem("id")
+			pbselectbox.Hideitem("controltype")
+		Case "slider"
+			ShowBag("pbslider")
+			pbslider.SetDefaults
+			pbslider.hideitem("id")
+			pbslider.Hideitem("controltype")
+		Case "switch"
+			ShowBag("pbcheckbox")
+			pbcheckbox.SetDefaults
+			pbcheckbox.hideitem("id")
+			vm.setdata("controltype", "switch")
+			pbcheckbox.Hideitem("controltype")
+		Case "label"
+			ShowBag("pblabel")
+			pblabel.SetDefaults
+			pblabel.hideitem("id")
+			pblabel.Hideitem("controltype")
+		Case "email"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "email")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "password"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "password")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "tel"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "tel")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "combo"
+			ShowBag("pbselectbox")
+			pbselectbox.SetDefaults
+			vm.setdata("controltype", "combo")
+			pbselectbox.hideitem("id")
+			pbselectbox.Hideitem("controltype")
+		Case "number"
+			ShowBag("pbtextfield")
+			pbtextfield.SetDefaults
+			vm.setdata("controltype", "number")
+			pbtextfield.hideitem("id")
+			pbtextfield.Hideitem("controltype")
+		Case "profile"
+			ShowBag("pbimage")
+			pbimage.SetDefaults
+			vm.setdata("controltype", "profile")
+			pbimage.hideitem("id")
+			pbimage.Hideitem("controltype")
+		Case "auto"
+			ShowBag("pbselectbox")
+			pbselectbox.SetDefaults
+			vm.setdata("controltype", "auto")
+			pbselectbox.hideitem("id")
+			pbselectbox.Hideitem("controltype")
+		Case "time"
+			ShowBag("pbdatepicker")
+			pbdatepicker.SetDefaults
+			vm.setdata("controltype", "time")
+			pbdatepicker.hideitem("id")
+			pbdatepicker.Hideitem("controltype")
+		Case "image"
+			ShowBag("pbimage")
+			pbimage.SetDefaults
+			vm.setdata("controltype", "image")
+			pbimage.hideitem("id")
+			pbimage.Hideitem("controltype")
+		Case "button"
+			ShowBag("pbbutton")
+			pbbutton.SetDefaults
+			vm.setdata("controltype", "button")
+			pbbutton.hideitem("id")
+			pbbutton.Hideitem("controltype")
+		Case "icon"
+			ShowBag("pbicon")
+			pbicon.SetDefaults
+			vm.setdata("controltype", "icon")
+			pbicon.hideitem("id")
+			pbicon.Hideitem("controltype")
 	End Select
 	'
 	Dim mattr As Map = BANano.FromJson(sattributes)
 	'DONT OVERWRITE
 	Select Case stypeof
 		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon"
-		mattr.remove("controltype")		
+			mattr.remove("controltype")
 	End Select
 	vm.setstate(mattr)
 	vm.setdata("propbagtype", stypeof)
@@ -2021,7 +2012,7 @@ Sub GridPanel As VMExpansionPanel
 	grd.Container.AddComponent(7,4,col11.tostring)
 	'
 	Dim col12 As VMElement = ToolboxDiv("col12","C12")
-	grd.Container.AddComponent(8,1,col12.tostring)	
+	grd.Container.AddComponent(8,1,col12.tostring)
 	Return grd
 End Sub
 
@@ -2042,6 +2033,8 @@ End Sub
 
 'whenever we drop an item
 Sub ItemDrop(e As BANanoEvent)
+	ShowBag("")
+	vm.setdata("devspace", 0)
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	e.PreventDefault
@@ -2054,132 +2047,134 @@ Sub ItemDrop(e As BANanoEvent)
 	e.OtherField("dataTransfer").RunMethod("clearData", Null)
 	
 	Select Case dropZoneID
-	Case "bananovmdemocontainerr1c2"
-		'drop on root
-		Select Case savedid
-		Case "rc12","rc6x2", "rc1x12", "rc2x6","rc4x3", "rc3x4", _
+		Case "bananovmdemocontainerr1c2"
+			'drop on root
+			Select Case savedid
+				Case "rc12","rc6x2", "rc1x12", "rc2x6","rc4x3", "rc3x4", _
 			"rc5p7","rc7p5","rc8p4","rc9p3","rc10p2","rc11p1", _
 			"rc4p8", "rc3p9", "rc2p10", "rc1p11", "rc12x1", _
 			"row", "col2", "col1", "col3","col4","col5", "col6", "col7", _
 			"col8", "col9", "col10", "col11", "col12"
-			'adding 1 row and
-			BANano.SetLocalStorage("selectedpanel", 0)
-			BANano.SetLocalStorage("hasborder", True)
-			BANano.SetLocalStorage("showmatrix", True)
-			vm.pagepause
-			db.OpenWait("bvmdesigner", "bvmdesigner")
-			rsSQL.Initialize("grid", "id")
-			Dim nrec As Map = CreateMap()
-			nrec.put("id", DateTime.now)
-			nrec.put("controltype", savedid)
-			rsSQL.RecordFromMap(nrec)
-			rsSQL.Insert
-			rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
-			vm.pageresume
-		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", _
+					'adding 1 row and
+					BANano.SetLocalStorage("selectedpanel", 0)
+					BANano.SetLocalStorage("hasborder", True)
+					BANano.SetLocalStorage("showmatrix", True)
+					vm.setdata("showmatrix", True)
+					vm.setdata("hasborder", True)
+					vm.pagepause
+					db.OpenWait("bvmdesigner", "bvmdesigner")
+					rsSQL.Initialize("grid", "id")
+					Dim nrec As Map = CreateMap()
+					nrec.put("id", DateTime.now)
+					nrec.put("controltype", savedid)
+					rsSQL.RecordFromMap(nrec)
+					rsSQL.Insert
+					rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+					vm.pageresume
+				Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", _
 			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
-			BANano.SetLocalStorage("selectedpanel", 2)
-			'
-			Dim rowPos As Int = 0
-			vm.pagepause
-			db.OpenWait("bvmdesigner", "bvmdesigner")
-			rsSQL.Initialize("components", "row")
-			'get the max rows
-			rsSQL.GetMax
-			rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
-			rowPos = rsSQL.GetNextID
+					BANano.SetLocalStorage("selectedpanel", 2)
+					'
+					Dim rowPos As Int = 0
+					vm.pagepause
+					db.OpenWait("bvmdesigner", "bvmdesigner")
+					rsSQL.Initialize("components", "row")
+					'get the max rows
+					rsSQL.GetMax
+					rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
+					rowPos = rsSQL.GetNextID
 			
-			'
-			Dim slabel As String = savedid
-			slabel = slabel & vm.cstr(rowPos)
-			'
-			Dim avatar As String = ""
-			If avatarMap.containskey(savedid) Then avatar = avatarMap.get(savedid)
-			Dim sid As String = DateTime.now
-			' 
-			Dim nrec As Map = CreateMap()
-			nrec.put("id", sid)
-			nrec.put("controltype", savedid)
-			nrec.put("row", rowPos)
-			nrec.put("col", 1)
-			nrec.put("name", slabel)
-			nrec.put("vmodel", slabel)
-			nrec.put("label", slabel)
-			nrec.put("avatar", avatar)
-			'
-			Dim attr As Map = CreateMap()
-			attr.put("fieldtype", "string")
-			attr.put("id", sid)
-			attr.put("vmodel", slabel)
-			attr.put("row", rowPos)
-			attr.put("col", 1)
-			attr.put("label", slabel)
-			attr.put("offsetsmall",0)
-			attr.put("offsetmedium",0)
-			attr.put("offsetlarge",0)
-			attr.put("offsetxlarge",0)
-			attr.put("sizesmall",12)
-			attr.put("sizemedium",12)
-			attr.put("sizelarge",12)
-			attr.put("sizexlarge",12)
-			attr.put("isrequired","Yes")
-			attr.put("isclearable","Yes")
-			attr.put("isvisible","Yes")
-			attr.put("isdisabled","No")
-			attr.put("isautogrow","No")
-			attr.put("ontable", "No")
-			attr.put("maxlength", 0)
-			attr.Put("icon", "mdi-account-circle")
-			attr.put("centeronparent", "No")
-			attr.put("sourcetable", "datasource")
-			attr.put("sourcefield", "id")
-			attr.put("displayfield", "text")
-			attr.put("useoptions", "Yes")
-			attr.put("showlabel", "Yes")
-			attr.put("labelontop", "Yes")
-			attr.put("keys", "1,2,3")
-			attr.put("values","One,Two,Three")
-			attr.put("tformat","24hr")
-			attr.put("isforinput", "Yes")
-			'
-			Select Case savedid
-			Case "label"
-				attr.put("labelsize", "p")
-				attr.put("value", slabel)
-			Case "password"
-				attr.put("istoggle", "Yes")
-			Case "profile"
-				attr.put("borderradius", "50%")
-				attr.put("borderwidth", "1px")
-				attr.put("bordercolor", "black")
-				attr.put("borderstyle", "solid")
-				attr.put("src", "./assets/sponge.png")
-				attr.put("width", "100")
-				attr.put("height", "100")
-				BANano.SetLocalStorage("selectedpanel", 1)
-			Case "image"
-				attr.put("src", "./assets/bird.jpg")
-				BANano.SetLocalStorage("selectedpanel", 1)
-			Case "icon"
-				BANano.SetLocalStorage("selectedpanel", 1)
-			Case "button"
-				BANano.SetLocalStorage("selectedpanel", 3)
+					'
+					Dim slabel As String = savedid
+					slabel = slabel & vm.cstr(rowPos)
+					'
+					Dim avatar As String = ""
+					If avatarMap.containskey(savedid) Then avatar = avatarMap.get(savedid)
+					Dim sid As String = DateTime.now
+					'
+					Dim nrec As Map = CreateMap()
+					nrec.put("id", sid)
+					nrec.put("controltype", savedid)
+					nrec.put("row", rowPos)
+					nrec.put("col", 1)
+					nrec.put("name", slabel)
+					nrec.put("vmodel", slabel)
+					nrec.put("label", slabel)
+					nrec.put("avatar", avatar)
+					'
+					Dim attr As Map = CreateMap()
+					attr.put("fieldtype", "string")
+					attr.put("id", sid)
+					attr.put("vmodel", slabel)
+					attr.put("row", rowPos)
+					attr.put("col", 1)
+					attr.put("label", slabel)
+					attr.put("offsetsmall",0)
+					attr.put("offsetmedium",0)
+					attr.put("offsetlarge",0)
+					attr.put("offsetxlarge",0)
+					attr.put("sizesmall",12)
+					attr.put("sizemedium",12)
+					attr.put("sizelarge",12)
+					attr.put("sizexlarge",12)
+					attr.put("isrequired","Yes")
+					attr.put("isclearable","Yes")
+					attr.put("isvisible","Yes")
+					attr.put("isdisabled","No")
+					attr.put("isautogrow","No")
+					attr.put("ontable", "No")
+					attr.put("maxlength", 0)
+					attr.Put("icon", "mdi-account-circle")
+					attr.put("centeronparent", "No")
+					attr.put("sourcetable", "datasource")
+					attr.put("sourcefield", "id")
+					attr.put("displayfield", "text")
+					attr.put("useoptions", "Yes")
+					attr.put("showlabel", "Yes")
+					attr.put("labelontop", "Yes")
+					attr.put("keys", "1,2,3")
+					attr.put("values","One,Two,Three")
+					attr.put("tformat","24hr")
+					attr.put("isforinput", "Yes")
+					'
+					Select Case savedid
+						Case "label"
+							attr.put("labelsize", "p")
+							attr.put("value", slabel)
+						Case "password"
+							attr.put("istoggle", "Yes")
+						Case "profile"
+							attr.put("borderradius", "50%")
+							attr.put("borderwidth", "1px")
+							attr.put("bordercolor", "black")
+							attr.put("borderstyle", "solid")
+							attr.put("src", "./assets/sponge.png")
+							attr.put("width", "100")
+							attr.put("height", "100")
+							BANano.SetLocalStorage("selectedpanel", 1)
+						Case "image"
+							attr.put("src", "./assets/bird.jpg")
+							BANano.SetLocalStorage("selectedpanel", 1)
+						Case "icon"
+							BANano.SetLocalStorage("selectedpanel", 1)
+						Case "button"
+							BANano.SetLocalStorage("selectedpanel", 3)
+					End Select
+					'
+					'save just in case
+					vm.SetState(attr)
+					'
+					Dim sjson As String = BANano.ToJson(attr)
+					nrec.put("attributes", sjson)
+					'
+					rsSQL.Initialize("components", "id")
+					rsSQL.RecordFromMap(nrec)
+					rsSQL.Insert
+					rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+					vm.pageresume
 			End Select
 			'
-			'save just in case
-			vm.SetState(attr)
-			'
-			Dim sjson As String = BANano.ToJson(attr)
-			nrec.put("attributes", sjson)		
-			'
-			rsSQL.Initialize("components", "id")
-			rsSQL.RecordFromMap(nrec)
-			rsSQL.Insert
-			rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
-			vm.pageresume
-		End Select
-		'
-		Init
+			CreateUX
 	End Select
 End Sub
 
@@ -2484,7 +2479,7 @@ Sub PropertyBag_Select
 	pbselectbox.AddText("d","vmodel","VModel","","")
 	pbselectbox.AddText("d","label","Label","","")
 	pbselectbox.AddText("d", "value", "Value","","")
-	pbselectbox.AddText("d","placeholder","Placeholder","","")	
+	pbselectbox.AddText("d","placeholder","Placeholder","","")
 	pbselectbox.AddNumber("d","tabindex","Tab Index","","")
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
 	pbselectbox.AddText("d","errortext","Error Text","","")
@@ -2636,7 +2631,47 @@ Sub DeleteIT
 	rsSQL.Delete(sid)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	vm.pageresume
-	Init
+	CreateUX
+End Sub
+
+Sub ppbtextfield_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbcheckbox_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbdatepicker_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbradiogroup_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbselectbox_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbslider_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppblabel_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbimage_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbbutton_change(e As BANanoEvent)
+	SavePropertyBag	
+End Sub
+
+Sub ppbicon_change(e As BANanoEvent)
+	SavePropertyBag
 End Sub
 
 'save the property bag
@@ -2646,28 +2681,28 @@ Sub SavePropertyBag
 	Dim spropbagtype As String = vm.getdata("propbagtype")
 	Dim props As Map = CreateMap()
 	Select Case spropbagtype
-	Case "text", "textarea", "file", "email", "password", "tel", "number"
-		props = pbtextfield.properties
-	Case "checkbox"
-		props = pbcheckbox.Properties
-	Case "date", "time"
-		props = pbdatepicker.Properties
-	Case "radio"
-		props = pbradiogroup.Properties
-	Case "select", "combo", "auto"
-		props = pbselectbox.Properties
-	Case "slider"
-		props = pbslider.properties
-	Case "switch"
-		props = pbcheckbox.properties
-	Case "label"
-		props = pblabel.properties
-	Case "profile", "image"
-		props = pbimage.Properties
-	Case "button"
-		props = pbbutton.properties
-	Case "icon"
-		props = pbicon.properties
+		Case "text", "textarea", "file", "email", "password", "tel", "number"
+			props = pbtextfield.properties
+		Case "checkbox"
+			props = pbcheckbox.Properties
+		Case "date", "time"
+			props = pbdatepicker.Properties
+		Case "radio"
+			props = pbradiogroup.Properties
+		Case "select", "combo", "auto"
+			props = pbselectbox.Properties
+		Case "slider"
+			props = pbslider.properties
+		Case "switch"
+			props = pbcheckbox.properties
+		Case "label"
+			props = pblabel.properties
+		Case "profile", "image"
+			props = pbimage.Properties
+		Case "button"
+			props = pbbutton.properties
+		Case "icon"
+			props = pbicon.properties
 	End Select
 	'
 	Dim sid As String = props.get("id")
@@ -2679,11 +2714,11 @@ Sub SavePropertyBag
 	'
 	'is vmodel valid
 	Select Case svmodel
-	Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
-		vm.SnackBar.SetColor("red")
-		vm.SnackBar.SetTop(True)
-		vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")
-		Return
+		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
+			vm.SnackBar.SetColor("red")
+			vm.SnackBar.SetTop(True)
+			vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")
+			Return
 	End Select
 	
 	'
@@ -2697,7 +2732,7 @@ Sub SavePropertyBag
 	nrec.put("id", sid)
 	nrec.put("row", srow)
 	nrec.put("col", scol)
-	nrec.put("tabindex", stabindex) 
+	nrec.put("tabindex", stabindex)
 	nrec.put("attributes", attr)
 	nrec.put("vmodel", svmodel)
 	nrec.put("label", slabel)
@@ -2711,7 +2746,7 @@ Sub SavePropertyBag
 	rsSQL.Update(sid)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	vm.pageresume
-	Init
+	CreateUX
 End Sub
 
 Sub MapRemovePrefix(m As Map) As Map

@@ -221,6 +221,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Overlay.Pop(VContent)
 	'
 	Drawer.Hide
+	Footer.hide
 	'
 	vue.SetData("confirmtitle", "Confirm")
 	vue.SetData("btnconfirmcancellabel", "Cancel")
@@ -265,6 +266,14 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 		Log("Initialize.alert_ok - please add this event to trap alert dialog!")
 	End If
 End Sub
+
+
+'getElementById
+Sub getElementById(sid As String) As BANanoObject
+	Dim el As BANanoObject = BANano.Window.GetField("document").RunMethod("getElementById", Array(sid))
+	Return el
+End Sub
+
 
 'build the map to send an email to use in callinlinephp
 Sub BuildPHPEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
@@ -1395,7 +1404,6 @@ Sub CreateDynamicContent(sid As String) As VMElement
 	SetStateSingle(pp,"<div></div>")
 	Dim UI As VMElement = CreateTag(sid, "renderstring")
 	UI.Bind(":string", pp)
-	'UI.SetAttrSingle("v-bind", "$props")
 	Return UI
 End Sub
 

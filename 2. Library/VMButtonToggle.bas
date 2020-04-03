@@ -212,11 +212,11 @@ Sub SetValue(varValue As Object) As VMButtonToggle
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMButtonToggle
+Sub SetOnChange(eventHandler As Object,methodName As String) As VMButtonToggle
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -134,7 +134,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	refs.Initialize 
 	props.Initialize
 	methods.Initialize
-	data.Initialize
 	computed.Initialize
 	watches.Initialize
 	beforeMount = Null
@@ -717,7 +716,7 @@ Sub SetValue(valueName As String, bbind As Boolean) As VMElement
 End Sub
 
 'set template
-Sub SetTemplate(tmp As Object) As VMElement
+Sub SetTemplate(tmp As String) As VMElement
 	Element.Clear
 	SetText(tmp)
 	hasContent = True

@@ -294,11 +294,11 @@ Sub SetWidth(varWidth As Object) As VMBottomNavigation
 End Sub
 
 'selValue
-Sub SetOnChange(methodName As String) As VMBottomNavigation
+Sub SetOnChange(eventHandler As Object,methodName As String) As VMBottomNavigation
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -206,6 +206,8 @@ Sub ToString As String
 			vue.SetStateSingle($"${ID}menu2"$, False)
 			Dim dMenu As VMElement
 			dMenu.Initialize(vue, $"${ID}menu"$).SetTag("v-menu")
+			dMenu.SetStatic(bStatic)
+			dMenu.SetDesignMode(DesignMode)
 			dMenu.SetAttrSingle("ref", $"${ID}menu"$)
 			dMenu.SetVModel($"${ID}menu2"$)
 			dMenu.SetAttrSingle(":close-on-content-click", False)
@@ -215,16 +217,12 @@ Sub ToString As String
 			dMenu.SetAttrloose("offset-y")
 			dMenu.SetAttrSingle("min-width", "290px")
 			dMenu.SetAttrSingle("max-width", "290px")
-			dMenu.SetDesignMode(DesignMode)
 			'
 			Dim tmpl As VMTemplate
-			tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetSlotActivatorOn
-			tmpl.SetDesignMode(DesignMode)
+			tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetSlotActivatorOn
 			'
 			TextField.SetPrependIcon("access_time").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
 			TextField.SetVModel(vmodel)
-			TextField.SetDesignMode(DesignMode)
-			
 			TextField.Pop(tmpl.Template)
 			dMenu.SetText(tmpl.ToString)
 			'
@@ -242,6 +240,8 @@ Sub ToString As String
 		vue.SetStateSingle($"${ID}menu"$, False)
 		Dim dMenu As VMElement
 		dMenu.Initialize(vue, $"${ID}menu"$).SetTag("v-menu")
+		dMenu.SetStatic(bStatic)
+		dMenu.SetDesignMode(DesignMode)
 		dMenu.SetAttrSingle("ref", $"${ID}menu"$)
 		dMenu.SetVModel($"${ID}menu"$)
 		dMenu.SetAttrSingle(":close-on-content-click", False)
@@ -249,16 +249,13 @@ Sub ToString As String
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
 		dMenu.SetAttrSingle("min-width", "290px")
-		dMenu.SetDesignMode(DesignMode)
 		'
 		Dim tmpl As VMTemplate
-		tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetSlotActivatorOn
-		tmpl.SetDesignMode(DesignMode)
+		tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetSlotActivatorOn
 		'
 		
 		TextField.SetPrependIcon("event").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
 		TextField.SetVModel(vmodel)
-		TextField.SetDesignMode(DesignMode)
 		'
 		TextField.Pop(tmpl.Template)
 				'
@@ -272,9 +269,9 @@ Sub ToString As String
 		Dim btnCancel As VMButton
 		btnCancel.Initialize(vue, $"${ID}cancel"$, Me)
 		btnCancel.SetStatic(bStatic)
+		btnCancel.SetDesignMode(DesignMode)
 		btnCancel.SetTransparent(True)
 		btnCancel.SetColor("primary")
-		btnCancel.SetDesignMode(DesignMode)
 		btnCancel.setattrsingle("@click", $"${ID}menu = false"$)
 		btnCancel.SetLabel("Cancel")
 		
@@ -283,16 +280,14 @@ Sub ToString As String
 		Dim btnOk As VMButton
 		btnOk.Initialize(vue, $"${ID}ok"$, Me)
 		btnOk.SetStatic(bStatic)
+		btnOk.SetDesignMode(DesignMode)
 		btnOk.SetTransparent(True)
 		btnOk.SetColor("primary")
-		btnOk.SetDesignMode(DesignMode)
 		Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
 		btnOk.SetAttrSingle("@click", ssave)
 		btnOk.SetLabel("Ok")
 		
 		DateTimePicker.SetText(btnOk.ToString)
-			
-		'
 		dMenu.SetText(DateTimePicker.ToString)
 		
 		Return dMenu.tostring
@@ -810,11 +805,11 @@ Sub SetYearIcon(varYearIcon As String) As VMDateTimePicker
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMDateTimePicker
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -942,6 +937,7 @@ End Sub
 Sub SetDesignMode(b As Boolean) As VMDateTimePicker
 	DateTimePicker.SetDesignMode(b)
 	DesignMode = b
+	TextField.SetDesignMode(b)
 	Return Me
 End Sub
 

@@ -313,11 +313,11 @@ Sub SetVertical(varVertical As Boolean) As VMStepper
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMStepper
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMStepper
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim num As Int  'ignore
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(num))
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -406,6 +406,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Stepper.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMStepper
 Stepper.SetVisible(b)
 Return Me

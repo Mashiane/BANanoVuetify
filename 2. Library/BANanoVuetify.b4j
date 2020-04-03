@@ -389,7 +389,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("beautify.js")
 	BANano.Header.AddJavascriptFile("beautify-css.js")
 	BANano.Header.AddJavascriptFile("beautify-html.js")
-	
 	'
 	BANano.BuildAsB4XLib("3.03")
 	ExitApplication

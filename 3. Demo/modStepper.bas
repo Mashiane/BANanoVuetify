@@ -20,25 +20,25 @@ Sub Code
 	cont.Hide
 	cont.AddRows(4).AddColumns(2, 12, 6, 6, 6)
 	'
-	Dim stepper As VMStepper = vm.CreateStepper("a", Me)
+	Dim stepper As VMStepper = vm.CreateStepper("a", Me).SetOnChange(Me, "stepperChange")
 	stepper.AddStep("astep1", "Step 1", "Name of Step 1", True, Null)
 	stepper.AddStep("astep2", "Step 2", "Name of Step 2", True, Null)
 	stepper.AddStep("astep3", "Step 3", "Name of Step 3", True, Null)
 	stepper.AddToContainer(cont, 1, 1)
 	'
-	Dim stepper2 As VMStepper = vm.CreateStepper("b", Me)
+	Dim stepper2 As VMStepper = vm.CreateStepper("b", Me).SetOnChange(Me, "stepperChange")
 	stepper2.AddStep("bstep1", "Step 1", "", True, Null).SetStepComplete("bstep1",True)
 	stepper2.AddStep("bstep2", "Step 2", "", True, Null).SetStepComplete("bstep2", True)
 	stepper2.AddStep("bstep3", "Step 3", "", True, Null)
 	stepper2.AddToContainer(cont, 1, 2)
 	'
-	Dim stepper3 As VMStepper = vm.CreateStepper("c", Me).SetVertical(True)
+	Dim stepper3 As VMStepper = vm.CreateStepper("c", Me).SetVertical(True).SetOnChange(Me, "stepperChange")
 	stepper3.AddStep("cstep1", "Step 1", "", True, Null)
 	stepper3.AddStep("cstep2", "Step 2", "", True, Null)
 	stepper3.AddStep("cstep3", "Step 3", "", True, Null)
 	stepper3.AddToContainer(cont, 2, 1)
 	'	
-	Dim stepper4 As VMStepper = vm.CreateStepper("d", Me).SetVertical(True).SetAltLabels(True)
+	Dim stepper4 As VMStepper = vm.CreateStepper("d", Me).SetVertical(True).SetAltLabels(True).SetOnChange(Me, "stepperChange")
 	stepper4.AddStep("dstep1", "Step 1", "", True, Null)
 	stepper4.AddStep("dstep2", "Step 2", "", True, Null)
 	stepper4.AddStep("dstep3", "Step 3", "", True, Null)
@@ -48,4 +48,6 @@ Sub Code
 	vm.AddContainer(cont)
 End Sub
 
-
+Sub stepperChange(numx As Int)		'ignore
+	vm.ShowSnackBar(numx)
+End Sub

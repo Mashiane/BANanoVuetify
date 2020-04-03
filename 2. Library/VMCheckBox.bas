@@ -26,7 +26,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	CheckBox.typeOf = "checkbox"
 	CheckBox.fieldType = "bool"
 	bStatic = False
-	SetOnChange($"${ID}_change"$)
 	Return Me
 End Sub
 
@@ -852,11 +851,11 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCheck
 	Return Me
 End Sub
 
-Sub SetOnChange(methodName As String) As VMCheckBox
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

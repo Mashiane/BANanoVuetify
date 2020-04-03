@@ -345,11 +345,11 @@ Sub SetSlotPrepend(b As Boolean) As VMInput    'ignore
 End Sub
 
 '
-Sub SetOnChange(methodName As String) As VMInput
+Sub SetOnChange(EventHandler As Object, methodName As String) As VMInput
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(EventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, e)
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

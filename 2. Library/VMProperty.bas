@@ -27,6 +27,7 @@ Sub Class_Globals
 	Private contChecks As VMContainer
 	Private hasChecks As Boolean
 	Private xmodel As String
+	Private changeEvent As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMProperty
@@ -48,7 +49,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	hasChecks = False
 	contChecks.Initialize(vue, "checks", module).SetFluid(True)
 	xmodel = ""
+	changeEvent = $"${ID}_change"$
 	Return Me
+End Sub
+
+Sub RaiseChangeEvent
+	If SubExists(module, changeEvent) Then
+		BANano.CallSub(module, changeEvent, Null)
+	End If
 End Sub
 
 'IMPORTANT
@@ -623,32 +631,32 @@ Sub ToString As String
 				'
 				Dim w1 As VMTextField
 				w1.Initialize(vue, "txtwidth", module).SetStatic(True).SetClearable(True).Setlabel("Width")
-				w1.SetVModel("width").SetDense(True).SetOutlined(True)
+				w1.SetVModel("width").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				wcont.AddControlS(w1.TextField, w1.ToString, 1, 1, 4, 4, 4, 4)
 				'
 				Dim w2 As VMTextField
 				w2.Initialize(vue, "txtminwidth", module).SetStatic(True).SetClearable(True).Setlabel("Min Width")
-				w2.SetVModel("minwidth").SetDense(True).SetOutlined(True)
+					w2.SetVModel("minwidth").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				wcont.AddControlS(w2.TextField, w2.ToString, 1, 2, 4, 4, 4, 4)
 				'
 				Dim w3 As VMTextField
 				w3.Initialize(vue, "txtmaxwidth", module).SetStatic(True).SetClearable(True).Setlabel("Max Width")
-				w3.SetVModel("maxwidth").SetDense(True).SetOutlined(True)
+					w3.SetVModel("maxwidth").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				wcont.AddControlS(w3.TextField, w3.ToString, 1, 3, 4, 4, 4, 4)
 				'height
 				Dim h1 As VMTextField
 				h1.Initialize(vue, "txtheight", module).SetStatic(True).SetClearable(True).Setlabel("Height")
-				h1.SetVModel("height").SetDense(True).SetOutlined(True)
+					h1.SetVModel("height").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				wcont.AddControlS(h1.TextField, h1.ToString, 2, 1, 4, 4, 4, 4)
 					'
 				Dim h2 As VMTextField
 				h2.Initialize(vue, "txtminheight", module).SetStatic(True).SetClearable(True).Setlabel("Min Height")
-				h2.SetVModel("minheight").SetDense(True).SetOutlined(True)
+					h2.SetVModel("minheight").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				wcont.AddControlS(h2.TextField, h2.ToString, 2, 2, 4, 4, 4, 4)
 					'
 				Dim h3 As VMTextField
 				h3.Initialize(vue, "txtmaxheight", module).SetStatic(True).SetClearable(True).Setlabel("Max Height")
-				h3.SetVModel("maxheight").SetDense(True).SetOutlined(True)
+					h3.SetVModel("maxheight").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				wcont.AddControlS(h3.TextField, h3.ToString, 2, 3, 4, 4, 4, 4)
 				'
 				expanel.Container.AddControlS(wcont.Container, wcont.ToString, 1, 1, 12, 12, 12, 12)
@@ -667,52 +675,52 @@ Sub ToString As String
 				'
 				Dim rw As VMTextField
 				rw.Initialize(vue, "txtrow", module).SetStatic(True).SetClearable(True).Setlabel("Row")
-				rw.SetVModel("row").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					rw.SetVModel("row").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(rw.TextField, rw.ToString, 1, 1, 6, 6, 6, 6)
 				'
 				Dim cl As VMTextField
 				cl.Initialize(vue, "txtcol", module).SetStatic(True).SetClearable(True).Setlabel("Col")
-				cl.SetVModel("col").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					cl.SetVModel("col").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(cl.TextField, cl.ToString, 1, 2, 6, 6, 6, 6)
 					'
 				Dim os As VMTextField
 				os.Initialize(vue, "txtoffsetsmall", module).SetStatic(True).SetClearable(True).Setlabel("Offset Small")
-				os.SetVModel("offsetsmall").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					os.SetVModel("offsetsmall").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(os.TextField, os.ToString, 2, 1, 6, 6, 6, 6)
 					'
 				Dim om As VMTextField
 				om.Initialize(vue, "txtoffsetmedium", module).SetStatic(True).SetClearable(True).Setlabel("Offset Medium")
-				om.SetVModel("offsetmedium").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					om.SetVModel("offsetmedium").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(om.TextField, om.ToString, 2, 2, 6, 6, 6, 6)
 					'
 				Dim ol As VMTextField
 				ol.Initialize(vue, "txtoffsetlarge", module).SetStatic(True).SetClearable(True).Setlabel("Offset Large")
-				ol.SetVModel("offsetlarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					ol.SetVModel("offsetlarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(ol.TextField, ol.ToString, 3, 1, 6, 6, 6, 6)
 					'
 				Dim oxl As VMTextField
 				oxl.Initialize(vue, "txtoffsetxlarge", module).SetStatic(True).SetClearable(True).Setlabel("Offset XLarge")
-				oxl.SetVModel("offsetxlarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					oxl.SetVModel("offsetxlarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(oxl.TextField, oxl.ToString, 3, 2, 6, 6, 6, 6)
 				'				
 				Dim ss As VMTextField
 				ss.Initialize(vue, "txtsizesmall", module).SetStatic(True).SetClearable(True).Setlabel("Size Small")
-				ss.SetVModel("sizesmall").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					ss.SetVModel("sizesmall").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(ss.TextField, ss.ToString, 4, 1, 6, 6, 6, 6)
 				'
 				Dim sm As VMTextField
 				sm.Initialize(vue, "txtsizemedium", module).SetStatic(True).SetClearable(True).Setlabel("Size Medium")
-				sm.SetVModel("sizemedium").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					sm.SetVModel("sizemedium").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(sm.TextField, sm.ToString, 4, 2, 6, 6, 6, 6)
 				'
 				Dim sl As VMTextField
 				sl.Initialize(vue, "txtsizelarge", module).SetStatic(True).SetClearable(True).Setlabel("Size Large")
-				sl.SetVModel("sizelarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					sl.SetVModel("sizelarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(sl.TextField, sl.ToString, 5, 1, 6, 6, 6, 6)
 				'
 				Dim sxl As VMTextField
 				sxl.Initialize(vue, "txtsizexlarge", module).SetStatic(True).SetClearable(True).Setlabel("Size XLarge")
-				sxl.SetVModel("sizexlarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					sxl.SetVModel("sizexlarge").SetType("number").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 				scont.AddControlS(sxl.TextField, sxl.ToString, 5, 2, 6, 6, 6, 6)
 				'
 				expanel.Content.Container.AddControlS(scont.Container, scont.ToString, 1, 1, 12, 12, 12, 12)
@@ -727,6 +735,7 @@ Sub ToString As String
 				cbo.SetDense(True)
 				cbo.SetOutlined(True)
 				cbo.SetVShow(nc.vmodel & "show")
+				cbo.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				Dim scombo As String = cbo.tostring
 				expanel.Content.Container.AddControlS(cbo.Combo, scombo, 1, 1, 12, 12, 12, 12)
@@ -754,6 +763,7 @@ Sub ToString As String
 				sld.RemoveAttr("ref")
 				sld.SetDense(True)
 				sld.SetVShow(nc.vmodel & "show")
+					sld.SetOnClick("RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(sld.Slider, sld.ToString, 1, 1, 12, 12, 12, 12)
 			Case "label"
@@ -777,6 +787,7 @@ Sub ToString As String
 				sw.RemoveAttr("ref")
 				sw.SetDense(True)
 				sw.SetVShow(nc.vmodel & "show")
+				sw.SetOnChange(Me,"RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(sw.CheckBox, sw.ToString, 1, 1, 12, 12, 12, 12)
 			Case "iconbutton"
@@ -793,29 +804,34 @@ Sub ToString As String
 				pwd.SetPassword(True, True)
 				pwd.SetVShow(nc.vmodel & "show")
 				vue.SetData(nc.vmodel & "show", True)
+				pwd.SetOnChange(Me, "RaiseChangeEvent")
 				expanel.Container.AddControlS(pwd.TextField, pwd.ToString, 1, 1, 12, 12, 12, 12)
 			Case "text"
 				Dim text As VMTextField = BuildTextField(nc)
 				text.SetType("text")
 				text.SetVShow(nc.vmodel & "show")
+				text.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(text.TextField, text.ToString, 1, 1, 12, 12, 12, 12)
 			Case "number"
 				Dim numx As VMTextField = BuildTextField(nc)
 				numx.SetType("number")
 				numx.SetVShow(nc.vmodel & "show")
+				numx.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(numx.TextField, numx.ToString, 1, 1, 12, 12, 12, 12)
 			Case "tel"
 				Dim tel As VMTextField = BuildTextField(nc)
 				tel.SetType("tel")
 				tel.SetVShow(nc.vmodel & "show")
+				tel.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(tel.TextField, tel.ToString, 1, 1, 12, 12, 12, 12)
 			Case "email"
 				Dim email As VMTextField = BuildTextField(nc)
 				email.SetType("email")
 				email.SetVShow(nc.vmodel & "show")
+				email.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(email.TextField, email.ToString, 1, 1, 12, 12, 12, 12)
 			Case "textarea"
@@ -830,6 +846,7 @@ Sub ToString As String
 				txta.RemoveAttr("ref")
 				txta.SetOutlined(True)
 				txta.SetVShow(nc.vmodel & "show")
+				txta.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(txta.TextField, txta.ToString, 1, 1, 12, 12, 12, 12)
 			Case "checkbox"
@@ -845,6 +862,7 @@ Sub ToString As String
 				chk.SetDense(True)
 				chk.RemoveAttr("ref")
 				chk.SetVShow(nc.vmodel & "show")
+				chk.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(chk.CheckBox, chk.ToString, 1, 1, 12, 12, 12, 12)
 			Case "radiogroup"
@@ -858,6 +876,7 @@ Sub ToString As String
 				rg.SetDense(True)
 				rg.RemoveAttr("ref")
 				rg.SetVShow(nc.vmodel & "show")
+				rg.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(rg.RadioGroup, rg.ToString, 1, 1, 12, 12, 12, 12)
 			Case "timepicker"
@@ -873,6 +892,7 @@ Sub ToString As String
 				tp.SetDense(True)
 				tp.SetOutlined(True)
 				tp.SetVShow(nc.vmodel & "show")
+				tp.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(tp.DateTimePicker, tp.ToString, 1, 1, 12, 12, 12, 12)
 			Case "datepicker"
@@ -888,6 +908,7 @@ Sub ToString As String
 				dp.SetDense(True)
 				dp.SetOutlined(True)
 				dp.SetVShow(nc.vmodel & "show")
+				dp.SetOnChange(Me, "RaiseChangeEvent")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(dp.DateTimePicker, dp.ToString, 1, 1, 12, 12, 12, 12)
 			End Select

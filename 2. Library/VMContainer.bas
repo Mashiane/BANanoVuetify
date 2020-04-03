@@ -102,6 +102,539 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetAutoComplete
+	el.SetStatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.SetPlaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.SetMultiple(bMultiple)
+	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
+	el.SetVModel(vmodel)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+
+Sub CreateLabel(sID As String) As VMLabel
+	Dim el As VMLabel
+	el.Initialize(vue, sID)
+	Return el
+End Sub
+
+Sub CreateImage(img As String, eventHandler As Object) As VMImage
+	Dim el As VMImage
+	el.Initialize(vue, img, eventHandler)
+	el.Image.typeof = "image"
+	Return el
+End Sub
+
+Sub NewImage(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, src As String, salt As String, swidth As String, sheight As String) As VMImage
+	vmodel = vmodel.ToLowerCase
+	Dim el As VMImage = CreateImage(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.setstatic(bStatic)
+	el.SetWidth(swidth)
+	el.SetHeight(sheight)
+	el.SetAlt(salt)
+	el.SetVModel(vmodel, src)
+	Return el
+End Sub
+'
+'
+Sub NewLabel(bStatic As Boolean,sname As String, vmodel As String, sSize As String, sText As String) As VMLabel
+	vmodel = vmodel.tolowercase
+	vue.SetStateSingle(vmodel, sText)
+	Dim el As VMLabel = CreateLabel(sname)
+	el.SetDesignMode(DesignMode)
+	el.setstatic(bStatic)
+	el.SetTag(sSize)
+	el.SetVModel(vmodel, sText)
+	Select Case sSize
+		Case vue.SIZE_BLOCKQUOTE
+			el.AddClass("blockquote")
+	End Select
+	Return el
+End Sub
+
+
+Sub CreateInfoBox(sid As String, eventHandler As Object) As VMInfoBox
+	Dim el As VMInfoBox
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+Sub CreateIcon(sid As String, moduleObj As Object) As VMIcon
+	Dim el As VMIcon
+	el.Initialize(vue, sid, moduleObj)
+	Return el
+End Sub
+
+Sub NewIcon(eventHandler As Object,bStatic As Boolean,sname As String, sIcon As String, sSize As String, scolor As String, sintensity As String) As VMIcon
+	Dim el As VMIcon = CreateIcon(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetText(sIcon)
+	el.SetAttributes(Array(sSize))
+	el.SetColorIntensity(scolor,sintensity)
+	Return el
+End Sub
+
+
+Sub NewInfoBox(eventHandler As Object, bStatic As Boolean, sname As String, sText As String, sIcon As String, sIconBackgroundColor As String, iStart As String, iFinish As String) As VMInfoBox
+	Dim el As VMInfoBox = CreateInfoBox(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	'el.setstatic(bStatic)
+	el.InfoBox.typeof = "infobox"
+	el.InfoBox.fieldType = "string"
+	If iStart <> Null Then el.SetFrom(iStart)
+	If iFinish <> Null Then el.SetTo(iFinish)
+	If sIcon <> Null Then el.SetIcon(sIcon)
+	If sIconBackgroundColor <> Null Then el.SetIconBackgroundColor(sIconBackgroundColor)
+	el.SetText(sText)
+	If iFinish <> Null Then el.Countit.SetText(iFinish)
+	el.SetDuration("1000")
+	Return el
+End Sub
+
+
+Sub CreateSlider(sid As String, eventHandler As Object) As VMSlider
+	Dim el As VMSlider
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+''
+Sub NewSlider(eventHandler As Object,bStatic As Boolean,sid As String, vmodel As String, slabel As String, iMinValue As String, iMaxValue As String,iTabIndex As Int) As VMSlider
+	Dim el As VMSlider = CreateSlider(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetMin(iMinValue)
+	el.SetMax(iMaxValue)
+	el.SetLabel(slabel)
+	el.SetVModel(vmodel)
+	el.SetTabIndex(iTabIndex)
+	Return el
+End Sub
+
+
+Sub CreateSwitch(sid As String, eventHandler As Object) As VMCheckBox
+	Dim el As VMCheckBox
+	el.Initialize(vue, sid, eventHandler)
+	el.SetSwitch
+	Return el
+End Sub
+
+Sub NewEmail(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, serrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = NewTextField(eventHandler, bStatic, sid, vmodel, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, serrorText, iTabIndex)
+	el.SetType("email")
+	Return el
+End Sub
+
+Sub NewSwitch(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, svalue As Object, sunchecked As Object, bPrimary As Boolean, iTabIndex As Int) As VMCheckBox
+	Dim el As VMCheckBox = CreateSwitch(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetVModel(vmodel)
+	el.Setlabel(slabel)
+	el.SetValue(svalue)
+	'el.SetTrueValue(svalue)
+	el.SetPrimary(bPrimary)
+	'el.SetFalseValue(sunchecked)
+	el.SetUncheckedValue(sunchecked)
+	el.SetTabIndex(iTabIndex)
+	vue.SetData(vmodel, sunchecked)
+	Return el
+End Sub
+
+
+Sub CreateRadioGroup(sid As String, eventHandler As Object) As VMRadioGroup
+	Dim el As VMRadioGroup
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+'
+Sub NewRadioGroup(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, svalue As Object, optionsm As Map, bShowLabel As Boolean, bLabelOnTop As Boolean, iTabIndex As Int) As VMRadioGroup
+	Dim el As VMRadioGroup = CreateRadioGroup(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetVModel(vmodel)
+	el.Setlabel(slabel)
+	el.SetOptions(optionsm)
+	el.SetTabIndex(iTabIndex)
+	vue.SetData(vmodel, svalue)
+	If bShowLabel = False Then el.SetLabel("")
+	If bLabelOnTop Then
+		el.SetColumn(bLabelOnTop)
+	Else
+		el.SetRow(True)
+	End If
+	Return el
+End Sub
+
+Sub NewSelectDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.SetPlaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.SetMultiple(bMultiple)
+	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
+	el.SetVModel(vmodel)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+'use select with map
+Sub NewSelectOptions(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.Setlabel(sLabel)
+	el.Setrequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.Setplaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.Setmultiple(bMultiple)
+	el.SetVModel(vmodel)
+	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetComboBox
+	el.setstatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.SetPlaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.SetMultiple(bMultiple)
+	el.SetVModel(vmodel)
+	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+'use select with map
+Sub NewComboOptions(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetComboBox
+	el.SetStatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.Setplaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.Setmultiple(bMultiple)
+	el.SetVModel(vmodel)
+	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+'
+
+Sub CreateFABButton(sid As String,moduleObj As Object, iconName As String) As VMButton
+	Dim el As VMButton
+	el.Initialize(vue, sid, moduleObj)
+	el.SetFabButton(iconName)
+	Return el
+End Sub
+
+Sub NewIconButton(eventHandler As Object,bStatic As Boolean,sname As String, iconName As String, sColor As String, sTooltip As String) As VMButton
+	Dim el As VMButton = CreateButton(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetIconButton(iconName)
+	el.SetColor(sColor)
+	el.SetTooltip(sTooltip)
+	Return el
+End Sub
+
+Sub NewFABButton(eventHandler As Object,bStatic As Boolean,sname As String, iconName As String, sColor As String, sTooltip As String) As VMButton
+	Dim el As VMButton = CreateFABButton(sname, eventHandler, iconName)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetColor(sColor)
+	el.SetTooltip(sTooltip)
+	Return el
+End Sub
+
+Sub NewH1(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "h1", sText)
+End Sub
+
+Sub NewH2(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "h2", sText)
+End Sub
+
+Sub NewH3(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "h3", sText)
+End Sub
+
+Sub NewH4(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "h4", sText)
+End Sub
+
+Sub NewH5(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname,sname, "h5", sText)
+End Sub
+
+Sub NewH6(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "h6", sText)
+End Sub
+
+Sub NewP(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "p", sText)
+End Sub
+
+Sub NewSPAN(bstatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bstatic,sname, sname, "span", sText)
+End Sub
+
+Sub NewBLOCKQUOTE(bStatic As Boolean,sname As String, sText As String) As VMLabel
+	Return NewLabel(bStatic,sname, sname, "blockquote", sText)
+End Sub
+
+
+Sub NewRadioGroupDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, svalue As String, sourceTable As String, sourceField As String, displayField As String, bShowLabel As Boolean, bLabelOnTop As Boolean, iTabIndex As Int) As VMRadioGroup
+	Dim el As VMRadioGroup = CreateRadioGroup(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetVModel(vmodel)
+	el.Setlabel(sLabel)
+	el.SetTabIndex(iTabIndex)
+	el.SetDataSource(sourceTable, sourceField, displayField)
+	vue.SetData(vmodel, svalue)
+	If bShowLabel = False Then el.SetLabel("")
+	If bLabelOnTop Then
+		el.SetColumn(bLabelOnTop)
+	Else
+		el.SetRow(True)
+	End If
+	Return el
+End Sub
+
+
+Sub CreateCheckBox(sid As String, eventHandler As Object) As VMCheckBox
+	Dim el As VMCheckBox
+	el.Initialize(vue, sid, eventHandler)	
+	Return el
+End Sub
+
+Sub NewCheckBox(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, svalue As Object, sunchecked As Object, bPrimary As Boolean, iTabIndex As Int) As VMCheckBox
+	Dim el As VMCheckBox = CreateCheckBox(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.SetVModel(vmodel)
+	el.SetValue(svalue)
+	'el.SetTrueValue(svalue)
+	el.Setlabel(slabel)
+	el.SetPrimary(bPrimary)
+	'el.SetFalseValue(sunchecked)
+	el.SetTabIndex(iTabIndex)
+	el.SetUncheckedValue(sunchecked)
+	vue.SetData(vmodel, sunchecked)
+	Return el
+End Sub
+
+
+Sub CreateDateTimePicker(sid As String, eventHandler As Object) As VMDateTimePicker
+	Dim el As VMDateTimePicker
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+Sub NewDatePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, bRequired As Boolean, sPlaceholder As String, sHint As String, sErrorText As String, iTabIndex As Int) As VMDateTimePicker
+	Dim el As VMDateTimePicker = CreateDateTimePicker(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.setstatic(bStatic)
+	el.Setlabel(slabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.SetVModel(vmodel)
+	el.SetPlaceHolder(sPlaceholder)
+	el.SetHint(sHint)
+	el.SetErrorText(sErrorText)
+	el.SetForInput
+	Return el
+End Sub
+'
+Sub NewTimePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmodel As String, slabel As String, bRequired As Boolean, sPlaceholder As String, sHint As String, sErrorText As String, iTabIndex As Int) As VMDateTimePicker
+	Dim el As VMDateTimePicker = CreateDateTimePicker(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetTimePicker
+	el.setstatic(bStatic)
+	el.Setlabel(slabel)
+	el.SetVModel(vmodel)
+	el.SetRequired(bRequired)
+	el.SetPlaceHolder(sPlaceholder)
+	el.SetHint(sHint)
+	el.SetTabIndex(iTabIndex)
+	el.SetErrorText(sErrorText)
+	el.SetForInput
+	Return el
+End Sub
+
+
+Sub CreateTextField(sid As String, eventHandler As Object) As VMTextField
+	Dim el As VMTextField
+	el.Initialize(vue, sid,eventHandler)
+	Return el
+End Sub
+
+'
+'added for back ward compatibility
+Sub NewText(eventHandler As Object,bStatic As Boolean,sid As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Return NewTextField(eventHandler,bStatic,sid, vmodel, slabel, splaceholder, bRequired, sIcon, iMaxLen, shelpertext, sErrorText, iTabIndex)
+End Sub
+
+Sub NewTextField(eventHandler As Object,bStatic As Boolean,sid As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateTextField(sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetStatic(bStatic)
+	el.Setlabel(slabel)
+	el.SetRequired(bRequired)
+	el.SetPrependIcon(sIcon)
+	If iMaxLen > 0 Then
+		el.SetMaxLength(iMaxLen)
+		el.SetCounter(True)
+	End If
+	el.SetPlaceHolder(splaceholder)
+	el.SetHint(shelpertext)
+	el.SetTabIndex(iTabIndex)
+	el.SetVModel(vmodel)
+	el.SetErrorText(sErrorText)
+	el.SetType("text")
+	Return el
+End Sub
+'
+Sub NewTel(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = NewTextField(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, sErrorText, iTabIndex)
+	el.SetType("tel")
+	Return el
+End Sub
+
+Sub NewNumber(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = NewTextField(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, sErrorText, iTabIndex)
+	el.SetType("number")
+	Return el
+End Sub
+
+Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, bAutoGrow As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateTextField(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetTextArea
+	el.setstatic(bStatic)
+	el.Setlabel(slabel)
+	el.Setrequired(bRequired)
+	el.SetPrependIcon(sIcon)
+	If iMaxLen > 0 Then
+		el.SetCounter(iMaxLen)
+		el.SetMaxLength(iMaxLen)
+	End If
+	el.SetPlaceHolder(splaceholder)
+	el.SetHint(shelpertext)
+	el.SetTabIndex(iTabIndex)
+	el.SetErrorText(sErrorText)
+	el.SetAutoGrow(bAutoGrow)
+	el.SetVModel(vmodel)
+	Return el
+End Sub
+
+'
+Sub NewPassword(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, bToggle As Boolean, sIcon As String, iMaxLen As Int, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = NewTextField(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, sIcon, iMaxLen, shelpertext, sErrorText, iTabIndex)
+	el.SetPassword(True, bToggle)
+	Return el
+End Sub
+
+'backward compatibility
+Sub NewFile(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Return NewFileInput(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
+End Sub
+'
+Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateFileInput(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.setstatic(bStatic)
+	el.SetHint(shelperText)
+	el.SetErrorText(sErrorText)
+	el.SetTabIndex(iTabIndex)
+	el.SetPlaceHolder(splaceholder)
+	el.SetVModel(vmodel)
+	el.Setlabel(slabel)
+	el.SetRequired(bRequired)
+	vue.SetData(vmodel, Null)
+	Return el
+End Sub
+'
+
+Sub CreateFileInput(sid As String, eventHandler As Object) As VMTextField
+	Dim el As VMTextField
+	el.Initialize(vue, sid, eventHandler)
+	el.SetFileInput
+	Return el
+End Sub
+
+'use select with map
+Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As String,vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, optionsm As Map, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
+	Dim el As VMSelect = CreateSelect(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.SetAutoComplete
+	el.setstatic(bStatic)
+	el.Setlabel(sLabel)
+	el.SetRequired(bRequired)
+	el.SetTabIndex(iTabIndex)
+	el.Setplaceholder(sPlaceHolder)
+	el.SetHint(sHelperText)
+	el.Setmultiple(bMultiple)
+	el.SetVModel(vmodel)
+	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
+	el.SetErrorText(sErrorText)
+	Return el
+End Sub
+
+
+Sub NewButton(eventHandler As Object,bStatic As Boolean,sname As String, sLabel As String, bRaised As Boolean, bPrimary As Boolean, bAccent As Boolean, bFitWidth As Boolean) As VMButton
+	Dim el As VMButton = CreateButton(sname, eventHandler)
+	el.SetDesignMode(DesignMode)
+	el.setstatic(bStatic)
+	el.SetLabel(sLabel)
+	If bRaised = False Then el.SetTransparent(True)
+	If bPrimary Then el.SetPrimary(bPrimary)
+	If bAccent Then el.SetColor("accent")
+	If bFitWidth Then el.SetBlock(True)
+	Return el
+End Sub
+
+
+Sub CreateSelect(sid As String, eventHandler As Object) As VMSelect
+	Dim el As VMSelect
+	el.Initialize(vue,sid,eventHandler)
+	Return el
+End Sub
+
+
+Sub CreateButton(sid As String,moduleObj As Object) As VMButton
+	Dim el As VMButton
+	el.Initialize(vue, sid, moduleObj)
+	el.SetType("button")
+	Return el
+End Sub
+
 Sub SetHasBorder(b As Boolean) As VMContainer
 	HasBorder = b
 	Return Me
