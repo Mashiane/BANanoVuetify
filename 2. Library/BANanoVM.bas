@@ -258,6 +258,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	For e = 0 To 24
 		Elevation.Put(e, e)
 	Next
+	Elevation.Put("", "None")
 	InitColors
 	InitTransition
 	'
@@ -285,6 +286,7 @@ Sub InitTransition
 	For Each sl As String In tran
 		Transition.Put(sl, sl)
 	Next
+	Transition.Put("", "None")
 End Sub
 
 'getElementById
@@ -1894,6 +1896,10 @@ Sub CreateSystemBar(sid As String, moduleObj As Object) As VMToolBar
 	el.Initialize(vue, sid, moduleObj)
 	el.SetSystemBar(True)
 	Return el
+End Sub
+
+Sub MidString2(Text As String, Start As Int) As String
+	Return vue.MidString2(Text, Start)
 End Sub
 
 Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar

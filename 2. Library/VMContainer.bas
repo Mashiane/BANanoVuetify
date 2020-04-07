@@ -174,6 +174,7 @@ End Sub
 Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar
 	Dim el As VMToolBar
 	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	el.SetToolBar(True)
 	Return el
 End Sub

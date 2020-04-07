@@ -190,7 +190,7 @@ End Sub
 Sub SetBottom(varBottom As Boolean) As VMBadge
 	If varBottom = False Then Return Me
 	HasContent = True
-	If bStatic = False Then
+	If bStatic Then
 		SetAttrSingle("bottom", varBottom)
 		Return Me
 	End If

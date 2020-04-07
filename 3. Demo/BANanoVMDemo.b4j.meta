@@ -154,6 +154,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modAutoComplete,Card_2,121,0,modGMap,Code,36,0,modMessageBoard,Code,16,0,modDesigner,Process_Globals,181,0,modDesigner,Init,276,0,modDesigner,CreateUX,547,2,modDesigner,Design_Container,1305,0,modDesigner,optMenuitems_click,1488,0,modDesigner,ItemDrop,2129,0,modDesigner,PropertyBag_Container,2648,0,Main,AppStart,31,0
+NavigationStack=modDesigner,BuildBooleans,3009,6,modDesigner,BuildStrings,2978,4,modDesigner,CodeLine,1660,0,modDesigner,CodeLine2,1675,0,modDesigner,BuildDrawer,1690,0,modDesigner,btnRefresh_click,1693,0,modDesigner,CodeLine1,1686,0,modDesigner,Design_ToolBar,1511,6,Main,AppStart,19,0,Main,Process_Globals,8,0
 SelectedBuild=0
 VisibleModules=

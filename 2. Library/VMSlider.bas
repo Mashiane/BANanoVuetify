@@ -267,7 +267,7 @@ End Sub
 'set error
 Sub SetError(varError As Boolean) As VMSlider
 	If varError = False Then Return Me
-	If bStatic = False Then
+	If bStatic Then
 		SetAttrSingle("error", varError)
 		Return Me
 	End If

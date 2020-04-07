@@ -90,7 +90,7 @@ End Sub
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMToolBar
 	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	If bStatic = False Then
+	If bStatic Then
 		SetAttrSingle("color", scolor)
 		Return Me
 	End If
@@ -837,6 +837,7 @@ Sub SetDesignMode(b As Boolean) As VMToolBar
 	Hamburger.SetDesignMode(b)
 	Extension.SetDesignMode(b)
 	Tabs.SetDesignMode(b)
+	Logo.SetDesignMode(b)
 	Return Me
 End Sub
 

@@ -25,6 +25,7 @@ Sub Process_Globals
 	Private pbimage As VMProperty			'done
 	Private pbparallax As VMProperty
 	Private pbcontainer As VMProperty
+	Private pbtoolbar As VMProperty
 	Private lstBags As List
 	Private avatarMap As Map
 	Private controltypes As Map
@@ -187,6 +188,35 @@ Sub Process_Globals
 	Private bisfluid As Boolean
 	Private bisshowmatrix As Boolean
 	Private bisnogutters As Boolean
+	'
+	Private sextensionheight As String
+	Private sscrolltarget As String
+	Private sscrollthreshold As String
+	Private slogourl As String
+	Private stitleclass As String
+	Private sbartype As String
+	Private slogowidth As String
+	Private slogoheight As String
+	Private bishamburger As Boolean
+	Private bisabsolute As Boolean
+	Private bisclippedleft As Boolean
+	Private bisclippedright As Boolean
+	Private bisclippedleft As Boolean
+	Private biscollapse As Boolean
+	Private biscollapseonscroll As Boolean
+	Private biselevateonscroll As Boolean
+	Private bisextended As Boolean
+	Private bisfadeimageonscroll As Boolean
+	Private bisfixed As Boolean
+	Private bisfloating As Boolean
+	Private bishideonscroll As Boolean
+	Private bisinvertedscroll As Boolean
+	Private bisprominent As Boolean
+	Private bisscrolloffscreen As Boolean
+	Private bisshort As Boolean
+	Private bisshrinkonscroll As Boolean
+	Private bisvisible As Boolean
+	Private bislogovisible As Boolean
 End Sub
 
 Sub Init
@@ -207,6 +237,7 @@ Sub Init
 	lstBags.Add("pbimage")
 	lstBags.add("pbparallax")
 	lstBags.add("pbcontainer")
+	lstBags.add("pbtoolbar")
 	'
 	avatarMap.initialize
 	avatarMap.put("text", "./assets/text.png")
@@ -231,6 +262,7 @@ Sub Init
 	avatarMap.put("icon", "./assets/icon.png")
 	avatarMap.put("parallax", "./assets/carousel.png")
 	avatarMap.put("container", "./assets/container.png")
+	avatarMap.put("toolbar", "./assets/toolbar.png")
 	'
 	vm.Initialize(Me, Main.appname)
 	vm.setdata("showmatrix", True)
@@ -319,6 +351,7 @@ Sub Init
 	PropertyBag_Button
 	PropertyBag_Parallax
 	PropertyBag_Container
+	PropertyBag_Toolbar
 	'
 	AddPages
 	vm.UX
@@ -495,9 +528,17 @@ Sub CreateUX
 		stooltip = mattr.getdefault("tooltip", "")
 		scolor = mattr.get("color")
 		sintensity = mattr.get("intensity")
+		If scolor = "undefined" Then scolor = ""
+		If scolor = "none" Then scolor = ""
+		If sintensity = "undefined" Then sintensity = ""
+		If sintensity = "none" Then sintensity = ""
 		'
 		stextcolor = mattr.getdefault("textcolor", "")
 		stextintensity = mattr.getdefault("textintensity", "")
+		If stextcolor = "undefined" Then stextcolor = ""
+		If stextcolor = "none" Then stextcolor = ""
+		If stextintensity = "undefined" Then stextintensity = ""
+		If stextintensity = "none" Then stextintensity = ""
 		'
 		ssrc = mattr.getdefault("src", "")
 		slazysrc = mattr.getdefault("lazysrc", "")
@@ -553,10 +594,41 @@ Sub CreateUX
 		bisfluid = YesNoToBoolean(mattr.getdefault("isfluid", "No"))
 		bisshowmatrix = YesNoToBoolean(mattr.getdefault("isshowmatrix", "No"))
 		bisnogutters = YesNoToBoolean(mattr.getdefault("isnogutters", "No"))
-					
+		'
+		sextensionheight = mattr.getdefault("extensionheight", "")
+		sscrolltarget = mattr.getdefault("scrolltarget", "")
+		sscrollthreshold = mattr.getdefault("scrollthreshold", "")
+		slogourl = mattr.getdefault("logourl", "")
+		stitleclass = mattr.getdefault("titleclass", "")
+		sbartype = mattr.getdefault("bartype","tool")
+		slogowidth = mattr.getdefault("logowidth", "46px")
+		slogoheight = mattr.getdefault("logoheight","46px")
+		bishamburger = YesNoToBoolean(mattr.getdefault("ishamburger", "No"))
+		bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+		bisclippedleft = YesNoToBoolean(mattr.getdefault("isclippedleft", "No"))
+		bisclippedright = YesNoToBoolean(mattr.getdefault("isclippedright", "No"))
+		bisclippedleft = YesNoToBoolean(mattr.getdefault("isclippedleft", "No"))
+		biscollapse = YesNoToBoolean(mattr.getdefault("iscollapse", "No"))
+		biscollapseonscroll = YesNoToBoolean(mattr.getdefault("iscollapseonscroll", "No"))
+		biselevateonscroll = YesNoToBoolean(mattr.getdefault("iselevateonscroll", "No"))
+		bisextended = YesNoToBoolean(mattr.getdefault("isextended", "No"))
+		bisfadeimageonscroll = YesNoToBoolean(mattr.getdefault("isfadeimageonscroll", "No"))
+		bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+		bisfloating = YesNoToBoolean(mattr.getdefault("isfloating", "No"))
+		bishideonscroll = YesNoToBoolean(mattr.getdefault("ishideonscroll", "No"))
+		bisinvertedscroll = YesNoToBoolean(mattr.getdefault("isinvertedscroll", "No"))
+		bisprominent = YesNoToBoolean(mattr.getdefault("isprominent", "No"))
+		bisscrolloffscreen = YesNoToBoolean(mattr.getdefault("isscrolloffscreen", "No"))
+		bisshort = YesNoToBoolean(mattr.getdefault("isshort", "No"))
+		bisshrinkonscroll = YesNoToBoolean(mattr.getdefault("isshrinkonscroll", "No"))
+		bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+		bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
+							
 		bStatic = True
 		'
 		Select Case controltype
+			Case "toolbar", "appbar", "systembar"
+				Design_ToolBar
 			Case "container"
 				Design_Container
 			Case "parallax"
@@ -1358,6 +1430,130 @@ Sub Design_Image
 	'
 End Sub
 
+Sub Design_ToolBar
+	Dim tbl As VMToolBar = ui.CreateToolbar("tbl" & sname, Me)
+	tbl.SetStatic(True)
+	Select Case sbartype
+	Case "app"
+		tbl.SetAppBar(True)
+	Case "tool"
+		tbl.SetToolBar(True)
+	Case "sys"
+		tbl.SetSystemBar(True)
+	End Select
+	'
+	tbl.SetExtensionHeight(sextensionheight)
+	tbl.SetScrollTarget(sscrolltarget)
+	tbl.SetScrollThreshold(sscrollthreshold)
+	tbl.SetSrc(ssrc)
+	tbl.SetElevation(selevation)
+	'
+	If bishamburger Then tbl.AddHamburger
+	'
+	If bislogovisible Then
+		tbl.Logo.SetBorderRadius(sborderradius)
+		tbl.Logo.SetBorderWidth(sborderwidth)
+		tbl.Logo.SetBorderColor(sbordercolor)
+		tbl.Logo.SetBorderStyle(sborderstyle)
+		tbl.Logo.SetSize(slogowidth, slogoheight)
+		tbl.AddLogo(slogourl)
+	End If
+	'
+	tbl.AddTitle(stitle, stitleclass)
+	tbl.SetColorIntensity(scolor, sintensity)
+	'
+	tbl.SetMaxWidth(smaxwidth)
+	tbl.SetWidth(swidth)
+	tbl.SetMinWidth(sminwidth)
+	'
+	tbl.SetMinHeight(sminheight)
+	tbl.SetMaxHeight(smaxheight)
+	tbl.SetHeight(sheight)
+	'
+	tbl.Setdense(bisdense)
+	tbl.Setdark(bisdark)
+	tbl.Setabsolute(bisabsolute)
+	tbl.Setclippedleft(bisclippedleft)
+	tbl.Setclippedright(bisclippedright)
+	tbl.Setclippedleft(bisclippedleft)
+	tbl.Setcollapse(biscollapse)
+	tbl.Setcollapseonscroll(biscollapseonscroll)
+	tbl.Setelevateonscroll(biselevateonscroll)
+	tbl.Setextended(bisextended)
+	tbl.SetFadeImgOnScroll(bisfadeimageonscroll)
+	tbl.Setfixed(bisfixed)
+	tbl.Setfloating(bisfloating)
+	tbl.Sethideonscroll(bishideonscroll)
+	tbl.Setinvertedscroll(bisinvertedscroll)
+	tbl.Setprominent(bisprominent)
+	tbl.Setscrolloffscreen(bisscrolloffscreen)
+	tbl.Setshort(bisshort)
+	tbl.Setshrinkonscroll(bisshrinkonscroll)
+	tbl.Setvisible(bisvisible)
+				
+	ui.AddControl(tbl.toolbar, tbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim tbl${sname} As VMToolBar = ui.CreateToolBar("tbl${sname}", Me)"$).append(CRLF)
+	Select Case sbartype
+	Case "app"
+		CodeLine(sb, True, "b", "tbl", sname, "SetAppBar")
+	Case "tool"
+		CodeLine(sb, True, "b", "tbl", sname, "SetToolBar")
+	Case "sys"
+		CodeLine(sb, True, "b", "tbl", sname, "SetSystemBar")
+	End Select
+	'
+	CodeLine1(sb, bishamburger, "b", "tbl", sname, "AddHamburger")
+	If bislogovisible Then
+		CodeLine(sb, sborderradius, "s", "tbl", sname, "Logo.SetBorderRadius")
+		CodeLine(sb, sborderwidth, "s", "tbl", sname, "Logo.SetBorderWidth")
+		CodeLine(sb, sbordercolor, "s", "tbl", sname, "Logo.SetBorderColor")
+		CodeLine(sb, sborderstyle, "s", "tbl", sname, "Logo.SetBorderStyle")
+		CodeLine2(sb, slogowidth, slogoheight, "s", "tbl", sname, "Logo.SetSize")
+		CodeLine1(sb, slogourl, "s", "tbl", sname, "AddLogo")
+	End If
+	
+	CodeLine(sb, sextensionheight, "s", "tbl", sname, "SetExtensionHeight")
+	CodeLine(sb, sscrolltarget, "s", "tbl", sname, "SetScrollTarget")
+	CodeLine(sb, sscrollthreshold, "s", "tbl", sname, "SetScrollThreshold")
+	CodeLine(sb, ssrc, "s", "tbl", sname, "SetSrc")
+	CodeLine(sb, selevation, "s", "tbl", sname, "SetElevation")
+	'
+	CodeLine(sb, swidth, "s", "tbl", sname, "SetWidth")
+	CodeLine(sb, sminwidth, "s", "tbl", sname, "SetMinWidth")
+	CodeLine(sb, smaxwidth, "s", "tbl", sname, "SetMaxWidth")
+	CodeLine(sb, sheight, "s", "tbl", sname, "SetHeight")
+	CodeLine(sb, sminheight, "s", "tbl", sname, "SetMinHeight")
+	CodeLine(sb, smaxheight, "s", "tbl", sname, "SetMaxHeight")
+	'
+	CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
+	CodeLine2(sb, scolor, sintensity, "s", "tbl", sname, "SetColorIntensity")
+	
+	CodeLine(sb, bisdense, "b", "tbl", sname, "SetDense")
+	CodeLine(sb, bisdark, "b", "tbl", sname, "SetDark")
+	CodeLine(sb, bisabsolute, "b", "tbl", sname, "SetAbsolute")
+	CodeLine(sb, bisclippedleft, "b", "tbl", sname, "SetClippedLeft")
+	CodeLine(sb, bisclippedright, "b", "tbl", sname, "SetClippedRight")
+	CodeLine(sb, bisclippedleft, "b", "tbl", sname, "SetClippedLeft")
+	CodeLine(sb, biscollapse, "b", "tbl", sname, "SetCollapse")
+	CodeLine(sb, biscollapseonscroll, "b", "tbl", sname, "SetCollapseOnScroll")
+	CodeLine(sb, biselevateonscroll, "b", "tbl", sname, "SetElevateOnScroll")
+	CodeLine(sb, bisextended, "b", "tbl", sname, "SetExtended")
+	CodeLine(sb, bisfadeimageonscroll, "b", "tbl", sname, "SetFadeImgOnScroll")
+	CodeLine(sb, bisfixed, "b", "tbl", sname, "SetFixed")
+	CodeLine(sb, bisfloating, "b", "tbl", sname, "SetFloating")
+	CodeLine(sb, bishideonscroll, "b", "tbl", sname, "SetHideOnScroll")
+	CodeLine(sb, bisinvertedscroll, "b", "tbl", sname, "SetInvertedScroll")
+	CodeLine(sb, bisprominent, "b", "tbl", sname, "SetProminent")
+	CodeLine(sb, bisscrolloffscreen, "b", "tbl", sname, "SetScrollOffScreen")
+	CodeLine(sb, bisshort, "b", "tbl", sname, "SetShort")
+	CodeLine(sb, bisshrinkonscroll, "b", "tbl", sname, "SetShrinkOnScroll")
+	CodeLine(sb, bisvisible, "b", "tbl", sname, "SetVisible")
+	
+	sb.append($".Container.AddControl(tbl${sname}.ToolBar, tbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+End Sub
+
 Sub Design_Button
 	If biconbutton Then stitle = ""
 	If bfabbutton Then stitle = ""
@@ -1475,6 +1671,25 @@ Sub CodeLine(sbx As StringBuilder, varName As String, varType As String, prefix 
 			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}")"$).append(CRLF)
 	End Select
 End Sub
+
+Sub CodeLine2(sbx As StringBuilder, varName As String, varName1 As String, varType As String, prefix As String, ssname As String, methodName As String)
+	Select Case varType
+		Case "b"
+			If varName Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}","${varName1})"$).append(CRLF)
+		Case "s"
+			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}","${varName1}")"$).append(CRLF)
+	End Select
+End Sub
+
+Sub CodeLine1(sbx As StringBuilder, varName As String, varType As String, prefix As String, ssname As String, methodName As String)
+	Select Case varType
+		Case "b"
+			If varName Then sbx.append($"${prefix}${ssname}.${methodName}"$).append(CRLF)
+		Case "s"
+			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}"$).append(CRLF)
+	End Select
+End Sub
+
 
 Sub BuildDrawer
 	
@@ -1719,6 +1934,7 @@ End Sub
 Sub mycomponents_click(e As BANanoEvent)
 	Dim itemID As String = vm.GetIDFromEvent(e)
 	itemID = BANano.parseint(itemID)
+	vm.setdata("devspace", 0)
 	'read the record from the database
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
@@ -1734,6 +1950,11 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim sattributes As String = rec.get("attributes")
 	'show the property bags
 	Select Case stypeof
+		Case "toolbar"
+			ShowBag("pbtoolbar")
+			vm.setdata("controltype", "toolbar")
+			pbtoolbar.hideitem("id")
+			pbtoolbar.Hideitem("controltype")
 		Case "container"
 			ShowBag("pbcontainer")
 			vm.setdata("controltype", "container")
@@ -1872,7 +2093,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim mattr As Map = BANano.FromJson(sattributes)
 	'DONT OVERWRITE
 	Select Case stypeof
-		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container"
+		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container", "toolbar"
 			mattr.remove("controltype")
 	End Select
 	vm.setstate(mattr)
@@ -1902,6 +2123,9 @@ Sub LayoutPanel As VMExpansionPanel
 	Dim cont As VMImage = ToolboxImage("container", "./assets/container.png", "Container")
 	grd.Container.AddComponent(1,1,cont.tostring)
 	'
+	Dim tblr As VMImage = ToolboxImage("toolbar", "./assets/toolbar.png", "Toolbar")
+	grd.Container.AddComponent(1,2,tblr.tostring)
+	
 	Return grd
 End Sub
 
@@ -2145,9 +2369,7 @@ Sub ItemDrop(e As BANanoEvent)
 					rsSQL.Insert
 					rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 					vm.pageresume
-				Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", _
-			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", _
-			"parallax", "container"
+				Case Else
 					BANano.SetLocalStorage("selectedpanel", 2)
 					'
 					Dim rowPos As Int = 0
@@ -2246,6 +2468,17 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("borderstyle", "")
 							attr.put("color", "")
 							attr.put("intensity","")
+							BANano.SetLocalStorage("selectedpanel", 4)
+						Case "toolbar"
+							attr.put("bartype", "tool")
+							attr.put("logourl", "./assets/sponge.png")
+							attr.put("borderradius", "50%")
+							attr.put("borderwidth", "1px")
+							attr.put("bordercolor", "black")
+							attr.put("borderstyle", "solid")
+							attr.put("ishamburger", "Yes")
+							attr.put("logowidth", "46px")
+							attr.put("logoheight", "46px")
 							BANano.SetLocalStorage("selectedpanel", 4)
 					End Select
 					'
@@ -2665,6 +2898,127 @@ Sub PropertyBag_Container
 End Sub
 #End Region
 
+#Region Toolbar
+Sub PropertyBag_Toolbar
+	vm.setdata("pbtoolbar", False)
+	pbtoolbar = vm.CreateProperty("ppbcontainer", Me)
+	pbtoolbar.SetVShow("pbtoolbar")
+	pbtoolbar.AddHeading("d","Details")
+	pbtoolbar.AddText("d","id","ID","","")
+	pbtoolbar.AddText("d", "controltype", "Type", "","toolbar")
+	pbtoolbar.AddText("d","vmodel","ID","","")
+	pbtoolbar.AddRadioGroup("d", "bartype", "Type", CreateMap("app":"AppBar","tool":"ToolBar","sys":"SystemBar"))
+	pbtoolbar.AddSelect("d","elevation","Elevation",vm.elevation)
+	pbtoolbar.AddText("d","extensionheight","Extension Height","","")
+	pbtoolbar.AddText("d","scrolltarget","Scroll Target","","")
+	pbtoolbar.AddText("d","scrollthreshold","Scroll Threshold","","")
+	pbtoolbar.AddText("d","src","Src","","")
+	pbtoolbar.AddText("d","logourl","Logo URL","","")
+	pbtoolbar.AddText("d","borderradius","Logo Border Radius","","")
+	pbtoolbar.AddText("d","borderwidth","Logo Border Width","","")
+	pbtoolbar.AddSelect("d","bordercolor","Logo Border Color", vm.ColorOptions)
+	pbtoolbar.AddSelect("d","borderstyle","Logo Border Style",vm.BorderOptions)
+	pbtoolbar.AddText("d","logowidth","Logo Width","","")
+	pbtoolbar.AddText("d","logoheight","Logo Height","","")
+	pbtoolbar.AddText("d","label","Title","","")
+	pbtoolbar.AddText("d","titleclass","Title Class(es)","","")
+	
+	pbtoolbar.AddSelect("d","color","Color", vm.ColorOptions)
+	pbtoolbar.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
+	'
+	pbtoolbar.AddCheck2(1, 1, "ishamburger", "Hamburger")
+	pbtoolbar.AddCheck2(1, 2, "isdense", "Dense")
+	pbtoolbar.AddCheck2(2, 1, "isdark", "Dark")
+	pbtoolbar.AddCheck2(2, 2, "isabsolute", "Absolute")
+	pbtoolbar.AddCheck2(3, 1, "isclippedleft", "Clipped Left")
+	pbtoolbar.AddCheck2(3, 2, "isclippedright", "Clipped Right")
+	pbtoolbar.AddCheck2(4, 1, "isclippedleft", "Clipped Left")
+	pbtoolbar.AddCheck2(4, 2, "iscollapse", "Collapse")
+	pbtoolbar.AddCheck2(5, 1, "iscollapseonscroll", "Collapse on Scroll")
+	pbtoolbar.AddCheck2(5, 2, "iselevateonscroll", "Elevate on Scroll")
+	pbtoolbar.AddCheck2(6, 1, "isextended", "Extended")
+	pbtoolbar.AddCheck2(6, 2, "isfadeimageonscroll", "Fade Image on Scroll")
+	pbtoolbar.AddCheck2(7, 1, "isfixed", "Fixed")
+	pbtoolbar.AddCheck2(7, 2, "isfloating", "Floating")
+	pbtoolbar.AddCheck2(8, 1, "ishideonscroll", "Hide on Scroll")
+	pbtoolbar.AddCheck2(8, 2, "isinvertedscroll", "Inverted Scroll")
+	pbtoolbar.AddCheck2(9, 1, "isprominent", "Prominent")
+	pbtoolbar.AddCheck2(9, 2, "isscrolloffscreen", "Scroll off Screen")
+	pbtoolbar.AddCheck2(10, 1, "isshort", "Short")
+	pbtoolbar.AddCheck2(10, 2, "isshrinkonscroll", "Shrink on Scroll")
+	pbtoolbar.AddCheck2(11, 1, "isvisible", "Visible")
+	pbtoolbar.AddCheck2(11, 2, "islogovisible", "Logo Visible")
+	
+	pbtoolbar.SetChecks("d")
+	'
+	pbtoolbar.AddHeightWidths("d")
+	pbtoolbar.AddMatrix("d")
+	'
+	pbtoolbar.AddButton("d", "btnSaveToolbar", "Save", "savePropertyBag")
+	pbtoolbar.AddButton("d", "btnDeleteToolbar", "Delete", "deletePropertyBag")
+	vm.container.AddComponent(1, 3, pbtoolbar.tostring)
+	'
+	Log(pbtoolbar.btext)
+	Log(pbtoolbar.sText)
+	
+	'
+	'BuildBooleans("tbl", pbtoolbar.bText)
+	'BuildStrings("tbl", pbtoolbar.stext)
+	
+End Sub
+#End Region
+
+Sub BuildStrings(sprefix As String, sText As List)
+	Dim sbl As StringBuilder
+	sbl.initialize
+	For Each v As String In sText
+		sbl.Append($"Private s${v} As String"$).append(CRLF)
+	Next
+	sbl.Append(CRLF)
+	'read details
+	For Each v As String In sText
+		sbl.append($"s${v} = mattr.getdefault("${v}", "")"$).append(CRLF)
+	Next
+	sbl.append(CRLF)
+	'assign to component
+	For Each v As String In sText
+		sbl.append($"${sprefix}.Set${v}(b${v})"$).append(CRLF)
+	Next
+	'build the source code
+	sbl.append(CRLF)
+	For Each v As String In sText
+		sbl.append($"CodeLine(sb, s${v}, "s", "${sprefix}", sname, "Set${v}")"$).append(CRLF)
+	Next
+	sbl.append(CRLF)
+	vm.SaveText2File(sbl.tostring, $"${sprefix}strings.txt"$)
+End Sub
+
+Sub BuildBooleans(sprefix As String, bText As List)
+	Dim sbl As StringBuilder
+	sbl.initialize
+	For Each v As String In bText
+		sbl.Append($"Private b${v} As Boolean"$).append(CRLF)
+	Next
+	sbl.Append(CRLF)
+	'read details
+	For Each v As String In bText
+		sbl.append($"b${v} = YesNoToBoolean(mattr.getdefault("${v}", "No"))"$).append(CRLF)
+	Next
+	sbl.append(CRLF)
+	'assign to component
+	For Each v As String In bText
+		Dim rid As String = vm.midstring2(v, 3)
+		sbl.append($"${sprefix}.Set${rid}(b${v})"$).append(CRLF)
+	Next
+	'build the source code
+	sbl.append(CRLF)
+	For Each v As String In bText
+		Dim rid As String = vm.midstring2(v, 3)
+		sbl.append($"CodeLine(sb, b${v}, "b", "${sprefix}", sname, "Set${rid}")"$).append(CRLF)
+	Next
+	sbl.append(CRLF)
+	vm.SaveText2File(sbl.tostring, $"${sprefix}booleans.txt"$)
+End Sub
 
 
 #Region Label Property Bag
@@ -2823,6 +3177,14 @@ Sub ppbparallax_change(e As BANanoEvent)
 	SavePropertyBag
 End Sub
 
+Sub ppbcontainer_change(e As BANanoEvent)
+	SavePropertyBag	
+End Sub
+
+Sub ppbtoolbar_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
 'save the property bag
 Sub SavePropertyBag
 	'get the saved property bag
@@ -2857,6 +3219,8 @@ Sub SavePropertyBag
 			props = pbparallax.properties
 		Case "container"
 			props = pbcontainer.properties
+		Case "toolbar"
+			props = pbtoolbar.properties
 	End Select
 	'
 	Dim sid As String = props.get("id")
@@ -2868,7 +3232,7 @@ Sub SavePropertyBag
 	'
 	'is vmodel valid
 	Select Case svmodel
-		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", "parallax", "container"
+		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", "parallax", "container", "toolbar"
 			vm.SnackBar.SetColor("red")
 			vm.SnackBar.SetTop(True)
 			vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")
