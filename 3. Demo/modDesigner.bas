@@ -232,10 +232,11 @@ Sub Init
 	avatarMap.put("parallax", "./assets/carousel.png")
 	avatarMap.put("container", "./assets/container.png")
 	'
-	bHasBorder = False
-	bShowMatrix = False
-	'
 	vm.Initialize(Me, Main.appname)
+	vm.setdata("showmatrix", True)
+	vm.setdata("hasborder", True)
+	bHasBorder = True
+	bShowMatrix = True
 	'
 	'get last selected panel
 	Dim sp As String = BANano.GetLocalStorage("selectedpanel")
@@ -245,15 +246,6 @@ Sub Init
 		vm.setdata("selectedpanel", 0)
 	End If
 	'
-	bHasBorder = BANano.GetLocalStorage("hasborder")
-	If bHasBorder <> True Then bHasBorder = False
-	'
-	bShowMatrix = BANano.GetLocalStorage("showmatrix")
-	If bShowMatrix <> True Then bShowMatrix = False
-	'
-	vm.setdata("showmatrix", bShowMatrix)
-	vm.setdata("hasborder", bHasBorder)
-	
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
@@ -376,6 +368,9 @@ Sub YesNoToBoolean(xvalue As String) As Boolean
 End Sub
 
 Sub CreateUX
+	bShowMatrix = vm.getdata("showmatrix")
+	bHasBorder = vm.getdata("hasborder")
+	
 	vm.pagepause
 	vm.setdata("myux", Array())
 	'
@@ -401,17 +396,8 @@ Sub CreateUX
 	'make it a div
 	ui = vm.CreateContainer("ui", Me)
 	ui.SetDesignMode(True)
-	If bShowMatrix = True Then
-		ui.ShowMatrix = True
-	Else
-		ui.showmatrix = False
-	End If
-	'
-	If bHasBorder = True Then
-		ui.HasBorder = True
-	Else
-		ui.HasBorder = False
-	End If
+	ui.ShowMatrix = bShowMatrix
+	ui.HasBorder = bHasBorder
 	'
 	Design_Grid(gridSQL)
 	
@@ -1507,21 +1493,9 @@ Sub optMenuitems_click(e As BANanoEvent)
 	Select Case menuID
 		Case "btnshowmatrix"
 			vm.ToggleState("showmatrix")
-			bShowMatrix = vm.getdata("showmatrix")
-			If bShowMatrix = True Then
-				BANano.setlocalstorage("showmatrix", True)
-			Else
-				BANano.setlocalstorage("showmatrix", False)
-			End If
 			CreateUX
 		Case "btnhasborder"
 			vm.togglestate("hasborder")
-			bHasBorder = vm.getdata("hasborder")
-			If bHasBorder = True Then
-				BANano.setlocalstorage("hasborder", True)
-			Else
-				BANano.setlocalstorage("hasborder", False)
-			End If
 			CreateUX
 	End Select
 End Sub
@@ -2159,8 +2133,6 @@ Sub ItemDrop(e As BANanoEvent)
 			"col8", "col9", "col10", "col11", "col12"
 					'adding 1 row and
 					BANano.SetLocalStorage("selectedpanel", 0)
-					BANano.SetLocalStorage("hasborder", True)
-					BANano.SetLocalStorage("showmatrix", True)
 					vm.setdata("showmatrix", True)
 					vm.setdata("hasborder", True)
 					vm.pagepause
