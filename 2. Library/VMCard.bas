@@ -37,7 +37,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Text.Initialize(vue, $"${ID}text"$, Module)
 	Actions.Initialize(vue, $"${ID}actions"$, Module)
 	Container.Initialize(vue, $"${ID}cont"$, Module)
-	ToolBar.Initialize(vue, $"${ID}bar"$, Module)
+	ToolBar.Initialize(vue, $"${ID}bar"$, Module).SetToolBar(True)
 	lst.Initialize 
 	extra.Initialize 
 	IsTable = False

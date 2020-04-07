@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the TabsItems
@@ -22,9 +23,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMTabsItems
+	bStatic = b
+	TabsItems.SetStatic(b)
+	Return Me
+End Sub
 
 Sub AddComponent(comp As String) As VMTabsItems
 	TabsItems.SetText(comp)

@@ -56,6 +56,7 @@ Sub Class_Globals
 	Public HasBorder As Boolean
 	Public ShowMatrix As Boolean
 	Public NoGutters As Boolean
+	Private cStatic As Boolean
 End Sub
 
 'initialize the Container
@@ -99,9 +100,45 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	HasBorder = False
 	ShowMatrix = False
 	NoGutters = False
+	cStatic = True
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMContainer
+	cStatic = b
+	Container.SetStatic(b)
+	Return Me
+End Sub
+
+Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
+	Dim el As VMParallax
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateContainer(sid As String, eventHandler As Object) As VMContainer
+	Dim el As VMContainer
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+
+Sub NewParallax(eventHandler As Object,bStatic As Boolean, sname As String, sheight As String, src As String,salt As String) As VMParallax
+	Dim el As VMParallax = CreateParallax(sname, eventHandler)
+	el.SetStatic(bStatic)
+	el.SetDesignMode(DesignMode)
+	el.SetHeight(sheight)
+	el.SetSrc(src)
+	el.SetAlt(salt)
+	Return el
+End Sub
+
+Sub NewContainer(eventHandler As Object, bStatic As Boolean, sname As String) As VMContainer
+	Dim el As VMContainer = CreateContainer(sname, eventHandler)
+	el.SetStatic(bStatic)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
 
 Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, bRequired As Boolean, bMultiple As Boolean, sPlaceHolder As String, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean, sHelperText As String, sErrorText As String, iTabIndex As Int) As VMSelect
 	Dim el As VMSelect = CreateSelect(sname, eventHandler)
@@ -120,6 +157,31 @@ Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As
 	Return el
 End Sub
 
+Sub CreateAppBar(sid As String, moduleObj As Object) As VMToolBar
+	Dim el As VMToolBar
+	el.Initialize(vue, sid, moduleObj)
+	el.SetAppBar(True)
+	Return el
+End Sub
+
+Sub CreateSystemBar(sid As String, moduleObj As Object) As VMToolBar
+	Dim el As VMToolBar
+	el.Initialize(vue, sid, moduleObj)
+	el.SetSystemBar(True)
+	Return el
+End Sub
+
+Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar
+	Dim el As VMToolBar
+	el.Initialize(vue, sid, moduleObj)
+	el.SetToolBar(True)
+	Return el
+End Sub
+
+Sub SetBorderRadius(size As String) As VMContainer
+	Container.SetBorderRadius(size)
+	Return Me
+End Sub
 
 Sub CreateLabel(sID As String) As VMLabel
 	Dim el As VMLabel
@@ -562,12 +624,12 @@ Sub NewPassword(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 End Sub
 
 'backward compatibility
-Sub NewFile(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
-	Return NewFileInput(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
+Sub NewFile(eventHandler As Object,bStatic As Boolean,bUpload As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Return NewFileInput(eventHandler,bStatic,bUpload,sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
 End Sub
 '
-Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
-	Dim el As VMTextField = CreateFileInput(sname, eventHandler)
+Sub NewFileInput(eventHandler As Object,bStatic As Boolean,bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateFileInput(sname, eventHandler, bUpload)
 	el.SetDesignMode(DesignMode)
 	el.setstatic(bStatic)
 	el.SetHint(shelperText)
@@ -582,10 +644,10 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmod
 End Sub
 '
 
-Sub CreateFileInput(sid As String, eventHandler As Object) As VMTextField
+Sub CreateFileInput(sid As String, eventHandler As Object, bUpload As Boolean) As VMTextField
 	Dim el As VMTextField
 	el.Initialize(vue, sid, eventHandler)
-	el.SetFileInput
+	el.SetFileInput(bUpload)
 	Return el
 End Sub
 
@@ -651,25 +713,48 @@ Sub SetNoGutters(b As Boolean) As VMContainer
 End Sub
 
 Sub SetWidth(w As String) As VMContainer
+	If w = "" Then Return Me
 	Container.SetStyleSingle("width", w)
+	Return Me
+End Sub
+
+Sub SetMaxWidth(w As String) As VMContainer
+	If w = "" Then Return Me
 	Container.SetStyleSingle("max-width", w)
 	Return Me
 End Sub
 
+Sub SetMinWidth(w As String) As VMContainer
+	If w = "" Then Return Me
+	Container.SetStyleSingle("min-width", w)
+	Return Me
+End Sub
 
 Sub SetHeight(h As String) As VMContainer
+	If h = "" Then Return Me
 	Container.SetStyleSingle("height", h)
+	Return Me
+End Sub
+
+Sub SetMaxHeight(h As String) As VMContainer
+	If h = "" Then Return Me
 	Container.SetStyleSingle("max-height", h)
 	Return Me
 End Sub
 
+Sub SetMinHeight(h As String) As VMContainer
+	If h = "" Then Return Me
+	Container.SetStyleSingle("min-height", h)
+	Return Me
+End Sub
 
 Sub HasContent As Boolean
 	Return Container.hascontent
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMContainer
+Sub SetTransition(varTransition As String) As VMContainer
+	If varTransition = "" Then Return Me
 	Container.Bind("transition", varTransition)
 	Return Me
 End Sub
@@ -682,7 +767,8 @@ Sub AddExclusion(them As List) As VMContainer
 End Sub
 
 Sub SetElevation(elx As String) As VMContainer
-	Container.SetElevation(elx)
+	If elx = "" Then Return Me
+	AddClass($"elevation-${elx}"$)
 	Return Me
 End Sub
 
@@ -1194,8 +1280,36 @@ Sub SetAttrRC(rowPos As Int, colPos As Int, prop As String, value As String) As 
 	Return Me
 End Sub
 
+'set the border
+Sub SetBorderStyle(bstyle As String) As VMContainer
+	If bstyle = "" Then Return Me
+	SetStyleSingle("border-style", bstyle)
+	Return Me
+End Sub
+
+Sub SetBorderWidth(bwidth As String) As VMContainer
+	If bwidth = "" Then Return Me
+	SetStyleSingle("border-width", bwidth)
+	Return Me
+End Sub
+
+'set the border
+Sub SetBorderColor(bcolor As String) As VMContainer
+	If bcolor = "" Then Return Me
+	SetStyleSingle("border-color", bcolor)
+	Return Me
+End Sub
+
+'set the border
+Sub SetBorder(bwidth As String, bcolor As String, bstyle As String) As VMContainer
+	If bstyle <> "" Then SetStyleSingle("border-style", bstyle)
+	If bwidth <> "" Then SetStyleSingle("border-width", bwidth)
+	If bcolor <> "" Then SetStyleSingle("border-color", bcolor)
+	Return Me
+End Sub
+
 'set the border of the rc
-Sub SetBorderRC(rowPos As Int, colPos As Int, width As String, color As String, bstyle As String) As VMContainer
+Sub SetBorderRC(rowPos As Int, colPos As Int, bwidth As String, bcolor As String, bstyle As String) As VMContainer
 	Dim rowc As Map
 	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
 	If colPos = 0 Then
@@ -1207,9 +1321,9 @@ Sub SetBorderRC(rowPos As Int, colPos As Int, width As String, color As String, 
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("border-style", bstyle)
-	rowc.Put("border-width", width)
-	rowc.Put("border-color", color)
+	If bstyle <> "" Then rowc.Put("border-style", bstyle)
+	If bwidth <> "" Then rowc.Put("border-width", bwidth)
+	If bcolor <> "" Then rowc.Put("border-color", bcolor)
 	rowStyles.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -1596,7 +1710,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set fluid
-Sub SetFluid(varFluid As Object) As VMContainer
+Sub SetFluid(varFluid As Boolean) As VMContainer
+	If varFluid = False Then Return Me
+	If cStatic Then
+		SetAttrSingle("fluid", varFluid)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Fluid"$
 	vue.SetStateSingle(pp, varFluid)
 	Container.Bind(":fluid", pp)
@@ -1610,7 +1729,8 @@ Sub UseTheme(themeName As String) As VMContainer
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMContainer
+Sub SetTag(varTag As String) As VMContainer
+	If varTag = "" Then Return Me
 	Container.SetTag(varTag)
 	Return Me
 End Sub
@@ -1830,6 +1950,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMContainer
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -1837,6 +1958,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMContainer
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
@@ -2024,4 +2146,31 @@ Sub BANanoReplaceRC(rowPos As Int, colPos As Int, elHTML As String)
 		elBody.Empty
 		elBody.SetHTML(elHTML)
 	End If
+End Sub
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMContainer
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If cStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	Container.Bind(":color", pp)
+	Return Me
+End Sub
+
+'set color
+Sub SetColor(varColor As String) As VMContainer
+	If varColor = "" Then Return Me
+	If cStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, varColor)
+	Container.Bind(":color", pp)
+	Return Me
 End Sub

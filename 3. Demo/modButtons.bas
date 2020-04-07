@@ -49,6 +49,24 @@ Sub Code
 	vm.AddContainer(cont)
 End Sub
 
+Sub tilex_click(e As BANanoEvent)
+	vm.ShowSnackBAr("clicked Tile")
+End Sub
+
+
+Sub fab2_click(e As BANanoEvent)
+	vm.ShowSnackBAr("clicked fab2")
+End Sub
+
+Sub fab1_click(e As BANanoEvent)
+	vm.ShowSnackBAr("clicked fab1")
+End Sub
+
+
+Sub btnAccent_click(e As BANanoEvent)
+	vm.ShowSnackBAr("clicked accent")
+End Sub
+
 Sub btnPrimary_click(e As BANanoEvent)
 	vm.ShowAlert("did_it", "TheMash", "This is my first alert!", "Cool")
 End Sub

@@ -15,10 +15,11 @@ Sub Class_Globals
 	Public Container As VMContainer
 	Public BOVuetify As BANanoObject
 	Public Drawer As VMNavigationDrawer
-	Public NavBar As VMAppBar
+	Public NavBar As VMToolBar
 	Public Footer As VMFooter
 	Private module As Object
 	Public Elevation As Map
+	Public Transition As Map
 	Private Chartkick As BANanoObject
 	Private Chart As BANanoObject
 	Private VueGoogleMaps As BANanoObject
@@ -206,9 +207,14 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Container.Initialize(vue, $"${appName}container"$, eventHandler)
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	NavBar.Initialize(vue, "appbar", eventHandler)
-	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
-	'
+	NavBar.SetAppBar(True)
+	NavBar.AddHamburger
+	NavBar.AddLogo("")
+	NavBar.AddTitle(appName,"")
+	NavBar.AddSpacer
 	NavBar.Show
+	'
+	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
 	'
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
 	SnackBar.Pop(VContent)
@@ -253,6 +259,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 		Elevation.Put(e, e)
 	Next
 	InitColors
+	InitTransition
 	'
 	If SubExists(module, "confirm_ok") = False Then
 		Log("Initialize.confirm_ok - please add this event to trap confirm dialog!")
@@ -267,6 +274,18 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	End If
 End Sub
 
+Sub InitTransition
+	Dim tran As List
+	tran.Initialize
+	'
+	tran.AddAll(Array("slide-x-transition", "slide-x-reverse-transition", "slide-y-transition", "slide-y-reverse-transition", "scroll-x-transition"))
+	tran.AddAll(Array("scroll-x-reverse-transition", "scroll-y-transition", "scroll-y-reverse-transition", "scale-transition",  "fade-transition"))
+	'
+	Transition.Initialize 
+	For Each sl As String In tran
+		Transition.Put(sl, sl)
+	Next
+End Sub
 
 'getElementById
 Sub getElementById(sid As String) As BANanoObject
@@ -370,6 +389,15 @@ End Sub
 Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	Dim el As VMParallax
 	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub NewParallax(eventHandler As Object,bStatic As Boolean, sname As String, sheight As String, src As String,salt As String) As VMParallax
+	Dim el As VMParallax = CreateParallax(sname, eventHandler)
+	el.SetStatic(bStatic)
+	el.SetHeight(sheight)
+	el.SetSrc(src)
+	el.SetAlt(salt)
 	Return el
 End Sub
 
@@ -831,7 +859,6 @@ End Sub
 Sub CreateContainer(sid As String, eventHandler As Object) As VMContainer
 	Dim el As VMContainer
 	el.Initialize(vue, sid, eventHandler)
-	
 	Return el
 End Sub
 
@@ -1756,10 +1783,10 @@ Sub CreateInput(sid As String, eventHandler As Object) As VMInput
 	Return el
 End Sub
 
-Sub CreateFileInput(sid As String, eventHandler As Object) As VMTextField
+Sub CreateFileInput(sid As String, eventHandler As Object, bUpload As Boolean) As VMTextField
 	Dim el As VMTextField
 	el.Initialize(vue, sid, eventHandler)
-	el.SetFileInput
+	el.SetFileInput(bUpload)
 	Return el
 End Sub
 
@@ -1855,9 +1882,24 @@ Sub CreateRadioGroup(sid As String, eventHandler As Object) As VMRadioGroup
 	Return el
 End Sub
 
+Sub CreateAppBar(sid As String, moduleObj As Object) As VMToolBar
+	Dim el As VMToolBar
+	el.Initialize(vue, sid, moduleObj)
+	el.SetAppBar(True)
+	Return el
+End Sub
+
+Sub CreateSystemBar(sid As String, moduleObj As Object) As VMToolBar
+	Dim el As VMToolBar
+	el.Initialize(vue, sid, moduleObj)
+	el.SetSystemBar(True)
+	Return el
+End Sub
+
 Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar
 	Dim el As VMToolBar
-	el.Initialize(vue, sid, moduleObj)	
+	el.Initialize(vue, sid, moduleObj)
+	el.SetToolBar(True)	
 	Return el
 End Sub
 
@@ -2211,12 +2253,12 @@ Sub NewPassword(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 End Sub
 
 'backward compatibility
-Sub NewFile(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
-	Return NewFileInput(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
+Sub NewFile(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Return NewFileInput(eventHandler,bStatic,bUpload, sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
 End Sub
 '
-Sub NewFileInput(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
-	Dim el As VMTextField = CreateFileInput(sname, eventHandler)
+Sub NewFileInput(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
+	Dim el As VMTextField = CreateFileInput(sname, eventHandler, bUpload)
 	el.setstatic(bStatic)
 	el.SetHint(shelperText)
 	el.SetErrorText(sErrorText)

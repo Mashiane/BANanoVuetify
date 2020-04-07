@@ -12,19 +12,28 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
+	Public HasContent As Boolean
 End Sub
 
 'initialize the Badge
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMBadge
+	HasContent = False
 	vue = v
 	ID = sid.tolowercase
-	Badge.Initialize(v, ID)
+	Badge.Initialize(v, ID).SetVModel(ID)
 	Badge.SetTag("v-badge")
 	DesignMode = False
 	Module = eventHandler
+	bStatic = False
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMBadge
+	bStatic = b
+	Badge.SetStatic(b)
+	Return Me
+End Sub
 
 Sub SetAttrLoose(loose As String) As VMBadge
 	Badge.SetAttrLoose(loose)
@@ -45,13 +54,20 @@ Sub SetOnlineIndicator(b As Boolean) As VMBadge
 	SetOffsetX("10")
 	SetOffsetY("10")
 	SetBottom(True)
+	HasContent = True
 	Return Me
 End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMBadge
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
+	HasContent = True
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)	
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	Badge.Bind(":color", pp)
 	Return Me
@@ -59,7 +75,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	Return Badge.ToString
 End Sub
 
@@ -80,6 +95,7 @@ Sub UseTheme(themeName As String) As VMBadge
 End Sub
 
 Sub SetVModel(k As String) As VMBadge
+	HasContent = True
 	Badge.SetVModel(k)
 	Return Me
 End Sub
@@ -143,7 +159,13 @@ Sub AddChildren(children As List)
 End Sub
 
 'set avatar
-Sub SetAvatar(varAvatar As Object) As VMBadge
+Sub SetAvatar(varAvatar As Boolean) As VMBadge
+	If varAvatar = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("avatar", varAvatar)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Avatar"$
 	vue.SetStateSingle(pp, varAvatar)
 	Badge.Bind(":avatar", pp)
@@ -151,7 +173,13 @@ Sub SetAvatar(varAvatar As Object) As VMBadge
 End Sub
 
 'set bordered
-Sub SetBordered(varBordered As Object) As VMBadge
+Sub SetBordered(varBordered As Boolean) As VMBadge
+	If varBordered = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("bordered", varBordered)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bordered"$
 	vue.SetStateSingle(pp, varBordered)
 	Badge.Bind(":bordered", pp)
@@ -159,7 +187,13 @@ Sub SetBordered(varBordered As Object) As VMBadge
 End Sub
 
 'set bottom
-Sub SetBottom(varBottom As Object) As VMBadge
+Sub SetBottom(varBottom As Boolean) As VMBadge
+	If varBottom = False Then Return Me
+	HasContent = True
+	If bStatic = False Then
+		SetAttrSingle("bottom", varBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bottom"$
 	vue.SetStateSingle(pp, varBottom)
 	Badge.Bind(":bottom", pp)
@@ -167,7 +201,13 @@ Sub SetBottom(varBottom As Object) As VMBadge
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMBadge
+Sub SetColor(varColor As String) As VMBadge
+	If varColor = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Badge.Bind(":color", pp)
@@ -176,13 +216,25 @@ End Sub
 
 'set content
 Sub SetContent(varContent As String) As VMBadge
-	varContent = varContent.tolowercase
-	Badge.SetAttrSingle(":content", varContent)
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("content", varContent)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}content"$
+	vue.SetStateSingle(pp, varContent)
+	Badge.bind(":content", pp)
 	Return Me
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMBadge
+Sub SetDark(varDark As Boolean) As VMBadge
+	If varDark = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Badge.Bind(":dark", pp)
@@ -190,7 +242,13 @@ Sub SetDark(varDark As Object) As VMBadge
 End Sub
 
 'set dot
-Sub SetDot(varDot As Object) As VMBadge
+Sub SetDot(varDot As Boolean) As VMBadge
+	If varDot = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("dot", varDot)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dot"$
 	vue.SetStateSingle(pp, varDot)
 	Badge.Bind(":dot", pp)
@@ -198,7 +256,13 @@ Sub SetDot(varDot As Object) As VMBadge
 End Sub
 
 'set icon
-Sub SetIcon(varIcon As Object) As VMBadge
+Sub SetIcon(varIcon As String) As VMBadge
+	If varIcon = "" Then Return Me
+	HasContent = True
+	If bStatic Then 
+		SetAttrSingle("icon", varIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Icon"$
 	vue.SetStateSingle(pp, varIcon)
 	Badge.Bind(":icon", pp)
@@ -206,7 +270,13 @@ Sub SetIcon(varIcon As Object) As VMBadge
 End Sub
 
 'set inline
-Sub SetInline(varInline As Object) As VMBadge
+Sub SetInline(varInline As Boolean) As VMBadge
+	If varInline = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("inline", varInline)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Inline"$
 	vue.SetStateSingle(pp, varInline)
 	Badge.Bind(":inline", pp)
@@ -214,7 +284,13 @@ Sub SetInline(varInline As Object) As VMBadge
 End Sub
 
 'set label
-Sub SetLabel(varLabel As Object) As VMBadge
+Sub SetLabel(varLabel As String) As VMBadge
+	If varLabel = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Label"$
 	vue.SetStateSingle(pp, varLabel)
 	Badge.Bind(":label", pp)
@@ -222,7 +298,13 @@ Sub SetLabel(varLabel As Object) As VMBadge
 End Sub
 
 'set left
-Sub SetLeft(varLeft As Object) As VMBadge
+Sub SetLeft(varLeft As Boolean) As VMBadge
+	If varLeft = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("left", varLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Left"$
 	vue.SetStateSingle(pp, varLeft)
 	Badge.Bind(":left", pp)
@@ -230,7 +312,13 @@ Sub SetLeft(varLeft As Object) As VMBadge
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMBadge
+Sub SetLight(varLight As Boolean) As VMBadge
+	If varLight = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Badge.Bind(":light", pp)
@@ -238,7 +326,13 @@ Sub SetLight(varLight As Object) As VMBadge
 End Sub
 
 'set mode
-Sub SetMode(varMode As Object) As VMBadge
+Sub SetMode(varMode As String) As VMBadge
+	If varMode = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("mode", varMode)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Mode"$
 	vue.SetStateSingle(pp, varMode)
 	Badge.Bind(":mode", pp)
@@ -246,7 +340,13 @@ Sub SetMode(varMode As Object) As VMBadge
 End Sub
 
 'set offset-x
-Sub SetOffsetX(varOffsetX As Object) As VMBadge
+Sub SetOffsetX(varOffsetX As String) As VMBadge
+	If varOffsetX = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("offset-x", varOffsetX)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffsetX"$
 	vue.SetStateSingle(pp, varOffsetX)
 	Badge.Bind(":offset-x", pp)
@@ -255,6 +355,12 @@ End Sub
 
 'set offset-y
 Sub SetOffsetY(varOffsetY As Object) As VMBadge
+	If varOffsetY = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("offset-y", varOffsetY)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffsetY"$
 	vue.SetStateSingle(pp, varOffsetY)
 	Badge.Bind(":offset-y", pp)
@@ -262,7 +368,13 @@ Sub SetOffsetY(varOffsetY As Object) As VMBadge
 End Sub
 
 'set origin
-Sub SetOrigin(varOrigin As Object) As VMBadge
+Sub SetOrigin(varOrigin As String) As VMBadge
+	If varOrigin = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("origin", varOrigin)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Origin"$
 	vue.SetStateSingle(pp, varOrigin)
 	Badge.Bind(":origin", pp)
@@ -270,7 +382,13 @@ Sub SetOrigin(varOrigin As Object) As VMBadge
 End Sub
 
 'set overlap
-Sub SetOverlap(varOverlap As Object) As VMBadge
+Sub SetOverlap(varOverlap As Boolean) As VMBadge
+	If varOverlap = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("overlap", varOverlap)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Overlap"$
 	vue.SetStateSingle(pp, varOverlap)
 	Badge.Bind(":overlap", pp)
@@ -278,7 +396,13 @@ Sub SetOverlap(varOverlap As Object) As VMBadge
 End Sub
 
 'set tile
-Sub SetTile(varTile As Object) As VMBadge
+Sub SetTile(varTile As Boolean) As VMBadge
+	If varTile = False Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("tile", varTile)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Tile"$
 	vue.SetStateSingle(pp, varTile)
 	Badge.Bind(":tile", pp)
@@ -286,7 +410,13 @@ Sub SetTile(varTile As Object) As VMBadge
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMBadge
+Sub SetTransition(varTransition As String) As VMBadge
+	If varTransition = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Transition"$
 	vue.SetStateSingle(pp, varTransition)
 	Badge.Bind(":transition", pp)
@@ -294,12 +424,18 @@ Sub SetTransition(varTransition As Object) As VMBadge
 End Sub
 
 'set value
-Sub SetValue(varValue As String) As VMBadge
-	varValue = varValue.tolowercase
-	Badge.SetAttrSingle(":value", varValue)
+Sub SetValue(varValue As Boolean) As VMBadge
+	If varValue = "" Then Return Me
+	HasContent = True
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	Badge.Bind(":value", pp)
 	Return Me
 End Sub
-
 
 Sub Hide As VMBadge
 	Badge.SetVisible(False)
@@ -390,18 +526,18 @@ Sub SetWidth(w As String) As VMBadge
 	Return Me
 End Sub
 
-
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBadge
-Badge.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Badge.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMBadge
-Badge.SetVisible(b)
-Return Me
+	Badge.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

@@ -21,7 +21,7 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(10).AddColumns2x6
 	'
-	vm.CreateCheckBox("chk1", Me).SetLabel("Check Box 1").SetVModel("chk1").AddToContainer(cont, 1, 1)
+	vm.CreateCheckBox("chk1", Me).SetLabel("Check Box 1").SetVModel("chk1").SetOnChange(Me, "chk1_change").AddToContainer(cont, 1, 1)
 	vm.CreateLABEL("lbl1").SetText("{{ chk1 }}").AddToContainer(cont, 1, 2 )
 	'
 	vm.SetStateSingle("names", Array())
@@ -34,4 +34,10 @@ Sub Code
 	
 	
 	vm.AddContainer(cont)
+End Sub
+
+Sub chk1_change(value As Object)
+	
+	vm.ShowSnackBar($"chk1_change: ${value}"$)
+	
 End Sub

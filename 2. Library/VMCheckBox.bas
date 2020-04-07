@@ -664,11 +664,11 @@ Sub SetSlotPrepend(b As Boolean) As VMCheckBox    'ignore
 End Sub
 
 '
-Sub SetOnClick(methodName As String) As VMCheckBox
+Sub SetOnClick(eventHandler As Object, methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("v-on:click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -676,11 +676,11 @@ Sub SetOnClick(methodName As String) As VMCheckBox
 End Sub
 
 '
-Sub SetOnClickAppend(methodName As String) As VMCheckBox
+Sub SetOnClickAppend(eventHandler As Object, methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
+	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("v-on:click:append": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -692,7 +692,7 @@ Sub SetOnClickPrepend(methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("v-on:click:prepend": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -704,7 +704,7 @@ Sub SetOnMousedown(methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("v-on:mousedown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -716,7 +716,7 @@ Sub SetOnMouseup(methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("v-on:mouseup": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -854,8 +854,8 @@ End Sub
 Sub SetOnChange(eventHandler As Object, methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim value As Object
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(value))
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

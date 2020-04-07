@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Public Container As VMContainer
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Parallax
@@ -24,6 +25,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Container.Initialize(vue, $"${ID}par"$, Module)
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMParallax
+	bStatic = b
+	Parallax.SetStatic(b)
+	Container.SetStatic(b)
 	Return Me
 End Sub
 
@@ -54,7 +63,7 @@ End Sub
 
 'get component
 Sub ToString As String
-	AddComponent(Container.ToString)
+	If Container.HasContent Then AddComponent(Container.ToString)
 	Return Parallax.ToString
 End Sub
 
@@ -127,7 +136,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set alt
-Sub SetAlt(varAlt As Object) As VMParallax
+Sub SetAlt(varAlt As String) As VMParallax
+	If varAlt = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("alt", varAlt)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Alt"$
 	vue.SetStateSingle(pp, varAlt)
 	Parallax.Bind(":alt", pp)
@@ -135,7 +149,12 @@ Sub SetAlt(varAlt As Object) As VMParallax
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMParallax
+Sub SetHeight(varHeight As String) As VMParallax
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Parallax.Bind(":height", pp)
@@ -143,7 +162,12 @@ Sub SetHeight(varHeight As Object) As VMParallax
 End Sub
 
 'set src
-Sub SetSrc(varSrc As Object) As VMParallax
+Sub SetSrc(varSrc As String) As VMParallax
+	If varSrc = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("src", varSrc)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Src"$
 	vue.SetStateSingle(pp, varSrc)
 	Parallax.Bind(":src", pp)
@@ -200,7 +224,6 @@ Sub UseTheme(themeName As String) As VMParallax
 	Return Me
 End Sub
 
-
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMParallax
 	Dim pp As String = $"${ID}Color"$
@@ -231,6 +254,7 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMParallax
 	Parallax.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -306,6 +330,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Parallax.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMParallax
 Parallax.SetVisible(b)
 Return Me

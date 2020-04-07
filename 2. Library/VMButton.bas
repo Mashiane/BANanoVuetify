@@ -18,6 +18,7 @@ Sub Class_Globals
 	Private span As VMLabel
 	Private txt As String
 	Private bStatic As Boolean
+	Public Badge As VMBadge
 End Sub
 
 'initialize the Button
@@ -37,6 +38,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	span.Initialize(vue, $"${ID}span"$).SetSpan
 	Button.SetVShow($"${ID}show"$)
 	Button.typeOf = "button"
+	Badge.Initialize(vue, $"${ID}badge"$, Module) 
 	txt = ""
 	bStatic = False
 	Return Me
@@ -55,6 +57,7 @@ Sub SetStatic(b As Boolean) As VMButton
 	tooltip.setstatic(b)
 	tmpl.setstatic(b)
 	span.SetStatic(b)
+	Badge.SetStatic(b)
 	Return Me
 End Sub
 
@@ -275,9 +278,19 @@ Sub ToString As String
 		Button.Pop(tmpl.Template)
 		tmpl.Pop(tooltip.tooltip)
 		span.Pop(tooltip.ToolTip)
-		Return tooltip.ToString
-	Else	
-		Return Button.ToString
+		If Badge.HasContent Then
+			Badge.AddComponent(tooltip.ToString)
+			Return Badge.tostring
+		Else	
+			Return tooltip.ToString
+		End If
+	Else
+		If Badge.HasContent Then
+			Badge.AddComponent(Button.ToString)
+			Return Badge.tostring	
+		Else
+			Return Button.ToString
+		End If
 	End If
 End Sub
 
@@ -953,6 +966,10 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMButton
 	Button.SetDesignMode(b)
+	tooltip.SetDesignMode(b)
+	tmpl.SetDesignMode(b)
+	span.SetDesignMode(b)
+	Badge.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub

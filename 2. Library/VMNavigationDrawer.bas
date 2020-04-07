@@ -36,6 +36,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub Toggle
+	vue.ToggleState("drawer")
+End Sub
+
 Sub AddComponent(comp As String) As VMNavigationDrawer
 	SetText(comp)
 	Return Me

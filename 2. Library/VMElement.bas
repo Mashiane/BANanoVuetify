@@ -198,6 +198,11 @@ Sub SetRC(sRow As String, sCol As String) As VMElement
 	Return Me
 End Sub
 
+Sub SetBorderRadius(size As String) As VMElement
+	Element.SetStyleRound(size)
+	Return Me
+End Sub
+
 Sub SetDeviceOffsets(sOffsetSmall As String, sOffsetMedium As String,sOffsetLarge As String,sOffsetXLarge As String) As VMElement
 	OS = sOffsetSmall
 	OM = sOffsetMedium
@@ -323,6 +328,7 @@ Sub SetDense As VMElement
 End Sub
 
 Sub SetElevation(elNum As String) As VMElement
+	AddClass($"elevation-${elNum}"$)
 	Element.SetAttrSingle("elevation", BANano.parseInt(elNum))
 	Return Me
 End Sub

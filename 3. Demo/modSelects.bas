@@ -43,7 +43,7 @@ Sub Code
 	'
 	vm.CreateSelect("sel3", Me).SetMultiple(True).SetChips(True).SetAttach(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 3, 1)
 	'
-	vm.CreateSelect("sel4", Me).SetFilled(True).SetMultiple(True).SetChips(True).SetAttach(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 4, 1)
+	vm.CreateSelect("sel4", Me).SetFilled(True).SetOnChange(Me, "sel4_change").SetChips(True).SetAttach(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 4, 1)
 	'
 	vm.CreateSelect("sel5", Me).SetOutlined(True).SetMultiple(True).SetChips(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 5, 1)
 	'
@@ -70,3 +70,7 @@ Sub Code
 	vm.AddContainer(cont)
 End Sub
 
+
+Sub sel4_change(value As Object)
+	vm.ShowSnackBar(value)
+End Sub

@@ -65,7 +65,6 @@ Sub Required As Map
 	Return Container.required
 End Sub
 
-
 'set single style
 Sub BindStyleSingle(prop As String, value As String) As VMDialog
 	Dialog.BindStyleSingle(prop, value)
@@ -462,7 +461,6 @@ Sub Disable As VMDialog
 	Return Me
 End Sub
 
-
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMDialog
 	stateprop = stateprop.ToLowerCase
@@ -522,12 +520,13 @@ End Sub
 
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMDialog
-Dialog.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Dialog.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMDialog
-Dialog.SetVisible(b)
-Return Me
+	Dialog.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

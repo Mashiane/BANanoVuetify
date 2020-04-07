@@ -37,6 +37,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetOnClickClear(eventHandler As Object, methodName As String) As VMDateTimePicker
+	TextField.SetOnClickClear(eventHandler, methodName)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMDateTimePicker
 	bStatic = b
 	TextField.SetStatic(b)

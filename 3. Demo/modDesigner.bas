@@ -23,6 +23,8 @@ Sub Process_Globals
 	Private pbbutton As VMProperty			'done
 	Private pblabel As VMProperty			'done
 	Private pbimage As VMProperty			'done
+	Private pbparallax As VMProperty
+	Private pbcontainer As VMProperty
 	Private lstBags As List
 	Private avatarMap As Map
 	Private controltypes As Map
@@ -179,6 +181,12 @@ Sub Process_Globals
 	'
 	Private pc As VMPrism
 	Private htm As VMPrism
+	
+	Private selevation As String
+	Private stransition As String
+	Private bisfluid As Boolean
+	Private bisshowmatrix As Boolean
+	Private bisnogutters As Boolean
 End Sub
 
 Sub Init
@@ -197,6 +205,8 @@ Sub Init
 	lstBags.add("pbbutton")
 	lstBags.Add("pblabel")
 	lstBags.Add("pbimage")
+	lstBags.add("pbparallax")
+	lstBags.add("pbcontainer")
 	'
 	avatarMap.initialize
 	avatarMap.put("text", "./assets/text.png")
@@ -219,7 +229,9 @@ Sub Init
 	avatarMap.put("image", "./assets/image.png")
 	avatarMap.put("button", "./assets/button.png")
 	avatarMap.put("icon", "./assets/icon.png")
-	
+	avatarMap.put("parallax", "./assets/carousel.png")
+	avatarMap.put("container", "./assets/container.png")
+	'
 	bHasBorder = False
 	bShowMatrix = False
 	'
@@ -313,6 +325,8 @@ Sub Init
 	PropertyBag_Image
 	PropertyBag_Icon
 	PropertyBag_Button
+	PropertyBag_Parallax
+	PropertyBag_Container
 	'
 	AddPages
 	vm.UX
@@ -493,8 +507,8 @@ Sub CreateUX
 		smaxheight = mattr.getdefault("maxheight", "")
 		'
 		stooltip = mattr.getdefault("tooltip", "")
-		scolor = mattr.getdefault("color", "")
-		sintensity = mattr.getdefault("intensity", "")
+		scolor = mattr.get("color")
+		sintensity = mattr.get("intensity")
 		'
 		stextcolor = mattr.getdefault("textcolor", "")
 		stextintensity = mattr.getdefault("textintensity", "")
@@ -548,10 +562,19 @@ Sub CreateUX
 		stformat = mattr.getdefault("tformat", "ampm")
 		'sheadercolor = mattr.getdefault("headercolor", "")
 		'sheaderintensity = mattr.getdefault("headerintensity", "")
-						
+		selevation = mattr.getdefault("elevation", "")
+		stransition = mattr.getdefault("transition", "")
+		bisfluid = YesNoToBoolean(mattr.getdefault("isfluid", "No"))
+		bisshowmatrix = YesNoToBoolean(mattr.getdefault("isshowmatrix", "No"))
+		bisnogutters = YesNoToBoolean(mattr.getdefault("isnogutters", "No"))
+					
 		bStatic = True
 		'
 		Select Case controltype
+			Case "container"
+				Design_Container
+			Case "parallax"
+				Design_Parallax
 			Case "text"
 				Design_TextField
 			Case "textarea"
@@ -858,7 +881,7 @@ Sub Design_Date
 End Sub
 
 Sub Design_File
-	Dim fi As VMTextField = ui.NewFileInput(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
+	Dim fi As VMTextField = ui.NewFileInput(Me, True, False, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
 	fi.SetSolo(bissolo)
 	fi.SetOutlined(bisoutlined)
 	fi.SetFilled(bisfilled)
@@ -873,7 +896,7 @@ Sub Design_File
 	fi.SetHideDetails(bishidedetails)
 	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			
-	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, False, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "fi", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "fi", sname, "SetFilled")
@@ -1267,6 +1290,56 @@ Sub Design_Icon
 	sb.append($".Container.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
+Sub Design_Parallax
+	Dim para As VMParallax = ui.NewParallax(Me, True, sname, sheight, ssrc, salt)
+	ui.AddControl(para.Parallax, para.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sheight}", "${ssrc}", "${salt}")"$).append(CRLF)
+	sb.append($".Container.AddControl(prlx${sname}.Parallax, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+Sub Design_Container
+	Dim cont As VMContainer = ui.NewContainer(Me, True, "cont" & sname)
+	cont.SetElevation(selevation)
+	cont.SetTransition(stransition)
+	cont.SetFluid(bisfluid)
+	cont.SetShowMatrix(bisshowmatrix)
+	cont.SetNoGutters(bisnogutters)
+	cont.SetVisible(bisvisible)
+	cont.SetBorderRadius(sborderradius)
+	cont.SetBorderWidth(sborderwidth)
+	cont.SetBorderColor(sbordercolor)
+	cont.SetBorderStyle(sborderstyle)
+	cont.SetColorIntensity(scolor, sintensity)
+	cont.SetWidth(swidth)
+	cont.SetHeight(sheight)
+	cont.SetMinWidth(sminwidth)
+	cont.SetMaxWidth(smaxwidth)
+	cont.SetMinHeight(sminheight)
+	cont.SetMaxHeight(smaxheight)
+	ui.AddControl(cont.Container, cont.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim cont${sname} As VMContainer = vm.NewContainer(Me, ${bStatic}, "cont${sname}")"$).append(CRLF)
+	CodeLine(sb, selevation, "s", "cont", sname, "SetElevation")
+	CodeLine(sb, stransition, "s", "cont", sname, "SetTransition")
+	CodeLine(sb, bisfluid, "b", "cont", sname, "SetFluid")
+	CodeLine(sb, bisshowmatrix, "b", "cont", sname, "SetShowMatrix")
+	CodeLine(sb, bisnogutters, "b", "cont", sname, "SetNoGutters")
+	CodeLine(sb, bisvisible, "b", "cont", sname, "SetVisible")
+	CodeLine(sb, sborderradius, "s", "cont", sname, "SetBorderRadius")
+	CodeLine(sb, sborderwidth, "s", "cont", sname, "SetBorderWidth")
+	CodeLine(sb, sbordercolor, "s", "cont", sname, "SetBorderColor")
+	CodeLine(sb, sborderstyle, "s", "cont", sname, "SetBorderStyle")
+	CodeLine(sb, swidth, "s", "cont", sname, "SetWidth")
+	CodeLine(sb, sheight, "s", "cont", sname, "SetHeight")
+	CodeLine(sb, sminwidth, "s", "cont", sname, "SetMinWidth")
+	CodeLine(sb, smaxwidth, "s", "cont", sname, "SetMaxWidth")
+	CodeLine(sb, sminheight, "s", "cont", sname, "SetMinHeight")
+	CodeLine(sb, smaxheight, "s", "cont", sname, "SetMaxHeight")
+	If scolor <> "" Then sb.append($"cont${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	sb.append($".Container.AddControl(cont${sname}.Container, cont${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
 Sub Design_Image
 	Dim img As VMImage = ui.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
 	img.SetLazysrc(slazysrc)
@@ -1605,7 +1678,9 @@ Sub DesignLayout
 	Dim nav As VMExpansionPanel = NavigationPanel
 	ep.AddPanel(nav)
 	'
-	Dim page As VMExpansionPanel = GridPage
+	ep.AddPanel(LayoutPanel)
+	'
+	Dim page As VMExpansionPanel = ComponentsPanel
 	ep.AddPanel(page)
 	'
 	vm.container.AddComponent(1, 1, ep.tostring)
@@ -1652,7 +1727,7 @@ Sub DesignLayout
 End Sub
 '
 
-Sub GridPage As VMExpansionPanel
+Sub ComponentsPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep0grid", "ep1", Me)
 	grd.Header.SetText("My Components")
 	grd.Container.SetTag("div")
@@ -1685,6 +1760,17 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim sattributes As String = rec.get("attributes")
 	'show the property bags
 	Select Case stypeof
+		Case "container"
+			ShowBag("pbcontainer")
+			vm.setdata("controltype", "container")
+			pbcontainer.hideitem("id")
+			pbcontainer.Hideitem("controltype")
+		Case "parallax"
+			ShowBag("pbparallax")
+			pbparallax.SetDefaults
+			vm.setdata("controltype", "parallax")
+			pbparallax.hideitem("id")
+			pbparallax.Hideitem("controltype")
 		Case "text"
 			ShowBag("pbtextfield")
 			pbtextfield.SetDefaults
@@ -1812,7 +1898,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim mattr As Map = BANano.FromJson(sattributes)
 	'DONT OVERWRITE
 	Select Case stypeof
-		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon"
+		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container"
 			mattr.remove("controltype")
 	End Select
 	vm.setstate(mattr)
@@ -1833,6 +1919,18 @@ Sub NavigationPanel As VMExpansionPanel
 	Return grd
 End Sub
 
+Sub LayoutPanel As VMExpansionPanel
+	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("laynav", "epx", Me)
+	grd.Header.SetText("Layouts")
+	grd.Container.SetTag("div")
+	grd.Container.AddRows(1).AddColumns4X3
+	'
+	Dim cont As VMImage = ToolboxImage("container", "./assets/container.png", "Container")
+	grd.Container.AddComponent(1,1,cont.tostring)
+	'
+	Return grd
+End Sub
+
 Sub DisplayPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep3grid", "ep1", Me)
 	grd.Header.SetText("Display")
@@ -1847,7 +1945,10 @@ Sub DisplayPanel As VMExpansionPanel
 	'
 	Dim icon As VMImage = ToolboxImage("icon", "./assets/icon.png", "Icon")
 	grd.Container.AddComponent(1,3,icon.tostring)
-
+	'
+	Dim para As VMImage = ToolboxImage("parallax", "./assets/carousel.png", "Parallax")
+	grd.Container.AddComponent(1,4,para.tostring)
+	'
 	Return grd
 End Sub
 
@@ -2013,6 +2114,7 @@ Sub GridPanel As VMExpansionPanel
 	'
 	Dim col12 As VMElement = ToolboxDiv("col12","C12")
 	grd.Container.AddComponent(8,1,col12.tostring)
+	'
 	Return grd
 End Sub
 
@@ -2072,7 +2174,8 @@ Sub ItemDrop(e As BANanoEvent)
 					rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 					vm.pageresume
 				Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", _
-			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
+			"switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", _
+			"parallax", "container"
 					BANano.SetLocalStorage("selectedpanel", 2)
 					'
 					Dim rowPos As Int = 0
@@ -2155,10 +2258,23 @@ Sub ItemDrop(e As BANanoEvent)
 						Case "image"
 							attr.put("src", "./assets/bird.jpg")
 							BANano.SetLocalStorage("selectedpanel", 1)
+						Case "parallax"
+							attr.put("src", "./assets/material.jpg")
+							BANano.SetLocalStorage("selectedpanel", 1)
 						Case "icon"
 							BANano.SetLocalStorage("selectedpanel", 1)
 						Case "button"
 							BANano.SetLocalStorage("selectedpanel", 3)
+						Case "container"
+							attr.put("elevation", "2")
+							attr.put("transition", "")
+							attr.put("borderradius", "")
+							attr.put("borderwidth", "")
+							attr.put("bordercolor", "")
+							attr.put("borderstyle", "")
+							attr.put("color", "")
+							attr.put("intensity","")
+							BANano.SetLocalStorage("selectedpanel", 4)
 					End Select
 					'
 					'save just in case
@@ -2339,7 +2455,7 @@ Sub PropertyBag_Icon
 	pbicon.AddSelect("d", "size", "Icon Size", iconsizes)
 	pbicon.AddSelect("d","color","Color", vm.ColorOptions)
 	pbicon.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
-	pbicon.AddCheck2(1, 1, "visible", "Visible")
+	pbicon.AddCheck2(1, 1, "isvisible", "Visible")
 	pbicon.AddCheck2(1, 2, "ontable", "On Table")
 	pbicon.AddCheck2(2, 1, "isdark", "Dark")
 	pbicon.AddCheck2(2, 2, "isdense", "Dense")
@@ -2375,7 +2491,7 @@ Sub PropertyBag_Image
 	pbimage.AddText("d","aspectratio","Aspect Ratio","","")
 	pbimage.AddHeightWidths("d")
 	'
-	pbimage.AddCheck2(1, 1, "visible", "Visible")
+	pbimage.AddCheck2(1, 1, "isvisible", "Visible")
 	pbimage.AddCheck2(1, 2, "ontable", "On Table")
 	pbimage.AddCheck2(2, 1, "centeronparent", "Center on Parent")
 	pbimage.SetChecks("d")
@@ -2521,6 +2637,63 @@ Sub PropertyBag_Select
 End Sub
 #End Region
 
+#Region Parallax
+Sub PropertyBag_Parallax
+	vm.setdata("pbparallax", False)
+	pbparallax = vm.CreateProperty("ppbparallax", Me)
+	pbparallax.SetVShow("pbparallax")
+	pbparallax.AddHeading("d","Details")
+	pbparallax.AddText("d","id","ID","","")
+	pbparallax.AddText("d", "controltype", "Type", "","parallax")
+	pbparallax.AddText("d","vmodel","ID","","")
+	pbparallax.AddText("d","height","Height","","500")
+	pbparallax.AddText("d","src","Src","","./assets/material.jpg")
+	pbparallax.AddText("d","alt","Alt","","")
+	
+	pbparallax.AddCheck2(1, 1, "isvisible", "Visible")
+	pbparallax.SetChecks("d")
+	pbparallax.AddMatrix("d")
+	'
+	pbparallax.AddButton("d", "btnSaveParallax", "Save", "savePropertyBag")
+	pbparallax.AddButton("d", "btnDeleteParallax", "Delete", "deletePropertyBag")
+	vm.container.AddComponent(1, 3, pbparallax.tostring)
+End Sub
+#End Region
+
+#Region Container
+Sub PropertyBag_Container
+	vm.setdata("pbcontainer", False)
+	pbcontainer = vm.CreateProperty("ppbcontainer", Me)
+	pbcontainer.SetVShow("pbcontainer")
+	pbcontainer.AddHeading("d","Details")
+	pbcontainer.AddText("d","id","ID","","")
+	pbcontainer.AddText("d", "controltype", "Type", "","container")
+	pbcontainer.AddText("d","vmodel","ID","","")
+	pbcontainer.AddSelect("d","elevation","Elevation",vm.elevation)
+	pbcontainer.AddSelect("d","transition","Transition",vm.Transition)
+	pbcontainer.AddText("d","borderradius","Border Radius","","")
+	pbcontainer.AddText("d","borderwidth","Border Width","","")
+	pbcontainer.AddSelect("d","bordercolor","Border Color", vm.ColorOptions)
+	pbcontainer.AddSelect("d","borderstyle","Border Style",vm.BorderOptions)
+	pbcontainer.AddSelect("d","color","Color", vm.ColorOptions)
+	pbcontainer.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
+	'
+	pbcontainer.AddCheck2(1, 1, "isvisible", "Visible")
+	pbcontainer.AddCheck2(1, 2, "isfluid", "Fluid")
+	pbcontainer.AddCheck2(2, 1, "isshowmatrix", "Show Matrix")
+	pbcontainer.AddCheck2(2, 2, "isnogutters", "No Gutters")
+	pbcontainer.SetChecks("d")
+	'
+	pbcontainer.AddHeightWidths("d")
+	pbcontainer.AddMatrix("d")
+	'
+	pbcontainer.AddButton("d", "btnSaveContainer", "Save", "savePropertyBag")
+	pbcontainer.AddButton("d", "btnDeleteContainer", "Delete", "deletePropertyBag")
+	vm.container.AddComponent(1, 3, pbcontainer.tostring)
+End Sub
+#End Region
+
+
 
 #Region Label Property Bag
 Sub PropertyBag_Label
@@ -2540,7 +2713,7 @@ Sub PropertyBag_Label
 	pblabel.AddSelect("d", "align", "Text Align", vm.TextAlignmentOptions)
 	pblabel.AddSelect("d", "fontweight", "Font Weight", vm.FontWeightOptions)
 	
-	pblabel.AddCheck2(1, 1, "visible", "Visible")
+	pblabel.AddCheck2(1, 1, "isvisible", "Visible")
 	pblabel.AddCheck2(1, 2, "ontable", "On Table")
 	pblabel.AddCheck2(2, 1, "isitalic", "Italic")
 	pblabel.SetChecks("d")
@@ -2674,9 +2847,14 @@ Sub ppbicon_change(e As BANanoEvent)
 	SavePropertyBag
 End Sub
 
+Sub ppbparallax_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
 'save the property bag
 Sub SavePropertyBag
 	'get the saved property bag
+	vm.setdata("devspace", 0)
 	vm.pagepause
 	Dim spropbagtype As String = vm.getdata("propbagtype")
 	Dim props As Map = CreateMap()
@@ -2703,6 +2881,10 @@ Sub SavePropertyBag
 			props = pbbutton.properties
 		Case "icon"
 			props = pbicon.properties
+		Case "parallax"
+			props = pbparallax.properties
+		Case "container"
+			props = pbcontainer.properties
 	End Select
 	'
 	Dim sid As String = props.get("id")
@@ -2714,7 +2896,7 @@ Sub SavePropertyBag
 	'
 	'is vmodel valid
 	Select Case svmodel
-		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon"
+		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", "parallax", "container"
 			vm.SnackBar.SetColor("red")
 			vm.SnackBar.SetTop(True)
 			vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")

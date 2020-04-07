@@ -21,7 +21,7 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(10).AddColumns2x6
 	
-	vm.CreateSwitch("sw1", Me).SetLabel("Switch 1").SetVModel("sw1").SetColorIntensity(vm.vue.COLOR_INDIGO, vm.vue.INTENSITY_DARKEN4).AddToContainer(cont, 1, 1)
+	vm.CreateSwitch("sw1", Me).SetLabel("Switch 1").SetVModel("sw1").SetOnChange(Me, "sw1_change").SetColorIntensity(vm.vue.COLOR_INDIGO, vm.vue.INTENSITY_DARKEN4).AddToContainer(cont, 1, 1)
 	vm.CreateLABEL("lbl2").SetText("{{ sw1 }}").AddToContainer(cont, 1, 2 )
 	'
 	vm.CreateSwitch("sw2", Me).SetLabel("Switch 2").SetVModel("sw2").AddToContainer(cont, 2, 1)
@@ -33,4 +33,11 @@ Sub Code
 	vm.CreateSwitch("sw5", Me).SetLabel("Switch 4").SetLoading("warning").AddToContainer(cont, 4, 1)
 	'
 	vm.AddContainer(cont)
+End Sub
+
+
+Sub sw1_change(value As Object)
+	
+	vm.ShowSnackBar($"sw1_change: ${value}"$)
+	
 End Sub

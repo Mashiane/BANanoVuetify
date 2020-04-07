@@ -22,8 +22,13 @@ Sub Code
 	cont.addrows(10).AddColumns2x6
 	'
 	Dim rg1 As VMRadioGroup = vm.CreateRadioGroup("rg2", Me).SetVModel("rg2").SetHorizontal(True).SetLabel("Other Radios")
-	rg1.SetOptions(CreateMap("rad1":"Radio 1","rad2":"Radio 2"))
+	rg1.SetOptions(CreateMap("rad1":"Radio 1","rad2":"Radio 2","rad3":"Radio 3"))
+	rg1.SetOnChange(Me, "rg2_change")
 	rg1.AddToContainer(cont, 1, 1)
 	'
 	vm.AddContainer(cont)
+End Sub
+
+Sub rg2_change(e As Object)
+	vm.ShowSnackBar(e)
 End Sub

@@ -16,6 +16,7 @@ Sub Class_Globals
 	Private children As List
 	Public hasContent As Boolean
 	Public OnToolBar As Boolean
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Tabs
@@ -31,6 +32,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	hasContent = False
 	OnToolBar = False
 	items.Initialize(vue, $"${ID}items"$, Module)
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMTabs
+	bStatic = b
+	Tabs.SetStatic(b)
+	items.setstatic(b)
 	Return Me
 End Sub
 

@@ -80,9 +80,12 @@ End Sub
 
 Sub AddButton1(key As String, iconName As String, text As String, toolTip As String, badge As String) As VMCardTitle
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module).SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
+	btn.Initialize(vue, key, Module)
+	btn.SetToolTip(toolTip)
+	btn.AddIcon(iconName,"left","")
+	btn.SetLabel(text)
 	If badge <> "" Then
-		'btn.SetBadgeContent(badge)
+		btn.Badge.SetContent(badge)
 	End If
 	CardTitle.SetText(btn.tostring)
 	Return Me
