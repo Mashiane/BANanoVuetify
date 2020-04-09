@@ -14,22 +14,39 @@ Sub Class_Globals
 	Private Module As Object
 	Private act As VMTemplate
 	Private MenuContent As VMList
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Menu
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMMenu
 	vue = v
-	ID = sid.tolowercase
-	Menu.Initialize(v, ID)
-	Menu.SetTag("v-menu")
-	SetOffsetY(True)
-	DesignMode = False
 	Module = eventHandler
-	act.Initialize(vue, "", Module).SetSlotActivatorOn
+	ID = sid.tolowercase
+	Menu.Initialize(v, ID).SetTag("v-menu")
+	act.Initialize(vue, "", Module)
 	MenuContent.Initialize(vue, $"${ID}items"$, Module)
-	SetCloseOnClick(True)
-	SetCloseOnContentClick(True)
+	'
+	act.SetSlotActivatorOn
+	
 	SetOpenOnHover(True)
+	SetOffsetY(True)
+	
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMMenu
+	bStatic = b
+	Menu.SetStatic(b)
+	act.setstatic(b)
+	MenuContent.SetStatic(b)
+	Return Me
+End Sub
+
+Sub SetDesignMode(b As Boolean) As VMMenu
+	DesignMode = b
+	Menu.SetDesignMode(b)
+	act.SetDesignMode(b)
+	MenuContent.SetDesignMode(b)
 	Return Me
 End Sub
 
@@ -84,7 +101,11 @@ End Sub
 'set the icon to activate the menu
 Sub SetIcon(iconName As String) As VMMenu
 	Dim btn As VMButton
-	btn.Initialize(vue, $"${ID}button"$, Module).SetIconButton(iconName).SetMenuTrigger(True)
+	btn.Initialize(vue, $"${ID}button"$, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetIconButton(iconName)
+	btn.SetMenuTrigger(True)
 	btn.Pop(act.Template)
 	Return Me
 End Sub
@@ -92,7 +113,13 @@ End Sub
 'set the button to activate the menu
 Sub SetButton(iconName As String, btnText As String) As VMMenu
 	Dim btn As VMButton
-	btn.Initialize(vue, $"${ID}button"$, Module).AddIcon(iconName,"left","").SetLabel(btnText).SetMenuTrigger(True).SetTransparent(True)
+	btn.Initialize(vue, $"${ID}button"$, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.AddIcon(iconName,"left","")
+	btn.SetLabel(btnText)
+	btn.SetMenuTrigger(True)
+	btn.SetTransparent(True)
 	btn.Pop(act.Template)
 	Return Me
 End Sub
@@ -174,7 +201,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set absolute
-Sub SetAbsolute(varAbsolute As Object) As VMMenu
+Sub SetAbsolute(varAbsolute As Boolean) As VMMenu
+	If varAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("absolute", varAbsolute)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Absolute"$
 	vue.SetStateSingle(pp, varAbsolute)
 	Menu.Bind(":absolute", pp)
@@ -182,7 +214,12 @@ Sub SetAbsolute(varAbsolute As Object) As VMMenu
 End Sub
 
 'set activator
-Sub SetActivator(varActivator As Object) As VMMenu
+Sub SetActivator(varActivator As String) As VMMenu
+	If varActivator = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("activator", varActivator)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}Activator"$
 	vue.SetStateSingle(pp, varActivator)
 	Menu.Bind(":activator", pp)
@@ -190,7 +227,12 @@ Sub SetActivator(varActivator As Object) As VMMenu
 End Sub
 
 'set allow-overflow
-Sub SetAllowOverflow(varAllowOverflow As Object) As VMMenu
+Sub SetAllowOverflow(varAllowOverflow As Boolean) As VMMenu
+	If varAllowOverflow = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("allow-overflow", varAllowOverflow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}AllowOverflow"$
 	vue.SetStateSingle(pp, varAllowOverflow)
 	Menu.Bind(":allow-overflow", pp)
@@ -206,7 +248,12 @@ Sub SetAttach(varAttach As Object) As VMMenu
 End Sub
 
 'set auto
-Sub SetAuto(varAuto As Object) As VMMenu
+Sub SetAuto(varAuto As Boolean) As VMMenu
+	If varAuto = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("auto", varAuto)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Auto"$
 	vue.SetStateSingle(pp, varAuto)
 	Menu.Bind(":auto", pp)
@@ -214,7 +261,12 @@ Sub SetAuto(varAuto As Object) As VMMenu
 End Sub
 
 'set bottom
-Sub SetBottom(varBottom As Object) As VMMenu
+Sub SetBottom(varBottom As Boolean) As VMMenu
+	If varBottom = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("bottom", varBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bottom"$
 	vue.SetStateSingle(pp, varBottom)
 	Menu.Bind(":bottom", pp)
@@ -222,7 +274,12 @@ Sub SetBottom(varBottom As Object) As VMMenu
 End Sub
 
 'set close-delay
-Sub SetCloseDelay(varCloseDelay As Object) As VMMenu
+Sub SetCloseDelay(varCloseDelay As String) As VMMenu
+	If varCloseDelay = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("close-delay", varCloseDelay)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CloseDelay"$
 	vue.SetStateSingle(pp, varCloseDelay)
 	Menu.Bind(":close-delay", pp)
@@ -230,7 +287,12 @@ Sub SetCloseDelay(varCloseDelay As Object) As VMMenu
 End Sub
 
 'set close-on-click
-Sub SetCloseOnClick(varCloseOnClick As Object) As VMMenu
+Sub SetCloseOnClick(varCloseOnClick As Boolean) As VMMenu
+	If varCloseOnClick Then Return Me
+	If bStatic Then
+		SetAttrSingle("close-on-click", varCloseOnClick)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CloseOnClick"$
 	vue.SetStateSingle(pp, varCloseOnClick)
 	Menu.Bind(":close-on-click", pp)
@@ -238,7 +300,12 @@ Sub SetCloseOnClick(varCloseOnClick As Object) As VMMenu
 End Sub
 
 'set close-on-content-click
-Sub SetCloseOnContentClick(varCloseOnContentClick As Object) As VMMenu
+Sub SetCloseOnContentClick(varCloseOnContentClick As Boolean) As VMMenu
+	If varCloseOnContentClick Then Return Me
+	If bStatic Then
+		SetAttrSingle("close-on-content-click", varCloseOnContentClick)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CloseOnContentClick"$
 	vue.SetStateSingle(pp, varCloseOnContentClick)
 	Menu.Bind(":close-on-content-click", pp)
@@ -246,7 +313,12 @@ Sub SetCloseOnContentClick(varCloseOnContentClick As Object) As VMMenu
 End Sub
 
 'set content-class
-Sub SetContentClass(varContentClass As Object) As VMMenu
+Sub SetContentClass(varContentClass As String) As VMMenu
+	If varContentClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("content-class", varContentClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ContentClass"$
 	vue.SetStateSingle(pp, varContentClass)
 	Menu.Bind(":content-class", pp)
@@ -254,7 +326,12 @@ Sub SetContentClass(varContentClass As Object) As VMMenu
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMMenu
+Sub SetDark(varDark As Boolean) As VMMenu
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Menu.Bind(":dark", pp)
@@ -262,7 +339,12 @@ Sub SetDark(varDark As Object) As VMMenu
 End Sub
 
 'set disable-keys
-Sub SetDisableKeys(varDisableKeys As Object) As VMMenu
+Sub SetDisableKeys(varDisableKeys As Boolean) As VMMenu
+	If varDisableKeys = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("disable-keys", varDisableKeys)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}DisableKeys"$
 	vue.SetStateSingle(pp, varDisableKeys)
 	Menu.Bind(":disable-keys", pp)
@@ -276,7 +358,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMMenu
 End Sub
 
 'set eager
-Sub SetEager(varEager As Object) As VMMenu
+Sub SetEager(varEager As Boolean) As VMMenu
+	If varEager = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("eager", varEager)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Eager"$
 	vue.SetStateSingle(pp, varEager)
 	Menu.Bind(":eager", pp)
@@ -284,7 +371,12 @@ Sub SetEager(varEager As Object) As VMMenu
 End Sub
 
 'set fixed
-Sub SetFixed(varFixed As Object) As VMMenu
+Sub SetFixed(varFixed As Boolean) As VMMenu
+	If varFixed = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fixed", varFixed)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Fixed"$
 	vue.SetStateSingle(pp, varFixed)
 	Menu.Bind(":fixed", pp)
@@ -292,7 +384,12 @@ Sub SetFixed(varFixed As Object) As VMMenu
 End Sub
 
 'set internal-activator
-Sub SetInternalActivator(varInternalActivator As Object) As VMMenu
+Sub SetInternalActivator(varInternalActivator As Boolean) As VMMenu
+	If varInternalActivator = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("internal-activator", varInternalActivator)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}InternalActivator"$
 	vue.SetStateSingle(pp, varInternalActivator)
 	Menu.Bind(":internal-activator", pp)
@@ -300,7 +397,12 @@ Sub SetInternalActivator(varInternalActivator As Object) As VMMenu
 End Sub
 
 'set left
-Sub SetLeft(varLeft As Object) As VMMenu
+Sub SetLeft(varLeft As Boolean) As VMMenu
+	If varLeft = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("left", varLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Left"$
 	vue.SetStateSingle(pp, varLeft)
 	Menu.Bind(":left", pp)
@@ -308,7 +410,12 @@ Sub SetLeft(varLeft As Object) As VMMenu
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMMenu
+Sub SetLight(varLight As Boolean) As VMMenu
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Menu.Bind(":light", pp)
@@ -316,7 +423,12 @@ Sub SetLight(varLight As Object) As VMMenu
 End Sub
 
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMMenu
+Sub SetMaxHeight(varMaxHeight As String) As VMMenu
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	Menu.Bind(":max-height", pp)
@@ -324,7 +436,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMMenu
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMMenu
+Sub SetMaxWidth(varMaxWidth As String) As VMMenu
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	Menu.Bind(":max-width", pp)
@@ -332,7 +449,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMMenu
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMMenu
+Sub SetMinWidth(varMinWidth As String) As VMMenu
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	Menu.Bind(":min-width", pp)
@@ -340,7 +462,12 @@ Sub SetMinWidth(varMinWidth As Object) As VMMenu
 End Sub
 
 'set nudge-bottom
-Sub SetNudgeBottom(varNudgeBottom As Object) As VMMenu
+Sub SetNudgeBottom(varNudgeBottom As String) As VMMenu
+	If varNudgeBottom = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-bottom", varNudgeBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeBottom"$
 	vue.SetStateSingle(pp, varNudgeBottom)
 	Menu.Bind(":nudge-bottom", pp)
@@ -348,7 +475,12 @@ Sub SetNudgeBottom(varNudgeBottom As Object) As VMMenu
 End Sub
 
 'set nudge-left
-Sub SetNudgeLeft(varNudgeLeft As Object) As VMMenu
+Sub SetNudgeLeft(varNudgeLeft As String) As VMMenu
+	If varNudgeLeft = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-left", varNudgeLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeLeft"$
 	vue.SetStateSingle(pp, varNudgeLeft)
 	Menu.Bind(":nudge-left", pp)
@@ -356,7 +488,12 @@ Sub SetNudgeLeft(varNudgeLeft As Object) As VMMenu
 End Sub
 
 'set nudge-right
-Sub SetNudgeRight(varNudgeRight As Object) As VMMenu
+Sub SetNudgeRight(varNudgeRight As String) As VMMenu
+	If varNudgeRight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-right", varNudgeRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeRight"$
 	vue.SetStateSingle(pp, varNudgeRight)
 	Menu.Bind(":nudge-right", pp)
@@ -364,7 +501,12 @@ Sub SetNudgeRight(varNudgeRight As Object) As VMMenu
 End Sub
 
 'set nudge-top
-Sub SetNudgeTop(varNudgeTop As Object) As VMMenu
+Sub SetNudgeTop(varNudgeTop As String) As VMMenu
+	If varNudgeTop = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-top", varNudgeTop)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeTop"$
 	vue.SetStateSingle(pp, varNudgeTop)
 	Menu.Bind(":nudge-top", pp)
@@ -372,7 +514,12 @@ Sub SetNudgeTop(varNudgeTop As Object) As VMMenu
 End Sub
 
 'set nudge-width
-Sub SetNudgeWidth(varNudgeWidth As Object) As VMMenu
+Sub SetNudgeWidth(varNudgeWidth As String) As VMMenu
+	If varNudgeWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("nudge-width", varNudgeWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NudgeWidth"$
 	vue.SetStateSingle(pp, varNudgeWidth)
 	Menu.Bind(":nudge-width", pp)
@@ -380,7 +527,12 @@ Sub SetNudgeWidth(varNudgeWidth As Object) As VMMenu
 End Sub
 
 'set offset-overflow
-Sub SetOffsetOverflow(varOffsetOverflow As Object) As VMMenu
+Sub SetOffsetOverflow(varOffsetOverflow As Boolean) As VMMenu
+	If varOffsetOverflow = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("offset-overflow", varOffsetOverflow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffsetOverflow"$
 	vue.SetStateSingle(pp, varOffsetOverflow)
 	Menu.Bind(":offset-overflow", pp)
@@ -388,7 +540,12 @@ Sub SetOffsetOverflow(varOffsetOverflow As Object) As VMMenu
 End Sub
 
 'set offset-x
-Sub SetOffsetX(varOffsetX As Object) As VMMenu
+Sub SetOffsetX(varOffsetX As Boolean) As VMMenu
+	If varOffsetX = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("offset-x", varOffsetX)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffsetX"$
 	vue.SetStateSingle(pp, varOffsetX)
 	Menu.Bind(":offset-x", pp)
@@ -396,7 +553,16 @@ Sub SetOffsetX(varOffsetX As Object) As VMMenu
 End Sub
 
 'set offset-y
-Sub SetOffsetY(varOffsetY As Object) As VMMenu
+Sub SetOffsetY(varOffsetY As Boolean) As VMMenu
+	If varOffsetY = False Then 
+		RemoveAttr("offset-y")
+		RemoveAttr(":offset-y")
+		Return Me
+	End If
+	If bStatic Then
+		SetAttrSingle("offset-y", varOffsetY)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffsetY"$
 	vue.SetStateSingle(pp, varOffsetY)
 	Menu.Bind(":offset-y", pp)
@@ -404,7 +570,12 @@ Sub SetOffsetY(varOffsetY As Object) As VMMenu
 End Sub
 
 'set open-delay
-Sub SetOpenDelay(varOpenDelay As Object) As VMMenu
+Sub SetOpenDelay(varOpenDelay As String) As VMMenu
+	If varOpenDelay = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-delay", varOpenDelay)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenDelay"$
 	vue.SetStateSingle(pp, varOpenDelay)
 	Menu.Bind(":open-delay", pp)
@@ -412,7 +583,12 @@ Sub SetOpenDelay(varOpenDelay As Object) As VMMenu
 End Sub
 
 'set open-on-click
-Sub SetOpenOnClick(varOpenOnClick As Object) As VMMenu
+Sub SetOpenOnClick(varOpenOnClick As Boolean) As VMMenu
+	If varOpenOnClick Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-on-click", varOpenOnClick)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenOnClick"$
 	vue.SetStateSingle(pp, varOpenOnClick)
 	Menu.Bind(":open-on-click", pp)
@@ -420,7 +596,16 @@ Sub SetOpenOnClick(varOpenOnClick As Object) As VMMenu
 End Sub
 
 'set open-on-hover
-Sub SetOpenOnHover(varOpenOnHover As Object) As VMMenu
+Sub SetOpenOnHover(varOpenOnHover As Boolean) As VMMenu
+	If varOpenOnHover = False Then
+		RemoveAttr("open-on-hover")
+		RemoveAttr(":open-on-hover")
+		Return Me
+	End If
+	If bStatic Then
+		SetAttrSingle("", varOpenOnHover)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenOnHover"$
 	vue.SetStateSingle(pp, varOpenOnHover)
 	Menu.Bind(":open-on-hover", pp)
@@ -428,7 +613,12 @@ Sub SetOpenOnHover(varOpenOnHover As Object) As VMMenu
 End Sub
 
 'set origin
-Sub SetOrigin(varOrigin As Object) As VMMenu
+Sub SetOrigin(varOrigin As String) As VMMenu
+	If varOrigin = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("origin", varOrigin)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Origin"$
 	vue.SetStateSingle(pp, varOrigin)
 	Menu.Bind(":origin", pp)
@@ -436,7 +626,12 @@ Sub SetOrigin(varOrigin As Object) As VMMenu
 End Sub
 
 'set position-x
-Sub SetPositionX(varPositionX As Object) As VMMenu
+Sub SetPositionX(varPositionX As String) As VMMenu
+	If varPositionX = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("position-x", varPositionX)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PositionX"$
 	vue.SetStateSingle(pp, varPositionX)
 	Menu.Bind(":position-x", pp)
@@ -444,7 +639,12 @@ Sub SetPositionX(varPositionX As Object) As VMMenu
 End Sub
 
 'set position-y
-Sub SetPositionY(varPositionY As Object) As VMMenu
+Sub SetPositionY(varPositionY As String) As VMMenu
+	If varPositionY = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("position-y", varPositionY)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PositionY"$
 	vue.SetStateSingle(pp, varPositionY)
 	Menu.Bind(":position-y", pp)
@@ -452,15 +652,19 @@ Sub SetPositionY(varPositionY As Object) As VMMenu
 End Sub
 
 'set return-value
-Sub SetReturnValue(varReturnValue As Object) As VMMenu
-	Dim pp As String = $"${ID}ReturnValue"$
-	vue.SetStateSingle(pp, varReturnValue)
-	Menu.Bind(":return-value", pp)
+Sub SetReturnValue(varReturnValue As String) As VMMenu
+	If varReturnValue = "" Then Return Me
+	Menu.Bind("return-value", varReturnValue)
 	Return Me
 End Sub
 
 'set right
-Sub SetRight(varRight As Object) As VMMenu
+Sub SetRight(varRight As Boolean) As VMMenu
+	If varRight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", varRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Right"$
 	vue.SetStateSingle(pp, varRight)
 	Menu.Bind(":right", pp)
@@ -468,7 +672,12 @@ Sub SetRight(varRight As Object) As VMMenu
 End Sub
 
 'set top
-Sub SetTop(varTop As Object) As VMMenu
+Sub SetTop(varTop As Boolean) As VMMenu
+	If varTop = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("top", varTop)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Top"$
 	vue.SetStateSingle(pp, varTop)
 	Menu.Bind(":top", pp)
@@ -476,7 +685,12 @@ Sub SetTop(varTop As Object) As VMMenu
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMMenu
+Sub SetTransition(varTransition As String) As VMMenu
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Transition"$
 	vue.SetStateSingle(pp, varTransition)
 	Menu.Bind(":transition", pp)
@@ -484,13 +698,18 @@ Sub SetTransition(varTransition As Object) As VMMenu
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMMenu
+Sub SetValue(varValue As Boolean) As VMMenu
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 'set z-index
-Sub SetZIndex(varZIndex As Object) As VMMenu
+Sub SetZIndex(varZIndex As String) As VMMenu
+	If varZIndex = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("z-index", varZIndex)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ZIndex"$
 	vue.SetStateSingle(pp, varZIndex)
 	Menu.Bind(":z-index", pp)
@@ -549,12 +768,6 @@ Sub SetMarginAll(p As String) As VMMenu
 	Return Me
 End Sub
 
-Sub SetDesignMode(b As Boolean) As VMMenu
-	Menu.SetDesignMode(b)
-	DesignMode = b
-	Return Me
-End Sub
-
 Sub SetTabIndex(ti As String) As VMMenu
 	Menu.SetTabIndex(ti)
 	Return Me
@@ -583,12 +796,13 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMMenu
-Menu.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Menu.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMMenu
-Menu.SetVisible(b)
-Return Me
+	Menu.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

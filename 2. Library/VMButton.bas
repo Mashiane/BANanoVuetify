@@ -118,8 +118,10 @@ Sub SetIconButton(iconName As String) As VMButton
 	If iconName = "" Then Return Me
 	SetIcon(True)
 	Dim icon As VMIcon
-	icon.Initialize(vue, $"${ID}icon"$, Module).SetText(iconName)
+	icon.Initialize(vue, $"${ID}icon"$, Module)
 	icon.SetStatic(bStatic)
+	icon.SetDesignMode(DesignMode)
+	icon.SetText(iconName)
 	icon.Pop(Button)
 	Return Me
 End Sub
@@ -169,8 +171,10 @@ Sub SetFABButton(iconName As String) As VMButton
 	SetFab(True)
 	SetDark(True)
 	Dim icon As VMIcon
-	icon.Initialize(vue, $"${ID}icon"$, Module).SetText(iconName)
+	icon.Initialize(vue, $"${ID}icon"$, Module)
 	icon.SetStatic(bStatic)
+	icon.SetDesignMode(DesignMode)
+	icon.SetText(iconName)
 	icon.Pop(Button)
 	Return Me
 End Sub
@@ -190,8 +194,10 @@ End Sub
 'add an icon to the button
 Sub AddIconVIf(iconName As String, vif As String, theme As String) As VMButton
 	Dim icon As VMIcon
-	icon.Initialize(vue, "", Module).SetText(iconName).SetVIf(vif)
+	icon.Initialize(vue, "", Module)
 	icon.SetStatic(bStatic)
+	icon.SetDesignMode(DesignMode)
+	icon.SetText(iconName).SetVIf(vif)
 	If theme <> "" Then
 		icon.UseTheme(theme)
 	End If
@@ -202,8 +208,10 @@ End Sub
 'add an icon to the button
 Sub AddIconVElse(iconName As String, vif As String, theme As String) As VMButton
 	Dim icon As VMIcon
-	icon.Initialize(vue, "", Module).SetText(iconName).setvelse(vif)
+	icon.Initialize(vue, "", Module)
 	icon.SetStatic(bStatic)
+	icon.SetDesignMode(True)
+	icon.SetText(iconName).setvelse(vif)
 	If theme <> "" Then
 		icon.UseTheme(theme)
 	End If
@@ -216,8 +224,10 @@ Sub AddIcon(iconName As String, iconPos As String, iconTheme As String) As VMBut
 	Dim oldtxt As String = txt
 	If iconName = "" Then Return Me
 	Dim icon As VMIcon
-	icon.Initialize(vue, $"${ID}icon"$, Module).SetText(iconName)
+	icon.Initialize(vue, $"${ID}icon"$, Module)
 	icon.SetStatic(bStatic)
+	icon.SetDesignMode(True)
+	icon.SetText(iconName)
 	Select Case iconPos
 	Case "left"
 		icon.SetLeft(True)
@@ -794,12 +804,12 @@ End Sub
 'set text
 private Sub SetText(varText As String) As VMButton
 	txt = varText
-	Dim pp As String = $"${ID}label"$
-	pp = pp.tolowercase
-	vue.SetStateSingle(pp, varText)
-	If DesignMode Then
+	If DesignMode = True Or bStatic = True Then
 		Button.SetText(varText)
 	Else
+		Dim pp As String = $"${ID}label"$
+		pp = pp.tolowercase
+		vue.SetStateSingle(pp, varText)
 		Button.SetText($"{{ ${pp} }}"$)
 	End If
 	Return Me

@@ -26,6 +26,7 @@ Sub Process_Globals
 	Private pbparallax As VMProperty
 	Private pbcontainer As VMProperty
 	Private pbtoolbar As VMProperty
+	Private pbmenu As VMProperty
 	Private lstBags As List
 	Private avatarMap As Map
 	Private controltypes As Map
@@ -217,6 +218,52 @@ Sub Process_Globals
 	Private bisshrinkonscroll As Boolean
 	Private bisvisible As Boolean
 	Private bislogovisible As Boolean
+	'menu
+	Private sactivator As String
+	Private sclosedelay As String
+	Private scontentclass As String
+	Private sicon As String
+	Private smaxheight As String
+	Private smaxwidth As String
+	Private sminwidth As String
+	Private snudgebottom As String
+	Private snudgeleft As String
+	Private snudgeright As String
+	Private snudgetop As String
+	Private snudgewidth As String
+	Private sopendelay As String
+	Private sorigin As String
+	Private spositionx As String
+	Private spositiony As String
+	Private sreturnvalue As String
+	Private stabindex As String
+	Private stextcolor As String
+	Private stransition As String
+	'
+	Private bisabsolute As Boolean
+	Private bisallowoverflow As Boolean
+	Private bisauto As Boolean
+	Private bisbottom As Boolean
+	Private biscloseonclick As Boolean
+	Private biscloseoncontentclick As Boolean
+	Private bisdark As Boolean
+	Private bisdisablekeys As Boolean
+	Private bisdisabled As Boolean
+	Private biseager As Boolean
+	Private bisfixed As Boolean
+	Private bisinternalactivator As Boolean
+	Private bisleft As Boolean
+	Private bislight As Boolean
+	Private bisoffsetoverflow As Boolean
+	Private bisoffsetx As Boolean
+	Private bisoffsety As Boolean
+	Private bisopenonclick As Boolean
+	Private bisopenonhover As Boolean
+	Private bisright As Boolean
+	Private bisslotactivator As Boolean
+	Private bistop As Boolean
+	Private bisvisible As Boolean
+	Private menutype As String
 End Sub
 
 Sub Init
@@ -238,6 +285,7 @@ Sub Init
 	lstBags.add("pbparallax")
 	lstBags.add("pbcontainer")
 	lstBags.add("pbtoolbar")
+	lstBags.add("pbmenu")
 	'
 	avatarMap.initialize
 	avatarMap.put("text", "./assets/text.png")
@@ -263,6 +311,7 @@ Sub Init
 	avatarMap.put("parallax", "./assets/carousel.png")
 	avatarMap.put("container", "./assets/container.png")
 	avatarMap.put("toolbar", "./assets/toolbar.png")
+	avatarMap.put("menu", "./assets/menu.png")
 	'
 	vm.Initialize(Me, Main.appname)
 	vm.setdata("showmatrix", True)
@@ -352,6 +401,8 @@ Sub Init
 	PropertyBag_Parallax
 	PropertyBag_Container
 	PropertyBag_Toolbar
+	PropertyBag_Menu
+
 	'
 	AddPages
 	vm.UX
@@ -623,10 +674,14 @@ Sub CreateUX
 		bisshrinkonscroll = YesNoToBoolean(mattr.getdefault("isshrinkonscroll", "No"))
 		bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 		bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
+		'
+		Read_Menu
 							
 		bStatic = True
 		'
 		Select Case controltype
+			Case "menu"
+				Design_Menu
 			Case "toolbar", "appbar", "systembar"
 				Design_ToolBar
 			Case "container"
@@ -689,6 +744,53 @@ Sub CreateUX
 	
 	'
 	vm.pageresume
+End Sub
+
+Sub Read_Menu
+	bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisallowoverflow = YesNoToBoolean(mattr.getdefault("isallowoverflow", "No"))
+	bisauto = YesNoToBoolean(mattr.getdefault("isauto", "No"))
+	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+	biscloseonclick = YesNoToBoolean(mattr.getdefault("iscloseonclick", "No"))
+	biscloseoncontentclick = YesNoToBoolean(mattr.getdefault("iscloseoncontentclick", "No"))
+	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisdisablekeys = YesNoToBoolean(mattr.getdefault("isdisablekeys", "No"))
+	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
+	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	bisinternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
+	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
+	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisoffsetoverflow = YesNoToBoolean(mattr.getdefault("isoffsetoverflow", "No"))
+	bisoffsetx = YesNoToBoolean(mattr.getdefault("isoffsetx", "No"))
+	bisoffsety = YesNoToBoolean(mattr.getdefault("isoffsety", "No"))
+	bisopenonclick = YesNoToBoolean(mattr.getdefault("isopenonclick", "No"))
+	bisopenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
+	bisright = YesNoToBoolean(mattr.getdefault("isright", "No"))
+	bisslotactivator = YesNoToBoolean(mattr.getdefault("isslotactivator", "No"))
+	bistop = YesNoToBoolean(mattr.getdefault("istop", "No"))
+	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	'
+	'menu
+	menutype = mattr.getdefault("menutype","")
+	sactivator = mattr.getdefault("activator", "")
+	sclosedelay = mattr.getdefault("closedelay", "")
+	scontentclass = mattr.getdefault("contentclass", "")
+	sicon = mattr.getdefault("icon", "")
+	smaxheight = mattr.getdefault("maxheight", "")
+	smaxwidth = mattr.getdefault("maxwidth", "")
+	sminwidth = mattr.getdefault("minwidth", "")
+	snudgebottom = mattr.getdefault("nudgebottom", "")
+	snudgeleft = mattr.getdefault("nudgeleft", "")
+	snudgeright = mattr.getdefault("nudgeright", "")
+	snudgetop = mattr.getdefault("nudgetop", "")
+	snudgewidth = mattr.getdefault("nudgewidth", "")
+	sopendelay = mattr.getdefault("opendelay", "")
+	sorigin = mattr.getdefault("origin", "")
+	spositionx = mattr.getdefault("positionx", "")
+	spositiony = mattr.getdefault("positiony", "")
+	sreturnvalue = mattr.getdefault("returnvalue", "")
+	stransition = mattr.getdefault("transition", "")
 End Sub
 
 Sub Design_Grid(gridSQL As BANanoAlaSQLE)
@@ -1430,6 +1532,112 @@ Sub Design_Image
 	'
 End Sub
 
+
+Sub Design_Menu
+	Dim menu As VMMenu = ui.CreateMenu("menu" & sname, Me)
+	menu.setstatic(True)
+	Select Case menutype
+	Case "icon"
+		menu.SetIcon(sicon)
+	Case "btn"
+		menu.SetButton(sicon, stitle)
+	End Select
+	menu.Setactivator(sactivator)
+	menu.Setclosedelay(sclosedelay)
+	menu.Setcontentclass(scontentclass)
+	menu.Setmaxheight(smaxheight)
+	menu.Setmaxwidth(smaxwidth)
+	menu.Setminwidth(sminwidth)
+	menu.Setnudgebottom(snudgebottom)
+	menu.Setnudgeleft(snudgeleft)
+	menu.Setnudgeright(snudgeright)
+	menu.Setnudgetop(snudgetop)
+	menu.Setnudgewidth(snudgewidth)
+	menu.Setopendelay(sopendelay)
+	menu.Setorigin(sorigin)
+	menu.Setpositionx(spositionx)
+	menu.Setpositiony(spositiony)
+	menu.Setreturnvalue(sreturnvalue)
+	menu.Settransition(stransition)
+	'
+	menu.Setabsolute(bisabsolute)
+	menu.Setallowoverflow(bisallowoverflow)
+	menu.Setauto(bisauto)
+	menu.Setbottom(bisbottom)
+	menu.Setcloseonclick(biscloseonclick)
+	menu.Setcloseoncontentclick(biscloseoncontentclick)
+	menu.Setdark(bisdark)
+	menu.Setdisablekeys(bisdisablekeys)
+	menu.Setdisabled(bisdisabled)
+	menu.Seteager(biseager)
+	menu.Setfixed(bisfixed)
+	menu.Setinternalactivator(bisinternalactivator)
+	menu.Setleft(bisleft)
+	menu.Setlight(bislight)
+	menu.Setoffsetoverflow(bisoffsetoverflow)
+	menu.Setoffsetx(bisoffsetx)
+	menu.Setoffsety(bisoffsety)
+	menu.Setopenonclick(bisopenonclick)
+	menu.Setopenonhover(bisopenonhover)
+	menu.Setright(bisright)
+	menu.Setslotactivator(bisslotactivator)
+	menu.Settop(bistop)
+	ui.AddControl(menu.Menu, menu.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	
+	'
+	sb.append($"Dim menu${sname} As VMMenu = vm.CreateMenu("menu${sname}", Me)"$).append(CRLF)
+	Select Case menutype
+	Case "icon"
+		menu.SetIcon(sicon)
+		CodeLine(sb, sicon, "s", "menu", sname, "SetIcon")
+	Case "btn"
+		CodeLine2(sb, sicon, stitle, "s", "menu", sname, "SetButton")
+	End Select
+	CodeLine(sb, sactivator, "s", "menu", sname, "Setactivator")
+	CodeLine(sb, sclosedelay, "s", "menu", sname, "Setclosedelay")
+	CodeLine(sb, scontentclass, "s", "menu", sname, "Setcontentclass")
+	CodeLine(sb, smaxheight, "s", "menu", sname, "Setmaxheight")
+	CodeLine(sb, smaxwidth, "s", "menu", sname, "Setmaxwidth")
+	CodeLine(sb, sminwidth, "s", "menu", sname, "Setminwidth")
+	CodeLine(sb, snudgebottom, "s", "menu", sname, "Setnudgebottom")
+	CodeLine(sb, snudgeleft, "s", "menu", sname, "Setnudgeleft")
+	CodeLine(sb, snudgeright, "s", "menu", sname, "Setnudgeright")
+	CodeLine(sb, snudgetop, "s", "menu", sname, "Setnudgetop")
+	CodeLine(sb, snudgewidth, "s", "menu", sname, "Setnudgewidth")
+	CodeLine(sb, sopendelay, "s", "menu", sname, "Setopendelay")
+	CodeLine(sb, sorigin, "s", "menu", sname, "Setorigin")
+	CodeLine(sb, spositionx, "s", "menu", sname, "Setpositionx")
+	CodeLine(sb, spositiony, "s", "menu", sname, "Setpositiony")
+	CodeLine(sb, sreturnvalue, "s", "menu", sname, "Setreturnvalue")
+	CodeLine(sb, stransition, "s", "menu", sname, "Settransition")
+	'
+	CodeLine(sb, bisabsolute, "b", "menu", sname, "Setabsolute")
+	CodeLine(sb, bisallowoverflow, "b", "menu", sname, "Setallowoverflow")
+	CodeLine(sb, bisauto, "b", "menu", sname, "Setauto")
+	CodeLine(sb, bisbottom, "b", "menu", sname, "Setbottom")
+	CodeLine(sb, biscloseonclick, "b", "menu", sname, "Setcloseonclick")
+	CodeLine(sb, biscloseoncontentclick, "b", "menu", sname, "Setcloseoncontentclick")
+	CodeLine(sb, bisdark, "b", "menu", sname, "Setdark")
+	CodeLine(sb, bisdisablekeys, "b", "menu", sname, "Setdisablekeys")
+	CodeLine(sb, bisdisabled, "b", "menu", sname, "Setdisabled")
+	CodeLine(sb, biseager, "b", "menu", sname, "Seteager")
+	CodeLine(sb, bisfixed, "b", "menu", sname, "Setfixed")
+	CodeLine(sb, bisinternalactivator, "b", "menu", sname, "Setinternalactivator")
+	CodeLine(sb, bisleft, "b", "menu", sname, "Setleft")
+	CodeLine(sb, bislight, "b", "menu", sname, "Setlight")
+	CodeLine(sb, bisoffsetoverflow, "b", "menu", sname, "Setoffsetoverflow")
+	CodeLine(sb, bisoffsetx, "b", "menu", sname, "Setoffsetx")
+	CodeLine(sb, bisoffsety, "b", "menu", sname, "Setoffsety")
+	CodeLine(sb, bisopenonclick, "b", "menu", sname, "Setopenonclick")
+	CodeLine(sb, bisopenonhover, "b", "menu", sname, "Setopenonhover")
+	CodeLine(sb, bisright, "b", "menu", sname, "Setright")
+	CodeLine(sb, bisslotactivator, "b", "menu", sname, "Setslotactivator")
+	CodeLine(sb, bistop, "b", "menu", sname, "Settop")
+	
+	sb.append($".Container.AddControl(menu${sname}.Menu, menu${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+
+End Sub
+
 Sub Design_ToolBar
 	Dim tbl As VMToolBar = ui.CreateToolbar("tbl" & sname, Me)
 	tbl.SetStatic(True)
@@ -1950,6 +2158,11 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim sattributes As String = rec.get("attributes")
 	'show the property bags
 	Select Case stypeof
+		Case "menu"
+			ShowBag("pbmenu")
+			vm.setdata("controltype", "menu")
+			pbmenu.hideitem("id")
+			pbmenu.Hideitem("controltype")
 		Case "toolbar"
 			ShowBag("pbtoolbar")
 			vm.setdata("controltype", "toolbar")
@@ -2093,7 +2306,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim mattr As Map = BANano.FromJson(sattributes)
 	'DONT OVERWRITE
 	Select Case stypeof
-		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container", "toolbar"
+		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container", "toolbar", "menu"
 			mattr.remove("controltype")
 	End Select
 	vm.setstate(mattr)
@@ -2125,6 +2338,9 @@ Sub LayoutPanel As VMExpansionPanel
 	'
 	Dim tblr As VMImage = ToolboxImage("toolbar", "./assets/toolbar.png", "Toolbar")
 	grd.Container.AddComponent(1,2,tblr.tostring)
+	'
+	Dim menu As VMImage = ToolboxImage("menu", "./assets/menu.png", "Menu")
+	grd.Container.AddComponent(1,3,menu.tostring)
 	
 	Return grd
 End Sub
@@ -2479,6 +2695,15 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("ishamburger", "Yes")
 							attr.put("logowidth", "46px")
 							attr.put("logoheight", "46px")
+							BANano.SetLocalStorage("selectedpanel", 4)
+						Case "menu"
+							attr.put("icon", "mdi-dots-vertical")
+							attr.put("iscloseonclick", "Yes")
+							attr.put("iscloseoncontentclick", "Yes")
+							attr.put("isopenonclick", "Yes")
+							attr.put("menutype", "icon")
+							attr.put("isopenonhover", "Yes")
+							attr.put("isoffsety", "Yes")
 							BANano.SetLocalStorage("selectedpanel", 4)
 					End Select
 					'
@@ -3185,6 +3410,11 @@ Sub ppbtoolbar_change(e As BANanoEvent)
 	SavePropertyBag
 End Sub
 
+
+Sub ppbmenu_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
 'save the property bag
 Sub SavePropertyBag
 	'get the saved property bag
@@ -3221,6 +3451,8 @@ Sub SavePropertyBag
 			props = pbcontainer.properties
 		Case "toolbar"
 			props = pbtoolbar.properties
+		Case "menu"
+			props = pbmenu.properties
 	End Select
 	'
 	Dim sid As String = props.get("id")
@@ -3232,7 +3464,7 @@ Sub SavePropertyBag
 	'
 	'is vmodel valid
 	Select Case svmodel
-		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", "parallax", "container", "toolbar"
+		Case "text", "textarea", "checkbox", "date", "file", "radio", "select", "slider", "switch", "label", "email", "password", "tel", "combo", "number", "profile", "auto", "time", "image", "button", "icon", "parallax", "container", "toolbar", "menu"
 			vm.SnackBar.SetColor("red")
 			vm.SnackBar.SetTop(True)
 			vm.ShowSnackBar("The vmodel you have specified is internal to the designer, please change it!")
@@ -3287,5 +3519,65 @@ Sub ShowBag(thisBag As String)
 	vm.SetState(m)
 End Sub
 
+
+#Region Menu
+Sub PropertyBag_Menu
+	vm.setdata("pbmenu", False)
+	pbmenu = vm.CreateProperty("ppbmenu", Me)
+	pbmenu.SetVShow("pbmenu")
+	pbmenu.AddHeading("d","Details")
+	pbmenu.AddText("d","id","ID","","")
+	pbmenu.AddText("d", "controltype", "Type", "","menu")
+	pbmenu.AddText("d","vmodel","ID","","")
+	pbmenu.AddRadioGroup("d", "menutype", "Type", CreateMap("icon":"Icon","btn":"Button"))
+	pbmenu.AddText("d","activator","Activator","","")
+	pbmenu.AddText("d","closedelay","Close Delay","","")
+	pbmenu.AddText("d","contentclass","Content Class","","")
+	pbmenu.AddText("d","icon","Icon","","")
+	pbmenu.AddText("d","label","Text","","")
+	pbmenu.AddText("d","maxheight","Max Height","","")
+	pbmenu.AddText("d","maxwidth","Max Width","","")
+	pbmenu.AddText("d","minwidth","Min Width","","")
+	pbmenu.AddText("d","nudgebottom","Nudge Bottom","","")
+	pbmenu.AddText("d","nudgeleft","Nudge Left","","")
+	pbmenu.AddText("d","nudgeright","Nudge Right","","")
+	pbmenu.AddText("d","nudgetop","Nudge Top","","")
+	pbmenu.AddText("d","nudgewidth","Nudge Width","","")
+	pbmenu.AddText("d","opendelay","Open Delay","","")
+	pbmenu.AddText("d","origin","Origin","","")
+	pbmenu.AddText("d","positionx","Position X","","")
+	pbmenu.AddText("d","positiony","Position Y","","")
+	pbmenu.AddText("d","returnvalue","Return Value","","")
+	pbmenu.AddSelect("d","transition","Transition",vm.Transition)
+	'
+	pbmenu.AddCheck2(1, 1, "isabsolute", "Absolute")
+	pbmenu.AddCheck2(1, 2, "isallowoverflow", "AllowOverflow")
+	pbmenu.AddCheck2(2, 1, "isauto", "Auto")
+	pbmenu.AddCheck2(2, 2, "isbottom", "Bottom")
+	pbmenu.AddCheck2(3, 1, "iscloseonclick", "CloseOn Click")
+	pbmenu.AddCheck2(3, 2, "iscloseoncontentclick", "CloseOnContentClick")
+	pbmenu.AddCheck2(4, 1, "isdark", "Dark")
+	pbmenu.AddCheck2(4, 2, "isdisablekeys", "DisableKeys")
+	pbmenu.AddCheck2(5, 1, "isdisabled", "Disabled")
+	pbmenu.AddCheck2(5, 2, "iseager", "Eager")
+	pbmenu.AddCheck2(6, 1, "isfixed", "Fixed")
+	pbmenu.AddCheck2(6, 2, "isinternalactivator", "InternalActivator")
+	pbmenu.AddCheck2(7, 1, "isleft", "Left")
+	pbmenu.AddCheck2(7, 2, "islight", "Light")
+	pbmenu.AddCheck2(8, 1, "isoffsetoverflow", "OffsetOverflow")
+	pbmenu.AddCheck2(8, 2, "isoffsetx", "OffsetX")
+	pbmenu.AddCheck2(9, 1, "isoffsety", "OffsetY")
+	pbmenu.AddCheck2(9, 2, "isopenonclick", "OpenOnClick")
+	pbmenu.AddCheck2(10, 1, "isopenonhover", "OpenOnHover")
+	pbmenu.AddCheck2(10, 2, "isright", "Right")
+	pbmenu.AddCheck2(11, 1, "isslotactivator", "SlotActivator")
+	pbmenu.AddCheck2(11, 2, "istop", "Top")
+	pbmenu.SetChecks("d")
+	pbmenu.AddMatrix("d")
+	pbmenu.AddButton("d", "btnSaveMenu", "Save", "savePropertyBag")
+	pbmenu.AddButton("d", "btnDeleteMenu", "Delete", "deletePropertyBag")
+	vm.container.AddComponent(1, 3, pbmenu.tostring)
+End Sub
+#End Region
 
 	

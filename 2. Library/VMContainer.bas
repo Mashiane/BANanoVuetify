@@ -113,12 +113,22 @@ End Sub
 Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	Dim el As VMParallax
 	el.Initialize(vue, eID, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
+
+Sub CreateMenu(sid As String, moduleObj As Object) As VMMenu
+	Dim el As VMMenu
+	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
 Sub CreateContainer(sid As String, eventHandler As Object) As VMContainer
 	Dim el As VMContainer
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -160,6 +170,7 @@ End Sub
 Sub CreateAppBar(sid As String, moduleObj As Object) As VMToolBar
 	Dim el As VMToolBar
 	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	el.SetAppBar(True)
 	Return el
 End Sub
@@ -167,6 +178,7 @@ End Sub
 Sub CreateSystemBar(sid As String, moduleObj As Object) As VMToolBar
 	Dim el As VMToolBar
 	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	el.SetSystemBar(True)
 	Return el
 End Sub
@@ -187,12 +199,14 @@ End Sub
 Sub CreateLabel(sID As String) As VMLabel
 	Dim el As VMLabel
 	el.Initialize(vue, sID)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
 Sub CreateImage(img As String, eventHandler As Object) As VMImage
 	Dim el As VMImage
 	el.Initialize(vue, img, eventHandler)
+	el.SetDesignMode(DesignMode)
 	el.Image.typeof = "image"
 	Return el
 End Sub
@@ -229,12 +243,14 @@ End Sub
 Sub CreateInfoBox(sid As String, eventHandler As Object) As VMInfoBox
 	Dim el As VMInfoBox
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
 Sub CreateIcon(sid As String, moduleObj As Object) As VMIcon
 	Dim el As VMIcon
 	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -269,6 +285,7 @@ End Sub
 Sub CreateSlider(sid As String, eventHandler As Object) As VMSlider
 	Dim el As VMSlider
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -289,6 +306,7 @@ End Sub
 Sub CreateSwitch(sid As String, eventHandler As Object) As VMCheckBox
 	Dim el As VMCheckBox
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	el.SetSwitch
 	Return el
 End Sub
@@ -319,6 +337,7 @@ End Sub
 Sub CreateRadioGroup(sid As String, eventHandler As Object) As VMRadioGroup
 	Dim el As VMRadioGroup
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 '
@@ -412,6 +431,7 @@ End Sub
 Sub CreateFABButton(sid As String,moduleObj As Object, iconName As String) As VMButton
 	Dim el As VMButton
 	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	el.SetFabButton(iconName)
 	Return el
 End Sub
@@ -494,6 +514,7 @@ End Sub
 Sub CreateCheckBox(sid As String, eventHandler As Object) As VMCheckBox
 	Dim el As VMCheckBox
 	el.Initialize(vue, sid, eventHandler)	
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -517,6 +538,7 @@ End Sub
 Sub CreateDateTimePicker(sid As String, eventHandler As Object) As VMDateTimePicker
 	Dim el As VMDateTimePicker
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -555,6 +577,7 @@ End Sub
 Sub CreateTextField(sid As String, eventHandler As Object) As VMTextField
 	Dim el As VMTextField
 	el.Initialize(vue, sid,eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -648,6 +671,7 @@ End Sub
 Sub CreateFileInput(sid As String, eventHandler As Object, bUpload As Boolean) As VMTextField
 	Dim el As VMTextField
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
 	el.SetFileInput(bUpload)
 	Return el
 End Sub
@@ -687,6 +711,7 @@ End Sub
 Sub CreateSelect(sid As String, eventHandler As Object) As VMSelect
 	Dim el As VMSelect
 	el.Initialize(vue,sid,eventHandler)
+	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
 
@@ -694,6 +719,7 @@ End Sub
 Sub CreateButton(sid As String,moduleObj As Object) As VMButton
 	Dim el As VMButton
 	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
 	el.SetType("button")
 	Return el
 End Sub

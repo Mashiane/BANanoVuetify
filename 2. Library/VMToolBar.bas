@@ -41,7 +41,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	tTitle = $"${ID}title"$
 	Title.Initialize(vue, "appbartitle").SetTag("v-toolbar-title")
 	'
-	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("ma-2").BindStyleSingle("opacity", "1")
+	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").BindStyleSingle("opacity", "1")
 	
 	compx = 0
 	bStatic = False
@@ -117,7 +117,12 @@ Sub AddSubHeading(sText As String, mprops As Map, mstyles As Map, lclasses As Li
 	d.Initialize(vue, skey)
 	d.SetStatic(bStatic)
 	d.SetDesignMode(DesignMode)
-	d.SetSpan.SetText($"{{ ${skey} }}"$).AddClass("subheading")
+	If bStatic Then
+		d.SetSpan.SetText(sText)
+	Else	
+		d.SetSpan.SetText($"{{ ${skey} }}"$)
+	End If
+	d.AddClass("subheading")
 	d.BuildModel(mprops, mstyles, lclasses, loose)
 	AddComponent(skey, d.ToString)
 	vue.SetData(skey, sText)
@@ -229,7 +234,10 @@ End Sub
 
 Sub AddSearch(key As String) As VMToolBar
 	Dim txt As VMTextField
-	txt.Initialize(vue, key, module).AddClass("mx-4").SetAttributes(Array("flat", "hide-details","solo-inverted"))
+	txt.Initialize(vue, key, module)
+	txt.SetStatic(bStatic)
+	txt.SetDesignMode(DesignMode)
+	txt.AddClass("mx-4").SetAttributes(Array("flat", "hide-details","solo-inverted"))
 	txt.SetLabel("Search").SetPrependInnerIcon("search").AddClass("hidden-sm-and-down").SetClearable(True).SetVModel(key)
 	ToolBar.SetText(txt.ToString)
 	Return Me
@@ -250,7 +258,10 @@ End Sub
 Sub AddIcon(key As String, iconName As String, toolTip As String, badge As String) As VMToolBar
 	key = key.tolowercase
 	Dim btn As VMButton
-	btn.Initialize(vue, key, module).SetIconButton(iconName).SetTooltip(toolTip)
+	btn.Initialize(vue, key, module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetIconButton(iconName).SetTooltip(toolTip)
 	btn.Pop(ToolBar)
 	objects.Add(key)
 	Return Me
@@ -639,11 +650,16 @@ Sub SetMaxWidth(varMaxWidth As String) As VMToolBar
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMToolBar
-Dim pp As String = $"${ID}MinHeight"$
-vue.SetStateSingle(pp, varMinHeight)
-ToolBar.Bind(":min-height", pp)
-Return Me
+Sub SetMinHeight(varMinHeight As String) As VMToolBar
+	If varMinHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}MinHeight"$
+	vue.SetStateSingle(pp, varMinHeight)
+	ToolBar.Bind(":min-height", pp)
+	Return Me
 End Sub
 
 'set min-width

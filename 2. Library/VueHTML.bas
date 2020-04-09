@@ -2115,9 +2115,11 @@ Sub BuildAttributes As String
 		For kCnt = kTot To 0 Step -1
 			Dim sKey As String = properties.GetKeyAt(kCnt)
 			If sKey.StartsWith(":") Then properties.Remove(sKey)
-			If sKey.StartsWith("v-") Then properties.Remove(sKey)
+			'If sKey.StartsWith("v-") Then properties.Remove(sKey)
 			If sKey.StartsWith("@") Then properties.Remove(sKey)
 		Next
+		properties.Remove("v-if")
+		properties.Remove("v-show")
 	End If
 	Dim strKey As String = properties.GetKeyAt(0)
 	Dim strValue As Object = properties.Get(strKey)

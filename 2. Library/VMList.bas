@@ -182,7 +182,7 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 		vlii.Initialize(vue, "", Module).SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
 		icon.Initialize(vue,"", Module).SetVText($"item.${iconName}"$)
-		icon.SetStatic(bstatic)
+		icon.SetStatic(bStatic)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If
