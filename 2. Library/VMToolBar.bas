@@ -41,7 +41,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	tTitle = $"${ID}title"$
 	Title.Initialize(vue, "appbartitle").SetTag("v-toolbar-title")
 	'
-	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").BindStyleSingle("opacity", "1")
+	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").AddClass("my-1").BindStyleSingle("opacity", "1")
 	
 	compx = 0
 	bStatic = False

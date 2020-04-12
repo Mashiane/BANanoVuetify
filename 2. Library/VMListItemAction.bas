@@ -37,9 +37,13 @@ End Sub
 Sub AddIcon(key As String, iconName As String) As VMListItemAction
 	key = key.tolowercase
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module).SetAttributes(Array("icon")).SetStatic(bStatic)
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetAttributes(Array("icon"))
 	Dim icon As VMIcon
-	icon.Initialize(vue, $"${key}icon"$, Module).SetVText(iconName).SetStatic(bStatic)
+	icon.Initialize(vue, $"${key}icon"$, Module)
+	icon.SetStatic(bStatic)
+	icon.SetVText(iconName)
 	btn.AddComponent(icon.ToString)
 	btn.Pop(ListItemAction)
 	Return Me
@@ -59,6 +63,7 @@ End Sub
 
 'get component
 Sub ToString As String
+	RemoveAttr("ref")
 	Return ListItemAction.ToString
 End Sub
 
@@ -200,12 +205,13 @@ Sub SetAttrSingle(prop As String, value As String) As VMListItemAction
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItemAction
-ListItemAction.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	ListItemAction.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMListItemAction
-ListItemAction.SetVisible(b)
-Return Me
+	ListItemAction.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

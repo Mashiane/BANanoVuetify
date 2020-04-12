@@ -49,7 +49,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	markers.SetAttrSingle(":key", "m.id")
 	markers.SetAttrSingle("@click", "toggleinfowindow(m,i)")
 	SetEvents
-	vue.SetStateSingle(markerName, Array())
+	vue.SetStateSingle(markerName, vue.newlist)
 	points.Initialize
 	'
 	iwPosition = $"${ID}iwpos"$
@@ -78,7 +78,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'
 	kmlLayer.Initialize(vue, kmlName).SetTag("google-kml-layer")
 	kmlLayer.SetAttrSingle("v-if", $"${ID}kmlvisible"$)
-	vue.setstatesingle(kmlName, Array())
+	vue.setstatesingle(kmlName, vue.newlist)
 	kmlLayer.SetAttrSingle(":clickable", True)
 	kmlLayer.SetVFor("lyr", kmlName)
 	kmlLayer.SetAttrSingle(":url", "lyr.url")

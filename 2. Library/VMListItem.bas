@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Public childList As VMList
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ListItem
@@ -25,9 +26,16 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	SetOnClick($"${ID}_click"$)
 	childList.Initialize(vue, $"${ID}children"$, Module)
+	bStatic = False
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMListItem
+	bStatic = b
+	ListItem.SetStatic(b)
+	childList.SetStatic(b)
+	Return Me
+End Sub
 
 Sub SetAttributes(attrs As List) As VMListItem
 	For Each stra As String In attrs
@@ -53,9 +61,7 @@ End Sub
 
 'get component
 Sub ToString As String
-	
-	
-	
+	RemoveAttr("ref")
 	Return ListItem.ToString
 End Sub
 
@@ -123,7 +129,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMListItem
+Sub SetActiveClass(varActiveClass As String) As VMListItem
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	ListItem.Bind(":active-class", pp)
@@ -131,7 +142,12 @@ Sub SetActiveClass(varActiveClass As Object) As VMListItem
 End Sub
 
 'set append
-Sub SetAppend(varAppend As Object) As VMListItem
+Sub SetAppend(varAppend As Boolean) As VMListItem
+	If varAppend = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("append", varAppend)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Append"$
 	vue.SetStateSingle(pp, varAppend)
 	ListItem.Bind(":append", pp)
@@ -139,7 +155,12 @@ Sub SetAppend(varAppend As Object) As VMListItem
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMListItem
+Sub SetColor(varColor As String) As VMListItem
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	ListItem.Bind(":color", pp)
@@ -147,7 +168,12 @@ Sub SetColor(varColor As Object) As VMListItem
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMListItem
+Sub SetDark(varDark As Boolean) As VMListItem
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	ListItem.Bind(":dark", pp)
@@ -155,7 +181,12 @@ Sub SetDark(varDark As Object) As VMListItem
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMListItem
+Sub SetDense(varDense As Boolean) As VMListItem
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	ListItem.Bind(":dense", pp)
@@ -169,7 +200,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMListItem
 End Sub
 
 'set exact
-Sub SetExact(varExact As Object) As VMListItem
+Sub SetExact(varExact As Boolean) As VMListItem
+	If varExact = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact", varExact)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Exact"$
 	vue.SetStateSingle(pp, varExact)
 	ListItem.Bind(":exact", pp)
@@ -177,7 +213,12 @@ Sub SetExact(varExact As Object) As VMListItem
 End Sub
 
 'set exact-active-class
-Sub SetExactActiveClass(varExactActiveClass As Object) As VMListItem
+Sub SetExactActiveClass(varExactActiveClass As String) As VMListItem
+	If varExactActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact-active-class", varExactActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ExactActiveClass"$
 	vue.SetStateSingle(pp, varExactActiveClass)
 	ListItem.Bind(":exact-active-class", pp)
@@ -185,7 +226,12 @@ Sub SetExactActiveClass(varExactActiveClass As Object) As VMListItem
 End Sub
 
 'set href
-Sub SetHref(varHref As Object) As VMListItem
+Sub SetHref(varHref As String) As VMListItem
+	If varHref = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("href", varHref)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Href"$
 	vue.SetStateSingle(pp, varHref)
 	ListItem.Bind(":href", pp)
@@ -193,7 +239,12 @@ Sub SetHref(varHref As Object) As VMListItem
 End Sub
 
 'set inactive
-Sub SetInactive(varInactive As Object) As VMListItem
+Sub SetInactive(varInactive As Boolean) As VMListItem
+	If varInactive  = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("inactive", varInactive)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Inactive"$
 	vue.SetStateSingle(pp, varInactive)
 	ListItem.Bind(":inactive", pp)
@@ -201,7 +252,12 @@ Sub SetInactive(varInactive As Object) As VMListItem
 End Sub
 
 'set input-value
-Sub SetInputValue(varInputValue As Object) As VMListItem
+Sub SetInputValue(varInputValue As String) As VMListItem
+	If varInputValue = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("input-value", varInputValue)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}InputValue"$
 	vue.SetStateSingle(pp, varInputValue)
 	ListItem.Bind(":input-value", pp)
@@ -209,7 +265,12 @@ Sub SetInputValue(varInputValue As Object) As VMListItem
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMListItem
+Sub SetLight(varLight As Boolean) As VMListItem
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	ListItem.Bind(":light", pp)
@@ -217,7 +278,12 @@ Sub SetLight(varLight As Object) As VMListItem
 End Sub
 
 'set link
-Sub SetLink(varLink As Object) As VMListItem
+Sub SetLink(varLink As Boolean) As VMListItem
+	If varLink = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("link", varLink)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Link"$
 	vue.SetStateSingle(pp, varLink)
 	ListItem.Bind(":link", pp)
@@ -225,7 +291,12 @@ Sub SetLink(varLink As Object) As VMListItem
 End Sub
 
 'set nuxt
-Sub SetNuxt(varNuxt As Object) As VMListItem
+Sub SetNuxt(varNuxt As Boolean) As VMListItem
+	If varNuxt = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("nuxt", varNuxt)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Nuxt"$
 	vue.SetStateSingle(pp, varNuxt)
 	ListItem.Bind(":nuxt", pp)
@@ -233,7 +304,12 @@ Sub SetNuxt(varNuxt As Object) As VMListItem
 End Sub
 
 'set replace
-Sub SetReplace(varReplace As Object) As VMListItem
+Sub SetReplace(varReplace As Boolean) As VMListItem
+	If varReplace = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("replace", varReplace)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Replace"$
 	vue.SetStateSingle(pp, varReplace)
 	ListItem.Bind(":replace", pp)
@@ -241,7 +317,12 @@ Sub SetReplace(varReplace As Object) As VMListItem
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMListItem
+Sub SetRipple(varRipple As Boolean) As VMListItem
+	If varRipple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	ListItem.Bind(":ripple", pp)
@@ -249,7 +330,12 @@ Sub SetRipple(varRipple As Object) As VMListItem
 End Sub
 
 'set selectable
-Sub SetSelectable(varSelectable As Object) As VMListItem
+Sub SetSelectable(varSelectable As Boolean) As VMListItem
+	If varSelectable = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("selectable", varSelectable)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Selectable"$
 	vue.SetStateSingle(pp, varSelectable)
 	ListItem.Bind(":selectable", pp)
@@ -257,15 +343,19 @@ Sub SetSelectable(varSelectable As Object) As VMListItem
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMListItem
-	Dim pp As String = $"${ID}Tag"$
-	vue.SetStateSingle(pp, varTag)
-	ListItem.Bind(":tag", pp)
+Sub SetTag(varTag As String) As VMListItem
+	If varTag = "" Then Return Me
+	SetAttrSingle("tag", varTag)
 	Return Me
 End Sub
 
 'set target
-Sub SetTarget(varTarget As Object) As VMListItem
+Sub SetTarget(varTarget As String) As VMListItem
+	If varTarget = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("target", varTarget)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Target"$
 	vue.SetStateSingle(pp, varTarget)
 	ListItem.Bind(":target", pp)
@@ -273,7 +363,12 @@ Sub SetTarget(varTarget As Object) As VMListItem
 End Sub
 
 'set three-line
-Sub SetThreeLine(varThreeLine As Object) As VMListItem
+Sub SetThreeLine(varThreeLine As Boolean) As VMListItem
+	If varThreeLine = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("three-line", varThreeLine)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ThreeLine"$
 	vue.SetStateSingle(pp, varThreeLine)
 	ListItem.Bind(":three-line", pp)
@@ -281,15 +376,19 @@ Sub SetThreeLine(varThreeLine As Object) As VMListItem
 End Sub
 
 'set to
-Sub SetTo(varTo As Object) As VMListItem
-	Dim pp As String = $"${ID}To"$
-	vue.SetStateSingle(pp, varTo)
-	ListItem.Bind(":to", pp)
+Sub SetTo(varTo As String) As VMListItem
+	If varTo = "" Then Return Me
+	SetAttrSingle("to", varTo)
 	Return Me
 End Sub
 
 'set two-line
-Sub SetTwoLine(varTwoLine As Object) As VMListItem
+Sub SetTwoLine(varTwoLine As Boolean) As VMListItem
+	If varTwoLine = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("two-line", varTwoLine)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}TwoLine"$
 	vue.SetStateSingle(pp, varTwoLine)
 	ListItem.Bind(":two-line", pp)
@@ -301,7 +400,6 @@ Sub SetValue(varValue As Object) As VMListItem
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
-
 '
 Sub SetOnClick(methodName As String) As VMListItem
 	methodName = methodName.tolowercase
@@ -313,7 +411,6 @@ Sub SetOnClick(methodName As String) As VMListItem
 	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
-
 '
 Sub SetOnKeydown(methodName As String) As VMListItem
 	methodName = methodName.tolowercase
@@ -325,8 +422,7 @@ Sub SetOnKeydown(methodName As String) As VMListItem
 	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
-
-
+'
 Sub Hide As VMListItem
 	ListItem.SetVisible(False)
 	Return Me
@@ -346,7 +442,6 @@ Sub Disable As VMListItem
 	ListItem.Disable(True)
 	Return Me
 End Sub
-
 
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMListItem
@@ -401,12 +496,13 @@ Sub SetAttrSingle(prop As String, value As String) As VMListItem
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItem
-ListItem.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	ListItem.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMListItem
-ListItem.SetVisible(b)
-Return Me
+	ListItem.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

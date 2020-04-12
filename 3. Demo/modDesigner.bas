@@ -12,6 +12,7 @@ Sub Process_Globals
 	Private BANano As BANano
 	Private bHasBorder As Boolean
 	Private bShowMatrix As Boolean
+	Private tblProp As VMToolBar
 	'
 	Private pbtextfield As VMProperty   	'done
 	Private pbdatepicker As VMProperty  	'done
@@ -67,7 +68,7 @@ Sub Process_Globals
 	'
 	Private splaceholder As String
 	Private bisrequired As Boolean
-	Private sicon As String
+	Private siconname As String
 	Private shelpertext As String
 	Private serrortext As String
 	Private imaxlen As String
@@ -222,7 +223,6 @@ Sub Process_Globals
 	Private sactivator As String
 	Private sclosedelay As String
 	Private scontentclass As String
-	Private sicon As String
 	Private smaxheight As String
 	Private smaxwidth As String
 	Private sminwidth As String
@@ -264,6 +264,9 @@ Sub Process_Globals
 	Private bistop As Boolean
 	Private bisvisible As Boolean
 	Private menutype As String
+	Private jcontents As String
+	Private lcontents As List
+	Private bisspacer As Boolean
 End Sub
 
 Sub Init
@@ -313,6 +316,7 @@ Sub Init
 	avatarMap.put("toolbar", "./assets/toolbar.png")
 	avatarMap.put("menu", "./assets/menu.png")
 	'
+	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vm.setdata("showmatrix", True)
 	vm.setdata("hasborder", True)
@@ -346,21 +350,21 @@ Sub Init
 	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
-	Dim gridmenu As VMMenu = vm.createmenu("gridMenu", Me).SetButton("", "Grid")
+	Dim gridmenu As VMMenu = vm.CreateMenu("gridMenu", Me).SetButton("", "Grid")
 	gridmenu.AddItem("btnClearGrid", "", "delete", "Clear", "", "")
 	gridmenu.AddItem("btnRemoveLastGrid", "", "delete", "Remove Last", "", "")
 	vm.NavBar.AddMenu(gridmenu)
 	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
-	Dim compmenu As VMMenu = vm.createmenu("compMenu", Me).SetButton("", "Components")
+	Dim compmenu As VMMenu = vm.CreateMenu("compMenu", Me).SetButton("", "Components")
 	compmenu.AddItem("btnclearcomp", "", "delete", "Clear", "", "")
 	compmenu .AddItem("btnremovelastcomp", "", "delete", "Remove Last", "", "")
 	vm.NavBar.AddMenu(compmenu)
 	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
-	Dim optMenu As VMMenu = vm.createmenu("optMenu", Me).SetButton("", "Options")
+	Dim optMenu As VMMenu = vm.CreateMenu("optMenu", Me).SetButton("", "Options")
 	optMenu.AddItem("btnShowMatrix", "", "", "Show Matrix", "", "")
 	optMenu.AddItem("btnHasBorder", "", "", "Has Border", "", "")
 	vm.NavBar.AddMenu(optMenu)
@@ -406,6 +410,8 @@ Sub Init
 	'
 	AddPages
 	vm.UX
+	'Dim s As String = vm.vue.GetTemplate
+	'vm.SaveText2File(s, "all.txt")
 	'
 	CreateUX
 End Sub
@@ -504,7 +510,12 @@ Sub CreateUX
 		sloose = rec.get("loose")
 		stitle = rec.get("label")
 		sfieldtype = rec.getdefault("fieldtype", "")
-		
+		jcontents = rec.getdefault("items", "")
+		If jcontents = "" Then
+			lcontents.initialize
+		Else
+			lcontents = BANano.fromjson(jcontents)
+		End If	
 		' get the attributes
 		mattr = BANano.FromJson(sattributes)
 		os = mattr.get("offsetsmall")
@@ -519,7 +530,7 @@ Sub CreateUX
 		'
 		splaceholder = mattr.getdefault("placeholder", "")
 		bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
-		sicon = mattr.GetDefault("icon", "")
+		siconname = mattr.GetDefault("iconname", "")
 		shelpertext = mattr.getdefault("helpertext", "")
 		serrortext = mattr.getdefault("errortext", "")
 		imaxlen = mattr.getdefault("maxlength", "0")
@@ -674,6 +685,8 @@ Sub CreateUX
 		bisshrinkonscroll = YesNoToBoolean(mattr.getdefault("isshrinkonscroll", "No"))
 		bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 		bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
+		bisspacer = YesNoToBoolean(mattr.getdefault("isspacer", "No"))
+		
 		'
 		Read_Menu
 							
@@ -726,6 +739,7 @@ Sub CreateUX
 	Next
 	
 	Dim html As String = ui.tostring
+	
 	Dim shtml As String = vm.BeautifySourceCode("html", html)
 	'save grid source code
 	BANano.SetSessionStorage("sourcecode", sb.tostring)
@@ -776,7 +790,7 @@ Sub Read_Menu
 	sactivator = mattr.getdefault("activator", "")
 	sclosedelay = mattr.getdefault("closedelay", "")
 	scontentclass = mattr.getdefault("contentclass", "")
-	sicon = mattr.getdefault("icon", "")
+	siconname = mattr.getdefault("iconname", "")
 	smaxheight = mattr.getdefault("maxheight", "")
 	smaxwidth = mattr.getdefault("maxwidth", "")
 	sminwidth = mattr.getdefault("minwidth", "")
@@ -889,7 +903,7 @@ Sub Design_Grid(gridSQL As BANanoAlaSQLE)
 End Sub
 
 Sub Design_TextArea
-	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txta.SetSolo(bissolo)
 	txta.SetOutlined(bisoutlined)
 	txta.SetFilled(bisfilled)
@@ -905,7 +919,7 @@ Sub Design_TextArea
 	txta.SetAutoGrow(bautogrow)
 	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
@@ -980,8 +994,6 @@ Sub Design_CheckBox
 	If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
 	sb.append($".Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-	'
-
 End Sub
 
 Sub Design_Date
@@ -1071,8 +1083,6 @@ Sub Design_File
 	CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
 				
 	sb.append($".Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-	'
-
 End Sub
 
 Sub Design_Radio
@@ -1105,8 +1115,6 @@ Sub Design_Radio
 	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
 				
 	sb.append($".Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-	'
-
 End Sub
 
 Sub Design_Select
@@ -1266,7 +1274,7 @@ Sub Design_Label
 End Sub
 
 Sub Design_Email
-	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
+	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
 	email.SetFieldType(sfieldtype)
 	email.SetSolo(bissolo)
 	email.SetOutlined(bisoutlined)
@@ -1282,7 +1290,7 @@ Sub Design_Email
 	email.SetHideDetails(bishidedetails)
 	ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
+	sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "email", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "email", sname, "SetSolo")
@@ -1304,7 +1312,7 @@ Sub Design_Email
 End Sub
 
 Sub Design_Password
-	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	pwd.SetFieldType(sfieldtype)
 	pwd.SetSolo(bissolo)
 	pwd.SetOutlined(bisoutlined)
@@ -1321,7 +1329,7 @@ Sub Design_Password
 				
 	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
 	CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
@@ -1343,7 +1351,7 @@ Sub Design_Password
 End Sub
 
 Sub Design_Tel
-	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, shelpertext, serrortext, stabindex)
+	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
 	tel.SetFieldType(sfieldtype)
 	tel.SetSolo(bissolo)
 	tel.SetOutlined(bisoutlined)
@@ -1359,7 +1367,7 @@ Sub Design_Tel
 	tel.SetHideDetails(bishidedetails)
 	ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
@@ -1435,14 +1443,14 @@ Sub Design_Time
 End Sub
 
 Sub Design_Icon
-	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, sicon, ssize, scolor, sintensity)
+	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, siconname, ssize, scolor, sintensity)
 	icn.SetDark(bisdark)
 	icn.SetDense(bisdense)
 	icn.SetDisabled(bisdisabled)
 	icn.SetCenterOnParent(bcenteronparent)
 	ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${sicon}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
+	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
 	CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
 	CodeLine(sb, bisdisabled, "b", "icn", sname, "SetDisabled")
@@ -1538,9 +1546,9 @@ Sub Design_Menu
 	menu.setstatic(True)
 	Select Case menutype
 	Case "icon"
-		menu.SetIcon(sicon)
+		menu.SetIcon(siconname)
 	Case "btn"
-		menu.SetButton(sicon, stitle)
+		menu.SetButton(siconname, stitle)
 	End Select
 	menu.Setactivator(sactivator)
 	menu.Setclosedelay(sclosedelay)
@@ -1582,16 +1590,27 @@ Sub Design_Menu
 	menu.Setright(bisright)
 	menu.Setslotactivator(bisslotactivator)
 	menu.Settop(bistop)
+	'
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssavatar As String = m.getdefault("avatar", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim ssactionicon As String = m.getdefault("action", "")
+		If sskey = "" Then Continue
+		menu.AddItem(sskey, ssavatar, ssiconname, sstitle, sssubtitle, ssactionicon)
+	Next
 	ui.AddControl(menu.Menu, menu.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	
 	'
 	sb.append($"Dim menu${sname} As VMMenu = vm.CreateMenu("menu${sname}", Me)"$).append(CRLF)
 	Select Case menutype
 	Case "icon"
-		menu.SetIcon(sicon)
-		CodeLine(sb, sicon, "s", "menu", sname, "SetIcon")
+		menu.SetIcon(siconname)
+		CodeLine(sb, siconname, "s", "menu", sname, "SetIcon")
 	Case "btn"
-		CodeLine2(sb, sicon, stitle, "s", "menu", sname, "SetButton")
+		CodeLine2a(sb, siconname, stitle, "s", "menu", sname, "SetButton")
 	End Select
 	CodeLine(sb, sactivator, "s", "menu", sname, "Setactivator")
 	CodeLine(sb, sclosedelay, "s", "menu", sname, "Setclosedelay")
@@ -1633,7 +1652,18 @@ Sub Design_Menu
 	CodeLine(sb, bisright, "b", "menu", sname, "Setright")
 	CodeLine(sb, bisslotactivator, "b", "menu", sname, "Setslotactivator")
 	CodeLine(sb, bistop, "b", "menu", sname, "Settop")
-	
+	'
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssavatar As String = m.getdefault("avatar", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim ssactionicon As String = m.getdefault("action", "")
+		If sskey = "" Then Continue
+		sb.append($"menu${sname}.AddItem("${sskey}", "${ssavatar}", "${ssiconname}", "${sstitle}", "${sssubtitle}", "${ssactionicon}")"$).append(CRLF)
+	Next
+		
 	sb.append($".Container.AddControl(menu${sname}.Menu, menu${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 
 End Sub
@@ -1668,6 +1698,8 @@ Sub Design_ToolBar
 	End If
 	'
 	tbl.AddTitle(stitle, stitleclass)
+	If bisspacer Then tbl.AddSpacer
+	
 	tbl.SetColorIntensity(scolor, sintensity)
 	'
 	tbl.SetMaxWidth(smaxwidth)
@@ -1698,7 +1730,26 @@ Sub Design_ToolBar
 	tbl.Setshort(bisshort)
 	tbl.Setshrinkonscroll(bisshrinkonscroll)
 	tbl.Setvisible(bisvisible)
-				
+	'
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssavatar As String = m.getdefault("avatar", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim sitemtype As String = m.getdefault("itemtype", "icon")
+		Dim sbadge As String = m.getdefault("badge", "")
+		If sskey = "" Then Continue
+		Select Case sitemtype
+		Case "menu"
+			'tbl.AddMenu(sskey)
+		Case "btn"
+			tbl.AddButton1(sskey, ssiconname, sstitle, sssubtitle, sbadge)
+		Case "icon"
+			tbl.AddIcon(sskey, ssiconname, sssubtitle, sbadge)
+		End Select
+	Next
+	
 	ui.AddControl(tbl.toolbar, tbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim tbl${sname} As VMToolBar = ui.CreateToolBar("tbl${sname}", Me)"$).append(CRLF)
@@ -1735,6 +1786,7 @@ Sub Design_ToolBar
 	CodeLine(sb, smaxheight, "s", "tbl", sname, "SetMaxHeight")
 	'
 	CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
+	If bisspacer Then sb.append($"tbl${sname}.AddSpacer"$).append(CRLF)
 	CodeLine2(sb, scolor, sintensity, "s", "tbl", sname, "SetColorIntensity")
 	
 	CodeLine(sb, bisdense, "b", "tbl", sname, "SetDense")
@@ -1758,6 +1810,25 @@ Sub Design_ToolBar
 	CodeLine(sb, bisshrinkonscroll, "b", "tbl", sname, "SetShrinkOnScroll")
 	CodeLine(sb, bisvisible, "b", "tbl", sname, "SetVisible")
 	
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssavatar As String = m.getdefault("avatar", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim sitemtype As String = m.getdefault("itemtype", "icon")
+		Dim sbadge As String = m.getdefault("badge", "")
+		If sskey = "" Then Continue
+		Select Case sitemtype
+		Case "menu"
+			sb.append($"tbl${sname}.AddMenu(${sskey})"$).append(CRLF)
+		Case "btn"
+			sb.append($"tbl${sname}.AddButton1("${sskey}", "${ssiconname}", "${sstitle}", "${sssubtitle}", "${sbadge}")"$).append(CRLF)
+		Case "icon"
+			sb.append($"tbl${sname}.AddIcon("${sskey}", "${ssiconname}", "${sssubtitle}", "${sbadge}")"$).append(CRLF)
+		End Select
+	Next
+	
 	sb.append($".Container.AddControl(tbl${sname}.ToolBar, tbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 End Sub
@@ -1774,8 +1845,8 @@ Sub Design_Button
 	btn.SetTextColorIntensity(stextcolor, stextintensity)
 	btn.SetDisabled(bisdisabled).Setoutlined(bisoutlined)
 	btn.SetRounded(bisrounded).SetTransparent(bistext)
-	If biconbutton Then btn.SetIconButton(sicon)
-	If bfabbutton Then btn.Setfabbutton(sicon)
+	If biconbutton Then btn.SetIconButton(siconname)
+	If bfabbutton Then btn.Setfabbutton(siconname)
 	btn.SetDepressed(bisdepressed)
 	btn.SetDark(bisdark)
 	btn.SetTile(bistile)
@@ -1810,8 +1881,8 @@ Sub Design_Button
 	If bisoutlined Then sb.append($"btn${sname}.Setoutlined(${bisoutlined})"$).append(CRLF)
 	If bisrounded Then sb.append($"btn${sname}.SetRounded(${bisrounded})"$).append(CRLF)
 	If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
-	If biconbutton Then sb.append($"btn${sname}.SetIconButton("${sicon}")"$).append(CRLF)
-	If bfabbutton Then sb.append($"btn${sname}.SetFabButton("${sicon}")"$).append(CRLF)
+	If biconbutton Then sb.append($"btn${sname}.SetIconButton("${siconname}")"$).append(CRLF)
+	If bfabbutton Then sb.append($"btn${sname}.SetFabButton("${siconname}")"$).append(CRLF)
 	If bisdepressed Then sb.append($"btn${sname}.SetDepressed(${bisdepressed})"$).append(CRLF)
 	If bisdark Then sb.append($"btn${sname}.SetDark(${bisdark})"$).append(CRLF)
 	If bistile Then sb.append($"btn${sname}.SetTile(${bistile})"$).append(CRLF)
@@ -1836,7 +1907,7 @@ Sub Design_Button
 End Sub
 
 Sub Design_TextField
-	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, sicon, imaxlen, shelpertext, serrortext, stabindex)
+	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txt.SetFieldType(sfieldtype)
 	txt.SetSolo(bissolo)
 	txt.SetOutlined(bisoutlined)
@@ -1852,7 +1923,7 @@ Sub Design_TextField
 	txt.SetHideDetails(bishidedetails)
 	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${sicon}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
@@ -1886,6 +1957,15 @@ Sub CodeLine2(sbx As StringBuilder, varName As String, varName1 As String, varTy
 			If varName Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}","${varName1})"$).append(CRLF)
 		Case "s"
 			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}","${varName1}")"$).append(CRLF)
+	End Select
+End Sub
+
+Sub CodeLine2a(sbx As StringBuilder, varName As String, varName1 As String, varType As String, prefix As String, ssname As String, methodName As String)
+	Select Case varType
+		Case "b"
+			sbx.append($"${prefix}${ssname}.${methodName}("${varName}","${varName1})"$).append(CRLF)
+		Case "s"
+			sbx.append($"${prefix}${ssname}.${methodName}("${varName}","${varName1}")"$).append(CRLF)
 	End Select
 End Sub
 
@@ -2121,6 +2201,21 @@ Sub DesignLayout
 	tabs.AddTab("b4xarea", "B4X", "code", b4x)
 	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
 	vm.container.AddComponent(1, 2, tabs.tostring)
+	'
+	'create a toolbar to save and delete the property bag
+	tblProp = vm.CreateToolbar("tblx", Me).SetDense(True).SetVisible(False)
+	tblProp.AddSpacer
+	tblProp.AddIcon("btnSaveProp", "save", "Save property bag", "")
+	tblProp.AddIcon("btnDeleteProp", "delete", "Delete property bag", "")
+	vm.container.AddComponent(1, 3, tblProp.tostring)
+End Sub
+
+Sub btnSaveProp_click(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub btnDeleteProp_click(e As BANanoEvent)
+	DeletePropertyBag
 End Sub
 '
 
@@ -2156,6 +2251,16 @@ Sub mycomponents_click(e As BANanoEvent)
 	'read the type of record
 	Dim stypeof As String = rec.get("controltype")
 	Dim sattributes As String = rec.get("attributes")
+	Dim mattr As Map = BANano.FromJson(sattributes)
+	'DONT OVERWRITE
+	Select Case stypeof
+	Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container", "toolbar", "menu"
+		mattr.remove("controltype")
+	End Select
+	vm.setstate(mattr)
+	vm.setdata("propbagtype", stypeof)
+	vm.setdata("propbag", mattr)
+
 	'show the property bags
 	Select Case stypeof
 		Case "menu"
@@ -2163,11 +2268,31 @@ Sub mycomponents_click(e As BANanoEvent)
 			vm.setdata("controltype", "menu")
 			pbmenu.hideitem("id")
 			pbmenu.Hideitem("controltype")
+			'get the items
+			Dim scontents As String = rec.getdefault("items", "")
+			If scontents = "" Then
+				'we dont have menu items
+				vm.setdata("tableitems", vm.newlist)
+			Else
+				Dim contents As List = BANano.FromJson(scontents)
+				vm.setdata("tableitems", contents)
+			End If
+			pbmenu.ClearContents
 		Case "toolbar"
 			ShowBag("pbtoolbar")
 			vm.setdata("controltype", "toolbar")
 			pbtoolbar.hideitem("id")
 			pbtoolbar.Hideitem("controltype")
+			'get the items
+			Dim scontents As String = rec.getdefault("items", "")
+			If scontents = "" Then
+				'we dont have menu items
+				vm.setdata("tableitems", vm.newlist)
+			Else
+				Dim contents As List = BANano.FromJson(scontents)
+				vm.setdata("tableitems", contents)
+			End If
+			pbtoolbar.ClearContents
 		Case "container"
 			ShowBag("pbcontainer")
 			vm.setdata("controltype", "container")
@@ -2303,15 +2428,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbicon.Hideitem("controltype")
 	End Select
 	'
-	Dim mattr As Map = BANano.FromJson(sattributes)
-	'DONT OVERWRITE
-	Select Case stypeof
-		Case "text", "textarea", "date", "file", "select", "email", "password","tel", "combo", "number", "auto", "time", "image", "profile", "button", "icon", "parallax", "container", "toolbar", "menu"
-			mattr.remove("controltype")
-	End Select
-	vm.setstate(mattr)
-	vm.setdata("propbagtype", stypeof)
-	vm.setdata("propbag", mattr)
 End Sub
 
 
@@ -2367,8 +2483,8 @@ Sub DisplayPanel As VMExpansionPanel
 End Sub
 
 Sub ToolboxImage(eid As String, url As String, tt As String) As VMImage
-	Dim img As VMImage = vm.CreateImage(eid, Me).SetValue(url).SetOnDragStart(Me, "ItemDragStart")
-	img.SetHeight("32px").SetWidth("32px").SetCursorMove.SetTooltip(tt)
+	Dim img As VMImage = vm.CreateImage(eid, Me).SetStatic(True).SetValue(url).SetOnDragStart(Me, "ItemDragStart")
+	img.SetHeight("32px").SetWidth("32px").SetCursorMove.SetTooltip(tt).RemoveAttr("v-show")
 	Return img
 End Sub
 
@@ -2430,9 +2546,10 @@ End Sub
 
 
 Sub ToolboxDiv(eid As String, text As String) As VMElement
-	Dim dv As VMElement = vm.CreateDiv(eid).SetOnDragStart(Me, "ItemDragStart")
+	Dim dv As VMElement = vm.CreateDiv(eid).SetStatic(True).SetOnDragStart(Me, "ItemDragStart")
 	dv.SetBorder("2px", vm.COLOR_BLACK, vm.BORDER_SOLID).SetWidth("42px").SetHeight("32px").SetVerticalAlignMiddle
 	dv.SetText(text).SetTextAlignCenter.SetCursorMove.SetBackgroundColor(vm.COLOR_GREY).SetLineHeight("32px")
+	dv.removeattr("v-show")
 	Return dv
 End Sub
 
@@ -2637,7 +2754,7 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("isautogrow","No")
 					attr.put("ontable", "No")
 					attr.put("maxlength", 0)
-					attr.Put("icon", "mdi-account-circle")
+					attr.Put("iconname", "mdi-account-circle")
 					attr.put("centeronparent", "No")
 					attr.put("sourcetable", "datasource")
 					attr.put("sourcefield", "id")
@@ -2649,7 +2766,13 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("values","One,Two,Three")
 					attr.put("tformat","24hr")
 					attr.put("isforinput", "Yes")
-					'
+					attr.put("minvalue", "0")
+					attr.put("maxvalue", "100")
+					attr.put("value", "20")
+					attr.put("stepvalue", "1")
+					attr.put("prependicon", "volume_down")
+					attr.put("appendicon", "volume_up")
+						'
 					Select Case savedid
 						Case "label"
 							attr.put("labelsize", "p")
@@ -2697,7 +2820,7 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("logoheight", "46px")
 							BANano.SetLocalStorage("selectedpanel", 4)
 						Case "menu"
-							attr.put("icon", "mdi-dots-vertical")
+							attr.put("iconname", "mdi-dots-vertical")
 							attr.put("iscloseonclick", "Yes")
 							attr.put("iscloseoncontentclick", "Yes")
 							attr.put("isopenonclick", "Yes")
@@ -2735,12 +2858,9 @@ Sub PropertyBag_Slider
 	pbslider.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbslider.AddText("d", "vmodel","VModel","","")
 	pbslider.AddText("d", "label","Label","","")
-	pbslider.AddText("d", "value", "Value(s)","","20")
-	pbslider.AddText("d", "minvalue", "Min Value","","0")
-	pbslider.AddText("d", "stepvalue", "Step","","1")
-	pbslider.AddText("d", "maxvalue", "Max Value","","100")
-	pbslider.AddText("d", "prependicon", "Prepend Icon","","volume_down")
-	pbslider.AddText("d", "appendicon", "Append Icon","","volume_up")
+	pbslider.AddText2("d", CreateMap("value": "Value(s)", "stepvalue": "Step"))
+	pbslider.AddText2("d", CreateMap("minvalue": "Min Value", "maxvalue": "Max Value"))
+	pbslider.AddText2("d", CreateMap("prependicon": "Prepend Icon", "appendicon": "Append Icon"))
 	pbslider.AddText("d", "thumbsize", "Thumb Size","","32")
 	pbslider.AddSelect("d","color","Color", vm.ColorOptions)
 	pbslider.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
@@ -2750,21 +2870,16 @@ Sub PropertyBag_Slider
 	pbslider.AddSelect("d","trackintensity","Track Intensity", vm.IntensityOptions)
 	pbslider.AddNumber("d","tabindex","Tab Index","","")
 	'
-	pbslider.AddCheck2(1, 1, "isrequired", "Required")
-	pbslider.AddCheck2(1, 2, "isvisible", "Visible")
-	pbslider.AddCheck2(2, 1, "isdisabled", "Disabled")
-	pbslider.AddCheck2(2, 2, "isreadonly", "Read Only")
-	pbslider.AddCheck2(3, 1, "isvertical", "Vertical")
-	pbslider.AddCheck2(3, 2, "isthumbalways", "Thumb Label Always")
-	pbslider.AddCheck2(4, 1, "isthumblabel", "Thumb Label")
-	pbslider.AddCheck2(4, 2, "ishidedetails", "Hide Details")
-	pbslider.AddCheck2(5, 1, "isdark", "Dark")
-	pbslider.AddCheck2(5, 2, "isdense", "Dense")
-	pbslider.SetChecks("d")
-	
-	pbslider.AddMatrix("d")
-	pbslider.AddButton("d", "btnSaveSlider", "Save", "savePropertyBag")
-	pbslider.AddButton("d", "btnDeleteSlider", "Delete", "deletePropertyBag")
+	pbslider.AddHeading("e","Settings")
+	pbslider.AddSwitches("e", CreateMap("isrequired": "Required", "isvisible": "Visible"))
+	pbslider.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isreadonly": "Read Only"))
+	pbslider.AddSwitches("e", CreateMap("isvertical": "Vertical", "isthumbalways": "Thumb Label Always"))
+	pbslider.AddSwitches("e", CreateMap("isthumblabel": "Thumb Label", "ishidedetails": "Hide Details"))
+	pbslider.AddSwitches("e", CreateMap("isdark": "Dark", "isdense": "Dense"))
+	pbslider.AddHeading("f","Matrix")
+	pbslider.AddMatrix("f")
+	'pbslider.AddButton("d", "btnSaveSlider", "Save", "savePropertyBag")
+	'pbslider.AddButton("d", "btnDeleteSlider", "Delete", "deletePropertyBag")
 	vm.Container.AddComponent(1, 3, pbslider.tostring)
 End Sub
 #End Region
@@ -2784,42 +2899,31 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddText("d","helpertext","Helper Text","","")
 	pbdatepicker.AddText("d","errortext","Error Text","","")
 	pbdatepicker.AddText("d","firstdayofweek","First Day of Week","","0")
-	pbdatepicker.AddRadioGroup("d", "tformat", "T:Format", CreateMap("ampm":"AM/PM","24hr":"24hr"))
+	pbdatepicker.AddRadioGroupH("d", "tformat", "T:Format", CreateMap("ampm":"AM/PM","24hr":"24hr"))
 	'pbdatepicker.AddSelect("d","headercolor","Header Color", vm.ColorOptions)
 	'pbdatepicker.AddSelect("d","headerintensity","Header Intensity", vm.IntensityOptions)
 	'pbdatepicker.AddSelect("d","color","T:Color", vm.ColorOptions)
 	'pbdatepicker.AddSelect("d","intensity","T:Intensity", vm.IntensityOptions)
 	pbdatepicker.AddNumber("d","tabindex","Tab Index","","")
 	'
-	pbdatepicker.AddCheck2(1, 1, "isrequired", "Required")
-	pbdatepicker.AddCheck2(1, 2, "isclearable", "Clearable")
-	pbdatepicker.AddCheck2(2, 1, "isvisible", "Visible")
-	pbdatepicker.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbdatepicker.AddCheck2(3, 1, "ontable", "On Table")
-	pbdatepicker.AddCheck2(3, 2, "ismultiple", "Multiple")
-	pbdatepicker.AddCheck2(4, 1, "isrange", "Range")
-	pbdatepicker.AddCheck2(4, 2, "isshowweek", "Show Week")
-	pbdatepicker.AddCheck2(5, 1, "isampm", "T:AM/PM in Title")
-	pbdatepicker.AddCheck2(5, 2, "isdark", "Dark")
-	pbdatepicker.AddCheck2(6, 1, "isnotitle", "T:No Title")
-	pbdatepicker.AddCheck2(6, 2, "isuseseconds", "T:Use Seconds")
+	pbdatepicker.AddHeading("e","Settings")
+	pbdatepicker.AddSwitches("e", CreateMap("isrequired": "Required", "isclearable": "Clearable"))
+	pbdatepicker.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
+	pbdatepicker.AddSwitches("e", CreateMap("ontable": "On Table", "ismultiple": "Multiple"))
+	pbdatepicker.AddSwitches("e", CreateMap("isrange": "Range", "isshowweek": "Show Week"))
+	pbdatepicker.AddSwitches("e", CreateMap("isampm": "T:AM/PM in Title", "isdark": "Dark"))
+	pbdatepicker.AddSwitches("e", CreateMap("isnotitle": "T:No Title", "isuseseconds": "T:Use Seconds"))
 	'
-	pbdatepicker.AddCheck2(7, 1, "issolo", "Solo")
-	pbdatepicker.AddCheck2(7, 2, "isoutlined", "Outlined")
-	pbdatepicker.AddCheck2(8, 1, "isfilled", "Filled")
-	pbdatepicker.AddCheck2(8, 2, "isdense", "Dense")
-	pbdatepicker.AddCheck2(9, 1, "issingleline", "Single Line")
-	pbdatepicker.AddCheck2(9, 2, "ispersistenthint", "Persistent Hint")
-	pbdatepicker.AddCheck2(10, 1, "isshaped", "Shaped - FOS")
-	pbdatepicker.AddCheck2(10, 2, "isloading", "Loading")
-	pbdatepicker.AddCheck2(11, 1, "isflat", "Flat - Solo")
-	pbdatepicker.AddCheck2(11, 2, "isrounded", "Rounded - FOS")
-	pbdatepicker.AddCheck2(12, 1, "ishidedetails", "Hide Details")
-	pbdatepicker.SetChecks("d")
-		
-	pbdatepicker.AddMatrix("d")
-	pbdatepicker.AddButton("d", "btnSaveDate", "Save", "savePropertyBag")
-	pbdatepicker.AddButton("d", "btnDeleteDate", "Delete", "deletePropertyBag")
+	pbdatepicker.AddSwitches("e", CreateMap("issolo": "Solo", "isoutlined": "Outlined"))
+	pbdatepicker.AddSwitches("e", CreateMap("isfilled": "Filled", "isdense": "Dense"))
+	pbdatepicker.AddSwitches("e", CreateMap("issingleline": "Single Line", "ispersistenthint": "Persistent Hint"))
+	pbdatepicker.AddSwitches("e", CreateMap("isshaped": "Shaped - FOS", "isloading": "Loading"))
+	pbdatepicker.AddSwitches("e", CreateMap("isflat": "Flat - Solo", "isrounded": "Rounded - FOS"))
+	pbdatepicker.AddSwitches("e", CreateMap("ishidedetails": "Hide Details"))
+	pbdatepicker.AddHeading("f","Matrix")
+	pbdatepicker.AddMatrix("f")
+	'pbdatepicker.AddButton("d", "btnSaveDate", "Save", "savePropertyBag")
+	'pbdatepicker.AddButton("d", "btnDeleteDate", "Delete", "deletePropertyBag")
 	vm.container.Addcomponent(1, 3, pbdatepicker.tostring)
 End Sub
 #End Region
@@ -2838,7 +2942,7 @@ Sub PropertyBag_Button
 	pbbutton.AddText("d","href","Href","","")
 	pbbutton.AddText("d","target","Target","","")
 	pbbutton.AddText("d","to","Navigate To","","")
-	pbbutton.AddText("d","icon","Icon Name","","")
+	pbbutton.AddText("d","iconname","Icon Name","","")
 	pbbutton.AddText("d","tooltip","Tooltip","","")
 	pbbutton.AddSelect("d","color","Color", vm.ColorOptions)
 	pbbutton.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
@@ -2848,26 +2952,20 @@ Sub PropertyBag_Button
 	pbbutton.AddSelect("d", "size", "Size", iconsizes)
 	pbbutton.AddNumber("d","tabindex","Tab Index","","")
 	'
-	pbbutton.AddCheck2(1, 1, "istext", "Text")
-	pbbutton.AddCheck2(1, 2, "isfitwidth", "Fit Width/Block")
-	pbbutton.AddCheck2(2, 1, "isoutlined", "Outlined")
-	pbbutton.AddCheck2(2, 2, "isrounded", "Rounded")
-	pbbutton.AddCheck2(3, 1, "isiconbutton", "Icon Button")
-	pbbutton.AddCheck2(3, 2, "isdepressed", "Depressed")
-	pbbutton.AddCheck2(4, 1, "isfabbutton", "FAB Button")
-	pbbutton.AddCheck2(4, 2, "isvisible", "Visible")
-	pbbutton.AddCheck2(5, 1, "isdisabled", "Disabled")
-	pbbutton.AddCheck2(5, 2, "isdark", "Dark")
-	pbbutton.AddCheck2(6, 1, "istile", "Tile")
-	pbbutton.AddCheck2(6, 2, "centeronparent", "Center on Parent")
-	
-	pbbutton.SetChecks("d")
+	pbbutton.AddHeading("e","Settings")
+	pbbutton.AddSwitches("e", CreateMap("istext": "Text", "isfitwidth": "Fit Width/Block"))
+	pbbutton.AddSwitches("e", CreateMap("isoutlined": "Outlined", "isrounded": "Rounded"))
+	pbbutton.AddSwitches("e", CreateMap("isiconbutton": "Icon Button", "isdepressed": "Depressed"))
+	pbbutton.AddSwitches("e", CreateMap("isfabbutton": "FAB Button", "isvisible": "Visible"))
+	pbbutton.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isdark": "Dark"))
+	pbbutton.AddSwitches("e", CreateMap("istile": "Tile", "centeronparent": "Center on Parent"))
 	'
-	pbbutton.AddHeightWidths("d")
+	pbbutton.AddHeading("f","Matrix")
+	pbbutton.AddHeightWidths("f")
+	pbbutton.AddMatrix("f")
 	
-	pbbutton.AddMatrix("d")
-	pbbutton.AddButton("d", "btnSaveButton", "Save", "savePropertyBag")
-	pbbutton.AddButton("d", "btnDeleteButton", "Delete", "deletePropertyBag")
+	'pbbutton.AddButton("d", "btnSaveButton", "Save", "savePropertyBag")
+	'pbbutton.AddButton("d", "btnDeleteButton", "Delete", "deletePropertyBag")
 	vm.Container.AddComponent(1, 3, pbbutton.tostring)
 End Sub
 #End Region
@@ -2881,21 +2979,19 @@ Sub PropertyBag_Icon
 	pbicon.AddText("d","id","ID","","")
 	pbicon.AddText("d", "controltype", "Type", "", "icon")
 	pbicon.AddText("d","vmodel","ID","","")
-	pbicon.AddText("d","icon","Icon Name","","mdi-account-circle")
+	pbicon.AddText("d","iconname","Icon Name","","mdi-account-circle")
 	pbicon.AddSelect("d", "size", "Icon Size", iconsizes)
 	pbicon.AddSelect("d","color","Color", vm.ColorOptions)
 	pbicon.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
-	pbicon.AddCheck2(1, 1, "isvisible", "Visible")
-	pbicon.AddCheck2(1, 2, "ontable", "On Table")
-	pbicon.AddCheck2(2, 1, "isdark", "Dark")
-	pbicon.AddCheck2(2, 2, "isdense", "Dense")
-	pbicon.AddCheck2(3, 1, "isdisabled", "Disabled")
-	pbicon.AddCheck2(3, 2, "centeronparent", "Center on Parent")
-	pbicon.SetChecks("d")
-	
-	pbicon.AddMatrix("d")
-	pbicon.AddButton("d", "btnSaveIcon", "Save", "savePropertyBag")
-	pbicon.AddButton("d", "btnDeleteIcon", "Delete", "deletePropertyBag")
+	'
+	pbicon.AddHeading("e","Settings")
+	pbicon.AddSwitches("e", CreateMap("isvisible": "Visible", "ontable": "On Table"))
+	pbicon.AddSwitches("e", CreateMap("isdark": "Dark", "isdense": "Dense"))
+	pbicon.AddSwitches("e", CreateMap("isdisabled": "Disabled", "centeronparent": "Center on Parent"))
+	pbicon.AddHeading("f","Matrix")
+	pbicon.AddMatrix("f")
+	'pbicon.AddButton("d", "btnSaveIcon", "Save", "savePropertyBag")
+	'pbicon.AddButton("d", "btnDeleteIcon", "Delete", "deletePropertyBag")
 	vm.Container.AddComponent(1, 3, pbicon.tostring)
 End Sub
 #End Region
@@ -2914,22 +3010,21 @@ Sub PropertyBag_Image
 	pbimage.AddText("d","alt","Alt","","")
 	pbimage.AddText("d","tooltip","Tooltip","","")
 	pbimage.AddNumber("d","tabindex","Tab Index","","")
-	pbimage.AddText("d","borderradius","Border Radius","","")
-	pbimage.AddText("d","borderwidth","Border Width","","")
+	pbimage.AddText2("d", CreateMap("borderradius":"Border Radius", "borderwidth":"Border Width"))
 	pbimage.AddSelect("d","bordercolor","Border Color", vm.ColorOptions)
 	pbimage.AddSelect("d","borderstyle","Border Style",vm.BorderOptions)
 	pbimage.AddText("d","aspectratio","Aspect Ratio","","")
 	pbimage.AddHeightWidths("d")
 	'
-	pbimage.AddCheck2(1, 1, "isvisible", "Visible")
-	pbimage.AddCheck2(1, 2, "ontable", "On Table")
-	pbimage.AddCheck2(2, 1, "centeronparent", "Center on Parent")
-	pbimage.SetChecks("d")
+	pbimage.AddHeading("e","Settings")
+	pbimage.AddSwitches("e", CreateMap("isvisible": "Visible", "ontable": "On Table"))
+	pbimage.AddSwitches("e", CreateMap("centeronparent": "Center on Parent"))
 	
-	pbimage.AddMatrix("d")
+	pbimage.AddHeading("f","Matrix")
+	pbimage.AddMatrix("f")
 	'
-	pbimage.AddButton("d", "btnSaveImage", "Save", "savePropertyBag")
-	pbimage.AddButton("d", "btnDeleteImage", "Delete", "deletePropertyBag")
+	'pbimage.AddButton("d", "btnSaveImage", "Save", "savePropertyBag")
+	'pbimage.AddButton("d", "btnDeleteImage", "Delete", "deletePropertyBag")
 	vm.Container.AddComponent(1, 3, pbimage.tostring)
 End Sub
 #End Region
@@ -2952,24 +3047,19 @@ Sub PropertyBag_CheckBox
 	pbcheckbox.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
 	pbcheckbox.AddSelect("d","switchloading","Loading", vm.ColorOptions)
 	'
-	pbcheckbox.AddCheck2(1, 1, "isrequired", "Required")
-	pbcheckbox.AddCheck2(1, 2, "isprimary", "Primary")
-	pbcheckbox.AddCheck2(2, 1, "isvisible", "Visible")
-	pbcheckbox.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbcheckbox.AddCheck2(3, 1, "ontable", "On Table")
-	pbcheckbox.AddCheck2(3, 2, "isdark", "Dark")
-	pbcheckbox.AddCheck2(4, 1, "isdense", "Dense")
-	pbcheckbox.AddCheck2(4, 2, "ishidedetails", "Hide Details")
-	pbcheckbox.AddCheck2(5, 1, "isindeterminate", "Indeterminate")
-	pbcheckbox.AddCheck2(5, 2, "islight", "Light")
-	pbcheckbox.AddCheck2(6, 1, "ismultiple", "Multiple")
-	pbcheckbox.AddCheck2(6, 2, "isinset", "Inset")
-	pbcheckbox.AddCheck2(7, 1, "isflat", "Flat")
-	pbcheckbox.SetChecks("d")
+	pbcheckbox.AddHeading("e","Settings")
+	pbcheckbox.AddSwitches("e", CreateMap("isrequired": "Required", "isprimary": "Primary"))
+	pbcheckbox.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
+	pbcheckbox.AddSwitches("e", CreateMap("ontable": "On Table", "isdark": "Dark"))
+	pbcheckbox.AddSwitches("e", CreateMap("isdense": "Dense", "ishidedetails": "Hide Details"))
+	pbcheckbox.AddSwitches("e", CreateMap("isindeterminate": "Indeterminate", "islight": "Light"))
+	pbcheckbox.AddSwitches("e", CreateMap("ismultiple": "Multiple", "isinset": "Inset"))
+	pbcheckbox.AddSwitches("e", CreateMap("isflat": "Flat"))
 	'
-	pbcheckbox.AddMatrix("d")
-	pbcheckbox.AddButton("d", "btnSaveCheck", "Save", "savePropertyBag")
-	pbcheckbox.AddButton("d", "btnDeleteCheck", "Delete", "deletePropertyBag")
+	pbcheckbox.AddHeading("f","Matrix")
+	pbcheckbox.AddMatrix("f")
+	'pbcheckbox.AddButton("d", "btnSaveCheck", "Save", "savePropertyBag")
+	'pbcheckbox.AddButton("d", "btnDeleteCheck", "Delete", "deletePropertyBag")
 	'
 	vm.container.AddComponent(1, 3, pbcheckbox.tostring)
 End Sub
@@ -2987,27 +3077,22 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddText("d","label","Label","","")
 	pbradiogroup.AddText("d","value","Value","","")
 	pbradiogroup.AddText("d","sourcetable","Data Source","","")
-	pbradiogroup.AddText("d","sourcefield","Item Value","","")
-	pbradiogroup.AddText("d","displayfield","Item Text","","")
+	pbradiogroup.AddText2("d", CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
 	pbradiogroup.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
 	pbradiogroup.AddTextArea("d","values","Item Texts (,)", "", "One,Two,Three")
 	pbradiogroup.AddNumber("d","tabindex","Tab Index","","")
 	'
-	pbradiogroup.AddCheck2(1, 1, "showlabel", "Show Label")
-	pbradiogroup.AddCheck2(1, 2, "labelontop", "Column")
-	pbradiogroup.AddCheck2(2, 1, "isvisible", "Visible")
-	pbradiogroup.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbradiogroup.AddCheck2(3, 1, "ontable", "On Table")
-	pbradiogroup.AddCheck2(3, 2, "ismandatory", "Mandatory")
-	pbradiogroup.AddCheck2(4, 1, "isdense", "Dense")
-	pbradiogroup.AddCheck2(4, 2, "ishidedetails", "Hide Details")
-	pbradiogroup.AddCheck2(5, 1, "ismultiple", "Multiple")
-	pbradiogroup.AddCheck2(5, 2, "useoptions", "Use Options")
-	pbradiogroup.SetChecks("d")
-	
-	pbradiogroup.AddMatrix("d")
-	pbradiogroup.AddButton("d", "btnSaveRadio", "Save", "savePropertyBag")
-	pbradiogroup.AddButton("d", "btnDeleteRadio", "Delete", "deletePropertyBag")
+	pbradiogroup.AddHeading("e","Settings")
+	pbradiogroup.AddSwitches("e", CreateMap("showlabel": "Show Label", "labelontop": "Column"))
+	pbradiogroup.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
+	pbradiogroup.AddSwitches("e", CreateMap("ontable": "On Table", "ismandatory": "Mandatory"))
+	pbradiogroup.AddSwitches("e", CreateMap("isdense": "Dense", "ishidedetails": "Hide Details"))
+	pbradiogroup.AddSwitches("e", CreateMap("ismultiple": "Multiple", "useoptions": "Use Options"))
+	'
+	pbradiogroup.AddHeading("f","Matrix")
+	pbradiogroup.AddMatrix("f")
+	'pbradiogroup.AddButton("d", "btnSaveRadio", "Save", "savePropertyBag")
+	'pbradiogroup.AddButton("d", "btnDeleteRadio", "Delete", "deletePropertyBag")
 	'
 	vm.container.AddComponent(1, 3, pbradiogroup.tostring)
 End Sub
@@ -3030,39 +3115,28 @@ Sub PropertyBag_Select
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
 	pbselectbox.AddText("d","errortext","Error Text","","")
 	pbselectbox.AddText("d","sourcetable","Data Source","","")
-	pbselectbox.AddText("d","sourcefield","Item Value","","")
-	pbselectbox.AddText("d","displayfield","Item Text","","")
+	pbselectbox.AddText2("d",CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
 	pbselectbox.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
 	pbselectbox.AddTextArea("d","values","Item Texts (,)", "", "One,Two,Three")
 	'
-	pbselectbox.AddCheck2(1, 1, "isrequired", "Required")
-	pbselectbox.AddCheck2(1, 2, "isclearable", "Clearable")
-	pbselectbox.AddCheck2(2, 1, "isvisible", "Visible")
-	pbselectbox.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbselectbox.AddCheck2(3, 1, "ismultiple", "Multiple")
-	pbselectbox.AddCheck2(3, 2, "ontable", "On Table")
-	pbselectbox.AddCheck2(4, 1, "issolo", "Solo")
-	pbselectbox.AddCheck2(4, 2, "isoutlined", "Outlined")
-	pbselectbox.AddCheck2(5, 1, "isfilled", "Filled")
-	pbselectbox.AddCheck2(5, 2, "isdense", "Dense")
-	pbselectbox.AddCheck2(6, 1, "issingleline", "Single Line")
-	pbselectbox.AddCheck2(6, 2, "ispersistenthint", "Persistent Hint")
-	pbselectbox.AddCheck2(7, 1, "isshaped", "Shaped - FOS")
-	pbselectbox.AddCheck2(7, 2, "isloading", "Loading")
-	pbselectbox.AddCheck2(8, 1, "isflat", "Flat - Solo")
-	pbselectbox.AddCheck2(8, 2, "isrounded", "Rounded - FOS")
-	pbselectbox.AddCheck2(9, 1, "ishidedetails", "Hide Details")
-	pbselectbox.AddCheck2(9, 2, "useoptions", "Use Options")
-	pbselectbox.AddCheck2(10, 1, "isreturnobject", "Return Object")
-	pbselectbox.AddCheck2(10, 2, "ischips", "Chips")
-	pbselectbox.AddCheck2(11, 1, "issmallchips", "Small Chips")
-	pbselectbox.AddCheck2(11, 2, "isdeletablechips", "Deletable Chips")
-	pbselectbox.SetChecks("d")
+	pbselectbox.AddHeading("e","Settings")
+	pbselectbox.AddSwitches("e", CreateMap("isrequired": "Required", "isclearable": "Clearable"))
+	pbselectbox.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
+	pbselectbox.AddSwitches("e", CreateMap("ismultiple": "Multiple", "ontable": "On Table"))
+	pbselectbox.AddSwitches("e", CreateMap("issolo": "Solo", "isoutlined": "Outlined"))
+	pbselectbox.AddSwitches("e", CreateMap("isfilled": "Filled", "isdense": "Dense"))
+	pbselectbox.AddSwitches("e", CreateMap("issingleline": "Single Line", "ispersistenthint": "Persistent Hint"))
+	pbselectbox.AddSwitches("e", CreateMap("isshaped": "Shaped - FOS", "isloading": "Loading"))
+	pbselectbox.AddSwitches("e", CreateMap("isflat": "Flat - Solo", "isrounded": "Rounded - FOS"))
+	pbselectbox.AddSwitches("e", CreateMap("ishidedetails": "Hide Details", "useoptions": "Use Options"))
+	pbselectbox.AddSwitches("e", CreateMap("isreturnobject": "Return Object", "ischips": "Chips"))
+	pbselectbox.AddSwitches("e", CreateMap("issmallchips": "Small Chips", "isdeletablechips": "Deletable Chips"))
 	
-	pbselectbox.AddMatrix("d")
+	pbselectbox.AddHeading("f","Matrix")
+	pbselectbox.AddMatrix("f")
 	'
-	pbselectbox.AddButton("d", "btnSaveSelect", "Save", "savePropertyBag")
-	pbselectbox.AddButton("d", "btnDeleteSelect", "Delete", "deletePropertyBag")
+	'pbselectbox.AddButton("d", "btnSaveSelect", "Save", "savePropertyBag")
+	'pbselectbox.AddButton("d", "btnDeleteSelect", "Delete", "deletePropertyBag")
 	vm.container.AddComponent(1, 3, pbselectbox.tostring)
 End Sub
 #End Region
@@ -3080,12 +3154,14 @@ Sub PropertyBag_Parallax
 	pbparallax.AddText("d","src","Src","","./assets/material.jpg")
 	pbparallax.AddText("d","alt","Alt","","")
 	
-	pbparallax.AddCheck2(1, 1, "isvisible", "Visible")
-	pbparallax.SetChecks("d")
-	pbparallax.AddMatrix("d")
+	pbparallax.AddHeading("e","Settings")
+	pbparallax.AddSwitches("e", CreateMap("isvisible": "Visible"))
+	
+	pbparallax.AddHeading("f","Matrix")
+	pbparallax.AddMatrix("f")
 	'
-	pbparallax.AddButton("d", "btnSaveParallax", "Save", "savePropertyBag")
-	pbparallax.AddButton("d", "btnDeleteParallax", "Delete", "deletePropertyBag")
+	'pbparallax.AddButton("d", "btnSaveParallax", "Save", "savePropertyBag")
+	'pbparallax.AddButton("d", "btnDeleteParallax", "Delete", "deletePropertyBag")
 	vm.container.AddComponent(1, 3, pbparallax.tostring)
 End Sub
 #End Region
@@ -3101,24 +3177,22 @@ Sub PropertyBag_Container
 	pbcontainer.AddText("d","vmodel","ID","","")
 	pbcontainer.AddSelect("d","elevation","Elevation",vm.elevation)
 	pbcontainer.AddSelect("d","transition","Transition",vm.Transition)
-	pbcontainer.AddText("d","borderradius","Border Radius","","")
-	pbcontainer.AddText("d","borderwidth","Border Width","","")
+	pbcontainer.AddText2("d",CreateMap("borderradius":"Border Radius", "borderwidth":"Border Width"))
 	pbcontainer.AddSelect("d","bordercolor","Border Color", vm.ColorOptions)
 	pbcontainer.AddSelect("d","borderstyle","Border Style",vm.BorderOptions)
 	pbcontainer.AddSelect("d","color","Color", vm.ColorOptions)
 	pbcontainer.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
 	'
-	pbcontainer.AddCheck2(1, 1, "isvisible", "Visible")
-	pbcontainer.AddCheck2(1, 2, "isfluid", "Fluid")
-	pbcontainer.AddCheck2(2, 1, "isshowmatrix", "Show Matrix")
-	pbcontainer.AddCheck2(2, 2, "isnogutters", "No Gutters")
-	pbcontainer.SetChecks("d")
+	pbcontainer.AddHeading("e","Settings")
+	pbcontainer.AddSwitches("e", CreateMap("isvisible": "Visible", "isfluid": "Fluid"))
+	pbcontainer.AddSwitches("e", CreateMap("isshowmatrix": "Show Matrix", "isnogutters": "No Gutters"))
 	'
-	pbcontainer.AddHeightWidths("d")
-	pbcontainer.AddMatrix("d")
+	pbcontainer.AddHeading("f","Matrix")
+	pbcontainer.AddHeightWidths("f")
+	pbcontainer.AddMatrix("f")
 	'
-	pbcontainer.AddButton("d", "btnSaveContainer", "Save", "savePropertyBag")
-	pbcontainer.AddButton("d", "btnDeleteContainer", "Delete", "deletePropertyBag")
+	'pbcontainer.AddButton("d", "btnSaveContainer", "Save", "savePropertyBag")
+	'pbcontainer.AddButton("d", "btnDeleteContainer", "Delete", "deletePropertyBag")
 	vm.container.AddComponent(1, 3, pbcontainer.tostring)
 End Sub
 #End Region
@@ -3132,60 +3206,47 @@ Sub PropertyBag_Toolbar
 	pbtoolbar.AddText("d","id","ID","","")
 	pbtoolbar.AddText("d", "controltype", "Type", "","toolbar")
 	pbtoolbar.AddText("d","vmodel","ID","","")
-	pbtoolbar.AddRadioGroup("d", "bartype", "Type", CreateMap("app":"AppBar","tool":"ToolBar","sys":"SystemBar"))
+	pbtoolbar.AddRadioGroupH("d", "bartype", "Type", CreateMap("app":"AppBar","tool":"ToolBar","sys":"SystemBar"))
 	pbtoolbar.AddSelect("d","elevation","Elevation",vm.elevation)
 	pbtoolbar.AddText("d","extensionheight","Extension Height","","")
 	pbtoolbar.AddText("d","scrolltarget","Scroll Target","","")
 	pbtoolbar.AddText("d","scrollthreshold","Scroll Threshold","","")
 	pbtoolbar.AddText("d","src","Src","","")
 	pbtoolbar.AddText("d","logourl","Logo URL","","")
-	pbtoolbar.AddText("d","borderradius","Logo Border Radius","","")
-	pbtoolbar.AddText("d","borderwidth","Logo Border Width","","")
+	pbtoolbar.AddText2("d",CreateMap("borderradius":"Logo Border Radius", "borderwidth":"Logo Border Width"))
 	pbtoolbar.AddSelect("d","bordercolor","Logo Border Color", vm.ColorOptions)
 	pbtoolbar.AddSelect("d","borderstyle","Logo Border Style",vm.BorderOptions)
-	pbtoolbar.AddText("d","logowidth","Logo Width","","")
-	pbtoolbar.AddText("d","logoheight","Logo Height","","")
+	pbtoolbar.AddText2("d",CreateMap("logowidth":"Logo Width","logoheight":"Logo Height"))
 	pbtoolbar.AddText("d","label","Title","","")
 	pbtoolbar.AddText("d","titleclass","Title Class(es)","","")
 	
 	pbtoolbar.AddSelect("d","color","Color", vm.ColorOptions)
 	pbtoolbar.AddSelect("d","intensity","Intensity", vm.IntensityOptions)
 	'
-	pbtoolbar.AddCheck2(1, 1, "ishamburger", "Hamburger")
-	pbtoolbar.AddCheck2(1, 2, "isdense", "Dense")
-	pbtoolbar.AddCheck2(2, 1, "isdark", "Dark")
-	pbtoolbar.AddCheck2(2, 2, "isabsolute", "Absolute")
-	pbtoolbar.AddCheck2(3, 1, "isclippedleft", "Clipped Left")
-	pbtoolbar.AddCheck2(3, 2, "isclippedright", "Clipped Right")
-	pbtoolbar.AddCheck2(4, 1, "isclippedleft", "Clipped Left")
-	pbtoolbar.AddCheck2(4, 2, "iscollapse", "Collapse")
-	pbtoolbar.AddCheck2(5, 1, "iscollapseonscroll", "Collapse on Scroll")
-	pbtoolbar.AddCheck2(5, 2, "iselevateonscroll", "Elevate on Scroll")
-	pbtoolbar.AddCheck2(6, 1, "isextended", "Extended")
-	pbtoolbar.AddCheck2(6, 2, "isfadeimageonscroll", "Fade Image on Scroll")
-	pbtoolbar.AddCheck2(7, 1, "isfixed", "Fixed")
-	pbtoolbar.AddCheck2(7, 2, "isfloating", "Floating")
-	pbtoolbar.AddCheck2(8, 1, "ishideonscroll", "Hide on Scroll")
-	pbtoolbar.AddCheck2(8, 2, "isinvertedscroll", "Inverted Scroll")
-	pbtoolbar.AddCheck2(9, 1, "isprominent", "Prominent")
-	pbtoolbar.AddCheck2(9, 2, "isscrolloffscreen", "Scroll off Screen")
-	pbtoolbar.AddCheck2(10, 1, "isshort", "Short")
-	pbtoolbar.AddCheck2(10, 2, "isshrinkonscroll", "Shrink on Scroll")
-	pbtoolbar.AddCheck2(11, 1, "isvisible", "Visible")
-	pbtoolbar.AddCheck2(11, 2, "islogovisible", "Logo Visible")
-	
-	pbtoolbar.SetChecks("d")
+	pbtoolbar.AddHeading("a", "Items")
+	pbtoolbar.AddToolbarItems("a")
+
 	'
-	pbtoolbar.AddHeightWidths("d")
-	pbtoolbar.AddMatrix("d")
+	pbtoolbar.AddHeading("e","Settings")
+	pbtoolbar.AddSwitches("e", CreateMap("ishamburger":"Hamburger","isspacer":"Add Spacer"))
+	pbtoolbar.AddSwitches("e", CreateMap("isdark":"Dark","isabsolute":"Absolute"))	
+	pbtoolbar.AddSwitches("e", CreateMap("isclippedleft": "Clipped Left", "isclippedright": "Clipped Right"))
+	pbtoolbar.AddSwitches("e", CreateMap("iscollapse": "Collapse", "iscollapseonscroll": "Collapse on Scroll"))
+	pbtoolbar.AddSwitches("e", CreateMap("iselevateonscroll": "Elevate on Scroll", "isextended": "Extended"))
+	pbtoolbar.AddSwitches("e", CreateMap("isfadeimageonscroll": "Fade Image on Scroll", "isfixed": "Fixed"))
+	pbtoolbar.AddSwitches("e", CreateMap("isfloating": "Floating", "ishideonscroll": "Hide on Scroll"))
+	pbtoolbar.AddSwitches("e", CreateMap("isinvertedscroll": "Inverted Scroll", "isprominent": "Prominent"))
+	pbtoolbar.AddSwitches("e", CreateMap("isscrolloffscreen": "Scroll off Screen", "isshort": "Short"))
+	pbtoolbar.AddSwitches("e", CreateMap("isshrinkonscroll": "Shrink on Scroll", "isvisible": "Visible"))
+	pbtoolbar.AddSwitches("e", CreateMap("islogovisible": "Logo Visible","isdense":"Dense"))
 	'
-	pbtoolbar.AddButton("d", "btnSaveToolbar", "Save", "savePropertyBag")
-	pbtoolbar.AddButton("d", "btnDeleteToolbar", "Delete", "deletePropertyBag")
+	pbtoolbar.AddHeading("f","Matrix")
+	pbtoolbar.AddHeightWidths("f")
+	pbtoolbar.AddMatrix("f")
+	'
+	'pbtoolbar.AddButton("d", "btnSaveToolbar", "Save", "savePropertyBag")
+	'pbtoolbar.AddButton("d", "btnDeleteToolbar", "Delete", "deletePropertyBag")
 	vm.container.AddComponent(1, 3, pbtoolbar.tostring)
-	'
-	Log(pbtoolbar.btext)
-	Log(pbtoolbar.sText)
-	
 	'
 	'BuildBooleans("tbl", pbtoolbar.bText)
 	'BuildStrings("tbl", pbtoolbar.stext)
@@ -3264,14 +3325,15 @@ Sub PropertyBag_Label
 	pblabel.AddSelect("d", "align", "Text Align", vm.TextAlignmentOptions)
 	pblabel.AddSelect("d", "fontweight", "Font Weight", vm.FontWeightOptions)
 	
-	pblabel.AddCheck2(1, 1, "isvisible", "Visible")
-	pblabel.AddCheck2(1, 2, "ontable", "On Table")
-	pblabel.AddCheck2(2, 1, "isitalic", "Italic")
-	pblabel.SetChecks("d")
-	pblabel.AddMatrix("d")
+	pblabel.AddHeading("e","Settings")
+	pblabel.AddSwitches("e", CreateMap("isvisible": "Visible", "ontable": "On Table"))
+	pblabel.AddSwitches("e", CreateMap("isitalic": "Italic"))
+	
+	pblabel.AddHeading("f","Matrix")
+	pblabel.AddMatrix("f")
 	'
-	pblabel.AddButton("d", "btnSaveLabel", "Save", "savePropertyBag")
-	pblabel.AddButton("d", "btnDeleteLabel", "Delete", "deletePropertyBag")
+	'pblabel.AddButton("d", "btnSaveLabel", "Save", "savePropertyBag")
+	'pblabel.AddButton("d", "btnDeleteLabel", "Delete", "deletePropertyBag")
 	vm.container.AddComponent(1, 3, pblabel.tostring)
 End Sub
 #End Region
@@ -3288,7 +3350,7 @@ Sub PropertyBag_TextField
 	pbtextfield.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbtextfield.AddText("d","vmodel","VModel","","")
 	pbtextfield.AddText("d","label","Label","","")
-	pbtextfield.AddText("d","icon","Icon Name","","")
+	pbtextfield.AddText("d","iconname","Icon Name","","")
 	pbtextfield.AddText("d", "value", "Value","","")
 	pbtextfield.AddText("d", "placeholder","Placeholder","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
@@ -3296,29 +3358,22 @@ Sub PropertyBag_TextField
 	pbtextfield.AddNumber("d","tabindex","Tab Index","","")
 	pbtextfield.AddTel("d","maxlength","Max Length/Counter","","")
 	'
-	pbtextfield.AddCheck2(1, 1, "isrequired", "Required")
-	pbtextfield.AddCheck2(1, 2, "isclearable", "Clearable")
-	pbtextfield.AddCheck2(2, 1, "isvisible", "Visible")
-	pbtextfield.AddCheck2(2, 2, "isdisabled", "Disabled")
-	pbtextfield.AddCheck2(3, 1, "isautogrow", "Autogrow")
-	pbtextfield.AddCheck2(3, 2, "ontable", "On Table")
-	pbtextfield.AddCheck2(4, 1, "issolo", "Solo")
-	pbtextfield.AddCheck2(4, 2, "isoutlined", "Outlined")
-	pbtextfield.AddCheck2(5, 1, "isfilled", "Filled")
-	pbtextfield.AddCheck2(5, 2, "isdense", "Dense")
-	pbtextfield.AddCheck2(6, 1, "issingleline", "Single Line")
-	pbtextfield.AddCheck2(6, 2, "ispersistenthint", "Persistent Hint")
-	pbtextfield.AddCheck2(7, 1, "isshaped", "Shaped - FOS")
-	pbtextfield.AddCheck2(7, 2, "isloading", "Loading")
-	pbtextfield.AddCheck2(8, 1, "isflat", "Flat - Solo")
-	pbtextfield.AddCheck2(8, 2, "isrounded", "Rounded - FOS")
-	pbtextfield.AddCheck2(9, 1, "ishidedetails", "Hide Details")
-	pbtextfield.AddCheck2(9, 2, "istoggle", "Show Toggle Icons")
-	pbtextfield.SetChecks("d")
+	pbtextfield.AddHeading("e","Settings")
+	pbtextfield.AddSwitches("e", CreateMap("isrequired": "Required", "isclearable": "Clearable"))
+	pbtextfield.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
+	pbtextfield.AddSwitches("e", CreateMap("isautogrow": "Autogrow", "ontable": "On Table"))
+	pbtextfield.AddSwitches("e", CreateMap("issolo": "Solo", "isoutlined": "Outlined"))
+	pbtextfield.AddSwitches("e", CreateMap("isfilled": "Filled", "isdense": "Dense"))
+	pbtextfield.AddSwitches("e", CreateMap("issingleline": "Single Line", "ispersistenthint": "Persistent Hint"))
+	pbtextfield.AddSwitches("e", CreateMap("isshaped": "Shaped - FOS", "isloading": "Loading"))
+	pbtextfield.AddSwitches("e", CreateMap("isflat": "Flat - Solo", "isrounded": "Rounded - FOS"))
+	pbtextfield.AddSwitches("e", CreateMap("ishidedetails": "Hide Details", "istoggle": "Show Toggle Icons"))
 	
-	pbtextfield.AddMatrix("d")
-	pbtextfield.AddButton("d", "btnSaveText", "Save", "savePropertyBag")
-	pbtextfield.AddButton("d", "btnDelete", "Delete", "deletePropertyBag")
+	pbtextfield.AddHeading("f","Matrix")
+	pbtextfield.AddMatrix("f")
+	'
+	'pbtextfield.AddButton("d", "btnSaveText", "Save", "savePropertyBag")
+	'pbtextfield.AddButton("d", "btnDelete", "Delete", "deletePropertyBag")
 	'pbtextfield.AddButton("d", "btnClone", "Clone", "clonePropertyBag")
 	'
 	Dim txtCode As String = pbtextfield.tostring
@@ -3344,6 +3399,7 @@ Sub DeletePropertyBag
 End Sub
 
 Sub DeleteIT
+	ShowBag("")
 	'get the id tp delete
 	Dim sid As String = vm.getdata("deleteid")
 	sid = BANano.parseint(sid)
@@ -3418,6 +3474,9 @@ End Sub
 'save the property bag
 Sub SavePropertyBag
 	'get the saved property bag
+	Dim contents As List
+	contents.initialize
+	Dim scontents As String = ""
 	vm.setdata("devspace", 0)
 	vm.pagepause
 	Dim spropbagtype As String = vm.getdata("propbagtype")
@@ -3451,8 +3510,12 @@ Sub SavePropertyBag
 			props = pbcontainer.properties
 		Case "toolbar"
 			props = pbtoolbar.properties
+			contents = vm.getdata("tableitems")
+			scontents = BANano.tojson(contents)
 		Case "menu"
 			props = pbmenu.properties
+			contents = vm.getdata("tableitems")
+			scontents = BANano.tojson(contents)
 	End Select
 	'
 	Dim sid As String = props.get("id")
@@ -3487,6 +3550,7 @@ Sub SavePropertyBag
 	nrec.put("vmodel", svmodel)
 	nrec.put("label", slabel)
 	nrec.put("name", svmodel)
+	nrec.Put("items", scontents)
 	
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
@@ -3510,12 +3574,16 @@ Sub MapRemovePrefix(m As Map) As Map
 End Sub
 
 Sub ShowBag(thisBag As String)
+	tblProp.setvisible(False)
 	thisBag = thisBag.tolowercase
 	Dim m As Map = CreateMap()
 	For Each strT As String In lstBags
 		m.Put(strT, False)
 	Next
-	m.Put(thisBag, True)
+	If thisBag <> "" Then 
+		tblProp.SetVisible(True)
+		m.Put(thisBag, True)
+	End If
 	vm.SetState(m)
 End Sub
 
@@ -3529,55 +3597,40 @@ Sub PropertyBag_Menu
 	pbmenu.AddText("d","id","ID","","")
 	pbmenu.AddText("d", "controltype", "Type", "","menu")
 	pbmenu.AddText("d","vmodel","ID","","")
-	pbmenu.AddRadioGroup("d", "menutype", "Type", CreateMap("icon":"Icon","btn":"Button"))
+	pbmenu.AddRadioGroupH("d", "menutype", "Type", CreateMap("icon":"Icon","btn":"Button"))
 	pbmenu.AddText("d","activator","Activator","","")
 	pbmenu.AddText("d","closedelay","Close Delay","","")
 	pbmenu.AddText("d","contentclass","Content Class","","")
-	pbmenu.AddText("d","icon","Icon","","")
+	pbmenu.AddText("d","iconname","Icon","","")
 	pbmenu.AddText("d","label","Text","","")
-	pbmenu.AddText("d","maxheight","Max Height","","")
-	pbmenu.AddText("d","maxwidth","Max Width","","")
-	pbmenu.AddText("d","minwidth","Min Width","","")
-	pbmenu.AddText("d","nudgebottom","Nudge Bottom","","")
-	pbmenu.AddText("d","nudgeleft","Nudge Left","","")
-	pbmenu.AddText("d","nudgeright","Nudge Right","","")
-	pbmenu.AddText("d","nudgetop","Nudge Top","","")
-	pbmenu.AddText("d","nudgewidth","Nudge Width","","")
-	pbmenu.AddText("d","opendelay","Open Delay","","")
-	pbmenu.AddText("d","origin","Origin","","")
-	pbmenu.AddText("d","positionx","Position X","","")
-	pbmenu.AddText("d","positiony","Position Y","","")
+	pbmenu.AddText2("d", CreateMap("maxheight":"Max Height","maxwidth":"Max Width"))
+	pbmenu.AddText2("d", CreateMap("minwidth":"Min Width","nudgewidth":"Nudge Width"))
+	pbmenu.AddText2("d", CreateMap("nudgebottom":"Nudge Bottom","nudgetop":"Nudge Top"))
+	pbmenu.AddText2("d", CreateMap("nudgeleft":"Nudge Left","nudgeright":"Nudge Right"))
+	pbmenu.AddText2("d", CreateMap("opendelay":"Open Delay","origin":"Origin"))
+	pbmenu.AddText2("d", CreateMap("positionx":"Position X","positiony":"Position Y"))
 	pbmenu.AddText("d","returnvalue","Return Value","","")
 	pbmenu.AddSelect("d","transition","Transition",vm.Transition)
 	'
-	pbmenu.AddCheck2(1, 1, "isabsolute", "Absolute")
-	pbmenu.AddCheck2(1, 2, "isallowoverflow", "AllowOverflow")
-	pbmenu.AddCheck2(2, 1, "isauto", "Auto")
-	pbmenu.AddCheck2(2, 2, "isbottom", "Bottom")
-	pbmenu.AddCheck2(3, 1, "iscloseonclick", "CloseOn Click")
-	pbmenu.AddCheck2(3, 2, "iscloseoncontentclick", "CloseOnContentClick")
-	pbmenu.AddCheck2(4, 1, "isdark", "Dark")
-	pbmenu.AddCheck2(4, 2, "isdisablekeys", "DisableKeys")
-	pbmenu.AddCheck2(5, 1, "isdisabled", "Disabled")
-	pbmenu.AddCheck2(5, 2, "iseager", "Eager")
-	pbmenu.AddCheck2(6, 1, "isfixed", "Fixed")
-	pbmenu.AddCheck2(6, 2, "isinternalactivator", "InternalActivator")
-	pbmenu.AddCheck2(7, 1, "isleft", "Left")
-	pbmenu.AddCheck2(7, 2, "islight", "Light")
-	pbmenu.AddCheck2(8, 1, "isoffsetoverflow", "OffsetOverflow")
-	pbmenu.AddCheck2(8, 2, "isoffsetx", "OffsetX")
-	pbmenu.AddCheck2(9, 1, "isoffsety", "OffsetY")
-	pbmenu.AddCheck2(9, 2, "isopenonclick", "OpenOnClick")
-	pbmenu.AddCheck2(10, 1, "isopenonhover", "OpenOnHover")
-	pbmenu.AddCheck2(10, 2, "isright", "Right")
-	pbmenu.AddCheck2(11, 1, "isslotactivator", "SlotActivator")
-	pbmenu.AddCheck2(11, 2, "istop", "Top")
-	pbmenu.SetChecks("d")
-	pbmenu.AddMatrix("d")
-	pbmenu.AddButton("d", "btnSaveMenu", "Save", "savePropertyBag")
-	pbmenu.AddButton("d", "btnDeleteMenu", "Delete", "deletePropertyBag")
+	pbmenu.AddHeading("a", "Items")
+	pbmenu.AddMenuItems("a")
+	'
+	pbmenu.AddHeading("e","Settings")
+	pbmenu.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isallowoverflow": "AllowOverflow"))
+	pbmenu.AddSwitches("e", CreateMap("isauto": "Auto", "isbottom": "Bottom"))
+	pbmenu.AddSwitches("e", CreateMap("iscloseonclick": "CloseOn Click", "iscloseoncontentclick": "CloseOnContentClick"))
+	pbmenu.AddSwitches("e", CreateMap("isdark": "Dark", "isdisablekeys": "DisableKeys"))
+	pbmenu.AddSwitches("e", CreateMap("isdisabled": "Disabled", "iseager": "Eager"))
+	pbmenu.AddSwitches("e", CreateMap("isfixed": "Fixed", "isinternalactivator": "InternalActivator"))
+	pbmenu.AddSwitches("e", CreateMap("isleft": "Left", "islight": "Light"))
+	pbmenu.AddSwitches("e", CreateMap("isoffsetoverflow": "OffsetOverflow", "isoffsetx": "OffsetX"))
+	pbmenu.AddSwitches("e", CreateMap("isoffsety": "OffsetY", "isopenonclick": "OpenOnClick"))
+	pbmenu.AddSwitches("e", CreateMap("isopenonhover": "OpenOnHover", "isright": "Right"))
+	pbmenu.AddSwitches("e", CreateMap("isslotactivator": "SlotActivator", "istop": "Top"))
+	pbmenu.AddHeading("f","Matrix")
+	pbmenu.AddMatrix("f")
+	'pbmenu.AddButton("d", "btnSaveMenu", "Save", "savePropertyBag")
+	'pbmenu.AddButton("d", "btnDeleteMenu", "Delete", "deletePropertyBag")
 	vm.container.AddComponent(1, 3, pbmenu.tostring)
 End Sub
 #End Region
-
-	

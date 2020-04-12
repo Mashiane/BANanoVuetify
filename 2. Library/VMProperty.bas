@@ -22,7 +22,7 @@ Sub Class_Globals
 	Private defaults As Map
 	Private labels As Map
 	Type PropControls(vmodel As String, value As String, text As String, typeOf As String, module As Object, methodName As String, _
-	iconName As String, MinValue As Int, MaxValue As Int, sourceName As String, options As Map, sourcefield As String, displayfield As String, OptionsList As List, cont As VMContainer)
+	iconName As String, MinValue As Int, MaxValue As Int, sourceName As String, options As Map, sourcefield As String, displayfield As String, OptionsList As List, cont As VMContainer,horizontal As Boolean)
 	Dim sshow As String
 	Private contChecks As VMContainer
 	Private hasChecks As Boolean
@@ -30,6 +30,7 @@ Sub Class_Globals
 	Private changeEvent As String
 	Public bText As List
 	Public sText As List
+	Public contentitems As List
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMProperty
@@ -54,6 +55,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	changeEvent = $"${ID}_change"$
 	bText.Initialize 
 	sText.Initialize 
+	contentitems.Initialize
+	contentitems.Add("key")
+	contentitems.Add("avatar")
+	contentitems.Add("icon")
+	contentitems.Add("title")
+	contentitems.Add("subtitle")
+	contentitems.Add("action")
+	contentitems.Add("itemtype")
+	contentitems.Add("badge")
 	Return Me
 End Sub
 
@@ -135,7 +145,6 @@ Sub setProperties(m As Map)
 	If Booleans.Size > 0 Then vue.MakeBoolean(m, Booleans)
 	vue.SetState(m)
 End Sub
-
 
 Sub AddSelect(parent As String, vmodel As String, vText As String, options As Map) As VMProperty
 	vmodel = vmodel.tolowercase
@@ -314,7 +323,82 @@ Sub AddHeightWidths(parent As String)
 	sText.add("height")
 	sText.add("minheight")
 	sText.add("maxheight")
-	
+End Sub
+
+Sub AddMenuItems(parent As String)
+	AddCrudList(parent, CreateMap("key":"Item Key","avatar":"Avatar","icon":"Icon Name","title":"Title","subtitle":"Sub Title","action":"Action Icon"))
+End Sub
+
+private Sub SetToolBarItems
+End Sub
+
+Sub AddToolbarItems(parent As String)
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = "toolbaritems"
+	nc.text = "toolbaritems"
+	nc.value = ""
+	nc.typeOf = "toolbaritems"
+	existing.Add(nc)
+	controls.Put(parent, existing)
+End Sub
+
+'only 1 of this can exist in a property bag
+private Sub AddCrudList(parent As String, options As Map)
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = "items"
+	nc.text = "table"
+	nc.value = ""
+	nc.typeOf = "table"
+	nc.options = options
+	existing.Add(nc)
+	controls.Put(parent, existing)
+End Sub
+
+Sub AddText2(parent As String, options As Map)
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = "text2"
+	nc.text = "Text2"
+	nc.value = ""
+	nc.typeOf = "text2"
+	nc.options = options
+	existing.Add(nc)
+	controls.Put(parent, existing)
+	'
+	For Each k As String In options.keys
+		fields.Add(k)
+		defaults.Put(k, "")
+		sText.Add(k)
+	Next
 End Sub
 
 Sub AddMatrix(parent As String)
@@ -618,11 +702,157 @@ Sub AddRadioGroup(parent As String, vmodel As String, vText As String, options A
 	nc.options = options
 	nc.sourcefield = sourcefield
 	nc.displayfield = displayfield
+	nc.horizontal = False
 	existing.Add(nc)
 	controls.Put(parent, existing)
 	fields.Add(vmodel)
 	Strings.Add(vmodel)
 	defaults.Put(vmodel,"")
+End Sub
+
+Sub AddRadioGroupH(parent As String, vmodel As String, vText As String, options As Map)
+	parent = parent.tolowercase
+	vmodel = vmodel.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	Dim sourceName As String = $"${vmodel}items"$
+	Dim sourcefield As String = "id"
+	Dim displayfield As String = "text"
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = vmodel
+	nc.text = vText
+	nc.value = ""
+	nc.typeOf = "radiogroup"
+	nc.sourceName = sourceName
+	nc.options = options
+	nc.sourcefield = sourcefield
+	nc.displayfield = displayfield
+	nc.horizontal = True
+	existing.Add(nc)
+	controls.Put(parent, existing)
+	fields.Add(vmodel)
+	Strings.Add(vmodel)
+	defaults.Put(vmodel,"")
+End Sub
+
+Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar
+	Dim el As VMToolBar
+	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
+	el.SetToolBar(True)
+	Return el
+End Sub
+
+Sub CreateList(sid As String, eventHandler As Object) As VMList
+	Dim el As VMList
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+'add a new item
+Sub btnAddTable_click(e As BANanoEvent)
+	ClearContents
+End Sub
+
+'save an item
+Sub btnSaveTable_click(e As BANanoEvent)
+	Dim item As Map = CreateMap()
+	For Each k As String In contentitems
+		Dim v As String = vue.GetData($"items${k}"$)
+		item.Put(k, v)
+	Next
+	'read the existing items
+	Dim contents As List = vue.GetData("tableitems")
+	
+	'get the value
+	Dim v As String = item.Get("key")
+	If v = "" Then Return
+	'does the record exist
+	Dim rpos As Int = RecordPos(contents, "key", v)
+	rpos = BANano.parseInt(rpos)
+	Select Case rpos
+	Case -1	
+		contents.Add(item)
+	Case Else
+		contents.Set(rpos, item)
+	End Select		
+	vue.SetData("tableitems", contents)
+	ClearContents
+	'ensure we save the prop bag
+	BANano.CallSub(module, changeEvent, Null)
+End Sub
+
+'get the record position from saved items
+Sub RecordPos(lst As List, k As String, v As String) As Int
+	Dim lTot As Int = lst.Size - 1
+	Dim lCnt As Int
+	For lCnt = 0 To lTot
+		Dim m As Map = lst.Get(lCnt)
+		Dim sk As String = m.GetDefault(k, "")
+		If sk.EqualsIgnoreCase(v) Then
+			Return lCnt
+		End If
+	Next
+	Return -1
+End Sub
+
+'clear the contents of the items on list
+Sub ClearContents
+	'empty the details for entry
+	Dim item As Map = CreateMap()
+	For Each k As String In contentitems
+		Dim v As String = $"items${k}"$
+		item.Put(v, Null)
+	Next
+	vue.SetState(item)
+End Sub
+
+Sub btnDeleteTable_click(e As BANanoEvent)
+	Dim item As Map = CreateMap()
+	For Each k As String In contentitems
+		Dim v As String = vue.GetData($"items${k}"$)
+		item.Put(k, v)
+	Next
+	'read the existing items
+	Dim contents As List = vue.GetData("tableitems")
+	'get the value
+	Dim v As String = item.Get("key")
+	If v = "" Then Return
+	'does the record exist
+	Dim rpos As Int = RecordPos(contents, "key", v)
+	rpos = BANano.parseInt(rpos)
+	If rpos <> -1 Then
+		contents.RemoveAt(rpos)
+	End If
+	vue.SetData("tableitems", contents)
+	ClearContents
+	BANano.CallSub(module, changeEvent, Null)
+End Sub
+
+Sub itemscrud_click(e As BANanoEvent)
+	Dim menuID As String = vue.getidfromevent(e)
+	If menuID = "" Then Return
+	'read the existing items
+	Dim contents As List = vue.GetData("tableitems")
+	'does the record exist
+	Dim rpos As Int = RecordPos(contents, "key", menuID)
+	'copy to needed structure
+	If rpos = -1 Then Return
+	'get the saved record
+	Dim m As Map = contents.Get(rpos)
+	For Each k As String In contentitems
+		'read the existing record
+		Dim v As String = m.Get(k)
+		m.Put($"items${k}"$, v)
+	Next
+	vue.SetState(m)
 End Sub
 
 Sub ToString As String
@@ -641,8 +871,150 @@ Sub ToString As String
 		expanel.Container.SetFluid(True)
 		'
 		For Each nc As PropControls In items
-			vue.SetData(nc.vmodel, Null)
 			Select Case nc.typeOf
+			Case "toolbaritems"
+				nc.vmodel = "items"
+				Dim bcont As VMContainer
+				bcont.Initialize(vue, "tx" & nc.vmodel, module).SetStatic(True).SetTag("div").NoGutters = True
+				bcont.SetFluid(True)
+				bcont.AddRows(1).AddColumns12
+				'add a toolbar
+				Dim tblx As VMToolBar = CreateToolbar("t" & nc.vmodel, Me).SetStatic(True)
+				tblx.SetDense(True).AddSpacer.SetElevation("1")
+				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
+				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				bcont.AddComponent(1, 1, tblx.tostring)
+				'add input controls
+				Dim tcont As VMContainer
+				tcont.Initialize(vue, "tbl" & nc.vmodel, module).SetTag("div").SetStatic(True)
+				tcont.NoGutters = True
+				tcont.SetFluid(True)
+				tcont.SetElevation("1")
+				'
+				nc.options.Initialize 
+				nc.options.Put("key", "Item Key")
+				nc.options.Put("icon", "Icon Name")
+				nc.options.Put("title", "Title")
+				nc.options.Put("subtitle", "Tooltip")
+				nc.options.Put("badge", "Badge")
+				'
+				Dim rg As VMRadioGroup
+				rg.Initialize(vue, "rg" & nc.vmodel, module).SetStatic(True).SetVModel("itemsitemtype").Setlabel("Type")
+				rg.SetOptions(CreateMap("menu":"Menu","btn":"Button","icon":"Icon"))
+				vue.SetData("itemsitemtype", "icon")
+				rg.SetDense(True).SetRow(True).RemoveAttr("ref").SetHideDetails(True)
+				tcont.AddControlS(rg.RadioGroup, rg.ToString, 1, 1, 12, 12, 12, 12)
+				'
+				Dim rowPos As Int = 2
+				Dim colPos As Int = 0
+				For Each k As String In nc.options.Keys
+					Dim v As String = nc.options.Get(k)
+					'store for later retrieval
+					colPos = colPos + 1
+					If colPos = 3 Then
+						rowPos = rowPos + 1
+						colPos = 1
+					End If
+					'
+					Dim vmodel As String = $"${nc.vmodel}${k}"$
+					Dim tw As VMTextField
+					tw.Initialize(vue, vmodel, module).SetStatic(True).SetClearable(True).Setlabel(v)
+					tw.SetVModel(vmodel).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					tw.SetHideDetails(True).AddClass("my-2").RemoveAttr("v-show")
+					tcont.AddControlS(tw.TextField, tw.ToString, rowPos, colPos, 6, 6, 6, 6)
+				Next
+				bcont.AddComponent(1, 1, tcont.tostring)
+				'add a list
+				Dim mItems As VMList = CreateList(nc.vmodel & "crud", Me).SetElevation("1")
+				mItems.SetStatic(True)
+				mItems.SetDataSourceTemplate("tableitems", "key", "", "icon", "title", "subtitle", "")
+				Dim mList As String = mItems.tostring
+				bcont.AddComponent(1, 1, mList)
+				'
+				expanel.Container.AddControlS(bcont.Container, bcont.ToString, 1, 1, 12, 12, 12, 12)
+				
+			Case "table"
+				Dim bcont As VMContainer
+				bcont.Initialize(vue, "a" & nc.vmodel, module).SetStatic(True).SetTag("div").NoGutters = True
+				bcont.SetFluid(True)
+				bcont.AddRows(1).AddColumns12
+				'add a toolbar
+				Dim tblx As VMToolBar = CreateToolbar("t" & nc.vmodel, Me).SetStatic(True)
+				tblx.SetDense(True).AddSpacer.SetElevation("1")
+				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
+				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				bcont.AddComponent(1, 1, tblx.tostring)
+				'add input controls
+				Dim tcont As VMContainer
+				tcont.Initialize(vue, "tbl" & nc.vmodel, module).SetTag("div").SetStatic(True)
+				tcont.NoGutters = True
+				tcont.SetFluid(True)
+				tcont.SetElevation("1")
+				'
+				Dim rowPos As Int = 1
+				Dim colPos As Int = 0
+				For Each k As String In nc.options.Keys
+					Dim v As String = nc.options.Get(k)
+					'store for later retrieval
+					colPos = colPos + 1
+					If colPos = 3 Then
+						rowPos = rowPos + 1
+						colPos = 1
+					End If
+					'
+					Dim vmodel As String = $"${nc.vmodel}${k}"$
+					Dim tw As VMTextField
+					tw.Initialize(vue, vmodel, module).SetStatic(True).SetClearable(True).Setlabel(v)
+					tw.SetVModel(vmodel).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+					tw.SetHideDetails(True).AddClass("my-2").RemoveAttr("v-show")
+					tcont.AddControlS(tw.TextField, tw.ToString, rowPos, colPos, 6, 6, 6, 6)
+				Next
+				bcont.AddComponent(1, 1, tcont.tostring)
+				'add a list
+				Dim mItems As VMList = CreateList(nc.vmodel & "crud", Me).SetElevation("1")
+				mItems.SetStatic(True)
+				mItems.SetDataSourceTemplate("tableitems", "key", "avatar", "icon", "title", "subtitle", "action")
+				Dim mList As String = mItems.tostring
+				bcont.AddComponent(1, 1, mList)
+				'
+				expanel.Container.AddControlS(bcont.Container, bcont.ToString, 1, 1, 12, 12, 12, 12)
+			Case "switches"
+				Dim acont As VMContainer
+				acont.Initialize(vue, "a" & nc.vmodel, module).SetTag("div")
+				acont.NoGutters = True
+				acont.SetFluid(True)
+				Dim colPos As Int = 0
+				For Each k As String In nc.options.Keys
+					Dim v As String = nc.options.Get(k)
+					colPos = colPos + 1
+						'
+					Dim sw As VMCheckBox
+					sw.Initialize(vue, "sw" & k, module).SetStatic(True).SetVModel(k).SetSwitch
+					sw.Setlabel(v).SetValue("Yes").SetUncheckedValue("No").SetHideDetails(True).SetFieldType("string")
+					sw.RemoveAttr("ref").SetDense(True).SetOnChange(Me, "RaiseChangeEvent").SetInset(True)
+					acont.AddControlS(sw.CheckBox, sw.ToString, 1, colPos, 6, 6, 6, 6)
+				Next
+				expanel.Container.AddControlS(acont.Container, acont.ToString, 1, 1, 12, 12, 12, 12)
+			Case "text2"
+				Dim tcont As VMContainer
+				tcont.Initialize(vue, "t" & nc.vmodel, module).SetTag("div")
+				tcont.NoGutters = True
+				tcont.SetFluid(True)
+				'
+				Dim colPos As Int = 0
+				For Each k As String In nc.options.Keys
+					Dim v As String = nc.options.Get(k)
+					colPos = colPos + 1
+					'
+					Dim tw As VMTextField
+					tw.Initialize(vue, k, module).SetStatic(True).SetClearable(True).Setlabel(v)
+					tw.SetVModel(k).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent").SetOnClickClear(Me, "RaiseChangeEvent")
+					tw.SetHideDetails(True).AddClass("my-2")
+					tcont.AddControlS(tw.TextField, tw.ToString, 1, colPos, 6, 6, 6, 6)
+				Next
+				expanel.Container.AddControlS(tcont.Container, tcont.ToString, 1, 1, 12, 12, 12, 12)
 			Case "widths"
 				Dim wcont As VMContainer
 				wcont.Initialize(vue, "w" & nc.vmodel, module).SetTag("div")
@@ -923,6 +1295,7 @@ Sub ToString As String
 				rg.SetOptions(nc.options)
 				vue.SetData(nc.vmodel, nc.value)
 				rg.SetDense(True)
+				rg.SetRow(nc.horizontal)
 				rg.RemoveAttr("ref")
 				rg.SetVShow(nc.vmodel & "show")
 				rg.SetOnChange(Me, "RaiseChangeEvent")
@@ -1051,12 +1424,14 @@ End Sub
 
 private Sub BuildSwitch(k As String, v As String) As VMCheckBox
 	Dim sw As VMCheckBox
-	sw.Initialize(vue, "sw" & k, module)
+	sw.Initialize(vue, "sw" & k, module).SetSwitch
 	sw.SetVModel(k)
 	sw.Setlabel(v)
 	sw.SetValue("Yes")
 	sw.SetUncheckedValue("No")
 	sw.SetHideDetails(True)
+	sw.SetInset(True)
+	sw.SetFieldType("string")
 	vue.SetData(k, "No")
 	defaults.Put(k,"No")
 	fields.Add(k)
@@ -1064,4 +1439,33 @@ private Sub BuildSwitch(k As String, v As String) As VMCheckBox
 	sw.RemoveAttr("ref")
 	sw.SetDense(True)
 	Return sw
+End Sub
+
+Sub AddSwitches(parent As String, options As Map)
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = "switches"
+	nc.text = "Switches"
+	nc.value = ""
+	nc.typeOf = "switches"
+	nc.options = options
+	existing.Add(nc)
+	controls.Put(parent, existing)
+	'
+	For Each k As String In options.keys
+		fields.Add(k)
+		defaults.Put(k, "No")
+		sText.Add(k)
+		Strings.Add(k)
+		vue.SetData(k, "No")
+	Next
 End Sub

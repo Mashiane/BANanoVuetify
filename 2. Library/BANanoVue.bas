@@ -537,6 +537,12 @@ Public Sub Initialize()
 	ColorMap.put("transparent", "transparent")
 End Sub
 
+Sub NewList As List
+	Dim lst As List
+	lst.Initialize
+	Return lst 
+End Sub
+
 'join list to mv string
 Sub Join(delimiter As String, lst As List) As String
 	Dim i As Int

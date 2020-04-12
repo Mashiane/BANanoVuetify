@@ -39,6 +39,16 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetStatic(b As Boolean) As VMImage
+	bStatic = b
+	Image.SetStatic(b)
+	tooltip.SetStatic(b)
+	tmpl.SetStatic(b)
+	span.SetStatic(b)
+	Return Me
+End Sub
+
 'the image should be centered on the RC
 Sub SetCenterOnParent(b As Boolean) As VMImage
 	If b = False Then Return Me
@@ -46,11 +56,6 @@ Sub SetCenterOnParent(b As Boolean) As VMImage
 	Return Me	
 End Sub
 
-Sub SetStatic(b As Boolean) As VMImage
-	bStatic = b
-	Image.SetStatic(b)
-	Return Me
-End Sub
 
 Sub SetTooltip(tt As String) As VMImage
 	If tt = "" Then Return Me
@@ -634,6 +639,10 @@ End Sub
 Sub SetDesignMode(b As Boolean) As VMImage
 	Image.SetDesignMode(b)
 	DesignMode = b
+	Image.SetDesignMode(b)
+	tooltip.SetDesignMode(b)
+	tmpl.SetDesignMode(b)
+	span.SetDesignMode(b)
 	Return Me
 End Sub
 

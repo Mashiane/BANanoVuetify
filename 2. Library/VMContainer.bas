@@ -1625,7 +1625,7 @@ Sub AddControl1(el As VMElement, template As String)
 		vue.SetStateSingle(disKey, el.IsDisabled)
 		vue.SetStateSingle(enaKey, el.IsRequired)
 		If el.isarray Then
-			vue.SetStateSingle(el.vmodel, Array())
+			vue.SetStateSingle(el.vmodel, vue.newlist)
 		Else
 			vue.SetStateSingle(el.vmodel, el.defaultValue)
 		End If

@@ -322,6 +322,13 @@ Sub LogState(stateName As String)
 	Log(rec)
 End Sub
 
+Sub NewList As List
+	Dim lst As List
+	lst.Initialize
+	Return lst
+End Sub
+
+
 Sub RefreshKey(keyName As String) As BANanoVM
 	keyName = keyName.ToLowerCase
 	vue.SetData(keyName, DateTime.now)

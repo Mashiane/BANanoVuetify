@@ -125,7 +125,7 @@ Sub SetDataSource(sourceName As String, sourceField As String, displayField As S
 	
 	Radio.Pop(RadioGroup)
 	If vue.StateExists(sourceName) = False Then
-		vue.SetData(sourceName, Array())
+		vue.SetData(sourceName, vue.newlist)
 	End If
 	
 	Return Me

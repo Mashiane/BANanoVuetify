@@ -66,8 +66,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	title = $"${ID}title"$
 	search = $"${ID}search"$
 	items = $"${ID}items"$
-	vue.SetData(headers, Array())
-	vue.SetData(items, Array())
+	vue.SetData(headers, vue.newlist)
+	vue.SetData(items, vue.newlist)
 	vue.SetData(title, "")
 	'
 	vcard.Title.SetText($"{{ ${title} }}"$)
@@ -217,7 +217,7 @@ End Sub
 
 'set filters
 Sub SetFilters(sourceOf As String)
-	filters = vue.GetState(sourceOf, Array())
+	filters = vue.GetState(sourceOf, vue.newlist)
 	hasFilters = True
 End Sub
 

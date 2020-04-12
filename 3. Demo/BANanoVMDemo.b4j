@@ -423,7 +423,7 @@ Sub BANano_Ready
 	alaSQL.Initialize("components", "id")
 	alaSQL.SchemaAddField("controltype", alaSQL.DB_TEXT)
 	alaSQL.SchemaAddIntegers(Array("id", "row","col","tabindex"))
-	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar"))
+	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	'pgIndex.Init

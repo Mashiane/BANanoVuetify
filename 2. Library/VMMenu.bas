@@ -130,8 +130,7 @@ Sub AddItem(key As String, avatar As String, iconName As String, title As String
 End Sub
 
 'get component
-Sub ToString As String
-	
+Sub ToString As String	
 	act.Pop(Menu)
 	If MenuContent.HasContent Then MenuContent.Pop(Menu)
 	Return Menu.ToString

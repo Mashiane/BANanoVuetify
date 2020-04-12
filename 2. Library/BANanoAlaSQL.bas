@@ -278,12 +278,17 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String) As Ala
 	m.command = "createtable"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
 End Sub
 
+Sub NewList As List
+	Dim lst As List
+	lst.Initialize
+	Return lst
+End Sub
 
 'insert multiple records commands, pass the list name on ExecuteSQL
 Sub InsertList(tblname As String) As AlaSQLResultSet
@@ -296,7 +301,7 @@ Sub InsertList(tblname As String) As AlaSQLResultSet
 	m.command = "insert"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -313,7 +318,7 @@ Sub GetMax(tblName As String, fldName As String) As AlaSQLResultSet
 	m.command = "getmax"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -331,7 +336,7 @@ public Sub DropTable(tblName As String) As AlaSQLResultSet
 	m.response = ""
 	m.error = ""
 	m.command = "droptable"
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -347,7 +352,7 @@ Sub Execute(strSQL As String) As AlaSQLResultSet
 	m.command = "execute"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -388,7 +393,7 @@ Sub Insert(tblName As String, tblFields As Map) As AlaSQLResultSet
 	m.command = "insert"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -477,7 +482,7 @@ Sub UpdateWhere(tblName As String, tblfields As Map, tblWhere As Map, operators 
 	m.command = "update"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -511,7 +516,7 @@ Sub DeleteWhere(tblName As String, tblWhere As Map, operators As List) As AlaSQL
 	m.command = "delete"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -529,7 +534,7 @@ Sub DeleteAll(tblName As String) As AlaSQLResultSet
 	m.command = "delete"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -595,7 +600,7 @@ Sub UpdateAll(tblName As String, tblFields As Map, operators As List) As AlaSQLR
 	m.command = "update"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -646,7 +651,7 @@ Sub GetMaxWhere(tblName As String, fldName As String, tblWhere As Map, operators
 	m.command = "getmax"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -695,7 +700,7 @@ Sub SelectWhere(tblName As String, tblfields As List, tblWhere As Map, operators
 	m.command = "select"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m
@@ -745,7 +750,7 @@ Sub SelectAll(tblName As String, tblfields As List, orderBy As List) As AlaSQLRe
 	m.command = "select"
 	m.response = ""
 	m.error = ""
-	m.result = Array()
+	m.result = NewList
 	m.json = ""
 	m.affectedRows = 0
 	Return m

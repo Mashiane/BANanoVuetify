@@ -36,7 +36,7 @@ ID = sid.tolowercase
 	columnsD.Initialize 
 	chartData.Initialize 
 	cdKey = $"${ID}chartdata"$
-	vue.SetData(cdKey, Array())
+	vue.SetData(cdKey, vue.newlist)
 	Bind(":data", cdKey)
 	optKey = $"${ID}settings"$
 	options.Initialize 

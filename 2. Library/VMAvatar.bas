@@ -29,9 +29,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	Icon.Initialize(vue, $"${ID}icon"$, Module)
-	Image.Initialize(vue, $"${ID}image"$, Module)
-	Label.Initialize(vue, $"${ID}label"$) 
+	If ID = "" Then
+		Icon.Initialize(vue, "", Module)
+		Image.Initialize(vue, "", Module)
+		Label.Initialize(vue, "")
+	Else
+		Icon.Initialize(vue, $"${ID}icon"$, Module)
+		Image.Initialize(vue, $"${ID}image"$, Module)
+		Label.Initialize(vue, $"${ID}label"$)
+	End If
 	hasIcon = False
 	hasImage = False
 	bStatic = False

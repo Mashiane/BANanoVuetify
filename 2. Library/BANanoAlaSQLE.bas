@@ -364,10 +364,17 @@ public Sub CreateTable(tblFields As Map) As BANanoAlaSQLE
 	command = "createtable"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
+End Sub
+
+
+Sub NewList As List
+	Dim lst As List
+	lst.Initialize
+	Return lst
 End Sub
 
 'insert multiple records commands, pass the list name on ExecuteSQL
@@ -379,7 +386,7 @@ Sub InsertList As BANanoAlaSQLE
 	command = "insert"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -394,7 +401,7 @@ Sub GetMax As BANanoAlaSQLE
 	command = "getmax"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -409,7 +416,7 @@ public Sub DropTable As BANanoAlaSQLE
 	response = ""
 	error = ""
 	command = "droptable"
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -422,7 +429,7 @@ Sub Execute(strSQL As String) As BANanoAlaSQLE
 	command = "execute"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -461,7 +468,7 @@ Sub Insert As BANanoAlaSQLE
 	command = "insert"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -548,7 +555,7 @@ Sub UpdateWhere(tblfields As Map, tblWhere As Map, operators As List) As BANanoA
 	command = "update"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -579,7 +586,7 @@ Sub DeleteWhere(tblWhere As Map, operators As List) As BANanoAlaSQLE
 	command = "delete"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -594,7 +601,7 @@ Sub DeleteAll As BANanoAlaSQLE
 	command = "delete"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -658,7 +665,7 @@ Sub UpdateAll(tblFields As Map, operators As List) As BANanoAlaSQLE
 	command = "update"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -708,7 +715,7 @@ Sub GetMaxWhere(fldName As String, tblWhere As Map, operators As List) As BANano
 	command = "getmax"
 	response = ""
 	error = ""
-	result = Array()
+	result = newlist
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -755,7 +762,7 @@ Sub SelectWhere(tblfields As List, tblWhere As Map, operators As List, orderBy A
 	command = "select"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me
@@ -804,7 +811,7 @@ Sub SelectAll(tblfields As List, orderBy As List) As BANanoAlaSQLE
 	command = "select"
 	response = ""
 	error = ""
-	result = Array()
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me

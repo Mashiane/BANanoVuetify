@@ -29,6 +29,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetFieldType(ft As String) As VMCheckBox
+	CheckBox.fieldType = ft
+	Return Me
+End Sub
 
 'set inset
 Sub SetInset(varInset As Boolean) As VMCheckBox

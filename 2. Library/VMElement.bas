@@ -700,7 +700,7 @@ End Sub
 Sub SetVFor(item As String, dataSource As String) As VMElement
 	dataSource = dataSource.tolowercase
 	item = item.tolowercase
-	If vue.StateExists(dataSource) = False Then vue.SetStateSingle(dataSource, Array())
+	If vue.StateExists(dataSource) = False Then vue.SetStateSingle(dataSource, vue.newlist)
 	Dim sline As String = $"${item} in ${dataSource}"$
 	SetAttr(CreateMap("v-for": sline))
 	RemoveAttr("ref")

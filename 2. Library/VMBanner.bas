@@ -23,7 +23,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	Actions.Initialize(vue, $"${ID}actions"$, Module).SetSlotActions
+	If ID = "" Then
+		Actions.Initialize(vue, "", Module).SetSlotActions
+	Else
+		Actions.Initialize(vue, $"${ID}actions"$, Module).SetSlotActions
+	End If
 	Return Me
 End Sub
 

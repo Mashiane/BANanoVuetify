@@ -91,7 +91,8 @@ End Sub
 
 Sub CreateListItem(datasource As String, key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMListItem
 	Dim vli As VMListItem
-	vli.Initialize(vue, "", Module)
+	vli.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	If DesignMode Then Return vli
 	vli.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
 	If key = "" Then
 		vli.SetAttrSingle(":key", "i")
@@ -104,19 +105,20 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
-		lia.Initialize(vue, "", Module).SetVIf($"item.${avatar}"$)
+		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetVIf($"item.${avatar}"$)
 		Dim img As VMImage
-		img.Initialize(vue, "", Module).SetAttrSingle(":src", $"item.${avatar}"$)
+		img.Initialize(vue, "", Module).SetStatic(bStatic)
+		img.SetAttrSingle(":src", $"item.${avatar}"$)
 		img.Pop(lia.ListItemAvatar)
 		lia.Pop(vli.ListItem)
 	End If
 	'
 	If iconName <> "" Then
 		Dim vlii As VMListItemIcon
-		vlii.Initialize(vue, "", Module).SetVif($"item.${iconName}"$)
+		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
-		icon.Initialize(vue,"", Module).SetVText($"item.${iconName}"$)
-		icon.SetStatic(bStatic)
+		icon.Initialize(vue,"", Module).SetStatic(bStatic)
+		icon.SetVText($"item.${iconName}"$)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If
@@ -127,17 +129,17 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	
 	If iContent > 0 Then
 		Dim lic As VMListItemContent
-		lic.Initialize(vue,"", Module)
+		lic.Initialize(vue,"", Module).SetStatic(bStatic)
 		'
 		If title <> "" Then
 			Dim lit As VMListItemTitle
-			lit.Initialize(vue, "", Module).SetVText($"item.${title}"$)
+			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetVText($"item.${title}"$)
 			lit.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle <> "" Then
 			Dim listt As VMListItemSubTitle
-			listt.Initialize(vue, "", Module).SetVText($"item.${subtitle}"$)
+			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetVText($"item.${subtitle}"$)
 			listt.Pop(lic.ListItemContent)
 		End If
 		lic.Pop(vli.ListItem)
@@ -145,7 +147,8 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
+		la.Initialize(vue, "", Module).SetStatic(bStatic)
+		la.AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
 		la.Pop(vli.ListItem)		
 	End If
 	Return vli
@@ -154,15 +157,16 @@ End Sub
 'define a template to load items from
 Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMList
 	If vue.StateExists(datasource) = False Then
-		vue.SetData(datasource, Array())
+		vue.SetData(datasource, vue.newlist)
 	End If
-	
+	If DesignMode Then Return Me
+	'
 	Dim tmp As VMTemplate
-	tmp.Initialize(vue, $"${ID}tmpl"$, Module)
+	tmp.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 	tmp.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
 	'
 	Dim vli As VMListItem
-	vli.Initialize(vue, "", Module)
+	vli.Initialize(vue, "", Module).SetStatic(bStatic)
 	vli.SetVIf($"item.${key}"$)
 	vli.Bind(":key", $"item.${key}"$)
 	vli.SetAttrSingle(":id", $"item.${key}"$)
@@ -170,19 +174,18 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
-		lia.Initialize(vue, "", Module).SetVIf($"item.${avatar}"$)
+		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${avatar}"$)
 		Dim img As VMImage
-		img.Initialize(vue, "", Module).SetAttrSingle(":src", $"item.${avatar}"$)
+		img.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrSingle(":src", $"item.${avatar}"$)
 		img.Pop(lia.ListItemAvatar)
 		lia.Pop(vli.ListItem)
 	End If
 	'
 	If iconName <> "" Then
 		Dim vlii As VMListItemIcon
-		vlii.Initialize(vue, "", Module).SetVif($"item.${iconName}"$)
+		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
-		icon.Initialize(vue,"", Module).SetVText($"item.${iconName}"$)
-		icon.SetStatic(bStatic)
+		icon.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${iconName}"$)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If
@@ -193,17 +196,17 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	
 	If iContent > 0 Then
 		Dim lic As VMListItemContent
-		lic.Initialize(vue,"", Module)
+		lic.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 		'
 		If title <> "" Then
 			Dim lit As VMListItemTitle
-			lit.Initialize(vue, "", Module).SetVText($"item.${title}"$)
+			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${title}"$)
 			lit.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle <> "" Then
 			Dim listt As VMListItemSubTitle
-			listt.Initialize(vue, "", Module).SetVText($"item.${subtitle}"$)
+			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${subtitle}"$)
 			listt.Pop(lic.ListItemContent)
 		End If
 		lic.Pop(vli.ListItem)
@@ -211,7 +214,7 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
+		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
 		la.Pop(vli.ListItem)
 	End If
 	vli.Pop(tmp.Template)	
@@ -705,6 +708,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 List.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMList
 List.SetVisible(b)
 Return Me

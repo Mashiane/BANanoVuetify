@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ListItemGroup
@@ -25,6 +26,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetStatic(b As Boolean) As VMListItemGroup
+	bStatic = b
+	ListItemGroup.SetStatic(b)
+	Return Me
+End Sub
 
 Sub SetAttributes(attrs As List) As VMListItemGroup
 	For Each stra As String In attrs
@@ -35,9 +41,7 @@ End Sub
 
 'get component
 Sub ToString As String
-	
-	
-	
+	RemoveAttr("ref")
 	Return ListItemGroup.ToString
 End Sub
 
