@@ -210,6 +210,12 @@ Sub Class_Globals
 	Public Specials_rollIn As String="rollIn"
 	Public Specials_rollOut As String="rollOut"
 	Public Themes As Map
+	Public TargetOptions As Map
+	Public ColumnTypes As Map
+	Public ColumnAlign As Map
+	Public DataTypes As Map
+	Public ControlTypes As Map
+	
 End Sub
 
 'initialize view
@@ -535,6 +541,70 @@ Public Sub Initialize()
 	ColorMap.put("black", "#000000")
 	ColorMap.put("white", "#ffffff")
 	ColorMap.put("transparent", "transparent")
+	'
+	TargetOptions.Put("","None")
+	TargetOptions.Put("_blank","Blank")
+	TargetOptions.Put("_self","Self")
+	TargetOptions.Put("_parent","Parent")
+	TargetOptions.Put("_top","Top")
+	'
+	ColumnTypes.Initialize
+	ColumnTypes.put("date","Date")
+	ColumnTypes.put("text", "Text")
+	ColumnTypes.put("icon", "Icon")
+	ColumnTypes.put("checkbox", "Check Box")
+	ColumnTypes.put("", "None")
+	ColumnTypes.put("time","Time")
+	ColumnTypes.put("datetime","Date Time")
+	ColumnTypes.put("image","Image")
+	ColumnTypes.Put("money","Money")
+	ColumnTypes.put("filesize", "File Size")
+	ColumnTypes.put("chip","Chip")
+	ColumnTypes.put("action","Action")
+	'
+	ColumnAlign.Initialize
+	ColumnAlign.Put("start", "Start")
+	ColumnAlign.Put("center", "Center")
+	ColumnAlign.Put("end", "End")
+	'
+	DataTypes.Initialize
+	DataTypes.Put("BOOL", "Boolean")
+	DataTypes.Put("INT", "Integer")
+	DataTypes.Put("TEXT", "Text")
+	DataTypes.Put("FLOAT", "Double")
+	DataTypes.Put("BLOB", "Blob")
+	DataTypes.Put("DATE", "Date")
+	DataTypes.Put("None", "None")
+	
+	'
+	ControlTypes.Initialize
+	ControlTypes.put("text", "Text")
+	ControlTypes.put("textarea", "Text Area")
+	ControlTypes.put("checkbox", "Check Box")
+	ControlTypes.put("date", "Date")
+	ControlTypes.put("file", "File")
+	ControlTypes.put("radio", "Radio")
+	ControlTypes.put("select", "Select")
+	ControlTypes.put("slider", "Slider")
+	ControlTypes.put("switch", "Switch")
+	ControlTypes.put("label", "Label")
+	ControlTypes.put("email", "Email")
+	ControlTypes.put("rating", "Rating")
+	ControlTypes.put("password", "Password")
+	ControlTypes.put("tel", "Telephone")
+	ControlTypes.put("time", "Time")
+	ControlTypes.put("combo", "Combo")
+	ControlTypes.put("auto", "Auto Complete")
+	ControlTypes.put("profile", "Profile")
+	ControlTypes.put("image", "Image")
+	ControlTypes.put("button", "Button")
+	ControlTypes.put("icon", "Icon")
+	ControlTypes.put("parallax", "Parallax")
+	ControlTypes.put("container", "Container")
+	ControlTypes.put("menu", "Menu")
+	ControlTypes.put("carousel", "Carousel")
+	ControlTypes.put("speeddial", "Speed Dial")
+	ControlTypes.Put("None", "None")
 End Sub
 
 Sub NewList As List
@@ -2085,6 +2155,24 @@ Sub MakeDouble(m As Map, xkeys As List)
 	Next
 End Sub
 
+Sub MakeYesNo(m As Map, xkeys As List)
+	For Each k As String In xkeys
+		If m.ContainsKey(k) Then
+			Dim v As String = m.GetDefault(k,"No")
+			v = CStr(v)
+			v = v.trim
+			Select Case v
+				Case "","0", "false", "False",False,0,"no","No"
+					m.Put(k, "No")
+				Case "1", "true", "True",True,1,"yes","Yes"
+					m.Put(k, "Yes")
+			End Select
+		End If
+	Next
+End Sub
+
+
+
 Sub MakeBoolean(m As Map, xkeys As List)
 	For Each k As String In xkeys
 		If m.ContainsKey(k) Then
@@ -2092,9 +2180,9 @@ Sub MakeBoolean(m As Map, xkeys As List)
 			v = CStr(v)
 			v = v.trim
 			Select Case v
-			Case "","0", "false", "False",False,0
+			Case "","0", "false", "False",False,0,"no","No"
 				m.Put(k, False)
-			Case "1", "true", "True",True,1
+			Case "1", "true", "True",True,1,"yes","Yes"
 				m.Put(k, True)
 			End Select
 		End If
@@ -2960,6 +3048,24 @@ Sub JoinFields(delimiter As String, lst As List) As String
 	Return sb.ToString
 End Sub
 
+'join list to multi value string with a quote
+Sub JoinFields1(delimiter As String, sQuote As String, lst As List) As String
+	Dim i As Int
+	Dim sb As StringBuilder
+	Dim fld As String
+	sb.Initialize
+	fld = lst.Get(0)
+	Dim xfld As String = $"${fld}"$
+	xfld = sQuote & xfld & sQuote
+	sb.Append(xfld)
+	For i = 1 To lst.size - 1
+		Dim fld As String = lst.Get(i)
+		Dim xfld As String = $"${fld}"$
+		xfld = sQuote & xfld & sQuote
+		sb.Append(delimiter).Append(xfld)
+	Next
+	Return sb.ToString
+End Sub
 
 Sub SetRequired(elID As String, b As Boolean)
 	elID = elID.tolowercase
