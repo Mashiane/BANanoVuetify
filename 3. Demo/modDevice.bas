@@ -25,10 +25,10 @@ Sub Code
 	
 	'
 	vm.CreateDevice("iphoneX", Me).SetIphoneX.SetURL("https://vuetifyjs.com/en/").AddToContainer(cont, 1, 1)
-	vm.CreateDevice("iphoneXl", Me).SetIphoneX.SetURL("https://vuetifyjs.com/en/").SetLandScape.AddToContainer(cont, 1, 2)
+	vm.CreateDevice("iphoneXl", Me).SetIphoneX.SetURL("https://vuetifyjs.com/en/").SetLandScape(True).AddToContainer(cont, 1, 2)
 	'
 	vm.CreateDevice("ipad", Me).SetIpad.SetURL("https://vuetifyjs.com/en/").AddToContainer(cont, 2, 1)
-	vm.CreateDevice("ipadl", Me).SetIpad.SetURL("https://vuetifyjs.com/en/").SetLandScape.AddToContainer(cont, 2, 2)
+	vm.CreateDevice("ipadl", Me).SetIpad.SetURL("https://vuetifyjs.com/en/").SetLandScape(True).AddToContainer(cont, 2, 2)
 	'
 	vm.CreateDevice("mac", Me).SetMacbook.SetURL("https://vuetifyjs.com/en/").AddToContainer(cont, 3, 1)
 	'

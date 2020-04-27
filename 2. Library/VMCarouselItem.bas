@@ -6,12 +6,13 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-Public CarouselItem As VMElement
-Public ID As String
-Private vue As BANanoVue
-Private BANano As BANano  'ignore
-Private DesignMode As Boolean
-Private Module As Object
+	Public CarouselItem As VMElement
+	Public ID As String
+	Private vue As BANanoVue
+	Private BANano As BANano  'ignore
+	Private DesignMode As Boolean
+	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the CarouselItem
@@ -22,17 +23,24 @@ ID = sid.tolowercase
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMCarouselItem
+	bStatic = b
+	CarouselItem.SetStatic(b)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-Return CarouselItem.ToString
+	Return CarouselItem.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMCarouselItem
-CarouselItem.SetVModel(k)
-Return Me
+	CarouselItem.SetVModel(k)
+	Return Me
 End Sub
 
 Sub SetVIf(vif As Object) As VMCarouselItem
@@ -54,12 +62,6 @@ End Sub
 Sub AddChild(child As VMElement) As VMCarouselItem
 Dim childHTML As String = child.ToString
 CarouselItem.SetText(childHTML)
-Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMCarouselItem
-CarouselItem.SetText(t)
 Return Me
 End Sub
 
@@ -94,135 +96,201 @@ Next
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMCarouselItem
-Dim pp As String = $"${ID}ActiveClass"$
-vue.SetStateSingle(pp, varActiveClass)
-CarouselItem.Bind(":active-class", pp)
-Return Me
+Sub SetActiveClass(varActiveClass As String) As VMCarouselItem
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ActiveClass"$
+	vue.SetStateSingle(pp, varActiveClass)
+	CarouselItem.Bind(":active-class", pp)
+	Return Me
 End Sub
 
 'set append
-Sub SetAppend(varAppend As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Append"$
-vue.SetStateSingle(pp, varAppend)
-CarouselItem.Bind(":append", pp)
-Return Me
+Sub SetAppend(varAppend As Boolean) As VMCarouselItem
+	If varAppend = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("append", varAppend)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Append"$
+	vue.SetStateSingle(pp, varAppend)
+	CarouselItem.Bind(":append", pp)
+	Return Me
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Disabled"$
-vue.SetStateSingle(pp, varDisabled)
-CarouselItem.Bind(":disabled", pp)
-Return Me
+Sub SetDisabled(varDisabled As Boolean) As VMCarouselItem
+	If varDisabled = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("disabled", varDisabled)
+	End If
+	Dim pp As String = $"${ID}Disabled"$
+	vue.SetStateSingle(pp, varDisabled)
+	CarouselItem.Bind(":disabled", pp)
+	Return Me
 End Sub
 
 'set eager
-Sub SetEager(varEager As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Eager"$
-vue.SetStateSingle(pp, varEager)
-CarouselItem.Bind(":eager", pp)
-Return Me
+Sub SetEager(varEager As Boolean) As VMCarouselItem
+	If varEager = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("eager", varEager)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Eager"$
+	vue.SetStateSingle(pp, varEager)
+	CarouselItem.Bind(":eager", pp)
+	Return Me
 End Sub
 
 'set exact
-Sub SetExact(varExact As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Exact"$
-vue.SetStateSingle(pp, varExact)
-CarouselItem.Bind(":exact", pp)
-Return Me
+Sub SetExact(varExact As Boolean) As VMCarouselItem
+	If varExact = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact", varExact)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Exact"$
+	vue.SetStateSingle(pp, varExact)
+	CarouselItem.Bind(":exact", pp)
+	Return Me
 End Sub
 
 'set exact-active-class
-Sub SetExactActiveClass(varExactActiveClass As Object) As VMCarouselItem
-Dim pp As String = $"${ID}ExactActiveClass"$
-vue.SetStateSingle(pp, varExactActiveClass)
-CarouselItem.Bind(":exact-active-class", pp)
-Return Me
+Sub SetExactActiveClass(varExactActiveClass As String) As VMCarouselItem
+	If varExactActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact-active-class", varExactActiveClass)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ExactActiveClass"$
+	vue.SetStateSingle(pp, varExactActiveClass)
+	CarouselItem.Bind(":exact-active-class", pp)
+	Return Me
 End Sub
 
 'set href
-Sub SetHref(varHref As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Href"$
-vue.SetStateSingle(pp, varHref)
-CarouselItem.Bind(":href", pp)
-Return Me
+Sub SetHref(varHref As String) As VMCarouselItem
+	If varHref = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("href", varHref)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Href"$
+	vue.SetStateSingle(pp, varHref)
+	CarouselItem.Bind(":href", pp)
+	Return Me
 End Sub
 
 'set link
-Sub SetLink(varLink As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Link"$
-vue.SetStateSingle(pp, varLink)
-CarouselItem.Bind(":link", pp)
-Return Me
+Sub SetLink(varLink As Boolean) As VMCarouselItem
+	If varLink = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("link", varLink)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Link"$
+	vue.SetStateSingle(pp, varLink)
+	CarouselItem.Bind(":link", pp)
+	Return Me
+End Sub
+
+Sub SetSRC(src As String) As VMCarouselItem
+	SetAttrSingle("src", src)
+	Return Me
 End Sub
 
 'set nuxt
-Sub SetNuxt(varNuxt As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Nuxt"$
-vue.SetStateSingle(pp, varNuxt)
-CarouselItem.Bind(":nuxt", pp)
-Return Me
+Sub SetNuxt(varNuxt As Boolean) As VMCarouselItem
+	If varNuxt = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("nuxt", varNuxt)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Nuxt"$
+	vue.SetStateSingle(pp, varNuxt)
+	CarouselItem.Bind(":nuxt", pp)
+	Return Me
 End Sub
 
 'set replace
-Sub SetReplace(varReplace As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Replace"$
-vue.SetStateSingle(pp, varReplace)
-CarouselItem.Bind(":replace", pp)
-Return Me
+Sub SetReplace(varReplace As Boolean) As VMCarouselItem
+	If varReplace = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("replace", varReplace)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Replace"$
+	vue.SetStateSingle(pp, varReplace)
+	CarouselItem.Bind(":replace", pp)
+	Return Me
 End Sub
 
 'set reverse-transition
-Sub SetReverseTransition(varReverseTransition As Object) As VMCarouselItem
-Dim pp As String = $"${ID}ReverseTransition"$
-vue.SetStateSingle(pp, varReverseTransition)
-CarouselItem.Bind(":reverse-transition", pp)
-Return Me
+Sub SetReverseTransition(varReverseTransition As String) As VMCarouselItem
+	If varReverseTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("reverse-transition", varReverseTransition)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ReverseTransition"$
+	vue.SetStateSingle(pp, varReverseTransition)
+	CarouselItem.Bind(":reverse-transition", pp)
+	Return Me
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Ripple"$
-vue.SetStateSingle(pp, varRipple)
-CarouselItem.Bind(":ripple", pp)
-Return Me
+Sub SetRipple(varRipple As Boolean) As VMCarouselItem
+	If varRipple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Ripple"$
+	vue.SetStateSingle(pp, varRipple)
+	CarouselItem.Bind(":ripple", pp)
+	Return Me
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Tag"$
-vue.SetStateSingle(pp, varTag)
-CarouselItem.Bind(":tag", pp)
-Return Me
+Sub SetTag(varTag As String) As VMCarouselItem
+	If varTag = "" Then Return Me
+	SetAttrSingle("tag", varTag)
+	Return Me
 End Sub
 
 'set target
-Sub SetTarget(varTarget As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Target"$
-vue.SetStateSingle(pp, varTarget)
-CarouselItem.Bind(":target", pp)
-Return Me
+Sub SetTarget(varTarget As String) As VMCarouselItem
+	If varTarget = "" Then Return Me
+	SetAttrSingle("target", varTarget)
+	Return Me
 End Sub
 
 'set to
-Sub SetTo(varTo As Object) As VMCarouselItem
-Dim pp As String = $"${ID}To"$
-vue.SetStateSingle(pp, varTo)
-CarouselItem.Bind(":to", pp)
-Return Me
+Sub SetTo(varTo As String) As VMCarouselItem
+	If varTo = "" Then Return Me
+	SetAttrSingle("to", varTo)
+	Return Me
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMCarouselItem
-Dim pp As String = $"${ID}Transition"$
-vue.SetStateSingle(pp, varTransition)
-CarouselItem.Bind(":transition", pp)
-Return Me
+Sub SetTransition(varTransition As String) As VMCarouselItem
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Transition"$
+	vue.SetStateSingle(pp, varTransition)
+	CarouselItem.Bind(":transition", pp)
+	Return Me
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMCarouselItem
+Sub SetValue(varValue As String) As VMCarouselItem
 	SetAttrSingle("value", varValue)
 Return Me
 End Sub
@@ -280,8 +348,13 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCarouselItem
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)	
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$	
 	vue.SetStateSingle(pp, scolor)
 	CarouselItem.Bind(":color", pp)
 	Return Me
@@ -436,6 +509,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMCarouselItem
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -443,6 +517,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCarouselItem
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

@@ -174,26 +174,23 @@ Sub SetRipple(varRipple As Object) As VMBreadCrumbsItem
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}Tag"$
-	vue.SetStateSingle(pp, varTag)
-	BreadCrumbsItem.Bind(":tag", pp)
+Sub SetTag(varTag As String) As VMBreadCrumbsItem
+	If varTag = "" Then Return Me
+	BreadCrumbsItem.Bind("tag", varTag)
 	Return Me
 End Sub
 
 'set target
-Sub SetTarget(varTarget As Object) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}Target"$
-	vue.SetStateSingle(pp, varTarget)
-	BreadCrumbsItem.Bind(":target", pp)
+Sub SetTarget(varTarget As String) As VMBreadCrumbsItem
+	If varTarget = "" Then Return Me
+	SetAttrSingle("target", varTarget)
 	Return Me
 End Sub
 
 'set to
-Sub SetTo(varTo As Object) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}To"$
-	vue.SetStateSingle(pp, varTo)
-	BreadCrumbsItem.Bind(":to", pp)
+Sub SetTo(varTo As String) As VMBreadCrumbsItem
+	If varTo = "" Then Return Me
+	BreadCrumbsItem.Bind("to", varTo)
 	Return Me
 End Sub
 

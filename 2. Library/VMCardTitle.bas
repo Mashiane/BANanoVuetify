@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the CardTitle
@@ -22,13 +23,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMCardTitle
+	bStatic = b
+	CardTitle.SetStatic(b)
 	Return Me
 End Sub
 
 'add a search box
 Sub AddSearch(key As String) As VMCardTitle
 	Dim txt As VMTextField
-	txt.Initialize(vue, key, Module).SetAttributes(Array("single-line", "hide-details"))
+	txt.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttributes(Array("single-line", "hide-details"))
 	txt.SetLabel("Search").SetAppendIcon("mdi-magnify").SetClearable(True).Setvmodel(key)
 	CardTitle.SetText(txt.ToString)
 	Return Me
@@ -80,13 +89,25 @@ End Sub
 
 Sub AddButton1(key As String, iconName As String, text As String, toolTip As String, badge As String) As VMCardTitle
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module)
+	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 	btn.SetToolTip(toolTip)
-	btn.AddIcon(iconName,"left","")
+	If iconName <> "" Then btn.AddIcon(iconName,"left","")
 	btn.SetLabel(text)
 	If badge <> "" Then
 		btn.Badge.SetContent(badge)
 	End If
+	CardTitle.SetText(btn.tostring)
+	Return Me
+End Sub
+
+Sub AddButtonIcon(key As String, iconName As String, iconColor As String, toolTip As String) As VMCardTitle
+	key = key.tolowercase
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetIconButton(iconName).SetTooltip(toolTip)
+	btn.SetColor(iconColor)
 	CardTitle.SetText(btn.tostring)
 	Return Me
 End Sub
@@ -103,8 +124,13 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCardTitle
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	CardTitle.Bind(":color", pp)
 	Return Me
@@ -112,7 +138,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	Return CardTitle.ToString
 End Sub
 
@@ -264,6 +289,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColor(varColor As String) As VMCardTitle
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	AddClass(sColor)
 	Return Me
@@ -271,6 +297,7 @@ End Sub
 
 'set color intensity
 Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCardTitle
+	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$

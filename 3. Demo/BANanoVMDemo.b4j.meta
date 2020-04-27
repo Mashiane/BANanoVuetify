@@ -154,6 +154,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modDesigner,compMenuitems_click,1961,0,modDesigner,ComponentsPanel,2190,0,modDesigner,NavigationPanel,2400,0,modDesigner,PropertyBag_Toolbar,3180,0,modDesigner,PropertyBag_Menu,3569,0,modDesigner,SavePropertyBag,3471,0,modDesigner,mycomponents_click,2254,1,modDesigner,Design_Menu,1565,1,modDesigner,Design_Button,1836,0,modDesigner,Design_ToolBar,1816,6
+NavigationStack=pgIndex,Init,20,1,modDesigner,schemaDT_edit,3517,0,modDesigner,ComponentsPanel,3555,0,modDesigner,mycomponents_click,3623,0,modDesigner,ClearTableThings,3585,0,modDesigner,TableStructure,3569,0,modDesigner,htmlcodecopy_click,3539,0,modDesigner,AddComment,3509,0,modDesigner,Process_Globals,15,0,modDesigner,Design_DBSourceCode,3063,2
 SelectedBuild=0
 VisibleModules=

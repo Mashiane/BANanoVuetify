@@ -164,16 +164,6 @@ Sub UseTheme(themeName As String) As VMListItemGroup
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMListItemGroup
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	ListItemGroup.Bind(":color", pp)
-	Return Me
-End Sub
-
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMListItemGroup
 	ListItemGroup.RemoveAttr(sName)
@@ -236,20 +226,4 @@ End Sub
 Sub SetVisible(b As Boolean) As VMListItemGroup
 ListItemGroup.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMListItemGroup
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMListItemGroup
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

@@ -110,6 +110,27 @@ Sub SetStatic(b As Boolean) As VMContainer
 	Return Me
 End Sub
 
+Sub CreateDataTable(cID As String, PrimaryKey As String, eventHandler As Object) As VMDataTable
+	Dim el As VMDataTable
+	el.Initialize(vue, cID,PrimaryKey,  eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
+Sub CreateSpeedDial(sid As String, eventHandler As Object) As VMSpeedDial
+	Dim el As VMSpeedDial
+	el.Initialize(vue, sid,eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
+Sub CreateRating(eID As String, eventHandler As Object) As VMRating
+	Dim el As VMRating
+	el.Initialize(vue, eID, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
 Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	Dim el As VMParallax
 	el.Initialize(vue, eID, eventHandler)
@@ -117,6 +138,12 @@ Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	Return el
 End Sub
 
+Sub CreateDialog(sid As String, moduleObj As Object) As VMDialog
+	Dim el As VMDialog
+	el.Initialize(vue, sid, moduleObj)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
 
 Sub CreateMenu(sid As String, moduleObj As Object) As VMMenu
 	Dim el As VMMenu
@@ -125,9 +152,30 @@ Sub CreateMenu(sid As String, moduleObj As Object) As VMMenu
 	Return el
 End Sub
 
+Sub CreateCarousel(sid As String, moduleObj As Object) As VMCarousel
+	Dim el As VMCarousel
+	el.Initialize(vue,sid, moduleObj)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
+Sub CreateDrawer(sid As String, eventHandler As Object) As VMNavigationDrawer
+	Dim el As VMNavigationDrawer
+	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
 Sub CreateContainer(sid As String, eventHandler As Object) As VMContainer
 	Dim el As VMContainer
 	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
+Sub CreateCard(cID As String, eventHandler As Object) As VMCard
+	Dim el As VMCard
+	el.Initialize(vue, cID, eventHandler)
 	el.SetDesignMode(DesignMode)
 	Return el
 End Sub
@@ -324,10 +372,10 @@ Sub NewSwitch(eventHandler As Object, bStatic As Boolean, sid As String, vmodel 
 	el.SetVModel(vmodel)
 	el.Setlabel(slabel)
 	el.SetValue(svalue)
-	'el.SetTrueValue(svalue)
+	el.SetTrueValue(svalue)
 	el.SetPrimary(bPrimary)
-	'el.SetFalseValue(sunchecked)
 	el.SetUncheckedValue(sunchecked)
+	el.SetFalseValue(sunchecked)
 	el.SetTabIndex(iTabIndex)
 	vue.SetData(vmodel, sunchecked)
 	Return el
@@ -491,7 +539,6 @@ Sub NewBLOCKQUOTE(bStatic As Boolean,sname As String, sText As String) As VMLabe
 	Return NewLabel(bStatic,sname, sname, "blockquote", sText)
 End Sub
 
-
 Sub NewRadioGroupDataSource(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, sLabel As String, svalue As String, sourceTable As String, sourceField As String, displayField As String, bShowLabel As Boolean, bLabelOnTop As Boolean, iTabIndex As Int) As VMRadioGroup
 	Dim el As VMRadioGroup = CreateRadioGroup(sname, eventHandler)
 	el.SetDesignMode(DesignMode)
@@ -523,13 +570,13 @@ Sub NewCheckBox(eventHandler As Object, bStatic As Boolean, sid As String, vmode
 	el.SetDesignMode(DesignMode)
 	el.SetStatic(bStatic)
 	el.SetVModel(vmodel)
+	el.SetTrueValue(svalue)
 	el.SetValue(svalue)
-	'el.SetTrueValue(svalue)
 	el.Setlabel(slabel)
 	el.SetPrimary(bPrimary)
-	'el.SetFalseValue(sunchecked)
-	el.SetTabIndex(iTabIndex)
 	el.SetUncheckedValue(sunchecked)
+	el.SetFalseValue(sunchecked)
+	el.SetTabIndex(iTabIndex)
 	vue.SetData(vmodel, sunchecked)
 	Return el
 End Sub
@@ -782,7 +829,7 @@ End Sub
 'set transition
 Sub SetTransition(varTransition As String) As VMContainer
 	If varTransition = "" Then Return Me
-	Container.Bind("transition", varTransition)
+	SetAttrSingle("transition", varTransition)
 	Return Me
 End Sub
 

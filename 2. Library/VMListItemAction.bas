@@ -39,15 +39,24 @@ Sub AddIcon(key As String, iconName As String) As VMListItemAction
 	Dim btn As VMButton
 	btn.Initialize(vue, key, Module)
 	btn.SetStatic(bStatic)
-	btn.SetAttributes(Array("icon"))
+	btn.SetDesignMode(DesignMode)
+	btn.SetIcon(True)
+	'
 	Dim icon As VMIcon
 	icon.Initialize(vue, $"${key}icon"$, Module)
 	icon.SetStatic(bStatic)
+	icon.SetDesignMode(DesignMode)
 	icon.SetVText(iconName)
 	btn.AddComponent(icon.ToString)
 	btn.Pop(ListItemAction)
 	Return Me
 End Sub
+
+Sub AddComponent(comp As String) As VMListItemAction
+	ListItemAction.SetText(comp)
+	Return Me
+End Sub
+
 
 Sub SetAttrLoose(loose As String) As VMListItemAction
 	ListItemAction.SetAttrLoose(loose)

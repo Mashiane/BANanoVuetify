@@ -129,6 +129,10 @@ Sub AddItem(key As String, avatar As String, iconName As String, title As String
 	MenuContent.AddItem(key, avatar, iconName, title, subtitle, actionIcon)
 End Sub
 
+Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String)
+	MenuContent.AddItem1(key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
+End Sub
+
 'get component
 Sub ToString As String	
 	act.Pop(Menu)

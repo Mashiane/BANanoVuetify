@@ -146,53 +146,52 @@ Library2=jfx
 Library3=banano
 Module1=BANanoAlaSQL
 Module10=VMArcCounter
-Module100=VMScaleTransition
-Module101=VMScrollXReverseTransition
-Module102=VMScrollXTransition
-Module103=VMScrollYReverseTransition
-Module104=VMScrollYTransition
-Module105=VMSelect
-Module106=VMSheet
-Module107=VMSimpleCheckBox
-Module108=VMSimpleTable
-Module109=VMSkeleton
+Module100=VMScrollXReverseTransition
+Module101=VMScrollXTransition
+Module102=VMScrollYReverseTransition
+Module103=VMScrollYTransition
+Module104=VMSelect
+Module105=VMSheet
+Module106=VMSimpleCheckBox
+Module107=VMSimpleTable
+Module108=VMSkeleton
+Module109=VMSkeletonLoader
 Module11=VMAvatar
-Module110=VMSkeletonLoader
-Module111=VMSlideGroup
-Module112=VMSlider
-Module113=VMSlideXReverseTransition
-Module114=VMSlideXTransition
-Module115=VMSlideYReverseTransition
-Module116=VMSlideYTransition
-Module117=VMSnackBar
-Module118=VMSparkLine
-Module119=VMSpeedDial
+Module110=VMSlideGroup
+Module111=VMSlider
+Module112=VMSlideXReverseTransition
+Module113=VMSlideXTransition
+Module114=VMSlideYReverseTransition
+Module115=VMSlideYTransition
+Module116=VMSnackBar
+Module117=VMSparkLine
+Module118=VMSpeedDial
+Module119=VMStepper
 Module12=VMBadge
-Module120=VMStepper
-Module121=VMStepperContent
-Module122=VMStepperHeader
-Module123=VMStepperItems
-Module124=VMStepperStep
-Module125=VMSubHeader
-Module126=VMTab
-Module127=VMTabItem
-Module128=VMTabs
-Module129=VMTabsItems
+Module120=VMStepperContent
+Module121=VMStepperHeader
+Module122=VMStepperItems
+Module123=VMStepperStep
+Module124=VMSubHeader
+Module125=VMTab
+Module126=VMTabItem
+Module127=VMTabs
+Module128=VMTabsItems
+Module129=VMTabsSlider
 Module13=VMBanner
-Module130=VMTabsSlider
-Module131=VMTemplate
-Module132=VMTextField
-Module133=VMTimeline
-Module134=VMTimelineItem
-Module135=VMToolBar
-Module136=VMToolTip
-Module137=VMTreeView
-Module138=VMWaterBall
-Module139=VMWindow
+Module130=VMTemplate
+Module131=VMTextField
+Module132=VMTimeline
+Module133=VMTimelineItem
+Module134=VMToolBar
+Module135=VMToolTip
+Module136=VMTreeView
+Module137=VMWaterBall
+Module138=VMWindow
+Module139=VMWindowItem
 Module14=VMBottomNavigation
-Module140=VMWindowItem
-Module141=VueElement
-Module142=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module140=VueElement
+Module141=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
 Module15=VMBottomSheet
 Module16=VMBreadCrumbs
 Module17=VMBreadCrumbsItem
@@ -273,22 +272,22 @@ Module84=VMOverlay
 Module85=VMPagination
 Module86=VMParallax
 Module87=VMPDF
-Module88=VMPrettyPrint
-Module89=VMPrism
+Module88=VMPrism
+Module89=VMProgressCircle
 Module9=VMAlert
-Module90=VMProgressCircle
-Module91=VMProgressCircular
-Module92=VMProgressLinear
-Module93=VMProperty
-Module94=VMQuill
-Module95=VMRadio
-Module96=VMRadioGroup
-Module97=VMRating
-Module98=VMResponsive
-Module99=VMRow
+Module90=VMProgressCircular
+Module91=VMProgressLinear
+Module92=VMProperty
+Module93=VMQuill
+Module94=VMRadio
+Module95=VMRadioGroup
+Module96=VMRating
+Module97=VMResponsive
+Module98=VMRow
+Module99=VMScaleTransition
 NumberOfFiles=70
 NumberOfLibraries=3
-NumberOfModules=142
+NumberOfModules=141
 Version=8.1
 @EndOfDesignText@
 '
@@ -296,7 +295,7 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 3.05
+	#LibraryVersion: 3.07
 	#LibraryName: BANanoVuetify
 #End Region
 
@@ -390,7 +389,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("beautify-css.js")
 	BANano.Header.AddJavascriptFile("beautify-html.js")
 	'
-	BANano.BuildAsB4XLib("3.05")
+	BANano.BuildAsB4XLib("3.07")
 	ExitApplication
 End Sub
 

@@ -12,16 +12,25 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Rating
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMRating
+	vue = v
 	ID = sid.tolowercase
 	Rating.Initialize(v, ID)
 	Rating.SetTag("v-rating")
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMRating
+	bStatic = b
+	Rating.SetStatic(b)
 	Return Me
 End Sub
 
@@ -49,6 +58,7 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	SetDeviceSizes(small,medium, large, xlarge)
 	Return Me
 End Sub
+
 'get component
 Sub ToString As String
 	Return Rating.ToString
@@ -59,12 +69,12 @@ Sub SetVModel(k As String) As VMRating
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMRating
+Sub SetVIf(vif As String) As VMRating
 	Rating.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMRating
+Sub SetVShow(vif As String) As VMRating
 	Rating.SetVShow(vif)
 	Return Me
 End Sub
@@ -118,7 +128,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMRating
+Sub SetBackgroundColor(varBackgroundColor As String) As VMRating
+	If varBackgroundColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, varBackgroundColor)
 	Rating.Bind(":background-color", pp)
@@ -126,7 +141,12 @@ Sub SetBackgroundColor(varBackgroundColor As Object) As VMRating
 End Sub
 
 'set clearable
-Sub SetClearable(varClearable As Object) As VMRating
+Sub SetClearable(varClearable As Boolean) As VMRating
+	If varClearable = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("clearable", varClearable)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Clearable"$
 	vue.SetStateSingle(pp, varClearable)
 	Rating.Bind(":clearable", pp)
@@ -134,7 +154,12 @@ Sub SetClearable(varClearable As Object) As VMRating
 End Sub
 
 'set close-delay
-Sub SetCloseDelay(varCloseDelay As Object) As VMRating
+Sub SetCloseDelay(varCloseDelay As String) As VMRating
+	If varCloseDelay = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("close-delay", varCloseDelay)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CloseDelay"$
 	vue.SetStateSingle(pp, varCloseDelay)
 	Rating.Bind(":close-delay", pp)
@@ -142,15 +167,25 @@ Sub SetCloseDelay(varCloseDelay As Object) As VMRating
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMRating
+Sub SetColor(color As String) As VMRating
+	If color = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", color)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, varColor)
+	vue.SetStateSingle(pp, color)
 	Rating.Bind(":color", pp)
 	Return Me
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMRating
+Sub SetDark(varDark As Boolean) As VMRating
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Rating.Bind(":dark", pp)
@@ -158,7 +193,12 @@ Sub SetDark(varDark As Object) As VMRating
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMRating
+Sub SetDense(varDense As Boolean) As VMRating
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	Rating.Bind(":dense", pp)
@@ -166,7 +206,12 @@ Sub SetDense(varDense As Object) As VMRating
 End Sub
 
 'set empty-icon
-Sub SetEmptyIcon(varEmptyIcon As Object) As VMRating
+Sub SetEmptyIcon(varEmptyIcon As String) As VMRating
+	If varEmptyIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("empty-icon", varEmptyIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EmptyIcon"$
 	vue.SetStateSingle(pp, varEmptyIcon)
 	Rating.Bind(":empty-icon", pp)
@@ -174,7 +219,12 @@ Sub SetEmptyIcon(varEmptyIcon As Object) As VMRating
 End Sub
 
 'set full-icon
-Sub SetFullIcon(varFullIcon As Object) As VMRating
+Sub SetFullIcon(varFullIcon As String) As VMRating
+	If varFullIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("full-icon", varFullIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}FullIcon"$
 	vue.SetStateSingle(pp, varFullIcon)
 	Rating.Bind(":full-icon", pp)
@@ -182,7 +232,12 @@ Sub SetFullIcon(varFullIcon As Object) As VMRating
 End Sub
 
 'set half-icon
-Sub SetHalfIcon(varHalfIcon As Object) As VMRating
+Sub SetHalfIcon(varHalfIcon As String) As VMRating
+	If varHalfIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("half-icon", varHalfIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HalfIcon"$
 	vue.SetStateSingle(pp, varHalfIcon)
 	Rating.Bind(":half-icon", pp)
@@ -190,7 +245,12 @@ Sub SetHalfIcon(varHalfIcon As Object) As VMRating
 End Sub
 
 'set half-increments
-Sub SetHalfIncrements(varHalfIncrements As Object) As VMRating
+Sub SetHalfIncrements(varHalfIncrements As Boolean) As VMRating
+	If varHalfIncrements = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("half-increments", varHalfIncrements)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HalfIncrements"$
 	vue.SetStateSingle(pp, varHalfIncrements)
 	Rating.Bind(":half-increments", pp)
@@ -198,7 +258,12 @@ Sub SetHalfIncrements(varHalfIncrements As Object) As VMRating
 End Sub
 
 'set hover
-Sub SetHover(varHover As Object) As VMRating
+Sub SetHover(varHover As Boolean) As VMRating
+	If varHover = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hover", varHover)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Hover"$
 	vue.SetStateSingle(pp, varHover)
 	Rating.Bind(":hover", pp)
@@ -206,7 +271,12 @@ Sub SetHover(varHover As Object) As VMRating
 End Sub
 
 'set large
-Sub SetLarge(varLarge As Object) As VMRating
+Sub SetLarge(varLarge As Boolean) As VMRating
+	If varLarge = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("large", varLarge)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Large"$
 	vue.SetStateSingle(pp, varLarge)
 	Rating.Bind(":large", pp)
@@ -214,7 +284,12 @@ Sub SetLarge(varLarge As Object) As VMRating
 End Sub
 
 'set length
-Sub SetLength(varLength As Object) As VMRating
+Sub SetLength(varLength As String) As VMRating
+	If varLength = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("length", varLength)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Length"$
 	vue.SetStateSingle(pp, varLength)
 	Rating.Bind(":length", pp)
@@ -222,7 +297,12 @@ Sub SetLength(varLength As Object) As VMRating
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMRating
+Sub SetLight(varLight As Boolean) As VMRating
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Rating.Bind(":light", pp)
@@ -230,7 +310,12 @@ Sub SetLight(varLight As Object) As VMRating
 End Sub
 
 'set open-delay
-Sub SetOpenDelay(varOpenDelay As Object) As VMRating
+Sub SetOpenDelay(varOpenDelay As String) As VMRating
+	If varOpenDelay = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-delay", varOpenDelay)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OpenDelay"$
 	vue.SetStateSingle(pp, varOpenDelay)
 	Rating.Bind(":open-delay", pp)
@@ -238,7 +323,12 @@ Sub SetOpenDelay(varOpenDelay As Object) As VMRating
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMRating
+Sub SetReadonly(varReadonly As Boolean) As VMRating
+	If varReadonly = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	Rating.Bind(":readonly", pp)
@@ -246,7 +336,12 @@ Sub SetReadonly(varReadonly As Object) As VMRating
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMRating
+Sub SetRipple(varRipple As Boolean) As VMRating
+	If varRipple Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	Rating.Bind(":ripple", pp)
@@ -254,7 +349,12 @@ Sub SetRipple(varRipple As Object) As VMRating
 End Sub
 
 'set size
-Sub SetSize(varSize As Object) As VMRating
+Sub SetSize(varSize As String) As VMRating
+	If varSize = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("size", varSize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Size"$
 	vue.SetStateSingle(pp, varSize)
 	Rating.Bind(":size", pp)
@@ -262,7 +362,12 @@ Sub SetSize(varSize As Object) As VMRating
 End Sub
 
 'set small
-Sub SetSmall(varSmall As Object) As VMRating
+Sub SetSmall(varSmall As Boolean) As VMRating
+	If varSmall = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("small", varSmall)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Small"$
 	vue.SetStateSingle(pp, varSmall)
 	Rating.Bind(":small", pp)
@@ -270,13 +375,18 @@ Sub SetSmall(varSmall As Object) As VMRating
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMRating
+Sub SetValue(varValue As String) As VMRating
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 'set x-large
-Sub SetXLarge(varXLarge As Object) As VMRating
+Sub SetXLarge(varXLarge As Boolean) As VMRating
+	If varXLarge = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("x-large", varXLarge)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}XLarge"$
 	vue.SetStateSingle(pp, varXLarge)
 	Rating.Bind(":x-large", pp)
@@ -284,13 +394,17 @@ Sub SetXLarge(varXLarge As Object) As VMRating
 End Sub
 
 'set x-small
-Sub SetXSmall(varXSmall As Object) As VMRating
+Sub SetXSmall(varXSmall As Boolean) As VMRating
+	If varXSmall = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("x-small", varXSmall)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}XSmall"$
 	vue.SetStateSingle(pp, varXSmall)
 	Rating.Bind(":x-small", pp)
 	Return Me
 End Sub
-
 
 'hide the component
 Sub Hide As VMRating
@@ -343,9 +457,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMRating
+Sub SetColorIntensity(color As String, intensity As String) As VMRating
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Rating.Bind(":color", pp)
 	Return Me
@@ -353,9 +472,14 @@ End Sub
 
 
 'set background-color
-Sub SetBackgroundColorIntensity(varBackgroundColor As Object, varIntensity As String) As VMRating
+Sub SetBackgroundColorIntensity(backgroundColor As String, backgroundintensity As String) As VMRating
+	If backgroundColor = "" Then Return Me
+	Dim scolor As String = $"${backgroundColor} ${backgroundintensity}"$
+	If bStatic Then
+		SetAttrSingle("background-color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}BackgroundColor"$
-	Dim scolor As String = $"${varBackgroundColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Rating.Bind(":background-color", pp)
 	Return Me
@@ -458,23 +582,9 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Rating.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMRating
 Rating.SetVisible(b)
 Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColor(varColor As String) As VMRating
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMRating
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
-End Sub

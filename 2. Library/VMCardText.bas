@@ -12,7 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	
+	Private bStatic As Boolean
 End Sub
 
 'initialize the CardText
@@ -23,9 +23,16 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
+
+Sub SetStatic(b As Boolean) As VMCardText
+	bStatic = b
+	CardText.SetStatic(b)
+	Return Me
+End Sub
 
 Sub SetAttrLoose(loose As String) As VMCardText
 	CardText.SetAttrLoose(loose)
@@ -66,9 +73,14 @@ Sub UseTheme(themeName As String) As VMCardText
 End Sub
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCardText
+Sub SetColorIntensity(color As String, intensity As String) As VMCardText
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	CardText.Bind(":color", pp)
 	Return Me
@@ -233,10 +245,11 @@ Sub SetTextColor(varColor As String) As VMCardText
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCardText
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMCardText
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me

@@ -584,7 +584,7 @@ End Sub
 
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMAppBar
-	appbar.Bind(prop, stateprop)
+	AppBar.Bind(prop, stateprop)
 	Return Me
 End Sub
 
@@ -640,12 +640,12 @@ End Sub
 
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMAppBar
-AppBar.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	AppBar.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 Sub SetVisible(b As Boolean) As VMAppBar
-AppBar.SetVisible(b)
-Return Me
+	AppBar.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity
@@ -662,4 +662,118 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMAppBa
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me
+End Sub
+
+'set the row and column position
+Sub SetRC(sRow As String, sCol As String) As VMToolBar
+	ToolBar.SetRC(sRow, sCol)
+	Return Me
+End Sub
+
+'set the offsets for this item
+Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMToolBar
+	ToolBar.SetDeviceOffsets(OS, OM, OL, OX)
+	Return Me
+End Sub
+
+'set the sizes for this item
+Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMToolBar
+	ToolBar.SetDeviceSizes(SS, SM, SL, SX)
+	Return Me
+End Sub
+
+'set the position: row and column and sizes
+Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMToolBar
+	SetRC(srow, scell)
+	SetDeviceSizes(small,medium, large, xlarge)
+	Return Me
+End Sub
+
+Sub AddButton1(key As String, iconName As String, text As String, toolTip As String, badge As String) As VMToolBar
+	Dim btn As VMButton
+	btn.Initialize(vue, key, module).SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
+	If badge <> "" Then
+		'btn.SetBadgeContent(badge)
+	End If
+	btn.Pop(ToolBar)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddTitle(tt As String, classes As String) As VMToolBar
+	Dim pp As String = $"${ID}title"$
+	vue.SetStateSingle(pp, tt)	
+	Dim page_title As String = $"{{ ${pp} }}"$
+	Dim Title As VMElement
+	Title.Initialize(vue, $"${ID}title"$).SetTag("v-toolbar-title").SetText(page_title)
+	Title.AddClass(classes)
+	Title.Pop(ToolBar)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddHamburger As VMToolBar
+	'will help place items on the right
+	Dim Spacer As VMElement
+	Spacer.Initialize(vue, $"${ID}menu"$).SetTag("v-app-bar-nav-icon")
+	Spacer.SetOnClick(module, $"${ID}menu_click"$)
+	Spacer.Pop(ToolBar)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub SetVIf(vif As Object) As VMToolBar
+	ToolBar.SetVIf(vif)
+	Return Me
+End Sub
+
+Sub SetVShow(vif As Object) As VMToolBar
+	ToolBar.SetVShow(vif)
+	Return Me
+End Sub
+
+'add to app template
+Sub Render
+	vue.SetTemplate(ToString)
+End Sub
+
+'add a child
+Sub AddChild(child As VMElement) As VMToolBar
+	Dim childHTML As String = child.ToString
+	ToolBar.SetText(childHTML)
+	HasContent = True
+	Return Me
+End Sub
+
+'set text
+Sub SetText(t As Object) As VMToolBar
+	ToolBar.SetText(t)
+	Return Me
+End Sub
+
+'set style
+Sub SetStyle(sm As Map) As VMToolBar
+	ToolBar.SetStyle(sm)
+	Return Me
+End Sub
+
+'add children
+Sub AddChildren(children As List)
+	For Each childx As VMElement In children
+		AddChild(childx)
+	Next
+End Sub
+
+Sub Enable As VMToolBar
+	ToolBar.Enable(True)
+	Return Me
+End Sub
+
+Sub Disable As VMToolBar
+	ToolBar.Disable(True)
+	Return Me
+End Sub
+
+Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
+	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub

@@ -10,6 +10,6 @@ ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
-NavigationStack=pgLogin,btnRegister_click,42,6,pgLogin,btnOkSignIn_click,56,1,pgRegister,Random,101,6,Main,Process_Globals,8,0,pgRegister,Process_Globals,4,0,pgRegister,btnCancelSignUp_click,88,0,Main,AppStart,25,0,pgRegister,fiuploadpic_change,86,5,pgRegister,Code,63,6,pgLogin,Code,21,0
+NavigationStack=pgLogin,btnOkSignIn_click,56,1,Main,Process_Globals,8,0,pgRegister,Process_Globals,4,0,Main,AppStart,25,0,pgLogin,Code,21,0,pgRegister,btnOkSignUp_click,106,0,pgRegister,Random,110,6,pgRegister,btnCancelSignUp_click,95,0,pgRegister,fiuploadpic_change,88,5,pgRegister,Code,84,6
 SelectedBuild=0
 VisibleModules=3,2

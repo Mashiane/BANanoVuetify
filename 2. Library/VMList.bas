@@ -147,9 +147,15 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).SetStatic(bStatic)
-		la.AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
-		la.Pop(vli.ListItem)		
+		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${actionIcon}"$)
+		Dim btn As VMButton
+		btn.Initialize(vue, "", Module).SetAttrLoose("icon")
+		Dim icon As VMIcon
+		icon.Initialize(vue, "", Module)
+		icon.SetVText($"item.${actionIcon}"$)
+		btn.AddComponent(icon.ToString)
+		la.AddComponent(btn.ToString)
+		la.Pop(vli.ListItem)
 	End If
 	Return vli
 End Sub
@@ -214,7 +220,14 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).AddIcon("", $"item.${actionIcon}"$).SetVIf($"item.${actionIcon}"$)
+		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${actionIcon}"$)
+		Dim btn As VMButton
+		btn.Initialize(vue, "", Module).SetAttrLoose("icon")
+		Dim icon As VMIcon
+		icon.Initialize(vue, "", Module)
+		icon.SetVText($"item.${actionIcon}"$)
+		btn.AddComponent(icon.ToString)
+		la.AddComponent(btn.ToString)
 		la.Pop(vli.ListItem)
 	End If
 	vli.Pop(tmp.Template)	
@@ -224,7 +237,100 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	dvd.Pop(tmp.Template)
 	'add sub heading
 	Dim sh As VMSubHeader
-	sh.Initialize(vue).SetVElseIf("item.header").Bind(":key", "item.header").SetText("{{ item.header }}").SetInset(True)
+	sh.Initialize(vue).SetVElseIf("item.header").Bind(":key", "item.header").SetVText("item.header").SetInset(True)
+	sh.Pop(tmp.Template)
+	tmp.Pop(List)
+	HasContent = True
+	Return Me
+End Sub
+
+'define a template to load items from
+Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String) As VMList
+	If vue.StateExists(datasource) = False Then
+		vue.SetData(datasource, vue.newlist)
+	End If
+	If DesignMode Then Return Me
+	'
+	Dim tmp As VMTemplate
+	tmp.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tmp.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
+	'
+	Dim vli As VMListItem
+	vli.Initialize(vue, "", Module).SetStatic(bStatic)
+	vli.SetVIf($"item.${key}"$)
+	vli.Bind(":key", $"item.${key}"$)
+	vli.SetAttrSingle(":id", $"item.${key}"$)
+	vli.SetOnClick($"${ID}_click"$)
+	'
+	If avatar <> "" Then
+		Dim lia As VMListItemAvatar
+		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${avatar}"$)
+		Dim img As VMImage
+		img.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrSingle(":src", $"item.${avatar}"$)
+		img.Pop(lia.ListItemAvatar)
+		lia.Pop(vli.ListItem)
+	End If
+	'
+	If iconName <> "" Then
+		Dim vlii As VMListItemIcon
+		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVif($"item.${iconName}"$)
+		Dim icon As VMIcon
+		icon.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${iconName}"$)
+		If iconColor <> "" Then icon.SetAttrSingle(":color", $"item.${iconColor}"$)
+		icon.Pop(vlii.ListItemIcon)
+		vlii.Pop(vli.ListItem)
+	End If
+	'
+	Dim iContent As Int = 0
+	If title <> "" Then iContent = iContent + 1
+	If subtitle <> "" Then iContent = iContent + 1
+	
+	If iContent > 0 Then
+		Dim lic As VMListItemContent
+		lic.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		'
+		If title <> "" Then
+			Dim lit As VMListItemTitle
+			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${title}"$)
+			lit.Pop(lic.ListItemContent)
+		End If
+		'
+		If subtitle <> "" Then
+			Dim listt As VMListItemSubTitle
+			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${subtitle}"$)
+			listt.Pop(lic.ListItemContent)
+		End If
+		'
+		If subtitle1 <> "" Then
+			Dim listt1 As VMListItemSubTitle
+			listt1.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${subtitle1}"$)
+			listt1.Pop(lic.ListItemContent)
+		End If
+		lic.Pop(vli.ListItem)
+	End If
+	'
+	If actionIcon <> "" Then
+		Dim la As VMListItemAction
+		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${actionIcon}"$)
+		Dim btn As VMButton
+		btn.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrLoose("icon")
+		Dim icon As VMIcon
+		icon.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		If actionIconColor <> "" Then icon.SetAttrSingle(":color", $"item.${actionIconColor}"$)
+		icon.SetVText($"item.${actionIcon}"$)
+		btn.AddComponent(icon.ToString)
+		la.AddComponent(btn.ToString)
+		la.Pop(vli.ListItem)
+	End If
+	
+	vli.Pop(tmp.Template)	
+	'add the divider
+	Dim dvd As VMDivider
+	dvd.Initialize(vue).SetVElseIf("item.divider").Bind(":key", "i").SetInset
+	dvd.Pop(tmp.Template)
+	'add sub heading
+	Dim sh As VMSubHeader
+	sh.Initialize(vue).SetVElseIf("item.header").Bind(":key", "item.header").SetVText("item.header").SetInset(True)
 	sh.Pop(tmp.Template)
 	tmp.Pop(List)
 	HasContent = True
@@ -352,14 +458,91 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMList
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	List.Bind(":color", pp)
 	HasContent = True
 	Return Me
 End Sub
 
+'
+Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String) As VMList
+	Dim vli As VMListItem
+	vli.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	vli.SetAttrSingle("key", key)
+	vli.SetOnClick($"${ID}_click"$)
+	'
+	If avatar <> "" Then
+		Dim lia As VMListItemAvatar
+		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		Dim img As VMImage
+		img.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrSingle("src", avatar)
+		img.Pop(lia.ListItemAvatar)
+		lia.Pop(vli.ListItem)
+	End If
+	'
+	If iconName <> "" Then
+		Dim vlii As VMListItemIcon
+		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		Dim icon As VMIcon
+		icon.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(iconName)
+		If iconColor <> "" Then icon.SetAttrSingle("color", iconColor)
+		icon.Pop(vlii.ListItemIcon)
+		vlii.Pop(vli.ListItem)
+	End If
+	'
+	Dim iContent As Int = 0
+	If title <> "" Then iContent = iContent + 1
+	If subtitle <> "" Then iContent = iContent + 1
+	
+	If iContent > 0 Then
+		Dim lic As VMListItemContent
+		lic.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		'
+		If title <> "" Then
+			Dim lit As VMListItemTitle
+			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(title)
+			lit.Pop(lic.ListItemContent)
+		End If
+		'
+		If subtitle <> "" Then
+			Dim listt As VMListItemSubTitle
+			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(subtitle)
+			listt.Pop(lic.ListItemContent)
+		End If
+		'
+		If subtitle1 <> "" Then
+			Dim listt1 As VMListItemSubTitle
+			listt1.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(subtitle1)
+			listt1.Pop(lic.ListItemContent)
+		End If
+		lic.Pop(vli.ListItem)
+	End If
+	'
+	If actionIcon <> "" Then
+		Dim la As VMListItemAction
+		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		Dim btn As VMButton
+		btn.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrLoose("icon")
+		Dim icon As VMIcon
+		icon.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		If actionIconColor <> "" Then icon.SetAttrSingle("color", actionIconColor)
+		icon.SetText(actionIcon)
+		btn.AddComponent(icon.ToString)
+		la.AddComponent(btn.ToString)
+		la.Pop(vli.ListItem)
+	End If
+	
+	vli.Pop(List)
+	HasContent = True
+	Return Me
+End Sub
 
 'get component
 Sub ToString As String	
@@ -391,12 +574,12 @@ Sub SetVModel(k As String) As VMList
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMList
+Sub SetVIf(vif As String) As VMList
 	List.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMList
+Sub SetVShow(vif As String) As VMList
 	List.SetVShow(vif)
 	Return Me
 End Sub
@@ -415,7 +598,7 @@ Sub AddChild(child As VMElement) As VMList
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMList
+Sub SetText(t As string) As VMList
 	List.SetText(t)
 	HasContent = True
 	Return Me
@@ -452,7 +635,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMList
+Sub SetColor(varColor As String) As VMList
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	List.Bind(":color", pp)
@@ -460,7 +648,12 @@ Sub SetColor(varColor As Object) As VMList
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMList
+Sub SetDark(varDark As Boolean) As VMList
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	List.Bind(":dark", pp)
@@ -468,7 +661,12 @@ Sub SetDark(varDark As Object) As VMList
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMList
+Sub SetDense(varDense As Boolean) As VMList
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	List.Bind(":dense", pp)
@@ -482,7 +680,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMList
 End Sub
 
 'set elevation
-Sub SetElevation(varElevation As Object) As VMList
+Sub SetElevation(varElevation As String) As VMList
+	If varElevation = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("elevation", varElevation)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Elevation"$
 	vue.SetStateSingle(pp, varElevation)
 	List.Bind(":elevation", pp)
@@ -490,7 +693,12 @@ Sub SetElevation(varElevation As Object) As VMList
 End Sub
 
 'set expand
-Sub SetExpand(varExpand As Object) As VMList
+Sub SetExpand(varExpand As Boolean) As VMList
+	If varExpand = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("expand", varExpand)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Expand"$
 	vue.SetStateSingle(pp, varExpand)
 	List.Bind(":expand", pp)
@@ -498,7 +706,12 @@ Sub SetExpand(varExpand As Object) As VMList
 End Sub
 
 'set flat
-Sub SetFlat(varFlat As Object) As VMList
+Sub SetFlat(varFlat As Boolean) As VMList
+	If varFlat = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("flat", varFlat)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Flat"$
 	vue.SetStateSingle(pp, varFlat)
 	List.Bind(":flat", pp)
@@ -506,7 +719,12 @@ Sub SetFlat(varFlat As Object) As VMList
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMList
+Sub SetHeight(varHeight As String) As VMList
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	List.Bind(":height", pp)
@@ -514,7 +732,12 @@ Sub SetHeight(varHeight As Object) As VMList
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMList
+Sub SetLight(varLight As Boolean) As VMList
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	List.Bind(":light", pp)
@@ -522,7 +745,12 @@ Sub SetLight(varLight As Object) As VMList
 End Sub
 
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMList
+Sub SetMaxHeight(varMaxHeight As String) As VMList
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	List.Bind(":max-height", pp)
@@ -530,7 +758,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMList
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMList
+Sub SetMaxWidth(varMaxWidth As String) As VMList
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	List.Bind(":max-width", pp)
@@ -538,7 +771,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMList
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMList
+Sub SetMinHeight(varMinHeight As String) As VMList
+	If varMinHeight = "" Then Return Me
+	If bStatic Then 
+		SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinHeight"$
 	vue.SetStateSingle(pp, varMinHeight)
 	List.Bind(":min-height", pp)
@@ -546,15 +784,25 @@ Sub SetMinHeight(varMinHeight As Object) As VMList
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMList
+Sub SetMinWidth(varMinWidth As String) As VMList
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	List.Bind(":min-width", pp)
 	Return Me
 End Sub
 
-'set nav
-Sub SetNav(varNav As Object) As VMList
+'set nav used with navdrawer
+Sub SetNav(varNav As Boolean) As VMList
+	If varNav = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("nav", varNav)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Nav"$
 	vue.SetStateSingle(pp, varNav)
 	List.Bind(":nav", pp)
@@ -562,7 +810,12 @@ Sub SetNav(varNav As Object) As VMList
 End Sub
 
 'set rounded
-Sub SetRounded(varRounded As Object) As VMList
+Sub SetRounded(varRounded As Boolean) As VMList
+	If varRounded = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("rounded", varRounded)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Rounded"$
 	vue.SetStateSingle(pp, varRounded)
 	List.Bind(":rounded", pp)
@@ -570,7 +823,12 @@ Sub SetRounded(varRounded As Object) As VMList
 End Sub
 
 'set shaped
-Sub SetShaped(varShaped As Object) As VMList
+Sub SetShaped(varShaped As Boolean) As VMList
+	If varShaped = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("shaped", varShaped)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Shaped"$
 	vue.SetStateSingle(pp, varShaped)
 	List.Bind(":shaped", pp)
@@ -578,7 +836,12 @@ Sub SetShaped(varShaped As Object) As VMList
 End Sub
 
 'set subheader
-Sub SetSubheader(varSubheader As Object) As VMList
+Sub SetSubheader(varSubheader As Boolean) As VMList
+	If varSubheader = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("subheader", varSubheader)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Subheader"$
 	vue.SetStateSingle(pp, varSubheader)
 	List.Bind(":subheader", pp)
@@ -586,15 +849,19 @@ Sub SetSubheader(varSubheader As Object) As VMList
 End Sub
 
 'set tag
-Sub SetTag(varTag As Object) As VMList
-	Dim pp As String = $"${ID}Tag"$
-	vue.SetStateSingle(pp, varTag)
-	List.Bind(":tag", pp)
+Sub SetTag(varTag As String) As VMList
+	If varTag = "" Then Return Me
+	SetAttrSingle("tag", varTag)
 	Return Me
 End Sub
 
 'set three-line
-Sub SetThreeLine(varThreeLine As Object) As VMList
+Sub SetThreeLine(varThreeLine As Boolean) As VMList
+	If varThreeLine = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("three-line", varThreeLine)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ThreeLine"$
 	vue.SetStateSingle(pp, varThreeLine)
 	List.Bind(":three-line", pp)
@@ -602,7 +869,12 @@ Sub SetThreeLine(varThreeLine As Object) As VMList
 End Sub
 
 'set tile
-Sub SetTile(varTile As Object) As VMList
+Sub SetTile(varTile As Boolean) As VMList
+	If varTile = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("tile", varTile)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Tile"$
 	vue.SetStateSingle(pp, varTile)
 	List.Bind(":tile", pp)
@@ -610,7 +882,12 @@ Sub SetTile(varTile As Object) As VMList
 End Sub
 
 'set two-line
-Sub SetTwoLine(varTwoLine As Object) As VMList
+Sub SetTwoLine(varTwoLine As Boolean) As VMList
+	If varTwoLine = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("two-line", varTwoLine)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}TwoLine"$
 	vue.SetStateSingle(pp, varTwoLine)
 	List.Bind(":two-line", pp)
@@ -618,7 +895,12 @@ Sub SetTwoLine(varTwoLine As Object) As VMList
 End Sub
 
 'set width
-Sub SetWidth(varWidth As Object) As VMList
+Sub SetWidth(varWidth As String) As VMList
+	If varWidth = "" Then Return Me
+	If bStatic Then 
+		SetAttrSingle("width", varWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Width"$
 	vue.SetStateSingle(pp, varWidth)
 	List.Bind(":width", pp)
@@ -683,7 +965,7 @@ Sub SetTabIndex(ti As String) As VMList
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMList
+Sub SetName(varName As String, bbind As Boolean) As VMList
 	List.SetName(varName, bbind)
 	Return Me
 End Sub

@@ -209,7 +209,7 @@ Sub AddIconVElse(iconName As String, vif As String, theme As String) As VMButton
 	Dim icon As VMIcon
 	icon.Initialize(vue, "", Module)
 	icon.SetStatic(bStatic)
-	icon.SetDesignMode(True)
+	icon.SetDesignMode(DesignMode)
 	icon.SetText(iconName).setvelse(vif)
 	If theme <> "" Then
 		icon.UseTheme(theme)
@@ -225,7 +225,7 @@ Sub AddIcon(iconName As String, iconPos As String, iconTheme As String) As VMBut
 	Dim icon As VMIcon
 	icon.Initialize(vue, $"${ID}icon"$, Module)
 	icon.SetStatic(bStatic)
-	icon.SetDesignMode(True)
+	icon.SetDesignMode(DesignMode)
 	icon.SetText(iconName)
 	Select Case iconPos
 	Case "left"
@@ -279,10 +279,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	tooltip.SetDesignMode(DesignMode)
-	tmpl.SetDesignMode(DesignMode)
-	span.SetDesignMode(DesignMode)
-		
 	If hasToolTip Then
 		Button.Pop(tmpl.Template)
 		tmpl.Pop(tooltip.tooltip)
@@ -1009,10 +1005,11 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMButton
-Button.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Button.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMButton
-Button.SetVisible(b)
-Return Me
+	Button.SetVisible(b)
+	Return Me
 End Sub

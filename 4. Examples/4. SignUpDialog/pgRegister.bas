@@ -50,7 +50,8 @@ Sub Code(vmx As BANanoVM)
 	profilepic.SetBorderRadius("50%")
 	
 	
-	Dim uploadprofile As VMTextField = vm.NewFile(Me,True,"fiuploadpic", "upload", "Upload Profile Image", "", False, "", "", 0)
+	Dim uploadprofile As VMTextField = vm.NewFile(Me,True,True,"fiuploadpic", "upload", "Upload Profile Image", "", False, "", "", 0)
+	
 	
 	Dim notes As VMTextField = vm.NewTextArea(Me,True,"txtnotes", "notes", "Notes", "", True, True, "", 0,"", "Notes are required!", 0)
 	Dim agree As VMCheckBox = vm.NewCheckBox(Me,True,"chkagree", "agree", "I agree with terms of use", "Yes", "No", True, 0).SetString

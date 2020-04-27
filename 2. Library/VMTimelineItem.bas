@@ -184,25 +184,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMTimelineItem
-	TimelineItem.SetVisible(False)
+	TimeLineItem.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMTimelineItem
-	TimelineItem.SetVisible(True)
+	TimeLineItem.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMTimelineItem
-	TimelineItem.Enable(True)
+	TimeLineItem.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMTimelineItem
-	TimelineItem.Disable(True)
+	TimeLineItem.Disable(True)
 	Return Me
 End Sub
 
@@ -330,11 +330,11 @@ Sub SetKey(k As String) As VMTimelineItem
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTimelineItem
-TimelineItem.BuildModel(mprops, mstyles, lclasses, loose)
+TimeLineItem.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
 Sub SetVisible(b As Boolean) As VMTimelineItem
-TimelineItem.SetVisible(b)
+TimeLineItem.SetVisible(b)
 Return Me
 End Sub
 

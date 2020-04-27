@@ -7,20 +7,21 @@ Version=8.1
 #IgnoreWarnings:12
 'https://github.com/juliorosseti/vue-select-sides
 Sub Class_Globals
-Public SelectSides As VMElement
-Public ID As String
-Private vue As BANanoVue
-Private BANano As BANano  'ignore
-Private DesignMode As Boolean
-Private Module As Object
-Private items As List
-Private selected As String
-Private lst As String
+	Public SelectSides As VMElement
+	Public ID As String
+	Private vue As BANanoVue
+	Private BANano As BANano  'ignore
+	Private DesignMode As Boolean
+	Private Module As Object
+	Private items As List
+	Private selected As String
+	Private lst As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the SelectSides
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMSelectSides
-ID = sid.tolowercase
+	ID = sid.tolowercase
 	SelectSides.Initialize(v, ID)
 	SelectSides.SetTag("vue-select-sides")
 	DesignMode = False
@@ -31,6 +32,13 @@ ID = sid.tolowercase
 	lst = $"${ID}list"$
 	vue.SetData(lst, Array())
 	SetList(lst)
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMSelectSides
+	bStatic = b
+	SelectSides.SetStatic(b)
 	Return Me
 End Sub
 
@@ -61,7 +69,7 @@ End Sub
 
 'get component
 Sub ToString As String
-Return SelectSides.ToString
+	Return SelectSides.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMSelectSides
@@ -72,69 +80,74 @@ Sub SetVModel(k As String) As VMSelectSides
 End Sub
 
 Sub SetVIf(vif As Object) As VMSelectSides
-SelectSides.SetVIf(vif)
-Return Me
+	SelectSides.SetVIf(vif)
+	Return Me
 End Sub
 
 Sub SetVShow(vif As Object) As VMSelectSides
-SelectSides.SetVShow(vif)
-Return Me
+	SelectSides.SetVShow(vif)
+	Return Me
 End Sub
 
 'add to app template
 Sub Render
-vue.SetTemplate(ToString)
+	vue.SetTemplate(ToString)
 End Sub
 
 'add a child
 Sub AddChild(child As VMElement) As VMSelectSides
-Dim childHTML As String = child.ToString
-SelectSides.SetText(childHTML)
-Return Me
+	Dim childHTML As String = child.ToString
+	SelectSides.SetText(childHTML)
+	Return Me
 End Sub
 
 'set text
 Sub SetText(t As Object) As VMSelectSides
-SelectSides.SetText(t)
-Return Me
+	SelectSides.SetText(t)
+	Return Me
 End Sub
 
 'add to parent
-Sub Pop(p As VMElement)
-p.SetText(ToString)
+Sub Pop(p As VMElement)	
+	p.SetText(ToString)
 End Sub
 
 'add a class
 Sub AddClass(c As String) As VMSelectSides
-SelectSides.AddClass(c)
-Return Me
+	SelectSides.AddClass(c)
+	Return Me
 End Sub
 
 'set an attribute
 Sub SetAttr(attr As Map) As VMSelectSides
-SelectSides.SetAttr(attr)
-Return Me
+	SelectSides.SetAttr(attr)
+	Return Me
 End Sub
 
 'set style
 Sub SetStyle(sm As Map) As VMSelectSides
-SelectSides.SetStyle(sm)
-Return Me
+	SelectSides.SetStyle(sm)
+	Return Me
 End Sub
 
 'add children
 Sub AddChildren(children As List)
-For Each childx As VMElement In children
-AddChild(childx)
-Next
+	For Each childx As VMElement In children
+		AddChild(childx)
+	Next
 End Sub
 
 'set type
-Sub SetType(varType As Object) As VMSelectSides
-Dim pp As String = $"${ID}Type"$
-vue.SetStateSingle(pp, varType)
-SelectSides.Bind(":type", pp)
-Return Me
+Sub SetType(varType As String) As VMSelectSides
+	If varType = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("type", varType)		
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Type"$
+	vue.SetStateSingle(pp, varType)
+	SelectSides.Bind(":type", pp)
+	Return Me
 End Sub
 
 'set list
@@ -144,67 +157,107 @@ Sub SetList(varList As String) As VMSelectSides
 End Sub
 
 'set search
-Sub SetSearch(varSearch As Object) As VMSelectSides
-Dim pp As String = $"${ID}Search"$
-vue.SetStateSingle(pp, varSearch)
-SelectSides.Bind(":search", pp)
-Return Me
+Sub SetSearch(varSearch As Boolean) As VMSelectSides
+	If varSearch = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("search", varSearch)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Search"$
+	vue.SetStateSingle(pp, varSearch)
+	SelectSides.Bind(":search", pp)
+	Return Me
 End Sub
 
 'set total
-Sub SetTotal(varTotal As Object) As VMSelectSides
-Dim pp As String = $"${ID}Total"$
-vue.SetStateSingle(pp, varTotal)
-SelectSides.Bind(":total", pp)
-Return Me
+Sub SetTotal(varTotal As Boolean) As VMSelectSides
+	If varTotal = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("total", varTotal)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Total"$
+	vue.SetStateSingle(pp, varTotal)
+	SelectSides.Bind(":total", pp)
+	Return Me
 End Sub
 
 'set toggle-all
-Sub SetToggleAll(varToggleAll As Object) As VMSelectSides
-Dim pp As String = $"${ID}ToggleAll"$
-vue.SetStateSingle(pp, varToggleAll)
-SelectSides.Bind(":toggle-all", pp)
-Return Me
+Sub SetToggleAll(varToggleAll As Boolean) As VMSelectSides
+	If varToggleAll = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("toggle-all", varToggleAll)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ToggleAll"$
+	vue.SetStateSingle(pp, varToggleAll)
+	SelectSides.Bind(":toggle-all", pp)
+	Return Me
 End Sub
 
 'set sort-selected-up
-Sub SetSortSelectedUp(varSortSelectedUp As Object) As VMSelectSides
-Dim pp As String = $"${ID}SortSelectedUp"$
-vue.SetStateSingle(pp, varSortSelectedUp)
-SelectSides.Bind(":sort-selected-up", pp)
-Return Me
+Sub SetSortSelectedUp(varSortSelectedUp As Boolean) As VMSelectSides
+	If varSortSelectedUp = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("sort-selected-up", varSortSelectedUp)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}SortSelectedUp"$
+	vue.SetStateSingle(pp, varSortSelectedUp)
+	SelectSides.Bind(":sort-selected-up", pp)
+	Return Me
 End Sub
 
 'set order-by
-Sub SetOrderBy(varOrderBy As Object) As VMSelectSides
-Dim pp As String = $"${ID}OrderBy"$
-vue.SetStateSingle(pp, varOrderBy)
-SelectSides.Bind(":order-by", pp)
-Return Me
+Sub SetOrderBy(varOrderBy As String) As VMSelectSides
+	If varOrderBy = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("order-by", varOrderBy)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}OrderBy"$
+	vue.SetStateSingle(pp, varOrderBy)
+	SelectSides.Bind(":order-by", pp)
+	Return Me
 End Sub
 
 'set lang
-Sub SetLang(varLang As Object) As VMSelectSides
-Dim pp As String = $"${ID}Lang"$
-vue.SetStateSingle(pp, varLang)
-SelectSides.Bind(":lang", pp)
-Return Me
+Sub SetLang(varLang As String) As VMSelectSides
+	If varLang = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("lang", varLang)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Lang"$
+	vue.SetStateSingle(pp, varLang)
+	SelectSides.Bind(":lang", pp)
+	Return Me
 End Sub
 
 'set placeholder-search-left
-Sub SetPlaceholderSearchLeft(varPlaceholderSearchLeft As Object) As VMSelectSides
-Dim pp As String = $"${ID}PlaceholderSearchLeft"$
-vue.SetStateSingle(pp, varPlaceholderSearchLeft)
-SelectSides.Bind(":placeholder-search-left", pp)
-Return Me
+Sub SetPlaceholderSearchLeft(varPlaceholderSearchLeft As String) As VMSelectSides
+	If varPlaceholderSearchLeft = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("placeholder-search-left", varPlaceholderSearchLeft)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}PlaceholderSearchLeft"$
+	vue.SetStateSingle(pp, varPlaceholderSearchLeft)
+	SelectSides.Bind(":placeholder-search-left", pp)
+	Return Me
 End Sub
 
 'set placeholder-search-right
-Sub SetPlaceholderSearchRight(varPlaceholderSearchRight As Object) As VMSelectSides
-Dim pp As String = $"${ID}PlaceholderSearchRight"$
-vue.SetStateSingle(pp, varPlaceholderSearchRight)
-SelectSides.Bind(":placeholder-search-right", pp)
-Return Me
+Sub SetPlaceholderSearchRight(varPlaceholderSearchRight As String) As VMSelectSides
+	If varPlaceholderSearchRight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("placeholder-search-right", varPlaceholderSearchRight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}PlaceholderSearchRight"$
+	vue.SetStateSingle(pp, varPlaceholderSearchRight)
+	SelectSides.Bind(":placeholder-search-right", pp)
+	Return Me
 End Sub
 
 
@@ -243,27 +296,6 @@ End Sub
 'add a loose attribute without value
 Sub SetAttrLoose(loose As String) As VMSelectSides
 	SelectSides.SetAttrLoose(loose)
-	Return Me
-End Sub
-
-'apply a theme to an element
-Sub UseTheme(themeName As String) As VMSelectSides
-	themeName = themeName.ToLowerCase
-	Dim themes As Map = vue.themes
-	If themes.ContainsKey(themeName) Then
-		Dim sclass As String = themes.Get(themeName)
-		AddClass(sclass)
-	End If
-	Return Me
-End Sub
-
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSelectSides
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	SelectSides.Bind(":color", pp)
 	Return Me
 End Sub
 
@@ -344,17 +376,13 @@ Sub SetAttributes(attrs As List) As VMSelectSides
 	Return Me
 End Sub
 
-'set for
-Sub SetVFor(item As String, dataSource As String) As VMSelectSides
-	dataSource = dataSource.tolowercase
-	item = item.tolowercase
-	Dim sline As String = $"${item} in ${dataSource}"$
-	SetAttrSingle("v-for", sline)
-	Return Me
-End Sub
-
 Sub SetKey(k As String) As VMSelectSides
 	k = k.tolowercase
+	If k = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("key", k)
+		Return Me
+	End If
 	SetAttrSingle(":key", k)
 	Return Me
 End Sub
@@ -411,21 +439,4 @@ End Sub
 Sub SetVisible(b As Boolean) As VMSelectSides
 SelectSides.SetVisible(b)
 Return Me
-End Sub
-
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMSelectSides
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSelectSides
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

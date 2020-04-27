@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the DataIterator
@@ -22,6 +23,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VMDataIterator
+	bStatic = b
+	DataIterator.SetStatic(b)
 	Return Me
 End Sub
 
@@ -75,7 +84,7 @@ Sub AddClass(c As String) As VMDataIterator
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMDataIterator
+Sub SetAttr(attr As Map) As VMDataIterator
 	DataIterator.SetAttr(attr)
 	Return Me
 End Sub
@@ -91,6 +100,14 @@ Sub AddChildren(children As List)
 	For Each childx As VMElement In children
 		AddChild(childx)
 	Next
+End Sub
+
+'set custom-sort
+Sub SetCustomSort(varCustomFilter As Object) As VMDataIterator
+	Dim pp As String = $"${ID}CustomSort"$
+	vue.SetStateSingle(pp, varCustomFilter)
+	DataIterator.Bind(":custom-sort", pp)
+	Return Me
 End Sub
 
 'set custom-filter
@@ -109,16 +126,13 @@ Sub SetCustomGroup(varCustomGroup As Object) As VMDataIterator
 	Return Me
 End Sub
 
-'set custom-sort
-Sub SetCustomSort(varCustomSort As Object) As VMDataIterator
-	Dim pp As String = $"${ID}CustomSort"$
-	vue.SetStateSingle(pp, varCustomSort)
-	DataIterator.Bind(":custom-sort", pp)
-	Return Me
-End Sub
-
 'set dark
-Sub SetDark(varDark As Object) As VMDataIterator
+Sub SetDark(varDark As Boolean) As VMDataIterator
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	DataIterator.Bind(":dark", pp)
@@ -126,7 +140,12 @@ Sub SetDark(varDark As Object) As VMDataIterator
 End Sub
 
 'set disable-filtering
-Sub SetDisableFiltering(varDisableFiltering As Object) As VMDataIterator
+Sub SetDisableFiltering(varDisableFiltering As Boolean) As VMDataIterator
+	If varDisableFiltering = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("disable-filtering", varDisableFiltering)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}DisableFiltering"$
 	vue.SetStateSingle(pp, varDisableFiltering)
 	DataIterator.Bind(":disable-filtering", pp)
@@ -134,7 +153,12 @@ Sub SetDisableFiltering(varDisableFiltering As Object) As VMDataIterator
 End Sub
 
 'set disable-pagination
-Sub SetDisablePagination(varDisablePagination As Object) As VMDataIterator
+Sub SetDisablePagination(varDisablePagination As Boolean) As VMDataIterator
+	If varDisablePagination = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("disable-pagination", varDisablePagination)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}DisablePagination"$
 	vue.SetStateSingle(pp, varDisablePagination)
 	DataIterator.Bind(":disable-pagination", pp)
@@ -142,79 +166,38 @@ Sub SetDisablePagination(varDisablePagination As Object) As VMDataIterator
 End Sub
 
 'set disable-sort
-Sub SetDisableSort(varDisableSort As Object) As VMDataIterator
+Sub SetDisableSort(varDisableSort As Boolean) As VMDataIterator
+	If varDisableSort = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("disable-sort", varDisableSort)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}DisableSort"$
 	vue.SetStateSingle(pp, varDisableSort)
 	DataIterator.Bind(":disable-sort", pp)
 	Return Me
 End Sub
 
-'set expanded
-Sub SetExpanded(varExpanded As Object) As VMDataIterator
-	Dim pp As String = $"${ID}Expanded"$
-	vue.SetStateSingle(pp, varExpanded)
-	DataIterator.Bind(":expanded", pp)
-	Return Me
-End Sub
-
-'set footer-props
-Sub SetFooterProps(varFooterProps As Object) As VMDataIterator
-	Dim pp As String = $"${ID}FooterProps"$
-	vue.SetStateSingle(pp, varFooterProps)
-	DataIterator.Bind(":footer-props", pp)
-	Return Me
-End Sub
-
-'set group-by
-Sub SetGroupBy(varGroupBy As Object) As VMDataIterator
-	Dim pp As String = $"${ID}GroupBy"$
-	vue.SetStateSingle(pp, varGroupBy)
-	DataIterator.Bind(":group-by", pp)
-	Return Me
-End Sub
-
-'set group-desc
-Sub SetGroupDesc(varGroupDesc As Object) As VMDataIterator
-	Dim pp As String = $"${ID}GroupDesc"$
-	vue.SetStateSingle(pp, varGroupDesc)
-	DataIterator.Bind(":group-desc", pp)
-	Return Me
-End Sub
-
 'set hide-default-footer
-Sub SetHideDefaultFooter(varHideDefaultFooter As Object) As VMDataIterator
+Sub SetHideDefaultFooter(varHideDefaultFooter As Boolean) As VMDataIterator
+	If varHideDefaultFooter = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-default-footer", varHideDefaultFooter)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideDefaultFooter"$
 	vue.SetStateSingle(pp, varHideDefaultFooter)
 	DataIterator.Bind(":hide-default-footer", pp)
 	Return Me
 End Sub
 
-'set item-key
-Sub SetItemKey(varItemKey As Object) As VMDataIterator
-	Dim pp As String = $"${ID}ItemKey"$
-	vue.SetStateSingle(pp, varItemKey)
-	DataIterator.Bind(":item-key", pp)
-	Return Me
-End Sub
-
-'set items
-Sub SetItems(varItems As Object) As VMDataIterator
-	Dim pp As String = $"${ID}Items"$
-	vue.SetStateSingle(pp, varItems)
-	DataIterator.Bind(":items", pp)
-	Return Me
-End Sub
-
-'set items-per-page
-Sub SetItemsPerPage(varItemsPerPage As Object) As VMDataIterator
-	Dim pp As String = $"${ID}ItemsPerPage"$
-	vue.SetStateSingle(pp, varItemsPerPage)
-	DataIterator.Bind(":items-per-page", pp)
-	Return Me
-End Sub
-
 'set light
-Sub SetLight(varLight As Object) As VMDataIterator
+Sub SetLight(varLight As Boolean) As VMDataIterator
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	DataIterator.Bind(":light", pp)
@@ -222,39 +205,25 @@ Sub SetLight(varLight As Object) As VMDataIterator
 End Sub
 
 'set loading
-Sub SetLoading(varLoading As Object) As VMDataIterator
+Sub SetLoading(varLoading As Boolean) As VMDataIterator
+	If varLoading = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("loading", varLoading)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Loading"$
 	vue.SetStateSingle(pp, varLoading)
 	DataIterator.Bind(":loading", pp)
 	Return Me
 End Sub
 
-'set loading-text
-Sub SetLoadingText(varLoadingText As Object) As VMDataIterator
-	Dim pp As String = $"${ID}LoadingText"$
-	vue.SetStateSingle(pp, varLoadingText)
-	DataIterator.Bind(":loading-text", pp)
-	Return Me
-End Sub
-
-'set locale
-Sub SetLocale(varLocale As Object) As VMDataIterator
-	Dim pp As String = $"${ID}Locale"$
-	vue.SetStateSingle(pp, varLocale)
-	DataIterator.Bind(":locale", pp)
-	Return Me
-End Sub
-
-'set mobile-breakpoint
-Sub SetMobileBreakpoint(varMobileBreakpoint As Object) As VMDataIterator
-	Dim pp As String = $"${ID}MobileBreakpoint"$
-	vue.SetStateSingle(pp, varMobileBreakpoint)
-	DataIterator.Bind(":mobile-breakpoint", pp)
-	Return Me
-End Sub
-
 'set multi-sort
-Sub SetMultiSort(varMultiSort As Object) As VMDataIterator
+Sub SetMultiSort(varMultiSort As Boolean) As VMDataIterator
+	If varMultiSort = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("multi-sort", varMultiSort)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MultiSort"$
 	vue.SetStateSingle(pp, varMultiSort)
 	DataIterator.Bind(":multi-sort", pp)
@@ -262,15 +231,181 @@ Sub SetMultiSort(varMultiSort As Object) As VMDataIterator
 End Sub
 
 'set must-sort
-Sub SetMustSort(varMustSort As Object) As VMDataIterator
+Sub SetMustSort(varMustSort As Boolean) As VMDataIterator
+	If varMustSort = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("must-sort", varMustSort)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MustSort"$
 	vue.SetStateSingle(pp, varMustSort)
 	DataIterator.Bind(":must-sort", pp)
 	Return Me
 End Sub
 
+'set single-expand
+Sub SetSingleExpand(varSingleExpand As Boolean) As VMDataIterator
+	If varSingleExpand = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("single-expand", varSingleExpand)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}SingleExpand"$
+	vue.SetStateSingle(pp, varSingleExpand)
+	DataIterator.Bind(":single-expand", pp)
+	Return Me
+End Sub
+
+'set single-select
+Sub SetSingleSelect(varSingleSelect As Boolean) As VMDataIterator
+	If varSingleSelect = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("single-select", varSingleSelect)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}SingleSelect"$
+	vue.SetStateSingle(pp, varSingleSelect)
+	DataIterator.Bind(":single-select", pp)
+	Return Me
+End Sub
+
+'set expanded
+Sub SetExpanded(varExpanded As String) As VMDataIterator
+	If varExpanded = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("expanded", varExpanded)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Expanded"$
+	vue.SetStateSingle(pp, varExpanded)
+	DataIterator.Bind(":expanded", pp)
+	Return Me
+End Sub
+
+'set footer-props
+Sub SetFooterProps(varFooterProps As String) As VMDataIterator
+	If varFooterProps = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("footer-props", varFooterProps)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}FooterProps"$
+	vue.SetStateSingle(pp, varFooterProps)
+	DataIterator.Bind(":footer-props", pp)
+	Return Me
+End Sub
+
+'set group-by
+Sub SetGroupBy(varGroupBy As String) As VMDataIterator
+	If varGroupBy = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("group-by", varGroupBy)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}GroupBy"$
+	vue.SetStateSingle(pp, varGroupBy)
+	DataIterator.Bind(":group-by", pp)
+	Return Me
+End Sub
+
+'set group-desc
+Sub SetGroupDesc(varGroupDesc As String) As VMDataIterator
+	If varGroupDesc = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("group-desc", varGroupDesc)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}GroupDesc"$
+	vue.SetStateSingle(pp, varGroupDesc)
+	DataIterator.Bind(":group-desc", pp)
+	Return Me
+End Sub
+
+'set item-key
+Sub SetItemKey(varItemKey As String) As VMDataIterator
+	If varItemKey = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("item-key", varItemKey)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ItemKey"$
+	vue.SetStateSingle(pp, varItemKey)
+	DataIterator.Bind(":item-key", pp)
+	Return Me
+End Sub
+
+'set items
+Sub SetItems(varItems As String) As VMDataIterator
+	If varItems = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("items", varItems)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Items"$
+	vue.SetStateSingle(pp, varItems)
+	DataIterator.Bind(":items", pp)
+	Return Me
+End Sub
+
+'set items-per-page
+Sub SetItemsPerPage(varItemsPerPage As String) As VMDataIterator
+	If varItemsPerPage = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("items-per-page", varItemsPerPage)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ItemsPerPage"$
+	vue.SetStateSingle(pp, varItemsPerPage)
+	DataIterator.Bind(":items-per-page", pp)
+	Return Me
+End Sub
+
+'set loading-text
+Sub SetLoadingText(varLoadingText As String) As VMDataIterator
+	If varLoadingText = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("loading-text", varLoadingText)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LoadingText"$
+	vue.SetStateSingle(pp, varLoadingText)
+	DataIterator.Bind(":loading-text", pp)
+	Return Me
+End Sub
+
+'set locale
+Sub SetLocale(varLocale As String) As VMDataIterator
+	If varLocale = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("locale", varLocale)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Locale"$
+	vue.SetStateSingle(pp, varLocale)
+	DataIterator.Bind(":locale", pp)
+	Return Me
+End Sub
+
+'set mobile-breakpoint
+Sub SetMobileBreakpoint(varMobileBreakpoint As String) As VMDataIterator
+	If varMobileBreakpoint = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("mobile-breakpoint", varMobileBreakpoint)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}MobileBreakpoint"$
+	vue.SetStateSingle(pp, varMobileBreakpoint)
+	DataIterator.Bind(":mobile-breakpoint", pp)
+	Return Me
+End Sub
+
 'set no-data-text
-Sub SetNoDataText(varNoDataText As Object) As VMDataIterator
+Sub SetNoDataText(varNoDataText As String) As VMDataIterator
+	If varNoDataText = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("no-data-text", varNoDataText)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NoDataText"$
 	vue.SetStateSingle(pp, varNoDataText)
 	DataIterator.Bind(":no-data-text", pp)
@@ -278,7 +413,12 @@ Sub SetNoDataText(varNoDataText As Object) As VMDataIterator
 End Sub
 
 'set no-results-text
-Sub SetNoResultsText(varNoResultsText As Object) As VMDataIterator
+Sub SetNoResultsText(varNoResultsText As String) As VMDataIterator
+	If varNoResultsText = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("no-results-text", varNoResultsText)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NoResultsText"$
 	vue.SetStateSingle(pp, varNoResultsText)
 	DataIterator.Bind(":no-results-text", pp)
@@ -286,7 +426,12 @@ Sub SetNoResultsText(varNoResultsText As Object) As VMDataIterator
 End Sub
 
 'set options
-Sub SetOptions(varOptions As Object) As VMDataIterator
+Sub SetOptions(varOptions As String) As VMDataIterator
+	If varOptions = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("options", varOptions)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Options"$
 	vue.SetStateSingle(pp, varOptions)
 	DataIterator.Bind(":options", pp)
@@ -294,7 +439,12 @@ Sub SetOptions(varOptions As Object) As VMDataIterator
 End Sub
 
 'set page
-Sub SetPage(varPage As Object) As VMDataIterator
+Sub SetPage(varPage As String) As VMDataIterator
+	If varPage = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("page", varPage)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Page"$
 	vue.SetStateSingle(pp, varPage)
 	DataIterator.Bind(":page", pp)
@@ -302,7 +452,12 @@ Sub SetPage(varPage As Object) As VMDataIterator
 End Sub
 
 'set search
-Sub SetSearch(varSearch As Object) As VMDataIterator
+Sub SetSearch(varSearch As String) As VMDataIterator
+	If varSearch = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("search", varSearch)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Search"$
 	vue.SetStateSingle(pp, varSearch)
 	DataIterator.Bind(":search", pp)
@@ -310,7 +465,12 @@ Sub SetSearch(varSearch As Object) As VMDataIterator
 End Sub
 
 'set selectable-key
-Sub SetSelectableKey(varSelectableKey As Object) As VMDataIterator
+Sub SetSelectableKey(varSelectableKey As String) As VMDataIterator
+	If varSelectableKey = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("selectable-key", varSelectableKey)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}SelectableKey"$
 	vue.SetStateSingle(pp, varSelectableKey)
 	DataIterator.Bind(":selectable-key", pp)
@@ -318,23 +478,25 @@ Sub SetSelectableKey(varSelectableKey As Object) As VMDataIterator
 End Sub
 
 'set server-items-length
-Sub SetServerItemsLength(varServerItemsLength As Object) As VMDataIterator
+Sub SetServerItemsLength(varServerItemsLength As String) As VMDataIterator
+	If varServerItemsLength = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("server-items-length", varServerItemsLength)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ServerItemsLength"$
 	vue.SetStateSingle(pp, varServerItemsLength)
 	DataIterator.Bind(":server-items-length", pp)
 	Return Me
 End Sub
 
-'set single-expand
-Sub SetSingleExpand(varSingleExpand As Object) As VMDataIterator
-	Dim pp As String = $"${ID}SingleExpand"$
-	vue.SetStateSingle(pp, varSingleExpand)
-	DataIterator.Bind(":single-expand", pp)
-	Return Me
-End Sub
-
 'set sort-by
-Sub SetSortBy(varSortBy As Object) As VMDataIterator
+Sub SetSortBy(varSortBy As String) As VMDataIterator
+	If varSortBy = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("sort-by", varSortBy)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}SortBy"$
 	vue.SetStateSingle(pp, varSortBy)
 	DataIterator.Bind(":sort-by", pp)
@@ -342,7 +504,12 @@ Sub SetSortBy(varSortBy As Object) As VMDataIterator
 End Sub
 
 'set sort-desc
-Sub SetSortDesc(varSortDesc As Object) As VMDataIterator
+Sub SetSortDesc(varSortDesc As String) As VMDataIterator
+	If varSortDesc = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("sort-desc", varSortDesc)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}SortDesc"$
 	vue.SetStateSingle(pp, varSortDesc)
 	DataIterator.Bind(":sort-desc", pp)
@@ -350,7 +517,7 @@ Sub SetSortDesc(varSortDesc As Object) As VMDataIterator
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMDataIterator
+Sub SetValue(varValue As String) As VMDataIterator
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
@@ -374,25 +541,25 @@ Sub SetSlotHeader(b As Boolean) As VMDataIterator    'ignore
 End Sub
 
 '
-Sub SetSlotItem(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotItem(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "item"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotLoading(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotLoading(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "loading"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotNoData(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotNoData(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "no-data"))
 	Return Me
 End Sub
 
 '
-Sub SetSlotNoResults(b As boolean) As VMDataIterator    'ignore
+Sub SetSlotNoResults(b As Boolean) As VMDataIterator    'ignore
 	SetAttr(CreateMap("slot": "no-results"))
 	Return Me
 End Sub
@@ -400,9 +567,9 @@ End Sub
 '
 Sub SetOnCurrentItems(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:current-items": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -412,9 +579,9 @@ End Sub
 '
 Sub SetOnInput(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -424,9 +591,9 @@ End Sub
 '
 Sub SetOnItemExpanded(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:item-expanded": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -436,9 +603,9 @@ End Sub
 '
 Sub SetOnItemSelected(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:item-selected": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -448,9 +615,9 @@ End Sub
 '
 Sub SetOnPageCount(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:page-count": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -460,9 +627,9 @@ End Sub
 '
 Sub SetOnPagination(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:pagination": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -472,9 +639,9 @@ End Sub
 '
 Sub SetOnToggleSelectAll(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:toggle-select-all": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -484,9 +651,9 @@ End Sub
 '
 Sub SetOnUpdateExpanded(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:expanded": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -496,9 +663,9 @@ End Sub
 '
 Sub SetOnUpdateGroupBy(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:group-by": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -508,9 +675,9 @@ End Sub
 '
 Sub SetOnUpdateGroupDesc(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:group-desc": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -520,9 +687,9 @@ End Sub
 '
 Sub SetOnUpdateItemsPerPage(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:items-per-page": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -532,9 +699,9 @@ End Sub
 '
 Sub SetOnUpdateMultiSort(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:multi-sort": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -544,9 +711,9 @@ End Sub
 '
 Sub SetOnUpdateOptions(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:options": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -556,9 +723,9 @@ End Sub
 '
 Sub SetOnUpdatePage(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:page": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -568,9 +735,9 @@ End Sub
 '
 Sub SetOnUpdateSortBy(methodName As String) As VMDataIterator
 	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
+	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
 	SetAttr(CreateMap("v-on:update:sort-by": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -639,15 +806,6 @@ Sub UseTheme(themeName As String) As VMDataIterator
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMDataIterator
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	DataIterator.Bind(":color", pp)
-	Return Me
-End Sub
 
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMDataIterator
@@ -726,21 +884,6 @@ Sub SetAttributes(attrs As List) As VMDataIterator
 	Return Me
 End Sub
 
-'set for
-Sub SetVFor(item As String, dataSource As String) As VMDataIterator
-	dataSource = dataSource.tolowercase
-	item = item.tolowercase
-	Dim sline As String = $"${item} in ${dataSource}"$
-	SetAttrSingle("v-for", sline)
-	Return Me
-End Sub
-
-Sub SetKey(k As String) As VMDataIterator
-	k = k.tolowercase
-	SetAttrSingle(":key", k)
-	Return Me
-End Sub
-
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMDataIterator
 	DataIterator.SetRC(sRow, sCol)
@@ -773,12 +916,6 @@ Sub AddComponent(comp As String) As VMDataIterator
 	Return Me
 End Sub
 
-
-Sub SetTextCenter As VMDataIterator
-	DataIterator.AddClass("text-center")
-	Return Me
-End Sub
-
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
@@ -787,23 +924,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 DataIterator.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMDataIterator
 DataIterator.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMDataIterator
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMDataIterator
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

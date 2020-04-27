@@ -61,9 +61,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	inner.Initialize(v, $"${ID}inner"$).SetTag("div").AddClass("inner")
 	'
 	frme.Initialize(v, $"${ID}frme"$).SetTag("iframe")
-	frme.SetStyleSingle("width", "100%")
-	frme.SetStyleSingle("border", "none")
-	frme.SetStyleSingle("height", "100%")
+	frme.SetStyleSingle("width", "100% !important")
+	frme.SetStyleSingle("max-width", "100% !important")
+	frme.SetStyleSingle("border", "none !important")
+	frme.SetStyleSingle("height", "100% !important")
+	frme.SetStyleSingle("max-height", "100% !important")
+	frme.SetStyleSingle("overflow-y", "auto !important")
+	frme.SetStyleSingle("overflow-x", "hidden !important")
+	frme.SetStyleSingle("float", "left !important")
 	module = eventHandler
 	DesignMode = False
 	deviceNum = 0
@@ -71,7 +76,9 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	hasFrame = False
 	Device.SetVShow($"${ID}show"$)
 	static.Initialize(vue, $"${ID}static"$, module)
-	static.SetStyleSingle("width", "98% !important")
+	static.SetStyleSingle("width", "100% !important")
+	static.SetStyleSingle("max-width", "100% !important")
+	static.SetStyleSingle("height", "100% !important")
 	static.SetStyleSingle("max-height", "100% !important")
 	static.SetStyleSingle("overflow-y", "auto !important")
 	static.SetStyleSingle("overflow-x", "hidden !important")
@@ -81,6 +88,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub AddDynamicClass(className As String) As VMDevice
+	Device.AddDynamicClass(className)
+	Return Me
+End Sub
 
 'the image should be centered on the RC
 Sub SetCenterOnParent(b As Boolean) As VMDevice
@@ -371,58 +382,58 @@ Sub SetContent(dynaContent As String)
 End Sub
 
 Sub SetIphoneX As VMDevice
-	Device.AddClass("marvel-device iphone-x")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("iphone-x")
 	deviceNum = 3
 	Return Me
 End Sub
 
 Sub SetIpad As VMDevice
-	Device.AddClass("marvel-device ipad silver")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("ipad silver")
 	deviceNum = 2
 	Return Me
 End Sub
 
 Sub SetMacBook As VMDevice
-	Device.AddClass("marvel-device macbook")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("macbook")
 	deviceNum = 1
 	Return Me
 End Sub
 
 Sub SetNote8 As VMDevice
-	Device.AddClass("marvel-device note8")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("note8")
 	deviceNum = 4
 	Return Me
 End Sub
 
 Sub SetS5White As VMDevice
-	Device.AddClass("marvel-device s5 white")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("s5").AddDynamicClass("white")
 	deviceNum = 6
 	Return Me
 End Sub
 
 
 Sub SetIPhone4S As VMDevice
-	Device.AddClass("marvel-device iphone4s silver")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("iphone4s").AddDynamicClass("silver")
 	deviceNum = 8
 	Return Me
 End Sub
 
 
 Sub SetIPhone5S As VMDevice
-	Device.AddClass("marvel-device iphone5s gold")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("iphone5s").AddDynamicClass("gold")
 	deviceNum = 9
 	Return Me
 End Sub
 
 
 Sub SetNexus5 As VMDevice
-	Device.AddClass("marvel-device nexus5")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("nexus5")
 	deviceNum = 7
 	Return Me
 End Sub
 
 Sub SetIPhone8 As VMDevice
-	Device.AddClass("marvel-device iphone8 gold")
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("iphone8").AddDynamicClass("gold")
 	deviceNum = 5
 	Return Me
 End Sub
@@ -434,8 +445,12 @@ Sub SetDesignMode(b As Boolean) As VMDevice
 	Return Me
 End Sub
 
-Sub SetLandScape As VMDevice
-	Device.AddClass("landscape")
+Sub SetLandScape(b As Boolean) As VMDevice
+	If b Then
+		Device.AddDynamicClass("landscape")
+	Else
+		Device.RemoveDynamicClass("landscape")
+	End If	
 	Return Me
 End Sub
 

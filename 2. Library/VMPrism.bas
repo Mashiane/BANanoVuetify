@@ -13,6 +13,7 @@ Private BANano As BANano  'ignore
 Private DesignMode As Boolean
 Private Module As Object
 Private codeKey As String
+Private Card As VMCard
 End Sub
 
 'initialize the PrismComponent
@@ -26,12 +27,26 @@ ID = sid.tolowercase
 	codeKey =  $"${ID}code"$
 	vue.SetStateSingle(codeKey, "")
 	Bind(":code", codeKey)
+	Card.Initialize(vue, $"${ID}card"$, Module) 
+	Card.ToolBar.AddTitle("Source Code", "")
 	Return Me
+End Sub
+
+Sub SetTitle(sTitle As String)
+	Card.ToolBar.UpdateTitle(sTitle)
 End Sub
 
 'get component
 Sub ToString As String
-	Return PrismComponent.ToString
+	Card.ToolBar.SetDense(True)
+	Card.ToolBar.SetFlat(True)
+	Card.ToolBar.AddSpacer
+	Card.ToolBar.AddIcon($"${ID}copy"$, "mdi-content-copy", "Copy content", "")
+	Card.Actions.SetVisible(False)
+	Card.Container.SetTag("div")
+	Card.Container.AddControlS(PrismComponent, PrismComponent.ToString,1,1,12,12,12,12)  
+	'Return PrismComponent.ToString
+	Return Card.ToString
 End Sub
 
 Sub SetVIf(vif As Object) As VMPrism

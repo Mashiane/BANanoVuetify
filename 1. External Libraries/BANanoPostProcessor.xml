@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <root>
   <doclet-version-NOT-library-version>1.00</doclet-version-NOT-library-version>
-  <b4x_version>8.08</b4x_version>
+  <b4x_version>8.10</b4x_version>
   <dependsOn>jcore</dependsOn>
   <dependsOn>jshell</dependsOn>
   <dependsOn>jsd_ziplibray</dependsOn>
@@ -123,6 +123,20 @@
       </parameter>
     </method>
     <method>
+      <name DesignerName="OpenOnPort">_openonport</name>
+      <comment>open the app on browser
+</comment>
+      <returntype>String</returntype>
+      <parameter>
+        <name>bLocalHost</name>
+        <type>boolean</type>
+      </parameter>
+      <parameter>
+        <name>port</name>
+        <type>String</type>
+      </parameter>
+    </method>
+    <method>
       <name DesignerName="RedirectOutput">_redirectoutput</name>
       <returntype>String</returntype>
       <parameter>
@@ -231,5 +245,5 @@
       <returntype>boolean</returntype>
     </field>
   </class>
-  <version>0.03</version>
+  <version>0.04</version>
 </root>

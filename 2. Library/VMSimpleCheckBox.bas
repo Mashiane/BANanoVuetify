@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the SimpleCheckBox
@@ -22,8 +23,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
 	Return Me
 End Sub
+
+
+Sub SetStatic(b As Boolean) As VMSimpleCheckBox
+	bStatic = b
+	SimpleCheckBox.SetStatic(b)
+	Return Me
+End Sub
+
 
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMSimpleCheckBox
@@ -131,7 +141,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMSimpleCheckBox
+Sub SetColor(varColor As String) As VMSimpleCheckBox
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	SimpleCheckBox.Bind(":color", pp)
@@ -139,7 +154,12 @@ Sub SetColor(varColor As Object) As VMSimpleCheckBox
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMSimpleCheckBox
+Sub SetDark(varDark As Boolean) As VMSimpleCheckBox
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	SimpleCheckBox.Bind(":dark", pp)
@@ -153,7 +173,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMSimpleCheckBox
 End Sub
 
 'set indeterminate
-Sub SetIndeterminate(varIndeterminate As Object) As VMSimpleCheckBox
+Sub SetIndeterminate(varIndeterminate As Boolean) As VMSimpleCheckBox
+	If varIndeterminate = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("indeterminate", varIndeterminate)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Indeterminate"$
 	vue.SetStateSingle(pp, varIndeterminate)
 	SimpleCheckBox.Bind(":indeterminate", pp)
@@ -161,7 +186,12 @@ Sub SetIndeterminate(varIndeterminate As Object) As VMSimpleCheckBox
 End Sub
 
 'set indeterminate-icon
-Sub SetIndeterminateIcon(varIndeterminateIcon As Object) As VMSimpleCheckBox
+Sub SetIndeterminateIcon(varIndeterminateIcon As String) As VMSimpleCheckBox
+	If varIndeterminateIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("indeterminate-icon", varIndeterminateIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IndeterminateIcon"$
 	vue.SetStateSingle(pp, varIndeterminateIcon)
 	SimpleCheckBox.Bind(":indeterminate-icon", pp)
@@ -169,7 +199,12 @@ Sub SetIndeterminateIcon(varIndeterminateIcon As Object) As VMSimpleCheckBox
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMSimpleCheckBox
+Sub SetLight(varLight As Boolean) As VMSimpleCheckBox
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	SimpleCheckBox.Bind(":light", pp)
@@ -177,7 +212,12 @@ Sub SetLight(varLight As Object) As VMSimpleCheckBox
 End Sub
 
 'set off-icon
-Sub SetOffIcon(varOffIcon As Object) As VMSimpleCheckBox
+Sub SetOffIcon(varOffIcon As String) As VMSimpleCheckBox
+	If varOffIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("off-icon", varOffIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}OffIcon"$
 	vue.SetStateSingle(pp, varOffIcon)
 	SimpleCheckBox.Bind(":off-icon", pp)
@@ -185,7 +225,12 @@ Sub SetOffIcon(varOffIcon As Object) As VMSimpleCheckBox
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMSimpleCheckBox
+Sub SetRipple(varRipple As Boolean) As VMSimpleCheckBox
+	If varRipple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	SimpleCheckBox.Bind(":ripple", pp)
@@ -193,7 +238,7 @@ Sub SetRipple(varRipple As Object) As VMSimpleCheckBox
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMSimpleCheckBox
+Sub SetValue(varValue As Boolean) As VMSimpleCheckBox
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub

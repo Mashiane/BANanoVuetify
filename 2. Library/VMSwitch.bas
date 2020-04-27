@@ -273,7 +273,7 @@ Sub SetFlat(varFlat As Object) As VMSwitch
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As boolean) As VMSwitch
+Sub SetHideDetails(varHideDetails As Boolean) As VMSwitch
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	SwitchBox.Bind(":hide-details", pp)

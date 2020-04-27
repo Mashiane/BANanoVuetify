@@ -161,25 +161,25 @@ End Sub
 
 'hide the component
 Sub Hide As VMTimeline
-	Timeline.SetVisible(False)
+	TimeLine.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMTimeline
-	Timeline.SetVisible(True)
+	TimeLine.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMTimeline
-	Timeline.Enable(True)
+	TimeLine.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMTimeline
-	Timeline.Disable(True)
+	TimeLine.Disable(True)
 	Return Me
 End Sub
 
@@ -307,11 +307,11 @@ Sub SetKey(k As String) As VMTimeline
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTimeline
-Timeline.BuildModel(mprops, mstyles, lclasses, loose)
+TimeLine.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
 Sub SetVisible(b As Boolean) As VMTimeline
-Timeline.SetVisible(b)
+TimeLine.SetVisible(b)
 Return Me
 End Sub
 

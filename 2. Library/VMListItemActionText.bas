@@ -37,12 +37,10 @@ End Sub
 Sub AddIcon(key As String, iconName As String) As VMListItemActionText
 	key = key.tolowercase
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module)
-	btn.SetStatic(bStatic)
+	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 	btn.SetAttributes(Array("icon"))
 	Dim icon As VMIcon
-	icon.Initialize(vue, $"${key}icon"$, Module)
-	icon.SetStatic(bStatic)
+	icon.Initialize(vue, $"${key}icon"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 	icon.SetVText(iconName)
 	btn.AddComponent(icon.ToString)
 	btn.Pop(ListItemActionText)

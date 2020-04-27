@@ -108,6 +108,7 @@ Sub AddDivider(bVertical As Boolean, mprops As Map, mstyles As Map, lclasses As 
 	If bVertical Then d.SetVertical
 	d.BuildModel(mprops, mstyles, lclasses, loose)
 	AddComponent(skey, d.ToString)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -126,12 +127,14 @@ Sub AddSubHeading(sText As String, mprops As Map, mstyles As Map, lclasses As Li
 	d.BuildModel(mprops, mstyles, lclasses, loose)
 	AddComponent(skey, d.ToString)
 	vue.SetData(skey, sText)
+	HasContent = True
 	Return Me
 End Sub
 
 Sub UpdateSubTitle(sText As String) As VMToolBar
 	Dim skey As String = $"${ID}subheading"$
 	vue.SetData(skey, sText)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -193,12 +196,14 @@ End Sub
 public Sub AddLogo(url As String) As VMToolBar
 	Logo.SetVisible(True)
 	Logo.SetVModel("logo", url).Pop(ToolBar)
+	HasContent = True
 	Return Me
 End Sub
 
 Sub UpdateLogo(URL As String) As VMToolBar
 	vue.SetData("logo", URL)
 	Logo.Show
+	HasContent = True
 	Return Me
 End Sub
 
@@ -229,8 +234,32 @@ End Sub
 
 Sub AddSpacer As VMToolBar
 	ToolBar.AddSpacer
+	HasContent = True
 	Return Me
 End Sub
+
+Sub AddSwitch(sid As String, vmodel As String, vlabel As String) As VMToolBar
+	sid = sid.tolowercase
+	Dim el As VMCheckBox
+	el.Initialize(vue, sid, module)
+	el.SetStatic(bStatic)
+	el.SetDesignMode(DesignMode)
+	el.SetSwitch
+	el.SetInset(True)
+	el.SetFalseValue("No")
+	el.SetTrueValue("Yes")
+	el.SetVModel(vmodel)
+	el.Setlabel(vlabel)
+	el.SetHideDetails(True)
+	vue.SetData(vmodel, "No")
+	el.SetOnChange(module, $"${sid}_change"$)
+	el.show
+	el.AddClass("mx-2")
+	ToolBar.SetText(el.ToString)
+	HasContent = True
+	Return Me
+End Sub
+
 
 Sub AddSearch(key As String) As VMToolBar
 	Dim txt As VMTextField
@@ -240,11 +269,13 @@ Sub AddSearch(key As String) As VMToolBar
 	txt.AddClass("mx-4").SetAttributes(Array("flat", "hide-details","solo-inverted"))
 	txt.SetLabel("Search").SetPrependInnerIcon("search").AddClass("hidden-sm-and-down").SetClearable(True).SetVModel(key)
 	ToolBar.SetText(txt.ToString)
+	HasContent = True
 	Return Me
 End Sub
 
 Sub AddMenu(menu As VMMenu) As VMToolBar
 	menu.Pop(ToolBar)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -264,8 +295,24 @@ Sub AddIcon(key As String, iconName As String, toolTip As String, badge As Strin
 	btn.SetIconButton(iconName).SetTooltip(toolTip)
 	btn.Pop(ToolBar)
 	objects.Add(key)
+	HasContent = True
 	Return Me
 End Sub
+
+Sub AddIcon1(key As String, iconName As String, iconColor As String, toolTip As String, badge As String) As VMToolBar
+	key = key.tolowercase
+	Dim btn As VMButton
+	btn.Initialize(vue, key, module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetColor(iconColor)
+	btn.SetIconButton(iconName).SetTooltip(toolTip)
+	btn.Pop(ToolBar)
+	objects.Add(key)
+	HasContent = True
+	Return Me
+End Sub
+
 
 Sub SetModeFixed(b As Boolean) As VMToolBar
 	ToolBar.SetAttrSingle("fixed", b)
@@ -283,18 +330,21 @@ Sub AddTitle(tt As String, ttClass As String) As VMToolBar
 		Title.SetText(page_title)
 	End If
 	Title.Pop(ToolBar)
+	HasContent = True
 	Return Me
 End Sub
 
 Sub UpdateTitle(tt As String) As VMToolBar
 	Dim pp As String = $"${ID}title"$
 	vue.SetStateSingle(pp, tt)
+	HasContent = True
 	Return Me
 End Sub
 
 'has menu button to show drawer
 Sub SetHasMenuButton(b As Boolean) As VMToolBar
 	vue.SetStateSingle("menushow", b)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -387,6 +437,7 @@ End Sub
 'the stepLabelVModel is the vmodel to have the caption
 Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
 	Tabs.AddTab(tabID, tabLabel, tabIcon, tabContent)
+	HasContent = True
 End Sub
 
 'set clipped-right
@@ -951,6 +1002,22 @@ Sub AddButton1(key As String, iconName As String, text As String, toolTip As Str
 	HasContent = True
 	Return Me
 End Sub
+
+Sub AddItem(key As String, iconName As String, color As String, text As String, toolTip As String, badge As String) As VMToolBar
+	Dim btn As VMButton
+	btn.Initialize(vue, key, module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetColor(color)
+	btn.SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
+	If badge <> "" Then
+		btn.Badge.SetContent(badge)
+	End If
+	btn.Pop(ToolBar)
+	HasContent = True
+	Return Me
+End Sub
+
 
 Sub SetVIf(vif As Object) As VMToolBar
 	ToolBar.SetVIf(vif)

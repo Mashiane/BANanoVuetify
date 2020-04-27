@@ -18,6 +18,8 @@ Sub Class_Globals
 	Public FinalIcon As VMIcon
 	Private items As List
 	Private bStatic As Boolean
+	Private hasInitial As Boolean
+	Private hasFinal As Boolean
 End Sub
 
 'initialize the SpeedDial
@@ -28,23 +30,31 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	Slot.Initialize(vue, "", Module).SetSlotActivator
-	Button.Initialize(vue, $"${ID}btn"$, Module).SetVModel(ID).SetFab(True).SetDark(True)
+	Slot.Initialize(vue, $"${ID}slot"$, Module)
+	Button.Initialize(vue, $"${ID}btn"$, Module).SetVModel(ID)
 	InitialIcon.Initialize(vue, $"${ID}initial"$, Module).SetAttrLoose("v-else")
 	FinalIcon.Initialize(vue,$"${ID}finalicon"$, Module).SetVIf(ID)
-	Hide
-	SetAbsolute(True)
-	SetRight(True)
-	SetBottom(True)
+	vue.SetData(ID, False)
 	items.Initialize
 	bStatic = False
+	hasInitial = False
+	hasFinal = False
 	Return Me
 End Sub
 
+'
+Sub SetOnClick(methodName As String) As VMSpeedDial
+	Button.SetOnClick(methodName)
+	Return Me
+End Sub
 
 Sub SetStatic(b As Boolean) As VMSpeedDial
 	bStatic = b
 	SpeedDial.SetStatic(b)
+	Slot.SetStatic(b)
+	Button.SetStatic(b)
+	InitialIcon.SetStatic(b)
+	FinalIcon.SetStatic(b)
 	Return Me
 End Sub
 
@@ -87,13 +97,11 @@ End Sub
 
 Sub AddItem(key As String, iconName As String, color As String) As VMSpeedDial
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module).SetFab(True).SetDark(True).SetSmall(True)
+	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetFab(True).SetDark(True).SetSmall(True)
 	btn.SetColor(color)
-	btn.SetDesignMode(DesignMode)
 	'
 	Dim icn As VMIcon
-	icn.Initialize(vue, $"${key}icon"$, Module).SetText(iconName)
-	icn.SetDesignMode(DesignMode)
+	icn.Initialize(vue, $"${key}icon"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(iconName)
 	btn.AddComponent(icn.ToString)
 	'
 	items.Add(btn.ToString)
@@ -101,13 +109,17 @@ Sub AddItem(key As String, iconName As String, color As String) As VMSpeedDial
 End Sub
 
 Sub SetInitialIcon(iconName As String) As VMSpeedDial
+	If iconName = "" Then Return Me
 	InitialIcon.SetText(iconName)
+	hasInitial = True
 	Return Me
 End Sub
 
 
 Sub SetFinalIcon(iconName As String) As VMSpeedDial
+	If iconName = "" Then Return Me
 	FinalIcon.SetText(iconName)
+	hasFinal = True
 	Return Me
 End Sub
 
@@ -123,18 +135,51 @@ Sub UseTheme(themeName As String) As VMSpeedDial
 End Sub
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSpeedDial
+Sub SetColorIntensity(color As String, intensity As String) As VMSpeedDial
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		Button.SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
-	SpeedDial.Bind(":color", pp)
+	Button.Bind(":color", pp)
+	Return Me
+End Sub
+
+'set dark
+Sub SetDark(varDark As Boolean) As VMSpeedDial
+	If varDark = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("dark", varDark)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dark"$
+	vue.SetStateSingle(pp, varDark)
+	Button.Bind(":dark", pp)
+	Return Me
+End Sub
+
+'set large
+Sub SetLarge(varLarge As Boolean) As VMSpeedDial
+	If varLarge = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("large", varLarge)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Large"$
+	vue.SetStateSingle(pp, varLarge)
+	Button.Bind(":large", pp)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-	FinalIcon.Pop(Button.Button)
-	InitialIcon.Pop(Button.Button)
+	Slot.SetSlotActivator
+	Button.SetFab(True)
+	If hasFinal Then FinalIcon.Pop(Button.Button)
+	If hasInitial Then InitialIcon.Pop(Button.Button)
 	Button.Pop(Slot.Template)
 	Slot.Pop(SpeedDial)
 	For Each item As String In items
@@ -207,7 +252,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set absolute
-Sub SetAbsolute(varAbsolute As Object) As VMSpeedDial
+Sub SetAbsolute(varAbsolute As Boolean) As VMSpeedDial
+	If varAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("absolute", varAbsolute)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Absolute"$
 	vue.SetStateSingle(pp, varAbsolute)
 	SpeedDial.Bind(":absolute", pp)
@@ -215,7 +265,12 @@ Sub SetAbsolute(varAbsolute As Object) As VMSpeedDial
 End Sub
 
 'set bottom
-Sub SetBottom(varBottom As Object) As VMSpeedDial
+Sub SetBottom(varBottom As Boolean) As VMSpeedDial
+	If varBottom = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("bottom", varBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bottom"$
 	vue.SetStateSingle(pp, varBottom)
 	SpeedDial.Bind(":bottom", pp)
@@ -223,23 +278,116 @@ Sub SetBottom(varBottom As Object) As VMSpeedDial
 End Sub
 
 'set direction
-Sub SetDirection(varDirection As Object) As VMSpeedDial
+Sub SetDirection(varDirection As String) As VMSpeedDial
+	If varDirection = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("direction", varDirection)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Direction"$
 	vue.SetStateSingle(pp, varDirection)
 	SpeedDial.Bind(":direction", pp)
 	Return Me
 End Sub
 
+'set small
+Sub SetSmall(varSmall As Boolean) As VMSpeedDial
+	If varSmall = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("small", varSmall)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Small"$
+	vue.SetStateSingle(pp, varSmall)
+	Button.Bind(":small", pp)
+	Return Me
+End Sub
+
+'set x-large
+Sub SetXLarge(varXLarge As Boolean) As VMSpeedDial
+	If varXLarge = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("x-large", varXLarge)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}XLarge"$
+	vue.SetStateSingle(pp, varXLarge)
+	Button.Bind(":x-large", pp)
+	Return Me
+End Sub
+
+'set x-small
+Sub SetXSmall(varXSmall As Boolean) As VMSpeedDial
+	If varXSmall = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("x-small", varXSmall)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}XSmall"$
+	vue.SetStateSingle(pp, varXSmall)
+	Button.Bind(":x-small", pp)
+	Return Me
+End Sub
+
+'set href
+Sub SetHref(varHref As String) As VMSpeedDial
+	If varHref = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("href", varHref)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Href"$
+	vue.SetStateSingle(pp, varHref)
+	Button.Bind(":href", pp)
+	Return Me
+End Sub
+
 'set fixed
-Sub SetFixed(varFixed As Object) As VMSpeedDial
+Sub SetFixed(varFixed As Boolean) As VMSpeedDial
+	If varFixed = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fixed", varFixed)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Fixed"$
 	vue.SetStateSingle(pp, varFixed)
 	SpeedDial.Bind(":fixed", pp)
 	Return Me
 End Sub
 
+'set target
+Sub SetTarget(varTarget As String) As VMSpeedDial
+	If varTarget = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("target", varTarget)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Target"$
+	vue.SetStateSingle(pp, varTarget)
+	Button.Bind(":target", pp)
+	Return Me
+End Sub
+
+'set to
+Sub SetTo(varTo As String) As VMSpeedDial
+	If varTo = "" Then Return Me
+	If bStatic Then
+		Button.SetAttrSingle("to", varTo)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}To"$
+	vue.SetStateSingle(pp, varTo)
+	Button.Bind(":to", pp)
+	Return Me
+End Sub
+
 'set left
-Sub SetLeft(varLeft As Object) As VMSpeedDial
+Sub SetLeft(varLeft As Boolean) As VMSpeedDial
+	If varLeft = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("left", varLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Left"$
 	vue.SetStateSingle(pp, varLeft)
 	SpeedDial.Bind(":left", pp)
@@ -247,7 +395,12 @@ Sub SetLeft(varLeft As Object) As VMSpeedDial
 End Sub
 
 'set mode
-Sub SetMode(varMode As Object) As VMSpeedDial
+Sub SetMode(varMode As String) As VMSpeedDial
+	If varMode = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("mode", varMode)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Mode"$
 	vue.SetStateSingle(pp, varMode)
 	SpeedDial.Bind(":mode", pp)
@@ -255,15 +408,25 @@ Sub SetMode(varMode As Object) As VMSpeedDial
 End Sub
 
 'set open-on-hove
-Sub SetOpenOnHove(varOpenOnHove As Object) As VMSpeedDial
-	Dim pp As String = $"${ID}OpenOnHove"$
-	vue.SetStateSingle(pp, varOpenOnHove)
-	SpeedDial.Bind(":open-on-hove", pp)
+Sub SetOpenOnHover(varOpenOnHover As Boolean) As VMSpeedDial
+	If varOpenOnHover = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("open-on-hover", varOpenOnHover)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}OpenOnHover"$
+	vue.SetStateSingle(pp, varOpenOnHover)
+	SpeedDial.Bind(":open-on-hover", pp)
 	Return Me
 End Sub
 
 'set origin
-Sub SetOrigin(varOrigin As Object) As VMSpeedDial
+Sub SetOrigin(varOrigin As String) As VMSpeedDial
+	If varOrigin = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("origin", varOrigin)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Origin"$
 	vue.SetStateSingle(pp, varOrigin)
 	SpeedDial.Bind(":origin", pp)
@@ -271,7 +434,12 @@ Sub SetOrigin(varOrigin As Object) As VMSpeedDial
 End Sub
 
 'set right
-Sub SetRight(varRight As Object) As VMSpeedDial
+Sub SetRight(varRight As Boolean) As VMSpeedDial
+	If varRight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", varRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Right"$
 	vue.SetStateSingle(pp, varRight)
 	SpeedDial.Bind(":right", pp)
@@ -279,7 +447,12 @@ Sub SetRight(varRight As Object) As VMSpeedDial
 End Sub
 
 'set top
-Sub SetTop(varTop As Object) As VMSpeedDial
+Sub SetTop(varTop As Boolean) As VMSpeedDial
+	If varTop = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("top", varTop)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Top"$
 	vue.SetStateSingle(pp, varTop)
 	SpeedDial.Bind(":top", pp)
@@ -287,7 +460,12 @@ Sub SetTop(varTop As Object) As VMSpeedDial
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMSpeedDial
+Sub SetTransition(varTransition As String) As VMSpeedDial
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Transition"$
 	vue.SetStateSingle(pp, varTransition)
 	SpeedDial.Bind(":transition", pp)
@@ -295,7 +473,7 @@ Sub SetTransition(varTransition As Object) As VMSpeedDial
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMSpeedDial
+Sub SetValue(varValue As String) As VMSpeedDial
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
@@ -355,6 +533,10 @@ End Sub
 Sub SetDesignMode(b As Boolean) As VMSpeedDial
 	SpeedDial.SetDesignMode(b)
 	DesignMode = b
+	Slot.SetDesignMode(b)
+	Button.SetDesignMode(b)
+	InitialIcon.SetDesignMode(b)
+	FinalIcon.SetDesignMode(b)
 	Return Me
 End Sub
 
@@ -380,6 +562,18 @@ Sub SetAttrSingle(prop As String, value As String) As VMSpeedDial
 	Return Me
 End Sub
 
+'make the button to be a floating action button
+Sub SetIcon(iconName As String) As VMSpeedDial
+	If iconName = "" Then Return Me
+	Dim icon As VMIcon
+	icon.Initialize(vue, $"${ID}icon"$, Module)
+	icon.SetStatic(bStatic)
+	icon.SetDesignMode(DesignMode)
+	icon.SetText(iconName)
+	Button.AddComponent(icon.ToString)
+	Return Me
+End Sub
+
 
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
@@ -389,23 +583,26 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 SpeedDial.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
-Sub SetVisible(b As Boolean) As VMSpeedDial
-SpeedDial.SetVisible(b)
-Return Me
-End Sub
 
-'set color intensity
-Sub SetTextColor(varColor As String) As VMSpeedDial
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+Sub SetVisible(b As Boolean) As VMSpeedDial
+	vue.SetData(ID, b)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSpeedDial
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColor(textcolor As String) As VMSpeedDial
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Button.AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textcolorintensity As String) As VMSpeedDial
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textcolorintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+	Button.AddClass(mcolor)
 	Return Me
 End Sub

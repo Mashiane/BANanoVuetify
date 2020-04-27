@@ -10,9 +10,9 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Public vmodel As String
-	Private orig As String
 	Private DesignMode As Boolean
 	Private bStatic As Boolean
+	Private BANano As BANano
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
@@ -21,7 +21,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Label.Initialize(vue, ID).SetTag("label")
 	vmodel = ""
 	Label.typeOf = "label"
-	orig = ""
 	DesignMode = False
 	bStatic = False
 	Return Me
@@ -34,7 +33,7 @@ Sub SetStatic(b As Boolean) As VMLabel
 End Sub
 
 Sub SetVModel(svmodel As String, value As String) As VMLabel
-	orig = value
+	value = BANano.SF(value)
 	svmodel = svmodel.tolowercase
 	If bStatic Then
 		SetText(value)
@@ -205,6 +204,7 @@ Sub SetStyle(sm As Map) As VMLabel
 End Sub
 
 Sub SetText(t As String) As VMLabel
+	t = BANano.SF(t)
 	Label.SetText(t)
 	Return Me
 End Sub
@@ -385,10 +385,6 @@ End Sub
 'End Sub
 
 Sub ToString As String
-	If DesignMode Then
-		Label.clear
-		SetText(orig)	
-	End If
 	Return Label.tostring
 End Sub
 
@@ -472,12 +468,13 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMLabel
-Label.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Label.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMLabel
-Label.SetVisible(b)
-Return Me
+	Label.SetVisible(b)
+	Return Me
 End Sub
 
 'set color intensity

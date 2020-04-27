@@ -275,12 +275,12 @@ Sub SetVModel(k As String, value As String) As VMImage
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMImage
+Sub SetVIf(vif As String) As VMImage
 	Image.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMImage
+Sub SetVShow(vif As string) As VMImage
 	Image.SetVShow(vif)
 	Return Me
 End Sub
@@ -652,7 +652,7 @@ Sub SetTabIndex(ti As String) As VMImage
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMImage
+Sub SetName(varName As string, bbind As Boolean) As VMImage
 	Image.SetName(varName, bbind)
 	Return Me
 End Sub

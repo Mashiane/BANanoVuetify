@@ -80,6 +80,8 @@ Sub Class_Globals
 	Public Value As Object
 	Private bStatic As Boolean
 	Public CenterOnParent As Boolean
+	Private classList As List
+	Private classKey As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -90,6 +92,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	End If
 	
 	Element.Initialize(ID,"div")
+	classList.Initialize 
 	vue = v
 	MT = ""
 	MB = ""
@@ -116,6 +119,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	reqKey = $"${ID}required"$
 	errKey = $"${ID}error"$
 	styleKey = $"${ID}style"$
+	classKey = $"${ID}class"$
 	
 	If ID <> "" Then
 		Dim SMp As Map = CreateMap()
@@ -125,9 +129,9 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 		vue.SetStateSingle(reqKey, False)
 		vue.SetStateSingle(errKey, False)
 		vue.SetStateSingle(styleKey, SMp)
+		vue.SetData(classKey, classList)
 	End If
 	'	
-	
 	DesignMode = False
 	opt.Initialize 
 	data.Initialize
@@ -725,7 +729,6 @@ End Sub
 Sub SetTemplate(tmp As String) As VMElement
 	Element.Clear
 	SetText(tmp)
-	hasContent = True
 	Return Me
 End Sub
 
@@ -825,6 +828,28 @@ Sub AddClass(className As String) As VMElement
 	Return Me
 End Sub
 
+'add a class
+Sub AddDynamicClass(className As String) As VMElement
+	classList = vue.GetData(classKey)
+	Dim cpos As Int = classList.IndexOf(className)
+	cpos = BANano.parseInt(cpos)
+	If cpos = -1 Then classList.Add(className)
+	vue.SetData(classKey, classList)
+	hasContent = True
+	Return Me
+End Sub
+
+Sub RemoveDynamicClass(className As String) As VMElement
+	classList = vue.GetData(classKey)
+	Dim cpos As Int = classList.IndexOf(className)
+	cpos = BANano.parseInt(cpos)
+	If cpos <> -1 Then classList.RemoveAt(cpos)
+	vue.SetData(classKey, classList)
+	hasContent = True
+	Return Me
+End Sub
+
+
 'render the element to parent element
 Sub Render1(parent As String)
 	BANano.GetElement(parent).Append(ToString)
@@ -850,7 +875,6 @@ End Sub
 Sub AddChild(child As VMElement) As VMElement
 	Dim childHTML As String = child.ToString
 	SetText(childHTML)
-	hasContent = True
 	Return Me
 End Sub
 
@@ -1098,8 +1122,11 @@ Sub ToString As String
 		RemoveAttr(":disabled")
 	End If
 	If bUsesShow = False Then
-		vue.RemoveData(showKey)
-		
+		vue.RemoveData(showKey)		
+	End If
+	If classList.Size > 0 Then
+		vue.SetData(classKey, classList)
+		SetAttrSingle(":class", classKey)
 	End If
 	If DesignMode Then
 		RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))

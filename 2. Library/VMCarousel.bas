@@ -13,6 +13,8 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Public Item As VMCarouselItem
+	Private bStatic As Boolean
+	Private items As List
 End Sub
 
 'initialize the Carousel
@@ -24,6 +26,26 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Item.Initialize(vue, "",Module)
+	bStatic = False
+	items.Initialize 
+	Return Me
+End Sub
+
+'add a static carousel item
+Sub AddItem1(src As String) As VMCarousel
+	Dim ci As VMCarouselItem
+	ci.Initialize(vue, "", Me)
+	ci.SetStatic(bStatic)
+	ci.SetDesignMode(DesignMode)
+	ci.SetSRC(src)
+	items.Add(ci.ToString) 
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMCarousel
+	bStatic = b
+	Carousel.SetStatic(b)
+	Item.setstatic(b)
 	Return Me
 End Sub
 
@@ -34,7 +56,13 @@ End Sub
 
 'get component
 Sub ToString As String
-	AddComponent(Item.ToString)
+	If items.Size > 0 Then
+		For Each s As String In items
+			AddComponent(s)
+		Next
+	Else
+		AddComponent(Item.ToString)
+	End If
 	Return Carousel.ToString
 End Sub
 
@@ -66,7 +94,7 @@ Sub AddChild(child As VMElement) As VMCarousel
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMCarousel
+Sub SetText(t As String) As VMCarousel
 	Carousel.SetText(t)
 	Return Me
 End Sub
@@ -102,7 +130,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMCarousel
+Sub SetActiveClass(varActiveClass As String) As VMCarousel
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	Carousel.Bind(":active-class", pp)
@@ -110,7 +143,12 @@ Sub SetActiveClass(varActiveClass As Object) As VMCarousel
 End Sub
 
 'set continuous
-Sub SetContinuous(varContinuous As Object) As VMCarousel
+Sub SetContinuous(varContinuous As Boolean) As VMCarousel
+	If varContinuous Then Return Me
+	If bStatic Then
+		SetAttrSingle("continuous", varContinuous)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Continuous"$
 	vue.SetStateSingle(pp, varContinuous)
 	Carousel.Bind(":continuous", pp)
@@ -118,7 +156,12 @@ Sub SetContinuous(varContinuous As Object) As VMCarousel
 End Sub
 
 'set cycle
-Sub SetCycle(varCycle As Object) As VMCarousel
+Sub SetCycle(varCycle As Boolean) As VMCarousel
+	If varCycle = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("cycle", varCycle)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Cycle"$
 	vue.SetStateSingle(pp, varCycle)
 	Carousel.Bind(":cycle", pp)
@@ -126,7 +169,12 @@ Sub SetCycle(varCycle As Object) As VMCarousel
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMCarousel
+Sub SetDark(varDark As Boolean) As VMCarousel
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Carousel.Bind(":dark", pp)
@@ -134,7 +182,12 @@ Sub SetDark(varDark As Object) As VMCarousel
 End Sub
 
 'set delimiter-icon
-Sub SetDelimiterIcon(varDelimiterIcon As Object) As VMCarousel
+Sub SetDelimiterIcon(varDelimiterIcon As String) As VMCarousel
+	If varDelimiterIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("delimiter-icon", varDelimiterIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}DelimiterIcon"$
 	vue.SetStateSingle(pp, varDelimiterIcon)
 	Carousel.Bind(":delimiter-icon", pp)
@@ -142,7 +195,12 @@ Sub SetDelimiterIcon(varDelimiterIcon As Object) As VMCarousel
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMCarousel
+Sub SetHeight(varHeight As String) As VMCarousel
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Carousel.Bind(":height", pp)
@@ -150,7 +208,12 @@ Sub SetHeight(varHeight As Object) As VMCarousel
 End Sub
 
 'set hide-delimiter-background
-Sub SetHideDelimiterBackground(varHideDelimiterBackground As Object) As VMCarousel
+Sub SetHideDelimiterBackground(varHideDelimiterBackground As Boolean) As VMCarousel
+	If varHideDelimiterBackground = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-delimiter-background", varHideDelimiterBackground)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideDelimiterBackground"$
 	vue.SetStateSingle(pp, varHideDelimiterBackground)
 	Carousel.Bind(":hide-delimiter-background", pp)
@@ -158,7 +221,12 @@ Sub SetHideDelimiterBackground(varHideDelimiterBackground As Object) As VMCarous
 End Sub
 
 'set hide-delimiters
-Sub SetHideDelimiters(varHideDelimiters As Object) As VMCarousel
+Sub SetHideDelimiters(varHideDelimiters As Boolean) As VMCarousel
+	If varHideDelimiters = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-delimiters", varHideDelimiters)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideDelimiters"$
 	vue.SetStateSingle(pp, varHideDelimiters)
 	Carousel.Bind(":hide-delimiters", pp)
@@ -166,7 +234,12 @@ Sub SetHideDelimiters(varHideDelimiters As Object) As VMCarousel
 End Sub
 
 'set interval
-Sub SetInterval(varInterval As Object) As VMCarousel
+Sub SetInterval(varInterval As String) As VMCarousel
+	If varInterval = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval", varInterval)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Interval"$
 	vue.SetStateSingle(pp, varInterval)
 	Carousel.Bind(":interval", pp)
@@ -174,7 +247,12 @@ Sub SetInterval(varInterval As Object) As VMCarousel
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMCarousel
+Sub SetLight(varLight As Boolean) As VMCarousel
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Carousel.Bind(":light", pp)
@@ -182,7 +260,12 @@ Sub SetLight(varLight As Object) As VMCarousel
 End Sub
 
 'set mandatory
-Sub SetMandatory(varMandatory As Object) As VMCarousel
+Sub SetMandatory(varMandatory As Boolean) As VMCarousel
+	If varMandatory Then Return Me
+	If bStatic Then
+		SetAttrSingle("mandatory", varMandatory)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Mandatory"$
 	vue.SetStateSingle(pp, varMandatory)
 	Carousel.Bind(":mandatory", pp)
@@ -190,7 +273,12 @@ Sub SetMandatory(varMandatory As Object) As VMCarousel
 End Sub
 
 'set max
-Sub SetMax(varMax As Object) As VMCarousel
+Sub SetMax(varMax As String) As VMCarousel
+	If varMax = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max", varMax)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Max"$
 	vue.SetStateSingle(pp, varMax)
 	Carousel.Bind(":max", pp)
@@ -198,7 +286,12 @@ Sub SetMax(varMax As Object) As VMCarousel
 End Sub
 
 'set multiple
-Sub SetMultiple(varMultiple As Object) As VMCarousel
+Sub SetMultiple(varMultiple As Boolean) As VMCarousel
+	If varMultiple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("multiple", varMultiple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Multiple"$
 	vue.SetStateSingle(pp, varMultiple)
 	Carousel.Bind(":multiple", pp)
@@ -206,7 +299,12 @@ Sub SetMultiple(varMultiple As Object) As VMCarousel
 End Sub
 
 'set next-icon
-Sub SetNextIcon(varNextIcon As Object) As VMCarousel
+Sub SetNextIcon(varNextIcon As Boolean) As VMCarousel
+	If varNextIcon = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("next-icon", varNextIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NextIcon"$
 	vue.SetStateSingle(pp, varNextIcon)
 	Carousel.Bind(":next-icon", pp)
@@ -214,7 +312,12 @@ Sub SetNextIcon(varNextIcon As Object) As VMCarousel
 End Sub
 
 'set prev-icon
-Sub SetPrevIcon(varPrevIcon As Object) As VMCarousel
+Sub SetPrevIcon(varPrevIcon As Boolean) As VMCarousel
+	If varPrevIcon  = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("prev-icon", varPrevIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PrevIcon"$
 	vue.SetStateSingle(pp, varPrevIcon)
 	Carousel.Bind(":prev-icon", pp)
@@ -222,7 +325,12 @@ Sub SetPrevIcon(varPrevIcon As Object) As VMCarousel
 End Sub
 
 'set progress
-Sub SetProgress(varProgress As Object) As VMCarousel
+Sub SetProgress(varProgress As Boolean) As VMCarousel
+	If varProgress = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("progress", varProgress)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Progress"$
 	vue.SetStateSingle(pp, varProgress)
 	Carousel.Bind(":progress", pp)
@@ -230,15 +338,39 @@ Sub SetProgress(varProgress As Object) As VMCarousel
 End Sub
 
 'set progress-color
-Sub SetProgressColor(varProgressColor As Object) As VMCarousel
+Sub SetProgressColor(varProgressColor As String) As VMCarousel
+	If varProgressColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("progress-color", varProgressColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ProgressColor"$
 	vue.SetStateSingle(pp, varProgressColor)
 	Carousel.Bind(":progress-color", pp)
 	Return Me
 End Sub
 
+'set progress color intensity
+Sub SetProgressColorIntensity(varColor As String, varIntensity As String) As VMCarousel
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("progress-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ProgressColor"$
+	vue.SetStateSingle(pp, scolor)
+	Carousel.Bind(":progress-color", pp)
+	Return Me
+End Sub
+
 'set reverse
-Sub SetReverse(varReverse As Object) As VMCarousel
+Sub SetReverse(varReverse As Boolean) As VMCarousel
+	If varReverse = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("reverse", varReverse)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Reverse"$
 	vue.SetStateSingle(pp, varReverse)
 	Carousel.Bind(":reverse", pp)
@@ -246,7 +378,12 @@ Sub SetReverse(varReverse As Object) As VMCarousel
 End Sub
 
 'set show-arrows
-Sub SetShowArrows(varShowArrows As Object) As VMCarousel
+Sub SetShowArrows(varShowArrows As Boolean) As VMCarousel
+	If varShowArrows Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-arrows", varShowArrows)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ShowArrows"$
 	vue.SetStateSingle(pp, varShowArrows)
 	Carousel.Bind(":show-arrows", pp)
@@ -254,7 +391,12 @@ Sub SetShowArrows(varShowArrows As Object) As VMCarousel
 End Sub
 
 'set show-arrows-on-hover
-Sub SetShowArrowsOnHover(varShowArrowsOnHover As Object) As VMCarousel
+Sub SetShowArrowsOnHover(varShowArrowsOnHover As Boolean) As VMCarousel
+	If varShowArrowsOnHover = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-arrows-on-hover", varShowArrowsOnHover)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ShowArrowsOnHover"$
 	vue.SetStateSingle(pp, varShowArrowsOnHover)
 	Carousel.Bind(":show-arrows-on-hover", pp)
@@ -270,7 +412,12 @@ Sub SetTouch(varTouch As Object) As VMCarousel
 End Sub
 
 'set touchless
-Sub SetTouchless(varTouchless As Object) As VMCarousel
+Sub SetTouchless(varTouchless As Boolean) As VMCarousel
+	If varTouchless = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("touchless", varTouchless)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Touchless"$
 	vue.SetStateSingle(pp, varTouchless)
 	Carousel.Bind(":touchless", pp)
@@ -278,13 +425,18 @@ Sub SetTouchless(varTouchless As Object) As VMCarousel
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMCarousel
+Sub SetValue(varValue As String) As VMCarousel
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
 'set vertical
-Sub SetVertical(varVertical As Object) As VMCarousel
+Sub SetVertical(varVertical As Boolean) As VMCarousel
+	If varVertical = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("vertical", varVertical)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Vertical"$
 	vue.SetStateSingle(pp, varVertical)
 	Carousel.Bind(":vertical", pp)
@@ -292,7 +444,12 @@ Sub SetVertical(varVertical As Object) As VMCarousel
 End Sub
 
 'set vertical-delimiters
-Sub SetVerticalDelimiters(varVerticalDelimiters As Object) As VMCarousel
+Sub SetVerticalDelimiters(varVerticalDelimiters As String) As VMCarousel
+	If varVerticalDelimiters = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("vertical-delimiters", varVerticalDelimiters)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}VerticalDelimiters"$
 	vue.SetStateSingle(pp, varVerticalDelimiters)
 	Carousel.Bind(":vertical-delimiters", pp)
@@ -364,8 +521,13 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCarousel
-	Dim pp As String = $"${ID}Color"$
+	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, scolor)
 	Carousel.Bind(":color", pp)
 	Return Me
@@ -392,6 +554,7 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMCarousel
 	Carousel.SetDesignMode(b)
+	Item.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -509,6 +672,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Carousel.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMCarousel
 Carousel.SetVisible(b)
 Return Me

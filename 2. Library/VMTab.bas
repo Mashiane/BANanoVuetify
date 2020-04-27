@@ -218,10 +218,9 @@ Sub SetTag(varTag As Object) As VMTab
 End Sub
 
 'set target
-Sub SetTarget(varTarget As Object) As VMTab
-	Dim pp As String = $"${ID}Target"$
-	vue.SetStateSingle(pp, varTarget)
-	TabItem.Bind(":target", pp)
+Sub SetTarget(varTarget As String) As VMTab
+	If varTarget = "" Then Return Me
+	SetAttrSingle("target", varTarget)
 	Return Me
 End Sub
 

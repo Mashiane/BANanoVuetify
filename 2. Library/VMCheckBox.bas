@@ -343,8 +343,8 @@ Sub SetErrorMessages(varErrorMessages As Object) As VMCheckBox
 End Sub
 
 'set false-value
-Sub SetFalseValue(varFalseValue As Object) As VMCheckBox
-	CheckBox.Bind("false-value", varFalseValue)
+Sub SetFalseValue(varFalseValue As String) As VMCheckBox
+	SetAttrSingle("false-value", varFalseValue)
 	Return Me
 End Sub
 
@@ -414,7 +414,7 @@ End Sub
 
 'set input-value
 Sub SetInputValue(varInputValue As Object) As VMCheckBox
-	CheckBox.Bind("input-value", varInputValue)
+	SetAttrSingle("input-value", varInputValue)
 	Return Me
 End Sub
 
@@ -607,8 +607,8 @@ Sub SetSuccessMessages(varSuccessMessages As Object) As VMCheckBox
 End Sub
 
 'set true-value
-Sub SetTrueValue(varTrueValue As Object) As VMCheckBox
-	CheckBox.Bind("true-value", varTrueValue)
+Sub SetTrueValue(varTrueValue As String) As VMCheckBox
+	SetAttrSingle("true-value", varTrueValue)
 	Return Me
 End Sub
 
@@ -626,7 +626,7 @@ Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMCheckBox
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMCheckBox
+Sub SetValue(varValue As String) As VMCheckBox
 	CheckBox.SetValue(varValue,False)
 	Return Me
 End Sub

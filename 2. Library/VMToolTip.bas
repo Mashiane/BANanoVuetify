@@ -56,12 +56,12 @@ Sub SetVModel(k As String) As VMToolTip
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMToolTip
+Sub SetVIf(vif As string) As VMToolTip
 	ToolTip.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMToolTip
+Sub SetVShow(vif As String) As VMToolTip
 	ToolTip.SetVShow(vif)
 	Return Me
 End Sub
@@ -79,7 +79,7 @@ Sub AddChild(child As VMElement) As VMToolTip
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMToolTip
+Sub SetText(t As String) As VMToolTip
 	ToolTip.SetText(t)
 	Return Me
 End Sub
@@ -521,7 +521,7 @@ Sub SetTransition(varTransition As String) As VMToolTip
 End Sub
 
 'set value, visible / not visible
-Sub SetValue(varValue As Object) As VMToolTip
+Sub SetValue(varValue As string) As VMToolTip
 	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
@@ -603,7 +603,7 @@ Sub SetTabIndex(ti As String) As VMToolTip
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMToolTip
+Sub SetName(varName As string, bbind As Boolean) As VMToolTip
 	ToolTip.SetName(varName, bbind)
 	Return Me
 End Sub

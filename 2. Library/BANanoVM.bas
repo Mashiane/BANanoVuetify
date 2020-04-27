@@ -36,6 +36,12 @@ Sub Class_Globals
 	Public DisplayOptions As Map
 	Public TextAlignmentOptions As Map
 	Public FontWeightOptions As Map
+	Public TargetOptions As Map
+	Public ColumnTypes As Map
+	Public Direction As Map
+	Public ColumnAlign As Map
+	Public DataTypes As Map
+	Public ControlTypes As Map
 	
 	'Public zircleBO As BANanoObject
 	'Public zircle As BANanoObject
@@ -205,7 +211,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	VApp.Initialize(vue, appName).SetTag("v-app")
 	VContent.Initialize(vue, $"${appName}content"$).SetTag("v-content")
 	Container.Initialize(vue, $"${appName}container"$, eventHandler)
-	Drawer.Initialize(vue, "drawer", eventHandler)
+	Drawer.Initialize(vue, "drawer", eventHandler).SetApp(True).SetVModel("drawer")
 	NavBar.Initialize(vue, "appbar", eventHandler)
 	NavBar.SetAppBar(True)
 	NavBar.AddHamburger
@@ -213,6 +219,77 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.AddTitle(appName,"")
 	NavBar.AddSpacer
 	NavBar.Show
+	'
+	TargetOptions.Put("","None")
+	TargetOptions.Put("_blank","Blank")
+	TargetOptions.Put("_self","Self")
+	TargetOptions.Put("_parent","Parent")
+	TargetOptions.Put("_top","Top")
+	'
+	ColumnTypes.Initialize
+	ColumnTypes.put("date","Date")
+	ColumnTypes.put("text", "Text")
+	ColumnTypes.put("icon", "Icon")
+	ColumnTypes.put("checkbox", "Check Box")
+	ColumnTypes.put("", "None")
+	ColumnTypes.put("time","Time")
+	ColumnTypes.put("datetime","Date Time")
+	ColumnTypes.put("image","Image")
+	ColumnTypes.Put("money","Money")
+	ColumnTypes.put("filesize", "File Size")
+	ColumnTypes.put("chip","Chip")
+	ColumnTypes.put("edit","Edit")
+	ColumnTypes.put("delete","Delete")
+	ColumnTypes.put("action","Action")
+	'
+	ColumnAlign.Initialize 
+	ColumnAlign.Put("start", "Start")
+	ColumnAlign.Put("center", "Center")
+	ColumnAlign.Put("end", "End")
+	'
+	DataTypes.Initialize
+	DataTypes.Put("BOOL", "Boolean")
+	DataTypes.Put("INT", "Integer")
+	DataTypes.Put("TEXT", "Text")
+	DataTypes.Put("FLOAT", "Double")
+	DataTypes.Put("BLOB", "Blob")
+	DataTypes.Put("DATE", "Date")
+	DataTypes.Put("None", "None")
+	'
+	ControlTypes.Initialize
+	ControlTypes.put("text", "Text")
+	ControlTypes.put("textarea", "Text Area")
+	ControlTypes.put("checkbox", "Check Box")
+	ControlTypes.put("date", "Date")
+	ControlTypes.put("file", "File")
+	ControlTypes.put("radio", "Radio")
+	ControlTypes.put("select", "Select")
+	ControlTypes.put("slider", "Slider")
+	ControlTypes.put("switch", "Switch")
+	ControlTypes.put("label", "Label")
+	ControlTypes.put("email", "Email")
+	ControlTypes.put("rating", "Rating")
+	ControlTypes.put("password", "Password")
+	ControlTypes.put("tel", "Telephone")
+	ControlTypes.put("time", "Time")
+	ControlTypes.put("combo", "Combo")
+	ControlTypes.put("auto", "Auto Complete")
+	ControlTypes.put("profile", "Profile")
+	ControlTypes.put("image", "Image")
+	ControlTypes.put("button", "Button")
+	ControlTypes.put("icon", "Icon")
+	ControlTypes.put("parallax", "Parallax")
+	ControlTypes.put("container", "Container")
+	ControlTypes.put("menu", "Menu")
+	ControlTypes.put("carousel", "Carousel")
+	ControlTypes.put("speeddial", "Speed Dial")
+	ControlTypes.Put("None", "None")
+	'
+	Direction.Initialize 
+	Direction.Put("top", "Top")
+	Direction.Put("bottom", "Bottom")
+	Direction.Put("left", "Left")
+	Direction.Put("right", "Right")
 	'
 	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
 	'
@@ -295,6 +372,22 @@ Sub getElementById(sid As String) As BANanoObject
 	Return el
 End Sub
 
+Sub List2ArrayVariable(lst As List) As String
+	If lst.Size = 0 Then
+		Return $""""$
+	End If
+	Dim i As Int
+	Dim sb As StringBuilder
+	Dim fld As String
+	sb.Initialize
+	fld = $""${lst.Get(0)}""$
+	sb.Append(fld)
+	For i = 1 To lst.size - 1
+		fld = $""${lst.Get(i)}""$
+		sb.Append(",").Append(fld)
+	Next
+	Return sb.ToString
+End Sub
 
 'build the map to send an email to use in callinlinephp
 Sub BuildPHPEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
@@ -444,7 +537,6 @@ Sub CreateTextArea(eID As String, eventHandler As Object) As VMTextField
 	Return el
 End Sub
 '
-'
 'Sub CreateSelectSides(eID As String, eventHandler As Object) As VMSelectSides
 '	Dim el As VMSelectSides
 '	el.Initialize(vue, eID, eventHandler)
@@ -454,7 +546,6 @@ End Sub
 Sub CreateProperty(eID As String, eventHandler As Object) As VMProperty
 	Dim el As VMProperty
 	el.Initialize(vue, eID, eventHandler)
-	el.SetVModel($"${eID}x"$)
 	Return el
 End Sub
 
@@ -541,6 +632,9 @@ Sub CreateDataTable(cID As String, PrimaryKey As String, eventHandler As Object)
 	Return el
 End Sub
 
+Sub CreateDataTable1(el As VMDataTable, cID As String, PrimaryKey As String, eventHandler As Object)
+	el.Initialize(vue, cID,PrimaryKey,  eventHandler)
+End Sub
 
 Sub CreateTreeView(cID As String, eventHandler As Object) As VMTreeView
 	Dim el As VMTreeView
@@ -897,13 +991,6 @@ Sub Md5Hash(value As String, key As String, raw As Boolean) As String
 	Return vue.Md5Hash(value, key, raw)
 End Sub
 
-Sub CreatePrettyPrint(sid As String, slang As String) As VMPrettyPrint
-	Dim El As VMPrettyPrint
-	El.Initialize(vue, sid, slang)
-	
-	Return El
-End Sub
-
 'set dynamic style
 Sub SetStyle(className As String, prop As String, vals As String) As BANanoVM
 	vue.SetStyle(className, prop, vals)
@@ -1030,7 +1117,7 @@ private Sub InitColors
 	ColorOptions.Put("transparent", "Transparent")
 	ColorOptions.Put("white", "White")
 	ColorOptions.Put("yellow", "Yellow")
-	ColorOptions.Put("none", "")
+	ColorOptions.Put("", "None")
 	ColorOptions.Put("primary","primary")
 	ColorOptions.Put("secondary","secondary")
 	ColorOptions.Put("accent","accent")
@@ -1250,6 +1337,14 @@ Sub HideItems(items As List)
 		nm.Put(item, False)
 	Next
 	SetState(nm)
+End Sub
+
+Sub ShowItem(elID As String)
+	vue.ShowItem(elID)
+End Sub
+
+Sub HideItem(elID As String)
+	vue.HideItem(elID)
 End Sub
 
 'change state of items to be true
@@ -2065,10 +2160,10 @@ Sub NewSwitch(eventHandler As Object, bStatic As Boolean, sid As String, vmodel 
 	el.SetVModel(vmodel)
 	el.Setlabel(slabel)
 	el.SetValue(svalue)
-	'el.SetTrueValue(svalue)
+	el.SetTrueValue(svalue)
 	el.SetPrimary(bPrimary)
-	'el.SetFalseValue(sunchecked)
 	el.SetUncheckedValue(sunchecked)
+	el.SetFalseValue(sunchecked)
 	el.SetTabIndex(iTabIndex)
 	vue.SetData(vmodel, sunchecked)
 	Return el
@@ -2114,12 +2209,12 @@ Sub NewCheckBox(eventHandler As Object, bStatic As Boolean, sid As String, vmode
 	el.SetStatic(bStatic)
 	el.SetVModel(vmodel)
 	el.SetValue(svalue)
-	'el.SetTrueValue(svalue)
+	el.SetTrueValue(svalue)
 	el.Setlabel(slabel)
 	el.SetPrimary(bPrimary)
-	'el.SetFalseValue(sunchecked)
-	el.SetTabIndex(iTabIndex)
 	el.SetUncheckedValue(sunchecked)
+	el.SetFalseValue(sunchecked)
+	el.SetTabIndex(iTabIndex)
 	vue.SetData(vmodel, sunchecked)
 	Return el
 End Sub
