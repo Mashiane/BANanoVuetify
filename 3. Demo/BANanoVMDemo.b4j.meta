@@ -154,6 +154,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=pgIndex,Init,20,1,modDesigner,schemaDT_edit,3517,0,modDesigner,ComponentsPanel,3555,0,modDesigner,mycomponents_click,3623,0,modDesigner,ClearTableThings,3585,0,modDesigner,TableStructure,3569,0,modDesigner,htmlcodecopy_click,3539,0,modDesigner,AddComment,3509,0,modDesigner,Process_Globals,15,0,modDesigner,Design_DBSourceCode,3063,2
+NavigationStack=modDesigner,SavePropertyBag,5077,0,modDesigner,PropertyBag_Menu,5154,0,modDesigner,PropertyBag_Drawer,5197,0,modDesigner,PropertyBag_Carousel,5237,0,modDesigner,PropertyBag_Dialog,5274,0,modDesigner,PropertyBag_SpeedDial,5362,0,modDesigner,PropertyBag_Rating,5431,0,modDesigner,PropertyBag_Table,5558,0,Main,BANano_Ready,61,0,Main,AppStart,20,0,Main,Process_Globals,17,0
 SelectedBuild=0
 VisibleModules=

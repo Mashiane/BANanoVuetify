@@ -957,6 +957,7 @@ Sub btnSaveTable_click(e As BANanoEvent)
 		contents.Set(rpos, item)
 	End Select		
 	vue.SetData("tableitems", contents)
+	vue.SetData("tableitem", item)
 	ClearContents
 	'ensure we save the prop bag
 	BANano.CallSub(module, changeEvent, Null)
@@ -1006,6 +1007,7 @@ Sub DeleteItem
 		contents.RemoveAt(rpos)
 	End If
 	vue.SetData("tableitems", contents)
+	vue.SetData("tableitem", item)
 	ClearContents
 	BANano.CallSub(module, changeEvent, Null)
 End Sub

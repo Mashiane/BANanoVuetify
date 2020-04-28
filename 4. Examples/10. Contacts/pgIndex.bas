@@ -16,7 +16,6 @@ Sub Init
 	BuildNavBar
 	BuildNavDrawer
 	AddPages
-	'
 	OurContacts
 	vm.ux
 End Sub
@@ -56,11 +55,11 @@ Sub cancel_ok
 End Sub
 
 Sub OurContacts
-	Dim txtfirsname As VMTextField = vm.NewTextField(Me, True, "txtfirsname", "firsname", "First Name", "", True, "", 0, "", "", 0)
-	txtfirsname.SetOutlined(True)
-	txtfirsname.SetShaped(True)
-	txtfirsname.SetClearable(True)
-	vm.Container.AddControl(txtfirsname.textfield, txtfirsname.tostring, 1, 1, 0, 0, 0, 0, 12, 6, 6, 6)
+	Dim txtfirstname As VMTextField = vm.NewTextField(Me, True, "txtfirstname", "firstname", "First Name", "", True, "", 0, "", "", 0)
+	txtfirstname.SetOutlined(True)
+	txtfirstname.SetShaped(True)
+	txtfirstname.SetClearable(True)
+	vm.Container.AddControl(txtfirstname.textfield, txtfirstname.tostring, 1, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 
 	Dim txtlastname As VMTextField = vm.NewTextField(Me, True, "txtlastname", "lastname", "Last Name", "", True, "", 0, "", "", 0)
 	txtlastname.SetOutlined(True)
