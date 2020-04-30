@@ -96,6 +96,7 @@ Dim dpdateofbirth As VMDateTimePicker = vm.NewDatePicker(Me, True, "dpdateofbirt
 dpdateofbirth.SetFieldType("string")
 dpdateofbirth.SetVisible(True)
 dpdateofbirth.SetValue("1973-04-15")
+dpdateofbirth.SetIsNow(True)
 dpdateofbirth.SetFirstDayOfWeek("0")
 dpdateofbirth.TextField.SetOutlined(True)
 dpdateofbirth.TextField.SetShaped(True)

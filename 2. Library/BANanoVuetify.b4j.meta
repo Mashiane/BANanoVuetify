@@ -424,6 +424,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMSelect,SetOnClick,1192,0,VMSelect,SetOnChange,1179,0,VMRadio,SetSlotLabel,323,0,VMTextField,Initialize,28,0,VMTextField,SetOnChange,967,0,VMTextField,SetOnFile,973,1,VMTextField,SetOnBlur,956,0,BANanoVM,HideDialog,820,0,VMRating,SetOnInput,36,1,VMRating,Initialize,24,0,Main,Process_Globals,9,0
+NavigationStack=VMRadio,SetSlotLabel,323,0,VMTextField,Initialize,28,0,VMTextField,SetOnChange,967,0,VMTextField,SetOnFile,973,1,VMTextField,SetOnBlur,956,0,BANanoVM,HideDialog,820,0,VMRating,SetOnInput,36,1,VMRating,Initialize,24,0,Main,Process_Globals,9,0,Main,AppStart,99,0,Main,Application_Error,104,0
 SelectedBuild=0
 VisibleModules=

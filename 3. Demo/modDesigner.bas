@@ -591,7 +591,7 @@ Sub Init
 	vm.NavBar.SetModeFixed(True)
 	vm.NavBar.SetHasMenuButton(True)
 	vm.NavBar.UpdateLogo("./assets/sponge.png")
-	vm.NavBar.UpdateTitle("BANanoVuetify Designer 3.7")
+	vm.NavBar.UpdateTitle("BANanoVuetify Designer 3.8")
 	vm.NavBar.Logo.SetBorderRadius("50%")
 	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
 	

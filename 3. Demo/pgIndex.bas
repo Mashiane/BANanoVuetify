@@ -20,7 +20,7 @@ Sub Init
 	vm.NavBar.SetModeFixed(True)
 	vm.NavBar.SetHasMenuButton(True)
 	vm.NavBar.UpdateLogo("./assets/sponge.png")
-	vm.NavBar.UpdateTitle("BANanoVuetify 3.7")
+	vm.NavBar.UpdateTitle("BANanoVuetify 3.8")
 	vm.NavBar.Logo.SetBorderRadius("50%")
 	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
 	
@@ -77,7 +77,7 @@ End Sub
 Sub BuildDrawer
 	vm.Drawer.List.SetDense(True)
 	vm.Drawer.SetWidth("300")
-	vm.Drawer.AddTitleSubTitle("BANanoVuetify", "Version 3.00")
+	vm.Drawer.AddTitleSubTitle("BANanoVuetify", "Version 3.8")
 	vm.Drawer.AddDivider
 	vm.Drawer.AddItem("designer", "", "Designer")
 	vm.Drawer.AddItem("alerts", "", "Alerts")

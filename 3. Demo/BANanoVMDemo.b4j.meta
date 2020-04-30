@@ -154,6 +154,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modDesigner,Design_Time,1952,0,modDesigner,Read_Label,1006,0,modDesigner,CreateUX,984,0,modDesigner,Design_Switch,1376,0,modDesigner,Design_CheckBox,1413,0,modDesigner,Design_Date,1479,0,modDesigner,Design_File,1521,0,modDesigner,Design_Select,1565,0,modGMap,btnShowLoc_click,66,0,modDesigner,Design_Radio,1563,0,Main,AppStart,20,0
+NavigationStack=modDesigner,Design_Switch,1376,0,modDesigner,Design_CheckBox,1413,0,modDesigner,Design_Date,1479,0,modDesigner,Design_File,1521,0,modDesigner,Design_Select,1565,0,modGMap,btnShowLoc_click,66,0,modDesigner,Design_Radio,1563,0,Main,AppStart,20,0,modDesigner,Init,587,0,pgIndex,Init,20,0,pgIndex,BuildDrawer,76,0
 SelectedBuild=0
 VisibleModules=
