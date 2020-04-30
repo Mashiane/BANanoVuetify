@@ -223,7 +223,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSparkLine
-	SetAttrSingle("value", varValue)
+	Sparkline.SetValue(varValue, False)
 	Return Me
 End Sub
 

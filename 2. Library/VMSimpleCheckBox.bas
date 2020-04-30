@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the SimpleCheckBox
@@ -24,6 +25,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	bStatic = False
+	vmodel = ""
 	Return Me
 End Sub
 
@@ -79,6 +81,7 @@ End Sub
 
 Sub SetVModel(k As String) As VMSimpleCheckBox
 	SimpleCheckBox.SetVModel(k)
+	vmodel = k.tolowercase
 	Return Me
 End Sub
 
@@ -239,7 +242,8 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMSimpleCheckBox
-	SetAttrSingle("value", varValue)
+	SimpleCheckBox.SetValue(varValue, False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 
@@ -339,6 +343,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 SimpleCheckBox.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMSimpleCheckBox
 SimpleCheckBox.SetVisible(b)
 Return Me

@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the CheckBox
@@ -26,6 +27,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	CheckBox.typeOf = "checkbox"
 	CheckBox.fieldType = "bool"
 	bStatic = False
+	vmodel = ""
 	Return Me
 End Sub
 
@@ -171,6 +173,7 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMCheckBox
+	vmodel = k.tolowercase
 	CheckBox.SetVModel(k)
 	Return Me
 End Sub
@@ -628,6 +631,7 @@ End Sub
 'set value
 Sub SetValue(varValue As String) As VMCheckBox
 	CheckBox.SetValue(varValue,False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 

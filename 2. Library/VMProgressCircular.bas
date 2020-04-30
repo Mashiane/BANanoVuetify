@@ -108,7 +108,7 @@ Sub AddClass(c As String) As VMProgressCircular
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMProgressCircular
+Sub SetAttr(attr As Map) As VMProgressCircular
 	ProgressCircular.SetAttr(attr)
 	Return Me
 End Sub
@@ -168,7 +168,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMProgressCircular
-	SetAttrSingle("value", varValue)
+	ProgressCircular.SetValue(varValue, False)
 	Return Me
 End Sub
 

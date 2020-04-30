@@ -220,77 +220,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.AddSpacer
 	NavBar.Show
 	'
-	TargetOptions.Put("","None")
-	TargetOptions.Put("_blank","Blank")
-	TargetOptions.Put("_self","Self")
-	TargetOptions.Put("_parent","Parent")
-	TargetOptions.Put("_top","Top")
-	'
-	ColumnTypes.Initialize
-	ColumnTypes.put("date","Date")
-	ColumnTypes.put("text", "Text")
-	ColumnTypes.put("icon", "Icon")
-	ColumnTypes.put("checkbox", "Check Box")
-	ColumnTypes.put("", "None")
-	ColumnTypes.put("time","Time")
-	ColumnTypes.put("datetime","Date Time")
-	ColumnTypes.put("image","Image")
-	ColumnTypes.Put("money","Money")
-	ColumnTypes.put("filesize", "File Size")
-	ColumnTypes.put("chip","Chip")
-	ColumnTypes.put("edit","Edit")
-	ColumnTypes.put("delete","Delete")
-	ColumnTypes.put("action","Action")
-	'
-	ColumnAlign.Initialize 
-	ColumnAlign.Put("start", "Start")
-	ColumnAlign.Put("center", "Center")
-	ColumnAlign.Put("end", "End")
-	'
-	DataTypes.Initialize
-	DataTypes.Put("BOOL", "Boolean")
-	DataTypes.Put("INT", "Integer")
-	DataTypes.Put("TEXT", "Text")
-	DataTypes.Put("FLOAT", "Double")
-	DataTypes.Put("BLOB", "Blob")
-	DataTypes.Put("DATE", "Date")
-	DataTypes.Put("None", "None")
-	'
-	ControlTypes.Initialize
-	ControlTypes.put("text", "Text")
-	ControlTypes.put("textarea", "Text Area")
-	ControlTypes.put("checkbox", "Check Box")
-	ControlTypes.put("date", "Date")
-	ControlTypes.put("file", "File")
-	ControlTypes.put("radio", "Radio")
-	ControlTypes.put("select", "Select")
-	ControlTypes.put("slider", "Slider")
-	ControlTypes.put("switch", "Switch")
-	ControlTypes.put("label", "Label")
-	ControlTypes.put("email", "Email")
-	ControlTypes.put("rating", "Rating")
-	ControlTypes.put("password", "Password")
-	ControlTypes.put("tel", "Telephone")
-	ControlTypes.put("time", "Time")
-	ControlTypes.put("combo", "Combo")
-	ControlTypes.put("auto", "Auto Complete")
-	ControlTypes.put("profile", "Profile")
-	ControlTypes.put("image", "Image")
-	ControlTypes.put("button", "Button")
-	ControlTypes.put("icon", "Icon")
-	ControlTypes.put("parallax", "Parallax")
-	ControlTypes.put("container", "Container")
-	ControlTypes.put("menu", "Menu")
-	ControlTypes.put("carousel", "Carousel")
-	ControlTypes.put("speeddial", "Speed Dial")
-	ControlTypes.Put("None", "None")
-	'
-	Direction.Initialize 
-	Direction.Put("top", "Top")
-	Direction.Put("bottom", "Bottom")
-	Direction.Put("left", "Left")
-	Direction.Put("right", "Right")
-	'
+		'
 	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
 	'
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
@@ -330,14 +260,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	AddContent(sDialog)
 	
 	'
-	Dim e As Int
-	Elevation.initialize
-	For e = 0 To 24
-		Elevation.Put(e, e)
-	Next
-	Elevation.Put("", "None")
 	InitColors
-	InitTransition
 	'
 	If SubExists(module, "confirm_ok") = False Then
 		Log("Initialize.confirm_ok - please add this event to trap confirm dialog!")
@@ -352,19 +275,15 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	End If
 End Sub
 
-Sub InitTransition
-	Dim tran As List
-	tran.Initialize
-	'
-	tran.AddAll(Array("slide-x-transition", "slide-x-reverse-transition", "slide-y-transition", "slide-y-reverse-transition", "scroll-x-transition"))
-	tran.AddAll(Array("scroll-x-reverse-transition", "scroll-y-transition", "scroll-y-reverse-transition", "scale-transition",  "fade-transition"))
-	'
-	Transition.Initialize 
-	For Each sl As String In tran
-		Transition.Put(sl, sl)
-	Next
-	Transition.Put("", "None")
+Sub SetOnClick(EventHandler As Object, methodName As String)
+	methodName = methodName.tolowercase
+	If SubExists(EventHandler, methodName) = False Then Return
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
 End Sub
+
 
 'getElementById
 Sub getElementById(sid As String) As BANanoObject
@@ -439,6 +358,18 @@ Sub ShowConfirm(process As String, Title As String, Message As String,ConfirmTex
 	process = process.tolowercase
 	vue.SetState(CreateMap("confirmtitle":Title,"confirmcontent":Message,"confirmkey":process,"btnconfirmoklabel":ConfirmText,"btnconfirmcancellabel":CancelText))
 	Confirm.Show
+End Sub
+
+Sub ShowConfirm1(eventHandler As Object, process As String, Title As String, Message As String,ConfirmText As String, CancelText As String)
+	process = process.tolowercase
+	vue.SetState(CreateMap("confirmtitle":Title,"confirmcontent":Message,"confirmkey":process,"btnconfirmoklabel":ConfirmText,"btnconfirmcancellabel":CancelText))
+	SetOnClick(eventHandler, "btnConfirmOk_click")
+	SetOnClick(eventHandler, "btnConfirmCancel_click")
+	Confirm.Show
+End Sub
+
+Sub ConfirmHide
+	Confirm.hide
 End Sub
 
 Sub ShowAlert(process As String, Title As String, Message As String, ConfirmText As String)
@@ -1047,6 +978,25 @@ Sub StrParse(Delim As String, InputString As String) As List
 End Sub
 
 private Sub InitColors
+	Dim e As Int
+	Elevation.initialize
+	For e = 0 To 24
+		Elevation.Put(e, e)
+	Next
+	Elevation.Put("", "None")
+	'
+	Dim tran As List
+	tran.Initialize
+	'
+	tran.AddAll(Array("slide-x-transition", "slide-x-reverse-transition", "slide-y-transition", "slide-y-reverse-transition", "scroll-x-transition"))
+	tran.AddAll(Array("scroll-x-reverse-transition", "scroll-y-transition", "scroll-y-reverse-transition", "scale-transition",  "fade-transition"))
+	'
+	Transition.Initialize
+	For Each sl As String In tran
+		Transition.Put(sl, sl)
+	Next
+	Transition.Put("", "None")
+	
 	DisplayOptions.Initialize
 	DisplayOptions.Put("", "None")
 	DisplayOptions.Put("display-4", "Display 4")
@@ -1137,6 +1087,78 @@ private Sub InitColors
 	BorderOptions.Put("outset", "Outset")
 	BorderOptions.Put("ridge", "Ridge")
 	BorderOptions.Put("solid", "Solid")
+	'
+	TargetOptions.Put("","None")
+	TargetOptions.Put("_blank","Blank")
+	TargetOptions.Put("_self","Self")
+	TargetOptions.Put("_parent","Parent")
+	TargetOptions.Put("_top","Top")
+	'
+	ColumnTypes.Initialize
+	ColumnTypes.put("date","Date")
+	ColumnTypes.put("text", "Text")
+	ColumnTypes.put("icon", "Icon")
+	ColumnTypes.put("checkbox", "Check Box")
+	ColumnTypes.put("", "None")
+	ColumnTypes.put("time","Time")
+	ColumnTypes.put("datetime","Date Time")
+	ColumnTypes.put("image","Image")
+	ColumnTypes.Put("money","Money")
+	ColumnTypes.put("filesize", "File Size")
+	ColumnTypes.put("chip","Chip")
+	ColumnTypes.put("edit","Edit")
+	ColumnTypes.put("delete","Delete")
+	ColumnTypes.put("action","Action")
+	'
+	ColumnAlign.Initialize
+	ColumnAlign.Put("start", "Start")
+	ColumnAlign.Put("center", "Center")
+	ColumnAlign.Put("end", "End")
+	'
+	DataTypes.Initialize
+	DataTypes.Put("BOOL", "Boolean")
+	DataTypes.Put("INT", "Integer")
+	DataTypes.Put("TEXT", "Text")
+	DataTypes.Put("FLOAT", "Double")
+	DataTypes.Put("BLOB", "Blob")
+	DataTypes.Put("DATE", "Date")
+	DataTypes.Put("None", "None")
+	'
+	ControlTypes.Initialize
+	ControlTypes.put("text", "Text")
+	ControlTypes.put("textarea", "Text Area")
+	ControlTypes.put("checkbox", "Check Box")
+	ControlTypes.put("date", "Date")
+	ControlTypes.put("file", "File")
+	ControlTypes.put("radio", "Radio")
+	ControlTypes.put("select", "Select")
+	ControlTypes.put("slider", "Slider")
+	ControlTypes.put("switch", "Switch")
+	ControlTypes.put("label", "Label")
+	ControlTypes.put("email", "Email")
+	ControlTypes.put("rating", "Rating")
+	ControlTypes.put("password", "Password")
+	ControlTypes.put("tel", "Telephone")
+	ControlTypes.put("time", "Time")
+	ControlTypes.put("combo", "Combo")
+	ControlTypes.put("auto", "Auto Complete")
+	ControlTypes.put("profile", "Profile")
+	ControlTypes.put("image", "Image")
+	ControlTypes.put("button", "Button")
+	ControlTypes.put("icon", "Icon")
+	ControlTypes.put("parallax", "Parallax")
+	ControlTypes.put("container", "Container")
+	ControlTypes.put("menu", "Menu")
+	ControlTypes.put("carousel", "Carousel")
+	ControlTypes.put("speeddial", "Speed Dial")
+	ControlTypes.Put("None", "None")
+	'
+	Direction.Initialize
+	Direction.Put("top", "Top")
+	Direction.Put("bottom", "Bottom")
+	Direction.Put("left", "Left")
+	Direction.Put("right", "Right")
+
 End Sub
 
 
@@ -2176,6 +2198,7 @@ Sub NewRadioGroup(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.Setlabel(slabel)
 	el.SetOptions(optionsm)
 	el.SetTabIndex(iTabIndex)
+	el.SetValue(svalue)
 	vue.SetData(vmodel, svalue)
 	If bShowLabel = False Then el.SetLabel("")
 	If bLabelOnTop Then

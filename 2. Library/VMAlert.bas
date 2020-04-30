@@ -281,7 +281,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMAlert
-	SetAttrSingle("value", varValue)
+	Alert.SetValue(varValue,False)
 Return Me
 End Sub
 

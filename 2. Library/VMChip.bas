@@ -593,7 +593,7 @@ End Sub
 Sub SetValue(varValue As String) As VMChip
 	If varValue = "" Then Return Me
 	If bStatic Then
-		SetAttrSingle("value", varValue)
+		Chip.SetValue(varValue, False)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Value"$

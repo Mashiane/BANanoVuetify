@@ -48,6 +48,7 @@ Sub Process_Globals
 	Private myipad As VMDevice
 	Private myiphone As VMDevice
 	Private iconsizes As Map
+	Private myComponents As VMDataTable
 	'
 	Private controltype As String
 	Private srow As String
@@ -507,6 +508,11 @@ Private bisvisible As Boolean
 	Private slabel As String
 	'Private previewTB As VMDataTable
 	Private sparent As String
+	Private bisnow As Boolean
+	
+	Private sdialogpage As String
+	Private sclickaction As String
+	Private sbEvents As StringBuilder
 End Sub
 
 Sub Init
@@ -738,12 +744,13 @@ Sub CreateUX
 	'
 	'add the components
 	compSQL.Initialize("components", "id")
-	compSQL.SelectAll(Array("*"), Array("id"))
+	compSQL.SelectAll(Array("*"), Array("row","col"))
 	compSQL.result = db.executewait(compSQL.query, compSQL.args)
 	'
 	vm.setdata("myux", compSQL.result)
 	
 	sb.initialize
+	sbEvents.initialize
 	'
 	'make it a div
 	ui = vm.CreateContainer("ui", Me).SetTag("div")
@@ -771,7 +778,6 @@ Sub CreateUX
 		sclasses = rec.get("classes")
 		sloose = rec.get("loose")
 		stitle = rec.get("label")
-		sfieldtype = rec.getdefault("fieldtype", "")
 		jcontents = rec.getdefault("items", "")
 		If jcontents = "" Then
 			lcontents.initialize
@@ -797,6 +803,7 @@ Sub CreateUX
 		shelpertext = mattr.getdefault("helpertext", "")
 		serrortext = mattr.getdefault("errortext", "")
 		imaxlen = mattr.getdefault("maxlength", "0")
+		sfieldtype = mattr.getdefault("fieldtype", "string")
 		If imaxlen = "" Then imaxlen = "0"
 		imaxlen = BANano.parseint(imaxlen)
 		bautogrow = YesNoToBoolean(mattr.getdefault("isautogrow", "No"))
@@ -806,6 +813,10 @@ Sub CreateUX
 		bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 		bontable = YesNoToBoolean(mattr.getdefault("ontable", "No"))
 		bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+		bisnow = YesNoToBoolean(mattr.getdefault("isnow", "No"))
+		sdialogpage = mattr.getdefault("dialogpage", "")
+		sclickaction = mattr.getdefault("clickaction","")
+		
 		'
 		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
 		bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
@@ -874,7 +885,6 @@ Sub CreateUX
 		sborderstyle = mattr.getdefault("borderstyle", "")
 		saspectratio = mattr.getdefault("aspectratio", "")
 		'
-		
 		'
 		ssourcefield = mattr.getdefault("sourcefield", "id")
 		ssourcetable = mattr.getdefault("sourcetable", "datasource")
@@ -977,6 +987,9 @@ Sub CreateUX
 		End Select
 	Next
 	
+	'update with events
+	sb.append(sbEvents.tostring)
+	'
 	Dim html As String = ui.tostring
 	
 	Dim shtml As String = vm.BeautifySourceCode("html", html)
@@ -1293,6 +1306,7 @@ End Sub
 Sub Design_TextArea
 	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txta.SetSolo(bissolo)
+	txta.SetValue(svalue)
 	txta.SetOutlined(bisoutlined)
 	txta.SetFilled(bisfilled)
 	txta.SetDense(bisdense)
@@ -1305,11 +1319,13 @@ Sub Design_TextArea
 	txta.SetClearable(bclearable)
 	txta.SetHideDetails(bishidedetails)
 	txta.SetAutoGrow(bautogrow)
+	txta.SetFieldType(sfieldtype)
 	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
+	CodeLine(sb, svalue, "s", "txta", sname, "SetValue")
 	CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txta", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "txta", sname, "SetFilled")
@@ -1332,16 +1348,20 @@ Sub Design_Switch
 	swt.SetRequired(bisrequired)
 	swt.SetDisabled(bisdisabled)
 	swt.SetDark(bisdark)
+	swt.SetValue(svalue)
 	swt.SetDense(bisdense)
 	swt.SetHideDetails(bishidedetails)
 	swt.SetLight(bislight)
 	swt.SetLoading(sswitchloading)
 	swt.SetMultiple(bismultiple)
 	swt.SetInset(bisinset).SetFlat(bisflat)
+	swt.SetFieldType(sfieldtype)
 	ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bStatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
+	CodeLine(sb, sfieldtype, "s", "swt", sname, "SetFieldType")
+	CodeLine(sb, svalue, "s", "swt", sname, "SetValue")
 	CodeLine(sb, bisdisabled, "b", "swt", sname, "SetDisabled")
 	CodeLine(sb, bisdark, "b", "swt", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "swt", sname, "SetDense")
@@ -1354,7 +1374,13 @@ Sub Design_Switch
 	
 	If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
+	AddCode(sb, $"swt${sname}.SetOnChange(Me, "swt${sname}_change")"$)
 	sb.append($"${sparent}.Container.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	
+	'add events
+	AddCode(sbEvents, $"Private Sub swt${sname}_change(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 End Sub
 
 Sub Design_CheckBox
@@ -1368,10 +1394,13 @@ Sub Design_CheckBox
 	chk.SetIndeterminate(bisindeterminate)
 	chk.SetLight(bislight)
 	chk.SetMultiple(bismultiple)
+	chk.SetValue(svalue)
+	chk.SetFieldType(sfieldtype)
 	ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
+	CodeLine(sb, svalue, "s", "chk", sname, "SetValue")
 	CodeLine(sb, bisdisabled, "b", "chk", sname, "SetDisabled")
 	CodeLine(sb, bisdark, "b", "chk", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "chk", sname, "SetDense")
@@ -1379,9 +1408,16 @@ Sub Design_CheckBox
 	CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
 	CodeLine(sb, bislight, "b", "chk", sname, "SetLight")
 	CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
+	CodeLine(sb, sfieldtype, "s", "chk", sname, "SetFieldType")
+	AddCode(sb, $"chk${sname}.SetOnChange(Me, "chk${sname}_change")"$)
 	If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
 	sb.append($"${sparent}.Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub chk${sname}_change(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 End Sub
 
 Sub Design_Date
@@ -1391,6 +1427,9 @@ Sub Design_Date
 	dp.SetRange(bisrange)
 	dp.SetShowWeek(bisshowweek)
 	dp.SetDark(bisdark)
+	dp.SetValue(svalue)
+	dp.SetIsNow(bisnow)
+	dp.SetFieldType(sfieldtype)
 	'dp.SetNotitle(bisnotitle)
 	'dp.SetColorIntensity(scolor, sintensity)
 	'dp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
@@ -1413,11 +1452,14 @@ Sub Design_Date
 	'
 	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 		
+	CodeLine(sb, sfieldtype, "s", "dp", sname, "SetFieldType")
 	CodeLine(sb, bisvisible, "b", "dp", sname, "SetVisible")
 	CodeLine(sb, bisdisabled, "b", "dp", sname, "SetDisabled")
 	CodeLine(sb, bisrange, "b", "dp", sname, "SetRange")
 	CodeLine(sb, bisshowweek, "b", "dp", sname, "SetShowWeek")
 	CodeLine(sb, bisdark, "b", "dp", sname, "SetDark")
+	CodeLine(sb, svalue, "s", "dp", sname, "SetValue")
+	CodeLine(sb, bisnow, "b", "dp", sname, "SetIsNow")
 	'CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
 	CodeLine(sb, sfirstdayofweek, "s", "dp", sname, "SetFirstDayOfWeek")
 	CodeLine(sb, bismultiple, "b", "dp", sname, "SetMultiple")
@@ -1436,8 +1478,15 @@ Sub Design_Date
 	CodeLine(sb, bisrounded, "b", "dp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "dp", sname, "TextField.SetClearable")
 	CodeLine(sb, bishidedetails, "b", "dp", sname, "TextField.SetHideDetails")
-
+	AddCode(sb, $"dp${sname}.SetOnChange(Me, "dp${sname}_change")"$)
+	
 	sb.append($"${sparent}.Container.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub dp${sname}_change(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	
 End Sub
 
 Sub Design_File
@@ -1454,6 +1503,7 @@ Sub Design_File
 	fi.SetRounded(bisrounded)
 	fi.SetClearable(bclearable)
 	fi.SetHideDetails(bishidedetails)
+	fi.SetFieldType(sfieldtype)
 	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			
 	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, False, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
@@ -1469,8 +1519,15 @@ Sub Design_File
 	CodeLine(sb, bisrounded, "b", "fi", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "fi", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
-				
+	CodeLine(sb, sfieldtype, "s", "fi", sname, "SetFieldType")
+	AddCode(sb, $"fi${sname}.SetOnFile(Me, "fi${sname}_change")"$)
+	
 	sb.append($"${sparent}.Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub fi${sname}_change(fileList As List)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 End Sub
 
 Sub Design_Radio
@@ -1486,6 +1543,7 @@ Sub Design_Radio
 	rd.SetDense(bisdense)
 	rd.SetMultiple(bismultiple)
 	rd.SetHideDetails(bishidedetails)
+	rd.SetFieldType(sfieldtype)
 	ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	If buseoptions Then
@@ -1497,12 +1555,18 @@ Sub Design_Radio
 		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${stabindex})"$).append(CRLF)
 	End If
 	CodeLine(sb, bismandatory, "b", "rd", sname, "SetMandatory")
+	CodeLine(sb, sfieldtype, "s", "rd", sname, "SetFieldType")
 	CodeLine(sb, bisdisabled, "b", "rd", sname, "SetDisabled")
 	CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
 	CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
 	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
-				
+	AddCode(sb, $"rd${sname}.SetOnChange(Me, "rd${sname}_change")"$)
 	sb.append($"${sparent}.Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub rd${sname}_change(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 End Sub
 
 Sub Design_Select
@@ -1543,6 +1607,7 @@ Sub Design_Select
 	sel.SetOutlined(bisoutlined)
 	sel.SetFilled(bisfilled)
 	sel.SetDense(bisdense)
+	sel.SetPrependIcon(siconname)
 	sel.SetSingleLine(bissingleline)
 	sel.SetPersistentHint(bispersistenthint)
 	sel.SetShaped(bisshaped)
@@ -1554,6 +1619,8 @@ Sub Design_Select
 	sel.SetChips(bischips)
 	sel.SetSmallChips(bissmallchips)
 	sel.SetDeletableChips(bisdeletablechips)
+	sel.SetValue(svalue)
+	sel.SetFieldType(sfieldtype)
 	ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	'define the code for the control
@@ -1591,6 +1658,9 @@ Sub Design_Select
 			End If
 	End Select
 	'
+	CodeLine(sb, svalue, "s", "sel", sname, "SetValue")
+	CodeLine(sb, siconname, "s", "sel", sname, "SetPrependIcon")
+	CodeLine(sb, sfieldtype, "s", "sel", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "sel", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "sel", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "sel", sname, "SetFilled")
@@ -1606,8 +1676,15 @@ Sub Design_Select
 	CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
 	CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
 	CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
-
+	AddCode(sb, $"sel${sname}.SetOnChange(Me, "sel${sname}_change")"$)
+	'
 	sb.append($"${sparent}.Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub sel${sname}_change(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	
 End Sub
 
 Sub Design_Slider
@@ -1616,6 +1693,7 @@ Sub Design_Slider
 	sld.SetColorIntensity(scolor, sintensity)
 	sld.SetHideDetails(bishidedetails)
 	sld.SetDark(bisdark)
+	sld.SetValue(svalue)
 	sld.SetReadonly(bisreadonly)
 	sld.SetVertical(bisvertical)
 	sld.SetStep(sstepvalue)
@@ -1625,6 +1703,7 @@ Sub Design_Slider
 	sld.SetThumbSize(sthumbsize)
 	sld.SetThumbColorIntensity(sthumbcolor,sthumbintensity)
 	sld.SetTrackColorIntensity(strackcolor,strackintensity)
+	sld.SetFieldType(sfieldtype)
 	If bisthumblabel Then sld.SetThumbLabel(bisthumblabel)
 	If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
 	ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
@@ -1633,6 +1712,8 @@ Sub Design_Slider
 	CodeLine(sb, sslidervalue, "s", "sld", sname, "SetValue")
 	CodeLine2(sb, scolor, sintensity, "s", "sld", sname, "SetColorIntensity")
 	CodeLine(sb, bishidedetails, "b", "sld", sname, "SetHidedetails")
+	CodeLine(sb, sfieldtype, "s", "sld", sname, "SetFieldType")
+	CodeLine(sb, svalue, "s", "sld", sname, "SetValue")
 	CodeLine(sb, bisdark, "b", "sld", sname, "SetDark")
 	CodeLine(sb, bisreadonly, "b", "sld", sname, "SetReadonly")
 	CodeLine(sb, bisvertical, "b", "sld", sname, "SetVertical")
@@ -1707,6 +1788,7 @@ Sub Design_Email
 	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
 	email.SetFieldType(sfieldtype)
 	email.SetSolo(bissolo)
+	email.SetValue(svalue)
 	email.SetOutlined(bisoutlined)
 	email.SetFilled(bisfilled)
 	email.SetDense(bisdense)
@@ -1723,6 +1805,7 @@ Sub Design_Email
 	sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "email", sname, "SetFieldType")
+	CodeLine(sb, svalue, "s", "email", sname, "SetValue")
 	CodeLine(sb, bissolo, "b", "email", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "email", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "email", sname, "SetFilled")
@@ -1756,6 +1839,7 @@ Sub Design_Password
 	pwd.SetRounded(bisrounded)
 	pwd.SetClearable(bclearable)
 	pwd.SetHideDetails(bishidedetails)
+	pwd.SetValue(svalue)
 				
 	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
@@ -1774,6 +1858,7 @@ Sub Design_Password
 	CodeLine(sb, bisrounded, "b", "pwd", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "pwd", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "pwd", sname, "SetHideDetails")
+	CodeLine(sb, svalue, "s", "pwd", sname, "SetValue")
 
 	sb.append($"${sparent}.Container.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -1784,6 +1869,7 @@ Sub Design_Tel
 	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
 	tel.SetFieldType(sfieldtype)
 	tel.SetSolo(bissolo)
+	tel.SetValue(svalue)
 	tel.SetOutlined(bisoutlined)
 	tel.SetFilled(bisfilled)
 	tel.SetDense(bisdense)
@@ -1799,6 +1885,7 @@ Sub Design_Tel
 	'
 	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
+	CodeLine(sb, svalue, "s", "tel", sname, "SetValue")
 	CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "tel", sname, "SetOutlined")
@@ -1824,6 +1911,7 @@ Sub Design_Time
 	tp.SetDisabled(bisdisabled)
 	tp.SetAmPmInTitle(bisampm)
 	tp.SetDark(bisdark)
+	tp.SetValue(svalue)
 	'tp.SetNotitle(bisnotitle)
 	tp.SetUSeSeconds(bisuseseconds)
 	'tp.SetColorIntensity(scolor, sintensity)
@@ -1847,6 +1935,7 @@ Sub Design_Time
 	'
 	sb.append($"Dim tp${sname} As VMDateTimePicker = vm.NewTimePicker(Me, ${bStatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
+	CodeLine(sb, svalue, "s", "tp", sname, "SetValue")
 	CodeLine(sb, bisvisible, "b", "tp", sname, "SetVisible")
 	CodeLine(sb, bisdisabled, "b", "tp", sname, "SetDisabled")
 	CodeLine(sb, bisampm, "b", "tp", sname, "SetAmPmInTitle")
@@ -1868,8 +1957,13 @@ Sub Design_Time
 	CodeLine(sb, bisrounded, "b", "tp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "tp", sname, "TextField.SetClearable")
 	CodeLine(sb, bishidedetails, "b", "tp", sname, "TextField.SetHideDetails")
-		
+	AddCode(sb, $"tp${sname}.SetOnChange(Me, "tp${sname}_change")"$)
 	sb.append($"${sparent}.Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub tp${sname}_change(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 End Sub
 
 Sub Design_Icon
@@ -2676,12 +2770,71 @@ Sub Design_Button
 			CodeLine(sb, True, "b", "btn", sname, "SetXLarge")
 	End Select
 	sb.append($"${sparent}.Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'add events
+	'
+	AddCode(sbEvents, $"Private Sub ${sname}_click(e As BANanoEvent)"$)
+	Select Case sclickaction
+	Case "add"
+		'add a record
+		AddComment(sbEvents, "set mode to A-dd")
+		sbEvents.append($"Mode = "A""$).append(CRLF)
+		AddComment(sbEvents, "set default values")
+		sbEvents.append($"${sdialogpage}.Container.SetDefaults"$).append(CRLF)
+		If sdialogpage.ToLowerCase <> "vm" Then
+			AddComment(sbEvents, "update the title")
+			sbEvents.append($"${sdialogpage}.SetTitle("New Record")"$).append(CRLF)
+			AddComment(sbEvents, "show dialog")
+			sbEvents.append($"vm.ShowDialog("${sdialogpage}")"$).append(CRLF)
+		End If
+	Case "edit"
+		'edit a record
+		AddComment(sbEvents, "set mode to E-dit")
+		sbEvents.append($"Mode = "E""$).append(CRLF)
+		AddComment(sbEvents, "set default values")
+		sbEvents.append($"${sdialogpage}.Container.SetDefaults"$).append(CRLF)
+		If sdialogpage.tolowercase <> "vm" Then
+			AddComment(sbEvents, "update the title")
+			sbEvents.append($"${sdialogpage}.SetTitle("Edit Record")"$).append(CRLF)
+			AddComment(sbEvents, "show dialog")
+			sbEvents.append($"vm.ShowDialog("${sdialogpage}")"$).append(CRLF)
+		End If
+		AddComment(sbEvents,"add code to read the record as a map")
+		AddCode(sbEvents, "Dim Record As Map = CreateMap()")
+		AddComment(sbEvents, "set state to display the record")
+		AddCode(sbEvents, "vm.SetState(Record)")
+	Case "save"
+		'save a record
+		AddComment(sbEvents, "get the record to create/update")
+		sbEvents.append($"Dim Record As Map = ${sdialogpage}.Container.GetData"$).append(CRLF)
+		AddComment(sbEvents, "validate the record")
+		sbEvents.append($"Dim bValid As Boolean = vm.Validate(Record, ${sdialogpage}.Container.Required)"$).append(CRLF)
+		AddComment(sbEvents, "if invalid exit create/update")
+		sbEvents.append($"If bValid = False Then Return"$).append(CRLF)
+		AddComment(sbEvents, "add code to save the record!")
+	Case "delete"
+		'delete a record
+		AddComment(sbEvents, "get the record to delete")
+		sbEvents.append($"Dim Record As Map = ${sdialogpage}.Container.GetData"$).append(CRLF)
+		AddComment(sbEvents, "add code to delete the record!")
+	Case "showdialog"
+		'show a dialog
+		AddCode(sbEvents, $"vm.ShowDialog("${sdialogpage}")"$)
+	Case "hidedialog"
+		'hide a dialog
+		AddCode(sbEvents, $"vm.HideDialog("${sdialogpage}")"$)
+	Case "showpage"
+		'show a page
+		AddCode(sbEvents, $"vm.ShowPage("${sdialogpage}")"$)
+	End Select
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 End Sub
 
 Sub Design_TextField
 	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txt.SetFieldType(sfieldtype)
 	txt.SetSolo(bissolo)
+	txt.SetValue(svalue)
 	txt.SetOutlined(bisoutlined)
 	txt.SetFilled(bisfilled)
 	txt.SetDense(bisdense)
@@ -2696,7 +2849,9 @@ Sub Design_TextField
 	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	
 	'
+	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
@@ -3559,10 +3714,10 @@ Sub ComponentsPanel As VMExpansionPanel
 	grd.Container.SetTag("div")
 	grd.Container.AddRows(1).AddColumns12
 	'
-	Dim mycomponents As VMList = vm.CreateList("mycomponents", Me)
-	mycomponents.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "")
+	Dim myComponents1 As VMList = vm.CreateList("mycomponents", Me)
+	myComponents1.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "")
 	
-	grd.Container.AddComponent(1,1,mycomponents.tostring)
+	grd.Container.AddComponent(1,1,myComponents1.tostring)
 
 	Return grd
 End Sub
@@ -4240,7 +4395,7 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("isautogrow","No")
 					attr.put("ontable", "No")
 					attr.put("maxlength", 0)
-					attr.Put("iconname", "mdi-account-circle")
+					attr.Put("iconname", "mdi-account")
 					attr.put("centeronparent", "No")
 					attr.put("sourcetable", "datasource")
 					attr.put("sourcefield", "id")
@@ -4266,8 +4421,15 @@ Sub ItemDrop(e As BANanoEvent)
 						Case "label"
 							attr.put("labelsize", "p")
 							attr.put("value", slabel)
+						Case "email"
+							attr.put("iconname", "mdi-email-outline")
 						Case "password"
+							attr.put("iconname", "mdi-lock-outline")
 							attr.put("istoggle", "Yes")
+						Case "tel"
+							attr.put("iconname", "mdi-phone")
+						Case "textarea"
+							attr.put("iconname", "mdi-comment-outline")
 						Case "profile"
 							attr.put("borderradius", "50%")
 							attr.put("borderwidth", "1px")
@@ -4284,8 +4446,9 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("src", "./assets/material.jpg")
 							BANano.SetLocalStorage("selectedpanel", 1)
 						Case "icon"
-							attr.put("islarge", "Yes")
+							attr.put("size", "x-large")
 							attr.put("color", "blue")
+							attr.put("iconname", "mdi-vuetify")
 							BANano.SetLocalStorage("selectedpanel", 1)
 						Case "button"
 							BANano.SetLocalStorage("selectedpanel", 3)
@@ -4453,10 +4616,10 @@ Sub PropertyBag_Slider
 	pbslider.AddHeading("d","Details")
 	pbslider.AddText("d","id","ID","","")
 	pbslider.AddSelect("d", "controltype", "Type", controltypes)
-	pbslider.AddText("d","parent","Parent","","vm")
+	pbslider.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
 	pbslider.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
-	pbslider.AddText2("d", CreateMap("vmodel":"VModel", "label":"Label"))
-	pbslider.AddText2("d", CreateMap("slidervalue": "Value(s)", "stepvalue": "Step"))
+	pbslider.AddText2("d", CreateMap("label": "Label", "slidervalue": "Value(,)"))
+	pbslider.AddText2("d", CreateMap("stepvalue": "Step Value"))
 	pbslider.AddText2("d", CreateMap("minvalue": "Min Value", "maxvalue": "Max Value"))
 	pbslider.AddText2("d", CreateMap("prependicon": "Prepend Icon", "appendicon": "Append Icon"))
 	pbslider.AddText2("d", CreateMap("thumbsize": "Thumb Size", "tabindex":"Tab Index"))
@@ -4486,8 +4649,9 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddHeading("d","Details")
 	pbdatepicker.AddText("d","id","ID","","")
 	pbdatepicker.AddSelect("d", "controltype", "Type", controltypes)
-	pbdatepicker.AddText("d","parent","Parent","","vm")
-	pbdatepicker.AddText2("d",CreateMap("vmodel":"VModel","label":"Label"))
+	pbdatepicker.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
+	pbdatepicker.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
+	pbdatepicker.AddText2("d", CreateMap("label": "Label", "value":"Value"))
 	pbdatepicker.AddText("d","placeholder","Placeholder","","")
 	pbdatepicker.AddText("d","helpertext","Helper Text","","")
 	pbdatepicker.AddText("d","errortext","Error Text","","")
@@ -4512,7 +4676,7 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddSwitches("e", CreateMap("issingleline": "Single Line", "ispersistenthint": "Persistent Hint"))
 	pbdatepicker.AddSwitches("e", CreateMap("isshaped": "Shaped - FOS", "isloading": "Loading"))
 	pbdatepicker.AddSwitches("e", CreateMap("isflat": "Flat - Solo", "isrounded": "Rounded - FOS"))
-	pbdatepicker.AddSwitches("e", CreateMap("ishidedetails": "Hide Details"))
+	pbdatepicker.AddSwitches("e", CreateMap("ishidedetails": "Hide Details","isnow":"Now"))
 	pbdatepicker.AddHeading("f","Matrix")
 	pbdatepicker.AddMatrix("f")
 	vm.container.Addcomponent(1, 3, pbdatepicker.tostring)
@@ -4522,18 +4686,20 @@ End Sub
 
 #Region Button Property Bag
 Sub PropertyBag_Button
+	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record","showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page")
 	vm.setdata("pbbutton", False)
 	pbbutton = vm.CreateProperty("ppbbutton", Me)
 	pbbutton.SetVShow("pbbutton")
 	pbbutton.AddHeading("d","Details")
 	pbbutton.AddText("d","id","ID","","")
 	pbbutton.AddSelect("d", "controltype", "Type", controltypes)
-	pbbutton.AddText("d","parent","Parent","","vm")
-	pbbutton.AddText2("d",CreateMap("vmodel":"ID", "label":"Label"))
+	pbbutton.AddText2("d",CreateMap("parent":"Parent","vmodel":"ID"))
+	pbbutton.AddText2("d",CreateMap("label":"Label", "iconname":"Icon Name"))
 	pbbutton.AddText("d","href","Href","","")
-	pbbutton.AddText("d","iconname","Icon Name","","")
-	pbbutton.AddSelect2("d","target","Target", vm.TargetOptions, "size", "Size", iconsizes)
 	pbbutton.AddText("d","to","Navigate To","","")
+	pbbutton.AddSelect2("d","target","Target", vm.TargetOptions, "size", "Size", iconsizes)
+	pbbutton.AddText("d","dialogpage","Dialog / Page Name","","")
+	pbbutton.AddSelect("d","clickaction", "On Click Action", ops)
 	pbbutton.AddText("d","tooltip","Tooltip","","")
 	pbbutton.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbbutton.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
@@ -4616,11 +4782,11 @@ Sub PropertyBag_CheckBox
 	pbcheckbox.AddHeading("d","Details")
 	pbcheckbox.AddText("d","id","ID","","")
 	pbcheckbox.AddSelect("d", "controltype", "Type", controltypes)
-	pbcheckbox.AddText("d","parent","Parent","","vm")
+	pbcheckbox.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
 	pbcheckbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
-	pbcheckbox.AddText2("d",CreateMap("vmodel":"VModel", "label":"Label"))
+	pbcheckbox.AddText2("d",CreateMap("label":"Label", "value": "Value"))
 	pbcheckbox.AddText2("d",CreateMap("truevalue":"True Value", "falsevalue":"False Value"))
-	pbcheckbox.AddNumber("d","tabindex","Tab Index","","")
+	pbcheckbox.AddText2("d", CreateMap("tabindex":"Tab Index"))
 	pbcheckbox.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbcheckbox.AddSelect("d","switchloading","Loading", vm.ColorOptions)
 	'
@@ -4647,9 +4813,9 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddHeading("d","Details")
 	pbradiogroup.AddText("d","id","ID","","")
 	pbradiogroup.AddText("d", "controltype", "Type", "", "radio")
-	pbradiogroup.AddText("d","parent","Parent","","vm")
-	pbradiogroup.AddText2("d",CreateMap("vmodel":"VModel", "label":"Label"))
-	pbradiogroup.AddText("d","value","Value","","")
+	pbradiogroup.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
+	pbradiogroup.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
+	pbradiogroup.AddText2("d",CreateMap("label":"Label","value":"Value"))
 	pbradiogroup.AddText("d","sourcetable","Data Source","","")
 	pbradiogroup.AddText2("d", CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
 	pbradiogroup.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
@@ -4677,10 +4843,10 @@ Sub PropertyBag_Select
 	pbselectbox.AddHeading("d","Details")
 	pbselectbox.AddText("d","id","ID","","")
 	pbselectbox.AddSelect("d", "controltype", "Type", controltypes)
-	pbselectbox.AddText("d","parent","Parent","","vm")
+	pbselectbox.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
 	pbselectbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
-	pbselectbox.AddText2("d",CreateMap("vmodel":"VModel","label":"Label"))
-	pbselectbox.AddText("d", "value", "Value","","")
+	pbselectbox.AddText2("d",CreateMap("label":"Label", "value": "Value"))
+	pbselectbox.AddText("d","iconname","Icon Name","","")
 	pbselectbox.AddText("d","placeholder","Placeholder","","")
 	pbselectbox.AddNumber("d","tabindex","Tab Index","","")
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
@@ -4842,16 +5008,14 @@ Sub PropertyBag_TextField
 	pbtextfield.AddHeading("d","Details")
 	pbtextfield.AddText("d","id","ID","","")
 	pbtextfield.AddSelect("d", "controltype", "Type", controltypes)
-	pbtextfield.AddText("d","parent","Parent","","vm")
+	pbtextfield.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
 	pbtextfield.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
-	pbtextfield.AddText2("d",CreateMap("vmodel":"VModel", "label":"Label"))
+	pbtextfield.AddText2("d", CreateMap("label": "Label","value": "Value"))
 	pbtextfield.AddText("d","iconname","Icon Name","","")
-	pbtextfield.AddText("d", "value", "Value","","")
 	pbtextfield.AddText("d", "placeholder","Placeholder","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
 	pbtextfield.AddText("d","errortext","Error Text","","")
-	pbtextfield.AddNumber("d","tabindex","Tab Index","","")
-	pbtextfield.AddTel("d","maxlength","Max Length/Counter","","")
+	pbtextfield.AddText2("d",CreateMap("tabindex":"Tab Index", "maxlength":"Max Length/Counter"))
 	'
 	pbtextfield.AddHeading("e","Settings")
 	pbtextfield.AddSwitches("e", CreateMap("isrequired": "Required", "isclearable": "Clearable"))
@@ -5436,6 +5600,7 @@ Sub PropertyBag_Rating
 	pbrating.AddText("d","id","ID","","")
 	pbrating.AddText("d", "controltype", "Type", "","rating")
 	pbrating.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
+	pbrating.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbrating.AddText2("d",CreateMap("value":"Value", "length":"Length"))
 	pbrating.AddText2("d",CreateMap("opendelay":"OpenDelay", "size":"Size"))
 	pbrating.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Color Intensity", vm.IntensityOptions)
@@ -5447,13 +5612,12 @@ Sub PropertyBag_Rating
 	pbrating.AddText("d","tabindex","Tab Index","","")
 	'
 	pbrating.AddHeading("e","Settings")
-	pbrating.AddSwitches("e", CreateMap("isclearable": "Clearable", "isdark": "Dark"))
+	pbrating.AddSwitches("e", CreateMap("isdark": "Dark", "islight": "Light"))
 	pbrating.AddSwitches("e", CreateMap("isdense": "Dense", "ishalfincrements": "HalfIncrements"))
 	pbrating.AddSwitches("e", CreateMap("ishover": "Hover", "islarge": "Large"))
-	pbrating.AddSwitches("e", CreateMap("islight": "Light", "isreadonly": "Readonly"))
+	pbrating.AddSwitches("e", CreateMap("isreadonly": "Readonly", "isvisible": "Visible"))
 	pbrating.AddSwitches("e", CreateMap("isripple": "Ripple", "issmall": "Small"))
-	pbrating.AddSwitches("e", CreateMap("isvisible": "Visible", "isxlarge": "XLarge"))
-	pbrating.AddSwitches("e", CreateMap("isxsmall": "XSmall"))
+	pbrating.AddSwitches("e", CreateMap("isxsmall": "XSmall","isxlarge": "XLarge"))
 	'
 	pbrating.AddHeading("f","Matrix")
 	pbrating.AddMatrix("f")
@@ -5494,7 +5658,7 @@ Sub Design_Rating
 	Dim rating As VMRating = ui.CreateRating("rating" & sname, Me)
 	rating.SetStatic(True)
 	rating.SetValue(svalue)
-	rating.SetClearable(bisClearable)
+	rating.SetFieldType(sfieldtype)
 	rating.SetClosedelay(sclosedelay)
 	rating.SetDark(bisdark)
 	rating.SetDense(bisdense)
@@ -5522,7 +5686,7 @@ Sub Design_Rating
 	'
 	sb.append($"Dim rating${sname} As VMRating = vm.CreateRating("rating${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, svalue, "s", "Rating", sname, "SetValue")
-	CodeLine(sb, bisClearable, "b", "Rating", sname, "SetClearable")
+	CodeLine(sb, sfieldtype, "s", "Rating", sname, "SetFieldType")
 	CodeLine(sb, sclosedelay, "s", "Rating", sname, "SetClosedelay")
 	CodeLine(sb, bisdark, "b", "Rating", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "Rating", sname, "SetDense")
@@ -5545,8 +5709,13 @@ Sub Design_Rating
 	CodeLine(sb, bisXsmall, "b", "Rating", sname, "SetXsmall")
 	CodeLine2(sb, scolor, sintensity, "b", "Rating", sname, "SetColorIntensity")
 	CodeLine2(sb, sBackgroundcolor, sBackgroundintensity, "b", "Rating", sname, "SetBackgroundColorIntensity")
-	
+	AddCode(sb, $"Rating${sname}.SetOnInput(Me, "Rating${sname}_input")"$)
 	sb.append($"${sparent}.Container.AddControl(rating${sname}.Rating, rating${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub Rating${sname}_input(value As Object)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
 
 End Sub
 

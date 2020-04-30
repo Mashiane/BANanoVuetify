@@ -521,8 +521,8 @@ Sub SetTransition(varTransition As String) As VMToolTip
 End Sub
 
 'set value, visible / not visible
-Sub SetValue(varValue As string) As VMToolTip
-	SetAttrSingle("value", varValue)
+Sub SetValue(varValue As String) As VMToolTip
+	ToolTip.SetValue(varValue, False)
 	Return Me
 End Sub
 

@@ -183,7 +183,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSlideGroup
-	SetAttrSingle("value", varValue)
+	SlideGroup.SetValue(varValue, False)
 	Return Me
 End Sub
 

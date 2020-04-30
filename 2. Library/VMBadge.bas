@@ -428,7 +428,7 @@ Sub SetValue(varValue As Boolean) As VMBadge
 	If varValue = "" Then Return Me
 	HasContent = True
 	If bStatic Then
-		SetAttrSingle("value", varValue)
+		Badge.SetValue(varValue,False)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Value"$

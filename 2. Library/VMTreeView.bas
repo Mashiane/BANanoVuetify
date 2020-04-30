@@ -465,7 +465,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMTreeView
-	SetAttrSingle("value", varValue)
+	TreeView.SetValue(varValue, False)
 	Return Me
 End Sub
 

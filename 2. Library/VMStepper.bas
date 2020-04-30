@@ -300,7 +300,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMStepper
-	SetAttrSingle("value", varValue)
+	Stepper.SetValue(varValue, False)
 	Return Me
 End Sub
 
@@ -348,7 +348,7 @@ End Sub
 
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMStepper
-	stepper.Bind(prop, stateprop)
+	Stepper.Bind(prop, stateprop)
 	Return Me
 End Sub
 

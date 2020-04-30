@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private vmodel As String
 End Sub
 
 'initialize the Input
@@ -22,6 +23,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	vmodel = ""
 	Return Me
 End Sub
 
@@ -69,6 +71,7 @@ End Sub
 
 Sub SetVModel(k As String) As VMInput
 	Input.SetVModel(k)
+	vmodel = k.tolowercase
 	Return Me
 End Sub
 
@@ -322,7 +325,8 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMInput
-	SetAttrSingle("value", varValue)
+	Input.SetValue(varValue, False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 

@@ -283,7 +283,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMBanner
-	SetAttrSingle("value", varValue)
+	Banner.SetValue(varValue,False)
 	Return Me
 End Sub
 

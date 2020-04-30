@@ -65,7 +65,6 @@ Sub Class_Globals
 	Public fieldType As String
 	Public typeOf As String
 	Public InputType As String
-	Public defaultValue As Object
 	Public Template As String
 	Public IsVisible As Boolean 
 	Public IsDisabled As Boolean
@@ -159,7 +158,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	typeOf = "text"
 	fieldType = "string"
 	InputType = "text"
-	defaultValue = Null
 	name = ID
 	IsVisible = True
 	IsDisabled = False
@@ -437,36 +435,38 @@ Sub SetAttrSingle(prop As String, vals As String) As VMElement
 End Sub
 
 Sub Required(b As Boolean) As VMElement
+	If ID = "" Then Return Me
+	IsRequired = b
+	bUsesRequired = True
 	If bStatic Then
 		SetAttrSingle("required", b)
 		Return Me
 	End If
-	If ID = "" Then Return Me
-	IsRequired = b
 	vue.SetStateSingle(reqKey, b)
 	Bind(":required", reqKey)
 	Return Me
 End Sub
 
 Sub Enable(b As Boolean) As VMElement
+	If ID = "" Then Return Me
 	Dim n As Boolean = Not(b)
+	IsDisabled = n
+	bUsedDisabled = True
 	If bStatic Then
 		SetAttrSingle("disabled", n)
 		Return Me
 	End If
-	If ID = "" Then Return Me
-	IsDisabled = n
 	vue.SetStateSingle(disKey, n)
 	Bind(":disabled", disKey)
 	Return Me
 End Sub
 
 Sub Disable(b As Boolean) As VMElement
+	IsDisabled = b
 	If bStatic Then
 		SetAttrSingle("disabled", b)
 		Return Me
 	End If
-	IsDisabled = b
 	vue.SetStateSingle(disKey, b)
 	Bind(":disabled", disKey)
 	Return Me
@@ -924,19 +924,20 @@ End Sub
 Sub SetDisabled(b As Boolean) As VMElement
 	If ID = "" Then Return Me
 	bUsedDisabled = b
+	IsDisabled = b
 	vue.SetStatesingle(disKey, b)
 	Element.SetAttr(":disabled", disKey)
 	Return Me
 End Sub
 
 Sub SetRequired(b As Boolean) As VMElement
+	IsRequired = b
+	bUsesRequired = True
 	If bStatic Then
 		Element.SetAttr("required", b)
 		Return Me
 	End If
 	If ID = "" Then Return Me
-	IsRequired = b
-	bUsesRequired = True
 	vue.SetStateSingle(reqKey, b)
 	Element.SetAttr(":required", reqKey)
 	Return Me

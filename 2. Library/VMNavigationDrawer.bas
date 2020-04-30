@@ -555,7 +555,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMNavigationDrawer
-	SetAttrSingle("value", varValue)
+	NavigationDrawer.SetValue(varValue, False)
 	Return Me
 End Sub
 

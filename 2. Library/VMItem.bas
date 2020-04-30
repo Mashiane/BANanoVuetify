@@ -111,7 +111,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMItem
-	SetAttrSingle("value", varValue)
+	Item.SetValue(varValue, False)
 	Return Me
 End Sub
 

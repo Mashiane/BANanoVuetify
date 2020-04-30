@@ -426,7 +426,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMCarousel
-	SetAttrSingle("value", varValue)
+	Carousel.SetValue(varValue, False)
 	Return Me
 End Sub
 

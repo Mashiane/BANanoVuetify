@@ -264,7 +264,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMProgressLinear
-	SetAttrSingle("value", varValue)
+	ProgressLinear.SetValue(varValue, False)
 	Return Me
 End Sub
 

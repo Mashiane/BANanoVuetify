@@ -23,7 +23,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	SetAttrSingle("key", ID)
-	SetAttrSingle("value", ID)
+	TabItem.SetValue(ID, False)
 	Return Me
 End Sub
 
@@ -161,7 +161,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMTabItem
-	SetAttrSingle("value", varValue)
+	TabItem.SetValue(varValue, False)
 	Return Me
 End Sub
 

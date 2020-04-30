@@ -119,7 +119,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMHover
-	SetAttrSingle("value", varValue)
+	Hover.SetValue(varValue, False)
 	Return Me
 End Sub
 

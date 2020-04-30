@@ -702,7 +702,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMMenu
-	SetAttrSingle("value", varValue)
+	Menu.SetValue(varValue,False)
 	Return Me
 End Sub
 

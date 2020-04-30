@@ -199,7 +199,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMChipGroup
-	SetAttrSingle("value", varValue)
+	ChipGroup.SetValue(varValue, False)
 	Return Me
 End Sub
 

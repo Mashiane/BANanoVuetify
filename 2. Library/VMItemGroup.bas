@@ -143,7 +143,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMItemGroup
-	SetAttrSingle("value", varValue)
+	ItemGroup.SetValue(varValue, False)
 	Return Me
 End Sub
 

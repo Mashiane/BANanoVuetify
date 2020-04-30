@@ -397,6 +397,7 @@ Sub NewRadioGroup(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.Setlabel(slabel)
 	el.SetOptions(optionsm)
 	el.SetTabIndex(iTabIndex)
+	el.SetValue(svalue)
 	vue.SetData(vmodel, svalue)
 	If bShowLabel = False Then el.SetLabel("")
 	If bLabelOnTop Then
@@ -1658,7 +1659,7 @@ Sub AddControl1(el As VMElement, template As String)
 	'
 	AddComponent(el.r, el.C, template)
 	Select Case el.typeOf
-	Case "checkbox", "checkbox", "switchbox", "switch"
+	Case "checkbox", "switchbox", "switch"
 		Dim newoption As CheckedUnchecked
 		newoption.Initialize
 		newoption.fieldname = el.vmodel
@@ -1674,7 +1675,7 @@ Sub AddControl1(el As VMElement, template As String)
 		If el.isarray Then
 			vue.SetStateSingle(el.vmodel, vue.newlist)
 		Else
-			vue.SetStateSingle(el.vmodel, el.defaultValue)
+			vue.SetStateSingle(el.vmodel, el.Value)
 		End If
 		vue.SetStateSingle(errKey, False)
 	End If	
@@ -1897,7 +1898,7 @@ private Sub CreateGrid
 					el.IsRequired = False
 				Case Else
 					Fields.Add(el.vmodel)
-					Defaults.Put(el.vmodel, el.defaultValue)
+					Defaults.Put(el.vmodel, el.value)
 			End Select
 			If el.isrequired Then Required.put(el.vmodel, el.vmodel)
 			Select Case el.fieldType

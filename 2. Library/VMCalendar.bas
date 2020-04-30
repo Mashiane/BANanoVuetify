@@ -399,7 +399,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMCalendar
-	SetAttrSingle("value", varValue)
+	Calendar.SetValue(varValue, False)
 	Return Me
 End Sub
 

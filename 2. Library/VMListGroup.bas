@@ -243,7 +243,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMListGroup
-	SetAttrSingle("value", varValue)
+	ListGroup.SetValue(varValue, False)
 	Return Me
 End Sub
 '

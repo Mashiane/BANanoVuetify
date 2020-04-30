@@ -294,7 +294,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSnackBar
-	SetAttrSingle("value", varValue)
+	SnackBar.SetValue(varValue, False)
 	Return Me
 End Sub
 

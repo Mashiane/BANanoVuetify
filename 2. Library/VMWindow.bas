@@ -208,7 +208,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMWindow
-	SetAttrSingle("value", varValue)
+	Window.SetValue(varValue, False)
 	Return Me
 End Sub
 

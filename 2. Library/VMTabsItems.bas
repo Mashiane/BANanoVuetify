@@ -234,7 +234,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMTabsItems
-	SetAttrSingle("value", varValue)
+	TabsItems.SetValue(varValue, False)
 	Return Me
 End Sub
 

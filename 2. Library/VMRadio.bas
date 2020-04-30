@@ -313,7 +313,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMRadio
-	Radio.SetAttrSingle("value", varValue)
+	Radio.SetValue(varValue, False)
 	Return Me
 End Sub
 

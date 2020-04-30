@@ -874,7 +874,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMButton
-	Button.SetAttrSingle("value", varValue)
+	Button.SetValue(varValue,False)
 	Return Me
 End Sub
 

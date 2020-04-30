@@ -170,7 +170,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMForm
-	SetAttrSingle("value", varValue)
+	Form.SetValue(varValue, False)
 	Return Me
 End Sub
 

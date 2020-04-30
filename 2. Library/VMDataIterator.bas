@@ -518,7 +518,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMDataIterator
-	SetAttrSingle("value", varValue)
+	DataIterator.SetValue(varValue, False)
 	Return Me
 End Sub
 

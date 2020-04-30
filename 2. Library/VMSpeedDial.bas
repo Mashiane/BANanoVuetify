@@ -474,7 +474,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMSpeedDial
-	SetAttrSingle("value", varValue)
+	SpeedDial.SetValue(varValue, False)
 	Return Me
 End Sub
 

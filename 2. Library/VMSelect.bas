@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Private ErrorText As String
 	Private bStatic As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the Combo
@@ -28,6 +29,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ErrorText = ""
 	Combo.typeOf = "select"
 	bStatic = False
+	vmodel = ""
+	Return Me
+End Sub
+
+
+Sub SetFieldType(ft As String) As VMSelect
+	Combo.fieldType = ft
 	Return Me
 End Sub
 
@@ -206,6 +214,7 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSelect
 End Sub
 
 Sub SetVModel(k As String) As VMSelect
+	vmodel = k.tolowercase
 	Combo.SetVModel(k)
 	Return Me
 End Sub
@@ -1072,7 +1081,8 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMSelect
-	SetAttrSingle("value", varValue)
+	Combo.SetValue(varValue, False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 
@@ -1189,7 +1199,7 @@ Sub SetOnClick(eventHandler As Object, methodName As String) As VMSelect
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("v-on:click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

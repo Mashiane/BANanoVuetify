@@ -397,7 +397,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMListItem
-	SetAttrSingle("value", varValue)
+	ListItem.SetValue(varValue, False)
 	Return Me
 End Sub
 '

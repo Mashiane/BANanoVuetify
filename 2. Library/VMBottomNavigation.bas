@@ -281,7 +281,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMBottomNavigation
-	SetAttrSingle("value", varValue)
+	BottomNavigation.SetValue(varValue,False)
 	Return Me
 End Sub
 

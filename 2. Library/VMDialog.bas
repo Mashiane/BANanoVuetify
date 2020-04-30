@@ -529,7 +529,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMDialog
-	SetAttrSingle("value", varValue)
+	Dialog.SetValue(varValue, False)
 	Return Me
 End Sub
 

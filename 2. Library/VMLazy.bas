@@ -127,7 +127,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMLazy
-	SetAttrSingle("value", varValue)
+	Lazy.SetValue(varValue, False)
 	Return Me
 End Sub
 

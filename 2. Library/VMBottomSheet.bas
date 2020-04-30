@@ -272,7 +272,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMBottomSheet
-	SetAttrSingle("value", varValue)
+	BottomSheet.SetValue(varValue, False)
 	Return Me
 End Sub
 

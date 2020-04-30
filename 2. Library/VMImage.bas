@@ -265,13 +265,14 @@ Sub SetValue(url As String) As VMImage
 End Sub
 
 Sub SetVModel(k As String, value As String) As VMImage
+	Image.Value = value
 	If bStatic Then
 		SetSrc(value)
 		Return Me
 	End If
 	k = k.tolowercase
 	vue.SetData(k, value)
-	SetSrc(k)	
+	SetSrc(k)
 	Return Me
 End Sub
 
@@ -280,7 +281,7 @@ Sub SetVIf(vif As String) As VMImage
 	Return Me
 End Sub
 
-Sub SetVShow(vif As string) As VMImage
+Sub SetVShow(vif As String) As VMImage
 	Image.SetVShow(vif)
 	Return Me
 End Sub

@@ -229,7 +229,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMExpansionPanels
-	SetAttrSingle("value", varValue)
+	ExpansionPanels.SetValue(varValue, False)
 	Return Me
 End Sub
 

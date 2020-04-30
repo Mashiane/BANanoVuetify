@@ -33,6 +33,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetFieldType(ft As String) As VMSlider
+	Slider.fieldType = ft
+	Return Me
+End Sub
+
+
 Sub SetRangeSlider(b As Boolean) As VMSlider
 	If b = False Then Return Me
 	Slider.SetTag("v-range-slider")
@@ -695,6 +701,7 @@ Sub SetValue(varValue As String) As VMSlider
 	End If
 	varValue = BANano.parseFloat(varValue)
 	vue.SetData(xmodel, varValue)
+	Slider.SetValue(varValue,False)
 	Return Me
 End Sub
 

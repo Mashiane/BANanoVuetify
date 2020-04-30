@@ -751,9 +751,37 @@ Sub SetType(varType As String) As VMDateTimePicker
 	Return Me
 End Sub
 
+
+Sub SetFieldType(ft As String) As VMDateTimePicker
+	DateTimePicker.fieldType = ft
+	Return Me
+End Sub
+
 'set value
-Sub SetValue(varValue As Object) As VMDateTimePicker
-	SetAttrSingle("value", varValue)
+Sub SetValue(varValue As String) As VMDateTimePicker
+	DateTimePicker.SetValue(varValue,False)
+	TextField.SetValue(varValue)
+	vue.SetData(vmodel, varValue)
+	Return Me
+End Sub
+
+Sub SetIsNow(b As Boolean) As VMDateTimePicker
+	If b = False Then Return Me
+	Dim lNow As Long
+	Dim dt As String
+	lNow = DateTime.Now
+	Select Case bTimePicker
+	Case False
+		'is date picker
+		DateTime.DateFormat = "yyyy-MM-dd"
+		dt = DateTime.Date(lNow)
+		SetValue(dt)
+	Case True
+		'is time picker
+		DateTime.DateFormat = "HH:mm"
+		dt = DateTime.Date(lNow)
+		SetValue(dt)
+	End Select
 	Return Me
 End Sub
 

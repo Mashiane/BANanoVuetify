@@ -363,7 +363,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMTabs
-	SetAttrSingle("value", varValue)
+	Tabs.SetValue(varValue, False)
 	Return Me
 End Sub
 

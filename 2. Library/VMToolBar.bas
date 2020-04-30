@@ -845,7 +845,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMToolBar
-	SetAttrSingle("value", varValue)
+	ToolBar.SetValue(varValue, False)
 Return Me
 End Sub
 

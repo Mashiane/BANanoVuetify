@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private vmodel As String
 End Sub
 
 'initialize the ColorPicker
@@ -22,6 +23,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	vmodel = ""
 	Return Me
 End Sub
 
@@ -57,6 +59,7 @@ End Sub
 
 Sub SetVModel(k As String) As VMColorPicker
 	ColorPicker.SetVModel(k)
+	vmodel = k.tolowercase
 	Return Me
 End Sub
 
@@ -223,8 +226,9 @@ Sub SetSwatchesMaxHeight(varSwatchesMaxHeight As Object) As VMColorPicker
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMColorPicker
-	SetAttrSingle("value", varValue)
+Sub SetValue(varValue As String) As VMColorPicker
+	ColorPicker.SetValue(varValue,False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 

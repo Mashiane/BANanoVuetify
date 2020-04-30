@@ -192,7 +192,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMPagination
-	SetAttrSingle("value", varValue)
+	Pagination.SetValue(varValue, False)
 	Return Me
 End Sub
 

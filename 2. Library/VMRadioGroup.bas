@@ -33,6 +33,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+Sub SetFieldType(ft As String) As VMRadioGroup
+	RadioGroup.fieldType = ft
+	Return Me
+End Sub
+
 'set for
 Sub SetVFor(item As String, dataSource As String, keyField As String, valueField As String, labelField As String) As VMRadioGroup
 	dataSource = dataSource.tolowercase
@@ -604,8 +609,9 @@ Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMRadioGroup
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMRadioGroup
-	SetAttrSingle("value", varValue)
+Sub SetValue(varValue As String) As VMRadioGroup
+	RadioGroup.SetValue(varValue, False)
+	vue.SetData(xmodel, varValue)
 	Return Me
 End Sub
 
@@ -643,8 +649,8 @@ End Sub
 Sub SetOnChange(eventHandler As Object, methodName As String) As VMRadioGroup
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
-	Dim e As Object
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	Dim value As Object
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(value))
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

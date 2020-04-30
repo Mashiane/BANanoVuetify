@@ -207,7 +207,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMButtonToggle
-	SetAttrSingle("value", varValue)
+	ButtonToggle.SetValue(varValue, False)
 	Return Me
 End Sub
 

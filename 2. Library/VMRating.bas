@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the Rating
@@ -24,6 +25,26 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	vmodel = ""
+	Return Me
+End Sub
+
+'
+Sub SetOnInput(eventHandler As Object,methodName As String) As VMRating
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim value As Object
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(value))
+	SetAttr(CreateMap("v-on:input": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+
+
+Sub SetFieldType(ft As String) As VMRating
+	Rating.fieldType = ft
 	Return Me
 End Sub
 
@@ -65,6 +86,7 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMRating
+	vmodel = k.tolowercase
 	Rating.SetVModel(k)
 	Return Me
 End Sub
@@ -376,7 +398,8 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMRating
-	SetAttrSingle("value", varValue)
+	Rating.SetValue(varValue, False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 

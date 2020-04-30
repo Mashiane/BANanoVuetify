@@ -902,7 +902,8 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMTextField
-	TextField.SetAttrSingle("value", varValue)
+	TextField.SetValue(varValue,False)
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 
@@ -975,7 +976,7 @@ End Sub
 Sub SetOnFile(eventHandler As Object, methodName As String) As VMTextField
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
-	Dim fileList As BANanoEvent
+	Dim fileList As Object
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(fileList))
 	SetAttr(CreateMap("v-on:change": methodName))
 	'add to methods

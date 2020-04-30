@@ -50,7 +50,10 @@ Sub btnOkSignIn_click(e As BANanoEvent)
 	Dim rec As Map = mdlSignIn.Container.GetData
 	'validate the details
 	Dim bValid As Boolean = mdlSignIn.Container.Validate(rec)
-	If bValid = False Then Return
+	If bValid = False Then 
+		vm.ShowSnackBar("You need to specify both the email address and password!")
+		Return
+	End If
 	vm.ShowSnackBar(BANano.tojson(rec))
 	'process further
 End Sub
