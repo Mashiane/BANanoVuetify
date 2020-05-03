@@ -407,6 +407,22 @@ Sub GetMax As BANanoAlaSQLE
 	Return Me
 End Sub
 
+'return a sql to delete record of table where one exists
+Sub GetMin As BANanoAlaSQLE
+	Dim sb As String = $"SELECT MIN([${PrimaryKey}]) As [${PrimaryKey}] FROM ${EscapeField(TableName)}"$
+	query = sb
+	args = Null
+	types = Null
+	command = "getmin"
+	response = ""
+	error = ""
+	result = NewList
+	json = ""
+	affectedRows = 0
+	Return Me
+End Sub
+
+
 'return sql command to drop a table
 public Sub DropTable As BANanoAlaSQLE
 	'define the qry to execute
@@ -715,7 +731,7 @@ Sub GetMaxWhere(fldName As String, tblWhere As Map, operators As List) As BANano
 	command = "getmax"
 	response = ""
 	error = ""
-	result = newlist
+	result = NewList
 	json = ""
 	affectedRows = 0
 	Return Me

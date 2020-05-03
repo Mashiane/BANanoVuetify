@@ -14,6 +14,7 @@ Sub Process_Globals
 	Private bShowMatrix As Boolean
 	Private tblProp As VMToolBar
 	'
+	Private sbuttontype As String
 	Private pbtextfield As VMProperty   	'done
 	Private pbdatepicker As VMProperty  	'done
 	Private pbcheckbox As VMProperty    	'done
@@ -34,6 +35,9 @@ Sub Process_Globals
 	Private pbspeeddial As VMProperty
 	Private pbrating As VMProperty
 	Private pbtable As VMProperty
+	Private pbchip As VMProperty
+	Private pbbadge As VMProperty
+	Private pbavatar As VMProperty
 	Private lstBags As List
 	Private avatarMap As Map
 	Private controltypes As Map
@@ -118,8 +122,6 @@ Sub Process_Globals
 	Private starget As String
 	Private sto As String
 	Private bistext As Boolean
-	Private biconbutton As Boolean
-	Private bfabbutton As Boolean
 	Private bisdepressed As Boolean
 	Private bistile As Boolean
 	Private ssize As String
@@ -228,7 +230,6 @@ Sub Process_Globals
 	Private bisscrolloffscreen As Boolean
 	Private bisshort As Boolean
 	Private bisshrinkonscroll As Boolean
-	Private bisvisible As Boolean
 	Private bislogovisible As Boolean
 	'menu
 	Private sactivator As String
@@ -257,7 +258,6 @@ Sub Process_Globals
 	Private bisbottom As Boolean
 	Private biscloseonclick As Boolean
 	Private biscloseoncontentclick As Boolean
-	Private bisdark As Boolean
 	Private bisdisablekeys As Boolean
 	Private bisdisabled As Boolean
 	Private biseager As Boolean
@@ -273,7 +273,6 @@ Sub Process_Globals
 	Private bisright As Boolean
 	Private bisslotactivator As Boolean
 	Private bistop As Boolean
-	Private bisvisible As Boolean
 	Private menutype As String
 	Private jcontents As String
 	Private lcontents As List
@@ -284,7 +283,6 @@ Sub Process_Globals
 	Private smobilebreakpoint As String
 	Private soverlaycolor As String
 	Private soverlayopacity As String
-	Private ssrc As String
 	Private stabindex As String
 	Private stag As String
 	Private swidth As String
@@ -292,7 +290,6 @@ Sub Process_Globals
 	Private bisapp As Boolean
 	Private bisbottom As Boolean
 	Private bisclipped As Boolean
-	Private bisdark As Boolean
 	Private bisdisableresizewatcher As Boolean
 	Private bisdisableroutewatcher As Boolean
 	Private bisexpandonhover As Boolean
@@ -309,7 +306,6 @@ Sub Process_Globals
 	Private bisstateless As Boolean
 	Private bistemporary As Boolean
 	Private bistouchless As Boolean
-	Private bisvisible As Boolean
 	Private smtitle As String
 	Private smsubtitle As String
 	'
@@ -323,7 +319,6 @@ Sub Process_Globals
 	'
 	Private biscontinuous As Boolean
 	Private biscycle As Boolean
-	Private bisdark As Boolean
 	Private bishidedelimiterbackground As Boolean
 	Private bishidedelimiters As Boolean
 	Private bislight As Boolean
@@ -337,7 +332,6 @@ Sub Process_Globals
 	Private bisshowarrowsonhover As Boolean
 	Private bistouchless As Boolean
 	Private bisvertical As Boolean
-	Private bisvisible As Boolean
 	Private sverticaldelimiter As String
 	'
 	Private biscaption As Boolean
@@ -356,7 +350,6 @@ Sub Process_Globals
 	Private bistextlowercase As Boolean
 	Private bistextuppercase As Boolean
 	Private bistitle As Boolean
-	Private bisvisible As Boolean
 	'
 	Private sactivator As String
 	Private scontentclass As String
@@ -366,12 +359,10 @@ Sub Process_Globals
 	Private soverlaycolor As String
 	Private soverlaycolorintensity As String
 	Private soverlayopacity As String
-	Private stitle As String
 	Private stransition As String
 	Private swidth As String
 	Private bisattach As Boolean
 	Private bisbackdrop As Boolean
-	Private bisdark As Boolean
 	Private bisdisabled As Boolean
 	Private biseager As Boolean
 	Private bisfullscreen As Boolean
@@ -385,7 +376,6 @@ Sub Process_Globals
 	Private bisscrollable As Boolean
 	Private bisslotactivator As Boolean
 	Private bistitleprimary As Boolean
-	Private bisvisible As Boolean
 	'
 	Private sCancelid As String
 	Private sCancelcaption As String
@@ -394,7 +384,6 @@ Sub Process_Globals
 	'
 	Private bisabsolute As Boolean
 	Private bisbottom As Boolean
-	Private bisdark As Boolean
 	Private sDirection As String
 	Private sFinalicon As String
 	Private bisfixed As Boolean
@@ -411,7 +400,6 @@ Sub Process_Globals
 	Private sto As String
 	Private bistop As Boolean
 	Private stransition As String
-	Private bisvisible As Boolean
 	Private bisXlarge As Boolean
 	Private bisXsmall As Boolean
 	'rating
@@ -421,7 +409,6 @@ Sub Process_Globals
 	Private sclosedelay As String
 	Private scolor As String
 	Private sintensity As String
-	Private bisdark As Boolean
 	Private bisdense As Boolean
 	Private sEmptyicon As String
 	Private sFullicon As String
@@ -434,17 +421,14 @@ Sub Process_Globals
 	Private sopendelay As String
 	Private bisreadonly As Boolean
 	Private bisRipple As Boolean
-	Private ssize As String
 	Private bisSmall As Boolean
 	Private stabindex As String
 	Private sDatasource As String
-	Private bisvisible As Boolean
 	Private bisXlarge As Boolean
 	Private bisXsmall As Boolean
 	' table
 	Private bisCalculatewidths As Boolean
 Private sCaption As String
-Private bisdark As Boolean
 Private sDatasourcename As String
 Private bisdense As Boolean
 Private bisDisablefiltering As Boolean
@@ -483,8 +467,6 @@ Private bisSingleselect As Boolean
 'Private sSortby As String
 'Private sSortdesc As String
 Private stabindex As String
-Private stitle As String
-Private bisvisible As Boolean
 	Private smastericon As String
 	'
 	Private bisDelete As Boolean
@@ -505,7 +487,7 @@ Private bisvisible As Boolean
 	'
 	Private bisautoincrement As Boolean
 	Private bisaddnew As Boolean
-	Private slabel As String
+	'Private slabel As String
 	'Private previewTB As VMDataTable
 	Private sparent As String
 	Private bisnow As Boolean
@@ -513,6 +495,64 @@ Private bisvisible As Boolean
 	Private sdialogpage As String
 	Private sclickaction As String
 	Private sbEvents As StringBuilder
+	Private iconpos As Map
+	'
+	'chip
+	Private bisActive As Boolean
+	Private bisAppend As Boolean
+	Private bisClose As Boolean
+	Private sCloseicon As String
+	Private scolor As String
+	Private sColorintensity As String
+	Private bisdisabled As Boolean
+	Private bisDraggable As Boolean
+	Private bisExact As Boolean
+	Private bisFilter As Boolean
+	Private shref As String
+	Private sInputvalue As String
+	Private bisLabel As Boolean
+	Private bisLarge As Boolean
+	Private bislight As Boolean
+	Private bisLink As Boolean
+	Private bisNuxt As Boolean
+	Private bisoutlined As Boolean
+	Private bisPill As Boolean
+	Private bisReplace As Boolean
+	Private bisRipple As Boolean
+	Private bisSmall As Boolean
+	Private starget As String
+	Private stextcolor As String
+	Private sTextcolorintensity As String
+	Private sto As String
+	Private bisXlarge As Boolean
+	Private bisXsmall As Boolean
+	Private siconpos As String
+	Private schiptype As String
+	'
+	Private bisAvatar As Boolean
+	Private bisBordered As Boolean
+	Private bisbottom As Boolean
+	Private sContent As String
+	Private bisdark As Boolean
+	Private bisdisabled As Boolean
+	Private bisDot As Boolean
+	Private bisInline As Boolean
+	Private bisleft As Boolean
+	Private bislight As Boolean
+	Private sOffsetx As String
+	Private sOffsety As String
+	Private sorigin As String
+	Private bisOverlap As Boolean
+	Private bistile As Boolean
+	'avatar
+	Private sBadge As String
+	Private bisHasbadge As Boolean
+	Private bisleft As Boolean
+	Private bisright As Boolean
+	Private ssize As String
+	Private bistile As Boolean
+	Private savatartype As String
+	Private sbadgetype As String
 End Sub
 
 Sub Init
@@ -520,59 +560,13 @@ Sub Init
 	fieldtypes = CreateMap("string":"string", "int":"int", "bool":"bool", "date":"date","dbl":"float")
 	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
 	'
-	lstBags.Initialize
-	lstBags.Add("pbtextfield")
-	lstBags.Add("pbdatepicker")
-	lstBags.Add("pbcheckbox")
-	lstBags.Add("pbradiogroup")
-	lstBags.add("pbselectbox")
-	lstBags.add("pbslider")
-	lstBags.Add("pbicon")
-	lstBags.add("pbbutton")
-	lstBags.Add("pblabel")
-	lstBags.Add("pbimage")
-	lstBags.add("pbparallax")
-	lstBags.add("pbcontainer")
-	lstBags.add("pbtoolbar")
-	lstBags.add("pbmenu")
-	lstBags.Add("pbdrawer")
-	lstBags.add("pbcarousel")
-	lstBags.add("pbdialog")
-	lstBags.add("pbspeeddial")
-	lstBags.add("pbrating")
-	lstBags.add("pbtable")
+	iconpos.initialize
+	iconpos.put("left", "Left")
+	iconpos.put("right", "Right")
+	iconpos.put("", "None")
 	'
+	lstBags.Initialize
 	avatarMap.initialize
-	avatarMap.put("text", "./assets/text.png")
-	avatarMap.put("textarea", "./assets/textarea.png")
-	avatarMap.put("checkbox", "./assets/checkbox.png")
-	avatarMap.put("date", "./assets/datepicker.png")
-	avatarMap.put("file", "./assets/uploader.png")
-	avatarMap.put("radio", "./assets/radio.png")
-	avatarMap.put("select", "./assets/select.png")
-	avatarMap.put("slider", "./assets/slider.png")
-	avatarMap.put("switch", "./assets/switch.png")
-	avatarMap.put("label", "./assets/label.png")
-	avatarMap.put("email", "./assets/email.png")
-	avatarMap.put("password", "./assets/password.png")
-	avatarMap.put("tel", "./assets/telephone.png")
-	avatarMap.put("time", "./assets/time.png")
-	avatarMap.put("combo", "./assets/combo.png")
-	avatarMap.put("auto", "./assets/autocomplete.png")
-	avatarMap.put("profile", "./assets/profilepic.png")
-	avatarMap.put("image", "./assets/image.png")
-	avatarMap.put("button", "./assets/button.png")
-	avatarMap.put("icon", "./assets/icon.png")
-	avatarMap.put("parallax", "./assets/parallax.png")
-	avatarMap.put("container", "./assets/container.png")
-	avatarMap.put("toolbar", "./assets/toolbar.png")
-	avatarMap.put("menu", "./assets/menu.png")
-	avatarMap.put("drawer", "./assets/sidebar.png")
-	avatarMap.put("carousel", "./assets/carousel.png")
-	avatarMap.put("dialog", "./assets/dialog.png")
-	avatarMap.put("speeddial", "./assets/speeddial.png")
-	avatarMap.put("rating", "./assets/rating.png")
-	avatarMap.put("table","./assets/table.png")
 	'
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
@@ -613,7 +607,9 @@ Sub Init
 	'
 	Dim compmenu As VMMenu = vm.CreateMenu("compMenu", Me).SetButton("", "Components")
 	compmenu.AddItem("btnclearcomp", "", "delete", "Clear", "", "")
-	compmenu .AddItem("btnremovelastcomp", "", "delete", "Remove Last", "", "")
+	compmenu.AddItem("btnremovelastcomp", "", "delete", "Remove Last", "", "")
+	compmenu.AddItem("btndownloadcomp", "", "mdi-cloud-download-outline", "Download", "", "")
+	compmenu.AddItem("btnuploadcomp","", "mdi-cloud-upload-outline","Upload", "", "")
 	vm.NavBar.AddMenu(compmenu)
 	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
@@ -662,12 +658,76 @@ Sub Init
 	PropertyBag_SpeedDial
 	PropertyBag_Rating
 	PropertyBag_Table
+	PropertyBag_Chip
+	PropertyBag_Badge
+	PropertyBag_Avatar
 	'
+	'add an invisible file uploader
+	vm.AddFileSelect(Me, "fucomponent")
 	vm.UX
 	'Dim s As String = vm.vue.GetTemplate
 	'vm.SaveText2File(s, "all.txt")
 	'
 	CreateUX
+End Sub
+
+Sub Read_Badge
+	bisAvatar = YesNoToBoolean(mattr.getdefault("isavatar", "No"))
+	bisBordered = YesNoToBoolean(mattr.getdefault("isbordered", "No"))
+	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+	scolor = mattr.getdefault("color", "")
+	sbadgetype = mattr.getdefault("badgetype", "iscontent")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	sContent = mattr.getdefault("content", "")
+	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDot = YesNoToBoolean(mattr.getdefault("isdot", "No"))
+	bisInline = YesNoToBoolean(mattr.getdefault("isinline", "No"))
+	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
+	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sOffsetx = mattr.getdefault("offsetx", "")
+	sOffsety = mattr.getdefault("offsety", "")
+	sorigin = mattr.getdefault("origin", "")
+	bisOverlap = YesNoToBoolean(mattr.getdefault("isoverlap", "No"))
+	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	stransition = mattr.getdefault("transition", "")
+End Sub
+
+
+Sub Read_Chip
+	bisActive = YesNoToBoolean(mattr.getdefault("isactive", "No"))
+	sactiveclass = mattr.getdefault("activeclass", "")
+	bisAppend = YesNoToBoolean(mattr.getdefault("isappend", "No"))
+	bisClose = YesNoToBoolean(mattr.getdefault("isclose", "No"))
+	sCloseicon = mattr.getdefault("closeicon", "")
+	schiptype = mattr.getdefault("chiptype","")
+	scolor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDraggable = YesNoToBoolean(mattr.getdefault("isdraggable", "No"))
+	bisExact = YesNoToBoolean(mattr.getdefault("isexact", "No"))
+	bisFilter = YesNoToBoolean(mattr.getdefault("isfilter", "No"))
+	shref = mattr.getdefault("href", "")
+	sInputvalue = mattr.getdefault("inputvalue", "")
+	bisLabel = YesNoToBoolean(mattr.getdefault("islabel", "No"))
+	bisLarge = YesNoToBoolean(mattr.getdefault("islarge", "No"))
+	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisLink = YesNoToBoolean(mattr.getdefault("islink", "No"))
+	bisNuxt = YesNoToBoolean(mattr.getdefault("isnuxt", "No"))
+	bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
+	bisPill = YesNoToBoolean(mattr.getdefault("ispill", "No"))
+	bisReplace = YesNoToBoolean(mattr.getdefault("isreplace", "No"))
+	bisRipple = YesNoToBoolean(mattr.getdefault("isripple", "No"))
+	bisSmall = YesNoToBoolean(mattr.getdefault("issmall", "No"))
+	stabindex = mattr.getdefault("tabindex", "")
+	stag = mattr.getdefault("tag", "")
+	starget = mattr.getdefault("target", "")
+	stextcolor = mattr.getdefault("textcolor", "")
+	sTextcolorintensity = mattr.getdefault("textcolorintensity", "")
+	sto = mattr.getdefault("to", "")
+	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisXlarge = YesNoToBoolean(mattr.getdefault("isxlarge", "No"))
+	bisXsmall = YesNoToBoolean(mattr.getdefault("isxsmall", "No"))
 End Sub
 
 Sub chkLandScape_change(value As String)
@@ -816,7 +876,8 @@ Sub CreateUX
 		bisnow = YesNoToBoolean(mattr.getdefault("isnow", "No"))
 		sdialogpage = mattr.getdefault("dialogpage", "")
 		sclickaction = mattr.getdefault("clickaction","")
-		
+		siconpos = mattr.getdefault("iconpos", "left")
+		sbuttontype = mattr.getdefault("buttontype", "normal")
 		'
 		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
 		bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
@@ -847,8 +908,6 @@ Sub CreateUX
 		starget = mattr.getdefault("target","")
 		sto = mattr.getdefault("to","")
 		bistext = YesNoToBoolean(mattr.getdefault("istext", "No"))
-		biconbutton = YesNoToBoolean(mattr.getdefault("isiconbutton", "No"))
-		bfabbutton = YesNoToBoolean(mattr.getdefault("isfabbutton", "No"))
 		bisdepressed = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
 		bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 		ssize = mattr.GetDefault("size", "")
@@ -920,6 +979,15 @@ Sub CreateUX
 		bStatic = True
 		'
 		Select Case controltype
+			Case "avatar"
+				Read_Avatar
+				Design_Avatar
+			Case "badge"
+				Read_Badge
+				Design_Badge
+			Case "chip"
+				Read_Chip
+				Design_Chip
 			Case "table"
 				Read_Table
 				Design_Table
@@ -1030,7 +1098,6 @@ Sub Read_Label
 	bistextlowercase = YesNoToBoolean(mattr.getdefault("istextlowercase", "No"))
 	bistextuppercase = YesNoToBoolean(mattr.getdefault("istextuppercase", "No"))
 	bistitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 Sub Read_Slider
@@ -1079,7 +1146,6 @@ Sub Read_Toolbar
 	bisscrolloffscreen = YesNoToBoolean(mattr.getdefault("isscrolloffscreen", "No"))
 	bisshort = YesNoToBoolean(mattr.getdefault("isshort", "No"))
 	bisshrinkonscroll = YesNoToBoolean(mattr.getdefault("isshrinkonscroll", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
 	bisspacer = YesNoToBoolean(mattr.getdefault("isspacer", "No"))
 End Sub
@@ -1100,7 +1166,6 @@ Sub Read_Carousel
 	'
 	biscontinuous = YesNoToBoolean(mattr.getdefault("iscontinuous", "No"))
 	biscycle = YesNoToBoolean(mattr.getdefault("iscycle", "No"))
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bishidedelimiterbackground = YesNoToBoolean(mattr.getdefault("ishidedelimiterbackground", "No"))
 	bishidedelimiters = YesNoToBoolean(mattr.getdefault("ishidedelimiters", "No"))
 	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
@@ -1114,7 +1179,6 @@ Sub Read_Carousel
 	bisshowarrowsonhover = YesNoToBoolean(mattr.getdefault("isshowarrowsonhover", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
 	bisvertical = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 
@@ -1130,7 +1194,6 @@ Sub Read_Drawer
 	soverlayopacity = mattr.getdefault("overlayopacity", "")
 	If soverlaycolor = "undefined" Then soverlaycolor = ""
 	If soverlaycolor = "none" Then soverlaycolor = ""
-	ssrc = mattr.getdefault("src", "")
 	stabindex = mattr.getdefault("tabindex", "")
 	stag = mattr.getdefault("tag", "")
 	swidth = mattr.getdefault("width", "")
@@ -1141,7 +1204,6 @@ Sub Read_Drawer
 	bisapp = YesNoToBoolean(mattr.getdefault("isapp", "No"))
 	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 	bisclipped = YesNoToBoolean(mattr.getdefault("isclipped", "No"))
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisdisableresizewatcher = YesNoToBoolean(mattr.getdefault("isdisableresizewatcher", "No"))
 	bisdisableroutewatcher = YesNoToBoolean(mattr.getdefault("isdisableroutewatcher", "No"))
 	bisexpandonhover = YesNoToBoolean(mattr.getdefault("isexpandonhover", "No"))
@@ -1158,7 +1220,6 @@ Sub Read_Drawer
 	bisstateless = YesNoToBoolean(mattr.getdefault("isstateless", "No"))
 	bistemporary = YesNoToBoolean(mattr.getdefault("istemporary", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 Sub Read_Menu
@@ -1168,7 +1229,6 @@ Sub Read_Menu
 	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 	biscloseonclick = YesNoToBoolean(mattr.getdefault("iscloseonclick", "No"))
 	biscloseoncontentclick = YesNoToBoolean(mattr.getdefault("iscloseoncontentclick", "No"))
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisdisablekeys = YesNoToBoolean(mattr.getdefault("isdisablekeys", "No"))
 	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
@@ -1184,7 +1244,6 @@ Sub Read_Menu
 	bisright = YesNoToBoolean(mattr.getdefault("isright", "No"))
 	bisslotactivator = YesNoToBoolean(mattr.getdefault("isslotactivator", "No"))
 	bistop = YesNoToBoolean(mattr.getdefault("istop", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	'
 	'menu
 	menutype = mattr.getdefault("menutype","")
@@ -1320,6 +1379,7 @@ Sub Design_TextArea
 	txta.SetHideDetails(bishidedetails)
 	txta.SetAutoGrow(bautogrow)
 	txta.SetFieldType(sfieldtype)
+	txta.SetVisible(bisvisible)
 	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
@@ -1338,6 +1398,7 @@ Sub Design_TextArea
 	CodeLine(sb, bisrounded, "b", "txta", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txta", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
+	CodeLine(sb, bisvisible, "b", "txta", sname, "SetVisible")
 
 	sb.append($"${sparent}.Container.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
@@ -1356,6 +1417,7 @@ Sub Design_Switch
 	swt.SetMultiple(bismultiple)
 	swt.SetInset(bisinset).SetFlat(bisflat)
 	swt.SetFieldType(sfieldtype)
+	swt.SetVisible(bisvisible)
 	ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bStatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
@@ -1371,6 +1433,7 @@ Sub Design_Switch
 	CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
 	CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
 	CodeLine(sb, bisflat, "b", "swt", sname, "SetFlat")
+	CodeLine(sb, bisvisible, "b", "swt", sname, "SetVisible")
 	
 	If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
@@ -1396,6 +1459,7 @@ Sub Design_CheckBox
 	chk.SetMultiple(bismultiple)
 	chk.SetValue(svalue)
 	chk.SetFieldType(sfieldtype)
+	chk.SetVisible(bisvisible)
 	ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
@@ -1409,6 +1473,7 @@ Sub Design_CheckBox
 	CodeLine(sb, bislight, "b", "chk", sname, "SetLight")
 	CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
 	CodeLine(sb, sfieldtype, "s", "chk", sname, "SetFieldType")
+	CodeLine(sb, bisvisible, "b", "chk", sname, "SetVisible")
 	AddCode(sb, $"chk${sname}.SetOnChange(Me, "chk${sname}_change")"$)
 	If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
@@ -1435,6 +1500,7 @@ Sub Design_Date
 	'dp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
 	dp.SetFirstDayOfWeek(sfirstdayofweek)
 	dp.SetMultiple(bismultiple)
+	dp.TextField.SetPrependIcon(siconname)
 	dp.TextField.SetSolo(bissolo)
 	dp.TextField.SetOutlined(bisoutlined)
 	dp.TextField.SetFilled(bisfilled)
@@ -1447,7 +1513,7 @@ Sub Design_Date
 	dp.TextField.SetRounded(bisrounded)
 	dp.TextField.SetClearable(bclearable)
 	dp.TextField.SetHideDetails(bishidedetails)
-			
+				
 	ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
@@ -1466,6 +1532,7 @@ Sub Design_Date
 	'If scolor <> "" Then sb.append($"dp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'If sheadercolor <> "" Then sb.append($"dp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
 	'
+	CodeLine(sb, siconname, "s", "dp", sname, "TextField.SetPrependIcon")
 	CodeLine(sb, bissolo, "b", "dp", sname, "TextField.SetSolo")
 	CodeLine(sb, bisoutlined, "b", "dp", sname, "TextField.SetOutlined")
 	CodeLine(sb, bisfilled, "b", "dp", sname, "TextField.SetFilled")
@@ -1489,6 +1556,153 @@ Sub Design_Date
 	
 End Sub
 
+Sub Design_Chip
+	Dim chip As VMChip = ui.CreateChip($"chip${sname}"$, Me)
+	chip.SetStatic(True)
+	Select Case schiptype
+	Case "icon"
+		chip.SetIcon(siconname, siconpos)
+	Case "image"
+		chip.SetImage(ssrc, siconpos)
+	End Select
+	chip.SetText(stitle)
+	chip.SetActive(bisActive)
+	chip.SetAppend(bisAppend)
+	chip.SetClose(bisClose)
+	chip.SetColorintensity(scolor, sColorintensity)
+	chip.SetDark(bisdark)
+	chip.SetDisabled(bisdisabled)
+	chip.SetDraggable(bisDraggable)
+	chip.SetExact(bisExact)
+	chip.SetFilter(bisFilter)
+	chip.SetHref(shref)
+	chip.SetLabel(bisLabel)
+	chip.SetLarge(bisLarge)
+	chip.SetLight(bislight)
+	chip.SetLink(bisLink)
+	chip.SetNuxt(bisNuxt)
+	chip.SetOutlined(bisoutlined)
+	chip.SetPill(bisPill)
+	chip.SetReplace(bisReplace)
+	chip.SetRipple(bisRipple)
+	chip.SetSmall(bisSmall)
+	chip.SetTarget(starget)
+	chip.SetTextcolorintensity(stextcolor, sTextcolorintensity)
+	chip.SetTo(sto)
+	chip.SetVisible(bisvisible)
+	chip.SetXlarge(bisXlarge)
+	chip.SetXsmall(bisXsmall)
+	ui.AddControl(chip.Chip, chip.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	
+	AddCode(sb, $"Dim chip${sname} As VMChip = vm.CreateChip("chip${sname}", Me)"$)
+	CodeLine(sb, stitle, "s", "Chip", sname, "SetText")
+	Select Case schiptype
+	Case "icon"
+		CodeLine2(sb, siconname, siconpos, "s", "Chip", sname, "SetIcon")
+	Case "image"
+		CodeLine2(sb, ssrc, siconpos, "s", "Chip", sname, "SetImage")
+	End Select
+	CodeLine(sb, bisActive, "b", "Chip", sname, "SetActive")
+	CodeLine(sb, bisAppend, "b", "Chip", sname, "SetAppend")
+	CodeLine(sb, bisClose, "b", "Chip", sname, "SetClose")
+	CodeLine2(sb, scolor, sColorintensity, "s", "Chip", sname, "SetColorintensity")
+	CodeLine(sb, bisdark, "b", "Chip", sname, "SetDark")
+	CodeLine(sb, bisdisabled, "b", "Chip", sname, "SetDisabled")
+	CodeLine(sb, bisDraggable, "b", "Chip", sname, "SetDraggable")
+	CodeLine(sb, bisExact, "b", "Chip", sname, "SetExact")
+	CodeLine(sb, bisFilter, "b", "Chip", sname, "SetFilter")
+	CodeLine(sb, shref, "s", "Chip", sname, "SetHref")
+	CodeLine(sb, bisLabel, "b", "Chip", sname, "SetLabel")
+	CodeLine(sb, bisLarge, "b", "Chip", sname, "SetLarge")
+	CodeLine(sb, bislight, "b", "Chip", sname, "SetLight")
+	CodeLine(sb, bisLink, "b", "Chip", sname, "SetLink")
+	CodeLine(sb, bisNuxt, "b", "Chip", sname, "SetNuxt")
+	CodeLine(sb, bisoutlined, "b", "Chip", sname, "SetOutlined")
+	CodeLine(sb, bisPill, "b", "Chip", sname, "SetPill")
+	CodeLine(sb, bisReplace, "b", "Chip", sname, "SetReplace")
+	CodeLine(sb, bisRipple, "b", "Chip", sname, "SetRipple")
+	CodeLine(sb, bisSmall, "b", "Chip", sname, "SetSmall")
+	CodeLine(sb, starget, "s", "Chip", sname, "SetTarget")
+	CodeLine2(sb, stextcolor, sTextcolorintensity, "s", "Chip", sname, "SetTextcolorintensity")
+	CodeLine(sb, sto, "s", "Chip", sname, "SetTo")
+	CodeLine(sb, bisvisible, "b", "Chip", sname, "SetVisible")
+	CodeLine(sb, bisXlarge, "b", "Chip", sname, "SetXlarge")
+	CodeLine(sb, bisXsmall, "b", "Chip", sname, "SetXsmall")
+	
+	sb.append($"${sparent}.Container.AddControl(chip${sname}.Chip, chip${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub chip${sname}_close(e As BANanoEvent)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	'
+	AddCode(sbEvents, $"Private Sub chip${sname}_click(e As BANanoEvent)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+End Sub
+
+
+Sub Design_Badge
+	Dim badge As VMBadge = ui.CreateBadge($"badge${sname}"$, Me)
+	badge.SetStatic(True)
+	badge.SetAvatar(bisAvatar)
+	badge.SetBordered(bisBordered)
+	badge.SetBottom(bisbottom)
+	badge.SetColorintensity(scolor, sColorintensity)
+	Select Case sbadgetype
+	Case "iscontent"
+		badge.SetContent(sContent)
+	Case "isicon"	
+		badge.SetIcon(siconname)
+	End Select
+	badge.SetDark(bisdark)
+	badge.SetDisabled(bisdisabled)
+	badge.SetDot(bisDot)
+	badge.SetInline(bisInline)
+	badge.SetLeft(bisleft)
+	badge.SetLight(bislight)
+	badge.SetOffsetx(sOffsetx)
+	badge.SetOffsety(sOffsety)
+	badge.SetOrigin(sorigin)
+	badge.SetOverlap(bisOverlap)
+	badge.SetTile(bistile)
+	badge.SetTransition(stransition)
+	badge.SetVisible(bisvisible)
+	ui.AddControl(badge.Badge, badge.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	
+	AddCode(sb, $"Dim badge${sname} As VMBadge = vm.CreateBadge("badge${sname}", Me)"$)
+	CodeLine(sb, bisAvatar, "b", "Badge", sname, "SetAvatar")
+	CodeLine(sb, bisBordered, "b", "Badge", sname, "SetBordered")
+	CodeLine(sb, bisbottom, "b", "Badge", sname, "SetBottom")
+	CodeLine2(sb, scolor, sColorintensity, "s", "Badge", sname, "SetColorintensity")
+	Select Case sbadgetype
+	Case "iscontent"
+		CodeLine(sb, sContent, "s", "Badge", sname, "SetContent")
+	Case "isicon"
+		CodeLine(sb, siconname, "s", "Badge", sname, "SetIcon")
+	End Select
+	CodeLine(sb, bisdark, "b", "Badge", sname, "SetDark")
+	CodeLine(sb, bisdisabled, "b", "Badge", sname, "SetDisabled")
+	CodeLine(sb, bisDot, "b", "Badge", sname, "SetDot")
+	CodeLine(sb, bisInline, "b", "Badge", sname, "SetInline")
+	CodeLine(sb, bisleft, "b", "Badge", sname, "SetLeft")
+	CodeLine(sb, bislight, "b", "Badge", sname, "SetLight")
+	CodeLine(sb, sOffsetx, "s", "Badge", sname, "SetOffsetx")
+	CodeLine(sb, sOffsety, "s", "Badge", sname, "SetOffsety")
+	CodeLine(sb, sorigin, "s", "Badge", sname, "SetOrigin")
+	CodeLine(sb, bisOverlap, "b", "Badge", sname, "SetOverlap")
+	CodeLine(sb, bistile, "b", "Badge", sname, "SetTile")
+	CodeLine(sb, stransition, "s", "Badge", sname, "SetTransition")
+	CodeLine(sb, bisvisible, "b", "Badge", sname, "SetVisible")
+	
+	sb.append($"${sparent}.Container.AddControl(badge${sname}.Badge, badge${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+
+
+
 Sub Design_File
 	Dim fi As VMTextField = ui.NewFileInput(Me, True, False, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
 	fi.SetSolo(bissolo)
@@ -1504,6 +1718,7 @@ Sub Design_File
 	fi.SetClearable(bclearable)
 	fi.SetHideDetails(bishidedetails)
 	fi.SetFieldType(sfieldtype)
+	fi.SetVisible(bisvisible)
 	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 			
 	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, False, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
@@ -1521,6 +1736,7 @@ Sub Design_File
 	CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
 	CodeLine(sb, sfieldtype, "s", "fi", sname, "SetFieldType")
 	AddCode(sb, $"fi${sname}.SetOnFile(Me, "fi${sname}_change")"$)
+	CodeLine(sb, bisvisible, "b", "fi", sname, "SetVisible")
 	
 	sb.append($"${sparent}.Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -1544,6 +1760,7 @@ Sub Design_Radio
 	rd.SetMultiple(bismultiple)
 	rd.SetHideDetails(bishidedetails)
 	rd.SetFieldType(sfieldtype)
+	rd.SetVisible(bisvisible)
 	ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	If buseoptions Then
@@ -1560,6 +1777,7 @@ Sub Design_Radio
 	CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
 	CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
 	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
+	CodeLine(sb, bisvisible, "b", "rd", sname, "SetVisible")
 	AddCode(sb, $"rd${sname}.SetOnChange(Me, "rd${sname}_change")"$)
 	sb.append($"${sparent}.Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -1621,6 +1839,7 @@ Sub Design_Select
 	sel.SetDeletableChips(bisdeletablechips)
 	sel.SetValue(svalue)
 	sel.SetFieldType(sfieldtype)
+	sel.SetVisible(bisvisible)
 	ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	'define the code for the control
@@ -1676,6 +1895,7 @@ Sub Design_Select
 	CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
 	CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
 	CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
+	CodeLine(sb, bisvisible, "b", "sel", sname, "SetVisible")
 	AddCode(sb, $"sel${sname}.SetOnChange(Me, "sel${sname}_change")"$)
 	'
 	sb.append($"${sparent}.Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
@@ -1706,6 +1926,7 @@ Sub Design_Slider
 	sld.SetFieldType(sfieldtype)
 	If bisthumblabel Then sld.SetThumbLabel(bisthumblabel)
 	If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
+	sld.SetVisible(bisvisible)
 	ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bStatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})"$).append(CRLF)
@@ -1722,6 +1943,7 @@ Sub Design_Slider
 	CodeLine(sb, sappendicon, "s", "sld", sname, "SetAppendIcon")
 	CodeLine(sb, bisdense, "b", "sld", sname, "SetDense")
 	CodeLine(sb, sthumbsize, "s", "sld", sname, "SetThumbSize")
+	CodeLine(sb, bisvisible, "b", "sld", sname, "SetVisible")
 	CodeLine2(sb, sthumbcolor, sthumbintensity, "s", "sld", sname, "SetThumbColorIntensity")
 	CodeLine2(sb, strackcolor, strackintensity, "s", "sld", sname, "SetTrackColorIntensity")
 	If bisthumblabel Then CodeLine(sb, bisthumblabel, "b", "sld", sname, "SetThumblabel")
@@ -1800,6 +2022,7 @@ Sub Design_Email
 	email.SetRounded(bisrounded)
 	email.SetClearable(bclearable)
 	email.SetHideDetails(bishidedetails)
+	email.SetVisible(bisvisible)
 	ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim email${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "email${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
@@ -1818,6 +2041,7 @@ Sub Design_Email
 	CodeLine(sb, bisrounded, "b", "email", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "email", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "email", sname, "SetHideDetails")
+	CodeLine(sb, bisvisible, "b", "email", sname, "SetVisible")
 
 	sb.append($"${sparent}.Container.AddControl(email${sname}.textfield, email${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -1840,6 +2064,7 @@ Sub Design_Password
 	pwd.SetClearable(bclearable)
 	pwd.SetHideDetails(bishidedetails)
 	pwd.SetValue(svalue)
+	pwd.SetVisible(bisvisible)
 				
 	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
@@ -1859,6 +2084,7 @@ Sub Design_Password
 	CodeLine(sb, bclearable, "b", "pwd", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "pwd", sname, "SetHideDetails")
 	CodeLine(sb, svalue, "s", "pwd", sname, "SetValue")
+	CodeLine(sb, bisvisible, "b", "pwd", sname, "SetVisible")
 
 	sb.append($"${sparent}.Container.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -1881,6 +2107,7 @@ Sub Design_Tel
 	tel.SetRounded(bisrounded)
 	tel.SetClearable(bclearable)
 	tel.SetHideDetails(bishidedetails)
+	tel.SetVisible(bisvisible)
 	ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
@@ -1899,6 +2126,7 @@ Sub Design_Tel
 	CodeLine(sb, bisrounded, "b", "tel", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "tel", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
+	CodeLine(sb, bisvisible, "b", "tel", sname, "SetVisible")
 		
 	sb.append($"${sparent}.Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -1912,12 +2140,14 @@ Sub Design_Time
 	tp.SetAmPmInTitle(bisampm)
 	tp.SetDark(bisdark)
 	tp.SetValue(svalue)
+	tp.SetIsNow(bisnow)
 	'tp.SetNotitle(bisnotitle)
 	tp.SetUSeSeconds(bisuseseconds)
 	'tp.SetColorIntensity(scolor, sintensity)
 	'tp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
 	tp.SetFormat(stformat)
-			
+	
+	tp.TextField.SetPrependIcon(siconname)		
 	tp.TextField.SetSolo(bissolo)
 	tp.TextField.SetOutlined(bisoutlined)
 	tp.TextField.SetFilled(bisfilled)
@@ -1940,11 +2170,13 @@ Sub Design_Time
 	CodeLine(sb, bisdisabled, "b", "tp", sname, "SetDisabled")
 	CodeLine(sb, bisampm, "b", "tp", sname, "SetAmPmInTitle")
 	CodeLine(sb, bisdark, "b", "tp", sname, "SetDark")
+	CodeLine(sb, bisnow, "b", "tp", sname, "SetIsNow")
 	'CodeLine(sb, bisnotitle, "b", "tp", sname, "SetNotitle")
 	CodeLine(sb, bisuseseconds, "b", "tp", sname, "SetUSeSeconds")
 	'If scolor <> "" Then sb.append($"tp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'If sheadercolor <> "" Then sb.append($"tp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
 	'
+	CodeLine(sb, siconname, "s", "tp", sname, "TextField.SetPrependIcon")
 	CodeLine(sb, bissolo, "b", "tp", sname, "TextField.SetSolo")
 	CodeLine(sb, bisoutlined, "b", "tp", sname, "TextField.SetOutlined")
 	CodeLine(sb, bisfilled, "b", "tp", sname, "TextField.SetFilled")
@@ -1974,6 +2206,7 @@ Sub Design_Icon
 	icn.SetCenterOnParent(bcenteronparent)
 	icn.SetLeft(bisleft)
 	icn.SetRight(bisright)
+	icn.SetVisible(bisvisible)
 	ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
@@ -1983,15 +2216,18 @@ Sub Design_Icon
 	CodeLine(sb, bcenteronparent, "b", "icn", sname, "SetCenterOnParent")
 	CodeLine(sb, bisleft, "b", "icn", sname, "SetLeft")
 	CodeLine(sb, bisright, "b", "icn", sname, "SetRight")
+	CodeLine(sb, bisvisible, "b", "icn", sname, "SetVisible")
 	sb.append($"${sparent}.Container.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Parallax
 	Dim para As VMParallax = ui.NewParallax(Me, True, sname, sheight, ssrc, salt)
+	para.SetVisible(bisvisible)
 	ui.AddControl(para.Parallax, para.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sheight}", "${ssrc}", "${salt}")"$).append(CRLF)
-	sb.append($"${sparent}.Container.AddControl(prlx${sname}.Parallax, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	CodeLine(sb, bisvisible, "b", "prlx", sname, "SetVisible")
+	sb.append($"${sparent}.Container.AddControl(prlx${sname}.Parallax, prlx${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Container
@@ -2048,6 +2284,7 @@ Sub Design_Image
 	img.SetMaxWidth(smaxwidth)
 	img.SetMinHeight(sminheight)
 	img.SetMaxHeight(smaxheight)
+	img.SetVisible(bisvisible)
 	img.SetCenterOnParent(bcenteronparent)
 				
 	ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
@@ -2064,6 +2301,7 @@ Sub Design_Image
 	CodeLine(sb, sminheight, "s", "img", sname, "SetMinHeight")
 	CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
 	CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
+	CodeLine(sb, bisvisible, "b", "img", sname, "SetVisible")
 	sb.append($"${sparent}.Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 End Sub
@@ -2453,6 +2691,7 @@ Sub Design_Menu
 	menu.Setright(bisright)
 	menu.Setslotactivator(bisslotactivator)
 	menu.Settop(bistop)
+	menu.SetVisible(bisvisible)
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -2476,6 +2715,7 @@ Sub Design_Menu
 	Case "btn"
 		CodeLine2a(sb, siconname, stitle, "s", "menu", sname, "SetButton")
 	End Select
+	CodeLine(sb, bisvisible, "b", "menu", sname, "SetVisible")
 	CodeLine(sb, sactivator, "s", "menu", sname, "Setactivator")
 	CodeLine(sb, sclosedelay, "s", "menu", sname, "Setclosedelay")
 	CodeLine(sb, scontentclass, "s", "menu", sname, "Setcontentclass")
@@ -2700,8 +2940,6 @@ Sub Design_ToolBar
 End Sub
 
 Sub Design_Button
-	If biconbutton Then stitle = ""
-	If bfabbutton Then stitle = ""
 	Dim btn As VMButton = ui.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
 	btn.Sethref(shref)
 	btn.SetTarget(starget)
@@ -2711,8 +2949,18 @@ Sub Design_Button
 	btn.SetTextColorIntensity(stextcolor, stextintensity)
 	btn.SetDisabled(bisdisabled).Setoutlined(bisoutlined)
 	btn.SetRounded(bisrounded).SetTransparent(bistext)
-	If biconbutton Then btn.SetIconButton(siconname)
-	If bfabbutton Then btn.Setfabbutton(siconname)
+	'
+	Select Case sbuttontype
+	Case "normal"
+		If siconname <> "" Then
+			btn.AddIcon(siconname, siconpos, "")
+		End If
+	Case "icon"
+		btn.SetIconButton(siconname)
+	Case "fab"
+		btn.Setfabbutton(siconname)
+	End Select
+	'
 	btn.SetDepressed(bisdepressed)
 	btn.SetDark(bisdark)
 	btn.SetTile(bistile)
@@ -2722,6 +2970,7 @@ Sub Design_Button
 	btn.SetMaxWidth(smaxwidth)
 	btn.SetMinHeight(sminheight)
 	btn.SetMaxHeight(smaxheight)
+	btn.SetVisible(bisvisible)
 	Select Case ssize
 		Case "small"
 			btn.setsmall(True)
@@ -2736,7 +2985,7 @@ Sub Design_Button
 	ui.AddControl(btn.button, btn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'build the source code
 				
-	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
+	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "btn${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
 	If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
 	If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
 	If sto <> "" Then sb.append($"btn${sname}.setto("${sto}")"$).append(CRLF)
@@ -2747,8 +2996,18 @@ Sub Design_Button
 	If bisoutlined Then sb.append($"btn${sname}.Setoutlined(${bisoutlined})"$).append(CRLF)
 	If bisrounded Then sb.append($"btn${sname}.SetRounded(${bisrounded})"$).append(CRLF)
 	If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
-	If biconbutton Then sb.append($"btn${sname}.SetIconButton("${siconname}")"$).append(CRLF)
-	If bfabbutton Then sb.append($"btn${sname}.SetFabButton("${siconname}")"$).append(CRLF)
+	
+	Select Case sbuttontype
+	Case "normal"
+		If siconname <> "" Then
+			AddCode(sb, $"btn${sname}.AddIcon("${siconname}", "${siconpos}", "")"$)
+		End If
+	Case "icon"
+		sb.append($"btn${sname}.SetIconButton("${siconname}")"$).append(CRLF)
+	Case "fab"
+		sb.append($"btn${sname}.SetFabButton("${siconname}")"$).append(CRLF)
+	End Select
+	
 	If bisdepressed Then sb.append($"btn${sname}.SetDepressed(${bisdepressed})"$).append(CRLF)
 	If bisdark Then sb.append($"btn${sname}.SetDark(${bisdark})"$).append(CRLF)
 	If bistile Then sb.append($"btn${sname}.SetTile(${bistile})"$).append(CRLF)
@@ -2758,6 +3017,7 @@ Sub Design_Button
 	If smaxwidth <> "" Then sb.append($"btn${sname}.SetMaxWidth("${smaxwidth}")"$).append(CRLF)
 	If sminheight <> "" Then sb.append($"btn${sname}.SetMinHeight("${sminheight}")"$).append(CRLF)
 	If smaxheight <> "" Then sb.append($"btn${sname}.SetMaxHeight("${smaxheight}")"$).append(CRLF)
+	CodeLine(sb, bisvisible, "b", "btn", sname, "SetVisible")
 	'
 	Select Case ssize
 		Case "small"
@@ -2772,7 +3032,7 @@ Sub Design_Button
 	sb.append($"${sparent}.Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'add events
 	'
-	AddCode(sbEvents, $"Private Sub ${sname}_click(e As BANanoEvent)"$)
+	AddCode(sbEvents, $"Private Sub btn${sname}_click(e As BANanoEvent)"$)
 	Select Case sclickaction
 	Case "add"
 		'add a record
@@ -2846,6 +3106,7 @@ Sub Design_TextField
 	txt.SetRounded(bisrounded)
 	txt.SetClearable(bclearable)
 	txt.SetHideDetails(bishidedetails)
+	txt.SetVisible(bisvisible)
 	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
@@ -2865,6 +3126,7 @@ Sub Design_TextField
 	CodeLine(sb, bisrounded, "b", "txt", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
+	CodeLine(sb, bisvisible, "b", "txt", sname, "SetVisible")
 
 	sb.append($"${sparent}.Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
@@ -2920,9 +3182,31 @@ Sub compMenuitems_click(e As BANanoEvent)
 			vm.ShowConfirm("clearcomp", "Confirm Clear Components", "Are you sure that you want to clear the components?", "Yes", "No")
 		Case "btnremovelastcomp"
 			vm.ShowConfirm("removelastcomp", "Confirm Remove Last", "Are you sure that you want to remove the last component?", "Yes", "No")
+	Case "btndownloadcomp"
+		vm.PagePause
+		Dim db As BANanoSQL
+		Dim compSQL As BANanoAlaSQLE
+		db.OpenWait("bvmdesigner", "bvmdesigner")
+		'add the components
+		compSQL.Initialize("components", "id")
+		compSQL.SelectAll(Array("*"), Array("row","col"))
+		compSQL.result = db.executewait(compSQL.query, compSQL.args)
+		'convert to json
+		Dim compJSON As String = BANano.ToJSON(compSQL.result)
+		Dim stime As String = DateTime.now
+		vm.SaveText2File(compJSON, $"${stime}.txt"$)
+		vm.PageResume
+	Case "btnuploadcomp"
+		'upload components
+		'activate file uploader
+		vm.ShowFileSelect("fucomponent")
 	End Select
 End Sub
 
+Sub fucomponent_change(e As BANanoEvent)
+	Dim fileList As List = vm.GetFileListFromTarget(e)
+	Log(fileList)
+End Sub
 
 Sub gridMenuitems_click(e As BANanoEvent)
 	Dim menuID As String = vm.getidfromevent(e)
@@ -3367,7 +3651,7 @@ Sub Design_DBSourceCode
 	AddCode(sbl, $"#IgnoreWarnings:12"$)
 	AddCode(sbl, $"Sub Process_Globals"$)
 	AddCode(sbl, $"Public name As String = "${tbName}Code""$)
-	AddCode(sbl, $"Public title As String = "${slabel}""$)
+	AddCode(sbl, $"Public title As String = "${stitle}""$)
 	AddCode(sbl, $"Private vm As BANanoVM"$)
 	AddCode(sbl, $"Private BANano As BANano  'ignore"$)
 	sbl.append($"Private dialog${tbName} As VMDialog"$).append(CRLF)
@@ -3817,7 +4101,26 @@ Sub mycomponents_click(e As BANanoEvent)
 				Dim contents As List = BANano.FromJson(scontents)
 				vm.setdata("tableitems", contents)
 			End If
-
+			'
+		Case "avatar"
+			ShowBag("pbavatar")
+			pbavatar.SetDefaults
+			vm.setdata("controltype", "avatar")
+			pbavatar.hideitem("id")
+			pbavatar.Hideitem("controltype")
+			
+		Case "badge"
+			ShowBag("pbbadge")
+			pbbadge.SetDefaults
+			vm.setdata("controltype", "badge")
+			pbbadge.hideitem("id")
+			pbbadge.Hideitem("controltype")
+		Case "chip"
+			ShowBag("pbchip")
+			pbchip.SetDefaults
+			vm.setdata("controltype", "chip")
+			pbchip.hideitem("id")
+			pbchip.Hideitem("controltype")
 		Case "dialog"
 			ShowBag("pbdialog")
 			pbdialog.SetDefaults
@@ -4098,7 +4401,7 @@ Sub DisplayPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep3grid", "ep1", Me)
 	grd.Header.SetText("Display")
 	grd.Container.SetTag("div")
-	grd.Container.AddRows(1).AddColumns4X3
+	grd.Container.AddRows(2).AddColumns4X3
 	'
 	Dim profile As VMImage = ToolboxImage("profile", "./assets/profilepic.png", "Profile Picture")
 	grd.Container.AddComponent(1,1,profile.tostring)
@@ -4112,12 +4415,23 @@ Sub DisplayPanel As VMExpansionPanel
 	Dim para As VMImage = ToolboxImage("parallax", "./assets/parallax.png", "Parallax")
 	grd.Container.AddComponent(1,4,para.tostring)
 	'
+	Dim chip As VMImage = ToolboxImage("chip", "./assets/chip.png", "Chip")
+	grd.Container.AddComponent(2,1,chip.tostring)
+	'
+	Dim badge As VMImage = ToolboxImage("badge", "./assets/badge.png", "Badge")
+	grd.Container.AddComponent(2,2,badge.tostring)
+	'
+	Dim avatar As VMImage = ToolboxImage("avatar", "./assets/avatar.png", "Avatar")
+	grd.Container.AddComponent(2,3,avatar.tostring)
+	
+	'
 	Return grd
 End Sub
 
 Sub ToolboxImage(eid As String, url As String, tt As String) As VMImage
 	Dim img As VMImage = vm.CreateImage(eid, Me).SetStatic(True).SetValue(url).SetOnDragStart(Me, "ItemDragStart")
 	img.SetHeight("32px").SetWidth("32px").SetCursorMove.SetTooltip(tt).RemoveAttr("v-show")
+	avatarMap.put(eid, url)
 	Return img
 End Sub
 
@@ -4185,7 +4499,7 @@ End Sub
 Sub ToolboxDiv(eid As String, text As String) As VMElement
 	Dim dv As VMElement = vm.CreateDiv(eid).SetStatic(True).SetOnDragStart(Me, "ItemDragStart")
 	dv.SetBorder("2px", vm.COLOR_BLACK, vm.BORDER_SOLID).SetWidth("42px").SetHeight("32px").SetVerticalAlignMiddle
-	dv.SetText(text).SetTextAlignCenter.SetCursorMove.SetBackgroundColor(vm.COLOR_GREY).SetLineHeight("32px")
+	dv.SetText(text).SetTextAlignCenter.SetCursorMove.SetLineHeight("32px").SetBorderRadius("5px")
 	dv.removeattr("v-show")
 	Return dv
 End Sub
@@ -4373,6 +4687,7 @@ Sub ItemDrop(e As BANanoEvent)
 					
 					'
 					Dim attr As Map = CreateMap()
+					attr.put("buttontype", "normal")
 					attr.put("parent", "vm")
 					attr.put("fieldtype", "string")
 					attr.put("id", sid)
@@ -4416,8 +4731,21 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("truevalue", "Yes")
 					attr.put("falsevalue", "No")
 					attr.put("thumbsize", "32")
+					attr.put("iconpos", "left")
 						'
 					Select Case savedid
+						Case "avatar"
+							attr.put("src", "./assets/sponge.png")
+							attr.put("size", "48")
+							attr.put("avatartype", "isimage")
+							attr.put("label", "A")
+							nrec.put("label", "A")
+							attr.put("color", "blue")
+							attr.put("badge", "1")
+						Case "date"
+							attr.put("iconname", "event")
+						Case "time"
+							attr.put("iconname", "access_time")
 						Case "label"
 							attr.put("labelsize", "p")
 							attr.put("value", slabel)
@@ -4430,6 +4758,17 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("iconname", "mdi-phone")
 						Case "textarea"
 							attr.put("iconname", "mdi-comment-outline")
+						Case "badge"
+							attr.put("color", "primary")
+							attr.put("content", "2")
+							attr.put("badgetype", "iscontent")
+						Case "chip"
+							attr.put("isactive", "Yes")
+							attr.put("iconname", "mdi-account-circle")
+							attr.put("color", "indigo")
+							attr.put("textcolor", "white")
+							attr.put("chiptype", "icon")
+							BANano.SetLocalStorage("selectedpanel", 1)
 						Case "profile"
 							attr.put("borderradius", "50%")
 							attr.put("borderwidth", "1px")
@@ -4611,6 +4950,7 @@ End Sub
 #Region Slider Property Bag
 Sub PropertyBag_Slider
 	vm.setdata("pbslider",False)
+	lstBags.add("pbslider")
 	pbslider = vm.CreateProperty("ppbslider", Me)
 	pbslider.SetVShow("pbslider")
 	pbslider.AddHeading("d","Details")
@@ -4644,6 +4984,7 @@ End Sub
 #Region DatePicker Property Bag
 Sub PropertyBag_DatePicker
 	vm.setdata("pbdatepicker", False)
+	lstBags.add("pbdatepicker")
 	pbdatepicker = vm.CreateProperty("ppbdatepicker", Me)
 	pbdatepicker.SetVShow("pbdatepicker")
 	pbdatepicker.AddHeading("d","Details")
@@ -4652,6 +4993,7 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
 	pbdatepicker.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbdatepicker.AddText2("d", CreateMap("label": "Label", "value":"Value"))
+	pbdatepicker.AddText("d","iconname","Icon Name","","")
 	pbdatepicker.AddText("d","placeholder","Placeholder","","")
 	pbdatepicker.AddText("d","helpertext","Helper Text","","")
 	pbdatepicker.AddText("d","errortext","Error Text","","")
@@ -4686,8 +5028,10 @@ End Sub
 
 #Region Button Property Bag
 Sub PropertyBag_Button
-	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record","showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page")
+	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record", _
+	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","":"None")
 	vm.setdata("pbbutton", False)
+	lstBags.add("pbbutton")
 	pbbutton = vm.CreateProperty("ppbbutton", Me)
 	pbbutton.SetVShow("pbbutton")
 	pbbutton.AddHeading("d","Details")
@@ -4695,6 +5039,8 @@ Sub PropertyBag_Button
 	pbbutton.AddSelect("d", "controltype", "Type", controltypes)
 	pbbutton.AddText2("d",CreateMap("parent":"Parent","vmodel":"ID"))
 	pbbutton.AddText2("d",CreateMap("label":"Label", "iconname":"Icon Name"))
+	pbbutton.AddRadioGroupH("d", "iconpos", "Icon Position", iconpos)
+	pbbutton.AddRadioGroupH("d", "buttontype", "Button Type", CreateMap("normal":"Normal","icon":"Icon","fab":"FAB"))
 	pbbutton.AddText("d","href","Href","","")
 	pbbutton.AddText("d","to","Navigate To","","")
 	pbbutton.AddSelect2("d","target","Target", vm.TargetOptions, "size", "Size", iconsizes)
@@ -4709,8 +5055,7 @@ Sub PropertyBag_Button
 	pbbutton.AddHeading("e","Settings")
 	pbbutton.AddSwitches("e", CreateMap("istext": "Text", "isfitwidth": "Fit Width/Block"))
 	pbbutton.AddSwitches("e", CreateMap("isoutlined": "Outlined", "isrounded": "Rounded"))
-	pbbutton.AddSwitches("e", CreateMap("isiconbutton": "Icon Button", "isdepressed": "Depressed"))
-	pbbutton.AddSwitches("e", CreateMap("isfabbutton": "FAB Button", "isvisible": "Visible"))
+	pbbutton.AddSwitches("e", CreateMap("isdepressed": "Depressed", "isvisible": "Visible"))
 	pbbutton.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isdark": "Dark"))
 	pbbutton.AddSwitches("e", CreateMap("istile": "Tile", "centeronparent": "Center on Parent"))
 	'
@@ -4723,6 +5068,7 @@ End Sub
 #Region Icon Property Bag
 Sub PropertyBag_Icon
 	vm.setdata("pbicon", False)
+	lstBags.add("pbicon")
 	pbicon = vm.CreateProperty("ppbicon", Me)
 	pbicon.SetVShow("pbicon")
 	pbicon.AddHeading("d","Details")
@@ -4748,6 +5094,7 @@ End Sub
 #Region Image Property Bag
 Sub PropertyBag_Image
 	vm.setdata("pbimage", False)
+	lstBags.add("pbimage")
 	pbimage = vm.CreateProperty("ppbimage",Me)
 	pbimage.SetVShow("pbimage")
 	pbimage.AddHeading("d","Details")
@@ -4777,6 +5124,7 @@ End Sub
 #Region CheckBox Property Bag
 Sub PropertyBag_CheckBox
 	vm.setdata("pbcheckbox", False)
+	lstBags.add("pbcheckbox")
 	pbcheckbox = vm.CreateProperty("ppbcheckbox",Me)
 	pbcheckbox.SetVShow("pbcheckbox")
 	pbcheckbox.AddHeading("d","Details")
@@ -4808,6 +5156,7 @@ End Sub
 #Region Radio Property Bag
 Sub PropertyBag_RadioGroup
 	vm.setdata("pbradiogroup", False)
+	lstBags.add("pbradiogroup")
 	pbradiogroup = vm.CreateProperty("ppbradiogroup", Me)
 	pbradiogroup.SetVShow("pbradiogroup")
 	pbradiogroup.AddHeading("d","Details")
@@ -4837,7 +5186,8 @@ End Sub
 
 #Region Select Property Bag
 Sub PropertyBag_Select
-	vm.setdata("pgselectbox", False)
+	vm.setdata("pbselectbox", False)
+	lstBags.add("pbselectbox")
 	pbselectbox = vm.CreateProperty("ppbselectbox", Me)
 	pbselectbox.SetVShow("pbselectbox")
 	pbselectbox.AddHeading("d","Details")
@@ -4878,6 +5228,7 @@ End Sub
 #Region Parallax
 Sub PropertyBag_Parallax
 	vm.setdata("pbparallax", False)
+	lstBags.add("pbparallax")
 	pbparallax = vm.CreateProperty("ppbparallax", Me)
 	pbparallax.SetVShow("pbparallax")
 	pbparallax.AddHeading("d","Details")
@@ -4900,6 +5251,7 @@ End Sub
 #Region Container
 Sub PropertyBag_Container
 	vm.setdata("pbcontainer", False)
+	lstBags.add("pbcontainer")
 	pbcontainer = vm.CreateProperty("ppbcontainer", Me)
 	pbcontainer.SetVShow("pbcontainer")
 	pbcontainer.AddHeading("d","Details")
@@ -4925,6 +5277,7 @@ End Sub
 #Region Toolbar
 Sub PropertyBag_Toolbar
 	vm.setdata("pbtoolbar", False)
+	lstBags.add("pbtoolbar")
 	pbtoolbar = vm.CreateProperty("ppbcontainer", Me)
 	pbtoolbar.SetVShow("pbtoolbar")
 	pbtoolbar.AddHeading("d","Details")
@@ -4971,6 +5324,7 @@ End Sub
 #Region Label Property Bag
 Sub PropertyBag_Label
 	vm.setdata("pblabel", False)
+	lstBags.add("pblabel")
 	Dim mlabelsize As Map = CreateMap("p":"Paragraph","h1":"H1", "h2":"H2", "h3":"H3", "h4":"H4", "h5":"H5","h6":"H6","span":"span","blockquote":"blockquote")
 	pblabel = vm.CreateProperty("ppblabel", Me)
 	pblabel.SetVShow("pblabel")
@@ -5001,7 +5355,7 @@ End Sub
 
 #Region TxtBox Property Bag
 Sub PropertyBag_TextField
-		
+	lstBags.add("pbtextfield")
 	vm.setdata("pbtextfield", False)
 	pbtextfield = vm.CreateProperty("ppbtextfield", Me)
 	pbtextfield.SetVShow("pbtextfield")
@@ -5133,6 +5487,14 @@ Sub ppbdialog_change(e As BANanoEvent)
 	SavePropertyBag
 End Sub
 
+Sub ppbbadge_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
+Sub ppbchip_change(e As BANanoEvent)
+	SavePropertyBag
+End Sub
+
 Sub ppbspeeddial_change(e As BANanoEvent)
 	SavePropertyBag
 End Sub
@@ -5227,6 +5589,12 @@ Sub SavePropertyBag
 			scontents = BANano.tojson(contents)
 		Case "dialog"
 			props = pbdialog.properties
+		Case "chip"
+			props = pbchip.properties
+		Case "badge"
+			props = pbbadge.properties
+		Case "avatar"
+			props = pbavatar.properties
 		Case "speeddial"
 			props = pbspeeddial.properties
 		Case "rating"
@@ -5317,6 +5685,7 @@ End Sub
 #Region Menu
 Sub PropertyBag_Menu
 	vm.setdata("pbmenu", False)
+	lstBags.add("pbmenu")
 	pbmenu = vm.CreateProperty("ppbmenu", Me)
 	pbmenu.SetVShow("pbmenu")
 	pbmenu.AddHeading("d","Details")
@@ -5360,6 +5729,7 @@ End Sub
 #Region Drawer
 Sub PropertyBag_Drawer
 	vm.setdata("pbdrawer", False)
+	lstBags.add("pbdrawer")
 	pbdrawer = vm.CreateProperty("ppbdrawer", Me)
 	pbdrawer.SetVShow("pbdrawer")
 	pbdrawer.AddHeading("d","Details")
@@ -5400,6 +5770,7 @@ End Sub
 #Region Carousel
 Sub PropertyBag_Carousel
 	vm.setdata("pbcarousel", False)
+	lstBags.add("pbcarousel")
 	pbcarousel = vm.CreateProperty("ppbcarousel", Me)
 	pbcarousel.SetVShow("pbcarousel")
 	pbcarousel.AddHeading("d","Details")
@@ -5437,6 +5808,7 @@ End Sub
 #Region Dialog
 Sub PropertyBag_Dialog
 	vm.setdata("pbdialog", False)
+	lstBags.add("pbdialog")
 	pbdialog = vm.CreateProperty("ppbdialog", Me)
 	pbdialog.SetVShow("pbdialog")
 	pbdialog.AddHeading("d","Details")
@@ -5492,7 +5864,6 @@ Sub Read_Dialog
 	'
 	bisattach = YesNoToBoolean(mattr.getdefault("isattach", "No"))
 	bisbackdrop = YesNoToBoolean(mattr.getdefault("isbackdrop", "No"))
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
 	bisfullscreen = YesNoToBoolean(mattr.getdefault("isfullscreen", "No"))
@@ -5506,7 +5877,6 @@ Sub Read_Dialog
 	bisscrollable = YesNoToBoolean(mattr.getdefault("isscrollable", "No"))
 	bisslotactivator = YesNoToBoolean(mattr.getdefault("isslotactivator", "No"))
 	bistitleprimary = YesNoToBoolean(mattr.getdefault("istitleprimary", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 Sub LoremIpsum(count As Int) As String
@@ -5525,6 +5895,7 @@ End Sub
 #Region SpeedDial
 Sub PropertyBag_SpeedDial
 	vm.setdata("pbspeeddial", False)
+	lstBags.add("pbspeeddial")
 	pbspeeddial = vm.CreateProperty("ppbspeeddial", Me)
 	pbspeeddial.SetVShow("pbspeeddial")
 	pbspeeddial.AddHeading("d","Details")
@@ -5566,7 +5937,6 @@ bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 scolor = mattr.getdefault("color", "")
 	smastericon = mattr.getdefault("mastericon","")
 sintensity = mattr.getdefault("intensity", "")
-bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 sDirection = mattr.getdefault("direction", "")
 sFinalicon = mattr.getdefault("finalicon", "")
 bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
@@ -5586,7 +5956,6 @@ stextintensity = mattr.getdefault("textintensity", "")
 sto = mattr.getdefault("to", "")
 bistop = YesNoToBoolean(mattr.getdefault("istop", "No"))
 stransition = mattr.getdefault("transition", "")
-bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 bisXlarge = YesNoToBoolean(mattr.getdefault("isxlarge", "No"))
 	bisXsmall = YesNoToBoolean(mattr.getdefault("isxsmall", "No"))
 End Sub
@@ -5594,6 +5963,7 @@ End Sub
 #Region Rating
 Sub PropertyBag_Rating
 	vm.setdata("pbrating", False)
+	lstBags.add("pbrating")
 	pbrating = vm.CreateProperty("ppbrating", Me)
 	pbrating.SetVShow("pbrating")
 	pbrating.AddHeading("d","Details")
@@ -5633,7 +6003,6 @@ Sub Read_Rating
 	sclosedelay = mattr.getdefault("closedelay", "")
 	scolor = mattr.getdefault("color", "")
 	sintensity = mattr.getdefault("intensity", "")
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisdense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
 	sEmptyicon = mattr.getdefault("emptyicon", "")
 	sFullicon = mattr.getdefault("fullicon", "")
@@ -5722,6 +6091,7 @@ End Sub
 #Region Table
 Sub PropertyBag_Table
 	vm.setdata("pbtable", False)
+	lstBags.add("pbtable")
 	pbtable = vm.CreateProperty("ppbtable", Me)
 	pbtable.IsTable = True
 	pbtable.SetVShow("pbtable")
@@ -5806,7 +6176,6 @@ Sub Read_Table
 	'
 	bisCalculatewidths = YesNoToBoolean(mattr.getdefault("iscalculatewidths", "No"))
 	sCaption = mattr.getdefault("caption", "")
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	sDatasourcename = mattr.getdefault("datasourcename", "")
 	bisdense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
 	bisDisablefiltering = YesNoToBoolean(mattr.getdefault("isdisablefiltering", "No"))
@@ -5844,8 +6213,6 @@ Sub Read_Table
 	bisSingleselect = YesNoToBoolean(mattr.getdefault("issingleselect", "No"))
 	'sSortby = mattr.getdefault("sortby", "")
 	'sSortdesc = mattr.getdefault("sortdesc", "")
-	slabel = mattr.getdefault("label", "")
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 Sub Design_TablePreview
@@ -5950,7 +6317,7 @@ Sub Design_Table
 	Design_TablePreview
 	Dim datatable As VMDataTable = ui.CreateDataTable("datatable" & sname, sItemkey, Me)
 	datatable.SetStatic(True)
-	datatable.SetTitle(slabel)
+	datatable.SetTitle(stitle)
 	datatable.SetSearchbox(bisSearchbox)
 	datatable.SetCaption(sCaption)
 	datatable.SetCalculatewidths(bisCalculatewidths)
@@ -6048,7 +6415,7 @@ Sub Design_Table
 	'build the code
 	AddCode(sb, $"Sub CreateListing_${sname}"$)
 	sb.append($"Dim datatable${sname} As VmDataTable = vm.CreateDataTable("datatable${sname}", "${sItemkey}", Me)"$).append(CRLF)
-	CodeLine(sb, slabel, "s", "DataTable", sname, "SetTitle")
+	CodeLine(sb, stitle, "s", "DataTable", sname, "SetTitle")
 	CodeLine(sb, sCaption, "s", "DataTable", sname, "SetCaption")
 	CodeLine(sb, bisSearchbox, "b", "DataTable", sname, "SetSearchbox")
 	If bisaddnew Then
@@ -6137,4 +6504,160 @@ Sub Design_Table
 	'
 	sb.append($"cont.AddControl(datatable${sname}.DataTable, datatable${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	AddCode(sb, "End Sub")
+End Sub
+
+#Region Chip
+Sub PropertyBag_Chip
+	vm.setdata("pbchip", False)
+	lstBags.add("pbchip")
+	pbchip = vm.CreateProperty("ppbchip", Me)
+	pbchip.SetVShow("pbchip")
+	pbchip.AddHeading("d","Details")
+	pbchip.AddText("d","id","ID","","")
+	pbchip.AddText("d", "controltype", "Type", "","chip")
+	pbchip.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbchip.AddText("d", "label","Label","","")
+	pbchip.AddText("d","src","Src","","./assets/sponge.png")
+	pbchip.AddText("d","iconname","Icon Name","","")
+	pbchip.AddRadioGroupH("d", "iconpos", "Position", iconpos)
+	pbchip.AddRadioGroupH("d", "chiptype", "Type", CreateMap("icon":"Icon","image":"Image"))
+	pbchip.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity", "Color Intensity", vm.IntensityOptions)
+	pbchip.AddSelect2("d","textcolor","TextColor", vm.ColorOptions, "textcolorintensity","TextColor Intensity", vm.IntensityOptions)
+	pbchip.AddText("d","href","Href","","")
+	pbchip.AddText("d","to","To","","")
+	pbchip.AddSelect("d","target","Target", vm.TargetOptions)
+	pbchip.AddHeading("e","Settings")
+	pbchip.AddSwitches("e", CreateMap("isactive": "Active", "isappend": "Append"))
+	pbchip.AddSwitches("e", CreateMap("isclose": "Close", "isdark": "Dark"))
+	pbchip.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isdraggable": "Draggable"))
+	pbchip.AddSwitches("e", CreateMap("isexact": "Exact", "isfilter": "Filter"))
+	pbchip.AddSwitches("e", CreateMap("islabel": "Label", "islarge": "Large"))
+	pbchip.AddSwitches("e", CreateMap("islight": "Light", "islink": "Link"))
+	pbchip.AddSwitches("e", CreateMap("isnuxt": "Nuxt", "isoutlined": "Outlined"))
+	pbchip.AddSwitches("e", CreateMap("ispill": "Pill", "isreplace": "Replace"))
+	pbchip.AddSwitches("e", CreateMap("isripple": "Ripple", "issmall": "Small"))
+	pbchip.AddSwitches("e", CreateMap("isvisible": "Visible", "isxlarge": "XLarge"))
+	pbchip.AddSwitches("e", CreateMap("isxsmall": "XSmall"))
+	
+	pbchip.AddHeading("f","Matrix")
+	pbchip.AddMatrix("f")
+	vm.container.AddComponent(1, 3, pbchip.tostring)
+End Sub
+#End Region
+
+#Region Badge
+Sub PropertyBag_Badge
+	vm.setdata("pbbadge", False)
+	lstBags.add("pbbadge")
+	pbbadge = vm.CreateProperty("ppbbadge", Me)
+	pbbadge.SetVShow("pbbadge")
+	pbbadge.AddHeading("d","Details")
+	pbbadge.AddText("d","id","ID","","")
+	pbbadge.AddText("d", "controltype", "Type", "","badge")
+	pbbadge.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbbadge.AddText2("d",CreateMap("content":"Content", "iconname":"Icon"))
+	pbbadge.AddRadioGroupH("d", "badgetype", "Type", CreateMap("iscontent":"Content","isicon":"Icon"))
+	pbbadge.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbbadge.AddText2("d",CreateMap("offsetx":"Offset X", "offsety":"Offset Y"))
+	pbbadge.AddSelect2("d","origin","Origin",vm.Transition,"transition","Transition",vm.Transition)
+	'
+	pbbadge.AddHeading("e","Settings")
+	pbbadge.AddSwitches("e", CreateMap("isavatar": "Avatar", "isbordered": "Bordered"))
+	pbbadge.AddSwitches("e", CreateMap("isbottom": "Bottom", "isdark": "Dark"))
+	pbbadge.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isdot": "Dot"))
+	pbbadge.AddSwitches("e", CreateMap("isinline": "Inline", "isleft": "Left"))
+	pbbadge.AddSwitches("e", CreateMap("islight": "Light", "isoverlap": "Overlap"))
+	pbbadge.AddSwitches("e", CreateMap("istile": "Tile", "isvisible": "Visible"))
+	'
+	pbbadge.AddHeading("f","Matrix")
+	pbbadge.AddMatrix("f")
+	'
+	vm.container.AddComponent(1, 3, pbbadge.tostring)
+End Sub
+#End Region
+
+
+#Region Avatar
+Sub PropertyBag_Avatar
+	vm.setdata("pbavatar", False)
+	lstBags.add("pbavatar")
+	pbavatar = vm.CreateProperty("ppbavatar", Me)
+	pbavatar.SetChangeEvent("SavePropertyBag")
+	pbavatar.SetVShow("pbavatar")
+	pbavatar.AddHeading("d","Details")
+	pbavatar.AddText("d","id","ID","","")
+	pbavatar.AddText("d", "controltype", "Type", "","avatar")
+	pbavatar.AddText2("d", CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbavatar.AddText2("d", CreateMap("badge":"Badge","label":"Label"))
+	pbavatar.AddText2("d", CreateMap("iconname": "Icon Name", "size": "Size"))
+	pbavatar.AddText("d", "src", "Src","", "")
+	pbavatar.AddRadioGroupH("d", "avatartype", "Type", CreateMap("islabel":"Label","isicon":"Icon", "isimage":"Image"))
+	pbavatar.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbavatar.AddSelect2("d","textcolor","TextColor", vm.ColorOptions, "textcolorintensity","TextColor Intensity", vm.IntensityOptions)
+	'
+	pbavatar.AddHeading("e","Settings")
+	pbavatar.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isvisible": "Visible"))
+	pbavatar.AddSwitches("e", CreateMap("isleft": "Left", "isright": "Right"))
+	pbavatar.AddSwitches("e", CreateMap("ishasbadge": "HasBadge", "istile": "Tile"))
+	'
+	pbavatar.AddHeading("f","Matrix")
+	pbavatar.AddHeightWidths("f")
+	pbavatar.AddMatrix("f")
+	vm.container.AddComponent(1, 3, pbavatar.tostring)
+End Sub
+#End Region
+
+Sub Read_Avatar
+	sBadge = mattr.getdefault("badge", "")
+	scolor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisHasbadge = YesNoToBoolean(mattr.getdefault("ishasbadge", "No"))
+	sheight = mattr.getdefault("height", "")
+	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
+	smaxheight = mattr.getdefault("maxheight", "")
+	smaxwidth = mattr.getdefault("maxwidth", "")
+	sminheight = mattr.getdefault("minheight", "")
+	sminwidth = mattr.getdefault("minwidth", "")
+	bisright = YesNoToBoolean(mattr.getdefault("isright", "No"))
+	ssize = mattr.getdefault("size", "")
+	savatartype = mattr.GetDefault("avatartype","")
+	stextcolor = mattr.getdefault("textcolor", "")
+	sTextcolorintensity = mattr.getdefault("textcolorintensity", "")
+	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+End Sub
+
+Sub Design_Avatar
+	Dim avatar As VMAvatar = ui.CreateAvatar($"avatar${sname}"$, Me)
+	avatar.setstatic(True)
+	avatar.SetBadge(sBadge)
+	avatar.SetColorintensity(scolor, sColorintensity)
+	avatar.SetDisabled(bisdisabled)
+	avatar.SetHasbadge(bisHasbadge)
+	avatar.SetHeight(sheight)
+	avatar.SetLeft(bisleft)
+	avatar.SetMaxheight(smaxheight)
+	avatar.SetMaxwidth(smaxwidth)
+	avatar.SetMinheight(sminheight)
+	avatar.SetMinwidth(sminwidth)
+	avatar.SetRight(bisright)
+	avatar.SetSize(ssize)
+	avatar.SetTextcolorintensity(stextcolor, sTextcolorintensity)
+	avatar.SetTile(bistile)	
+	avatar.SetVisible(bisvisible)
+	Select Case savatartype
+	Case "islabel"
+		avatar.SetTextOnly(stitle)
+	Case "isicon"
+		avatar.SetIconOnly(siconname)
+	Case "isimage"	
+		avatar.SetImageOnly(ssrc)
+	End Select	
+	ui.AddControl(avatar.Avatar, avatar.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	sb.append($"Dim avatar${sname} As VMAvatar = vm.CreateAvatar("avatar${sname}", Me)"$).Append(CRLF)
+	
+	sb.append($"${sparent}.Container.AddControl(avatar${sname}.Avatar, avatar${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
 End Sub

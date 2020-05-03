@@ -46,7 +46,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	RemoveAttr("ref")
 	Return ListItemIcon.ToString
 End Sub
 

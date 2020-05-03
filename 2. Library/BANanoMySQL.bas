@@ -91,6 +91,15 @@ Sub GetMax As BANanoMySQL
 	Return Me
 End Sub
 
+'return a sql to delete record of table where one exists
+Sub GetMin As BANanoMySQL
+	Dim sb As String = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
+	query = sb
+	command = "getmin"
+	Return Me
+End Sub
+
+
 'get table names
 Sub GetTableNames As BANanoMySQL
 	Dim sb As String = $"select table_name from information_schema.tables where table_schema = '${DBase}'"$

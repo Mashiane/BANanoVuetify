@@ -20,6 +20,7 @@ Sub Class_Globals
 	Private titleKey As String
 	Private contentKey As String
 	Private bStatic As Boolean
+	Public Form As VMForm
 End Sub
 
 'initialize the Dialog
@@ -36,7 +37,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Title = Card.title
 	Content = Card.text
 	Actions = Card.Actions
-	Container = Card.Container
+	Form = Card.form
+	Container = Form.Container
 	Actions.AddSpacer
 	'
 	Title.AddClass("headline")
@@ -46,11 +48,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub Validate
+	Form.validate
+End Sub
+
+Sub Reset
+	Form.Reset	
+End Sub
+
+Sub ResetValidation
+	Form.ResetValidation
+End Sub
+
 Sub SetStatic(b As Boolean) As VMDialog
 	bStatic = b
 	Dialog.SetStatic(b)
 	Card.setstatic(b)
-	Actions.SetStatic(b)
 	Return Me
 End Sub
 
@@ -595,6 +608,7 @@ Sub Hide As VMDialog
 End Sub
 
 Sub Show As VMDialog
+	Container.SetDefaults
 	vue.SetStateSingle(ID, True)
 	Return Me
 End Sub
@@ -637,7 +651,6 @@ Sub SetDesignMode(b As Boolean) As VMDialog
 	Dialog.SetDesignMode(b)
 	DesignMode = b
 	Card.SetDesignMode(b)
-	Actions.SetDesignMode(b)
 	Return Me
 End Sub
 

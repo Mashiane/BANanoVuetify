@@ -309,14 +309,13 @@ End Sub
 
 'set error
 Sub SetError(varError As Boolean) As VMCheckBox
-	If varError = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("error", varError)
-	Else
-	Dim pp As String = $"${ID}Error"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}Error"$
 	vue.SetStateSingle(pp, varError)
 	CheckBox.Bind(":error", pp)
-	End If
 	Return Me
 End Sub
 
@@ -325,23 +324,23 @@ Sub SetErrorCount(varErrorCount As String) As VMCheckBox
 	If varErrorCount = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("error-count", varErrorCount)
-	Else
-	Dim pp As String = $"${ID}ErrorCount"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	CheckBox.Bind(":error-count", pp)
-	End If
 	Return Me
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMCheckBox
+Sub SetErrorMessages(varErrorMessages As String) As VMCheckBox
 	If bStatic Then
 		SetAttrSingle("error-messages", varErrorMessages)
-	Else
-	Dim pp As String = $"${ID}ErrorMessages"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	CheckBox.Bind(":error-messages", pp)
-	End If
 	Return Me
 End Sub
 
@@ -579,8 +578,13 @@ Sub SetRipple(varRipple As Boolean) As VMCheckBox
 End Sub
 
 'set rules
-Sub SetRules(varRules As Object) As VMCheckBox
-	CheckBox.Bind("rules", varRules)
+Sub SetRules(varRules As Boolean) As VMCheckBox
+	If varRules = False Then Return Me
+	If bStatic Then Return Me
+	If DesignMode Then Return Me
+	Dim pp As String = $"${ID}Rules"$
+	CheckBox.Bind(":rules", pp)
+	vue.SetData(pp, vue.NewList)
 	Return Me
 End Sub
 

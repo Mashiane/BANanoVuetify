@@ -19,6 +19,9 @@ Sub Class_Globals
 	Private txt As String
 	Private bStatic As Boolean
 	Public Badge As VMBadge
+	Private iconPos As String
+	Private icon As String
+	Private hasBadge As Boolean
 End Sub
 
 'initialize the Button
@@ -40,6 +43,20 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Badge.Initialize(vue, $"${ID}badge"$, Module) 
 	txt = ""
 	bStatic = False
+	icon = ""
+	iconPos = ""
+	hasBadge = False
+	Return Me
+End Sub
+
+Sub SetHasBadge(b As Boolean) As VMButton
+	hasBadge = b
+	Return Me
+End Sub
+
+'set the badge value
+Sub SetBadge(bvalue As String) As VMButton
+	Badge.SetContent(bvalue)
 	Return Me
 End Sub
 
@@ -116,12 +133,15 @@ End Sub
 Sub SetIconButton(iconName As String) As VMButton
 	If iconName = "" Then Return Me
 	SetIcon(True)
-	Dim icon As VMIcon
-	icon.Initialize(vue, $"${ID}icon"$, Module)
-	icon.SetStatic(bStatic)
-	icon.SetDesignMode(DesignMode)
-	icon.SetText(iconName)
-	icon.Pop(Button)
+	Dim bicon As VMIcon
+	bicon.Initialize(vue, $"${ID}icon"$, Module)
+	bicon.SetStatic(bStatic)
+	bicon.SetDesignMode(DesignMode)
+	bicon.SetText(iconName)
+	bicon.Pop(Button)
+	txt = ""
+	iconPos = ""
+	icon = ""
 	Return Me
 End Sub
 
@@ -169,12 +189,15 @@ Sub SetFABButton(iconName As String) As VMButton
 	If iconName = "" Then Return Me
 	SetFab(True)
 	SetDark(True)
-	Dim icon As VMIcon
-	icon.Initialize(vue, $"${ID}icon"$, Module)
-	icon.SetStatic(bStatic)
-	icon.SetDesignMode(DesignMode)
-	icon.SetText(iconName)
-	icon.Pop(Button)
+	Dim bicon As VMIcon
+	bicon.Initialize(vue, $"${ID}icon"$, Module)
+	bicon.SetStatic(bStatic)
+	bicon.SetDesignMode(DesignMode)
+	bicon.SetText(iconName)
+	bicon.Pop(Button)
+	iconPos = ""
+	txt = ""
+	icon = ""
 	Return Me
 End Sub
 
@@ -192,54 +215,51 @@ End Sub
 
 'add an icon to the button
 Sub AddIconVIf(iconName As String, vif As String, theme As String) As VMButton
-	Dim icon As VMIcon
-	icon.Initialize(vue, "", Module)
-	icon.SetStatic(bStatic)
-	icon.SetDesignMode(DesignMode)
-	icon.SetText(iconName).SetVIf(vif)
+	Dim bicon As VMIcon
+	bicon.Initialize(vue, "", Module)
+	bicon.SetStatic(bStatic)
+	bicon.SetDesignMode(DesignMode)
+	bicon.SetText(iconName).SetVIf(vif)
 	If theme <> "" Then
-		icon.UseTheme(theme)
+		bicon.UseTheme(theme)
 	End If
-	icon.Pop(Button)
+	bicon.Pop(Button)
 	Return Me
 End Sub
 
 'add an icon to the button
 Sub AddIconVElse(iconName As String, vif As String, theme As String) As VMButton
-	Dim icon As VMIcon
-	icon.Initialize(vue, "", Module)
-	icon.SetStatic(bStatic)
-	icon.SetDesignMode(DesignMode)
-	icon.SetText(iconName).setvelse(vif)
+	Dim bicon As VMIcon
+	bicon.Initialize(vue, "", Module)
+	bicon.SetStatic(bStatic)
+	bicon.SetDesignMode(DesignMode)
+	bicon.SetText(iconName).setvelse(vif)
 	If theme <> "" Then
-		icon.UseTheme(theme)
+		bicon.UseTheme(theme)
 	End If
-	icon.Pop(Button)
+	bicon.Pop(Button)
 	Return Me
 End Sub
 
 'add an icon to the button
-Sub AddIcon(iconName As String, iconPos As String, iconTheme As String) As VMButton
-	Dim oldtxt As String = txt
+Sub AddIcon(iconName As String, siconPos As String, iconTheme As String) As VMButton
 	If iconName = "" Then Return Me
-	Dim icon As VMIcon
-	icon.Initialize(vue, $"${ID}icon"$, Module)
-	icon.SetStatic(bStatic)
-	icon.SetDesignMode(DesignMode)
-	icon.SetText(iconName)
+	iconPos = siconPos
+	Dim bicon As VMIcon
+	bicon.Initialize(vue, $"${ID}icon"$, Module)
+	bicon.SetStatic(bStatic)
+	bicon.SetDesignMode(DesignMode)
+	bicon.SetText(iconName)
 	Select Case iconPos
 	Case "left"
-		icon.SetLeft(True)
+		bicon.SetLeft(True)
 	Case "right"
-		icon.SetRight(True)
-		SetLabel("")
-		icon.SetText(oldtxt)
+		bicon.SetRight(True)
 	End Select
 	If iconTheme <> "" Then
-		icon.UseTheme(iconTheme)
+		bicon.UseTheme(iconTheme)
 	End If
-	icon.Pop(Button)
-	Button.AddClass("ma-2")
+	icon = bicon.tostring
 	Return Me
 End Sub
 
@@ -279,10 +299,25 @@ End Sub
 
 'get component
 Sub ToString As String
+	Select Case iconPos
+	Case "left"
+		Button.SetText(icon)
+		Button.SetText(txt)	
+	Case "right"
+		Button.SetText(txt)
+		Button.SetText(icon)
+	Case Else
+		Button.SetText(txt)
+	End Select
 	If hasToolTip Then
 		Button.Pop(tmpl.Template)
 		tmpl.Pop(tooltip.tooltip)
 		span.Pop(tooltip.ToolTip)
+		'
+		If hasBadge = False Then
+			Return tooltip.tostring
+		End If
+		'
 		If Badge.HasContent Then
 			Badge.AddComponent(tooltip.ToString)
 			Return Badge.tostring
@@ -290,6 +325,10 @@ Sub ToString As String
 			Return tooltip.ToString
 		End If
 	Else
+		If hasBadge = False Then
+			Return Button.tostring
+		End If
+		'
 		If Badge.HasContent Then
 			Badge.AddComponent(Button.ToString)
 			Return Badge.tostring	
@@ -798,14 +837,13 @@ End Sub
 
 'set text
 private Sub SetText(varText As String) As VMButton
-	txt = varText
 	If DesignMode = True Or bStatic = True Then
-		Button.SetText(varText)
+		txt = varText
 	Else
 		Dim pp As String = $"${ID}label"$
 		pp = pp.tolowercase
 		vue.SetStateSingle(pp, varText)
-		Button.SetText($"{{ ${pp} }}"$)
+		txt = $"{{ ${pp} }}"$
 	End If
 	Return Me
 End Sub

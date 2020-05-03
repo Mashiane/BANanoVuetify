@@ -36,11 +36,9 @@ End Sub
 'get component
 Sub ToString As String
 	Content.RemoveAttr("v-show")
-	Content.RemoveAttr("ref")
 	Content.RemoveAttr(":style")
 	ExpansionPanel.RemoveAttr("v-show")
 	ExpansionPanel.RemoveAttr(":style")
-	ExpansionPanel.RemoveAttr("ref")
 	AddComponent(Header.ToString)
 	AddComponent(Content.ToString)
 	Return ExpansionPanel.ToString

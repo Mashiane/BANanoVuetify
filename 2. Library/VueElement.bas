@@ -43,11 +43,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, stag As String) As VueEleme
 End Sub
 
 Sub SetKey(k As String) As VueElement
+	If k = "" Then Return Me
 	SetProp("key", k)
 	Return Me
 End Sub
 
 Sub SetRef(r As String) As VueElement
+	If r = "" Then Return Me
 	SetProp("ref", r)
 	Return Me
 End Sub

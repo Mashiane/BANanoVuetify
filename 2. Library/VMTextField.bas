@@ -13,7 +13,6 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private password As String
-	Public ErrorText As String
 	Private bStatic As Boolean
 	Private targetVModel As String
 	Private numFiles As Int
@@ -21,6 +20,7 @@ Sub Class_Globals
 	Private fd As List
 	Private bMultiple As Boolean
 	Private vmodel As String
+	Public ErrorText As String
 End Sub
 
 'initialize the TextField
@@ -35,6 +35,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	vmodel = ""
 	bMultiple = False
+	ErrorText = ""
+	Return Me
+End Sub
+
+Sub SetSlotActivator(b As Boolean) As VMTextField    'ignore
+	SetAttrSingle("slot", "activator")
 	Return Me
 End Sub
 
@@ -137,17 +143,6 @@ End Sub
 
 Sub SetTypeDate(b As Boolean) As VMTextField
 	SetType("date")
-	Return Me
-End Sub
-
-'backward compatibility
-Sub SetInvalidMessage(ErrText As String) As VMTextField
-	ErrorText = ErrText
-	Return Me
-End Sub
-
-Sub SetErrorText(errText As String) As VMTextField
-	ErrorText = errText
 	Return Me
 End Sub
 
@@ -470,38 +465,38 @@ Sub SetDisabled(varDisabled As Boolean) As VMTextField
 End Sub
 
 'set error
-Sub SetError(varError As Object) As VMTextField
+Sub SetError(varError As Boolean) As VMTextField
 	If bStatic Then
 		SetAttrSingle("error", varError)
-	Else
-	Dim pp As String = $"${ID}Error"$
-	vue.SetStateSingle(pp, varError)
-	TextField.Bind(":error", pp)
+		Return Me
 	End If
+	Dim pp As String = $"${vmodel}Error"$
+	vue.SetBoolean(pp, varError)
+	TextField.Bind(":error", pp)
 	Return Me
 End Sub
 
 'set error-count
-Sub SetErrorCount(varErrorCount As Object) As VMTextField
+Sub SetErrorCount(varErrorCount As String) As VMTextField
 	If bStatic Then
 		SetAttrSingle("error-count", varErrorCount)
-	Else
-	Dim pp As String = $"${ID}ErrorCount"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	TextField.Bind(":error-count", pp)
-	End If
 	Return Me
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMTextField
+Sub SetErrorMessages(varErrorMessages As String) As VMTextField
 	If bStatic Then
 		SetAttrSingle("error-messages", varErrorMessages)
-	Else
-	Dim pp As String = $"${ID}ErrorMessages"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	TextField.Bind(":error-messages", pp)
-	End If
 	Return Me
 End Sub
 
@@ -779,8 +774,13 @@ Sub SetRounded(varRounded As Boolean) As VMTextField
 End Sub
 
 'set rules
-Sub SetRules(varRules As Object) As VMTextField
-	SetAttrSingle("rules", varRules)
+Sub SetRules(b As Boolean) As VMTextField
+	If b = False Then Return Me
+	If bStatic Then Return Me
+	If DesignMode Then Return Me
+	Dim pp As String = $"${ID}rules"$
+	TextField.Bind(":rules", pp)
+	vue.SetData(pp, vue.NewList)
 	Return Me
 End Sub
 
@@ -892,11 +892,11 @@ Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMTextField
 	If varValidateOnBlur = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("validate-on-blur", varValidateOnBlur)
-	Else
-	Dim pp As String = $"${ID}ValidateOnBlur"$
-	vue.SetStateSingle(pp, varValidateOnBlur)
-	TextField.Bind(":validate-on-blur", pp)
+		Return Me
 	End If
+	Dim pp As String = $"${ID}ValidateOnBlur"$
+	vue.SetBoolean(pp, varValidateOnBlur)
+	TextField.Bind(":validate-on-blur", pp)
 	Return Me
 End Sub
 

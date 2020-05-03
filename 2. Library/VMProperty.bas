@@ -116,7 +116,12 @@ Sub OpenPanel(pnl As Int)
 	vue.SetData(selPanel, pnl)
 End Sub
 
-Sub RaiseChangeEvent
+Sub SetChangeEvent(cEx As String) As VMProperty
+	changeEvent = cEx
+	Return Me
+End Sub
+
+private Sub RaiseChangeEvent
 	If SubExists(module, changeEvent) Then
 		BANano.CallSub(module, changeEvent, Null)
 	End If
@@ -1218,7 +1223,7 @@ Sub ToString As String
 						rgx.SetOptions(CreateMap("isvalue":"Value","isdisplay":"Display","isnone":"None"))
 						vue.SetData(vmodel, "isnone")
 						rgx.SetDense(True).SetRow(True).RemoveAttr("ref").SetHideDetails(True)
-						rgx.AddClass("mb-2")
+						rgx.AddClass("my-2")
 						tcont.AddControlS(rgx.RadioGroup, rgx.ToString, 1, 1, 12, 12, 12, 12)
 						itemtypes.put(k, "String")
 					Case "colalign"
@@ -1227,6 +1232,7 @@ Sub ToString As String
 						rg.SetOptions(CreateMap("start":"Start","center":"Center","end":"End"))
 						vue.SetData(vmodel, "start")
 						rg.SetDense(True).SetRow(True).RemoveAttr("ref").SetHideDetails(True)
+						rg.AddClass("my-2")
 						tcont.AddControlS(rg.RadioGroup, rg.ToString, 1, 1, 12, 12, 12, 12)
 						itemtypes.put(k, "String")
 					Case "colcontroltype"
@@ -1789,6 +1795,7 @@ Sub ToString As String
 				rg.SetVShow(nc.vmodel & "show")
 				rg.SetOnChange(Me, "RaiseChangeEvent")
 				rg.SetHideDetails(True)
+				rg.AddClass("my-2")
 				vue.SetData(nc.vmodel & "show", True)
 				expanel.Container.AddControlS(rg.RadioGroup, rg.ToString, 1, 1, 12, 12, 12, 12)
 				sText.Add(nc.vmodel)

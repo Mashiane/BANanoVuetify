@@ -248,6 +248,13 @@ Sub GetMax As BANanoMSSQL
 	Return Me
 End Sub
 
+'return a sql to delete record of table where one exists
+Sub GetMin As BANanoMSSQL
+	Dim sb As String = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
+	query = sb
+	command = "getmin"
+	Return Me
+End Sub
 
 Sub GetNextID As String
 	Dim nextid As Int

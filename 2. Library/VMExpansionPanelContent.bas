@@ -30,7 +30,6 @@ End Sub
 'get component
 Sub ToString As String
 	Container.RemoveAttr("v-show")
-	Container.RemoveAttr("ref")
 	Container.RemoveAttr(":style")
 	If Container.HasContent Then AddComponent(Container.ToString)
 	Return ExpansionPanelContent.ToString

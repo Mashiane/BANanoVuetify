@@ -615,6 +615,7 @@ End Sub
 
 'join list to mv string
 Sub Join(delimiter As String, lst As List) As String
+	If lst.Size = 0 Then Return ""
 	Dim i As Int
 	Dim sb As StringBuilder
 	Dim fld As String
@@ -648,6 +649,7 @@ Sub KeyValues2Map(delim As String, keys As String, values As String) As Map
 	End If
 	Return optm
 End Sub
+
 
 'javascript getElementById
 Sub getElementById(sid As String) As BANanoObject
@@ -854,6 +856,7 @@ End Sub
 
 'join list to mv string
 Sub JoinNonBlanks(delimiter As String, lst As List) As String
+	If lst.size = 0 Then Return ""
 	'ensure we have non blanks
 	Dim nl As List
 	nl.Initialize
@@ -882,6 +885,7 @@ End Sub
 'join maps
 Sub JoinMaps(lst As List) As Map
 	Dim nm As Map = CreateMap()
+	If lst.Size = 0 Then Return nm
 	For Each mr As Map In lst
 		For Each k As String In mr.Keys
 			Dim v As Object = mr.Get(k)
@@ -2038,12 +2042,12 @@ End Sub
 Sub Validate(rec As Map, required As Map) As Boolean
 	Dim iv As Int = 0
 	For Each k As String In required.Keys
+		'get the message
 		If rec.ContainsKey(k) Then
 			Dim v As String = rec.GetDefault(k,"")
 			v = CStr(v)
 			v = v.trim
 			If v = "" Then
-				Log("Validate: " & k)
 				iv = iv + 1
 				ShowError(k)
 			Else
@@ -2058,13 +2062,18 @@ Sub Validate(rec As Map, required As Map) As Boolean
 	End If
 End Sub
 
+Sub ShowErrorMessage(k As String, v As String)
+	Dim pp As String = $"${k}ErrorMessages"$
+	SetStateSingle(pp, v)
+End Sub
+
 
 Sub ShowError(elID As String)
-	SetStateSingle($"${elID}error"$, True)
+	SetBoolean($"${elID}error"$, True)
 End Sub
 
 Sub HideError(elID As String)
-	SetStateSingle($"${elID}error"$, False)
+	SetBoolean($"${elID}error"$, False)
 End Sub
 
 Sub GetFileParentPath(Path As String) As String
@@ -2253,6 +2262,11 @@ Sub GetEventTargetProperty(e As BANanoEvent, prop As String) As String
 	Return sid
 End Sub
 
+Sub GetFileListFromTarget(e As BANanoEvent) As List
+	Dim files As List = e.OtherField("target").GetField("files").Result
+	Return files
+End Sub
+
 Sub CallComputed(methodName As String) As Object
 	methodName = methodName.tolowercase
 	Return BOVue.GetField(methodName)
@@ -2302,6 +2316,18 @@ Sub SetStateSingle(k As String, v As Object) As BANanoVue
 	k = k.tolowercase
 	data.Put(k, v)
 	Return Me 
+End Sub
+
+Sub SetBoolean(k As String, b As Boolean) As BANanoVue
+	k = k.tolowercase
+	data.Put(k, b)
+	Return Me
+End Sub
+
+Sub SetList(k As String, l As Boolean) As BANanoVue
+	k = k.tolowercase
+	data.Put(k, l)
+	Return Me
 End Sub
 
 Sub ToggleState(stateName As String) As BANanoVue
@@ -3033,6 +3059,7 @@ End Sub
 
 'join list to multi value string
 Sub JoinFields(delimiter As String, lst As List) As String
+	If lst.Size = 0 Then Return ""
 	Dim i As Int
 	Dim sb As StringBuilder
 	Dim fld As String
@@ -3050,6 +3077,7 @@ End Sub
 
 'join list to multi value string with a quote
 Sub JoinFields1(delimiter As String, sQuote As String, lst As List) As String
+	If lst.Size = 0 Then Return ""
 	Dim i As Int
 	Dim sb As StringBuilder
 	Dim fld As String

@@ -19,6 +19,8 @@ Sub Class_Globals
 	Private bStatic As Boolean
 	Public Label As VMLabel
 	Private hasLabel As Boolean
+	Public Badge As VMBadge
+	Private hasBadge As Boolean
 End Sub
 
 'initialize the Avatar
@@ -33,11 +35,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 		Icon.Initialize(vue, "", Module)
 		Image.Initialize(vue, "", Module)
 		Label.Initialize(vue, "")
+		Badge.Initialize(vue, "", Module)
 	Else
 		Icon.Initialize(vue, $"${ID}icon"$, Module)
 		Image.Initialize(vue, $"${ID}image"$, Module)
 		Label.Initialize(vue, $"${ID}label"$)
+		Badge.Initialize(vue, $"${ID}badge"$, Module)
 	End If
+	Label.SetTag("span")
+	hasBadge = False
 	hasIcon = False
 	hasImage = False
 	bStatic = False
@@ -45,6 +51,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetBadge(scontent As String) As VMAvatar
+	Badge.SetContent(scontent)
+	Return Me
+End Sub
+
+Sub SetHasBadge(b As Boolean) As VMAvatar
+	hasBadge = b
+	Return Me
+End Sub
 
 'the image should be centered on the RC
 Sub SetCenterOnParent(b As Boolean) As VMAvatar
@@ -59,6 +74,7 @@ Sub SetStatic(b As Boolean) As VMAvatar
 	Icon.SetStatic(b)
 	Image.SetStatic(b)
 	Label.SetStatic(b)
+	Badge.SetStatic(b)
 	Return Me
 End Sub
 
@@ -89,8 +105,8 @@ End Sub
 
 Sub AddIcon(iID As String, iconName As String, props As Map,  classes As List,  attributes As List) As VMAvatar
 	Dim vicon As VMIcon
-	vicon.Initialize(vue, iID, Module).SetText(iconName)
-	vicon.SetStatic(bStatic)
+	vicon.Initialize(vue, iID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	vicon.SetText(iconName)
 	If attributes <> Null Then
 		vicon.SetAttributes(attributes)
 	End If
@@ -147,6 +163,14 @@ Sub SetIcon(iconName As String, iconTheme As String, props As Map, classes As Li
 	Return Me
 End Sub
 
+Sub SetIconOnly(iconName As String) As VMAvatar
+	hasIcon = True
+	Icon.SetText(iconName)
+	Icon.SetDark(True)
+	Return Me
+End Sub
+
+
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMAvatar
 	If varColor = "" Then Return Me
@@ -177,6 +201,14 @@ Sub SetText(Text As String, props As Map, classes As List, attributes As List) A
 	Return Me
 End Sub
 
+Sub SetTextOnly(Text As String) As VMAvatar
+	If Text = "" Then Return Me
+	hasLabel = True
+	Label.SetText(Text).SetHeadline(True)
+	Return Me
+End Sub
+
+
 Sub SetImage(url As String, alt As String, props As Map, classes As List, attributes As List) As VMAvatar
 	hasImage = True
 	Image.SetVModel($"${ID}image"$, url) 
@@ -184,6 +216,14 @@ Sub SetImage(url As String, alt As String, props As Map, classes As List, attrib
 	Image.BuildModel(props, Null, classes, attributes)
 	Return Me
 End Sub
+
+Sub SetImageOnly(url As String) As VMAvatar
+	hasImage = True
+	Image.SetVModel($"${ID}image"$, url) 
+	Image.SetAlt("")
+	Return Me
+End Sub
+
 
 Sub AddComponent(comp As String) As VMAvatar
 	Avatar.SetText(comp)
@@ -206,7 +246,17 @@ Sub ToString As String
 	If hasImage Then Image.Pop(Avatar)
 	If hasIcon Then Icon.Pop(Avatar)
 	If hasLabel Then Label.Pop(Avatar)
-	Return Avatar.ToString
+	'
+	If hasBadge = False Then
+		Return Avatar.ToString
+	End If
+	'
+	If Badge.HasContent Then
+		Badge.AddComponent(Avatar.ToString)
+		Return Badge.tostring
+	Else
+		Return Avatar.ToString
+	End If
 End Sub
 
 Sub SetVModel(k As String) As VMAvatar
@@ -443,6 +493,10 @@ End Sub
 Sub SetDesignMode(b As Boolean) As VMAvatar
 	Avatar.SetDesignMode(b)
 	DesignMode = b
+	Icon.SetDesignMode(b)
+	Image.SetDesignMode(b)
+	Label.SetDesignMode(b)
+	Badge.SetDesignMode(b)
 	Return Me
 End Sub
 
@@ -492,7 +546,7 @@ End Sub
 Sub SetTextColor(varColor As String) As VMAvatar
 	If varColor = "" Then Return Me
 	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+	Label.AddClass(sColor)
 	Return Me
 End Sub
 
@@ -502,6 +556,6 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMAvata
 	Dim sColor As String = $"${varColor}--text"$
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+	Label.AddClass(mcolor)
 	Return Me
 End Sub

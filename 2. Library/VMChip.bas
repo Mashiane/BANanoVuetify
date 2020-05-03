@@ -13,6 +13,9 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Private sPos As String
+	Private icon As String
+	Private content As String
 End Sub
 
 'initialize the Chip
@@ -30,6 +33,9 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Chip.InputType = "text"
 	Chip.IsArray = True
 	bStatic = False
+	sPos = "left"
+	icon = ""
+	content = ""
 	Return Me
 End Sub
 
@@ -64,11 +70,25 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	Return Me
 End Sub
 
-Sub SetIcon(iconName As String, position As String) As VMChip
+Sub SetImage(url As String, position As String) As VMChip
+	If position = "" Then position = "left"
+	sPos = position
 	Dim c6a As VMAvatar
 	c6a.Initialize(vue, $"${ID}a"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-	c6a.SetAttributes(Array(position)).AddIcon($"${ID}i"$, iconName, Null, Null, Null)
-	AddComponent(c6a.ToString)
+	c6a.SetAttributes(Array(position))
+	c6a.SetImage(url, "", Null, Null, Null)
+	icon = c6a.ToString
+	Return Me
+End Sub
+
+Sub SetIcon(iconName As String, position As String) As VMChip
+	If position = "" Then position = "left"
+	sPos = position
+	Dim c6a As VMIcon
+	c6a.Initialize(vue, $"${ID}a"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	c6a.SetAttributes(Array(position))
+	c6a.SetText(iconName)
+	icon = c6a.ToString
 	Return Me
 End Sub
 
@@ -91,6 +111,14 @@ End Sub
 
 'get component
 Sub ToString As String	
+	Select Case sPos
+	Case "left"
+		Chip.SetText(icon)
+		Chip.SetText(content)
+	Case "right"
+		Chip.SetText(content)
+		Chip.SetText(icon)
+	End Select
 	Return Chip.ToString
 End Sub
 
@@ -123,7 +151,7 @@ End Sub
 
 'set text
 Sub SetText(t As String) As VMChip
-	Chip.SetText(t)
+	content = t
 	Return Me
 End Sub
 

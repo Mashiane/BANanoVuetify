@@ -347,35 +347,35 @@ End Sub
 Sub SetError(varError As Boolean) As VMRadioGroup
 	If bStatic Then
 		SetAttrSingle("error", varError)
-	Else
-	Dim pp As String = $"${ID}Error"$
+		Return Me
+	End If
+	Dim pp As String = $"${xmodel}Error"$
 	vue.SetStateSingle(pp, varError)
 	RadioGroup.Bind(":error", pp)
-	End If
 	Return Me
 End Sub
 
 'set error-count
-Sub SetErrorCount(varErrorCount As Object) As VMRadioGroup
+Sub SetErrorCount(varErrorCount As String) As VMRadioGroup
 	If bStatic Then
 		SetAttrSingle("error-count", varErrorCount)
-	Else
-	Dim pp As String = $"${ID}ErrorCount"$
+		Return Me
+	End If
+	Dim pp As String = $"${xmodel}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	RadioGroup.Bind(":error-count", pp)
-	End If
 	Return Me
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMRadioGroup
+Sub SetErrorMessages(varErrorMessages As String) As VMRadioGroup
 	If bStatic Then
 		SetAttrSingle("error-messages", varErrorMessages)
-	Else
-	Dim pp As String = $"${ID}ErrorMessages"$
+		Return Me
+	End If
+	Dim pp As String = $"${xmodel}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	RadioGroup.Bind(":error-messages", pp)
-	End If
 	Return Me
 End Sub
 
@@ -560,14 +560,13 @@ Sub SetColumn(varColumn As Boolean) As VMRadioGroup
 End Sub
 
 'set rules
-Sub SetRules(varRules As Object) As VMRadioGroup
-	If bStatic Then
-		SetAttrSingle("rules", varRules)
-	Else
-		Dim pp As String = $"${ID}Rules"$
-		vue.SetStateSingle(pp, varRules)
-		RadioGroup.Bind(":rules", pp)
-	End If
+Sub SetRules(varRules As Boolean) As VMRadioGroup
+	If varRules = False Then Return Me
+	If bStatic Then Return Me
+	If DesignMode Then Return Me
+	Dim pp As String = $"${ID}Rules"$
+	RadioGroup.Bind(":rules", pp)
+	vue.SetData(pp, vue.NewList)
 	Return Me
 End Sub
 

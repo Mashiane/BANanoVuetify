@@ -18,6 +18,7 @@ Sub Class_Globals
 	Public IsDialog As Boolean
 	Public Container As VMContainer
 	Public ToolBar As VMToolBar
+	Public Form As VMForm
 	Private lst As List
 	Private extra As List
 	Public IsTable As Boolean
@@ -38,14 +39,28 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Title.Initialize(vue, $"${ID}title"$, Module)
 	Text.Initialize(vue, $"${ID}text"$, Module)
 	Actions.Initialize(vue, $"${ID}actions"$, Module)
-	Container.Initialize(vue, $"${ID}cont"$, Module)
+	'Container.Initialize(vue, $"${ID}cont"$, Module)
+	Form.Initialize(vue, $"${ID}form"$, Module)
 	ToolBar.Initialize(vue, $"${ID}bar"$, Module).SetToolBar(True)
 	lst.Initialize 
 	extra.Initialize 
 	IsTable = False
 	bStatic = False
 	titleKey = $"${ID}title"$
+	Container = Form.container
 	Return Me
+End Sub
+
+Sub Validate
+	Form.validate
+End Sub
+
+Sub Reset
+	Form.Reset
+End Sub
+
+Sub ResetValidation
+	Form.ResetValidation
 End Sub
 
 'set the title of the dialog
@@ -73,6 +88,7 @@ Sub SetStatic(b As Boolean) As VMCard
 	Actions.SetStatic(b)
 	Container.SetStatic(b)
 	ToolBar.SetStatic(b)
+	Form.SetStatic(b)
 	Return Me
 End Sub
 
@@ -149,7 +165,7 @@ Sub ToString As String
 		Title.Pop(Card)
 	End If
 	If IsTable = False Then 
-		Container.Pop(Text.CardText)
+		Form.Pop(Text.CardText)
 		Text.Pop(Card)
 	End If
 	For Each strItem As String In lst

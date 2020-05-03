@@ -12,7 +12,6 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	Private ErrorText As String
 	Private bStatic As Boolean
 	Private vmodel As String
 End Sub
@@ -26,7 +25,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	Combo.typeOf = "selectbox"
-	ErrorText = ""
 	Combo.typeOf = "select"
 	bStatic = False
 	vmodel = ""
@@ -56,20 +54,6 @@ End Sub
 Sub SetStatic(b As Boolean) As VMSelect
 	bStatic = b
 	Combo.SetStatic(b)
-	Return Me
-End Sub
-
-
-'backward compatibility
-Sub SetInvalidMessage(ErrText As String) As VMSelect
-	If ErrText = "" Then Return Me
-	ErrorText = ErrText
-	Return Me
-End Sub
-
-Sub SetErrorText(Error As String) As VMSelect
-	If Error = "" Then Return Me
-	ErrorText = Error
 	Return Me
 End Sub
 
@@ -505,38 +489,38 @@ Sub SetEager(varEager As Boolean) As VMSelect
 End Sub
 
 'set error
-Sub SetError(varError As Object) As VMSelect
+Sub SetError(varError As Boolean) As VMSelect
 	If bStatic Then
 		SetAttrSingle("error", varError)
-	Else
-	Dim pp As String = $"${ID}Error"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}Error"$
 	vue.SetStateSingle(pp, varError)
 	Combo.Bind(":error", pp)
-	End If
 	Return Me
 End Sub
 
 'set error-count
-Sub SetErrorCount(varErrorCount As Object) As VMSelect
+Sub SetErrorCount(varErrorCount As String) As VMSelect
 	If bStatic Then
 		SetAttrSingle("error-count", varErrorCount)
-	Else
-	Dim pp As String = $"${ID}ErrorCount"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	Combo.Bind(":error-count", pp)
-	End If
 	Return Me
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMSelect
+Sub SetErrorMessages(varErrorMessages As String) As VMSelect
 	If bStatic Then
 		SetAttrSingle("error-messages", varErrorMessages)
-	Else
-	Dim pp As String = $"${ID}ErrorMessages"$
+		Return Me
+	End If
+	Dim pp As String = $"${vmodel}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	Combo.Bind(":error-messages", pp)
-	End If
 	Return Me
 End Sub
 
@@ -943,10 +927,13 @@ Sub SetRounded(varRounded As Boolean) As VMSelect
 End Sub
 
 'set rules
-Sub SetRules(varRules As Object) As VMSelect
+Sub SetRules(varRules As Boolean) As VMSelect
+	If varRules = False Then Return Me
+	If bStatic Then Return Me
+	If DesignMode Then Return Me
 	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
 	Combo.Bind(":rules", pp)
+	vue.SetData(pp, vue.NewList)
 	Return Me
 End Sub
 

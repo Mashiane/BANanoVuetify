@@ -275,6 +275,87 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	End If
 End Sub
 
+'join list to multi value string with a quote
+Sub JoinItems(delimiter As String, sQuote As String, lst As List) As String
+	If lst.Size = 0 Then Return ""
+	Dim i As Int
+	Dim sb As StringBuilder
+	Dim fld As String
+	sb.Initialize
+	fld = lst.Get(0)
+	Dim xfld As String = $"${fld}"$
+	xfld = sQuote & xfld & sQuote
+	sb.Append(xfld)
+	For i = 1 To lst.size - 1
+		Dim fld As String = lst.Get(i)
+		Dim xfld As String = $"${fld}"$
+		xfld = sQuote & xfld & sQuote
+		sb.Append(delimiter).Append(xfld)
+	Next
+	Return sb.ToString
+End Sub
+
+'nullify the file select
+Sub NullifyFileSelect(refID As String)
+	RefNull(refID)
+End Sub
+
+Sub RefNull(refID As String)
+	refID = refID.tolowercase
+	vue.refs.GetField(refID).SetField("value", Null)
+End Sub
+
+Sub FormValidate(frmID As String)
+	frmID = frmID.tolowercase
+	vue.refs.GetField(frmID).RunMethod("validate", Null)
+End Sub
+
+Sub FormReset(frmID As String)
+	frmID = frmID.tolowercase
+	vue.refs.GetField(frmID).RunMethod("reset", Null)
+End Sub
+
+'click a reference
+Sub RefClick(refID As String)
+	refID = refID.tolowercase
+	vue.refs.GetField(refID).RunMethod("click", Null)
+End Sub
+
+Sub ShowFileSelect(fsName As String)
+	RefClick(fsName)
+End Sub
+
+'focus on a ref
+Sub SetFocus(refID As String)
+	refID = refID.tolowercase
+	vue.refs.GetField(refID).RunMethod("focus", Null)
+End Sub
+
+Sub AddFileSelect(eventHandler As Object, fid As String)
+	Dim fu As VMElement = CreateInvisibleFileInput(eventHandler, fid)
+	Container.SetText(fu.ToString)
+End Sub
+
+'create an invisible file input
+private Sub CreateInvisibleFileInput(eventHandler As Object, fid As String) As VMElement
+	fid = fid.tolowercase
+	Dim methodName As String = $"${fid}_change"$
+	'
+	Dim fu As VMElement
+	fu.Initialize(vue, fid).SetTag("input")
+	fu.SetAttrSingle("v-show", "false")
+	fu.SetAttrSingle("ref", fid)
+	fu.SetAttrSingle("type", "file")
+	fu.SetAttrSingle("@change", methodName)
+	'
+	If SubExists(eventHandler, methodName) = False Then Return fu
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return fu
+End Sub
+
 Sub SetOnClick(EventHandler As Object, methodName As String)
 	methodName = methodName.tolowercase
 	If SubExists(EventHandler, methodName) = False Then Return
@@ -859,13 +940,7 @@ Sub Show(elID As String)
 	vue.SetStateSingle($"${elID}show"$, True)
 End Sub
 
-Sub ShowError(elID As String)
-	vue.SetStateSingle($"${elID}error"$, True)
-End Sub
 
-Sub HideError(elID As String)
-	vue.SetStateSingle($"${elID}error"$, False)
-End Sub
 
 Sub Date2YYYYMMDD(value As Object) As String
 	Return vue.Date2YYYYMMDD(value)
@@ -1244,6 +1319,12 @@ Sub DecrementBadge(elID As String, counted As Int) As BANanoVM
 	vue.SetStateSingle(badValue, intLast)
 	Return Me
 End Sub
+
+Sub GetFileListFromTarget(e As BANanoEvent) As List
+	Dim files As List = e.OtherField("target").GetField("files").Result
+	Return files
+End Sub
+
 
 'hack
 Sub GetChipIDFromEvent(e As BANanoEvent) As String
@@ -1884,8 +1965,7 @@ End Sub
 
 Sub CreateChip(sid As String, eventHandler As Object) As VMChip
 	Dim el As VMChip
-	el.Initialize(vue, sid, eventHandler)
-	
+	el.Initialize(vue, sid, eventHandler)	
 	Return el
 End Sub
 
@@ -2251,7 +2331,8 @@ Sub NewDatePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.SetVModel(vmodel)
 	el.SetPlaceHolder(sPlaceholder)
 	el.SetHint(sHint)
-	el.SetErrorText(sErrorText)
+	'el.TextField.SetErrorMessages(sErrorText)
+	'el.TextField.SetError(False)
 	el.SetForInput
 	Return el
 End Sub
@@ -2265,7 +2346,8 @@ Sub NewTimePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.SetPlaceHolder(sPlaceholder)
 	el.SetHint(sHint)
 	el.SetTabIndex(iTabIndex)
-	el.SetErrorText(sErrorText)
+	'el.TextFIeld.SetErrorMessages(sErrorText)
+	'el.TextField.SetError(False)
 	el.SetForInput
 	Return el
 End Sub
@@ -2340,11 +2422,18 @@ Sub NewTextField(eventHandler As Object,bStatic As Boolean,sid As String, vmodel
 	el.SetHint(shelpertext)
 	el.SetTabIndex(iTabIndex)
 	el.SetVModel(vmodel)
-	el.SetErrorText(sErrorText)
 	el.SetType("text")
 	Return el
 End Sub
 '
+Sub ShowError(elID As String)
+	vue.SetStateSingle($"${elID}error"$, True)
+End Sub
+
+Sub HideError(elID As String)
+	vue.SetStateSingle($"${elID}error"$, False)
+End Sub
+
 Sub NewTel(eventHandler As Object,bStatic As Boolean,sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, sIcon As String, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
 	Dim el As VMTextField = NewTextField(eventHandler,bStatic,sname, vmodel, slabel, splaceholder, bRequired, sIcon, 0, shelpertext, sErrorText, iTabIndex)
 	el.SetType("tel")
@@ -2367,12 +2456,13 @@ Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 		el.SetCounter(iMaxLen)
 		el.SetMaxLength(iMaxLen)
 	End If
+	el.SetVModel(vmodel)
 	el.SetPlaceHolder(splaceholder)
 	el.SetHint(shelpertext)
 	el.SetTabIndex(iTabIndex)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	el.SetAutoGrow(bAutoGrow)
-	el.SetVModel(vmodel)
 	Return el
 End Sub
 
@@ -2392,13 +2482,14 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, 
 	Dim el As VMTextField = CreateFileInput(sname, eventHandler, bUpload)
 	el.setstatic(bStatic)
 	el.SetHint(shelperText)
-	el.SetErrorText(sErrorText)
 	el.SetTabIndex(iTabIndex)
 	el.SetPlaceHolder(splaceholder)
 	el.SetVModel(vmodel)
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	vue.SetData(vmodel, Null)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 '
@@ -2461,7 +2552,8 @@ Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As St
 	el.Setmultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 
@@ -2476,7 +2568,8 @@ Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As
 	el.SetMultiple(bMultiple)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	el.SetVModel(vmodel)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 
@@ -2491,7 +2584,8 @@ Sub NewSelectDataSource(eventHandler As Object,bStatic As Boolean,sname As Strin
 	el.SetMultiple(bMultiple)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	el.SetVModel(vmodel)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 
@@ -2507,7 +2601,8 @@ Sub NewSelectOptions(eventHandler As Object,bStatic As Boolean,sname As String, 
 	el.Setmultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 
@@ -2522,7 +2617,8 @@ Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String
 	el.SetMultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 
@@ -2538,7 +2634,8 @@ Sub NewComboOptions(eventHandler As Object,bStatic As Boolean,sname As String, v
 	el.Setmultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	el.SetErrorText(sErrorText)
+	'el.SetErrorMessages(sErrorText)
+	'el.SetError(False)
 	Return el
 End Sub
 '

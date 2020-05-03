@@ -54,14 +54,12 @@ Sub SetOnlineIndicator(b As Boolean) As VMBadge
 	SetOffsetX("10")
 	SetOffsetY("10")
 	SetBottom(True)
-	HasContent = True
 	Return Me
 End Sub
 
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMBadge
 	If varColor = "" Then Return Me
-	HasContent = True
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)	
@@ -95,17 +93,16 @@ Sub UseTheme(themeName As String) As VMBadge
 End Sub
 
 Sub SetVModel(k As String) As VMBadge
-	HasContent = True
 	Badge.SetVModel(k)
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMBadge
+Sub SetVIf(vif As String) As VMBadge
 	Badge.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMBadge
+Sub SetVShow(vif As String) As VMBadge
 	Badge.SetVShow(vif)
 	Return Me
 End Sub
@@ -123,7 +120,7 @@ Sub AddChild(child As VMElement) As VMBadge
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMBadge
+Sub SetText(t As String) As VMBadge
 	Badge.SetText(t)
 	Return Me
 End Sub
@@ -161,7 +158,6 @@ End Sub
 'set avatar
 Sub SetAvatar(varAvatar As Boolean) As VMBadge
 	If varAvatar = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("avatar", varAvatar)
 		Return Me
@@ -175,7 +171,6 @@ End Sub
 'set bordered
 Sub SetBordered(varBordered As Boolean) As VMBadge
 	If varBordered = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("bordered", varBordered)
 		Return Me
@@ -189,7 +184,6 @@ End Sub
 'set bottom
 Sub SetBottom(varBottom As Boolean) As VMBadge
 	If varBottom = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("bottom", varBottom)
 		Return Me
@@ -203,7 +197,6 @@ End Sub
 'set color
 Sub SetColor(varColor As String) As VMBadge
 	If varColor = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("color", varColor)
 		Return Me
@@ -230,7 +223,6 @@ End Sub
 'set dark
 Sub SetDark(varDark As Boolean) As VMBadge
 	If varDark = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("dark", varDark)
 		Return Me
@@ -244,7 +236,6 @@ End Sub
 'set dot
 Sub SetDot(varDot As Boolean) As VMBadge
 	If varDot = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("dot", varDot)
 		Return Me
@@ -258,7 +249,6 @@ End Sub
 'set icon
 Sub SetIcon(varIcon As String) As VMBadge
 	If varIcon = "" Then Return Me
-	HasContent = True
 	If bStatic Then 
 		SetAttrSingle("icon", varIcon)
 		Return Me
@@ -272,7 +262,6 @@ End Sub
 'set inline
 Sub SetInline(varInline As Boolean) As VMBadge
 	If varInline = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("inline", varInline)
 		Return Me
@@ -286,7 +275,6 @@ End Sub
 'set label
 Sub SetLabel(varLabel As String) As VMBadge
 	If varLabel = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("label", varLabel)
 		Return Me
@@ -300,7 +288,6 @@ End Sub
 'set left
 Sub SetLeft(varLeft As Boolean) As VMBadge
 	If varLeft = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("left", varLeft)
 		Return Me
@@ -314,7 +301,6 @@ End Sub
 'set light
 Sub SetLight(varLight As Boolean) As VMBadge
 	If varLight = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("light", varLight)
 		Return Me
@@ -328,7 +314,6 @@ End Sub
 'set mode
 Sub SetMode(varMode As String) As VMBadge
 	If varMode = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("mode", varMode)
 		Return Me
@@ -342,7 +327,6 @@ End Sub
 'set offset-x
 Sub SetOffsetX(varOffsetX As String) As VMBadge
 	If varOffsetX = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("offset-x", varOffsetX)
 		Return Me
@@ -354,9 +338,8 @@ Sub SetOffsetX(varOffsetX As String) As VMBadge
 End Sub
 
 'set offset-y
-Sub SetOffsetY(varOffsetY As Object) As VMBadge
+Sub SetOffsetY(varOffsetY As String) As VMBadge
 	If varOffsetY = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("offset-y", varOffsetY)
 		Return Me
@@ -370,7 +353,6 @@ End Sub
 'set origin
 Sub SetOrigin(varOrigin As String) As VMBadge
 	If varOrigin = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("origin", varOrigin)
 		Return Me
@@ -384,7 +366,6 @@ End Sub
 'set overlap
 Sub SetOverlap(varOverlap As Boolean) As VMBadge
 	If varOverlap = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("overlap", varOverlap)
 		Return Me
@@ -398,7 +379,6 @@ End Sub
 'set tile
 Sub SetTile(varTile As Boolean) As VMBadge
 	If varTile = False Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("tile", varTile)
 		Return Me
@@ -412,7 +392,6 @@ End Sub
 'set transition
 Sub SetTransition(varTransition As String) As VMBadge
 	If varTransition = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		SetAttrSingle("transition", varTransition)
 		Return Me
@@ -423,10 +402,14 @@ Sub SetTransition(varTransition As String) As VMBadge
 	Return Me
 End Sub
 
-'set value
+Sub SetVisible(b As Boolean) As VMBadge
+	SetValue(b)
+	Return Me
+End Sub
+
+'set value / whether its visible . not
 Sub SetValue(varValue As Boolean) As VMBadge
 	If varValue = "" Then Return Me
-	HasContent = True
 	If bStatic Then
 		Badge.SetValue(varValue,False)
 		Return Me
@@ -457,13 +440,11 @@ Sub Disable As VMBadge
 	Return Me
 End Sub
 
-
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMBadge
 	Badge.Bind(prop, stateprop)
 	Return Me
 End Sub
-
 
 public Sub RemoveAttr(sName As String) As VMBadge
 	Badge.RemoveAttr(sName)
@@ -503,7 +484,6 @@ Sub SetDisabled(b As Boolean) As VMBadge
 	Return Me
 End Sub
 
-
 Sub SetStyleSingle(prop As String, value As String) As VMBadge
 	Badge.SetStyleSingle(prop, value)
 	Return Me
@@ -514,44 +494,11 @@ Sub SetAttrSingle(prop As String, value As String) As VMBadge
 	Return Me
 End Sub
 
-
-Sub SetHeight(h As String) As VMBadge
-	Badge.SetStyleSingle("height", h)
-	Return Me
-End Sub
-
-
-Sub SetWidth(w As String) As VMBadge
-	Badge.SetStyleSingle("width", w)
-	Return Me
-End Sub
-
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBadge
 	Badge.BuildModel(mprops, mstyles, lclasses, loose)
-	Return Me
-End Sub
-
-Sub SetVisible(b As Boolean) As VMBadge
-	Badge.SetVisible(b)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMBadge
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMBadge
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
 	Return Me
 End Sub

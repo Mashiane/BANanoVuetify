@@ -26,8 +26,8 @@ Sub Code
 	
 	vm.CreateLabel("lbl2").SetParagraph.SetText("Dates: {{ dp4 }}").AddToContainer(cont, 1, 2)
 	'
-	Dim dp As VMDateTimePicker = vm.CreateDatePicker("dp1", Me).SetVModel("dp1")
-	dp.AddToContainer(cont, 2, 1)
+	Dim dpx As VMDateTimePicker = vm.CreateDatePicker("dp1", Me).SetVModel("dp1")
+	dpx.AddToContainer(cont, 2, 1)
 	'
 	vm.CreateLabel("lbl1").SetParagraph.SetText("Date: {{ dp1 }}").AddToContainer(cont, 2, 2)
 	'

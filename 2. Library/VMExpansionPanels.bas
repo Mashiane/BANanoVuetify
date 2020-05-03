@@ -39,7 +39,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	RemoveAttr("ref")
 	Return ExpansionPanels.ToString
 End Sub
 

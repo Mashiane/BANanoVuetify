@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private vmodel As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Input
@@ -24,6 +25,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	vmodel = ""
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMInput
+	bStatic = b
+	Input.SetStatic(b)
 	Return Me
 End Sub
 
@@ -174,14 +182,14 @@ Sub SetDense(varDense As Object) As VMInput
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMInput
+Sub SetDisabled(varDisabled As Boolean) As VMInput
 	Input.SetDisabled(varDisabled)
 	Return Me
 End Sub
 
 'set error
-Sub SetError(varError As Object) As VMInput
-	Dim pp As String = $"${ID}Error"$
+Sub SetError(varError As Boolean) As VMInput
+	Dim pp As String = $"${vmodel}Error"$
 	vue.SetStateSingle(pp, varError)
 	Input.Bind(":error", pp)
 	Return Me
@@ -189,15 +197,15 @@ End Sub
 
 'set error-count
 Sub SetErrorCount(varErrorCount As Object) As VMInput
-	Dim pp As String = $"${ID}ErrorCount"$
+	Dim pp As String = $"${vmodel}ErrorCount"$
 	vue.SetStateSingle(pp, varErrorCount)
 	Input.Bind(":error-count", pp)
 	Return Me
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMInput
-	Dim pp As String = $"${ID}ErrorMessages"$
+Sub SetErrorMessages(varErrorMessages As String) As VMInput
+	Dim pp As String = $"${vmodel}ErrorMessages"$
 	vue.SetStateSingle(pp, varErrorMessages)
 	Input.Bind(":error-messages", pp)
 	Return Me
@@ -212,7 +220,7 @@ Sub SetHeight(varHeight As Object) As VMInput
 End Sub
 
 'set hide-details
-Sub SetHideDetails(varHideDetails As boolean) As VMInput
+Sub SetHideDetails(varHideDetails As Boolean) As VMInput
 	Dim pp As String = $"${ID}HideDetails"$
 	vue.SetStateSingle(pp, varHideDetails)
 	Input.Bind(":hide-details", pp)
@@ -292,10 +300,13 @@ Sub SetReadonly(varReadonly As Object) As VMInput
 End Sub
 
 'set rules
-Sub SetRules(varRules As Object) As VMInput
+Sub SetRules(varRules As Boolean) As VMInput
+	If varRules = False Then Return Me
+	If bStatic Then Return Me
+	If DesignMode Then Return Me
 	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
 	Input.Bind(":rules", pp)
+	vue.SetData(pp, vue.NewList)
 	Return Me
 End Sub
 

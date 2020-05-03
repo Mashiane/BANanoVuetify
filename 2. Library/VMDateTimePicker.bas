@@ -71,18 +71,6 @@ Sub SetDate As VMDateTimePicker
 	Return Me
 End Sub
 
-'backward compatibility
-Sub SetInvalidMessage(ErrText As String) As VMDateTimePicker
-	TextField.SetErrorText(ErrText)
-	Return Me
-End Sub
-
-Sub SetErrorText(Error As String) As VMDateTimePicker
-	If Error = "" Then Return Me
-	TextField.SetErrorText(Error)
-	Return Me
-End Sub
-
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMDateTimePicker
 	DateTimePicker.SetRC(sRow, sCol)
@@ -206,41 +194,6 @@ End Sub
 'get component
 Sub ToString As String
 	If bForInput Then
-		If bTimePicker Then
-			'create a menu
-			vue.SetStateSingle($"${ID}menu2"$, False)
-			Dim dMenu As VMElement
-			dMenu.Initialize(vue, $"${ID}menu"$).SetTag("v-menu")
-			dMenu.SetStatic(bStatic)
-			dMenu.SetDesignMode(DesignMode)
-			dMenu.SetAttrSingle("ref", $"${ID}menu"$)
-			dMenu.SetVModel($"${ID}menu2"$)
-			dMenu.SetAttrSingle(":close-on-content-click", False)
-			dMenu.SetAttrSingle(":nudge-right", "40")
-			dMenu.SetAttrSingle(":return-value.sync", vmodel)
-			dMenu.SetAttrSingle("transition", "scale-transition")
-			dMenu.SetAttrloose("offset-y")
-			dMenu.SetAttrSingle("min-width", "290px")
-			dMenu.SetAttrSingle("max-width", "290px")
-			'
-			Dim tmpl As VMTemplate
-			tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetSlotActivatorOn
-			'
-			TextField.SetPrependIcon("access_time").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
-			TextField.SetVModel(vmodel)
-			TextField.Pop(tmpl.Template)
-			dMenu.SetText(tmpl.ToString)
-			'
-			DateTimePicker.SetVIf($"${ID}menu2"$)
-			DateTimePicker.SetAttrLoose("full-width")
-			Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
-			DateTimePicker.SetAttrSingle("@click:minute", ssave)				
-			'
-			dMenu.SetText(DateTimePicker.ToString)
-		
-			Return dMenu.tostring
-		End If
-		'date picker
 		'create a menu
 		vue.SetStateSingle($"${ID}menu"$, False)
 		Dim dMenu As VMElement
@@ -250,51 +203,30 @@ Sub ToString As String
 		dMenu.SetAttrSingle("ref", $"${ID}menu"$)
 		dMenu.SetVModel($"${ID}menu"$)
 		dMenu.SetAttrSingle(":close-on-content-click", False)
+		dMenu.SetAttrSingle(":nudge-right", "40")
 		dMenu.SetAttrSingle(":return-value.sync", vmodel)
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
 		dMenu.SetAttrSingle("min-width", "290px")
+		dMenu.SetAttrSingle("max-width", "290px")
 		'
 		Dim tmpl As VMTemplate
 		tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetSlotActivatorOn
 		'
-		
-		TextField.SetPrependIcon("event").SetAttrloose("readonly").SetAttrSingle("v-on", "on")
-		TextField.SetVModel(vmodel)
-		'
+		TextField.SetAttrloose("readonly").SetAttrSingle("v-on", "on")
 		TextField.Pop(tmpl.Template)
-				'
 		dMenu.SetText(tmpl.ToString)
 		'
-		DateTimePicker.SetAttrLoose("no-title")
-		DateTimePicker.SetAttrLoose("scrollable")
-		'
-		AddSpacer
-		'
-		Dim btnCancel As VMButton
-		btnCancel.Initialize(vue, $"${ID}cancel"$, Me)
-		btnCancel.SetStatic(bStatic)
-		btnCancel.SetDesignMode(DesignMode)
-		btnCancel.SetTransparent(True)
-		btnCancel.SetColor("primary")
-		btnCancel.setattrsingle("@click", $"${ID}menu = false"$)
-		btnCancel.SetLabel("Cancel")
-		
-		DateTimePicker.SetText(btnCancel.ToString)
-		'
-		Dim btnOk As VMButton
-		btnOk.Initialize(vue, $"${ID}ok"$, Me)
-		btnOk.SetStatic(bStatic)
-		btnOk.SetDesignMode(DesignMode)
-		btnOk.SetTransparent(True)
-		btnOk.SetColor("primary")
+		DateTimePicker.SetVIf($"${ID}menu"$)
 		Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
-		btnOk.SetAttrSingle("@click", ssave)
-		btnOk.SetLabel("Ok")
-		
-		DateTimePicker.SetText(btnOk.ToString)
+		If bTimePicker Then
+			DateTimePicker.SetAttrSingle("@click:minute", ssave)
+		Else
+			DateTimePicker.SetAttrLoose("scrollable")
+			DateTimePicker.SetAttrSingle("@click:date", ssave)
+		End If
+		'
 		dMenu.SetText(DateTimePicker.ToString)
-		
 		Return dMenu.tostring
 	Else
 		Return DateTimePicker.ToString
@@ -315,6 +247,7 @@ End Sub
 Sub SetVModel(k As String) As VMDateTimePicker
 	k =k.tolowercase
 	DateTimePicker.SetVModel(k)
+	TextField.SetVModel(k)
 	vmodel = k
 	Return Me
 End Sub

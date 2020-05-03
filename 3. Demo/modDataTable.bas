@@ -11,6 +11,7 @@ Sub Process_Globals
 	Public title As String = "Data Table"
 	Private vm As BANanoVM
 	Private BANano As BANano
+	Private dt1 As VMDataTable
 End Sub
 
 
@@ -79,7 +80,7 @@ Sub Code
         "glutenfree": false
     }
 ]"$)
-	Dim dt1 As VMDataTable = vm.CreateDataTable("dt1", "name", Me)
+	dt1 = vm.CreateDataTable("dt1", "name", Me)
 	dt1.SetTitle("Food Intake")
 	dt1.AddSearch
 	dt1.AddNew("btnNew", "mdi-plus", "Add a new record")
@@ -96,13 +97,41 @@ Sub Code
 	dt1.SetColumnType("glutenfree", dt1.COLUMN_CHECKBOX)
 	dt1.SetColumnType("calories", dt1.COLUMN_CHIP)
 	dt1.SetColumnExtra("calories", $":color="getcolor(item.calories)""$)
+	'dt1.SetColumnDisabled("calories", True)
 	'
-	dt1.AddToContainer(cont, 1, 1)
+	dt1.SetShowSelect(True)
+	'dt1.SetOnToggleSelectAll("dt1_selectall")
+	'dt1.SetOnItemSelected("dt1_itemselected")
+	dt1.SetOnInput("dt1_input")
 	
+	dt1.AddToContainer(cont, 1, 1)
 	'add container to page
 	vm.AddContainer(cont)
 	'
 	vm.SetMethod(Me,"getcolor")
+End Sub
+
+Sub dt1_input(items As List)
+	Log("selected items")
+	Dim selKeys As List = dt1.GetItemKeys(items)
+	Log(selKeys)
+	'join the items
+	Log("String Join")
+	Dim selItems As String = vm.JoinItems(",", "'", selKeys)
+	Log(selItems)
+	'normal join
+	Log("Normal Join")
+	Dim selNormal As String = vm.Join(",", selKeys)
+	Log(selNormal)
+End Sub
+
+Sub dt1_itemselected(item As Map)
+	Log("item selected")
+	Log(item)
+End Sub
+
+Sub dt1_selectall(items As List)
+	Log(items)
 End Sub
 
 Sub dt1_edit(item As Map)

@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Public Container As VMContainer
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Form
@@ -23,12 +24,25 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	'set the vmodel to be the form name
-	SetVModel(ID)
-	'make the vmodel false
-	vue.SetStateSingle(ID, False)'
 	Container.Initialize(vue, $"${ID}cont"$, Module)
+	bStatic = False
+	SetVModel(ID)
+	SetAttrSingle("ref", ID)
+	'the form is valid
+	vue.SetData(ID, True)
 	Return Me
+End Sub
+
+Sub Validate
+	vue.refs.GetField(ID).RunMethod("validate", Null)
+End Sub
+
+Sub Reset
+	vue.refs.GetField(ID).RunMethod("reset", Null)
+End Sub
+
+Sub ResetValidation
+	vue.refs.GetField(ID).RunMethod("resetValidation", Null)
 End Sub
 
 'set the row and column position
@@ -70,11 +84,9 @@ End Sub
 
 'get component
 Sub ToString As String
-	
 	Container.Pop(Form)
 	Return Form.ToString
 End Sub
-
 
 'apply a theme to an element
 Sub UseTheme(themeName As String) As VMForm
@@ -87,17 +99,7 @@ Sub UseTheme(themeName As String) As VMForm
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMForm
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	Form.Bind(":color", pp)
-	Return Me
-End Sub
-
-Sub SetVModel(k As String) As VMForm
+private Sub SetVModel(k As String) As VMForm
 	Form.SetVModel(k)
 	Return Me
 End Sub
@@ -161,7 +163,11 @@ Sub AddChildren(children As List)
 End Sub
 
 'set lazy-validation
-Sub SetLazyValidation(varLazyValidation As Object) As VMForm
+Sub SetLazyValidation(varLazyValidation As Boolean) As VMForm
+	If bStatic Then
+		SetAttrSingle("lazy-validation", varLazyValidation)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}LazyValidation"$
 	vue.SetStateSingle(pp, varLazyValidation)
 	Form.Bind(":lazy-validation", pp)
@@ -169,8 +175,8 @@ Sub SetLazyValidation(varLazyValidation As Object) As VMForm
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMForm
-	Form.SetValue(varValue, False)
+Sub SetValue(varValue As Boolean) As VMForm
+	vue.SetStateSingle(ID, varValue)
 	Return Me
 End Sub
 
@@ -246,7 +252,15 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMForm
 	Form.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMForm
+	Form.SetStatic(b)
+	Container.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
@@ -299,23 +313,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Form.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMForm
 Form.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMForm
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMForm
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

@@ -27,10 +27,10 @@ Sub Code
 	'the grid will be automatically generated
 	frm = vm.CreateContainer("content", Me)
 	'
-	Dim latitude As VMTextField = vm.CreateTextField("txtbuildinglatitude", Me).SetVmodel("building_latitude").SetLabel("GPS Latitude").SetInvalidMessage("The latitude is required!")
+	Dim latitude As VMTextField = vm.CreateTextField("txtbuildinglatitude", Me).SetVmodel("building_latitude").SetLabel("GPS Latitude").SetErrorMessages("The latitude is required!")
 	frm.AddControl(latitude.TextField, latitude.ToString,1,2,0,0,0,0,12,6,6,6)
 	'
-	Dim longitude As VMTextField = vm.CreateTextField("txtbuildinglongitude", Me).SetVmodel("building_longitude").SetLabel("GPS Longitude").SetInvalidMessage("The address is required!")
+	Dim longitude As VMTextField = vm.CreateTextField("txtbuildinglongitude", Me).SetVmodel("building_longitude").SetLabel("GPS Longitude").SetErrorMessages("The address is required!")
 	frm.AddControl(longitude.TextField, longitude.ToString,1,1,0,0,0,0,12,6,6,6)
 	'
 	'add content to main container

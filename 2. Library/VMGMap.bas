@@ -30,7 +30,6 @@ End Sub
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMGMap
 	ID = sid.tolowercase
 	GMap.Initialize(v, ID).SetTag("gmap-map")
-	'GMap.SetRef(ID)
 	GMap.SetAttrSingle(":options", $"${ID}options"$)
 	vue.setstatesingle($"${ID}options"$, CreateMap())
 	vue = v

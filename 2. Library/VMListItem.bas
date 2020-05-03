@@ -61,7 +61,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	RemoveAttr("ref")
 	Return ListItem.ToString
 End Sub
 

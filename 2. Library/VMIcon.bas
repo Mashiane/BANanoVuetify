@@ -13,6 +13,8 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Public Badge As VMBadge
+	Private hasBadge As Boolean
 End Sub
 
 'initialize the Icon
@@ -24,12 +26,25 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	bStatic = False
+	Badge.Initialize(vue, $"${ID}badge"$, Module)
+	hasBadge = False
+	Return Me
+End Sub
+
+Sub SetBadge(scontent As String) As VMIcon
+	Badge.SetContent(scontent)
+	Return Me
+End Sub
+
+Sub SetHasBadge(b As Boolean) As VMIcon
+	hasBadge = b
 	Return Me
 End Sub
 
 Sub SetStatic(b As Boolean) As VMIcon
 	bStatic = b
 	Icon.SetStatic(b)
+	Badge.SetStatic(b)
 	Return Me
 End Sub
 
@@ -90,7 +105,15 @@ End Sub
 
 'get component
 Sub ToString As String
-	Return Icon.ToString
+	If hasBadge = False Then
+		Return Icon.ToString
+	End If
+	If Badge.HasContent Then
+		Badge.AddComponent(Icon.ToString)
+		Return Badge.tostring
+	Else
+		Return Icon.ToString
+	End If
 End Sub
 
 'set the icon name
@@ -410,6 +433,7 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMIcon
 	Icon.SetDesignMode(b)
+	Badge.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub

@@ -84,6 +84,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	Return Me
 End Sub
 
+'return a list of selected primary keys
+Sub GetItemKeys(lst As List) As List
+	Dim xlist As List
+	xlist.Initialize
+	For Each m As Map In lst
+		Dim xkey As String = m.GetDefault(PrimaryKey, "")
+		xlist.Add(xkey)
+	Next
+	Return xlist
+End Sub
+
 Sub BANanoReplace
 	Dim x As String = ToString
 	BANano.GetElement($"#${ID}card"$).RenderReplace(x, "")
@@ -1335,14 +1346,14 @@ End Sub
 
 '
 Sub SetOnInput(methodName As String) As VMDataTable
-methodName = methodName.tolowercase
-If SubExists(Module, methodName) = False Then Return Me
-Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-SetAttr(CreateMap("v-on:input": methodName))
-'add to methods
-		vue.SetCallBack(methodName, cb)
-		Return Me
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim xitems As List
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(xitems))
+	SetAttr(CreateMap("v-on:input": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
 End Sub
 
 '

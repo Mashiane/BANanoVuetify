@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Public Content As String
 	Public Description As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the StepperStep
@@ -26,6 +27,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	Content = ""
 	Description = ""
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMStepperStep
+	bStatic = b
+	StepperStep.SetStatic(b)
 	Return Me
 End Sub
 
@@ -168,10 +176,13 @@ Sub SetErrorIcon(varErrorIcon As Object) As VMStepperStep
 End Sub
 
 'set rules
-Sub SetRules(varRules As Object) As VMStepperStep
+Sub SetRules(varRules As Boolean) As VMStepperStep
+	If varRules = False Then Return Me
+	If bStatic Then Return Me
+	If DesignMode Then Return Me
 	Dim pp As String = $"${ID}Rules"$
-	vue.SetStateSingle(pp, varRules)
 	StepperStep.Bind(":rules", pp)
+	vue.SetData(pp, vue.NewList)
 	Return Me
 End Sub
 

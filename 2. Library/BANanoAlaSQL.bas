@@ -324,6 +324,24 @@ Sub GetMax(tblName As String, fldName As String) As AlaSQLResultSet
 	Return m
 End Sub
 
+'return a sql to delete record of table where one exists
+Sub GetMin(tblName As String, fldName As String) As AlaSQLResultSet
+	Dim sb As String = $"SELECT MIN(${fldName}) As ${fldName} FROM ${EscapeField(tblName)}"$
+	Dim m As AlaSQLResultSet
+	m.Initialize
+	m.query = sb
+	m.args = Null
+	m.types = Null
+	m.command = "getmin"
+	m.response = ""
+	m.error = ""
+	m.result = NewList
+	m.json = ""
+	m.affectedRows = 0
+	Return m
+End Sub
+
+
 'return sql command to drop a table
 public Sub DropTable(tblName As String) As AlaSQLResultSet
 	'define the qry to execute
