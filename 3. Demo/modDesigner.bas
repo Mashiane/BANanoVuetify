@@ -3205,7 +3205,37 @@ End Sub
 
 Sub fucomponent_change(e As BANanoEvent)
 	Dim fileList As List = vm.GetFileListFromTarget(e)
-	Log(fileList)
+	If fileList.size = 0 Then Return 
+	'only process 1 file
+	Dim fr As String = fileList.get(0)
+	'
+	Dim db As BANanoSQL
+	Dim compSQL As BANanoAlaSQLE
+	Dim CompList As List
+	CompList.initialize
+	Dim Result As Map
+	Dim promise As BANanoPromise = vm.readAsText(fr)
+	promise.Then(Result)
+		'get the json content
+		Dim compJSON As String = Result.get("result")
+		'convert to list
+		CompList = BANano.fromjson(compJSON)
+	promise.Else(Result)
+		Dim compError As String = Result.get("result")
+		vm.ShowSnackbar(compError)
+	promise.End
+	'nully file component so we can select same file
+	vm.NullifyFileSelect("fucomponent")
+	'
+	'lets import to the db
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	compSQL.Initialize("components", "id")
+	For Each nrec As Map In CompList
+		compSQL.RecordFromMap(nrec)
+		compSQL.Insert
+		compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	Next
+	CreateUX
 End Sub
 
 Sub gridMenuitems_click(e As BANanoEvent)

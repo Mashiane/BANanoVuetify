@@ -2699,3 +2699,46 @@ End Sub
 Sub NewBLOCKQUOTE(bStatic As Boolean,sname As String, sText As String) As VMLabel
 	Return NewLabel(bStatic,sname, sname, SIZE_BLOCKQUOTE, sText)
 End Sub
+
+public Sub readAsText(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFileAsText", Array(fr))
+	Return promise
+End Sub
+
+private Sub ReadFileAsText(FileToRead As Object)
+	' make a filereader
+	Dim FileReader As BANanoObject
+	FileReader.Initialize2("FileReader", Null)
+	' attach the file (to get the name later)
+	FileReader.SetField("file", FileToRead)
+	
+	' make a callback for the onload event
+	' an onload of a FileReader requires a 'event' param
+	Dim event As Map
+	FileReader.SetField("onload", BANano.CallBack(Me, "OnLoad", Array(event)))
+	FileReader.SetField("onerror", BANano.CallBack(Me, "OnError", Array(event)))
+	' start reading the DataURL
+	FileReader.RunMethod("readAsText", FileToRead)
+End Sub
+
+private Sub OnLoad(event As Map) As String 'ignore
+	' getting our file again (set in UploadFileAndGetDataURL)
+	Dim FileReader As BANanoObject = event.Get("target")
+	Dim UploadedFile As BANanoObject = FileReader.GetField("file")
+	' return to the then of the UploadFileAndGetDataURL
+	BANano.ReturnThen(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.Getfield("result")))
+End Sub
+
+private Sub OnError(event As Map) As String 'ignore
+	Dim FileReader As BANanoObject = event.Get("target")
+	Dim UploadedFile As BANanoObject = FileReader.GetField("file")
+	Dim Abort As Boolean = False
+	' uncomment this if you want to abort the whole operatio
+	' Abort = true
+	' FileReader.RunMethod("abort", Null)
+	
+	BANano.ReturnElse(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.GetField("error"), "abort": Abort))
+End Sub

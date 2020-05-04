@@ -295,7 +295,7 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 3.81
+	#LibraryVersion: 3.82
 	#LibraryName: BANanoVuetify
 #End Region
 
@@ -389,7 +389,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("beautify-css.js")
 	BANano.Header.AddJavascriptFile("beautify-html.js")
 	'
-	BANano.BuildAsB4XLib("3.81")
+	BANano.BuildAsB4XLib("3.82")
 	ExitApplication
 End Sub
 

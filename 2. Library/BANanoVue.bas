@@ -3190,3 +3190,46 @@ Sub Unflatten(tdata As List, childname As String) As List
 	Next
 	Return tree
 End Sub
+
+public Sub readAsText(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFileAsText", Array(fr))
+	Return promise
+End Sub
+
+private Sub ReadFileAsText(FileToRead As Object)
+	' make a filereader
+	Dim FileReader As BANanoObject
+	FileReader.Initialize2("FileReader", Null)
+	' attach the file (to get the name later)
+	FileReader.SetField("file", FileToRead)
+	
+	' make a callback for the onload event
+	' an onload of a FileReader requires a 'event' param
+	Dim event As Map
+	FileReader.SetField("onload", BANAno.CallBack(Me, "OnLoad", Array(event)))
+	FileReader.SetField("onerror", BANAno.CallBack(Me, "OnError", Array(event)))
+	' start reading the DataURL
+	FileReader.RunMethod("readAsText", FileToRead)
+End Sub
+
+private Sub OnLoad(event As Map) As String 'ignore
+	' getting our file again (set in UploadFileAndGetDataURL)
+	Dim FileReader As BANanoObject = event.Get("target")
+	Dim UploadedFile As BANanoObject = FileReader.GetField("file")
+	' return to the then of the UploadFileAndGetDataURL
+	BANAno.ReturnThen(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.Getfield("result")))
+End Sub
+
+private Sub OnError(event As Map) As String 'ignore
+	Dim FileReader As BANanoObject = event.Get("target")
+	Dim UploadedFile As BANanoObject = FileReader.GetField("file")
+	Dim Abort As Boolean = False
+	' uncomment this if you want to abort the whole operatio
+	' Abort = true
+	' FileReader.RunMethod("abort", Null)
+	
+	BANAno.ReturnElse(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.GetField("error"), "abort": Abort))
+End Sub
