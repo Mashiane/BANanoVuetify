@@ -544,6 +544,28 @@ Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As S
 	Return Me
 End Sub
 
+Sub AddComponent(comp As String) As VMList
+	List.SetText(comp)
+	Return Me
+End Sub
+
+Sub AddDivider1(bInset As Boolean) As VMList
+	Dim div As VMDivider
+	div.Initialize(vue)
+	If bInset Then div.SetAttrLoose("inset")
+	div.Pop(List)
+	Return Me
+End Sub
+
+Sub AddSubHeader1(hdr As String, bInset As Boolean) As VMList
+	Dim sh As VMElement
+	sh.Initialize(vue, "").SetTag("v-subheader")
+	If bInset Then sh.SetAttrLoose("inset")
+	sh.SetText(hdr)
+	sh.Pop(List)
+	Return Me
+End Sub
+
 'get component
 Sub ToString As String	
 	If items.Size > 0 Then
@@ -598,7 +620,7 @@ Sub AddChild(child As VMElement) As VMList
 End Sub
 
 'set text
-Sub SetText(t As string) As VMList
+Sub SetText(t As String) As VMList
 	List.SetText(t)
 	HasContent = True
 	Return Me
@@ -870,7 +892,6 @@ End Sub
 
 'set tile
 Sub SetTile(varTile As Boolean) As VMList
-	If varTile = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("tile", varTile)
 		Return Me
@@ -994,20 +1015,4 @@ End Sub
 Sub SetVisible(b As Boolean) As VMList
 List.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMList
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMList
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

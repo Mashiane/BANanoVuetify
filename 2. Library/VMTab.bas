@@ -12,6 +12,8 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object	
+	Private bStatic As Boolean
+	Private Icon As VMIcon
 End Sub
 
 'initialize the TabItem
@@ -22,6 +24,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Icon.Initialize(vue, $"${ID}icon"$, Module) 
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMTab
+	bStatic = b
+	TabItem.SetStatic(b)
+	Icon.SetStatic(b)
 	Return Me
 End Sub
 
@@ -79,8 +90,15 @@ Sub AddChild(child As VMElement) As VMTab
 	Return Me
 End Sub
 
+Sub SetIcon(iconName As String) As VMTab
+	If iconName = "" Then Return Me
+	Icon.SetText(iconName)
+	AddComponent(Icon.ToString)
+	Return Me
+End Sub
+
 'set text
-Sub SetText(t As Object) As VMTab
+Sub SetText(t As String) As VMTab
 	TabItem.SetText(t)
 	Return Me
 End Sub
@@ -116,7 +134,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMTab
+Sub SetActiveClass(varActiveClass As String) As VMTab
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	TabItem.Bind(":active-class", pp)
@@ -124,7 +147,12 @@ Sub SetActiveClass(varActiveClass As Object) As VMTab
 End Sub
 
 'set append
-Sub SetAppend(varAppend As Object) As VMTab
+Sub SetAppend(varAppend As Boolean) As VMTab
+	If varAppend = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("append", varAppend)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Append"$
 	vue.SetStateSingle(pp, varAppend)
 	TabItem.Bind(":append", pp)
@@ -132,7 +160,12 @@ Sub SetAppend(varAppend As Object) As VMTab
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMTab
+Sub SetDark(varDark As Boolean) As VMTab
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	TabItem.Bind(":dark", pp)
@@ -146,7 +179,12 @@ Sub SetDisabled(varDisabled As Boolean) As VMTab
 End Sub
 
 'set exact
-Sub SetExact(varExact As Object) As VMTab
+Sub SetExact(varExact As Boolean) As VMTab
+	If varExact = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact", varExact)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Exact"$
 	vue.SetStateSingle(pp, varExact)
 	TabItem.Bind(":exact", pp)
@@ -154,7 +192,12 @@ Sub SetExact(varExact As Object) As VMTab
 End Sub
 
 'set exact-active-class
-Sub SetExactActiveClass(varExactActiveClass As Object) As VMTab
+Sub SetExactActiveClass(varExactActiveClass As String) As VMTab
+	If varExactActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact-active-class", varExactActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ExactActiveClass"$
 	vue.SetStateSingle(pp, varExactActiveClass)
 	TabItem.Bind(":exact-active-class", pp)
@@ -162,15 +205,19 @@ Sub SetExactActiveClass(varExactActiveClass As Object) As VMTab
 End Sub
 
 'set href
-Sub SetHref(varHref As Object) As VMTab
-	Dim pp As String = $"${ID}Href"$
-	vue.SetStateSingle(pp, varHref)
-	TabItem.Bind(":href", pp)
+Sub SetHref(varHref As String) As VMTab
+	If varHref = "" Then Return Me
+	SetAttrSingle("href", varHref)
 	Return Me
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMTab
+Sub SetLight(varLight As Boolean) As VMTab
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	TabItem.Bind(":light", pp)
@@ -178,7 +225,12 @@ Sub SetLight(varLight As Object) As VMTab
 End Sub
 
 'set link
-Sub SetLink(varLink As Object) As VMTab
+Sub SetLink(varLink As Boolean) As VMTab
+	If varLink = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("link", varLink)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Link"$
 	vue.SetStateSingle(pp, varLink)
 	TabItem.Bind(":link", pp)
@@ -186,7 +238,12 @@ Sub SetLink(varLink As Object) As VMTab
 End Sub
 
 'set nuxt
-Sub SetNuxt(varNuxt As Object) As VMTab
+Sub SetNuxt(varNuxt As Boolean) As VMTab
+	If varNuxt = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("nuxt", varNuxt)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Nuxt"$
 	vue.SetStateSingle(pp, varNuxt)
 	TabItem.Bind(":nuxt", pp)
@@ -194,7 +251,12 @@ Sub SetNuxt(varNuxt As Object) As VMTab
 End Sub
 
 'set replace
-Sub SetReplace(varReplace As Object) As VMTab
+Sub SetReplace(varReplace As Boolean) As VMTab
+	If varReplace = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("replace", varReplace)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Replace"$
 	vue.SetStateSingle(pp, varReplace)
 	TabItem.Bind(":replace", pp)
@@ -202,15 +264,32 @@ Sub SetReplace(varReplace As Object) As VMTab
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMTab
+Sub SetRipple(varRipple As Boolean) As VMTab
+	If varRipple Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	TabItem.Bind(":ripple", pp)
 	Return Me
 End Sub
 
+'set key
+Sub SetKey(varKey As String) As VMTab
+	If varKey = "" Then Return Me
+	SetAttrSingle("key", varKey)
+	Return Me
+End Sub
+
 'set tag
-Sub SetTag(varTag As Object) As VMTab
+Sub SetTag(varTag As String) As VMTab
+	If varTag = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("tag", varTag)
+		Return Me 
+	End If
 	Dim pp As String = $"${ID}Tag"$
 	vue.SetStateSingle(pp, varTag)
 	TabItem.Bind(":tag", pp)
@@ -225,7 +304,12 @@ Sub SetTarget(varTarget As String) As VMTab
 End Sub
 
 'set to
-Sub SetTo(varTo As Object) As VMTab
+Sub SetTo(varTo As String) As VMTab
+	If varTo = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("to", varTo)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}To"$
 	vue.SetStateSingle(pp, varTo)
 	TabItem.Bind(":to", pp)
@@ -316,6 +400,7 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMTab
 	TabItem.SetDesignMode(b)
+	Icon.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -375,20 +460,4 @@ End Sub
 Sub SetVisible(b As Boolean) As VMTab
 TabItem.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMTab
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTab
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

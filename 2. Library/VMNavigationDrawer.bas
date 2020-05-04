@@ -118,6 +118,16 @@ Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As S
 	List.AddItem1(key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
 End Sub
 
+Sub AddDivider1(bInset As Boolean) As VMNavigationDrawer
+	List.AddDivider1(bInset)
+	Return Me
+End Sub
+
+Sub AddSubHeader1(hdr As String, bInset As Boolean) As VMNavigationDrawer
+	List.AddSubHeader1(hdr, bInset)
+	Return Me
+End Sub
+
 Sub AddSubItem(parent As String, key As String, iconName As String, title As String) As VMNavigationDrawer
 	List.AddSubItem(parent, key, "", iconName, title, "")
 	Return Me

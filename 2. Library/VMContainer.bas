@@ -104,6 +104,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub CreateList(sid As String, eventHandler As Object) As VMList
+	Dim el As VMList
+	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
+Sub CreateStepper(sid As String, eventHandler As Object) As VMStepper
+	Dim el As VMStepper
+	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
 Sub CreateBadge(sid As String, moduleObj As Object) As VMBadge
 	Dim el As VMBadge
 	el.Initialize(vue, sid, moduleObj)
@@ -145,6 +160,12 @@ Sub CreateRating(eID As String, eventHandler As Object) As VMRating
 	Return el
 End Sub
 
+Sub CreateTabs(sid As String, eventHandler As Object) As VMTabs
+	Dim el As VMTabs
+	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
 
 Sub CreateAvatar(sid As String, moduleObj As Object) As VMAvatar
 	Dim el As VMAvatar

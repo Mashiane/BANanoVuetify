@@ -1104,6 +1104,11 @@ Sub SetText(t As String) As VMElement
 	Return Me
 End Sub
 
+Sub AddComponent(comp As String) As VMElement
+	SetText(comp)
+	Return Me
+End Sub
+
 'add to parent element
 Sub Pop(p As VMElement)
 	If hasContent Then p.SetText(ToString)

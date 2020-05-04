@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the TabItem, ensure its same as AddTab
@@ -24,9 +25,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vue = v
 	SetAttrSingle("key", ID)
 	TabItem.SetValue(ID, False)
+	bStatic = False
 	Return Me
 End Sub
 
+'set key
+Sub SetKey(varKey As String) As VMTabItem
+	If varKey = "" Then Return Me
+	SetAttrSingle("key", varKey)
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMTabItem
+	bStatic = b
+	TabItem.SetStatic(b)
+	Return Me
+End Sub
 
 Sub AddComponent(comp As String) As VMTabItem
 	TabItem.SetText(comp)
@@ -114,7 +128,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMTabItem
+Sub SetActiveClass(varActiveClass As String) As VMTabItem
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	TabItem.Bind(":active-class", pp)
@@ -128,23 +147,25 @@ Sub SetDisabled(varDisabled As Boolean) As VMTabItem
 End Sub
 
 'set eager
-Sub SetEager(varEager As Object) As VMTabItem
+Sub SetEager(varEager As Boolean) As VMTabItem
+	If varEager = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("eager", varEager)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Eager"$
 	vue.SetStateSingle(pp, varEager)
 	TabItem.Bind(":eager", pp)
 	Return Me
 End Sub
 
-'set id
-Sub SetId(varId As Object) As VMTabItem
-	Dim pp As String = $"${ID}Id"$
-	vue.SetStateSingle(pp, varId)
-	TabItem.Bind(":id", pp)
-	Return Me
-End Sub
-
 'set reverse-transition
-Sub SetReverseTransition(varReverseTransition As Object) As VMTabItem
+Sub SetReverseTransition(varReverseTransition As String) As VMTabItem
+	If varReverseTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("reverse-transition", varReverseTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ReverseTransition"$
 	vue.SetStateSingle(pp, varReverseTransition)
 	TabItem.Bind(":reverse-transition", pp)
@@ -152,7 +173,12 @@ Sub SetReverseTransition(varReverseTransition As Object) As VMTabItem
 End Sub
 
 'set transition
-Sub SetTransition(varTransition As Object) As VMTabItem
+Sub SetTransition(varTransition As String) As VMTabItem
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Transition"$
 	vue.SetStateSingle(pp, varTransition)
 	TabItem.Bind(":transition", pp)
@@ -160,7 +186,7 @@ Sub SetTransition(varTransition As Object) As VMTabItem
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMTabItem
+Sub SetValue(varValue As String) As VMTabItem
 	TabItem.SetValue(varValue, False)
 	Return Me
 End Sub
@@ -243,23 +269,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 TabItem.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMTabItem
 TabItem.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMTabItem
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTabItem
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

@@ -133,6 +133,16 @@ Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As S
 	MenuContent.AddItem1(key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
 End Sub
 
+Sub AddDivider1(bInset As Boolean) As VMMenu
+	MenuContent.AddDivider1(bInset)
+	Return Me
+End Sub
+
+Sub AddSubHeader1(hdr As String, bInset As Boolean) As VMMenu
+	MenuContent.AddSubHeader1(hdr, bInset)
+	Return Me
+End Sub
+
 'get component
 Sub ToString As String	
 	act.Pop(Menu)

@@ -12,11 +12,13 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	Private items As VMTabsItems
-	Private children As List
+	'Private items As VMTabsItems
+	'Private children As List
 	Public hasContent As Boolean
 	Public OnToolBar As Boolean
 	Private bStatic As Boolean
+	Private titems As List
+	Private iconPos As String
 End Sub
 
 'initialize the Tabs
@@ -28,18 +30,26 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	vue.SetData($"${ID}ds"$, Null)
-	children.Initialize 
+	'children.Initialize 
 	hasContent = False
 	OnToolBar = False
-	items.Initialize(vue, $"${ID}items"$, Module)
+	'items.Initialize(vue, $"${ID}items"$, Module)
 	bStatic = False
+	titems.Initialize 
+	iconPos = "left"
+	Return Me
+End Sub
+
+Sub SetIconPosRight(b As Boolean) As VMTabs
+	If b = False Then Return Me
+	iconPos = "right"
 	Return Me
 End Sub
 
 Sub SetStatic(b As Boolean) As VMTabs
 	bStatic = b
 	Tabs.SetStatic(b)
-	items.setstatic(b)
+	'items.setstatic(b)
 	Return Me
 End Sub
 
@@ -68,30 +78,66 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	Return Me
 End Sub
 
-
 Sub AddTabSlider As VMTabs
 	AddComponent("<v-tabs-slider></v-tabs-slider>")
 	hasContent = True
 	Return Me
 End Sub
 
-'the stepLabelVModel is the vmodel to have the caption
+''the stepLabelVModel is the vmodel to have the caption
+'Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
+'	tabID = tabID.tolowercase
+'	'
+'	Dim item As Map = CreateMap()
+'	item.Put("key", tabID)
+'	item.Put("label", tabLabel)
+'	item.Put("icon", tabIcon)'
+'	'
+'	Dim tabitem As VMTabItem
+'	tabitem.Initialize(vue, tabID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+'	
+'	If tabContent <> Null Then
+'		tabitem.AddComponent(tabContent.ToString)
+'	End If
+'	'	
+'	items.AddComponent(tabitem.ToString)
+'	children.Add(item)
+'	hasContent = True
+'End Sub
+
+'manual installation
 Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
-	tabID = tabID.tolowercase
-	'
-	Dim item As Map = CreateMap()
-	item.Put("key", tabID)
-	item.Put("label", tabLabel)
-	item.Put("icon", tabIcon)'
-	'
+	tabID = tabID.ToLowerCase
+	Dim tabi As VMTab
+	tabi.Initialize(vue, tabID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tabi.SetKey(tabID)
+	tabi.SetHref($"#tab${tabID}"$)
+	Select Case iconPos
+	Case "right"	
+		tabi.SetText(tabLabel)
+		tabi.SetIcon(tabIcon)
+	Case "left"
+		tabi.SetText(tabLabel)
+		tabi.SetIcon(tabIcon)
+	End Select
+	AddComponent(tabi.ToString)
+	'add the tab item
 	Dim tabitem As VMTabItem
-	tabitem.Initialize(vue, tabID, Module)
+	tabitem.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tabitem.SetKey(tabID)
+	tabitem.SetValue($"tab${tabID}"$)
+	'
+	Dim vcard As VMElement
+	vcard.Initialize(vue, "").SetTag("v-card").SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrLoose("flat")
+	'
+	Dim vcardtext As VMElement
+	vcardtext.Initialize(vue,"").SetTag("v-card-text").SetStatic(bStatic).SetDesignMode(DesignMode)
 	If tabContent <> Null Then
-		tabitem.AddComponent(tabContent.ToString)
+		vcardtext.AddComponent(tabContent.ToString)
 	End If
-	'	
-	items.AddComponent(tabitem.ToString)
-	children.Add(item)
+	vcard.AddComponent(vcardtext.ToString)
+	tabitem.AddComponent(vcard.ToString)
+	titems.Add(tabitem.ToString)
 	hasContent = True
 End Sub
 
@@ -106,7 +152,6 @@ Sub SetAttrLoose(loose As String) As VMTabs
 	Return Me
 End Sub
 
-
 Sub SetAttributes(attrs As List) As VMTabs
 	For Each stra As String In attrs
 		SetAttrLoose(stra)
@@ -116,18 +161,20 @@ End Sub
 
 'get component
 Sub ToString As String
-	vue.SetStateSingle($"${ID}items"$, children)
-	'
-	Dim vtab As VMTab
-	vtab.Initialize(vue, "", Module)
-	vtab.SetAttrSingle("v-for", $"item in ${ID}items"$)
-	vtab.Bind(":key", "item.key")
-	vtab.Bind(":href", "`#${item.key}`")
-	vtab.SetText("{{ item.label }}")
-	vtab.SetText($"<v-icon>{{ item.icon }}</v-icon>"$)
-	vtab.Pop(Tabs)
-	'
-	Tabs.SetText(items.ToString)
+'	If children.Size > 0 Then
+'		vue.SetStateSingle($"${ID}items"$, children)
+'		Dim vtab As VMTab
+'		vtab.Initialize(vue, "", Module)
+'		vtab.SetAttrSingle("v-for", $"item in ${ID}items"$)
+'		vtab.Bind(":key", "item.key")
+'		vtab.Bind(":href", "`#${item.key}`")
+'		vtab.SetText("{{ item.label }}")
+'		vtab.SetText($"<v-icon>{{ item.icon }}</v-icon>"$)
+'		vtab.Pop(Tabs)
+'		Tabs.SetText(items.ToString)
+'	Else
+	Dim sitems As String = vue.Join("", titems)
+	AddComponent(sitems)
 	'
 	If OnToolBar = False Then
 		Return $"<v-card>${Tabs.tostring}</v-card>"$
@@ -138,7 +185,7 @@ End Sub
 
 Sub SetVModel(k As String) As VMTabs
 	Tabs.SetVModel(k)
-	items.SetVModel(k)
+	'items.SetVModel(k)
 	Return Me
 End Sub
 
@@ -194,7 +241,12 @@ Sub SetStyle(sm As Map) As VMTabs
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMTabs
+Sub SetActiveClass(varActiveClass As String) As VMTabs
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	Tabs.Bind(":active-class", pp)
@@ -202,7 +254,12 @@ Sub SetActiveClass(varActiveClass As Object) As VMTabs
 End Sub
 
 'set align-with-title
-Sub SetAlignWithTitle(varAlignWithTitle As Object) As VMTabs
+Sub SetAlignWithTitle(varAlignWithTitle As Boolean) As VMTabs
+	If varAlignWithTitle = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("align-with-title", varAlignWithTitle)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}AlignWithTitle"$
 	vue.SetStateSingle(pp, varAlignWithTitle)
 	Tabs.Bind(":align-with-title", pp)
@@ -210,15 +267,40 @@ Sub SetAlignWithTitle(varAlignWithTitle As Object) As VMTabs
 End Sub
 
 'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMTabs
+Sub SetBackgroundColor(varBackgroundColor As String) As VMTabs
+	If varBackgroundColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}BackgroundColor"$
 	vue.SetStateSingle(pp, varBackgroundColor)
 	Tabs.Bind(":background-color", pp)
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetBackgroundColorIntensity(varColor As String, varIntensity As String) As VMTabs
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("background-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	Tabs.Bind(":background-color", pp)
+	Return Me
+End Sub
+
+
 'set center-active
-Sub SetCenterActive(varCenterActive As Object) As VMTabs
+Sub SetCenterActive(varCenterActive As Boolean) As VMTabs
+	If varCenterActive = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("center-active", varCenterActive)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CenterActive"$
 	vue.SetStateSingle(pp, varCenterActive)
 	Tabs.Bind(":center-active", pp)
@@ -226,7 +308,12 @@ Sub SetCenterActive(varCenterActive As Object) As VMTabs
 End Sub
 
 'set centered
-Sub SetCentered(varCentered As Object) As VMTabs
+Sub SetCentered(varCentered As Boolean) As VMTabs
+	If varCentered = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("centered", varCentered)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Centered"$
 	vue.SetStateSingle(pp, varCentered)
 	Tabs.Bind(":centered", pp)
@@ -234,15 +321,39 @@ Sub SetCentered(varCentered As Object) As VMTabs
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMTabs
+Sub SetColor(varColor As String) As VMTabs
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Tabs.Bind(":color", pp)
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTabs
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)	
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	Tabs.Bind(":color", pp)
+	Return Me
+End Sub
+
 'set dark
-Sub SetDark(varDark As Object) As VMTabs
+Sub SetDark(varDark As Boolean) As VMTabs
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Tabs.Bind(":dark", pp)
@@ -250,7 +361,12 @@ Sub SetDark(varDark As Object) As VMTabs
 End Sub
 
 'set fixed-tabs
-Sub SetFixedTabs(varFixedTabs As Object) As VMTabs
+Sub SetFixedTabs(varFixedTabs As Boolean) As VMTabs
+	If varFixedTabs = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fixed-tabs",varFixedTabs)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}FixedTabs"$
 	vue.SetStateSingle(pp, varFixedTabs)
 	Tabs.Bind(":fixed-tabs", pp)
@@ -258,7 +374,12 @@ Sub SetFixedTabs(varFixedTabs As Object) As VMTabs
 End Sub
 
 'set grow
-Sub SetGrow(varGrow As Object) As VMTabs
+Sub SetGrow(varGrow As Boolean) As VMTabs
+	If varGrow = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("grow", varGrow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Grow"$
 	vue.SetStateSingle(pp, varGrow)
 	Tabs.Bind(":grow", pp)
@@ -266,7 +387,12 @@ Sub SetGrow(varGrow As Object) As VMTabs
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMTabs
+Sub SetHeight(varHeight As String) As VMTabs
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Tabs.Bind(":height", pp)
@@ -274,7 +400,12 @@ Sub SetHeight(varHeight As Object) As VMTabs
 End Sub
 
 'set hide-slider
-Sub SetHideSlider(varHideSlider As Object) As VMTabs
+Sub SetHideSlider(varHideSlider As Boolean) As VMTabs
+	If varHideSlider = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-slider", varHideSlider)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideSlider"$
 	vue.SetStateSingle(pp, varHideSlider)
 	Tabs.Bind(":hide-slider", pp)
@@ -282,7 +413,12 @@ Sub SetHideSlider(varHideSlider As Object) As VMTabs
 End Sub
 
 'set icons-and-text
-Sub SetIconsAndText(varIconsAndText As Object) As VMTabs
+Sub SetIconsAndText(varIconsAndText As Boolean) As VMTabs
+	If varIconsAndText = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("icons-and-text", varIconsAndText)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IconsAndText"$
 	vue.SetStateSingle(pp, varIconsAndText)
 	Tabs.Bind(":icons-and-text", pp)
@@ -290,7 +426,12 @@ Sub SetIconsAndText(varIconsAndText As Object) As VMTabs
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMTabs
+Sub SetLight(varLight As Boolean) As VMTabs
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Tabs.Bind(":light", pp)
@@ -298,7 +439,12 @@ Sub SetLight(varLight As Object) As VMTabs
 End Sub
 
 'set mobile-break-point
-Sub SetMobileBreakPoint(varMobileBreakPoint As Object) As VMTabs
+Sub SetMobileBreakPoint(varMobileBreakPoint As String) As VMTabs
+	If varMobileBreakPoint = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("mobile-break-point", varMobileBreakPoint)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MobileBreakPoint"$
 	vue.SetStateSingle(pp, varMobileBreakPoint)
 	Tabs.Bind(":mobile-break-point", pp)
@@ -306,7 +452,12 @@ Sub SetMobileBreakPoint(varMobileBreakPoint As Object) As VMTabs
 End Sub
 
 'set next-icon
-Sub SetNextIcon(varNextIcon As Object) As VMTabs
+Sub SetNextIcon(varNextIcon As String) As VMTabs
+	If varNextIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("next-icon", varNextIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}NextIcon"$
 	vue.SetStateSingle(pp, varNextIcon)
 	Tabs.Bind(":next-icon", pp)
@@ -314,7 +465,12 @@ Sub SetNextIcon(varNextIcon As Object) As VMTabs
 End Sub
 
 'set optional
-Sub SetOptional(varOptional As Object) As VMTabs
+Sub SetOptional(varOptional As Boolean) As VMTabs
+	If varOptional = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("optional", varOptional)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Optional"$
 	vue.SetStateSingle(pp, varOptional)
 	Tabs.Bind(":optional", pp)
@@ -322,7 +478,12 @@ Sub SetOptional(varOptional As Object) As VMTabs
 End Sub
 
 'set prev-icon
-Sub SetPrevIcon(varPrevIcon As Object) As VMTabs
+Sub SetPrevIcon(varPrevIcon As String) As VMTabs
+	If varPrevIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("prev-icon", varPrevIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}PrevIcon"$
 	vue.SetStateSingle(pp, varPrevIcon)
 	Tabs.Bind(":prev-icon", pp)
@@ -330,7 +491,12 @@ Sub SetPrevIcon(varPrevIcon As Object) As VMTabs
 End Sub
 
 'set right
-Sub SetRight(varRight As Object) As VMTabs
+Sub SetRight(varRight As Boolean) As VMTabs
+	If varRight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", varRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Right"$
 	vue.SetStateSingle(pp, varRight)
 	Tabs.Bind(":right", pp)
@@ -338,7 +504,12 @@ Sub SetRight(varRight As Object) As VMTabs
 End Sub
 
 'set show-arrows
-Sub SetShowArrows(varShowArrows As Object) As VMTabs
+Sub SetShowArrows(varShowArrows As Boolean) As VMTabs
+	If varShowArrows = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-arrows", varShowArrows)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ShowArrows"$
 	vue.SetStateSingle(pp, varShowArrows)
 	Tabs.Bind(":show-arrows", pp)
@@ -346,15 +517,39 @@ Sub SetShowArrows(varShowArrows As Object) As VMTabs
 End Sub
 
 'set slider-color
-Sub SetSliderColor(varSliderColor As Object) As VMTabs
+Sub SetSliderColor(varSliderColor As String) As VMTabs
+	If varSliderColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("slider-color", varSliderColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}SliderColor"$
 	vue.SetStateSingle(pp, varSliderColor)
 	Tabs.Bind(":slider-color", pp)
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetSliderColorIntensity(varColor As String, varIntensity As String) As VMTabs
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("slider-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	Tabs.Bind(":slider-color", pp)
+	Return Me
+End Sub
+
 'set slider-size
-Sub SetSliderSize(varSliderSize As Object) As VMTabs
+Sub SetSliderSize(varSliderSize As String) As VMTabs
+	If varSliderSize = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("slider-size",varSliderSize)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}SliderSize"$
 	vue.SetStateSingle(pp, varSliderSize)
 	Tabs.Bind(":slider-size", pp)
@@ -362,13 +557,19 @@ Sub SetSliderSize(varSliderSize As Object) As VMTabs
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMTabs
+Sub SetValue(varValue As String) As VMTabs
+	varValue = varValue.tolowercase
 	Tabs.SetValue(varValue, False)
 	Return Me
 End Sub
 
 'set vertical
-Sub SetVertical(varVertical As Object) As VMTabs
+Sub SetVertical(varVertical As Boolean) As VMTabs
+	If varVertical = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("vertical", varVertical)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Vertical"$
 	vue.SetStateSingle(pp, varVertical)
 	Tabs.Bind(":vertical", pp)
@@ -435,6 +636,7 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMTabs
 	Tabs.SetDesignMode(b)
+	'items.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -473,21 +675,5 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 	
 Sub SetVisible(b As Boolean) As VMTabs
 	Tabs.SetVisible(b)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMTabs
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTabs
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
 	Return Me
 End Sub

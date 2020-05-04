@@ -39,10 +39,14 @@ End Sub
 
 Sub SetLabel(lbl As String, lbldesc As String) As VMStepperStep
 	Dim pp As String = $"${ID}label"$
-	vue.SetData(pp, lbl)
 	Dim pd As String = $"${ID}desc"$
+	vue.SetData(pp, lbl)
 	vue.SetData(pd, lbldesc)
-	StepperStep.SetText($"{{ ${pp} }}<small>{{ ${pd} }}</small>"$)
+	If bStatic Or DesignMode Then
+		StepperStep.SetText($"${lbl}<small>${lbldesc}</small>"$)
+	Else
+		StepperStep.SetText($"{{ ${pp} }}<small>{{ ${pd} }}</small>"$)
+	End If
 	Return Me
 End Sub
 
@@ -59,8 +63,7 @@ Sub SetAttributes(attrs As List) As VMStepperStep
 End Sub
 
 'get component
-Sub ToString As String
-	
+Sub ToString As String	
 	Return StepperStep.ToString
 End Sub
 
@@ -92,7 +95,7 @@ Sub AddChild(child As VMElement) As VMStepperStep
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMStepperStep
+Sub SetText(t As String) As VMStepperStep
 	StepperStep.SetText(t)
 	Return Me
 End Sub
@@ -128,7 +131,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMStepperStep
+Sub SetColor(varColor As String) As VMStepperStep
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	StepperStep.Bind(":color", pp)
@@ -136,7 +144,12 @@ Sub SetColor(varColor As Object) As VMStepperStep
 End Sub
 
 'set complete
-Sub SetComplete(varComplete As Object) As VMStepperStep
+Sub SetComplete(varComplete As Boolean) As VMStepperStep
+	If varComplete = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("complete", varComplete)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Complete"$
 	vue.SetStateSingle(pp, varComplete)
 	StepperStep.Bind(":complete", pp)
@@ -144,7 +157,12 @@ Sub SetComplete(varComplete As Object) As VMStepperStep
 End Sub
 
 'set complete-icon
-Sub SetCompleteIcon(varCompleteIcon As Object) As VMStepperStep
+Sub SetCompleteIcon(varCompleteIcon As String) As VMStepperStep
+	If varCompleteIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("complete-icon", varCompleteIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CompleteIcon"$
 	vue.SetStateSingle(pp, varCompleteIcon)
 	StepperStep.Bind(":complete-icon", pp)
@@ -152,7 +170,12 @@ Sub SetCompleteIcon(varCompleteIcon As Object) As VMStepperStep
 End Sub
 
 'set edit-icon
-Sub SetEditIcon(varEditIcon As Object) As VMStepperStep
+Sub SetEditIcon(varEditIcon As String) As VMStepperStep
+	If varEditIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("edit-icon", varEditIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EditIcon"$
 	vue.SetStateSingle(pp, varEditIcon)
 	StepperStep.Bind(":edit-icon", pp)
@@ -160,7 +183,12 @@ Sub SetEditIcon(varEditIcon As Object) As VMStepperStep
 End Sub
 
 'set editable
-Sub SetEditable(varEditable As Object) As VMStepperStep
+Sub SetEditable(varEditable As Boolean) As VMStepperStep
+	If varEditable = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("editable", "varEditable")
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Editable"$
 	vue.SetStateSingle(pp, varEditable)
 	StepperStep.Bind(":editable", pp)
@@ -168,7 +196,12 @@ Sub SetEditable(varEditable As Object) As VMStepperStep
 End Sub
 
 'set error-icon
-Sub SetErrorIcon(varErrorIcon As Object) As VMStepperStep
+Sub SetErrorIcon(varErrorIcon As String) As VMStepperStep
+	If varErrorIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("error-icon", varErrorIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ErrorIcon"$
 	vue.SetStateSingle(pp, varErrorIcon)
 	StepperStep.Bind(":error-icon", pp)
@@ -187,10 +220,8 @@ Sub SetRules(varRules As Boolean) As VMStepperStep
 End Sub
 
 'set step
-Sub SetStep(varStep As Object) As VMStepperStep
-	Dim pp As String = $"${ID}Step"$
-	vue.SetStateSingle(pp, varStep)
-	StepperStep.Bind(":step", pp)
+Sub SetStep(varStep As String) As VMStepperStep
+	StepperStep.Bind("step", varStep)
 	Return Me
 End Sub
 
@@ -284,23 +315,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 StepperStep.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMStepperStep
 StepperStep.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMStepperStep
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMStepperStep
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

@@ -293,6 +293,10 @@ Sub AddIcon(key As String, iconName As String, toolTip As String, badge As Strin
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
 	btn.SetIconButton(iconName).SetTooltip(toolTip)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
 	btn.Pop(ToolBar)
 	objects.Add(key)
 	HasContent = True
@@ -307,6 +311,10 @@ Sub AddIcon1(key As String, iconName As String, iconColor As String, toolTip As 
 	btn.SetDesignMode(DesignMode)
 	btn.SetColor(iconColor)
 	btn.SetIconButton(iconName).SetTooltip(toolTip)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
 	btn.Pop(ToolBar)
 	objects.Add(key)
 	HasContent = True
@@ -996,7 +1004,8 @@ Sub AddButton1(key As String, iconName As String, text As String, toolTip As Str
 	btn.SetDesignMode(DesignMode)
 	btn.SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
 	If badge <> "" Then
-		btn.Badge.SetContent(badge)
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
 	End If
 	btn.Pop(ToolBar)
 	HasContent = True
@@ -1011,7 +1020,8 @@ Sub AddItem(key As String, iconName As String, color As String, text As String, 
 	btn.SetColor(color)
 	btn.SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
 	If badge <> "" Then
-		btn.Badge.SetContent(badge)
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
 	End If
 	btn.Pop(ToolBar)
 	HasContent = True

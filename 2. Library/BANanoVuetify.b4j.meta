@@ -424,6 +424,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoVM,NewH6,2680,0,BANanoVM,NewH5,2679,0,BANanoVM,readAsText,2696,0,BANanoVM,ReadFileAsText,2704,0,BANanoVM,NewBLOCKQUOTE,2695,0,BANanoVue,OnError,3229,0,BANanoVue,ReadFileAsText,3199,0,BANanoVue,Unflatten,3186,0,BANanoVue,readAsText,3191,0,BANanoVue,OnLoad,3216,0,Main,AppStart,100,0
+NavigationStack=VMStepper,SetOnChange,362,0,VMStepper,SetValue,335,6,VMStepper,Hide,366,0,VMStepper,Bind,390,0,VMStepper,SetMarginAll,406,0,VMStepper,SetAttrSingle,435,0,VMStepper,SetVisible,447,0,VMStepperStep,SetStep,216,0,VMStepperContent,SetStep,115,0,VMStepper,AddStep,88,2,VMStepper,SetAttributes,105,0
 SelectedBuild=0
 VisibleModules=
