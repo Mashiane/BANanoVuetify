@@ -2155,6 +2155,16 @@ Sub SetOnTouchStartRC(rowpos As Int, colpos As Int, methodName As String) As VMC
 	Return Me
 End Sub
 
+Sub SetOnDrop(methodName As String) As VMContainer
+	Container.SetOnDrop(Module, methodName)
+	Return Me
+End Sub
+
+Sub SetOnDragOver(methodName As String) As VMContainer
+	Container.SetOnDragOver(Module, methodName)
+	Return Me
+End Sub
+
 Sub SetOnDragOverRC(rowPos As Int, colPos As Int, methodName As String) As VMContainer
 	methodName = methodName.tolowercase
 	Dim rowc As Map

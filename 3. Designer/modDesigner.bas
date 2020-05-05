@@ -3458,8 +3458,8 @@ Sub DesignLayout
 	'vm.Container.SetBorderRC(1, 2, "1px", vm.COLOR_LIGHTBLUE, vm.BORDER_DASHED)
 	'
 	'set drag and drop events
-	vm.Container.SetOnDragOverRC(1, 2, "ItemDragOver")
-	vm.Container.SetOnDropRC(1, 2, "ItemDrop")
+	'vm.Container.SetOnDragOverRC(1, 2, "ItemDragOver")
+	'vm.Container.SetOnDropRC(1, 2, "ItemDrop")
 	'
 	Dim ep As VMExpansionPanels = vm.CreateExpansionpanels("ep1", Me).SetAccordion(True)
 	ep.SetVmodel("selectedpanel")
@@ -3493,6 +3493,8 @@ Sub DesignLayout
 	dnd.SetJustifyRC(1, 1, "center")
 	dnd.SetAlignRC(1, 1, "center")
 	dnd.AddClassRC(1, 1, Array("mx-auto"))
+	dnd.SetOnDragOver("ItemDragOver")
+	dnd.SetOnDrop("ItemDrop")
 	'
 	mymac = vm.CreateDevice("mymac", Me).SetMacbook
 	'
@@ -4841,8 +4843,6 @@ Sub ItemDrop(e As BANanoEvent)
 	'
 	e.OtherField("dataTransfer").RunMethod("clearData", Null)
 	
-	Select Case dropZoneID
-		Case "bananovmdemocontainerr1c2"
 			'drop on root
 			Select Case savedid
 				Case "rc12","rc6x2", "rc1x12", "rc2x6","rc4x3", "rc3x4", _
@@ -5139,7 +5139,6 @@ Sub ItemDrop(e As BANanoEvent)
 			End Select
 			'
 			CreateUX
-	End Select
 End Sub
 
 Sub StepperItems As String
