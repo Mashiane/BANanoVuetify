@@ -293,6 +293,7 @@ Sub DropDataBase As BANanoMySQL
 End Sub
 
 Sub Execute(strSQL As String) As BANanoMySQL
+	strSQL = strSQL.trim
 	query = strSQL
 	command = "execute"
 	Return Me

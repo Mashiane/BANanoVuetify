@@ -1939,7 +1939,6 @@ End Sub
 Sub CreateExpansionPanels(sid As String, eventHandler As Object) As VMExpansionPanels
 	Dim el As VMExpansionPanels
 	el.Initialize(vue, sid, eventHandler)	
-	el.SetVModel(sid)
 	Return el
 End Sub
 

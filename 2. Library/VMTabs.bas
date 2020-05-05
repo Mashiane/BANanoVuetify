@@ -12,8 +12,6 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	'Private items As VMTabsItems
-	'Private children As List
 	Public hasContent As Boolean
 	Public OnToolBar As Boolean
 	Private bStatic As Boolean
@@ -30,10 +28,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	vue.SetData($"${ID}ds"$, Null)
-	'children.Initialize 
 	hasContent = False
 	OnToolBar = False
-	'items.Initialize(vue, $"${ID}items"$, Module)
 	bStatic = False
 	titems.Initialize 
 	iconPos = "left"
@@ -49,7 +45,6 @@ End Sub
 Sub SetStatic(b As Boolean) As VMTabs
 	bStatic = b
 	Tabs.SetStatic(b)
-	'items.setstatic(b)
 	Return Me
 End Sub
 
@@ -83,27 +78,6 @@ Sub AddTabSlider As VMTabs
 	hasContent = True
 	Return Me
 End Sub
-
-''the stepLabelVModel is the vmodel to have the caption
-'Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
-'	tabID = tabID.tolowercase
-'	'
-'	Dim item As Map = CreateMap()
-'	item.Put("key", tabID)
-'	item.Put("label", tabLabel)
-'	item.Put("icon", tabIcon)'
-'	'
-'	Dim tabitem As VMTabItem
-'	tabitem.Initialize(vue, tabID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-'	
-'	If tabContent <> Null Then
-'		tabitem.AddComponent(tabContent.ToString)
-'	End If
-'	'	
-'	items.AddComponent(tabitem.ToString)
-'	children.Add(item)
-'	hasContent = True
-'End Sub
 
 'manual installation
 Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
@@ -161,18 +135,6 @@ End Sub
 
 'get component
 Sub ToString As String
-'	If children.Size > 0 Then
-'		vue.SetStateSingle($"${ID}items"$, children)
-'		Dim vtab As VMTab
-'		vtab.Initialize(vue, "", Module)
-'		vtab.SetAttrSingle("v-for", $"item in ${ID}items"$)
-'		vtab.Bind(":key", "item.key")
-'		vtab.Bind(":href", "`#${item.key}`")
-'		vtab.SetText("{{ item.label }}")
-'		vtab.SetText($"<v-icon>{{ item.icon }}</v-icon>"$)
-'		vtab.Pop(Tabs)
-'		Tabs.SetText(items.ToString)
-'	Else
 	Dim sitems As String = vue.Join("", titems)
 	AddComponent(sitems)
 	'
@@ -185,7 +147,6 @@ End Sub
 
 Sub SetVModel(k As String) As VMTabs
 	Tabs.SetVModel(k)
-	'items.SetVModel(k)
 	Return Me
 End Sub
 

@@ -12,7 +12,8 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	Private vmodel As String
+	Private bstatic As Boolean
+	Private sactive As String
 End Sub
 
 'initialize the ExpansionPanels
@@ -23,18 +24,47 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	vmodel = ""
+	bstatic = False
+	sactive = $"${ID}active"$
+	SetVModel(sactive)
+	vue.SetData(sactive, 0)
 	Return Me
 End Sub
 
-Sub SetActive(activeID As String) As VMExpansionPanels
-	vue.SetData($"${ID}active"$, activeID)
+Sub SetStatic(b As Boolean) As VMExpansionPanels
+	bstatic = b
+	ExpansionPanels.SetStatic(b)
+	Return Me
+End Sub
+
+'set the active panel
+Sub OpenPanel(pnl As String) As VMExpansionPanels
+	SetActivePanel(pnl)
+	Return Me
+End Sub
+
+'set active panel
+Sub SetActivePanel(activeID As String) As VMExpansionPanels
+	vue.SetData(sactive, activeID)
+	SetValue(activeID)
 	Return Me
 End Sub
 
 Sub AddPanel(pnl As VMExpansionPanel) As VMExpansionPanels
 	AddComponent(pnl.ToString)
 	Return Me
+End Sub
+
+Sub AddPanel1(pnlID As String, pnlLabel As String, pnlContent As VMContainer)
+	pnlID = pnlID.ToLowerCase
+	Dim tabi As VMExpansionPanel
+	tabi.Initialize(vue, ID, pnlID, Module).SetStatic(bstatic).SetDesignMode(DesignMode)
+	tabi.Header.SetText(pnlLabel)
+	tabi.SetAttrSingle("key", pnlID)
+	If pnlContent <> Null Then
+		tabi.Content.Container = pnlContent
+	End If
+	AddComponent(tabi.tostring)
 End Sub
 
 'get component
@@ -44,7 +74,6 @@ End Sub
 
 Sub SetVModel(k As String) As VMExpansionPanels
 	ExpansionPanels.SetVModel(k)
-	vmodel = k.tolowercase
 	Return Me
 End Sub
 
@@ -107,7 +136,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set accordion
-Sub SetAccordion(varAccordion As Object) As VMExpansionPanels
+Sub SetAccordion(varAccordion As Boolean) As VMExpansionPanels
+	If varAccordion = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("accordion", varAccordion)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Accordion"$
 	vue.SetStateSingle(pp, varAccordion)
 	ExpansionPanels.Bind(":accordion", pp)
@@ -115,7 +149,12 @@ Sub SetAccordion(varAccordion As Object) As VMExpansionPanels
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMExpansionPanels
+Sub SetActiveClass(varActiveClass As String) As VMExpansionPanels
+	If varActiveClass = "" Then Return Me
+	If bstatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	ExpansionPanels.Bind(":active-class", pp)
@@ -123,7 +162,12 @@ Sub SetActiveClass(varActiveClass As Object) As VMExpansionPanels
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMExpansionPanels
+Sub SetDark(varDark As Boolean) As VMExpansionPanels
+	If varDark = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	ExpansionPanels.Bind(":dark", pp)
@@ -131,15 +175,18 @@ Sub SetDark(varDark As Object) As VMExpansionPanels
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMExpansionPanels
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	ExpansionPanels.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMExpansionPanels
+	ExpansionPanels.SetDisabled(varDisabled)
 	Return Me
 End Sub
 
 'set flat
-Sub SetFlat(varFlat As Object) As VMExpansionPanels
+Sub SetFlat(varFlat As Boolean) As VMExpansionPanels
+	If varFlat = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("flat", varFlat)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Flat"$
 	vue.SetStateSingle(pp, varFlat)
 	ExpansionPanels.Bind(":flat", pp)
@@ -147,7 +194,12 @@ Sub SetFlat(varFlat As Object) As VMExpansionPanels
 End Sub
 
 'set focusable
-Sub SetFocusable(varFocusable As Object) As VMExpansionPanels
+Sub SetFocusable(varFocusable As Boolean) As VMExpansionPanels
+	If varFocusable = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("focusable", varFocusable)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Focusable"$
 	vue.SetStateSingle(pp, varFocusable)
 	ExpansionPanels.Bind(":focusable", pp)
@@ -155,7 +207,12 @@ Sub SetFocusable(varFocusable As Object) As VMExpansionPanels
 End Sub
 
 'set hover
-Sub SetHover(varHover As Object) As VMExpansionPanels
+Sub SetHover(varHover As Boolean) As VMExpansionPanels
+	If varHover = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("hover", varHover)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Hover"$
 	vue.SetStateSingle(pp, varHover)
 	ExpansionPanels.Bind(":hover", pp)
@@ -163,7 +220,12 @@ Sub SetHover(varHover As Object) As VMExpansionPanels
 End Sub
 
 'set inset
-Sub SetInset(varInset As Object) As VMExpansionPanels
+Sub SetInset(varInset As Boolean) As VMExpansionPanels
+	If varInset = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("inset", varInset)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Inset"$
 	vue.SetStateSingle(pp, varInset)
 	ExpansionPanels.Bind(":inset", pp)
@@ -171,7 +233,12 @@ Sub SetInset(varInset As Object) As VMExpansionPanels
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMExpansionPanels
+Sub SetLight(varLight As Boolean) As VMExpansionPanels
+	If varLight = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	ExpansionPanels.Bind(":light", pp)
@@ -179,7 +246,12 @@ Sub SetLight(varLight As Object) As VMExpansionPanels
 End Sub
 
 'set mandatory
-Sub SetMandatory(varMandatory As Object) As VMExpansionPanels
+Sub SetMandatory(varMandatory As Boolean) As VMExpansionPanels
+	If varMandatory = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("mandatory", varMandatory)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Mandatory"$
 	vue.SetStateSingle(pp, varMandatory)
 	ExpansionPanels.Bind(":mandatory", pp)
@@ -187,7 +259,12 @@ Sub SetMandatory(varMandatory As Object) As VMExpansionPanels
 End Sub
 
 'set max
-Sub SetMax(varMax As Object) As VMExpansionPanels
+Sub SetMax(varMax As String) As VMExpansionPanels
+	If varMax = "" Then Return Me
+	If bstatic Then
+		SetAttrSingle("max", varMax)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Max"$
 	vue.SetStateSingle(pp, varMax)
 	ExpansionPanels.Bind(":max", pp)
@@ -195,7 +272,12 @@ Sub SetMax(varMax As Object) As VMExpansionPanels
 End Sub
 
 'set multiple
-Sub SetMultiple(varMultiple As Object) As VMExpansionPanels
+Sub SetMultiple(varMultiple As Boolean) As VMExpansionPanels
+	If varMultiple = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("multiple", varMultiple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Multiple"$
 	vue.SetStateSingle(pp, varMultiple)
 	ExpansionPanels.Bind(":multiple", pp)
@@ -203,7 +285,12 @@ Sub SetMultiple(varMultiple As Object) As VMExpansionPanels
 End Sub
 
 'set popout
-Sub SetPopout(varPopout As Object) As VMExpansionPanels
+Sub SetPopout(varPopout As Boolean) As VMExpansionPanels
+	If varPopout = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("popout", varPopout)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Popout"$
 	vue.SetStateSingle(pp, varPopout)
 	ExpansionPanels.Bind(":popout", pp)
@@ -211,7 +298,12 @@ Sub SetPopout(varPopout As Object) As VMExpansionPanels
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMExpansionPanels
+Sub SetReadonly(varReadonly As Boolean) As VMExpansionPanels
+	If varReadonly = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("readonly", varReadonly)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	ExpansionPanels.Bind(":readonly", pp)
@@ -219,19 +311,23 @@ Sub SetReadonly(varReadonly As Object) As VMExpansionPanels
 End Sub
 
 'set tile
-Sub SetTile(varTile As Object) As VMExpansionPanels
+Sub SetTile(varTile As Boolean) As VMExpansionPanels
+	If varTile = False Then Return Me
+	If bstatic Then
+		SetAttrSingle("tile", varTile)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Tile"$
 	vue.SetStateSingle(pp, varTile)
 	ExpansionPanels.Bind(":tile", pp)
 	Return Me
 End Sub
 
-'set value
-Sub SetValue(varValue As Object) As VMExpansionPanels
+'set value, opened panel
+Sub SetValue(varValue As String) As VMExpansionPanels
 	ExpansionPanels.SetValue(varValue, False)
 	Return Me
 End Sub
-
 
 'hide the component
 Sub Hide As VMExpansionPanels
@@ -282,16 +378,6 @@ Sub UseTheme(themeName As String) As VMExpansionPanels
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanels
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	ExpansionPanels.Bind(":color", pp)
-	Return Me
-End Sub
-
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMExpansionPanels
 	ExpansionPanels.RemoveAttr(sName)
@@ -317,11 +403,6 @@ Sub SetDesignMode(b As Boolean) As VMExpansionPanels
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMExpansionPanels
-	ExpansionPanels.SetTabIndex(ti)
-	Return Me
-End Sub
 
 'The Select name. Similar To HTML5 name attribute.
 Sub SetName(varName As Object, bbind As Boolean) As VMExpansionPanels
@@ -430,23 +511,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 ExpansionPanels.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMExpansionPanels
 ExpansionPanels.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMExpansionPanels
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanels
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

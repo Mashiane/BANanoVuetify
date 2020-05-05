@@ -9,7 +9,7 @@ Sub Process_Globals
 	Public name As String = "listCode"
 	Public title As String = "Lists"
 	Private vm As BANanoVM
-	Private BANano As BANano
+	Private BANano As BANano   'ignore
 End Sub
 
 

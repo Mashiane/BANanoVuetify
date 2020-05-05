@@ -15,6 +15,7 @@ Sub Class_Globals
 	Public Header As VMExpansionPanelHeader
 	Public Content As VMExpansionPanelContent
 	Public Container As VMContainer
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ExpansionPanel
@@ -30,6 +31,14 @@ Public Sub Initialize(v As BANanoVue, sparent As String, sid As String, eventHan
 	Content.Initialize(vue, $"${ID}cnt"$, Module)
 	Container = Content.container 
 	SetAttrSingle("key", ID) 
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMExpansionPanel
+	bStatic = b
+	Header.SetStatic(b)
+	ExpansionPanel.setstatic(b)
+	Content.setstatic(b)
 	Return Me
 End Sub
 
@@ -72,7 +81,7 @@ Sub AddChild(child As VMElement) As VMExpansionPanel
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMExpansionPanel
+Sub SetText(t As String) As VMExpansionPanel
 	ExpansionPanel.SetText(t)
 	Return Me
 End Sub
@@ -108,7 +117,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMExpansionPanel
+Sub SetActiveClass(varActiveClass As String) As VMExpansionPanel
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	ExpansionPanel.Bind(":active-class", pp)
@@ -116,15 +130,18 @@ Sub SetActiveClass(varActiveClass As Object) As VMExpansionPanel
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMExpansionPanel
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	ExpansionPanel.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMExpansionPanel
+	ExpansionPanel.SetDisabled(varDisabled)
 	Return Me
 End Sub
 
 'set readonly
-Sub SetReadonly(varReadonly As Object) As VMExpansionPanel
+Sub SetReadonly(varReadonly As Boolean) As VMExpansionPanel
+	If varReadonly = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
 	ExpansionPanel.Bind(":readonly", pp)
@@ -352,23 +369,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 ExpansionPanel.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMExpansionPanel
 ExpansionPanel.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMExpansionPanel
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanel
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

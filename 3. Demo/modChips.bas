@@ -9,7 +9,7 @@ Sub Process_Globals
 	Public name As String = "chipsCode"
 	Public title As String = "Chips"
 	Private vm As BANanoVM
-	Private BANano As BANano
+	Private BANano As BANano  'ignore
 End Sub
 
 

@@ -10,7 +10,7 @@ Sub Process_Globals
 	Public name As String = "dataTableCode"
 	Public title As String = "Data Table"
 	Private vm As BANanoVM
-	Private BANano As BANano
+	Private BANano As BANano  'ignore
 	Private dt1 As VMDataTable
 End Sub
 

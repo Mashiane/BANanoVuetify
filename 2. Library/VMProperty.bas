@@ -27,13 +27,11 @@ Sub Class_Globals
 	Dim sshow As String
 	Private contChecks As VMContainer
 	Private hasChecks As Boolean
-	Private xmodel As String
 	Private changeEvent As String
 	Public bText As List
 	Public sText As List
 	Public contentitems As List
 	Private itemtypes As Map
-	Private selPanel As String
 	Public IsTable As Boolean
 End Sub
 
@@ -55,7 +53,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	sshow = ""
 	hasChecks = False
 	contChecks.Initialize(vue, "checks", module).SetFluid(True).SetTag("div").SetNoGutters(True)
-	xmodel = ""
 	changeEvent = $"${ID}_change"$
 	bText.Initialize 
 	sText.Initialize 
@@ -104,16 +101,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	contentitems.Add("colsizelarge")
 	contentitems.Add("colsizexlarge")
 	'
-	selPanel = $"${ID}openpanel"$
-	vue.SetData(selPanel, 0)
-	SetVModel(selPanel)
 	IsTable = False
 	Return Me
 End Sub
 
-'open a particular panel
-Sub OpenPanel(pnl As Int)
-	vue.SetData(selPanel, pnl)
+
+'set the active panel
+Sub OpenPanel(pnl As String) As VMProperty
+	SetActivePanel(pnl)
+	Return Me
+End Sub
+
+
+Sub SetActivePanel(activeID As String) As VMProperty
+	expnl.SetActivePanel(activeID)
+	Return Me
 End Sub
 
 Sub SetChangeEvent(cEx As String) As VMProperty
@@ -138,14 +140,6 @@ Sub SetVShow(vif As String) As VMProperty
 	sshow = vif
 	expnl.SetVShow(vif)
 	Return Me
-End Sub
-
-Sub SetVModel(vmodel As String) As VMProperty
-	vmodel = vmodel.ToLowerCase
-	expnl.SetVModel(vmodel)
-	vue.SetData(vmodel, 0)
-	xmodel = vmodel
-	Return Me	
 End Sub
 
 Sub Hide
@@ -730,7 +724,7 @@ End Sub
 
 Sub SetDefaults
 	vue.SetState(defaults)
-	vue.SetData(xmodel,0)
+	expnl.SetActivePanel("0")
 End Sub
 
 Sub AddCheck(parent As String, vModel As String, text As String, bvalue As Boolean)

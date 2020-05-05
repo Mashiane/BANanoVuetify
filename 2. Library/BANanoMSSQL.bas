@@ -385,6 +385,7 @@ End Sub
 
 'execute own query
 Sub Execute(strSQL As String) As BANanoMSSQL
+	strSQL = strSQL.trim
 	query = strSQL
 	command = "execute"
 	Return Me

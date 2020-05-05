@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ExpansionPanelHeader
@@ -22,6 +23,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	bStatic = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMExpansionPanelHeader
+	bStatic = b
+	ExpansionPanelHeader.SetStatic(b)
 	Return Me
 End Sub
 
@@ -35,12 +43,12 @@ Sub SetVModel(k As String) As VMExpansionPanelHeader
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMExpansionPanelHeader
+Sub SetVIf(vif As String) As VMExpansionPanelHeader
 	ExpansionPanelHeader.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMExpansionPanelHeader
+Sub SetVShow(vif As String) As VMExpansionPanelHeader
 	ExpansionPanelHeader.SetVShow(vif)
 	Return Me
 End Sub
@@ -58,7 +66,7 @@ Sub AddChild(child As VMElement) As VMExpansionPanelHeader
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMExpansionPanelHeader
+Sub SetText(t As String) As VMExpansionPanelHeader
 	ExpansionPanelHeader.SetText(t)
 	Return Me
 End Sub
@@ -75,7 +83,7 @@ Sub AddClass(c As String) As VMExpansionPanelHeader
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMExpansionPanelHeader
+Sub SetAttr(attr As Map) As VMExpansionPanelHeader
 	ExpansionPanelHeader.SetAttr(attr)
 	Return Me
 End Sub
@@ -94,15 +102,39 @@ Sub AddChildren(children As List)
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMExpansionPanelHeader
+Sub SetColor(varColor As String) As VMExpansionPanelHeader
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	ExpansionPanelHeader.Bind(":color", pp)
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanelHeader
+	Dim pp As String = $"${ID}Color"$
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	vue.SetStateSingle(pp, scolor)
+	ExpansionPanelHeader.Bind(":color", pp)
+	Return Me
+End Sub
+
 'set disabled-icon-rotate
-Sub SetDisabledIconRotate(varDisabledIconRotate As Object) As VMExpansionPanelHeader
+Sub SetDisabledIconRotate(varDisabledIconRotate As Boolean) As VMExpansionPanelHeader
+	If varDisabledIconRotate = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varDisabledIconRotate)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}DisabledIconRotate"$
 	vue.SetStateSingle(pp, varDisabledIconRotate)
 	ExpansionPanelHeader.Bind(":disabled-icon-rotate", pp)
@@ -110,7 +142,12 @@ Sub SetDisabledIconRotate(varDisabledIconRotate As Object) As VMExpansionPanelHe
 End Sub
 
 'set expand-icon
-Sub SetExpandIcon(varExpandIcon As Object) As VMExpansionPanelHeader
+Sub SetExpandIcon(varExpandIcon As String) As VMExpansionPanelHeader
+	If varExpandIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("expand-icon", varExpandIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ExpandIcon"$
 	vue.SetStateSingle(pp, varExpandIcon)
 	ExpansionPanelHeader.Bind(":expand-icon", pp)
@@ -118,7 +155,12 @@ Sub SetExpandIcon(varExpandIcon As Object) As VMExpansionPanelHeader
 End Sub
 
 'set hide-actions
-Sub SetHideActions(varHideActions As Object) As VMExpansionPanelHeader
+Sub SetHideActions(varHideActions As Boolean) As VMExpansionPanelHeader
+	If varHideActions = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-actions", varHideActions)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideActions"$
 	vue.SetStateSingle(pp, varHideActions)
 	ExpansionPanelHeader.Bind(":hide-actions", pp)
@@ -126,7 +168,12 @@ Sub SetHideActions(varHideActions As Object) As VMExpansionPanelHeader
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMExpansionPanelHeader
+Sub SetRipple(varRipple As Boolean) As VMExpansionPanelHeader
+	If varRipple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	ExpansionPanelHeader.Bind(":ripple", pp)
@@ -201,15 +248,6 @@ Sub UseTheme(themeName As String) As VMExpansionPanelHeader
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanelHeader
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	ExpansionPanelHeader.Bind(":color", pp)
-	Return Me
-End Sub
 
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMExpansionPanelHeader
@@ -349,23 +387,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 ExpansionPanelHeader.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMExpansionPanelHeader
 ExpansionPanelHeader.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMExpansionPanelHeader
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMExpansionPanelHeader
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

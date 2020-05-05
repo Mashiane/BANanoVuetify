@@ -424,6 +424,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMStepper,SetOnChange,362,0,VMStepper,SetValue,335,6,VMStepper,Hide,366,0,VMStepper,Bind,390,0,VMStepper,SetMarginAll,406,0,VMStepper,SetAttrSingle,435,0,VMStepper,SetVisible,447,0,VMStepperStep,SetStep,216,0,VMStepperContent,SetStep,115,0,VMStepper,AddStep,88,2,VMStepper,SetAttributes,105,0
+NavigationStack=VMTabs,SetStatic,42,0,VMTabs,SetDeviceSizes,61,0,VMTabs,AddTab,109,0,VMTabs,SetAttrLoose,118,0,VMTabs,SetAttributes,129,0,VMTabs,ToString,132,0,VMTabs,SetVModel,144,0,VMTabs,Render,157,0,VMTabs,AddClass,183,0,VMTabs,SetStyle,192,0,VMTabs,SetActiveClass,207,0
 SelectedBuild=0
 VisibleModules=

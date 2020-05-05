@@ -146,6 +146,14 @@ Sub CreateChip(sid As String, eventHandler As Object) As VMChip
 	Return el
 End Sub
 
+
+Sub CreateExpansionPanels(sid As String, eventHandler As Object) As VMExpansionPanels
+	Dim el As VMExpansionPanels
+	el.Initialize(vue, sid, eventHandler)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
 Sub CreateSpeedDial(sid As String, eventHandler As Object) As VMSpeedDial
 	Dim el As VMSpeedDial
 	el.Initialize(vue, sid,eventHandler)

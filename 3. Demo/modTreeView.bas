@@ -10,7 +10,7 @@ Sub Process_Globals
 	Public title As String = "TreeView"
 	Private vm As BANanoVM
 	Private tv As VMTreeView
-	Private BANano As BANano
+	Private BANano As BANano  'ignore
 End Sub
 
 

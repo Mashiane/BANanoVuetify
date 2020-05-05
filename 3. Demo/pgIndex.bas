@@ -79,7 +79,6 @@ Sub BuildDrawer
 	vm.Drawer.SetWidth("300")
 	vm.Drawer.AddTitleSubTitle("BANanoVuetify", "Version 3.8")
 	vm.Drawer.AddDivider
-	vm.Drawer.AddItem("designer", "", "Designer")
 	vm.Drawer.AddItem("alerts", "", "Alerts")
 	vm.Drawer.AddItem("toolbars", "", "Toolbars")
 	vm.Drawer.AddItem("grids", "", "Grids")
@@ -189,9 +188,6 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "arccounter"
 		vm.NavBar.UpdateTitle(modArcCounter.title)
 		vm.ShowPage(modArcCounter.name)
-	Case "designer"
-		vm.pagepause
-		modDesigner.init
 	Case "echarts"
 		vm.NavBar.UpdateTitle(modECharts.title)
 		vm.ShowPage(modECharts.name)

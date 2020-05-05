@@ -9,7 +9,7 @@ Sub Process_Globals
 	Public name As String = "designCode"
 	Public title As String = "Design"
 	Private vm As BANanoVM
-	Private BANano As BANano
+	Private BANano As BANano   'ignore
 	Private cont As VMContainer
 End Sub
 

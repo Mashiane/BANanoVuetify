@@ -439,6 +439,7 @@ public Sub DropTable As BANanoAlaSQLE
 End Sub
 
 Sub Execute(strSQL As String) As BANanoAlaSQLE
+	strSQL = strSQL.trim
 	query = strSQL
 	args = Null
 	types = Null

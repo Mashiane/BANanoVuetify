@@ -362,6 +362,7 @@ End Sub
 
 
 Sub Execute(strSQL As String) As AlaSQLResultSet
+	strSQL = strSQL.trim
 	Dim m As AlaSQLResultSet
 	m.Initialize
 	m.query = strSQL

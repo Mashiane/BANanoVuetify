@@ -11,7 +11,7 @@ Sub Process_Globals
 	Public title As String = "Auto Complete"
 	Private vm As BANanoVM
 	Private descriptionlimit As Int
-	Private BANano As BANano
+	Private BANano As BANano 'ignore
 End Sub
 
 

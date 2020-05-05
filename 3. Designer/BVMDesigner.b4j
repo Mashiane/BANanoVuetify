@@ -1,0 +1,203 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=1.jpg
+File10=bg-2.jpg
+File11=bird.jpg
+File12=button.png
+File13=carousel.png
+File14=checkbox.png
+File15=chip.png
+File16=combo.png
+File17=config.php
+File18=container.png
+File19=dark-beach.jpg
+File2=2.jpg
+File20=database.png
+File21=datepicker.png
+File22=dialog.png
+File23=email.png
+File24=icon.png
+File25=image.png
+File26=label.png
+File27=list.png
+File28=material.jpg
+File29=menu.png
+File3=3.jpg
+File30=panel.png
+File31=parallax.png
+File32=password.png
+File33=planet.jpg
+File34=profilepic.png
+File35=radio.png
+File36=rating.png
+File37=select.png
+File38=sidebar.png
+File39=sky.jpg
+File4=4.jpg
+File40=slider.png
+File41=speeddial.png
+File42=sponge.png
+File43=squirrel.jpg
+File44=stepper.png
+File45=switch.png
+File46=table.png
+File47=tabs.png
+File48=telephone.png
+File49=text.png
+File5=5.jpg
+File50=textarea.png
+File51=time.png
+File52=toolbar.png
+File53=upload.php
+File54=uploader.png
+File55=vbanner.jpg
+File6=alasql.min.js
+File7=autocomplete.png
+File8=avatar.png
+File9=badge.png
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
+FileGroup3=Default Group
+FileGroup30=Default Group
+FileGroup31=Default Group
+FileGroup32=Default Group
+FileGroup33=Default Group
+FileGroup34=Default Group
+FileGroup35=Default Group
+FileGroup36=Default Group
+FileGroup37=Default Group
+FileGroup38=Default Group
+FileGroup39=Default Group
+FileGroup4=Default Group
+FileGroup40=Default Group
+FileGroup41=Default Group
+FileGroup42=Default Group
+FileGroup43=Default Group
+FileGroup44=Default Group
+FileGroup45=Default Group
+FileGroup46=Default Group
+FileGroup47=Default Group
+FileGroup48=Default Group
+FileGroup49=Default Group
+FileGroup5=Default Group
+FileGroup50=Default Group
+FileGroup51=Default Group
+FileGroup52=Default Group
+FileGroup53=Default Group
+FileGroup54=Default Group
+FileGroup55=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananopostprocessor
+Library5=bananovuetify
+Module1=modDesigner
+NumberOfFiles=55
+NumberOfLibraries=5
+NumberOfModules=1
+Version=8.1
+@EndOfDesignText@
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+	#LibraryName: BVMDesigner
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "BVMDesigner"
+	Private Publish As String
+	Private BP As BANanoPostProcessor
+	Public ServerIP As String
+	Private db As BANanoSQL
+	Private alaSQL As BANanoAlaSQLE
+	Public Version As String
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	Version = "3.83"
+	'
+	'post processor
+	BP.Initialize
+	BP.RedirectOutput(File.DirApp,"log.txt")
+	Publish = "C:\laragon\www"
+	ServerIP = "localhost"
+	'
+	
+	
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, Version)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppName
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	'
+	'set php settings
+	BANano.PHP_NAME = $"${AppName}.php"$
+	BANano.PHPHost = $"http://${ServerIP}/${AppName}/"$
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")	
+	'
+	BANano.Build(Publish)
+	BP.OpenLog(File.DirApp, "log.txt")
+	
+	BP.PublishPath = Publish
+	BP.ShortName = AppName
+	BP.AssetsPath = BANano.ASSETS_FOLDER
+	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
+	BP.StylesPath = BANano.STYLES_FOLDER
+	BP.ScriptFile = BANano.JAVASCRIPT_NAME
+	BP.UnzipFonts
+	BP.OpenOnPort(True,"8080")
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	Version = "3.83"
+	'prepare the database
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	alaSQL.Initialize("grid", "id")
+	alaSQL.SchemaAddField("id", alaSQL.DB_INT)
+	alaSQL.SchemaAddField("controltype", alaSQL.DB_TEXT)
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	'create the table for the components
+	alaSQL.Initialize("components", "id")
+	alaSQL.SchemaAddField("controltype", alaSQL.DB_TEXT)
+	alaSQL.SchemaAddIntegers(Array("id", "row","col","tabindex"))
+	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items"))
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	modDesigner.init
+End Sub
