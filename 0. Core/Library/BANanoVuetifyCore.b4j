@@ -1,0 +1,192 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=fonts.zip
+File2=materialdesignicons.min.css
+File3=materialfont.min.css
+File4=renderstring.min.js
+File5=roboto.min.css
+File6=vue.min.js
+File7=vue-router.min.js
+File8=vuetify.min.css
+File9=vuetify.min.js
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Module1=BANanoVM
+Module10=VMBreadCrumbsItem
+Module100=VMStepperHeader
+Module101=VMStepperItems
+Module102=VMStepperStep
+Module103=VMSubHeader
+Module104=VMTab
+Module105=VMTabItem
+Module106=VMTabs
+Module107=VMTabsItems
+Module108=VMTabsSlider
+Module109=VMTemplate
+Module11=VMButton
+Module110=VMTextField
+Module111=VMTimeline
+Module112=VMTimelineItem
+Module113=VMToolBar
+Module114=VMToolTip
+Module115=VMTreeView
+Module116=VMWindow
+Module117=VMWindowItem
+Module118=VueElement
+Module119=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module12=VMButtonToggle
+Module13=VMCalendar
+Module14=VMCalendarDaily
+Module15=VMCalendarMonthly
+Module16=VMCalendarWeekly
+Module17=VMCard
+Module18=VMCardActions
+Module19=VMCardSubTitle
+Module2=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\BANanoVue
+Module20=VMCardText
+Module21=VMCardTitle
+Module22=VMCarousel
+Module23=VMCarouselItem
+Module24=VMCheckBox
+Module25=VMChip
+Module26=VMChipGroup
+Module27=VMCol
+Module28=VMColorPicker
+Module29=VMContainer
+Module3=VMAlert
+Module30=VMDataFooter
+Module31=VMDataIterator
+Module32=VMDataTable
+Module33=VMDateTimePicker
+Module34=VMDialog
+Module35=VMDivider
+Module36=VMEditDialog
+Module37=VMElement
+Module38=VMExpandTransition
+Module39=VMExpansionPanel
+Module4=VMAvatar
+Module40=VMExpansionPanelContent
+Module41=VMExpansionPanelHeader
+Module42=VMExpansionPanels
+Module43=VMFadeTransition
+Module44=VMFooter
+Module45=VMForm
+Module46=VMHover
+Module47=VMIcon
+Module48=VMImage
+Module49=VMInput
+Module5=VMBadge
+Module50=VMItem
+Module51=VMItemGroup
+Module52=VMLabel
+Module53=VMLazy
+Module54=VMList
+Module55=VMListGroup
+Module56=VMListItem
+Module57=VMListItemAction
+Module58=VMListItemActionText
+Module59=VMListItemAvatar
+Module6=VMBanner
+Module60=VMListItemContent
+Module61=VMListItemGroup
+Module62=VMListItemIcon
+Module63=VMListItemSubTitle
+Module64=VMListItemTitle
+Module65=VMMenu
+Module66=VMNavigationDrawer
+Module67=VMOverlay
+Module68=VMPagination
+Module69=VMParallax
+Module7=VMBottomNavigation
+Module70=VMProgressCircular
+Module71=VMProgressLinear
+Module72=VMProperty
+Module73=VMRadio
+Module74=VMRadioGroup
+Module75=VMRating
+Module76=VMResponsive
+Module77=VMRow
+Module78=VMScaleTransition
+Module79=VMScrollXReverseTransition
+Module8=VMBottomSheet
+Module80=VMScrollXTransition
+Module81=VMScrollYReverseTransition
+Module82=VMScrollYTransition
+Module83=VMSelect
+Module84=VMSheet
+Module85=VMSimpleCheckBox
+Module86=VMSimpleTable
+Module87=VMSkeleton
+Module88=VMSkeletonLoader
+Module89=VMSlideGroup
+Module9=VMBreadCrumbs
+Module90=VMSlider
+Module91=VMSlideXReverseTransition
+Module92=VMSlideXTransition
+Module93=VMSlideYReverseTransition
+Module94=VMSlideYTransition
+Module95=VMSnackBar
+Module96=VMSparkLine
+Module97=VMSpeedDial
+Module98=VMStepper
+Module99=VMStepperContent
+NumberOfFiles=9
+NumberOfLibraries=3
+NumberOfModules=119
+Version=8.1
+@EndOfDesignText@
+'
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+	#LibraryVersion: 4.00
+	#LibraryName: BANanoVuetifyCore
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "BANanoVuetifyCore"
+	Public Version As String = "4.00"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, Version)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppName
+	BANano.JAVASCRIPT_NAME = $"app${Version}.js"$
+	'
+	BANano.Header.AddCSSFile("roboto.min.css")
+	BANano.Header.AddCSSFile("materialfont.min.css")
+	BANano.header.AddCSSFile("materialdesignicons.min.css")
+	BANano.Header.AddCSSFile("vuetify.min.css")
+	'
+	BANano.Header.AddJavascriptFile("vue.min.js")
+	BANano.Header.AddJavascriptFile("vuetify.min.js")
+	BANano.Header.AddJavascriptFile("vue-router.min.js")
+	
+	BANano.Header.AddJavascriptFile("renderstring.min.js")
+	BANano.BuildAsB4XLib(Version)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	
+End Sub
