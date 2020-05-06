@@ -3,12 +3,11 @@ Build1=Default,b4j.example
 File1=fonts.zip
 File2=materialdesignicons.min.css
 File3=materialfont.min.css
-File4=renderstring.min.js
-File5=roboto.min.css
-File6=vue.min.js
-File7=vue-router.min.js
-File8=vuetify.min.css
-File9=vuetify.min.js
+File4=roboto.min.css
+File5=vue.min.js
+File6=vue-router.min.js
+File7=vuetify.min.css
+File8=vuetify.min.js
 FileGroup1=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
@@ -17,7 +16,6 @@ FileGroup5=Default Group
 FileGroup6=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
-FileGroup9=Default Group
 Group=Default Group
 Library1=jcore
 Library2=jfx
@@ -141,7 +139,7 @@ Module96=VMSparkLine
 Module97=VMSpeedDial
 Module98=VMStepper
 Module99=VMStepperContent
-NumberOfFiles=9
+NumberOfFiles=8
 NumberOfLibraries=3
 NumberOfModules=119
 Version=8.1
@@ -167,17 +165,30 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = AppName
 	BANano.JAVASCRIPT_NAME = $"app${Version}.js"$
-	'
+	'online installation
+'	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900")
+'	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp")
+'	BANano.Header.AddCSSFile("https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css")
+'	BANano.Header.AddCSSFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css")
+'	'
+'	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js")
+'	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js")
+'	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue-router@3.1.6/dist/vue-router.min.js")
+	
+	'local installation
+	'1. copy the 'local resources' contents to the 'files folder'
+	'2. remove links that point to interweb above
+	'3. uncomment lines from below
+	
 	BANano.Header.AddCSSFile("roboto.min.css")
 	BANano.Header.AddCSSFile("materialfont.min.css")
 	BANano.header.AddCSSFile("materialdesignicons.min.css")
 	BANano.Header.AddCSSFile("vuetify.min.css")
-	'
+	
 	BANano.Header.AddJavascriptFile("vue.min.js")
 	BANano.Header.AddJavascriptFile("vuetify.min.js")
 	BANano.Header.AddJavascriptFile("vue-router.min.js")
 	
-	BANano.Header.AddJavascriptFile("renderstring.min.js")
 	BANano.BuildAsB4XLib(Version)
 	ExitApplication
 End Sub

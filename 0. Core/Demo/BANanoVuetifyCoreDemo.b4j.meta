@@ -130,6 +130,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modAutoComplete,Card_1,187,0,modAutoComplete,SearchItems,245,4,pgIndex,Init,18,0,pgIndex,Process_Globals,2,0,Main,Process_Globals,14,0,Main,AppStart,22,0
+NavigationStack=modAutoComplete,Card_1,187,0,modAutoComplete,SearchItems,245,4,pgIndex,Init,18,0,pgIndex,Process_Globals,2,0,Main,BANano_Ready,61,0,Main,Process_Globals,11,0,Main,AppStart,42,4
 SelectedBuild=0
 VisibleModules=
