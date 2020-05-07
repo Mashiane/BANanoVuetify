@@ -1003,6 +1003,7 @@ Sub AddButton1(key As String, iconName As String, text As String, toolTip As Str
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
 	btn.SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
+	btn.SetTransparent(True)
 	If badge <> "" Then
 		btn.SetHasBadge(True)
 		btn.SetBadge(badge)
@@ -1018,6 +1019,7 @@ Sub AddItem(key As String, iconName As String, color As String, text As String, 
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
 	btn.SetColor(color)
+	btn.SetTransparent(True)
 	btn.SetToolTip(toolTip).AddIcon(iconName,"left","").SetLabel(text)
 	If badge <> "" Then
 		btn.SetHasBadge(True)

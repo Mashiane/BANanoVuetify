@@ -6,7 +6,6 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-	Public JQuery As BANanoObject
 	Private BANano As BANano
 	Public vue As BANanoVue
 	Private Pages As List
@@ -183,7 +182,6 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	drawers.Initialize 
 	RTL = False
 	Dark = False
-	JQuery = vue.jquery
 	module = eventHandler
 	lang = "en"
 	
@@ -941,28 +939,8 @@ Sub Show(elID As String)
 End Sub
 
 
-
-Sub Date2YYYYMMDD(value As Object) As String
-	Return vue.Date2YYYYMMDD(value)
-End Sub
-
 Sub DateAdd(mDate As String, HowManyDays As Int) As String
 	Return vue.DateAdd(mDate, HowManyDays)
-End Sub
-
-Sub Age(birthDay As String) As Int
-	Return vue.Age(birthDay)
-End Sub
-
-Sub DateDiff(CurrentDate As String, OtherDate As String) As Int
-	Return vue.DateDiff(CurrentDate, OtherDate)
-End Sub
-
-Sub CreateFrappeGantt(sid As String, eventHandler As Object) As VMFrappeGantt
-	Dim el As VMFrappeGantt
-	el.Initialize(vue, sid, eventHandler)
-	
-	Return el
 End Sub
 
 Sub CreateContainer(sid As String, eventHandler As Object) As VMContainer
@@ -992,11 +970,6 @@ Sub ExtractMap(source As Map, keys As List) As Map
 	Return vue.ExtractMap(source, keys)
 End Sub
 
-'return md5 hash
-Sub Md5Hash(value As String, key As String, raw As Boolean) As String
-	Return vue.Md5Hash(value, key, raw)
-End Sub
-
 'set dynamic style
 Sub SetStyle(className As String, prop As String, vals As String) As BANanoVM
 	vue.SetStyle(className, prop, vals)
@@ -1018,13 +991,6 @@ Sub CreateImage(img As String, eventHandler As Object) As VMImage
 	Dim el As VMImage
 	el.Initialize(vue, img, eventHandler)
 	el.Image.typeof = "image"
-	Return el
-End Sub
-
-Sub CreatePDF(sid As String, url As String) As VMPDF
-	Dim el As VMPDF
-	el.Initialize(vue, sid, url)
-	
 	Return el
 End Sub
 
@@ -1723,21 +1689,6 @@ Sub MakeTrim(m As Map, xkeys As List)
 	vue.MakeTrim(m, xkeys)
 End Sub
 
-'date picker dates in yyyy-mm-dd format
-Sub Prepare(keys As List)
-	For Each k As String In keys
-		Dim sk As String = GetState(k,"")
-		sk = Date2YYYYMMDD(sk)
-		SetStateSingle(k, sk)
-	Next
-End Sub
-
-'convert date picker value to correct date
-Sub ToYYYYMMDD(vmodel As String)
-	Dim sk As String = GetState(vmodel,"")
-	sk = Date2YYYYMMDD(sk)
-	SetStateSingle(vmodel, sk)
-End Sub
 
 Sub JoinNonBlanks(delimiter As String, lst As List) As String
 	Return vue.JoinNonBlanks(delimiter, lst)
@@ -1754,26 +1705,6 @@ End Sub
 Sub ToggleNamedState(stateName As String, state1 As String, state2 As String) As BANanoVM
 	vue.ToggleNamedState(stateName, state1, state2)
 	Return Me
-End Sub
-
-'compile html to render
-Sub Compile(html As String) As BANanoObject
-	Dim bo As BANanoObject = vue.Compile(html)
-	Return bo
-End Sub
-
-Sub CreateWaterBall(sid As String, eventHandler As Object, Width As String, Height As String) As VMWaterBall
-	Dim el As VMWaterBall
-	el.Initialize(vue, sid, eventHandler, Width, Height)
-	
-	Return el
-End Sub
-
-Sub CreateProgressCircle(sid As String, Width As String, Height As String) As VMProgressCircle
-	Dim el As VMProgressCircle
-	el.Initialize(vue, sid, Width, Height)
-	
-	Return el
 End Sub
 
 Sub MakePx(sValue As String) As String
@@ -1836,6 +1767,7 @@ End Sub
 
 'show a page for the app
 Sub ShowPage(name As String)
+	name = name.tolowercase
 	If Pages.IndexOf(name) = -1 Then
 		Log($"ShowPage: ${name} does not exist!"$)
 	End If
@@ -2138,12 +2070,6 @@ Public Sub DateTimeNow() As String
 	Return vue.DateTimeNow
 End Sub
 
-'get an element using jquery
-Sub JQueryElement(sid As String) As BANanoObject
-	sid = sid.ToLowerCase
-	Dim bo As BANanoObject = JQuery.Selector($"#${sid}"$)
-	Return bo
-End Sub
 
 'convert a map keys to lowercase
 Sub MakeLowerCase(m As Map) As Map

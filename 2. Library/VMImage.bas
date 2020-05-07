@@ -28,7 +28,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	Image.SetVShow($"${ID}show"$)
 	imgLink = $"${ID}url"$
 	hasTooltip = False
 	tooltip.Initialize(vue, "", Module)
@@ -36,6 +35,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
 	span.Initialize(vue, "").SetSpan
 	bStatic = False
+	SetVisible(True)
 	Return Me
 End Sub
 
@@ -653,7 +653,7 @@ Sub SetTabIndex(ti As String) As VMImage
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As string, bbind As Boolean) As VMImage
+Sub SetName(varName As String, bbind As Boolean) As VMImage
 	Image.SetName(varName, bbind)
 	Return Me
 End Sub

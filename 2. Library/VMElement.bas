@@ -37,7 +37,6 @@ Sub Class_Globals
 	Public name As String
 	Private props As List
 	Private propFrom As String
-	Private showKey As String
 	Private disKey As String
 	Private bUsesStyles As Boolean
 	Private bUsesRequired As Boolean

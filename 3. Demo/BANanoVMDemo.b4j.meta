@@ -151,6 +151,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modExpansionPanels,ep_click,61,0,modExpansionPanels,Process_Globals,5,0,modExpansionPanels,exppanel1_click,68,0,modExpansionPanels,Code,22,5,Main,BANano_Ready,76,0,pgIndex,BuildDrawer,75,0,pgIndex,draweritems_click,184,0
+NavigationStack=modExpansionPanels,exppanel1_click,68,0,modExpansionPanels,Code,22,5,pgIndex,draweritems_click,184,0,modArcCounter,Process_Globals,7,0,pgIndex,BuildDrawer,73,0,pgIndex,Init,68,0,Main,Process_Globals,17,4,Main,Application_Error,52,0,Main,BANano_Ready,60,0,Main,AppStart,45,2
 SelectedBuild=0
 VisibleModules=

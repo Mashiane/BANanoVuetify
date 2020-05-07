@@ -27,20 +27,19 @@ Sub Class_Globals
 	Private activated As BANanoObject
 	Private deactivated As BANanoObject
 	Private beforeUpdate As BANanoObject
-	Private TypeOfString As BANanoObject   'ignore
-	Private TypeOfNumber As BANanoObject   'ignore
-	Private TypeOfBoolean As BANanoObject  'ignore
-	Private TypeOfArray As BANanoObject    'ignore
-	Private TypeOfObject As BANanoObject   'ignore
-	Private TypeOfDate As BANanoObject     'ignore
-	Private TypeOfFunction As BANanoObject  'ignore
-	Private TypeOfSymbol As BANanoObject    'ignore
-	Private BORouter As BANanoObject      'ignore
+	'Private TypeOfString As BANanoObject   'ignore
+	'Private TypeOfNumber As BANanoObject   'ignore
+	'Private TypeOfBoolean As BANanoObject  'ignore
+	'Private TypeOfArray As BANanoObject    'ignore
+	'Private TypeOfObject As BANanoObject   'ignore
+	'Private TypeOfDate As BANanoObject     'ignore
+	'Private TypeOfFunction As BANanoObject  'ignore
+	'Private TypeOfSymbol As BANanoObject    'ignore
+	'Private BORouter As BANanoObject      'ignore
 	Private routes As List
 	Public components As Map
 	Public Options As Map
 	Private dynamicStyle As Map
-	Public JQuery As BANanoObject
 	Public GetTemplate As String
 	Public const colors_red As String = "#F44336"
 	Public const colors_pink As String = "#E91E63"
@@ -222,7 +221,6 @@ End Sub
 Public Sub Initialize()
 	Themes.Initialize 
 	BOVue.Initialize("Vue")
-	JQuery.Initialize("$")
 	'store = BOVue.RunMethod("observable", Null).Result
 	'empty the body of the page
 	body = BANAno.GetElement("#body")
@@ -247,14 +245,14 @@ Public Sub Initialize()
 	deactivated = Null
 	beforeDestroy = Null
 	'
-	TypeOfString = BOVue.GetField("String")
-	TypeOfNumber = BOVue.GetField("Number")
-	TypeOfBoolean = BOVue.GetField("Boolean")
-	TypeOfArray = BOVue.GetField("Array")
-	TypeOfObject = BOVue.GetField("Object")
-	TypeOfDate = BOVue.GetField("Date")
-	TypeOfFunction = BOVue.GetField("Function")
-	TypeOfSymbol = BOVue.GetField("Symbol")
+	'TypeOfString = BOVue.GetField("String")
+	'TypeOfNumber = BOVue.GetField("Number")
+	'TypeOfBoolean = BOVue.GetField("Boolean")
+	'TypeOfArray = BOVue.GetField("Array")
+	'TypeOfObject = BOVue.GetField("Object")
+	'TypeOfDate = BOVue.GetField("Date")
+	'TypeOfFunction = BOVue.GetField("Function")
+	'TypeOfSymbol = BOVue.GetField("Symbol")
 	Options = CreateMap()
 	dynamicStyle = CreateMap()
 	SetFontFamily("'Roboto', 'Helvetica', Arial, sans-serif")
@@ -607,6 +605,17 @@ Public Sub Initialize()
 	ControlTypes.Put("None", "None")
 End Sub
 
+'return sentences of lorem ipsum
+Sub Rand_LoremIpsum(count As Int) As String
+	Dim str As String = $"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."$
+	Dim sb As StringBuilder
+	sb.Initialize
+	For i = 1 To count
+		sb.Append(str).Append(CRLF)
+	Next
+	Return sb.tostring
+End Sub
+
 Sub NewList As List
 	Dim lst As List
 	lst.Initialize
@@ -656,13 +665,13 @@ Sub getElementById(sid As String) As BANanoObject
 	Dim el As BANanoObject = BANAno.Window.GetField("document").RunMethod("getElementById", Array(sid))
 	Return el
 End Sub
-
-Sub DateDiff(currentDate As String, otherDate As String) As Int
-	Dim dateS, dateE As BANanoObject
-	dateS.Initialize4("moment", currentDate)
-	dateE.Initialize4("moment", otherDate)
-	Return dateS.RunMethod("diff", Array(dateE, "days"))
-End Sub
+'
+'Sub DateDiff(currentDate As String, otherDate As String) As Int
+'	Dim dateS, dateE As BANanoObject
+'	dateS.Initialize4("moment", currentDate)
+'	dateE.Initialize4("moment", otherDate)
+'	Return dateS.RunMethod("diff", Array(dateE, "days"))
+'End Sub
 
 Sub RemoveData(key As String) As BANanoVue
 	key = key.ToLowerCase
@@ -709,7 +718,6 @@ End Sub
 Sub GetFileDetails(fileObj As Map) As FileObject
 	Dim sname As String = fileObj.Get("name")
 	Dim slastModifiedDate As String = fileObj.Get("lastModifiedDate")
-	slastModifiedDate = Date2YYYYMMDDHHMM(slastModifiedDate)
 	Dim ssize As String = fileObj.Get("size")
 	Dim stype As String = fileObj.Get("type")
 	'
@@ -831,13 +839,6 @@ End Sub
 Sub JSONPretty(m As Object) As String
 	Dim pretty As String = BANAno.RunJavascriptMethod("JSON.stringify", Array(m, Null, 4))
 	Return pretty
-End Sub
-
-'get an element using jquery
-Sub JQueryElement(sid As String) As BANanoObject
-	sid = sid.ToLowerCase
-	Dim bo As BANanoObject = JQuery.Selector($"#${sid}"$)
-	Return bo
 End Sub
 
 'create a map subset from list of keys
@@ -967,15 +968,6 @@ Sub DateAdd(mDate As String, HowManyDays As Int) As String
 	ConvertDate = DateTime.DateParse(mDate)
 	NewDateDay = DateTime.Add(ConvertDate, 0, 0, HowManyDays)
 	Return DateTime.Date(NewDateDay)
-End Sub
-
-Sub Age(birthDay As String) As Int
-	DateTime.DateFormat = "yyyy-MM-dd"
-	Dim tDay As String = DateTime.Date(DateTime.Now)
-	Dim cDay As String = DateTime.Date(DateTime.DateParse(birthDay))
-	Dim aDays As Int = DateDiff(tDay, cDay)
-	Dim aYears As Int = aDays / 365.25
-	Return BANAno.parseInt(aYears)
 End Sub
 
 Public Sub CDbl(value As String) As Double
@@ -1523,47 +1515,6 @@ Public Sub GetNumbers(value As String) As String
 	End Try
 End Sub
 
-'convert date picker value to correct date
-Sub ToYYYYMMDD(vmodel As String)
-	Dim sk As String = GetState(vmodel,"")
-	If sk = "" Then Return
-	sk = Date2YYYYMMDD(sk)
-	SetStateSingle(vmodel, sk)
-End Sub
-
-
-Sub Date2YYYYMMDD(value As Object) As String
-	Try
-		If CStr(value) = "" Then Return ""
-		If value = Null Then Return ""
-		Dim m As BANanoObject = BANAno.RunJavascriptMethod("moment", Array(value))
-		Dim res As String = m.RunMethod("format", "YYYY-MM-DD").result
-		If res.IndexOf("Invalid") > 0 Then res = ""
-		Return res
-	Catch
-		Return ""
-	End Try
-End Sub
-
-Sub Date2YYYYMMDDHHMM(value As Object) As String
-	Try
-		If CStr(value) = "" Then Return ""
-		If value = Null Then Return ""
-		Dim m As BANanoObject = BANAno.RunJavascriptMethod("moment", Array(value))
-		Dim res As String = m.RunMethod("format", "YYYY-MM-DD HH:MM").result
-		If res.IndexOf("Invalid") > 0 Then res = ""
-		Return res
-	Catch
-		Return ""
-	End Try
-End Sub
-
-'get md5hash
-Sub Md5Hash(value As String, key As String, raw As Boolean) As String
-	Dim res As Object = BANAno.RunJavascriptMethod("md5", Array(value, key, raw))
-	Return res
-End Sub
-
 Sub SortMap(m As Map) As Map
 	Try
 		Dim nm As Map
@@ -1639,6 +1590,15 @@ Sub ShowItems(items As List)
 	Next
 End Sub
 
+Sub List2MapSimple(lst As List, bSort As Boolean) As Map
+	If bSort Then lst.Sort(True)
+	Dim nm As Map = CreateMap()
+	For Each k As String In lst
+		nm.Put(k, k)	
+	Next
+	Return nm
+End Sub
+
 
 'convert a list to key value pairs map records
 Sub List2Options(lst As List, keyName As String, valueName As String) As Map
@@ -1695,13 +1655,6 @@ End Sub
 'update the background image for the page during runtime
 Sub SetBackgroundImage(elid As String, url As String)
 	BANAno.GetElement(elid).SetStyle(BANAno.ToJson(CreateMap("background-image": $"url('${url}')"$, "background-size": "100% 100%")))
-End Sub
-
-
-'compile html to render
-Sub Compile(html As String) As BANanoObject
-	Dim bo As BANanoObject = BOVue.RunMethod("compile", Array(html))
-	Return bo
 End Sub
 
 'set a property in a json string

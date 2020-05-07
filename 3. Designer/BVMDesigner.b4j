@@ -3,54 +3,56 @@ Build1=Default,b4j.example
 File1=1.jpg
 File10=bg-2.jpg
 File11=bird.jpg
-File12=button.png
-File13=carousel.png
-File14=checkbox.png
-File15=chip.png
-File16=combo.png
-File17=config.php
-File18=container.png
-File19=dark-beach.jpg
+File12=build.png
+File13=button.png
+File14=carousel.png
+File15=checkbox.png
+File16=chip.png
+File17=combo.png
+File18=config.php
+File19=container.png
 File2=2.jpg
-File20=database.png
-File21=datepicker.png
-File22=dialog.png
-File23=email.png
-File24=icon.png
-File25=image.png
-File26=label.png
-File27=list.png
-File28=material.jpg
-File29=menu.png
+File20=dark-beach.jpg
+File21=database.png
+File22=datepicker.png
+File23=dialog.png
+File24=email.png
+File25=icon.png
+File26=image.png
+File27=label.png
+File28=list.png
+File29=material.jpg
 File3=3.jpg
-File30=panel.png
-File31=parallax.png
-File32=password.png
-File33=planet.jpg
-File34=profilepic.png
-File35=radio.png
-File36=rating.png
-File37=select.png
-File38=sidebar.png
-File39=sky.jpg
+File30=menu.png
+File31=page.png
+File32=panel.png
+File33=parallax.png
+File34=password.png
+File35=planet.jpg
+File36=profilepic.png
+File37=radio.png
+File38=rating.png
+File39=select.png
 File4=4.jpg
-File40=slider.png
-File41=speeddial.png
-File42=sponge.png
-File43=squirrel.jpg
-File44=stepper.png
-File45=switch.png
-File46=table.png
-File47=tabs.png
-File48=telephone.png
-File49=text.png
+File40=sidebar.png
+File41=sky.jpg
+File42=slider.png
+File43=speeddial.png
+File44=sponge.png
+File45=squirrel.jpg
+File46=stepper.png
+File47=switch.png
+File48=table.png
+File49=tabs.png
 File5=5.jpg
-File50=textarea.png
-File51=time.png
-File52=toolbar.png
-File53=upload.php
-File54=uploader.png
-File55=vbanner.jpg
+File50=telephone.png
+File51=text.png
+File52=textarea.png
+File53=time.png
+File54=toolbar.png
+File55=upload.php
+File56=uploader.png
+File57=vbanner.jpg
 File6=alasql.min.js
 File7=autocomplete.png
 File8=avatar.png
@@ -106,6 +108,8 @@ FileGroup52=Default Group
 FileGroup53=Default Group
 FileGroup54=Default Group
 FileGroup55=Default Group
+FileGroup56=Default Group
+FileGroup57=Default Group
 FileGroup6=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
@@ -117,7 +121,7 @@ Library3=banano
 Library4=bananopostprocessor
 Library5=bananovuetify
 Module1=modDesigner
-NumberOfFiles=55
+NumberOfFiles=57
 NumberOfLibraries=5
 NumberOfModules=1
 Version=8.1
@@ -137,7 +141,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "3.83"
+	Public Version As String = "3.84"
 	Public Port As String = "8080"
 End Sub
 
@@ -147,13 +151,14 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BP.RedirectOutput(File.DirApp,"log.txt")
 	
 	'initialize banano for first use
-	BANano.Initialize("BANano", AppName, Version)
+	BANano.Initialize("BANano", AppName, DateTime.now)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = "BVMDesigner"
 	BANano.TranspilerOptions.UseServiceWorker = False
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
-	'
+	BANano.TranspilerOptions.MinifyOnline = True
+	
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$
 	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$

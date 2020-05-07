@@ -114,6 +114,10 @@ Sub AddItem(key As String, iconName As String, title As String) As VMNavigationD
 	Return Me
 End Sub
 
+Sub AddIcon1(key As String, iconName As String, iconColor As String, title As String, toolTip As String)
+	List.AddItem1(key, "", iconName, iconColor, title, toolTip, "", "", "") 
+End Sub
+
 Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String)
 	List.AddItem1(key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
 End Sub

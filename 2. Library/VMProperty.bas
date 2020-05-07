@@ -101,6 +101,18 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	contentitems.Add("colsizelarge")
 	contentitems.Add("colsizexlarge")
 	'
+	contentitems.Add("coldefaultvalue")
+	contentitems.Add("colminrange")
+	contentitems.Add("colmaxrange")
+	contentitems.Add("collist")
+	contentitems.Add("coltype")
+	contentitems.Add("colsetranges")
+	contentitems.Add("colhasset")
+	contentitems.Add("colhasget")
+	contentitems.Add("colisconsant")
+	contentitems.Add("colscope")
+	contentitems.Add("colfieldtype")
+	'
 	IsTable = False
 	Return Me
 End Sub
@@ -421,6 +433,28 @@ Sub AddToolbarItems(parent As String)
 	existing.Add(nc)
 	controls.Put(parent, existing)
 End Sub
+
+Sub AddDesignerProperties(parent As String)
+	itemtypes.Initialize
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = "items"
+	nc.text = "table"
+	nc.value = ""
+	nc.typeOf = "designerproperty"
+	existing.Add(nc)
+	controls.Put(parent, existing)
+End Sub
+
 
 'only 1 of this can exist in a property bag
 Sub AddCrudList(parent As String, options As Map)
@@ -1074,6 +1108,44 @@ Sub MultiText(nc As PropControls, m As Map) As VMContainer
 	Return tcont
 End Sub
 
+Sub MultiSelect(nc As PropControls, vmodel As String, vText As String, options As Map, vmodel1 As String, vText1 As String, options1 As Map) As VMContainer
+	Dim tcont As VMContainer
+	tcont.Initialize(vue, "mt" & nc.vmodel, module).SetTag("div").SetFluid(True).SetNoGutters(True)
+	'
+	Dim cbo As VMSelect
+	cbo.Initialize(vue, "cbo" & vmodel, module).SetStatic(True).Setlabel(vText).SetVModel($"${nc.vmodel}${vmodel}"$)
+	cbo.SetOptions($"${vmodel}1"$, options, "id", "text", False).RemoveAttr("ref").SetDense(True)
+	cbo.SetOutlined(True).SetHideDetails(True).AddClass("my-2")
+	tcont.AddControlS(cbo.Combo, cbo.ToString, 1, 1, 6, 6, 6, 6)
+	'
+	Dim cbo1 As VMSelect
+	cbo1.Initialize(vue, "cbo" & vmodel1, module).SetStatic(True).Setlabel(vText1).SetVModel($"${nc.vmodel}${vmodel1}"$)
+	cbo1.SetOptions($"${vmodel1}1"$, options1, "id", "text", False).RemoveAttr("ref").SetDense(True)
+	cbo1.SetOutlined(True).SetHideDetails(True).AddClass("my-2")
+	tcont.AddControlS(cbo1.Combo, cbo1.ToString, 1, 2, 6, 6, 6, 6)
+	Return tcont
+End Sub
+
+Sub MultiSwitches(nc As PropControls, options As Map) As VMContainer
+	Dim acont As VMContainer
+	acont.Initialize(vue, "", module).SetTag("div")
+	acont.NoGutters = True
+	acont.SetFluid(True)
+	Dim colPos As Int = 0
+	For Each k As String In options.keys
+		Dim v As String = options.Get(k)
+		Dim vmodel As String = $"${nc.vmodel}${k}"$
+		colPos = colPos + 1
+		'
+		Dim sw As VMCheckBox
+		sw.Initialize(vue, "sw" & k, module).SetStatic(True).SetVModel(vmodel).SetSwitch
+		sw.Setlabel(v).SetTrueValue("Yes").SetFalseValue("No").SetHideDetails(True).SetFieldType("string")
+		sw.RemoveAttr("ref").SetDense(True).SetInset(True)
+		acont.AddControlS(sw.CheckBox, sw.ToString, 1, colPos, 6, 6, 6, 6)
+		vue.SetData(vmodel, "No")
+	Next
+	Return acont
+End Sub
 
 Sub ToString As String
 	For Each slabel As String In labels.Keys
@@ -1092,6 +1164,90 @@ Sub ToString As String
 		'
 		For Each nc As PropControls In items
 			Select Case nc.typeOf
+			Case "designerproperty"
+				itemtypes.Initialize
+				nc.vmodel = "items"
+				Dim bcont As VMContainer
+				bcont.Initialize(vue, "tx" & nc.vmodel, module).SetStatic(True).SetTag("div").NoGutters = True
+				bcont.SetFluid(True)
+				bcont.AddRows(1).AddColumns12
+				'add a toolbar
+				Dim tblx As VMToolBar = CreateToolbar("t" & nc.vmodel, Me).SetStatic(True).SetFlat(True)
+				tblx.SetDense(True).AddSpacer
+				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
+				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				bcont.AddComponent(1, 1, tblx.tostring)
+					'
+				'add input controls
+				Dim tcont As VMContainer
+				tcont.Initialize(vue, "tbl" & nc.vmodel, module).SetTag("div").SetStatic(True)
+				tcont.NoGutters = True
+				tcont.SetFluid(True)
+				'
+				nc.options.Initialize
+				nc.options.Put("key", "Key")
+				nc.options.Put("title", "Display Name")
+				nc.options.Put("colscope", "Scope")
+				nc.options.Put("colfieldtype", "Field Type")
+				nc.options.Put("coldefaultvalue", "Default Value")
+				nc.options.Put("subtitle1", "Description")
+				nc.options.Put("colminrange", "Min Range")
+				nc.options.Put("colmaxrange", "Max Range")
+				nc.options.Put("collist", "List / Parameters")
+				nc.options.Put("coltype", "Type")
+				nc.options.Put("colsetranges", "Set Ranges")
+				nc.options.Put("colhasset", "Set")
+				nc.options.Put("colhasget", "Get")
+				'
+				Dim vc As VMContainer = MultiText(nc, CreateMap("key":"Key"))
+				bcont.AddComponent(1, 1, vc.tostring)
+				'
+				Dim vc As VMContainer = MultiText(nc, CreateMap("title":"Display Name"))
+				bcont.AddComponent(1, 1, vc.tostring)
+				'
+				Dim vc As VMContainer = MultiText(nc, CreateMap("coldefaultvalue":"Default Value"))
+				bcont.AddComponent(1, 1, vc.tostring)
+				'
+				Dim optx As Map = vue.List2MapSimple(Array("String","StringBuilder","Byte","Int","Long","Map","List","Object","Canvas","Boolean","Short","Float","Double","Char","Color"), True)
+					
+				Dim vc As VMContainer = MultiSelect(nc, "colscope", "Scope", CreateMap("Private":"Private","Public":"Public"), _
+				"colfieldtype", "Field Type", optx)
+				bcont.AddComponent(1, 1, vc.tostring)
+				'
+				Dim cbo1 As VMSelect
+				cbo1.Initialize(vue, "coltype", module).SetStatic(True).Setlabel("Type").SetVModel($"${nc.vmodel}coltype"$)
+				Dim xx As Map = CreateMap("isconstant":"Constant","isproperty":"Property","isdesign":"Design Property","isevent":"Event","isclass":"Class Name","isstyle":"Style")
+				cbo1.SetOptions("coltypes", xx, "id", "text", False).RemoveAttr("ref").SetDense(True)
+				cbo1.SetOutlined(True).SetHideDetails(True).AddClass("my-2")
+				bcont.AddComponent(1, 1, cbo1.ToString)
+				'
+				Dim vc As VMContainer = MultiText(nc, CreateMap("subtitle1":"Description"))
+				bcont.AddComponent(1, 1, vc.tostring)
+					
+				Dim vc As VMContainer = MultiText(nc, CreateMap("colminrange":"Min Range","colmaxrange":"Max Range"))
+				bcont.AddComponent(1, 1, vc.tostring)
+				'
+				Dim txta As VMTextField = NewTextArea("collist", $"${nc.vmodel}collist"$, "List / Parameters")
+				bcont.AddComponent(1, 1, txta.tostring)
+					
+				Dim vc As VMContainer = MultiSwitches(nc, CreateMap("colsetranges":"Set Ranges"))
+				bcont.AddComponent(1, 1, vc.tostring)
+				'
+				Dim vc As VMContainer = MultiSwitches(nc, CreateMap("colhasset":"Set","colhasget":"Get"))
+				bcont.AddComponent(1, 1, vc.tostring)
+					'
+'				'add a list
+'				Dim mItems As VMList = CreateList(nc.vmodel & "crud", Me).SetElevation("1")
+'				mItems.SetStatic(True)
+'				mItems.SetDataSourceTemplate1("tableitems", "key", "", "icon", "iconcolor", "title", "subtitle", "","","")
+'				mItems.AddClass("my-2")
+'				Dim mList As String = mItems.tostring
+'				bcont.AddComponent(2, 1, mList)
+
+				expanel.Container.AddControlS(bcont.Container, bcont.ToString, 1, 1, 12, 12, 12, 12)
+
+					
 			Case "dtcolumns"
 				Dim iconfound As Boolean = False
 				Dim lenfound As Boolean = False
@@ -1333,7 +1489,7 @@ Sub ToString As String
 				Dim bcont As VMContainer
 				bcont.Initialize(vue, "tx" & nc.vmodel, module).SetStatic(True).SetTag("div").NoGutters = True
 				bcont.SetFluid(True)
-				bcont.AddRows(1).AddColumns12
+				bcont.AddRows(2).AddColumns12
 				'add a toolbar
 				Dim tblx As VMToolBar = CreateToolbar("t" & nc.vmodel, Me).SetStatic(True)
 				tblx.SetDense(True).AddSpacer.SetElevation("1")
@@ -1389,7 +1545,7 @@ Sub ToString As String
 				mItems.SetStatic(True)
 				mItems.SetDataSourceTemplate1("tableitems", "key", "", "icon", "iconcolor", "title", "subtitle", "","","")
 				Dim mList As String = mItems.tostring
-				bcont.AddComponent(1, 1, mList)
+				bcont.AddComponent(2, 1, mList)
 				'
 				expanel.Container.AddControlS(bcont.Container, bcont.ToString, 1, 1, 12, 12, 12, 12)
 				
@@ -1398,7 +1554,7 @@ Sub ToString As String
 				Dim bcont As VMContainer
 				bcont.Initialize(vue, "a" & nc.vmodel, module).SetStatic(True).SetTag("div").NoGutters = True
 				bcont.SetFluid(True)
-				bcont.AddRows(1).AddColumns12
+				bcont.AddRows(2).AddColumns12
 				'add a toolbar
 				Dim tblx As VMToolBar = CreateToolbar("t" & nc.vmodel, Me).SetStatic(True)
 				tblx.SetDense(True).AddSpacer.SetElevation("1")
@@ -1438,7 +1594,7 @@ Sub ToString As String
 				mItems.SetStatic(True)
 				mItems.SetDataSourceTemplate1("tableitems", "key", "avatar", "icon", "iconcolor", "title", "subtitle", "subtitle1", "action", "actioncolor")
 				Dim mList As String = mItems.tostring
-				bcont.AddComponent(1, 1, mList)
+				bcont.AddComponent(2, 1, mList)
 				'
 				expanel.Container.AddControlS(bcont.Container, bcont.ToString, 1, 1, 12, 12, 12, 12)
 			Case "switches"
@@ -1491,6 +1647,23 @@ Sub ToString As String
 				tcont.Initialize(vue, "t" & nc.vmodel, module).SetTag("div")
 				tcont.NoGutters = True
 				tcont.SetFluid(True)
+				Dim colSize As Int
+				Dim m As Map = nc.options
+				Dim tTot As Int = m.Size
+				Select Case tTot
+				Case 1
+					colSize = 12
+				Case 2
+					colSize = 6
+				Case 3
+					colSize = 4
+				Case 4
+					colSize = 3
+				Case 6
+					colSize = 2
+				Case Else
+					Log("VMProperty.MultiText - item sizes should be 1, 2, 3, 4, 6")
+				End Select
 				'
 				Dim colPos As Int = 0
 				For Each k As String In nc.options.Keys
@@ -1501,7 +1674,7 @@ Sub ToString As String
 					tw.Initialize(vue, k, module).SetStatic(True).Setlabel(v)
 					tw.SetVModel(k).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True).SetOnChange(Me, "RaiseChangeEvent")
 					tw.SetHideDetails(True).AddClass("my-2")
-					tcont.AddControlS(tw.TextField, tw.ToString, 1, colPos, 6, 6, 6, 6)
+					tcont.AddControlS(tw.TextField, tw.ToString, 1, colPos, colSize, colSize, colSize, colSize)
 				Next
 				expanel.Container.AddControlS(tcont.Container, tcont.ToString, 1, 1, 12, 12, 12, 12)
 			Case "widths"
@@ -1836,6 +2009,22 @@ Sub ToString As String
 	Return expnl.tostring
 End Sub
 
+Sub NewTextArea(tID As String, tvModel As String, tLabel As String) As VMTextField
+	Dim txta As VMTextField
+	txta.Initialize(vue, tID, module)
+	txta.SetTextArea
+	txta.SetClearable(True)
+	txta.Setlabel(tLabel)
+	txta.SetAutoGrow(True)
+	txta.SetVModel(tvModel)
+	txta.SetDense(True)
+	txta.RemoveAttr("ref")
+	txta.SetOutlined(True)
+	txta.SetHideDetails(True)
+	txta.AddClass("my-2")
+	Return txta
+End Sub
+
 Sub AddTextField(tID As String, tVModel As String, tLabel As String) As VMTextField
 	Dim t As VMTextField
 	t.Initialize(vue, tID, module)
@@ -1848,7 +2037,6 @@ Sub AddTextField(tID As String, tVModel As String, tLabel As String) As VMTextFi
 	t.SetOutlined(True)
 	t.SetHideDetails(True)
 	t.AddClass("my-2")
-	t.RemoveAttr("v-show")
 	Return t
 End Sub
 

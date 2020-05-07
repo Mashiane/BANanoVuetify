@@ -7,12 +7,13 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12
 Sub Process_Globals
-	Dim vm As BANanoVM
+	Private vm As BANanoVM
 	Private ui As VMContainer
 	Private BANano As BANano  'ignore
 	Private bHasBorder As Boolean
 	Private bShowMatrix As Boolean
 	Private tblProp As VMToolBar
+	Private istool As Boolean
 	'
 	Private sbuttontype As String
 	Private pbtextfield As VMProperty   	
@@ -42,6 +43,8 @@ Sub Process_Globals
 	Private pbtabs As VMProperty
 	Private pbstepper As VMProperty
 	Private pbexpansionpanels As VMProperty
+	Private pbpage As VMProperty
+	Private pbbuilder As VMProperty
 	Private lstBags As List
 	Private avatarMap As Map
 	Private controltypes As Map
@@ -610,6 +613,29 @@ Private stabindex As String
 	Private bisreadonly As Boolean
 	Private bistile As Boolean
 	Private bisvisible As Boolean
+	'
+	Private sBuildertype As String
+	Private sDecription As String
+	Private sPrefix As String
+	Private stag As String
+	'
+	Private sDescription As String
+	Private bisDrawervisible As Boolean
+	Private bisHamburgervisible As Boolean
+	Private sIconcolor As String
+	Private sIconcolorintensity As String
+	Private siconname As String
+	Private sKeywords As String
+	Private bislogovisible As Boolean
+	Private bisNavbarvisible As Boolean
+	Private bisShowondrawer As Boolean
+	Private bisShowonnavbar As Boolean
+	Private spagetitle As String
+	Private bisUpdatenavtitle As Boolean
+	Private stooltip As String
+	Private bisdivider As Boolean
+	Private bisinsetdivider As Boolean
+	Private bisicon As Boolean
 End Sub
 
 Sub Init
@@ -718,6 +744,8 @@ Sub Init
 	PropertyBag_Tabs
 	PropertyBag_Stepper
 	PropertyBag_ExpansionPanels
+	PropertyBag_Builder
+	PropertyBag_Page
 	'
 	'add an invisible file uploader
 	vm.AddFileSelect(Me, "fucomponent")
@@ -1037,6 +1065,12 @@ Sub CreateUX
 		bStatic = True
 		'
 		Select Case controltype
+			Case "page"
+				Read_Page
+				Design_Page
+			Case "builder"
+				Read_Builder
+				Design_Builder
 			Case "panel"
 				Read_ExpansionPanels
 				Design_ExpansionPanels
@@ -2418,12 +2452,12 @@ Sub Design_Drawer
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssavatar As String = m.getdefault("avatar", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.getdefault("iconcolor", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		Dim sssubtitle As String = m.GetDefault("subtitle", "")
 		Dim ssactionicon As String = m.getdefault("action", "")
 		If sskey = "" Then Continue
-		drawer.AddItem1(sskey, ssavatar, ssiconname, siconcolor, sstitle, sssubtitle, "", ssactionicon, "")
+		drawer.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, "", ssactionicon, "")
 		If bisdivider Then drawer.AddDivider1(True)
 		AddCode(sbEvents, $"Case "${sskey}""$)
 	Next
@@ -2511,9 +2545,9 @@ Sub Design_SpeedDial
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.GetDefault("iconcolor", "")
+		Dim sIconcolor As String = m.GetDefault("iconcolor", "")
 		If sskey = "" Then Continue
-		speeddial.AddItem(sskey, ssiconname, siconcolor)
+		speeddial.AddItem(sskey, ssiconname, sIconcolor)
 		'
 		AddCode(sbEvents, $"Private Sub ${sskey}_click(e As BANanoEvent)"$)
 		AddCode(sbEvents, "End Sub")
@@ -2551,9 +2585,9 @@ Sub Design_SpeedDial
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.GetDefault("iconcolor", "")
+		Dim sIconcolor As String = m.GetDefault("iconcolor", "")
 		If sskey = "" Then Continue
-		sb.append($"spd${sname}.AddItem("${sskey}", "${ssiconname}", "${siconcolor}")"$).append(CRLF)
+		sb.append($"spd${sname}.AddItem("${sskey}", "${ssiconname}", "${sIconcolor}")"$).append(CRLF)
 	Next
 	If bismainclick Then
 		AddCode(sb, $"spd${sname}.SetOnClick("spd${sname}_click")"$)
@@ -2791,12 +2825,12 @@ Sub Design_Menu
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssavatar As String = m.getdefault("avatar", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.getdefault("iconcolor", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		'Dim sssubtitle As String = m.GetDefault("subtitle", "")
 		'Dim ssactionicon As String = m.getdefault("action", "")
 		If sskey = "" Then Continue
-		menu.AddItem1(sskey, ssavatar, ssiconname, siconcolor, sstitle, "", "","","") 
+		menu.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, "", "","","") 
 		If bisdivider Then menu.adddivider1(True)
 		AddCode(sbEvents, $"Case "${sskey}""$)
 	Next
@@ -2860,12 +2894,12 @@ Sub Design_Menu
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssavatar As String = m.getdefault("avatar", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.getdefault("iconcolor", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		'Dim sssubtitle As String = m.GetDefault("subtitle", "")
 		'Dim ssactionicon As String = m.getdefault("action", "")
 		If sskey = "" Then Continue
-		sb.append($"menu${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${siconcolor}", "${sstitle}", "", "","","")"$).append(CRLF)
+		sb.append($"menu${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "", "","","")"$).append(CRLF)
 		If bisdivider Then CodeLine(sb, True, "b", "menu", sname, "AddDivider1")
 	Next
 		
@@ -2940,7 +2974,7 @@ Sub Design_ToolBar
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssavatar As String = m.getdefault("avatar", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.getdefault("iconcolor", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		Dim sssubtitle As String = m.GetDefault("subtitle", "")
 		Dim sitemtype As String = m.getdefault("itemtype", "icon")
@@ -2950,12 +2984,12 @@ Sub Design_ToolBar
 		Case "menu"
 			'tbl.AddMenu(sskey)
 		Case "btn"
-			tbl.AddItem(sskey, ssiconname, siconcolor, sstitle, sssubtitle, sBadge)
+			tbl.AddItem(sskey, ssiconname, sIconcolor, sstitle, sssubtitle, sBadge)
 			AddCode(sbEvents, $"Private Sub ${sskey}_click(e As BANanoEvent)"$)
 			AddCode(sbEvents, "End Sub")
 			AddNewLine(sbEvents)
 		Case "icon"
-			tbl.AddIcon1(sskey, ssiconname, siconcolor, sssubtitle, sBadge)
+			tbl.AddIcon1(sskey, ssiconname, sIconcolor, sssubtitle, sBadge)
 			AddCode(sbEvents, $"Private Sub ${sskey}_click(e As BANanoEvent)"$)
 			AddCode(sbEvents, "End Sub")
 			AddNewLine(sbEvents)
@@ -3479,6 +3513,7 @@ Sub DesignLayout
 	ep.AddPanel(nav)
 	'
 	ep.AddPanel(LayoutPanel)
+	ep.AddPanel(ToolsPanel)
 	'
 	Dim page As VMExpansionPanel = ComponentsPanel
 	ep.AddPanel(page)
@@ -3496,7 +3531,7 @@ Sub DesignLayout
 	dnd.SetOnDragOver("ItemDragOver")
 	dnd.SetOnDrop("ItemDrop")
 	'
-	mymac = vm.CreateDevice("mymac", Me).SetMacbook
+	mymac = vm.CreateDevice("myma", Me).SetMacbook
 	'
 	myipad = vm.CreateDevice("myipad", Me).SetIpad
 	myipad.hide
@@ -3522,6 +3557,7 @@ Sub DesignLayout
 	schemaDT.AddButtonIcon("schemaDB", "mdi-database", "", "Database Schema")
 	schemaDT.AddButtonIcon("schemalisting", "mdi-file-outline", "", "Table Listing")
 	schemaDT.AddButtonIcon("formlisting", "mdi-laptop", "", "Form Listing")
+	schemaDT.AddButtonIcon("builderlisting", "build", "", "Builder Listing")
 	schemaDT.AddButtonIcon("schemaReset", "mdi-restart", "", "Reset")
 	
 	schemaDT.AddColumns(CreateMap("key": "Name", "title": "Title", "subtitle": "Type", "colwidth": "Width"))
@@ -3539,6 +3575,18 @@ Sub DesignLayout
 	schemaDT.AddColumns(CreateMap("colsizemedium": "SM"))
 	schemaDT.AddColumns(CreateMap("colsizelarge": "SL"))
 	schemaDT.AddColumns(CreateMap("colsizexlarge": "SX"))
+	'
+	schemaDT.AddColumns(CreateMap("colscope": "Scope"))
+	schemaDT.AddColumns(CreateMap("colfieldtype": "Field Type"))
+	schemaDT.AddColumns(CreateMap("coldefaultvalue": "Default Value"))
+	schemaDT.AddColumns(CreateMap("subtitle1": "Description"))
+	schemaDT.AddColumns(CreateMap("colminrange": "Min Range"))
+	schemaDT.AddColumns(CreateMap("colmaxrange": "Max Range"))
+	schemaDT.AddColumns(CreateMap("collist": "List / Parameters"))
+	schemaDT.AddColumns(CreateMap("coltype": "Type"))
+	schemaDT.AddColumns(CreateMap("colsetranges": "Set Ranges"))
+	schemaDT.AddColumns(CreateMap("colhasset": "Set"))
+	schemaDT.AddColumns(CreateMap("colhasget": "Get"))
 	'	
 	schemaDT.SetEdit(True)
 	schemaDT.SetDelete(True)
@@ -3577,6 +3625,15 @@ Sub DesignLayout
 	tblProp.AddIcon("btnSaveProp", "save", "Save property bag", "")
 	tblProp.AddIcon("btnDeleteProp", "delete", "Delete property bag", "")
 	vm.container.AddComponent(1, 3, tblProp.tostring)
+End Sub
+
+Sub builderlisting_click(e As BANanoEvent)
+	Dim dbFields As List
+	dbFields.initialize
+	dbFields.AddAll(Array("key", "title", "coltype", "colscope" , "colfieldtype" , "coldefaultvalue", "colminrange", "colmaxrange", "colhasset", "colhasget", "edit", "delete"))
+	schemaDT.ApplyFilter(dbFields)
+	schemaDT.SetDataSourceName("tableitems")
+	Design_TablePreview
 End Sub
 
 'show columns applicable to the form input
@@ -4141,6 +4198,26 @@ Sub ComponentsPanel As VMExpansionPanel
 	Return grd
 End Sub
 
+Sub DesignStructure(scontents As String)
+	ReadTableDetails(mattr)
+			
+	If scontents = "" Then
+		'we dont have menu items
+		vm.setdata("tableitems", vm.newlist)
+	Else
+		Dim contents As List = BANano.FromJson(scontents)
+		vm.setdata("tableitems", contents)
+	End If
+	schemaDT.SetDataSourceName("tableitems")
+	'apply filter
+	Dim dbFields As List
+	dbFields.initialize
+	dbFields.AddAll(Array("key", "title", "coltype", "colscope" , "colfieldtype" , "coldefaultvalue", "colminrange", "colmaxrange", "colhasset", "colhasget", "edit", "delete"))
+	schemaDT.ApplyFilter(dbFields)
+	Design_TablePreview
+End Sub
+
+
 Sub TableStructure(scontents As String)
 	ReadTableDetails(mattr)
 			
@@ -4175,6 +4252,7 @@ End Sub
 
 'a component has been clicked
 Sub mycomponents_click(e As BANanoEvent)
+	istool = False
 	Dim itemID As String = vm.GetIDFromEvent(e)
 	itemID = BANano.parseint(itemID)
 	vm.setdata("devspace", 0)
@@ -4199,6 +4277,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	End If
 	vm.setdata("propbagtype", stypeof)
 	vm.setdata("propbag", mattr)
+	vm.setdata("bag", rec)
 	ClearTableThings
 	
 	'show the property bags
@@ -4237,12 +4316,31 @@ Sub mycomponents_click(e As BANanoEvent)
 				vm.setdata("tableitems", contents)
 			End If
 			'
+		Case "page"
+			ShowBag("pbpage")
+			pbpage.SetDefaults
+			vm.setdata("controltype", "page")
+			pbpage.hideitem("id")
+			pbpage.Hideitem("controltype")
+			vm.setdata("devspace", 1)
 		Case "avatar"
 			ShowBag("pbavatar")
 			pbavatar.SetDefaults
 			vm.setdata("controltype", "avatar")
 			pbavatar.hideitem("id")
 			pbavatar.Hideitem("controltype")
+		Case "builder"
+			istool = True
+			ShowBag("pbbuilder")
+			pbbuilder.SetDefaults
+			vm.setdata("controltype", "builder")
+			pbbuilder.hideitem("id")
+			pbbuilder.Hideitem("controltype")
+			pbbuilder.ClearContents
+			'get the items
+			Dim scontents As String = rec.getdefault("items", "")
+			DesignStructure(scontents)
+			vm.setdata("devspace", 1)
 		Case "panel"
 			ShowBag("pbexpansionpanels")
 			pbexpansionpanels.SetDefaults
@@ -4549,8 +4647,25 @@ Sub mycomponents_click(e As BANanoEvent)
 			vm.setdata("controltype", "icon")
 	End Select
 	'
+	Log(mattr)
 	vm.setstate(mattr)
 End Sub
+
+Sub ToolsPanel As VMExpansionPanel
+	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("eptools", "ep1", Me)
+	grd.Header.SetText("Tools")
+	grd.Container.SetTag("div")
+	grd.Container.AddRows(2).AddColumns4X3
+	'
+	Dim page As VMImage = ToolboxImage("page", "./assets/page.png", "Page")
+	grd.Container.AddComponent(1,1,page.tostring)
+	
+	Dim cls As VMImage = ToolboxImage("builder", "./assets/build.png", "Builder")
+	grd.Container.AddComponent(1,2,cls.tostring)
+	
+	Return grd
+End Sub
+
 
 Sub NavigationPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("epnav", "ep1", Me)
@@ -4830,6 +4945,7 @@ End Sub
 'whenever we drop an item
 Sub ItemDrop(e As BANanoEvent)
 	ShowBag("")
+	istool = False
 	ClearTableThings
 	vm.setdata("devspace", 0)
 	Dim db As BANanoSQL
@@ -5009,6 +5125,18 @@ Sub ItemDrop(e As BANanoEvent)
 						Case "panel"
 							BANano.SetLocalStorage("selectedpanel", 3)
 							nrec.put("items", StepperItems)
+						Case "page"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							MakeYes(attr, Array("isnavbarvisible", "ishamburgervisible", _
+							"islogovisible", "isshowondrawer", "isshowonnavbar"))
+					 		MakeYes(attr, Array("isupdatenavtitle","isdivider","isinsetdivider"))
+							
+							attr.put("pagetitle", slabel)
+							attr.put("iconcolor", "blue")
+							attr.put("tooltip", "Tooltip for " & slabel)
+						Case "builder"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							nrec.put("items", vm.newlist)
 						Case "tabs"
 							attr.put("mobilebreakpoint", "1264")
 							attr.put("slider-size", "2")
@@ -5139,6 +5267,12 @@ Sub ItemDrop(e As BANanoEvent)
 			End Select
 			'
 			CreateUX
+End Sub
+
+Sub MakeYes(atr As Map, itemsL As List)
+	For Each k As String In itemsL
+		atr.put(k, "Yes")
+	Next
 End Sub
 
 Sub StepperItems As String
@@ -5845,6 +5979,12 @@ Sub SavePropertyBag
 			props = pbexpansionpanels.properties
 			contents = vm.getdata("tableitems")
 			scontents = BANano.tojson(contents)
+		Case "page"
+			props = pbpage.properties
+		Case "builder"
+			props = pbbuilder.properties
+			contents = vm.getdata("tableitems")
+			scontents = BANano.tojson(contents)
 		Case "stepper"
 			props = pbstepper.properties
 			contents = vm.getdata("tableitems")
@@ -5912,7 +6052,9 @@ Sub SavePropertyBag
 	nrec.put("label", stitle)
 	nrec.put("name", svmodel)
 	nrec.Put("items", scontents)
-	
+	'save the bag
+	vm.setdata("bag", nrec)
+	'
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -6490,6 +6632,8 @@ Sub Read_Table
 End Sub
 
 Sub Design_TablePreview
+	dbCode.SetCode("")
+	If istool Then Return
 	Design_DBSourceCode
 '	previewTB = vm.CreateDataTable("previewSchema", sItemkey, Me)
 '	previewTB.SetTitle(slabel)
@@ -7074,7 +7218,7 @@ Sub Design_List
 			Dim sskey As String = m.getdefault("key", "")
 			Dim ssavatar As String = m.getdefault("avatar", "")
 			Dim ssiconname As String = m.getdefault("icon", "")
-			Dim siconcolor As String = m.getdefault("iconcolor", "")
+			Dim sIconcolor As String = m.getdefault("iconcolor", "")
 			Dim sstitle As String = m.getdefault("title", "")
 			Dim sssubtitle As String = m.GetDefault("subtitle", "")
 			Dim ssubtitle1 As String = m.getdefault("subtitle1", "")
@@ -7082,7 +7226,7 @@ Sub Design_List
 			Dim sactioncolor As String = m.getdefault("actioncolor", "")
 			'
 			If sskey = "" Then Continue
-			lst.AddItem1(sskey, ssavatar, ssiconname, siconcolor, sstitle, sssubtitle, ssubtitle1, _
+			lst.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, ssubtitle1, _
 			ssactionicon, sactioncolor)
 			If bisdivider Then lst.AddDivider1(True)
 			AddCode(sbEvents, $"Case "${sskey}""$)
@@ -7122,7 +7266,7 @@ Sub Design_List
 			Dim sskey As String = m.getdefault("key", "")
 			Dim ssavatar As String = m.getdefault("avatar", "")
 			Dim ssiconname As String = m.getdefault("icon", "")
-			Dim siconcolor As String = m.getdefault("iconcolor", "")
+			Dim sIconcolor As String = m.getdefault("iconcolor", "")
 			Dim sstitle As String = m.getdefault("title", "")
 			Dim sssubtitle As String = m.GetDefault("subtitle", "")
 			Dim ssubtitle1 As String = m.getdefault("subtitle1", "")
@@ -7130,7 +7274,7 @@ Sub Design_List
 			Dim sactioncolor As String = m.getdefault("actioncolor", "")
 			'
 			If sskey = "" Then Continue
-			AddCode(sb, $"lst${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${siconcolor}", "${sstitle}", "${sssubtitle}", "${ssubtitle1}", "${ssactionicon}", "${sactioncolor}")"$)
+			AddCode(sb, $"lst${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "${ssubtitle1}", "${ssactionicon}", "${sactioncolor}")"$)
 			If bisdivider Then CodeLine(sb, True, "b", "lst", sname, "AddDivider1")
 		Next
 	Else
@@ -7495,5 +7639,270 @@ Sub Design_ExpansionPanels
 	AddCode(sbEvents, $"Dim expid As String = vm.GetIDFromEvent(e)"$)
 	AddCode(sbEvents, "End Sub")
 	AddNewLine(sbEvents)
-'
+	'
+End Sub
+
+#Region Builder
+Sub PropertyBag_Builder
+	vm.setdata("pbbuilder", False)
+	lstBags.add("pbbuilder")
+	pbbuilder = vm.CreateProperty("ppbbuilder", Me)
+	pbbuilder.SetChangeEvent("SavePropertyBag")
+	pbbuilder.SetVShow("pbbuilder")
+	pbbuilder.AddHeading("d","Details")
+	pbbuilder.AddText("d","id","ID","","")
+	pbbuilder.AddText("d", "controltype", "Type", "","builder")
+	pbbuilder.AddText2("d",CreateMap("prefix":"Prefix", "vmodel":"Instance"))
+	pbbuilder.AddSelect("d", "buildertype", "BuilderType", CreateMap("classname":"Class","customview":"View","codemodule":"Code","vuejs":"Vue","bananoview":"BANano"))
+	pbbuilder.AddText2("d", CreateMap("tag":"Tag"))
+	pbbuilder.AddTextArea("d","decription","Decription","","")
+	
+	pbbuilder.AddHeading("a","Items")
+	pbbuilder.AddDesignerProperties("a")
+	 
+	vm.container.AddComponent(1, 3, pbbuilder.tostring)
+End Sub
+#End Region
+
+Sub Read_Builder
+	sBuildertype = mattr.getdefault("buildertype", "")
+	sDecription = mattr.getdefault("decription", "")
+	sPrefix = mattr.getdefault("prefix", "")
+	stag = mattr.getdefault("tag", "")
+End Sub
+
+Sub Design_Builder
+
+End Sub
+
+#Region Page
+Sub PropertyBag_Page
+	vm.setdata("pbpage", False)
+	lstBags.add("pbpage")
+	pbpage = vm.CreateProperty("ppbpage", Me)
+	pbpage.SetChangeEvent("SavePropertyBag")
+	pbpage.SetVShow("pbpage")
+	pbpage.AddHeading("d","Details")
+	pbpage.AddText("d","id","ID","","")
+	pbpage.AddText("d", "controltype", "Type", "","page")
+	pbpage.AddText2("d",CreateMap("vmodel":"Name"))
+	pbpage.AddText("d","pagetitle","Title","","")
+	pbpage.AddText("d","iconname","Icon Name","","")
+	pbpage.AddText("d","tooltip","Tooltip","","")
+	pbpage.AddSelect2("d","iconcolor","Icon Color", vm.ColorOptions, "iconcolorintensity","IconColor Intensity", vm.IntensityOptions)
+	pbpage.AddTextArea("d","description","Description","","")
+	pbpage.AddTextArea("d","keywords","KeyWords","","")
+	'
+	pbpage.AddHeading("e","Settings")
+	pbpage.AddSwitches("e", CreateMap("isnavbarvisible": "NavBarVisible", "isdrawervisible": "DrawerVisible"))
+	pbpage.AddSwitches("e", CreateMap("ishamburgervisible": "HamburgerVisible", "islogovisible": "LogoVisible"))
+	pbpage.AddSwitches("e", CreateMap("isshowondrawer": "ShowOnDrawer", "isshowonnavbar": "ShowOnNavBar"))
+	pbpage.AddSwitches("e", CreateMap("isupdatenavtitle": "UpdateNavTitle","isdivider":"AddDivider"))
+	pbpage.AddSwitches("e", CreateMap("isinsetdivider": "Inset Divider","isicon":"NavIcon"))
+	vm.container.AddComponent(1, 3, pbpage.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Page
+	stooltip = mattr.GetDefault("tooltip", "")
+	sDescription = mattr.getdefault("description", "")
+	bisDrawervisible = YesNoToBoolean(mattr.getdefault("isdrawervisible", "No"))
+	bisHamburgervisible = YesNoToBoolean(mattr.getdefault("ishamburgervisible", "No"))
+	sIconcolor = mattr.getdefault("iconcolor", "")
+	sIconcolorintensity = mattr.getdefault("iconcolorintensity", "")
+	siconname = mattr.getdefault("iconname", "")
+	sKeywords = mattr.getdefault("keywords", "")
+	bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
+	bisNavbarvisible = YesNoToBoolean(mattr.getdefault("isnavbarvisible", "No"))
+	spagetitle = mattr.getdefault("pagetitle", "")
+	bisShowondrawer = YesNoToBoolean(mattr.getdefault("isshowondrawer", "No"))
+	bisShowonnavbar = YesNoToBoolean(mattr.getdefault("isshowonnavbar", "No"))
+	bisUpdatenavtitle = YesNoToBoolean(mattr.getdefault("isupdatenavtitle", "No"))
+	bisdivider = YesNoToBoolean(mattr.getdefault("isdivider", "No"))
+	bisinsetdivider = YesNoToBoolean(mattr.getdefault("isinsetdivider", "No"))
+	bisicon = YesNoToBoolean(mattr.getdefault("isicon", "No"))
+End Sub
+
+Sub Design_Page
+	'just a drawer for show
+	
+	Dim sbi As StringBuilder
+	sbi.initialize
+	'
+	Dim mdlName As String = $"pg${svmodel}"$
+	
+	'
+	AddInstruction(sbi, "pgIndex", "AddPages" , "")
+	AddComment(sbi, $"code to add the ${svmodel} template code to the master HTML template"$)
+	AddCode(sbi, $"vm.AddPage(${mdlName}.name, ${mdlName})"$)
+	AddCode(sbi, CRLF)
+	
+	AddComment(sb, "INSTRUCTION: In your B4J project, click Project > Add New Module > Code Module")
+	AddComment(sb, $"INSTRUCTION: Type "${mdlName}" as the module name and click Ok"$)
+	AddNewLine(sb)
+	AddComment(sb, $"INSTRUCTION: Press and hold Crtl+A to select all code and press Delete key, this will delete all the code"$)
+	AddInstruction(sb, mdlName, "" , "")
+	AddCode(sb, $"'Static code module"$)
+	AddCode(sb, $"#IgnoreWarnings:12"$)
+	AddCode(sb, $"Sub Process_Globals"$)
+	AddCode(sb, $"Public Name As String = "${svmodel}Code""$)
+	AddCode(sb, $"Public Title As String = "${spagetitle}""$)
+	AddCode(sb, $"Private vm As BANanoVM"$)
+	AddCode(sb, $"Private BANano As BANano  'ignore"$)
+	sb.append($"Private cont As VMContainer"$).append(CRLF)
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	'code for the page
+	AddCode(sb, "Sub Code")
+	AddComment(sb, "Establish a reference to the app")
+	AddCode(sb, "vm = pgIndex.vm")
+	AddComment(sb, "create a container to hold all contents based on the page name")
+	AddCode(sb, $"cont = vm.CreateContainer(Name, Me)"$)
+	AddComment(sb, "the container should be hidden initialy")
+	AddCode(sb, "cont.Hide")
+	AddNewLine(sb)
+	'
+	'draw a fake drawer
+	Dim drawer As VMNavigationDrawer = ui.CreateDrawer("drawerx", Me)
+	drawer.SetStatic(True)
+	drawer.Setabsolute(True)
+	'draw a fake toolbar
+	Dim tbl As VMToolBar = ui.CreateToolbar("tblx", Me)
+	tbl.SetStatic(True)
+	tbl.SetFixed(True)
+	'
+	If bisHamburgervisible Then
+		tbl.AddHamburger
+		tbl.SetHasMenuButton(True)
+	End If
+	'
+	If bislogovisible Then
+		tbl.Logo.SetBorderRadius("50%")
+		tbl.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_SOLID)
+		tbl.Logo.SetSize("46px", "46px")
+		tbl.AddLogo("./assets/sponge.png")
+	End If
+	
+	If bisUpdatenavtitle Then
+		tbl.AddTitle(spagetitle,"")
+	Else
+		tbl.AddTitle(Main.appName,"")
+	End If
+	tbl.AddSpacer
+	
+	
+	If bisNavbarvisible Then
+		AddComment(sb, "the navbar is visible for this page")
+		AddCode(sb,"vm.NavBar.Show")
+		tbl.Show
+	Else
+		AddComment(sb, "the navbar is hidden for this page")
+		AddCode(sb, "vm.NavBar.Hide")
+		tbl.hide
+	End If
+	'
+	If bisHamburgervisible Then
+		AddComment(sb, "show the hamburger for this page")
+		AddCode(sb, "vm.NavBar.Hamburger.SetVisible(True)")
+		tbl.Hamburger.SetVisible(True)
+	Else
+		AddComment(sb, "hide the hamburger for this page")	
+		AddCode(sb, "vm.NavBar.Hamburger.SetVisible(False)")
+		tbl.Hamburger.SetVisible(False)
+	End If
+	'
+	If bisDrawervisible Then
+		AddComment(sb, "the drawer should be visible for this page")
+		AddCode(sb, "vm.Drawer.Show")
+		drawer.Show
+	Else
+		AddComment(sb, "the drawer should be hidden for this page")
+		AddCode(sb, "vm.Drawer.Hide")
+		drawer.Hide	
+	End If
+	'
+	If bislogovisible Then
+		AddComment(sb, "the logo should be visible for this page")
+		AddCode(sb, "vm.NavBar.Logo.Show")
+		tbl.Logo.Show
+	Else
+		AddComment(sb, "the logo should be hidden for this page")
+		AddCode(sb, "vm.NavBar.Logo.Hide")
+		tbl.Logo.Hide
+	End If
+	'show in navbar
+	If  bisShowonnavbar Then
+		'navigation bar
+		AddComment(sb,$"this page should have an icon/button in the navbar"$)
+		If bisicon Then
+			AddCode(sb, $"vm.NavBar.AddIcon1("nav${svmodel}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
+			tbl.AddIcon1(svmodel, siconname, sIconcolor, stooltip, "")
+		Else
+			AddCode(sb, $"vm.NavBar.AddButton1("nav${svmodel}", "${siconname}", "${spagetitle}", "${stooltip}", "")"$)
+			tbl.AddButton1(svmodel, siconname, spagetitle, stooltip, "")
+		End If
+	End If
+	'show on drawer
+	If bisShowondrawer Then
+		drawer.AddIcon1("drw" & svmodel, siconname, sIconcolor, spagetitle, stooltip)
+		If bisdivider Then
+			drawer.AddDivider1(bisinsetdivider)
+		End If
+		'
+		AddComment(sb,$"this page should show on the drawer"$)
+		AddCode(sb, $"vm.Drawer.AddIcon1("drw${svmodel.tolowercase}", "${siconname}", "${sIconcolor}", "${spagetitle}", "${stooltip}")"$)
+		If bisdivider Then
+			AddCode(sb, $"vm.Drawer.AddDivider(${bisinsetdivider})"$)
+		End If
+		'
+		'on click show the page
+		AddInstruction(sbi, "pgIndex", "" , "")
+		AddComment(sbi, $"click ${mdlName} nav button"$)
+		AddCode(sbi, $"Sub nav${svmodel}_click(e As BANanoEvent)"$)
+		AddComment(sbi, $"show the page ${svmodel}"$)
+		AddCode(sbi, $"${mdlName}.Show"$)
+		AddCode(sbi, "End Sub")
+		AddCode(sbi, CRLF)
+		'
+		AddInstruction(sbi, "pgIndex", "draweritems_click" , "the case statement")
+		AddCode(sbi, $"Case "drw${svmodel.tolowercase}""$)
+		AddComment(sbi, $"show ${spagetitle}"$)
+		AddCode(sbi, $"${mdlName}.Show"$)
+		AddCode(sbi, CRLF)
+	End If
+	'
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	'
+	AddComment(sb,"show the page")
+	AddCode(sb, "Sub Show")
+	'update the navbar title
+	If bisUpdatenavtitle Then
+		AddComment(sb, "update the navbar title")
+		AddCode(sb, $"vm.NavBar.UpdateTitle("${spagetitle}")"$)
+		tbl.UpdateTitle(spagetitle)
+	End If
+	'
+	If  bisShowonnavbar Then
+		AddComment(sb, "hide all buttons in the navbar")
+		AddCode(sb, "vm.NavBar.HideItems")
+		AddComment(sb, $"show buttons for ${mdlName}"$)
+		AddCode(sb, $"vm.ShowItem("nav${svmodel}")"$)
+	End If
+	
+	AddComment(sb, "Show the page and hide others")
+	AddCode(sb, $"vm.ShowPage(Name)"$)
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	AddNewLine(sb)
+	sb.append(sbi.tostring)
+	'show the stuff
+	If bisDrawervisible Then
+		ui.AddControl(drawer.NavigationDrawer, drawer.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	End If
+	
+	If bisNavbarvisible Then
+		ui.AddControl(tbl.ToolBar, tbl.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	End If
 End Sub

@@ -108,8 +108,10 @@ End Sub
 Sub ApplyFilter(thisFilter As List)
 	Dim nm As Map = CreateMap()
 	For Each k As String In thisFilter
-		Dim nf As DataTableColumn = columnsM.Get(k)
-		nm.Put(k, nf)
+		If columnsM.ContainsKey(k) Then
+			Dim nf As DataTableColumn = columnsM.Get(k)
+			nm.Put(k, nf)
+		End If
 	Next
 	BuildHeaders(nm)
 End Sub
