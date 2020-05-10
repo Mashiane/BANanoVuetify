@@ -18,7 +18,18 @@ End Sub
 
 'initialize the PrismComponent
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMPrism
-ID = sid.tolowercase
+	BANano.DependsOnAsset("fileSaver.min.js")
+	BANano.DependsOnAsset("jszip.min.js")
+	'
+	BANano.DependsOnAsset("prism.css")
+	BANano.DependsOnAsset("prism.js")
+	BANano.DependsOnAsset("vue-prism-component.min.js")
+	'
+	BANano.DependsOnAsset("beautify.js")
+	BANano.DependsOnAsset("beautify-css.js")
+	BANano.DependsOnAsset("beautify-html.js")
+	'
+	ID = sid.tolowercase
 	PrismComponent.Initialize(v, ID)
 	PrismComponent.SetTag("prism")
 	DesignMode = False

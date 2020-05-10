@@ -32,8 +32,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	mini = $"${ID}mini"$
 	Container.Initialize(vue, $"${ID}cont"$, Module)
 	bStatic = False
+	SetVModel(ID)
 	Hide
 	Return Me
+End Sub
+
+Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String)
+	List.SetDataSourceTemplate1(datasource, key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
 End Sub
 
 Sub SetStatic(b As Boolean) As VMNavigationDrawer
@@ -46,7 +51,7 @@ Sub SetStatic(b As Boolean) As VMNavigationDrawer
 End Sub
 
 Sub Toggle
-	vue.ToggleState("drawer")
+	vue.ToggleState(ID)
 End Sub
 
 Sub AddComponent(comp As String) As VMNavigationDrawer
@@ -715,10 +720,9 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 	NavigationDrawer.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
 End Sub
-
+'
 Sub SetVisible(b As Boolean) As VMNavigationDrawer
-	vue.SetStateSingle(ID, b)
-	SetValue(b)
+	NavigationDrawer.SetVisible(b)
 	Return Me
 End Sub
 

@@ -22,8 +22,27 @@ Sub Init
 End Sub
 
 Sub BuildNavBar
-	'hide the navbar
-	'vm.NavBar.Hide
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	'add a logo
+	vm.NavBar.Logo.SetBorderRadius("50%")
+	vm.NavBar.Logo.SetBorderWidth("1px")
+	vm.NavBar.Logo.SetBorderColor("black")
+	vm.NavBar.Logo.SetBorderStyle("solid")
+	vm.NavBar.Logo.SetSize("46px","46px")
+	vm.NavBar.AddLogo("./assets/sponge.png")
+	vm.NavBar.Logo.Show
+	vm.NavBar.AddTitle("Expense Types","")
+	vm.NavBar.AddSubHeading1("")
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
+	'set primary color for the navbar
+	vm.NavBar.SetPrimary(True)
+	'fix the navbar so that it does not move
+	vm.NavBar.SetModeFixed(True)
+	
+	
 	'code to add the add and refresh navigation buttons for expensetypes
 	vm.NavBar.AddIcon("btnAddExpenseType","add", "Add ExpenseType", "")
 	vm.NavBar.AddIcon("btnRefreshExpenseType","refresh", "Refresh Expense Types", "")

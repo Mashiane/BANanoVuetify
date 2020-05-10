@@ -2283,12 +2283,19 @@ Sub SetList(k As String, l As Boolean) As BANanoVue
 	Return Me
 End Sub
 
+Sub NotState(stateName As String) As Boolean
+	Dim bcurrent As Boolean = GetState(stateName,False)
+	If bcurrent = Null Then bcurrent = True
+	bcurrent = Not(bcurrent)
+	Return bcurrent
+End Sub
+
 Sub ToggleState(stateName As String) As BANanoVue
 	Dim bcurrent As Boolean = GetState(stateName,False)
 	If bcurrent = Null Then bcurrent = True
 	bcurrent = Not(bcurrent)
 	SetStateSingle(stateName, bcurrent)
-	Return Me	
+	Return Me
 End Sub
 
 Sub ToggleNamedState(stateName As String, state1 As String, state2 As String) As BANanoVue

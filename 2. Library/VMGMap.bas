@@ -28,6 +28,7 @@ End Sub
 
 'initialize the Field
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMGMap
+	BANano.DependsOnAsset("vue-google-maps.js")
 	ID = sid.tolowercase
 	GMap.Initialize(v, ID).SetTag("gmap-map")
 	GMap.SetAttrSingle(":options", $"${ID}options"$)

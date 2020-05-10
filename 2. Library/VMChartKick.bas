@@ -29,6 +29,10 @@ Sub Class_Globals
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMChartKick
+	BANano.DependsOnAsset("Chart.min.css")
+	BANano.DependsOnAsset("Chart.min.js")
+	BANano.DependsOnAsset("vue-chartkick.min.js")
+	'
 	ID = sid.ToLowerCase
 	vue = v
 	ChartKick.Initialize(vue, ID)

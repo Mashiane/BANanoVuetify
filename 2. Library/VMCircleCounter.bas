@@ -16,6 +16,8 @@ End Sub
 
 'initialize the CircleCounter
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMCircleCounter
+	BANano.DependsOnAsset("circleCounter.umd.min.js")
+	'
 	ID = sid.tolowercase
 	CircleCounter.Initialize(v, ID)
 	CircleCounter.SetTag("circle-counter")

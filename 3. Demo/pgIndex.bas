@@ -99,6 +99,7 @@ Sub BuildDrawer
 	vm.Drawer.AddItem("datepicker", "", "Date Picker")
 	vm.Drawer.AddItem("timepicker", "", "Time Picker")
 	vm.Drawer.AddItem("fileinput", "", "File Input")
+	vm.Drawer.AddItem("files", "", "Files")
 	vm.Drawer.AddItem("form", "", "Form")
 	vm.Drawer.AddItem("radiogroups", "", "Radio Groups")
 	vm.Drawer.AddItem("selects", "", "Selects")
@@ -185,6 +186,9 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "selectsides"
 		'vm.NavBar.UpdateTitle(modSelectSides.title)
 		'vm.ShowPage(modSelectSides.name)
+	Case "files"
+		vm.NavBar.UpdateTitle(modFiles.title)
+		vm.ShowPage(modFiles.name)
 	Case "arccounter"
 		vm.NavBar.UpdateTitle(modArcCounter.title)
 		vm.ShowPage(modArcCounter.name)
@@ -424,5 +428,6 @@ Sub AddPages
 	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
 	vm.addpage(modECharts.name, modECharts)
 	vm.AddPage(modArcCounter.name, modArcCounter)
+	vm.AddPage(modFiles.name, modFiles)
 	'vm.addpage(modSelectSides.name, modSelectSides)
 End Sub

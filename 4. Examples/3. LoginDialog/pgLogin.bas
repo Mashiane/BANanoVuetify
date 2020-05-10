@@ -8,7 +8,7 @@ Version=8.1
 Sub Process_Globals
 	Private vm As BANanoVM
 	Public name As String = "signincode"
-	Private mdlSignIn As VMDialog
+	Public mdlSignIn As VMDialog
 	Private BANano As BANano
 End Sub
 
@@ -42,7 +42,7 @@ End Sub
 
 Sub btnCancelLogin_click(e As BANanoEvent)
 	'hide the dialog using its name
-	'vm.HideDialog("mdlsignin")
+	mdlSignIn.hide
 End Sub
 
 Sub btnOkSignIn_click(e As BANanoEvent)
@@ -50,8 +50,9 @@ Sub btnOkSignIn_click(e As BANanoEvent)
 	Dim rec As Map = mdlSignIn.Container.GetData
 	'validate the details
 	Dim bValid As Boolean = mdlSignIn.Container.Validate(rec)
-	If bValid = False Then 
+	If bValid = False Then
 		vm.ShowSnackBar("You need to specify both the email address and password!")
+		vm.SetFocus("txtemail")
 		Return
 	End If
 	vm.ShowSnackBar(BANano.tojson(rec))

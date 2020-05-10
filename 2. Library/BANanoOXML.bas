@@ -77,7 +77,6 @@ End Sub
 
 'initialize with filename
 Public Sub Initialize(fileName As String)
-	BANano.DependsOnAsset("dom-to-image.min.js")
 	BANano.DependsOnAsset("fileSaver.min.js")
 	BANano.DependsOnAsset("jszip.min.js")
 	BANano.DependsOnAsset("oxml.min.js")

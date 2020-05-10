@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=modDesigner,ItemDrop,5127,6,modDesigner,builderlisting_click,3623,0,Main,Process_Globals,16,0,modDesigner,Process_Globals,51,1,modDesigner,btnmac_click,838,0,modDesigner,btnipad_click,845,0,modDesigner,CreateUX,1169,0,modDesigner,DesignLayout,3542,6,modDesigner,Init,653,0,Main,AppStart,24,3
+NavigationStack=modDesigner,Init,688,0,modDesigner,draweritems_click,825,0,modDesigner,btnbtnSaveProject_click,972,0,modDesigner,Design_DBSourceCode,4272,0,modDesigner,DeleteProject,6251,0,modDesigner,Design_Page,8373,0,Main,AppStart,25,0,modDesigner,PropertyBag_Toolbar,6128,0,modDesigner,Process_Globals,355,0,modDesigner,Read_Label,1422,0,modDesigner,Read_Toolbar,1483,0
 SelectedBuild=0
 VisibleModules=

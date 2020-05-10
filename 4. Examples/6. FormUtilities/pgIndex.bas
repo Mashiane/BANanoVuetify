@@ -15,17 +15,20 @@ End Sub
 Sub Init
 	'initialize the page
 	vm.Initialize(Me, Main.appname)
-	vm.NavBar.UpdateLogo("./assets/formutilities.jpg")
-	vm.NavBar.UpdateTitle("BVM - Form Utilities")
-	'the navbar will be visible
-	vm.NavBar.Show
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	vm.NavBar.AddLogo("./assets/formutilities.jpg")
+	vm.NavBar.Logo.Show
+	vm.NavBar.AddTitle("Form Utilities","")
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
 	'set primary color for the navbar
-	'vm.NavBar.SetPrimary(True)
+	vm.NavBar.SetPrimary(True)
 	'fix the navbar so that it does not move
 	vm.NavBar.SetModeFixed(True)
-	'hide the back button
-	'show the hamburger button
-	vm.NavBar.SetHasMenuButton(True)
+	'the navbar will be visible
+	vm.NavBar.Show
 	'
 	vm.NavBar.AddIcon("btnRefreshTables","refresh", "Refresh tables", "")
 	vm.NavBar.AddIcon("btnAddTable","add", "Add table", "")

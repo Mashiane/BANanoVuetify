@@ -13,16 +13,30 @@ End Sub
 Sub Init
 	'initialize the page
 	vm.Initialize(Me, Main.appname)
-	'set the logo of the app
-	vm.NavBar.UpdateLogo(Main.AppLogo)
-	'update the title of the navbar
-	vm.NavBar.UpdateTitle(Main.AppTitle)
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	'add a logo
+	vm.NavBar.Logo.SetBorderRadius("50%")
+	vm.NavBar.Logo.SetBorderWidth("1px")
+	vm.NavBar.Logo.SetBorderColor("black")
+	vm.NavBar.Logo.SetBorderStyle("solid")
+	vm.NavBar.Logo.SetSize("46px","46px")
+	vm.NavBar.AddLogo("./assets/sponge.png")
+	vm.NavBar.Logo.Show
+	vm.NavBar.AddTitle("Hello World","")
+	vm.NavBar.AddSubHeading1("")
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
 	'set primary color for the navbar
 	vm.NavBar.SetPrimary(True)
 	'fix the navbar so that it does not move
 	vm.NavBar.SetModeFixed(True)
-	'show the hamburger button
-	vm.NavBar.SetHasMenuButton(False)
+	'set the logo of the app
+	vm.NavBar.UpdateLogo(Main.AppLogo)
+	'update the title of the navbar
+	vm.NavBar.UpdateTitle(Main.AppTitle)
+	
 	'build the drawer buttons
 	BuildDrawer
 	'add the pages to the app

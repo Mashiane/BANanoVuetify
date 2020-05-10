@@ -10,6 +10,6 @@ ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
-NavigationStack=Main,AppStart,33,0,pgIndex,AddPages,43,2,modCalculations,Process_Globals,7,0,Main,Process_Globals,16,1,modCalculations,ComputeTotal,38,6,pgIndex,confirm_ok,46,0,pgIndex,confirm_cancel,54,0,pgIndex,Init,22,2,modCalculations,Code,22,6
+NavigationStack=pgIndex,AddPages,43,2,modCalculations,Process_Globals,7,0,Main,Process_Globals,16,1,modCalculations,ComputeTotal,38,6,pgIndex,confirm_ok,46,0,pgIndex,confirm_cancel,54,0,modCalculations,Code,22,6,pgIndex,Init,32,2,Main,BANano_Ready,69,0,Main,AppStart,48,0
 SelectedBuild=0
 VisibleModules=3,1

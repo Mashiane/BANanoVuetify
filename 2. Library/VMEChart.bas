@@ -26,6 +26,11 @@ End Sub
 
 'initialize the EChart
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMEChart
+	BANano.DependsOnAsset("echarts.min.js")
+	BANano.DependsOnAsset("bmap.min.js")
+	BANano.DependsOnAsset("v-chart.js")
+	BANano.DependsOnAsset("v-chart.min.css")
+	'
 ID = sid.tolowercase
 	EChart.Initialize(v, ID)
 	EChart.SetTag("ve-chart")

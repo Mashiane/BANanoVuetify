@@ -16,6 +16,12 @@ End Sub
 
 'initialize the Quill
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMQuill
+	BANano.DependsOnAsset("quill.bubble.css")
+	BANano.DependsOnAsset("quill.snow.css")
+	BANano.DependsOnAsset("quill.min.js")
+	BANano.DependsOnAsset("vue2-editor.css")
+	BANano.DependsOnAsset("vue2-editor.umd.js")
+	'
 ID = sid.tolowercase
 	Quill.Initialize(v, ID)
 	Quill.SetTag("vue-editor").AddClass("mb-2")

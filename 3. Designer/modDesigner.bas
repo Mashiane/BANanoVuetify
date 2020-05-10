@@ -7,6 +7,8 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12
 Sub Process_Globals
+	Private Mode As String
+	Private ep As VMExpansionPanels
 	Private vm As BANanoVM
 	Private ui As VMContainer
 	Private BANano As BANano  'ignore
@@ -209,6 +211,11 @@ Sub Process_Globals
 	Private bisshowmatrix As Boolean
 	Private bisnogutters As Boolean
 	'
+	Private ssearchkey As String 
+	Private stoolbarsubtitle As String
+	Private bistitle As Boolean
+	Private bissubtitle As Boolean
+	Private bissearch As Boolean
 	Private sextensionheight As String
 	Private sscrolltarget As String
 	Private sscrollthreshold As String
@@ -218,6 +225,9 @@ Sub Process_Globals
 	Private slogowidth As String
 	Private slogoheight As String
 	Private bishamburger As Boolean
+	Private bisHamburgervisible As Boolean
+	Private biscurrent As Boolean
+	Private bisflat As Boolean
 	Private bisabsolute As Boolean
 	Private bisclippedleft As Boolean
 	Private bisclippedright As Boolean
@@ -621,7 +631,6 @@ Private stabindex As String
 	'
 	Private sDescription As String
 	Private bisDrawervisible As Boolean
-	Private bisHamburgervisible As Boolean
 	Private sIconcolor As String
 	Private sIconcolorintensity As String
 	Private siconname As String
@@ -636,6 +645,7 @@ Private stabindex As String
 	Private bisdivider As Boolean
 	Private bisinsetdivider As Boolean
 	Private bisicon As Boolean
+	Private drwprojectdetails As VMNavigationDrawer
 End Sub
 
 Sub Init
@@ -653,6 +663,23 @@ Sub Init
 	'
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	'add a logo
+	vm.NavBar.Logo.SetBorderRadius("50%")
+	vm.NavBar.Logo.SetBorderWidth("1px")
+	vm.NavBar.Logo.SetBorderColor("black")
+	vm.NavBar.Logo.SetBorderStyle("solid")
+	vm.NavBar.Logo.SetSize("46px","46px")
+	vm.NavBar.AddLogo("./assets/sponge.png")
+	vm.NavBar.Logo.Show
+	vm.NavBar.AddTitle(Main.AppTitle,"")
+	vm.NavBar.AddSubHeading1(Main.Version)
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
+	vm.NavBar.SetModeFixed(True)
+	
 	'
 	'get last selected panel
 	Dim sp As String = BANano.GetLocalStorage("selectedpanel")
@@ -665,19 +692,11 @@ Sub Init
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
-	vm.NavBar.SetModeFixed(True)
-	vm.NavBar.SetHasMenuButton(True)
-	vm.NavBar.UpdateLogo("./assets/sponge.png")
-	vm.NavBar.UpdateTitle($"BVMDesigner ${Main.version}"$)
-	vm.NavBar.Logo.SetBorderRadius("50%")
-	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
-	
 	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	vm.NavBar.SetDark(True)
 	vm.Footer.Hide
-	vm.Drawer.Hide
 	'
-	vm.NavBar.AddIcon("btnRefresh", "refresh", "Refresh", "")
+	vm.Drawer.AddTitleSubTitle("Projects", "")
 	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
@@ -697,19 +716,18 @@ Sub Init
 	'
 	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	'
-	vm.NavBar.AddSwitch("chkshowmatrix", "showmatrix", "Matrix")
-	vm.NavBar.AddSwitch("chkhasborder", "hasborder", "Border")
-	
-	vm.navbar.AddDivider(True, Null, Null, Array("mx-2"), Null)
-	'
+	vm.NavBar.AddIcon("btnMatrix", "mdi-matrix","Show Matrix", "")
+	vm.NavBar.AddIcon("btnBorder", "mdi-border-all", "Show Borders","")
 	vm.NavBar.Addicon("btnmac", "mdi-laptop-mac", "Macbook","")
 	vm.navbar.AddIcon("btnipad","mdi-tablet-ipad", "iPad", "")
 	vm.NavBar.addicon("btniphone", "mdi-cellphone-iphone", "iPhone", "")
-	vm.NavBar.AddSwitch("chkLandScape", "landscape", "LandScape")
-	
+	vm.NavBar.AddIcon("btnLandScape", "mdi-phone-rotate-landscape", "Rotate", "")
+	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")
+	vm.NavBar.AddIcon("btnRefresh", "refresh", "Refresh", "")
 	'
 	vm.setdata("showmatrix", "Yes")
 	vm.setdata("hasborder", "Yes")
+	vm.setdata("landscape", "No")
 	bHasBorder = True
 	bShowMatrix = True
 	'
@@ -749,11 +767,219 @@ Sub Init
 	'
 	'add an invisible file uploader
 	vm.AddFileSelect(Me, "fucomponent")
-	vm.UX
-	'Dim s As String = vm.vue.GetTemplate
-	'vm.SaveText2File(s, "all.txt")
+	CreateProjectDrawer
 	'
+	vm.Drawer.SetWidth("350")
+	Dim dtbl As VMToolBar = vm.CreateToolbar("dtbl", Me)
+	dtbl.SetDense(True).SetFlat(True)
+	dtbl.AddSpacer
+	dtbl.AddIcon1("btnNewProject", "mdi-book-plus", "green", "Add a new project","")
+	dtbl.AddIcon1("btnDeleteProject", "delete", "red", "Delete project", "")
+	'
+	vm.drawer.Container.SetNoGutters(True)
+	vm.Drawer.Container.AddControlS(dtbl.ToolBar, dtbl.ToString,1,1,12,12,12,12)
+	
+	'load the list of projects
+	vm.setdata("projects", vm.newlist)
+	vm.Drawer.SetDataSourceTemplate1("projects","id","","","","projectname","","","","")
+	'
+	vm.SetMethod(Me, "LoadProjects")
+	'
+	vm.UX
+	'
+	vm.SetData("project", vm.newmap)
+	drwprojectdetails.Container.Setdefaults
 	CreateUX
+	vm.CallMethod("LoadProjects")
+	'
+	Dim db As BANanoSQL
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("project", "id")
+	prjSQL.SelectAll(Array("*"), Array("projectname"))
+	prjSQL.result = db.executewait(prjSQL.query, prjSQL.args)
+	Dim projects As List = prjSQL.result
+	If projects.size = 0 Then
+		vm.ShowSnackBArError("You need to create a new project first!")
+		Mode = "A"
+		drwprojectdetails.Show
+	Else	
+		vm.ShowSnackBar("You need to select the work project from the drawer first!")
+		vm.Drawer.Show
+	End If
+End Sub
+
+'master drawer click
+Sub draweritems_click(e As BANanoEvent)
+	Dim menuID As String = vm.getidfromevent(e)
+	If menuID = "" Then Return
+	menuID = BANano.parseint(menuID)
+	vm.setdata("project", vm.NewMap)
+	'read the record from the database
+	Dim db As BANanoSQL
+	Dim rsSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	rsSQL.Initialize("project", "id")
+	rsSQL.Read(menuID)
+	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	If rsSQL.result.size = 0 Then Return
+	'read the first record found
+	Dim rec As Map = rsSQL.result.get(0)
+	vm.setdata("project", rec)
+	vm.setstate(rec)
+	Mode = "E"
+	Dim sprojectname As String = rec.getdefault("projectname", "")
+	vm.NavBar.UpdateTitle($"${main.AppTitle} [${sprojectname}]"$)
+End Sub
+
+Sub btnDeleteProject_click(e As BANanoEvent)
+	Dim project As Map = vm.getdata("project")
+	Dim sprojectname As String = project.getdefault("projectname", "")
+	Dim pid As String = project.GetDefault("id", "")
+	If pid = "" Then
+		vm.ShowSnackBar("You need to select the project to delete first!")
+		Return
+	End If
+	'
+	vm.setdata("deleteid", pid)
+	vm.ShowConfirm("deleteproject", $"Confirm Delete: ${sprojectname}"$, _
+	$"Are you sure that you want to delete this project?"$, "Yes", "No")
+
+End Sub
+
+'add a new project
+Sub btnNewProject_click(e As BANanoEvent)
+	NewProject
+End Sub
+
+Sub NewProject
+	Mode = "A"
+	vm.drawer.Hide
+	'hide all property bags
+	ShowBag("")
+	'show the drawer
+	drwprojectdetails.Container.SetDefaults
+	drwprojectdetails.Show
+	vm.SetFocus("txtprojectname")
+End Sub
+
+Sub alert_ok(e As BANanoEvent)
+	
+End Sub
+
+Sub LoadProjects
+	'"projectname","dbtype","databasename"
+	Dim db As BANanoSQL
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("project", "id")
+	prjSQL.SelectAll(Array("*"), Array("projectname"))
+	prjSQL.result = db.executewait(prjSQL.query, prjSQL.args)
+	vm.setdata("projects", prjSQL.result)
+End Sub
+
+Sub btnProject_click(e As BANanoEvent)
+	'hide all property bags
+	ShowBag("")
+	'show the drawer
+	drwprojectdetails.toggle
+End Sub
+
+Sub CreateProjectDrawer
+	drwprojectdetails = vm.CreateDrawer("drwprojectdetails", Me)
+	drwprojectdetails.AddTitleSubTitle("Project","Project Configuration")
+	drwprojectdetails.Setwidth("430")
+	drwprojectdetails.Setabsolute(True)
+	drwprojectdetails.Setright(True)
+	'
+	Dim txtprojectname As VMTextField = vm.NewTextField(Me, True, "txtprojectname", "projectname", "Project Name", "", True, "", 0, "", "", 0)
+	txtprojectname.SetFieldType("string")
+	txtprojectname.SetOutlined(True)
+	txtprojectname.SetClearable(True)
+	txtprojectname.SetHideDetails(True)
+	txtprojectname.SetVisible(True)
+	txtprojectname.SetDense(True)
+	drwprojectdetails.Container.AddControl(txtprojectname.textfield, txtprojectname.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+
+	Dim dbtypekeys As String = "banano,sqlite,mysql,mssql"
+	Dim dbtypevalues As String = "BANanoSQL,SQLite,MySQL,MSSQL"
+	Dim dbtypemap As Map = vm.keyvalues2map(",", dbtypekeys, dbtypevalues)
+	Dim rddbtype As VMRadioGroup = vm.NewRadioGroup(Me, True, "rddbtype", "dbtype", "Database Type", "banano", dbtypemap, False, True, 0)
+	rddbtype.SetFieldType("string")
+	rddbtype.SetHideDetails(True)
+	rddbtype.SetVisible(True)
+	rddbtype.AddClass("my-2")
+	drwprojectdetails.Container.AddControl(rddbtype.RadioGroup, rddbtype.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+
+	Dim txtdatabasename As VMTextField = vm.NewTextField(Me, True, "txtdatabasename", "databasename", "Database Name", "", True, "", 0, "", "", 0)
+	txtdatabasename.SetFieldType("string")
+	txtdatabasename.SetOutlined(True)
+	txtdatabasename.SetDense(True)
+	txtdatabasename.SetClearable(True)
+	txtdatabasename.SetHideDetails(True)
+	txtdatabasename.SetVisible(True)
+	drwprojectdetails.Container.AddControl(txtdatabasename.textfield, txtdatabasename.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+
+	Dim btnbtnCancelProject As VMButton = vm.NewButton(Me, True, "btnbtnCancelProject", "Cancel", True, False, False, True)
+	btnbtnCancelProject.SetColorIntensity("red", "")
+	btnbtnCancelProject.Setoutlined(True)
+	btnbtnCancelProject.SetVisible(True)
+	drwprojectdetails.Container.AddControl(btnbtnCancelProject.Button, btnbtnCancelProject.tostring, 2, 1, 0, 0, 0, 0, 12, 6, 6, 6)
+
+	Dim btnbtnSaveProject As VMButton = vm.NewButton(Me, True, "btnbtnSaveProject", "Save", True, False, False, True)
+	btnbtnSaveProject.SetColorIntensity("green", "")
+	btnbtnSaveProject.Setoutlined(True)
+	btnbtnSaveProject.SetVisible(True)
+	drwprojectdetails.Container.AddControl(btnbtnSaveProject.Button, btnbtnSaveProject.tostring, 2, 2, 0, 0, 0, 0, 12, 6, 6, 6)
+	vm.AddDrawer(drwprojectdetails)
+End Sub
+
+Private Sub btnbtnCancelProject_click(e As BANanoEvent)
+	drwprojectdetails.hide
+End Sub
+
+Private Sub btnbtnSaveProject_click(e As BANanoEvent)
+	'get the record to create/update
+	vm.SetData("project", vm.newmap)	
+	Dim Record As Map = drwprojectdetails.Container.GetData
+	'validate the record
+	Dim bValid As Boolean = vm.Validate(Record, drwprojectdetails.Container.Required)
+	'if invalid exit create/update
+	If bValid = False Then
+		vm.ShowSnackBar("Please ensure that the project name and database name are specified!")
+		Return
+	End If
+	Dim pid As String
+	Dim db As BANanoSQL
+	Dim rsSQL As BANanoAlaSQLE
+		
+	'add code to save the project!
+	Select Case Mode
+	Case "A"
+		'add mode
+		pid = DateTime.now
+		Record.put("id", pid)
+		db.OpenWait("bvmdesigner", "bvmdesigner")
+		rsSQL.Initialize("project", "id")
+		rsSQL.RecordFromMap(Record)
+		rsSQL.Insert
+		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	Case "E"
+		Dim prj As Map = vm.GetData("project")
+		Dim pid As String = prj.Get("id")
+		pid = BANano.parseint(pid)
+		Record.put("id", pid)
+		db.OpenWait("bvmdesigner", "bvmdesigner")
+		rsSQL.Initialize("project", "id")
+		rsSQL.RecordFromMap(Record)
+		rsSQL.Update(pid)
+		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	End Select
+	Dim sprojectname As String = Record.getdefault("projectname", "")
+	vm.NavBar.UpdateTitle($"${Main.AppTitle} [${sprojectname}]"$)
+	vm.SetData("project", Record)
+	vm.CallMethod("LoadProjects")
+	drwprojectdetails.hide
 End Sub
 
 Sub Read_Badge
@@ -815,28 +1041,30 @@ Sub Read_Chip
 	bisXsmall = YesNoToBoolean(mattr.getdefault("isxsmall", "No"))
 End Sub
 
-Sub chkLandScape_change(value As String)
+Sub btnLandScape_click(e As BANanoEvent)
 	vm.setdata("devspace", 0)
-	Select Case value
-	Case "no","No"
+	vm.ToggleNamedState("landscape", "Yes", "No")
+	Dim sState As String = vm.getdata("landscape")
+	Select Case sState
+	Case "No"
 		'potrait
 		myiphone.SetLandScape(False)
 		myipad.SetLandScape(False)
-	Case "yes","Yes"
+	Case "Yes"
 		'landscape
 		myiphone.SetLandScape(True)
 		myipad.SetLandScape(True)
 	End Select
 End Sub
 
-Sub chkshowmatrix_change(value As String)
-	vm.setdata("showmatrix", value)
+Sub btnMatrix_click(e As BANanoEvent)
+	vm.ToggleNamedState("showmatrix", "Yes", "No")
 	CreateUX
 End Sub
 	
-Sub chkhasborder_change(value As String)
-	vm.setdata("hasborder", value)
-	CreateUX
+Sub btnBorder_click(e As BANanoEvent)
+	vm.togglenamedstate("hasborder", "Yes", "No")
+	CreateUX	
 End Sub
 
 Sub btnmac_click(e As BANanoEvent)
@@ -979,6 +1207,7 @@ Sub CreateUX
 		bishidedetails = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
 		bToggle = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
 		bcenteronparent = YesNoToBoolean(mattr.getdefault("centeronparent", "No"))
+		bisHamburgervisible = YesNoToBoolean(mattr.getdefault("ishamburgervisible", "No"))
 		'
 		struevalue = mattr.getdefault("truevalue", "")
 		sfalsevalue = mattr.GetDefault("falsevalue", "")
@@ -1233,6 +1462,8 @@ Sub Read_Toolbar
 	slogowidth = mattr.getdefault("logowidth", "46px")
 	slogoheight = mattr.getdefault("logoheight","46px")
 	bishamburger = YesNoToBoolean(mattr.getdefault("ishamburger", "No"))
+	biscurrent = YesNoToBoolean(mattr.getdefault("iscurrent", "No"))
+	bisflat = YesNoToBoolean(mattr.getdefault("isflat","No"))
 	bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
 	bisclippedleft = YesNoToBoolean(mattr.getdefault("isclippedleft", "No"))
 	bisclippedright = YesNoToBoolean(mattr.getdefault("isclippedright", "No"))
@@ -1252,6 +1483,11 @@ Sub Read_Toolbar
 	bisshrinkonscroll = YesNoToBoolean(mattr.getdefault("isshrinkonscroll", "No"))
 	bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
 	bisspacer = YesNoToBoolean(mattr.getdefault("isspacer", "No"))
+	ssearchkey = mattr.getdefault("searchkey", "")
+	stoolbarsubtitle = mattr.getdefault("toolbarsubtitle", "")
+	bistitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
+	bissubtitle = YesNoToBoolean(mattr.getdefault("issubtitle", "No"))
+	bissearch = YesNoToBoolean(mattr.getdefault("issearch", "No"))
 End Sub
 
 Sub Read_Carousel
@@ -1324,6 +1560,17 @@ Sub Read_Drawer
 	bisstateless = YesNoToBoolean(mattr.getdefault("isstateless", "No"))
 	bistemporary = YesNoToBoolean(mattr.getdefault("istemporary", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
+	'
+	sDatasource = mattr.getdefault("datasource", "")
+	sKeyfld = mattr.getdefault("keyfld", "")
+	sAvatarfld = mattr.getdefault("avatarfld", "")
+	sIconfld = mattr.getdefault("iconfld", "")
+	sIconcolorfld = mattr.getdefault("iconcolorfld", "")
+	sTitlefld = mattr.getdefault("titlefld", "")
+	sSubtitlefld = mattr.getdefault("subtitlefld", "")
+	sSubtitle1fld = mattr.getdefault("subtitle1fld", "")
+	sActioniconfld = mattr.getdefault("actioniconfld", "")
+	sActioniconcolorfld = mattr.getdefault("actioniconcolorfld", "")
 End Sub
 
 Sub Read_Menu
@@ -2411,37 +2658,37 @@ Sub Design_Image
 End Sub
 
 Sub Design_Drawer
-	Dim drawer As VMNavigationDrawer = ui.CreateDrawer("drawer" & sname, Me)
-	drawer.SetStatic(True)
-	drawer.AddTitleSubTitle(smtitle,smsubtitle)
-	drawer.SetcolorIntensity(scolor,sintensity)
-	drawer.Setminivariantwidth(sminivariantwidth)
-	drawer.Setmobilebreakpoint(smobilebreakpoint)
-	drawer.Setoverlaycolor(soverlaycolor)
-	drawer.Setoverlayopacity(soverlayopacity)
-	drawer.Setsrc(ssrc)
-	drawer.Settag(stag)
-	drawer.Setheight(sheight)
-	drawer.Setwidth(swidth)
-	drawer.Setabsolute(bisabsolute)
-	drawer.Setapp(bisapp)
-	drawer.Setbottom(bisbottom)
-	drawer.Setclipped(bisclipped)
-	drawer.Setdark(bisdark)
-	drawer.Setdisableresizewatcher(bisdisableresizewatcher)
-	drawer.Setdisableroutewatcher(bisdisableroutewatcher)
-	drawer.Setexpandonhover(bisexpandonhover)
-	drawer.Setfixed(bisfixed)
-	drawer.Setfloating(bisfloating)
-	drawer.Sethideoverlay(bishideoverlay)
-	drawer.Setlight(bislight)
-	drawer.Setminivariant(bisminivariant)
-	drawer.Setpermanent(bispermanent)
-	drawer.Setright(bisright)
-	drawer.Setstateless(bisstateless)
-	drawer.Settemporary(bistemporary)
-	drawer.Settouchless(bistouchless)
-	drawer.Setvisible(bisvisible)
+	Dim drw As VMNavigationDrawer = ui.CreateDrawer("drw" & sname, Me)
+	drw.SetStatic(True)
+	drw.AddTitleSubTitle(smtitle,smsubtitle)
+	drw.SetcolorIntensity(scolor,sintensity)
+	drw.Setminivariantwidth(sminivariantwidth)
+	drw.Setmobilebreakpoint(smobilebreakpoint)
+	drw.Setoverlaycolor(soverlaycolor)
+	drw.Setoverlayopacity(soverlayopacity)
+	drw.Setsrc(ssrc)
+	drw.Settag(stag)
+	drw.Setheight(sheight)
+	drw.Setwidth(swidth)
+	drw.Setabsolute(bisabsolute)
+	drw.Setapp(bisapp)
+	drw.Setbottom(bisbottom)
+	drw.Setclipped(bisclipped)
+	drw.Setdark(bisdark)
+	drw.Setdisableresizewatcher(bisdisableresizewatcher)
+	drw.Setdisableroutewatcher(bisdisableroutewatcher)
+	drw.Setexpandonhover(bisexpandonhover)
+	drw.Setfixed(bisfixed)
+	drw.Setfloating(bisfloating)
+	drw.Sethideoverlay(bishideoverlay)
+	drw.Setlight(bislight)
+	drw.Setminivariant(bisminivariant)
+	drw.Setpermanent(bispermanent)
+	drw.Setright(bisright)
+	drw.Setstateless(bisstateless)
+	drw.Settemporary(bistemporary)
+	drw.Settouchless(bistouchless)
+	drw.Setvisible(bisvisible)
 	'
 	'link events
 	AddCode(sbEvents, $"Sub drw${sname}Items_click(e As BANanoEvent)"$)
@@ -2457,16 +2704,24 @@ Sub Design_Drawer
 		Dim sssubtitle As String = m.GetDefault("subtitle", "")
 		Dim ssactionicon As String = m.getdefault("action", "")
 		If sskey = "" Then Continue
-		drawer.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, "", ssactionicon, "")
-		If bisdivider Then drawer.AddDivider1(True)
+		drw.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, "", ssactionicon, "")
+		If bisdivider Then drw.AddDivider1(True)
 		AddCode(sbEvents, $"Case "${sskey}""$)
 	Next
 	AddCode(sbEvents,"End Select")
 	AddCode(sbEvents, "End Sub")
-	ui.AddControl(drawer.NavigationDrawer, drawer.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	ui.AddControl(drw.NavigationDrawer, drw.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	
 	'
-	sb.append($"Dim drw${sname} As VMNavigationDrawer = vm.CreateDrawer("drw${sname}", Me)"$).append(CRLF)
+	AddInstruction(sb, "Your", "Process_Globals","")
+	AddNewLine(sb)
+	AddCode(sb, $"Private drw${sname} As VMNavigationDrawer"$)
+	AddNewLine(sb)
+	
+	AddInstruction(sb, "Your", "Code","before vm.Ux")
+	AddNewLine(sb)
+	AddCode(sb, $"Sub CreateDrawer_${sname}"$)
+	sb.append($"drw${sname} = vm.CreateDrawer("drw${sname}", Me)"$).append(CRLF)
 	CodeLine2(sb, smtitle, smsubtitle, "s", "drw", sname, "AddTitleSubTitle")
 	CodeLine2(sb, scolor, sintensity, "s", "drw", sname, "SetColorIntensity")
 	CodeLine(sb, sminivariantwidth, "s", "drw", sname, "Setminivariantwidth")
@@ -2498,19 +2753,39 @@ Sub Design_Drawer
 	CodeLine(sb, bistouchless, "b", "drw", sname, "Settouchless")
 	CodeLine(sb, bisvisible, "b", "drw", sname, "Setvisible")
 	'
-	For Each m As Map In lcontents
-		Dim sskey As String = m.getdefault("key", "")
-		Dim ssavatar As String = m.getdefault("avatar", "")
-		Dim ssiconname As String = m.getdefault("icon", "")
-		Dim siconcolor As String = m.GetDefault("iconcolor", "")
-		Dim sstitle As String = m.getdefault("title", "")
-		Dim sssubtitle As String = m.GetDefault("subtitle", "")
-		Dim ssactionicon As String = m.getdefault("action", "")
-		If sskey = "" Then Continue
-		sb.append($"drw${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${siconcolor}", "${sstitle}", "${sssubtitle}", "", "${ssactionicon}", "")"$).append(CRLF)
-		If bisdivider Then AddCode(sb,$"drw.AddDivider1(True)"$)
-	Next		
-	sb.append($"${sparent}.Container.AddControl(drw${sname}.NavigationDrawer, drw${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	If buseoptions Then
+		For Each m As Map In lcontents
+			Dim sskey As String = m.getdefault("key", "")
+			Dim ssavatar As String = m.getdefault("avatar", "")
+			Dim ssiconname As String = m.getdefault("icon", "")
+			Dim sIconcolor As String = m.GetDefault("iconcolor", "")
+			Dim sstitle As String = m.getdefault("title", "")
+			Dim sssubtitle As String = m.GetDefault("subtitle", "")
+			Dim ssactionicon As String = m.getdefault("action", "")
+			If sskey = "" Then Continue
+			sb.append($"drw${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "", "${ssactionicon}", "")"$).append(CRLF)
+			If bisdivider Then AddCode(sb,$"drw.AddDivider1(True)"$)
+		Next
+	Else
+		'set data source
+		AddCode(sb, $"vm.setdata("${sDatasource}", vm.newlist)"$)
+		AddCode(sb, $"drw${sname}.SetDataSourceTemplate1("${sDatasource}","${sKeyfld}","${sAvatarfld}","${sIconfld}","${sIconcolorfld}","${sTitlefld}","${sSubtitlefld}","${sSubtitle1fld}","${sActioniconfld}","${sActioniconcolorfld}")"$)
+	End If
+	'
+	AddComment(sb, "Paste code here to to add container components")
+	AddNewLine(sb)		
+	AddCode(sb, $"vm.AddDrawer(drw${sname})"$)
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	AddCode(sb, $"Sub ShowDrawer_${sname}"$)
+	AddCode(sb, $"vm.ShowDrawer("drw${sname}")"$)
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	AddCode(sb, $"Sub HideDrawer_${sname}"$)
+	AddCode(sb, $"vm.HideDrawer("drw${sname}")"$)
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	
 End Sub
 
 Sub Design_SpeedDial
@@ -2936,7 +3211,13 @@ Sub Design_ToolBar
 		tbl.AddLogo(slogourl)
 	End If
 	'
-	tbl.AddTitle(stitle, stitleclass)
+	If bistitle Then tbl.AddTitle(stitle, stitleclass)
+	If bissubtitle Then tbl.AddSubHeading1(stoolbarsubtitle)
+	If bissearch Then
+		tbl.AddSpacer
+		tbl.AddSearch(ssearchkey)
+	End If
+	
 	If bisspacer Then tbl.AddSpacer
 	
 	tbl.SetColorIntensity(scolor, sintensity)
@@ -2950,6 +3231,7 @@ Sub Design_ToolBar
 	tbl.SetHeight(sheight)
 	'
 	tbl.Setdense(bisdense)
+	tbl.SetFLat(bisflat)
 	tbl.Setdark(bisdark)
 	tbl.Setabsolute(bisabsolute)
 	tbl.Setclippedleft(bisclippedleft)
@@ -2972,7 +3254,6 @@ Sub Design_ToolBar
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
-		Dim ssavatar As String = m.getdefault("avatar", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
 		Dim sIconcolor As String = m.getdefault("iconcolor", "")
 		Dim sstitle As String = m.getdefault("title", "")
@@ -2986,80 +3267,167 @@ Sub Design_ToolBar
 		Case "btn"
 			tbl.AddItem(sskey, ssiconname, sIconcolor, sstitle, sssubtitle, sBadge)
 			AddCode(sbEvents, $"Private Sub ${sskey}_click(e As BANanoEvent)"$)
+			AddCode(sbEvents, $"vm.ShowSnackBar("${sstitle}")"$)
 			AddCode(sbEvents, "End Sub")
 			AddNewLine(sbEvents)
 		Case "icon"
 			tbl.AddIcon1(sskey, ssiconname, sIconcolor, sssubtitle, sBadge)
 			AddCode(sbEvents, $"Private Sub ${sskey}_click(e As BANanoEvent)"$)
+			AddCode(sbEvents, $"vm.ShowSnackBar("${sstitle}")"$)
 			AddCode(sbEvents, "End Sub")
 			AddNewLine(sbEvents)
 		End Select
 	Next
-	
+	'
 	ui.AddControl(tbl.toolbar, tbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim tbl${sname} As VMToolBar = ui.CreateToolBar("tbl${sname}", Me)"$).append(CRLF)
-	Select Case sbartype
-	Case "app"
-		CodeLine(sb, True, "b", "tbl", sname, "SetAppBar")
-	Case "tool"
-		CodeLine(sb, True, "b", "tbl", sname, "SetToolBar")
-	Case "sys"
-		CodeLine(sb, True, "b", "tbl", sname, "SetSystemBar")
-	End Select
+	If biscurrent = False Then 
+		sb.append($"Dim tbl${sname} As VMToolBar = ui.CreateToolBar("tbl${sname}", Me)"$).append(CRLF)
+		Select Case sbartype
+		Case "app"
+			CodeLine(sb, True, "b", "tbl", sname, "SetAppBar")
+		Case "tool"
+			CodeLine(sb, True, "b", "tbl", sname, "SetToolBar")
+		Case "sys"
+			CodeLine(sb, True, "b", "tbl", sname, "SetSystemBar")
+		End Select
+	End If
 	'
-	CodeLine1(sb, bishamburger, "b", "tbl", sname, "AddHamburger")
-	If bislogovisible Then
+	AddComment(sb, "add a hamburger")
+	If biscurrent = False Then
+		CodeLine1(sb, True, "b", "tbl", sname, "AddHamburger")
+		AddCode(sb, $"tbl${sname}.Hamburger.SetVisible(${bishamburger})"$)
+	Else
+		CodeLine1(sb, True, "b", "vm.NavBar", "", "AddHamburger")
+		AddCode(sb, $"vm.NavBar.Hamburger.SetVisible(${bishamburger})"$)
+	End If
+	'
+	AddComment(sb, "add a logo")
+	'
+	If biscurrent = False Then
 		CodeLine(sb, sborderradius, "s", "tbl", sname, "Logo.SetBorderRadius")
 		CodeLine(sb, sborderwidth, "s", "tbl", sname, "Logo.SetBorderWidth")
 		CodeLine(sb, sbordercolor, "s", "tbl", sname, "Logo.SetBorderColor")
 		CodeLine(sb, sborderstyle, "s", "tbl", sname, "Logo.SetBorderStyle")
 		CodeLine2(sb, slogowidth, slogoheight, "s", "tbl", sname, "Logo.SetSize")
-		CodeLine1(sb, slogourl, "s", "tbl", sname, "AddLogo")
+		CodeLine(sb, slogourl, "s", "tbl", sname, "AddLogo")
+		If bislogovisible Then
+			AddCode(sb, $"tbl${sname}.Logo.Show"$)
+		Else
+			AddCode(sb, $"tbl${sname}.Logo.Hide"$)
+		End If
+	Else
+		CodeLine(sb, sborderradius, "s", "vm.NavBar", "", "Logo.SetBorderRadius")
+		CodeLine(sb, sborderwidth, "s", "vm.NavBar", "", "Logo.SetBorderWidth")
+		CodeLine(sb, sbordercolor, "s", "vm.NavBar", "", "Logo.SetBorderColor")
+		CodeLine(sb, sborderstyle, "s", "vm.NavBar", "", "Logo.SetBorderStyle")
+		CodeLine2(sb, slogowidth, slogoheight, "s", "vm.NavBar", "", "Logo.SetSize")
+		CodeLine(sb, slogourl, "s", "vm.NavBar", "", "AddLogo")
+		If bislogovisible Then
+			AddCode(sb, "vm.NavBar.Logo.Show")
+		Else
+			AddCode(sb, "vm.NavBar.Logo.Hide")
+		End If
+	End If
+	'
+	If biscurrent = False Then
+		If bistitle Then CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
+		If bissubtitle Then CodeLine(sb, stoolbarsubtitle, "s", "tbl", sname, "AddSubHeading1")
+		If bissearch Then
+			sb.append($"tbl${sname}.AddSpacer"$).append(CRLF)
+			sb.append($"tbl${sname}.AddSearch("${ssearchkey}")"$).append(CRLF)
+		End If
+		If bisspacer Then sb.append($"tbl${sname}.AddSpacer"$).append(CRLF)
+		
+		CodeLine(sb, sextensionheight, "s", "tbl", sname, "SetExtensionHeight")
+		CodeLine(sb, sscrolltarget, "s", "tbl", sname, "SetScrollTarget")
+		CodeLine(sb, sscrollthreshold, "s", "tbl", sname, "SetScrollThreshold")
+		CodeLine(sb, ssrc, "s", "tbl", sname, "SetSrc")
+		CodeLine(sb, selevation, "s", "tbl", sname, "SetElevation")
+		CodeLine(sb, bisflat, "b", "tbl", sname, "SetFlat")
+		'
+		CodeLine(sb, swidth, "s", "tbl", sname, "SetWidth")
+		CodeLine(sb, sminwidth, "s", "tbl", sname, "SetMinWidth")
+		CodeLine(sb, smaxwidth, "s", "tbl", sname, "SetMaxWidth")
+		CodeLine(sb, sheight, "s", "tbl", sname, "SetHeight")
+		CodeLine(sb, sminheight, "s", "tbl", sname, "SetMinHeight")
+		CodeLine(sb, smaxheight, "s", "tbl", sname, "SetMaxHeight")
+		'
+		CodeLine2(sb, scolor, sintensity, "s", "tbl", sname, "SetColorIntensity")
+		
+		CodeLine(sb, bisdense, "b", "tbl", sname, "SetDense")
+		CodeLine(sb, bisdark, "b", "tbl", sname, "SetDark")
+		CodeLine(sb, bisabsolute, "b", "tbl", sname, "SetAbsolute")
+		CodeLine(sb, bisclippedleft, "b", "tbl", sname, "SetClippedLeft")
+		CodeLine(sb, bisclippedright, "b", "tbl", sname, "SetClippedRight")
+		CodeLine(sb, bisclippedleft, "b", "tbl", sname, "SetClippedLeft")
+		CodeLine(sb, biscollapse, "b", "tbl", sname, "SetCollapse")
+		CodeLine(sb, biscollapseonscroll, "b", "tbl", sname, "SetCollapseOnScroll")
+		CodeLine(sb, biselevateonscroll, "b", "tbl", sname, "SetElevateOnScroll")
+		CodeLine(sb, bisextended, "b", "tbl", sname, "SetExtended")
+		CodeLine(sb, bisfadeimageonscroll, "b", "tbl", sname, "SetFadeImgOnScroll")
+		CodeLine(sb, bisfixed, "b", "tbl", sname, "SetFixed")
+		CodeLine(sb, bisfloating, "b", "tbl", sname, "SetFloating")
+		CodeLine(sb, bishideonscroll, "b", "tbl", sname, "SetHideOnScroll")
+		CodeLine(sb, bisinvertedscroll, "b", "tbl", sname, "SetInvertedScroll")
+		CodeLine(sb, bisprominent, "b", "tbl", sname, "SetProminent")
+		CodeLine(sb, bisscrolloffscreen, "b", "tbl", sname, "SetScrollOffScreen")
+		CodeLine(sb, bisshort, "b", "tbl", sname, "SetShort")
+		CodeLine(sb, bisshrinkonscroll, "b", "tbl", sname, "SetShrinkOnScroll")
+		CodeLine(sb, bisvisible, "b", "tbl", sname, "SetVisible")
+	Else
+		If bistitle Then CodeLine2(sb, stitle, stitleclass, "s", "vm.NavBar", "", "AddTitle")
+		If bissubtitle Then CodeLine(sb, stoolbarsubtitle, "s", "vm.NavBar", "", "AddSubHeading1")
+		If bissearch Then
+			sb.append($"vm.NavBar.AddSpacer"$).append(CRLF)
+			sb.append($"vm.NavBar.AddSearch("${ssearchkey}")"$).append(CRLF)
+		End If
+		If bisspacer Then sb.append($"vm.NavBar.AddSpacer"$).append(CRLF)
+		'
+		CodeLine2(sb, scolor, sintensity, "s", "vm.NavBar", "", "SetColorIntensity")
+		CodeLine(sb, sextensionheight, "s", "vm.NavBar", "", "SetExtensionHeight")
+		CodeLine(sb, sscrolltarget, "s", "vm.NavBar", "", "SetScrollTarget")
+		CodeLine(sb, sscrollthreshold, "s", "vm.NavBar", "", "SetScrollThreshold")
+		CodeLine(sb, ssrc, "s", "vm.NavBar", "", "SetSrc")
+		CodeLine(sb, selevation, "s", "vm.NavBar", "", "SetElevation")
+		CodeLine(sb, bisflat, "b", "vm.NavBar", "", "SetFlat")
+		'
+		CodeLine(sb, swidth, "s", "vm.NavBar", "", "SetWidth")
+		CodeLine(sb, sminwidth, "s", "vm.NavBar", "", "SetMinWidth")
+		CodeLine(sb, smaxwidth, "s", "vm.NavBar", "", "SetMaxWidth")
+		CodeLine(sb, sheight, "s", "vm.NavBar", "", "SetHeight")
+		CodeLine(sb, sminheight, "s", "vm.NavBar", "", "SetMinHeight")
+		CodeLine(sb, smaxheight, "s", "vm.NavBar", "", "SetMaxHeight")
+		'
+		
+		CodeLine(sb, bisdense, "b", "vm.NavBar", "", "SetDense")
+		CodeLine(sb, bisdark, "b", "vm.NavBar", "", "SetDark")
+		CodeLine(sb, bisabsolute, "b", "vm.NavBar", "", "SetAbsolute")
+		CodeLine(sb, bisclippedleft, "b", "vm.NavBar", "", "SetClippedLeft")
+		CodeLine(sb, bisclippedright, "b", "vm.NavBar", "", "SetClippedRight")
+		CodeLine(sb, bisclippedleft, "b", "vm.NavBar", "", "SetClippedLeft")
+		CodeLine(sb, biscollapse, "b", "vm.NavBar", "", "SetCollapse")
+		CodeLine(sb, biscollapseonscroll, "b", "vm.NavBar", "", "SetCollapseOnScroll")
+		CodeLine(sb, biselevateonscroll, "b", "vm.NavBar", "", "SetElevateOnScroll")
+		CodeLine(sb, bisextended, "b", "vm.NavBar", "", "SetExtended")
+		CodeLine(sb, bisfadeimageonscroll, "b", "vm.NavBar", "", "SetFadeImgOnScroll")
+		CodeLine(sb, bisfixed, "b", "vm.NavBar", "", "SetFixed")
+		CodeLine(sb, bisfloating, "b", "vm.NavBar", "", "SetFloating")
+		CodeLine(sb, bishideonscroll, "b", "vm.NavBar", "", "SetHideOnScroll")
+		CodeLine(sb, bisinvertedscroll, "b", "vm.NavBar", "", "SetInvertedScroll")
+		CodeLine(sb, bisprominent, "b", "vm.NavBar", "", "SetProminent")
+		CodeLine(sb, bisscrolloffscreen, "b", "vm.NavBar", "", "SetScrollOffScreen")
+		CodeLine(sb, bisshort, "b", "vm.NavBar", "", "SetShort")
+		CodeLine(sb, bisshrinkonscroll, "b", "vm.NavBar", "", "SetShrinkOnScroll")
+		CodeLine(sb, bisvisible, "b", "vm.NavBar", "", "SetVisible")
 	End If
 	
-	CodeLine(sb, sextensionheight, "s", "tbl", sname, "SetExtensionHeight")
-	CodeLine(sb, sscrolltarget, "s", "tbl", sname, "SetScrollTarget")
-	CodeLine(sb, sscrollthreshold, "s", "tbl", sname, "SetScrollThreshold")
-	CodeLine(sb, ssrc, "s", "tbl", sname, "SetSrc")
-	CodeLine(sb, selevation, "s", "tbl", sname, "SetElevation")
+	AddNewLine(sb)	
 	'
-	CodeLine(sb, swidth, "s", "tbl", sname, "SetWidth")
-	CodeLine(sb, sminwidth, "s", "tbl", sname, "SetMinWidth")
-	CodeLine(sb, smaxwidth, "s", "tbl", sname, "SetMaxWidth")
-	CodeLine(sb, sheight, "s", "tbl", sname, "SetHeight")
-	CodeLine(sb, sminheight, "s", "tbl", sname, "SetMinHeight")
-	CodeLine(sb, smaxheight, "s", "tbl", sname, "SetMaxHeight")
-	'
-	CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
-	If bisspacer Then sb.append($"tbl${sname}.AddSpacer"$).append(CRLF)
-	CodeLine2(sb, scolor, sintensity, "s", "tbl", sname, "SetColorIntensity")
-	
-	CodeLine(sb, bisdense, "b", "tbl", sname, "SetDense")
-	CodeLine(sb, bisdark, "b", "tbl", sname, "SetDark")
-	CodeLine(sb, bisabsolute, "b", "tbl", sname, "SetAbsolute")
-	CodeLine(sb, bisclippedleft, "b", "tbl", sname, "SetClippedLeft")
-	CodeLine(sb, bisclippedright, "b", "tbl", sname, "SetClippedRight")
-	CodeLine(sb, bisclippedleft, "b", "tbl", sname, "SetClippedLeft")
-	CodeLine(sb, biscollapse, "b", "tbl", sname, "SetCollapse")
-	CodeLine(sb, biscollapseonscroll, "b", "tbl", sname, "SetCollapseOnScroll")
-	CodeLine(sb, biselevateonscroll, "b", "tbl", sname, "SetElevateOnScroll")
-	CodeLine(sb, bisextended, "b", "tbl", sname, "SetExtended")
-	CodeLine(sb, bisfadeimageonscroll, "b", "tbl", sname, "SetFadeImgOnScroll")
-	CodeLine(sb, bisfixed, "b", "tbl", sname, "SetFixed")
-	CodeLine(sb, bisfloating, "b", "tbl", sname, "SetFloating")
-	CodeLine(sb, bishideonscroll, "b", "tbl", sname, "SetHideOnScroll")
-	CodeLine(sb, bisinvertedscroll, "b", "tbl", sname, "SetInvertedScroll")
-	CodeLine(sb, bisprominent, "b", "tbl", sname, "SetProminent")
-	CodeLine(sb, bisscrolloffscreen, "b", "tbl", sname, "SetScrollOffScreen")
-	CodeLine(sb, bisshort, "b", "tbl", sname, "SetShort")
-	CodeLine(sb, bisshrinkonscroll, "b", "tbl", sname, "SetShrinkOnScroll")
-	CodeLine(sb, bisvisible, "b", "tbl", sname, "SetVisible")
-	
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
-		Dim ssavatar As String = m.getdefault("avatar", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		Dim sssubtitle As String = m.GetDefault("subtitle", "")
 		Dim sitemtype As String = m.getdefault("itemtype", "icon")
@@ -3067,16 +3435,42 @@ Sub Design_ToolBar
 		If sskey = "" Then Continue
 		Select Case sitemtype
 		Case "menu"
-			sb.append($"tbl${sname}.AddMenu(${sskey})"$).append(CRLF)
+			If biscurrent = False Then
+				sb.append($"tbl${sname}.AddMenu(${sskey})"$).append(CRLF)
+			Else
+				sb.append($"vm.NavBar.AddMenu(${sskey})"$).append(CRLF)
+			End If
 		Case "btn"
-			sb.append($"tbl${sname}.AddButton1("${sskey}", "${ssiconname}", "${sstitle}", "${sssubtitle}", "${sBadge}")"$).append(CRLF)
+			If biscurrent = False Then
+				sb.append($"tbl${sname}.AddItem("${sskey}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "${sBadge}")"$).append(CRLF)
+			Else
+				sb.append($"vm.NavBar.AddItem("${sskey}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "${sBadge}")"$).append(CRLF)
+			End If
 		Case "icon"
-			sb.append($"tbl${sname}.AddIcon("${sskey}", "${ssiconname}", "${sssubtitle}", "${sBadge}")"$).append(CRLF)
+			If biscurrent = False Then
+				sb.append($"tbl${sname}.AddIcon1("${sskey}", "${ssiconname}", "${sIconcolor}", "${sssubtitle}", "${sBadge}")"$).append(CRLF)
+			Else
+				sb.append($"vm.NavBar.AddIcon1("${sskey}", "${ssiconname}", "${sIconcolor}", "${sssubtitle}", "${sBadge}")"$).append(CRLF)
+			End If
 		End Select
 	Next
-	
-	sb.append($"${sparent}.Container.AddControl(tbl${sname}.ToolBar, tbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	AddNewLine(sb)
 	'
+	If bissearch Then
+		AddNewLine(sbEvents)
+		AddComment(sbEvents, "fire when search looses focus")
+		AddCode(sbEvents, $"Private Sub ${ssearchkey}_change(e as BANanoEvent)"$)
+		AddComment(sbEvents, "get the search phrase")
+		AddCode(sbEvents, $"Dim s${ssearchkey} As String = vm.GetData("${ssearchkey}")"$)
+		AddCode(sbEvents, $"vm.ShowSnackBar(s${ssearchkey})"$)
+		AddCode(sbEvents, "End Sub")
+		AddNewLine(sbEvents)
+	End If
+	
+	'
+	If biscurrent = False Then
+		sb.append($"${sparent}.Container.AddControl(tbl${sname}.ToolBar, tbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	End If
 End Sub
 
 Sub Design_Button
@@ -3225,6 +3619,10 @@ Sub Design_Button
 	Case "showpage"
 		'show a page
 		AddCode(sbEvents, $"vm.ShowPage("${sdialogpage}")"$)
+	Case "showdrawer"
+		AddCode(sbEvents, $"vm.ShowDrawer("${sdialogpage}")	"$)
+	Case "hidedrawer"
+		AddCode(sbEvents, $"vm.HideDrawer("${sdialogpage}")"$)
 	End Select
 	AddCode(sbEvents, "End Sub")
 	AddNewLine(sbEvents)
@@ -3310,6 +3708,8 @@ End Sub
 Sub btnRefresh_click(e As BANanoEvent)
 	CreateUX
 End Sub
+
+
 
 Sub compMenuitems_click(e As BANanoEvent)
 	Dim menuID As String = vm.getidfromevent(e)
@@ -3402,6 +3802,8 @@ Sub confirm_ok(e As BANanoEvent)
 			RemoveLastGridItem
 		Case "deletepropbag"
 			DeleteIT
+		Case "deleteproject"
+			DeleteProject	
 	End Select
 End Sub
 
@@ -3495,7 +3897,8 @@ Sub DesignLayout
 	'vm.Container.SetOnDragOverRC(1, 2, "ItemDragOver")
 	'vm.Container.SetOnDropRC(1, 2, "ItemDrop")
 	'
-	Dim ep As VMExpansionPanels = vm.CreateExpansionpanels("ep1", Me).SetAccordion(True)
+	ep = vm.CreateExpansionpanels("ep1", Me).SetAccordion(True)
+	ep.SetVisible(True)
 	ep.SetVmodel("selectedpanel")
 	'
 	Dim ep1 As VMExpansionPanel = GridPanel
@@ -3621,7 +4024,6 @@ Sub DesignLayout
 	'create a toolbar to save and delete the property bag
 	tblProp = vm.CreateToolbar("tblx", Me).SetDense(True).SetVisible(False)
 	tblProp.AddSpacer
-	tblProp.SetFlat(True)
 	tblProp.AddIcon("btnSaveProp", "save", "Save property bag", "")
 	tblProp.AddIcon("btnDeleteProp", "delete", "Delete property bag", "")
 	vm.container.AddComponent(1, 3, tblProp.tostring)
@@ -4253,6 +4655,7 @@ End Sub
 'a component has been clicked
 Sub mycomponents_click(e As BANanoEvent)
 	istool = False
+	drwprojectdetails.hide
 	Dim itemID As String = vm.GetIDFromEvent(e)
 	itemID = BANano.parseint(itemID)
 	vm.setdata("devspace", 0)
@@ -4944,6 +5347,21 @@ End Sub
 
 'whenever we drop an item
 Sub ItemDrop(e As BANanoEvent)
+	'which project are we working on
+	Dim project As Map = vm.GetData("project")
+	Dim pid As String = project.getdefault("id", "")
+	If pid = "" Then
+		vm.ShowSnackBarError("You need to create a project / activate a project to add components to!")
+		'show the iphone
+		vm.setdata("devspace", 0)
+		mymac.hide
+		myipad.hide
+		myiphone.show
+		myiphone.SetLandScape(False)
+		vm.drawer.Show
+		NewProject
+		Return
+	End If
 	ShowBag("")
 	istool = False
 	ClearTableThings
@@ -5182,6 +5600,13 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("logowidth", "46px")
 							attr.put("logoheight", "46px")
 							attr.put("islogovisible", "Yes")
+							attr.put("iscurrent", "Yes")
+							attr.put("istitle","Yes")
+							attr.put("issubtitle", "Yes")
+							attr.put("issearch", "Yes")
+							attr.put("isfixed", "Yes")
+							attr.put("searchkey", "appsearch")
+							attr.put("subtitle", "1.00")
 							BANano.SetLocalStorage("selectedpanel", 4)
 							nrec.put("items", MenuItems)
 						Case "menu"
@@ -5197,6 +5622,17 @@ Sub ItemDrop(e As BANanoEvent)
 						Case "drawer"
 							attr.put("src", "")
 							attr.put("isabsolute", "Yes")
+							attr.put("width", "400")
+							attr.put("keyfld", "key")
+							attr.put("avatarfld", "avatar")
+							attr.put("iconfld", "iconname")
+							attr.put("iconcolorfld", "iconcolor")
+							attr.put("titlefld", "title")
+							attr.put("subtitlefld", "subtitle")
+							attr.put("subtitle1fld", "subtitle1")
+							attr.put("actioniconfld", "actionicon")
+							attr.put("actioniconcolorfld", "actioniconcolor")
+							attr.put("useoptions", "Yes")
 							BANano.SetLocalStorage("selectedpanel", 4)
 							nrec.put("items", DemoItems)
 						Case "carousel"
@@ -5417,7 +5853,7 @@ End Sub
 #Region Button Property Bag
 Sub PropertyBag_Button
 	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record", _
-	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","":"None")
+	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","":"None","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer")
 	vm.setdata("pbbutton", False)
 	lstBags.add("pbbutton")
 	pbbutton = vm.CreateProperty("ppbbutton", Me)
@@ -5432,7 +5868,7 @@ Sub PropertyBag_Button
 	pbbutton.AddText("d","href","Href","","")
 	pbbutton.AddText("d","to","Navigate To","","")
 	pbbutton.AddSelect2("d","target","Target", vm.TargetOptions, "size", "Size", iconsizes)
-	pbbutton.AddText("d","dialogpage","Dialog / Page Name","","")
+	pbbutton.AddText("d","dialogpage","Dialog / Page Name / Drawer","","")
 	pbbutton.AddSelect("d","clickaction", "On Click Action", ops)
 	pbbutton.AddText("d","tooltip","Tooltip","","")
 	pbbutton.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
@@ -5674,34 +6110,40 @@ Sub PropertyBag_Toolbar
 	pbtoolbar.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
 	pbtoolbar.AddRadioGroupH("d", "bartype", "Type", CreateMap("app":"AppBar","tool":"ToolBar","sys":"SystemBar"))
 	pbtoolbar.AddSelect("d","elevation","Elevation",vm.elevation)
-	pbtoolbar.AddText("d","extensionheight","Extension Height","","")
+	pbtoolbar.AddText2("d",CreateMap("extensionheight":"Extension Height","searchkey":"Search Key"))
 	pbtoolbar.AddText2("d",CreateMap("scrolltarget":"Scroll Target", "scrollthreshold":"Scroll Threshold"))
-	pbtoolbar.AddText("d","src","Src","","")
-	pbtoolbar.AddText("d","logourl","Logo URL","","")
-	pbtoolbar.AddText2("d",CreateMap("borderradius":"Logo Border Radius", "borderwidth":"Logo Border Width"))
-	pbtoolbar.AddSelect2("d","bordercolor","Logo Border Color", vm.ColorOptions, "borderstyle","Logo Border Style",vm.BorderOptions)
-	pbtoolbar.AddText2("d",CreateMap("logowidth":"Logo Width","logoheight":"Logo Height"))
+	pbtoolbar.AddText("d","src","Background Image","","")
 	pbtoolbar.AddText("d","label","Title","","")
 	pbtoolbar.AddText("d","titleclass","Title Class(es)","","")
+	pbtoolbar.AddText("d","toolbarsubtitle","Sub Heading","","")
 	pbtoolbar.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbtoolbar.AddHeightWidths("d")
 	'
+	pbtoolbar.AddHeading("b", "Logo")
+	pbtoolbar.AddText("b","logourl","Logo URL","","")
+	pbtoolbar.AddText2("b",CreateMap("borderradius":"Logo Border Radius", "borderwidth":"Logo Border Width"))
+	pbtoolbar.AddSelect2("b","bordercolor","Logo Border Color", vm.ColorOptions, "borderstyle","Logo Border Style",vm.BorderOptions)
+	pbtoolbar.AddText2("b",CreateMap("logowidth":"Logo Width","logoheight":"Logo Height"))
+	
 	pbtoolbar.AddHeading("a", "Items")
 	pbtoolbar.AddToolbarItems("a")
 
 	'
 	pbtoolbar.AddHeading("e","Settings")
-	pbtoolbar.AddSwitches("e", CreateMap("ishamburger":"Hamburger","isspacer":"Add Spacer"))
+	pbtoolbar.AddSwitches("e", CreateMap("iscurrent":"Master NavBar","isflat":"Flat"))
+	pbtoolbar.AddSwitches("e", CreateMap("ishamburger":"Hamburger","islogovisible": "Logo"))
+	pbtoolbar.AddSwitches("e", CreateMap("istitle":"Title", "issubtitle":"Sub Heading"))
+	pbtoolbar.AddSwitches("e", CreateMap("issearch":"Add Search","isspacer":"Add Spacer"))
+	pbtoolbar.AddSwitches("e", CreateMap("isdense":"Dense", "isfixed": "Fixed"))	
 	pbtoolbar.AddSwitches("e", CreateMap("isdark":"Dark","isabsolute":"Absolute"))	
 	pbtoolbar.AddSwitches("e", CreateMap("isclippedleft": "Clipped Left", "isclippedright": "Clipped Right"))
 	pbtoolbar.AddSwitches("e", CreateMap("iscollapse": "Collapse", "iscollapseonscroll": "Collapse on Scroll"))
 	pbtoolbar.AddSwitches("e", CreateMap("iselevateonscroll": "Elevate on Scroll", "isextended": "Extended"))
-	pbtoolbar.AddSwitches("e", CreateMap("isfadeimageonscroll": "Fade Image on Scroll", "isfixed": "Fixed"))
+	pbtoolbar.AddSwitches("e", CreateMap("isfadeimageonscroll": "Fade Image on Scroll"))
 	pbtoolbar.AddSwitches("e", CreateMap("isfloating": "Floating", "ishideonscroll": "Hide on Scroll"))
 	pbtoolbar.AddSwitches("e", CreateMap("isinvertedscroll": "Inverted Scroll", "isprominent": "Prominent"))
 	pbtoolbar.AddSwitches("e", CreateMap("isscrolloffscreen": "Scroll off Screen", "isshort": "Short"))
 	pbtoolbar.AddSwitches("e", CreateMap("isshrinkonscroll": "Shrink on Scroll", "isvisible": "Visible"))
-	pbtoolbar.AddSwitches("e", CreateMap("islogovisible": "Logo Visible","isdense":"Dense"))
 	'
 	pbtoolbar.AddHeading("f","Matrix")
 	pbtoolbar.AddMatrix("f")
@@ -5803,6 +6245,24 @@ Sub DeleteIT
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	vm.pageresume
 	CreateUX
+End Sub
+
+Sub DeleteProject
+	drwprojectdetails.hide
+	ShowBag("")
+	'get the id tp delete
+	Dim sid As String = vm.getdata("deleteid")
+	sid = BANano.parseint(sid)
+	Dim db As BANanoSQL
+	Dim rsSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	rsSQL.Initialize("project", "id")
+	rsSQL.Delete(sid)
+	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	vm.callmethod("LoadProjects")
+	vm.NavBar.UpdateTitle($"${Main.AppTitle} ${Main.version}"$)
+	vm.SetData("project", vm.newmap)
+	drwprojectdetails.Container.Setdefaults
 End Sub
 
 Sub ppbtextfield_change(e As BANanoEvent)
@@ -6159,11 +6619,20 @@ Sub PropertyBag_Drawer
 	pbdrawer.AddText2("d",CreateMap("overlayopacity":"OverlayOpacity","tag":"Tag"))
 	pbdrawer.AddText("d","src","Src","","")
 	pbdrawer.AddText2("d", CreateMap("width":"Width","height":"Height"))
+	
+	pbdrawer.AddHeading("s", "Data Source")
+	pbdrawer.AddText("s","datasource","Data Source","","")
+	pbdrawer.AddText2("s",CreateMap("keyfld":"Key Fld", "avatarfld":"Avatar Fld"))
+	pbdrawer.AddText2("s",CreateMap("iconfld":"Icon Fld", "iconcolorfld":"Icon Color Fld"))
+	pbdrawer.AddText2("s",CreateMap("titlefld":"Title Fld", "subtitlefld":"Subtitle 1 Fld"))
+	pbdrawer.AddText2("s",CreateMap("subtitle1fld":"Subtitle 2 Fld", "actioniconfld":"Action Icon Fld"))
+	pbdrawer.AddText2("s",CreateMap("actioniconcolorfld":"Action Icon Color Fld"))
 	'
 	pbdrawer.AddHeading("a", "Items")
 	pbdrawer.AddMenuItems("a")
 	'
 	pbdrawer.AddHeading("e","Settings")
+	pbdrawer.AddSwitches("e", CreateMap("useoptions": "Use Items"))
 	pbdrawer.AddSwitches("e", CreateMap("isdark": "Dark", "isdivider":"Divide Each"))
 	pbdrawer.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isapp": "App"))
 	pbdrawer.AddSwitches("e", CreateMap("isbottom": "Bottom", "isclipped": "Clipped"))
@@ -6840,6 +7309,7 @@ Sub Design_Table
 		sb.append($"datatable${sname}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
 	End If
 	'
+	AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
 	CodeLine(sb, bisCalculatewidths, "b", "DataTable", sname, "SetCalculatewidths")
 	CodeLine(sb, bisdark, "b", "DataTable", sname, "SetDark")
 	CodeLine(sb, sDatasourcename, "s", "DataTable", sname, "SetDatasourcename")
@@ -7279,6 +7749,7 @@ Sub Design_List
 		Next
 	Else
 		'set data source
+		AddCode(sb, $"vm.setdata("${sDatasource}", vm.newlist)"$)
 		AddCode(sb, $"lst${sname}.SetDataSourceTemplate1("${sDatasource}","${sKeyfld}","${sAvatarfld}","${sIconfld}","${sIconcolorfld}","${sTitlefld}","${sSubtitlefld}","${sSubtitle1fld}","${sActioniconfld}","${sActioniconcolorfld}")"$)
 	End If
 	

@@ -18,9 +18,9 @@ Sub Init
 	vm.Drawer.Hide
 	'add the code from the modules
 	vm.AddPage(pgLogin.name, pgLogin)
-	'show the dialog when page opens
-	vm.ShowDialog("mdlsignin")
 	'build the page
 	vm.ux
+	'
+	pgLogin.mdlSignIn.show
 End Sub
 

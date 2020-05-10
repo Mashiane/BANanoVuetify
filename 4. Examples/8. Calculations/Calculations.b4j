@@ -77,7 +77,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BP.StylesPath = BANano.STYLES_FOLDER
 	BP.ScriptFile = BANano.JAVASCRIPT_NAME
 	BP.UnzipFonts
-	BP.Open(True)
+	BP.OpenOnPort(True, 8080)
 	ExitApplication
 End Sub
 

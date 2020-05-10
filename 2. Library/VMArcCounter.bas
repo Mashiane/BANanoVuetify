@@ -16,6 +16,8 @@ End Sub
 
 'initialize the ArcCounter
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMArcCounter
+	BANano.DependsOnAsset("arcCounter.umd.min.js")
+	'
 	ID = sid.tolowercase
 	ArcCounter.Initialize(v, ID)
 	ArcCounter.SetTag("arc-counter")

@@ -40,6 +40,9 @@ End Sub
 
 'initialize the device
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMDevice
+	BANano.DependsOnAsset("renderstring.min.js")
+	BANano.DependsOnAsset("devices.min.css")
+	'
 	ID = sid.tolowercase
 	vue = v
 	Device.Initialize(v, ID).SetTag("div")

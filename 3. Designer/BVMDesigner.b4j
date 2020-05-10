@@ -120,9 +120,10 @@ Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
 Library5=bananovuetify
+Library6=b4xcollections
 Module1=modDesigner
 NumberOfFiles=57
-NumberOfLibraries=5
+NumberOfLibraries=6
 NumberOfModules=1
 Version=8.1
 @EndOfDesignText@
@@ -136,12 +137,13 @@ Version=8.1
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "bvmdesigner"
+	Public AppTitle As String = "BVMDesigner"
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "3.84"
+	Public Version As String = "3.85"
 	Public Port As String = "8080"
 End Sub
 
@@ -153,11 +155,11 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'initialize banano for first use
 	BANano.Initialize("BANano", AppName, DateTime.now)
 	BANano.HTML_NAME = "index.html"
-	BANano.Header.Title = "BVMDesigner"
-	BANano.TranspilerOptions.UseServiceWorker = True
+	BANano.Header.Title = AppTitle
+	BANano.TranspilerOptions.UseServiceWorker = False
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
-	BANano.TranspilerOptions.MinifyOnline = True
+	BANano.TranspilerOptions.MinifyOnline = False
 	
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$
@@ -196,6 +198,13 @@ Sub BANano_Ready
 	alaSQL.SchemaAddField("controltype", alaSQL.DB_TEXT)
 	alaSQL.SchemaAddIntegers(Array("id", "row","col","tabindex"))
 	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items"))
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	'
+	'create the project table
+	alaSQL.Initialize("project", "id")
+	alaSQL.SchemaAddInt(Array("id"))
+	alaSQL.SchemaAddStrings(Array("projectname","dbtype","databasename","components"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	modDesigner.init

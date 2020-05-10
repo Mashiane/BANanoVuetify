@@ -200,22 +200,17 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	circleCounter.Initialize("circleCounter")
 	vue.AddComponentBO("circle-counter", circleCounter)
 	'
-	'vueSelectSides.Initialize("vueSelectSides")
-	'vue.AddComponentBO("vue-select-sides", vueSelectSides)
-	'
 	'initialize the pages
 	Pages.initialize
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
 	VContent.Initialize(vue, $"${appName}content"$).SetTag("v-content")
 	Container.Initialize(vue, $"${appName}container"$, eventHandler)
-	Drawer.Initialize(vue, "drawer", eventHandler).SetApp(True).SetVModel("drawer")
+	Drawer.Initialize(vue, "drawer", eventHandler)
+	Drawer.SetApp(True)
+	Drawer.SetVModel("drawer")
 	NavBar.Initialize(vue, "appbar", eventHandler)
 	NavBar.SetAppBar(True)
-	NavBar.AddHamburger
-	NavBar.AddLogo("")
-	NavBar.AddTitle(appName,"")
-	NavBar.AddSpacer
 	NavBar.Show
 	'
 		'
@@ -273,6 +268,18 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	End If
 End Sub
 
+
+'return sentences of lorem ipsum
+Sub Rand_LoremIpsum(count As Int) As String
+	Dim str As String = $"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."$
+	Dim sb As StringBuilder
+	sb.Initialize
+	For i = 1 To count
+		sb.Append(str).Append(CRLF)
+	Next
+	Return sb.tostring
+End Sub
+
 'join list to multi value string with a quote
 Sub JoinItems(delimiter As String, sQuote As String, lst As List) As String
 	If lst.Size = 0 Then Return ""
@@ -291,6 +298,12 @@ Sub JoinItems(delimiter As String, sQuote As String, lst As List) As String
 		sb.Append(delimiter).Append(xfld)
 	Next
 	Return sb.ToString
+End Sub
+
+Sub NewMap As Map
+	Dim nm As Map
+	nm.Initialize 
+	Return nm
 End Sub
 
 'nullify the file select
@@ -2629,11 +2642,35 @@ public Sub readAsText(fr As String) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload
-	promise.CallSub(Me, "ReadFileAsText", Array(fr))
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsText"))
 	Return promise
 End Sub
 
-private Sub ReadFileAsText(FileToRead As Object)
+Sub readAsBinaryString(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsBinaryString"))
+	Return promise
+End Sub
+
+Sub readAsDataURL(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsDataURL"))
+	Return promise
+End Sub
+
+Sub readAsArrayBuffer(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsArrayBuffer"))
+	Return promise
+End Sub
+
+private Sub ReadFile(FileToRead As Object, MethodName As String)
 	' make a filereader
 	Dim FileReader As BANanoObject
 	FileReader.Initialize2("FileReader", Null)
@@ -2646,7 +2683,7 @@ private Sub ReadFileAsText(FileToRead As Object)
 	FileReader.SetField("onload", BANano.CallBack(Me, "OnLoad", Array(event)))
 	FileReader.SetField("onerror", BANano.CallBack(Me, "OnError", Array(event)))
 	' start reading the DataURL
-	FileReader.RunMethod("readAsText", FileToRead)
+	FileReader.RunMethod(MethodName, FileToRead)
 End Sub
 
 private Sub OnLoad(event As Map) As String 'ignore
@@ -2666,4 +2703,12 @@ private Sub OnError(event As Map) As String 'ignore
 	' FileReader.RunMethod("abort", Null)
 	
 	BANano.ReturnElse(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.GetField("error"), "abort": Abort))
+End Sub
+
+'upload a file
+Sub UploadFile(EventHandler As Object, MethodName As String, fName As String, data As Object)
+	Dim formData As BANanoObject
+	formData.Initialize2("FormData",Null)
+	formData.RunMethod("append", Array("upload", data, fName))
+	BANano.CallSub(EventHandler, MethodName, formData)
 End Sub

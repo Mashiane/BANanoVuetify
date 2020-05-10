@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=modTables,btnCancelTable_click,106,0,modTables,RefreshTables,110,0,modTables,Process_Globals,7,0,Main,Process_Globals,6,0,pgIndex,Init,29,0,Main,AppStart,29,0,modTables,Code,51,6,modTables,btnSaveTable_click,99,6,modTables,tables_edit,122,0,modTables,tables_delete,146,0
+NavigationStack=modTables,btnCancelTable_click,106,0,modTables,RefreshTables,110,0,modTables,Process_Globals,7,0,Main,Process_Globals,6,0,modTables,Code,51,6,modTables,btnSaveTable_click,99,6,modTables,tables_edit,122,0,modTables,tables_delete,146,0,Main,AppStart,47,0,pgIndex,Init,14,0
 SelectedBuild=0
 VisibleModules=2,1

@@ -14,14 +14,16 @@ End Sub
 Sub Init
 	'initialize the page
 	vm.Initialize(Me, Main.appname)
-	vm.NavBar.UpdateTitle("Expenses.Show")
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	vm.NavBar.AddTitle("Expenses.Show","")
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
 	'set primary color for the navbar
-	'vm.NavBar.SetPrimary(True)
+	vm.NavBar.SetPrimary(True)
 	'fix the navbar so that it does not move
 	vm.NavBar.SetModeFixed(True)
-	'hide the back button
-	'show the hamburger button
-	vm.NavBar.SetHasMenuButton(True)
 	vm.navbar.AddIcon("btnPrint", "print", "Print expenses", "")
 	'
 	'build the page
