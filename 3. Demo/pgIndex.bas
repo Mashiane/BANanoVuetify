@@ -12,22 +12,34 @@ End Sub
 
 Sub Init
 	vm.Initialize(Me, Main.appname)
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	'add a logo
+	vm.NavBar.Logo.SetBorderRadius("50%")
+	vm.NavBar.Logo.SetBorderWidth("1px")
+	vm.NavBar.Logo.SetBorderColor("black")
+	vm.NavBar.Logo.SetBorderStyle("solid")
+	vm.NavBar.Logo.SetSize("46px","46px")
+	vm.NavBar.AddLogo("./assets/sponge.png")
+	vm.NavBar.Logo.Show
+	vm.NavBar.AddTitle(Main.AppTitle,"")
+	vm.NavBar.AddSubHeading1(Main.Version)
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
+	vm.NavBar.SetModeFixed(True)
+	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
+	vm.NavBar.SetDark(True)
+	
 	'vm.Dark = True
 	'vm.SetLocale("ar")
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
-	vm.NavBar.SetModeFixed(True)
-	vm.NavBar.SetHasMenuButton(True)
-	vm.NavBar.UpdateLogo("./assets/sponge.png")
-	vm.NavBar.UpdateTitle($"${Main.appname} ${Main.version}"$)
-	vm.NavBar.Logo.SetBorderRadius("50%")
-	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
-	
-	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
-	vm.NavBar.SetDark(True)
 	'
 	'vm.NavBar.AddSearch("txtsearch")
+	vm.NavBar.AddSearch("appsearch")
+	vm.NavBar.AddSpacer
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")
 	vm.NavBar.AddIcon("btnButton", "mdi-magnify", "My button", "")
 	'
@@ -74,10 +86,14 @@ Sub Init
 	vm.showpage(modInfoBox.name)
 End Sub
 
+Sub appsearch_change(e As BANanoEvent)
+	Dim sappsearch As String = vm.getdata("appsearch")
+End Sub
+
 Sub BuildDrawer
 	vm.Drawer.List.SetDense(True)
 	vm.Drawer.SetWidth("300")
-	vm.Drawer.AddTitleSubTitle(Main.appname, $"Version ${Main.version}"$)
+	vm.Drawer.AddTitleSubTitle(Main.AppTitle, $"Version ${Main.version}"$)
 	vm.Drawer.AddDivider
 	vm.Drawer.AddItem("alerts", "", "Alerts")
 	vm.Drawer.AddItem("toolbars", "", "Toolbars")

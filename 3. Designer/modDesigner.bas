@@ -320,7 +320,6 @@ Sub Process_Globals
 	Private bisslotimg As Boolean
 	Private bisstateless As Boolean
 	Private bistemporary As Boolean
-	Private bistouchless As Boolean
 	Private smtitle As String
 	Private smsubtitle As String
 	'
@@ -347,6 +346,7 @@ Sub Process_Globals
 	Private bisshowarrowsonhover As Boolean
 	Private bistouchless As Boolean
 	Private sverticaldelimiter As String
+	Private bisinset As Boolean
 	'
 	Private biscaption As Boolean
 	Private bisdisabled As Boolean
@@ -769,11 +769,14 @@ Sub Init
 	vm.AddFileSelect(Me, "fucomponent")
 	CreateProjectDrawer
 	'
-	vm.Drawer.SetWidth("350")
+	vm.Drawer.SetWidth("300")
 	Dim dtbl As VMToolBar = vm.CreateToolbar("dtbl", Me)
 	dtbl.SetDense(True).SetFlat(True)
 	dtbl.AddSpacer
 	dtbl.AddIcon1("btnNewProject", "mdi-book-plus", "green", "Add a new project","")
+	dtbl.AddIcon1("btnSaveComponents2Project", "mdi-content-save-outline", "orange", "Save components to project","")
+	dtbl.AddIcon1("btnExtractComponents", "mdi-application-export", "purple", "Export components to stage","")
+	dtbl.AddIcon1("btnDownloadComponents", "mdi-cloud-download-outline", "brown", "Download project components","")
 	dtbl.AddIcon1("btnDeleteProject", "delete", "red", "Delete project", "")
 	'
 	vm.drawer.Container.SetNoGutters(True)
@@ -804,9 +807,96 @@ Sub Init
 		Mode = "A"
 		drwprojectdetails.Show
 	Else	
-		vm.ShowSnackBar("You need to select the work project from the drawer first!")
+		vm.ShowSnackBarError("You need to select the work project from the drawer first!")
 		vm.Drawer.Show
 	End If
+End Sub
+
+Sub btnDownloadComponents_click(e As BANanoEvent)
+	Dim prj As Map = vm.getdata("project")
+	Dim pid As String = prj.getdefault("id", "")
+	If pid = "" Then
+		vm.ShowSnackBarError("Please select the project to download components from!")
+		Return
+	End If
+	vm.PagePause
+	pid = BANano.parseint(pid)
+	Dim db As BANanoSQL
+	Dim compSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	compSQL.Initialize("project", "id")
+	compSQL.Read(pid)
+	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	If compSQL.result.Size = 0 Then
+		vm.PageResume
+		Return
+	End If
+	Dim prj As Map = compSQL.result.get(0)
+	Dim sprojectname As String = prj.getdefault("projectname", "")
+	Dim compJSON As String = prj.getdefault("components", "")
+	vm.PageResume
+	'save to file
+	vm.SaveText2File(compJSON, $"${sprojectname}.txt"$)
+End Sub
+
+'extract components to stage
+Sub btnExtractComponents_click(e As BANanoEvent)
+	Dim prj As Map = vm.getdata("project")
+	Dim pid As String = prj.getdefault("id", "")
+	If pid = "" Then
+		vm.ShowSnackBarError("Please select the project to extract components from!")
+		Return
+	End If
+	Dim compJSON As String = prj.getdefault("components", "")
+	If compJSON = "" Then Return
+	'
+	vm.PagePause
+	'lets import to the db
+	Dim CompList As List
+	CompList.initialize
+	CompList = BANano.FromJSON(compJSON)
+	Dim db As BANanoSQL
+	Dim compSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	compSQL.Initialize("components", "id")
+	For Each nrec As Map In CompList
+		compSQL.RecordFromMap(nrec)
+		compSQL.Insert
+		compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	Next
+	vm.PageResume
+	CreateUX
+End Sub
+
+'save components to project
+Sub btnSaveComponents2Project_click(e As BANanoEvent)
+	Dim prj As Map = vm.getdata("project")
+	Dim pid As String = prj.getdefault("id", "")
+	If pid = "" Then
+		vm.ShowSnackBarError("Please select the project to save the components to first!")
+		Return 
+	End If
+	'get the components
+	vm.PagePause
+	Dim db As BANanoSQL
+	Dim compSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	'add the components
+	compSQL.Initialize("components", "id")
+	compSQL.SelectAll(Array("*"), Array("row","col"))
+	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	'convert to json
+	Dim compJSON As String = BANano.ToJSON(compSQL.result)
+	'save to project
+	pid = BANano.parseint(pid)
+	prj.Put("components", compJSON)
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	compSQL.Initialize("project", "id")
+	compSQL.RecordFromMap(prj)
+	compSQL.Update(pid)
+	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	vm.SetData("project", prj)
+	vm.PageResume
 End Sub
 
 'master drawer click
@@ -829,7 +919,7 @@ Sub draweritems_click(e As BANanoEvent)
 	vm.setstate(rec)
 	Mode = "E"
 	Dim sprojectname As String = rec.getdefault("projectname", "")
-	vm.NavBar.UpdateTitle($"${main.AppTitle} [${sprojectname}]"$)
+	vm.NavBar.UpdateTitle($"${Main.AppTitle} [${sprojectname}]"$)
 End Sub
 
 Sub btnDeleteProject_click(e As BANanoEvent)
@@ -949,6 +1039,7 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 		vm.ShowSnackBar("Please ensure that the project name and database name are specified!")
 		Return
 	End If
+	'
 	Dim pid As String
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
@@ -1560,6 +1651,7 @@ Sub Read_Drawer
 	bisstateless = YesNoToBoolean(mattr.getdefault("isstateless", "No"))
 	bistemporary = YesNoToBoolean(mattr.getdefault("istemporary", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
+	bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 	'
 	sDatasource = mattr.getdefault("datasource", "")
 	sKeyfld = mattr.getdefault("keyfld", "")
@@ -2705,7 +2797,7 @@ Sub Design_Drawer
 		Dim ssactionicon As String = m.getdefault("action", "")
 		If sskey = "" Then Continue
 		drw.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, "", ssactionicon, "")
-		If bisdivider Then drw.AddDivider1(True)
+		If bisdivider Then drw.AddDivider1(bisinset)
 		AddCode(sbEvents, $"Case "${sskey}""$)
 	Next
 	AddCode(sbEvents,"End Select")
@@ -2764,7 +2856,7 @@ Sub Design_Drawer
 			Dim ssactionicon As String = m.getdefault("action", "")
 			If sskey = "" Then Continue
 			sb.append($"drw${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "", "${ssactionicon}", "")"$).append(CRLF)
-			If bisdivider Then AddCode(sb,$"drw.AddDivider1(True)"$)
+			If bisdivider Then AddCode(sb,$"drw.AddDivider1(${bisinset})"$)
 		Next
 	Else
 		'set data source
@@ -3714,11 +3806,18 @@ End Sub
 Sub compMenuitems_click(e As BANanoEvent)
 	Dim menuID As String = vm.getidfromevent(e)
 	Select Case menuID
-		Case "btnclearcomp"
-			vm.ShowConfirm("clearcomp", "Confirm Clear Components", "Are you sure that you want to clear the components?", "Yes", "No")
-		Case "btnremovelastcomp"
-			vm.ShowConfirm("removelastcomp", "Confirm Remove Last", "Are you sure that you want to remove the last component?", "Yes", "No")
+	Case "btnclearcomp"
+		vm.ShowConfirm("clearcomp", "Confirm Clear Components", "Are you sure that you want to clear the components?", "Yes", "No")
+	Case "btnremovelastcomp"
+		vm.ShowConfirm("removelastcomp", "Confirm Remove Last", "Are you sure that you want to remove the last component?", "Yes", "No")
 	Case "btndownloadcomp"
+		Dim prj As Map = vm.getdata("project")
+		Dim pid As String = prj.getdefault("id", "")
+		Dim sprojectname As String = prj.getdefault("projectname", "")
+		If pid = "" Then
+			vm.ShowSnackBarError("Please select the project to save the components to first!")
+			Return
+		End If
 		vm.PagePause
 		Dim db As BANanoSQL
 		Dim compSQL As BANanoAlaSQLE
@@ -3729,8 +3828,7 @@ Sub compMenuitems_click(e As BANanoEvent)
 		compSQL.result = db.executewait(compSQL.query, compSQL.args)
 		'convert to json
 		Dim compJSON As String = BANano.ToJSON(compSQL.result)
-		Dim stime As String = DateTime.now
-		vm.SaveText2File(compJSON, $"${stime}.txt"$)
+		vm.SaveText2File(compJSON, $"${sprojectname}.txt"$)
 		vm.PageResume
 	Case "btnuploadcomp"
 		'upload components
@@ -5620,6 +5718,8 @@ Sub ItemDrop(e As BANanoEvent)
 							BANano.SetLocalStorage("selectedpanel", 4)
 							nrec.put("items", MenuItems)
 						Case "drawer"
+							attr.put("ismasterdrawer", "Yes")
+							attr.put("isdivider", "Yes")
 							attr.put("src", "")
 							attr.put("isabsolute", "Yes")
 							attr.put("width", "400")
@@ -6632,16 +6732,17 @@ Sub PropertyBag_Drawer
 	pbdrawer.AddMenuItems("a")
 	'
 	pbdrawer.AddHeading("e","Settings")
-	pbdrawer.AddSwitches("e", CreateMap("useoptions": "Use Items"))
-	pbdrawer.AddSwitches("e", CreateMap("isdark": "Dark", "isdivider":"Divide Each"))
-	pbdrawer.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isapp": "App"))
+	pbdrawer.AddSwitches("e", CreateMap("ismasterdrawer": "Master Drawer", "useoptions": "Use Items"))
+	pbdrawer.AddSwitches("e", CreateMap("isdivider":"Divide Each", "isinset":"Inset Divider"))
+	pbdrawer.AddSwitches("e", CreateMap("isapp": "App", "isright": "Right"))
+	pbdrawer.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isdark": "Dark"))
 	pbdrawer.AddSwitches("e", CreateMap("isbottom": "Bottom", "isclipped": "Clipped"))
 	pbdrawer.AddSwitches("e", CreateMap("isdisableresizewatcher": "DisableResizeWatcher"))
 	pbdrawer.AddSwitches("e", CreateMap("isdisableroutewatcher": "DisableRouteWatcher"))
 	pbdrawer.AddSwitches("e", CreateMap("isfixed": "Fixed", "isfloating":"Floating"))
 	pbdrawer.AddSwitches("e", CreateMap("ishideoverlay": "HideOverlay", "islight": "Light"))
 	pbdrawer.AddSwitches("e", CreateMap("isminivariant": "MiniVariant", "isexpandonhover": "ExpandOnHover"))
-	pbdrawer.AddSwitches("e", CreateMap("ispermanent": "Permanent", "isright": "Right"))
+	pbdrawer.AddSwitches("e", CreateMap("ispermanent": "Permanent"))
 	pbdrawer.AddSwitches("e", CreateMap("isstateless": "Stateless", "istemporary": "Temporary"))
 	pbdrawer.AddSwitches("e", CreateMap("istouchless": "Touchless", "isvisible": "Visible"))
 	

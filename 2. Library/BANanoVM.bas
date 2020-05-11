@@ -31,7 +31,6 @@ Sub Class_Globals
 	Public Alert As VMDialog
 	Private arcCounter As BANanoObject
 	Private circleCounter As BANanoObject
-	'Private vueSelectSides As BANanoObject
 	Public DisplayOptions As Map
 	Public TextAlignmentOptions As Map
 	Public FontWeightOptions As Map
@@ -170,6 +169,7 @@ Sub Class_Globals
 	Private drawers As List
 	Private placeHolder As Int
 	Private PrismComponent As BANanoObject
+	Public Floats As Map
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -184,12 +184,11 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Dark = False
 	module = eventHandler
 	lang = "en"
+	Floats .Initialize 
 	
 	Chartkick.initialize("Chartkick")
 	Chart.Initialize("Chart")
 	vue.Use(Chartkick.RunMethod("use", Chart))
-	'zircleBO.Initialize("zircle")
-	'vue.Use(zircleBO)
 	'
 	PrismComponent.Initialize("PrismComponent")
 	vue.AddComponentBO("prism", PrismComponent)
@@ -701,6 +700,7 @@ End Sub
 
 Sub ShowSnackBarError(Message As String)
 	SetStateSingle("snackmessage", Message)
+	SnackBar.SetTop(True)
 	SnackBar.SetColor("red")
 	SnackBar.Button.Hide
 	SnackBar.show
@@ -709,6 +709,7 @@ End Sub
 Sub ShowSnackBarSuccess(Message As String)
 	SetStateSingle("snackmessage", Message)
 	SnackBar.SetColor("green")
+	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
 	SnackBar.show
 End Sub
@@ -1122,13 +1123,13 @@ private Sub InitColors
 	ColorOptions.Put("white", "White")
 	ColorOptions.Put("yellow", "Yellow")
 	ColorOptions.Put("", "None")
-	ColorOptions.Put("primary","primary")
-	ColorOptions.Put("secondary","secondary")
-	ColorOptions.Put("accent","accent")
-	ColorOptions.Put("error","error")
-	ColorOptions.Put("info","info")
-	ColorOptions.Put("success","success")
-	ColorOptions.Put("warning","warning")
+	ColorOptions.Put("primary","Primary")
+	ColorOptions.Put("secondary","Secondary")
+	ColorOptions.Put("accent","Accent")
+	ColorOptions.Put("error","Error")
+	ColorOptions.Put("info","Info")
+	ColorOptions.Put("success","Success")
+	ColorOptions.Put("warning","Warning")
 	'
 	BorderOptions.Initialize
 	BorderOptions.Put("dashed", "Dashed")
@@ -1212,7 +1213,13 @@ private Sub InitColors
 	Direction.Put("bottom", "Bottom")
 	Direction.Put("left", "Left")
 	Direction.Put("right", "Right")
-
+	'
+	Dim fList As List
+	fList.Initialize 
+	fList.AddAll(Array("float-left", "float-right", "float-none", "float-sm-left", "float-sm-right", "float-sm-none", _
+	"float-md-left", "float-md-right", "float-md-none", "float-lg-left", "float-lg-right", "float-lg-none", "float-xl-left", _
+	"float-xl-right", "float-xl-none"))
+	Floats = vue.List2MapSimple(fList, True)
 End Sub
 
 

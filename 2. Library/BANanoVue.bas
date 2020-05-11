@@ -219,6 +219,7 @@ End Sub
 
 'initialize view
 Public Sub Initialize()
+	Log("BANanoVue.Initialize")
 	Themes.Initialize 
 	BOVue.Initialize("Vue")
 	'store = BOVue.RunMethod("observable", Null).Result
@@ -228,7 +229,7 @@ Public Sub Initialize()
 	'add an empty div
 	body.Append($"<div id="app"></div>"$)
 	Template.Initialize("app","div")
-	Template.SetVCloak
+	'Template.SetVCloak
 	methods.Initialize
 	data.Initialize
 	computed.Initialize  
@@ -3155,11 +3156,35 @@ public Sub readAsText(fr As String) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload
-	promise.CallSub(Me, "ReadFileAsText", Array(fr))
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsText"))
 	Return promise
 End Sub
 
-private Sub ReadFileAsText(FileToRead As Object)
+Sub readAsBinaryString(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsBinaryString"))
+	Return promise
+End Sub
+
+Sub readAsDataURL(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsDataURL"))
+	Return promise
+End Sub
+
+Sub readAsArrayBuffer(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsArrayBuffer"))
+	Return promise
+End Sub
+
+private Sub ReadFile(FileToRead As Object, MethodName As String)
 	' make a filereader
 	Dim FileReader As BANanoObject
 	FileReader.Initialize2("FileReader", Null)
@@ -3172,7 +3197,7 @@ private Sub ReadFileAsText(FileToRead As Object)
 	FileReader.SetField("onload", BANAno.CallBack(Me, "OnLoad", Array(event)))
 	FileReader.SetField("onerror", BANAno.CallBack(Me, "OnError", Array(event)))
 	' start reading the DataURL
-	FileReader.RunMethod("readAsText", FileToRead)
+	FileReader.RunMethod(MethodName, FileToRead)
 End Sub
 
 private Sub OnLoad(event As Map) As String 'ignore
