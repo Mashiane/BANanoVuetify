@@ -469,6 +469,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMDataTable,SetVIf,633,0,BANanoVM,GetShowState,1647,0,BANanoVM,CreateA,1641,0,VMDataTable,SetVisible,1643,3,VMDataTable,SetItemKey,978,0,VMDataTable,SetNoResultsText,1060,0,VMDataTable,SetItemsPerPage,985,3,VMDataTable,SetPage,1064,1,VMDataTable,SetLocale,1019,0,VMDataTable,SetMobileBreakpoint,1025,0
+NavigationStack=BANanoVM,CreateA,1641,0,VMDataTable,SetVisible,1643,3,VMDataTable,SetItemKey,978,0,VMDataTable,SetNoResultsText,1060,0,VMDataTable,SetItemsPerPage,985,3,VMDataTable,SetPage,1064,1,VMDataTable,SetLocale,1019,0,VMDataTable,SetMobileBreakpoint,1025,0,Main,BANano_Ready,112,0,Main,AppStart,103,0
 SelectedBuild=0
 VisibleModules=

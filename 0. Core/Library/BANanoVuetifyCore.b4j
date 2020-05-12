@@ -149,14 +149,13 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 3.86
 	#LibraryName: BANanoVuetifyCore
 #End Region
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "3.86"
+	Public Version As String = "4.00"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

@@ -358,6 +358,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoVue,RunMethod,2242,0,BANanoVue,Use,2475,0,BANanoVue,SetTemplate,2473,0,BANanoVM,JoinItems,274,0,BANanoVM,NewMap,281,0,BANanoVM,AddModule,278,0,BANanoVue,AddModule,2480,0,BANanoVue,MvCount,1882,0,BANanoVue,AddComponent,1892,6,BANanoVue,AddComponentBO,1898,2,VMContainer,AddComponent,1640,0
+NavigationStack=BANanoVue,Use,2475,0,BANanoVue,SetTemplate,2473,0,BANanoVM,JoinItems,274,0,BANanoVM,NewMap,281,0,BANanoVM,AddModule,278,0,BANanoVue,AddModule,2480,0,BANanoVue,MvCount,1882,0,BANanoVue,AddComponent,1892,6,BANanoVue,AddComponentBO,1898,2,VMContainer,AddComponent,1640,0,Main,Process_Globals,12,0
 SelectedBuild=0
 VisibleModules=

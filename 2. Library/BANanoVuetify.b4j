@@ -286,7 +286,7 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 3.86
+	#LibraryVersion: 4.00
 	#LibraryName: BANanoVuetify
 #End Region
 
@@ -382,7 +382,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'
 	BANano.Header.AddJavascriptFile("force.min.js")
 	'
-	BANano.BuildAsB4XLib("3.86")
+	BANano.BuildAsB4XLib("4.00")
 	ExitApplication
 End Sub
 
