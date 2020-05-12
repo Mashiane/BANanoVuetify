@@ -4074,7 +4074,7 @@ Sub DesignLayout
 	myipad.hide
 	'
 	myiphone.Initialize(vue, "myiphone", Me)
-	myiphone.SetIphoneX
+	myiphone.SetIphone8Plus
 	myiphone.hide
 		
 	dnd.AddComponent(1, 1, mymac.tostring)
@@ -4669,7 +4669,7 @@ Sub Design_DBSourceCode
 		Dim xtitle As String = m.GetDefault("title","")  'Title
 		'
 		AddComment(sbl, $"${tbName} ${xtitle} action"$)
-		sbl.append($"Sub ${tbName}_${xkey}(item As Map)"$).append(CRLF)
+		sbl.append($"Sub dt${tbName}_${xkey}(item As Map)"$).append(CRLF)
 		AddComment(sbl, "get the key")
 		sbl.append($"Dim RecID As String = item.Get("${sItemkey}")"$).append(CRLF)
 		Select Case xkey
@@ -4687,7 +4687,8 @@ Sub Design_DBSourceCode
 			sbl.append($"vm.ShowConfirm("delete_${tbName.tolowercase}", "Confirm Delete: " & RecID, "$ & "_").append(CRLF)
 			sbl.append($""Are you sure that you want to delete this ${ssingular}. You will not be able to undo your actions. Continue?","Ok","Cancel")"$).append(CRLF)
 		Case Else
-			'we are doing something else		
+			'we are doing something else
+			AddCode(sbl, $"vm.ShowSnackBarSuccess(BANano.ToJSON(item))"$)		
 		End Select
 		sbl.append($"End Sub"$).append(CRLF).Append(CRLF).append(CRLF)
 	Next

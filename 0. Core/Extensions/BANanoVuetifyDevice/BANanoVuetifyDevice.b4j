@@ -20,7 +20,7 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 1.00
+	#LibraryVersion: 1.01
 	#LibraryName: BANanoVuetifyDevice
 #End Region
 
@@ -42,7 +42,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("renderstring.min.js")
 	BANano.Header.Addcssfile("devices.min.css")
 	'
-	BANano.BuildAsB4XLib("1.00")
+	BANano.BuildAsB4XLib("1.01")
 	ExitApplication
 End Sub
 

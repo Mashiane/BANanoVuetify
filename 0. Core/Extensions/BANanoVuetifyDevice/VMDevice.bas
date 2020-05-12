@@ -201,6 +201,24 @@ Sub ToString As String
 	sensors.SetDesignMode(DesignMode)
 	'
 	Select Case deviceNum
+		Case 10
+			'iphone8 plus
+			Device.AddChild(top_bar)
+			Device.AddChild(slep)
+			Device.AddChild(volume)
+			Device.AddChild(camera)
+			Device.AddChild(sensor)
+			Device.AddChild(speaker)
+			'
+			If hasFrame Then
+				frme.Pop(screen)
+			Else
+				If hasStatic = False Then screen.AddChild(dynamic)
+				If hasDynamic = False Then screen.SetText(static.tostring)
+			End If
+			screen.Pop(Device)
+			Device.AddChild(home)
+			Device.AddChild(bottom_bar)
 		Case 9
 			'iphone 5s
 			Device.AddChild(top_bar)
@@ -438,6 +456,12 @@ End Sub
 Sub SetIPhone8 As VMDevice
 	Device.AddDynamicClass("marvel-device").AddDynamicClass("iphone8").AddDynamicClass("gold")
 	deviceNum = 5
+	Return Me
+End Sub
+
+Sub SetIPhone8Plus As VMDevice
+	Device.AddDynamicClass("marvel-device").AddDynamicClass("iphone8plus").AddDynamicClass("black")
+	deviceNum = 10
 	Return Me
 End Sub
 
