@@ -121,6 +121,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	
 	If ID <> "" Then
 		Dim SMp As Map = CreateMap()
+		SetRef(ID)
 		vue.SetStateSingle(showKey, True)
 		vue.SetStateSingle(disKey, False)
 		vue.SetStateSingle(reqKey, False)

@@ -39,7 +39,6 @@ Sub Class_Globals
 	Private hasFilters As Boolean
 	Private exclusions As List
 	'
-	Private showkey As String
 	Private headers As String
 	Private vcard As VMCard
 	Private title As String
@@ -70,11 +69,9 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	title = $"${ID}title"$
 	search = $"${ID}search"$
 	items = $"${ID}items"$
-	showkey = $"${ID}show"$
 	vue.SetData(headers, vue.newlist)
 	vue.SetData(items, vue.newlist)
 	vue.SetData(title, "")
-	vue.SetData(showkey, True)
 	PrimaryKey = sPrimaryKey
 	'
 	vcard.IsDialog = False
@@ -332,7 +329,6 @@ End Sub
 
 'add columns to exclude
 Sub AddExclusion(colKey As String) As VMDataTable
-	colKey = colKey.tolowercase
 	exclusions.Add(colKey)
 	Return Me
 End Sub
@@ -361,9 +357,6 @@ End Sub
 'add a column
 'key, title, 
 Sub AddColumn1(colName As String, colTitle As String, colType As String, colWidth As Int, colSortable As Boolean, colAlign As String) As VMDataTable
-	'column name should not have a space
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	masterColumns.Add(colName)
 	If hasFilters Then
 		If exclusions.IndexOf(colName) = -1 Then
@@ -392,8 +385,6 @@ End Sub
 
 'set column sortable
 Sub SetColumnSortable(colName As String, colSortable As Boolean) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.sortable = colSortable
@@ -404,8 +395,6 @@ End Sub
 
 'set column sortable
 Sub SetColumnDisabled(colName As String, colDisabled As Boolean) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.Disabled = colDisabled
@@ -414,11 +403,8 @@ Sub SetColumnDisabled(colName As String, colDisabled As Boolean) As VMDataTable
 	Return Me
 End Sub
 
-
 'set the column data template
 Sub SetColumnAlignment(colName As String, colAlign As String) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.align = colAlign
@@ -429,8 +415,6 @@ End Sub
 
 'set the column data template
 Sub SetColumnExtra(colName As String, colExtra As String) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.extra = colExtra
@@ -440,8 +424,6 @@ Sub SetColumnExtra(colName As String, colExtra As String) As VMDataTable
 End Sub
 
 Sub SetColumnIcon(colName As String, icon As String) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.icon = icon
@@ -453,8 +435,6 @@ End Sub
 
 'set the column data template
 Sub SetColumnWidth(colName As String, colWidth As Int) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.width = colWidth
@@ -465,9 +445,6 @@ End Sub
 
 'set column filterable
 Sub SetColumnFilterable(colName As String, colFilter As Boolean) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
-	
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.filterable = colFilter
@@ -478,9 +455,6 @@ End Sub
 
 'set column class
 Sub SetColumnClass(colName As String, colClass As String) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
-	
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.classname = colClass
@@ -515,9 +489,6 @@ End Sub
 
 'set the column data template
 Sub SetColumnType(colName As String, colType As String) As VMDataTable
-	colName = colName.Replace(" ","")
-	colName = colName.tolowercase
-	
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.TypeOf = colType
@@ -664,11 +635,6 @@ End Sub
 
 Sub SetVIf(vif As String) As VMDataTable
 	vcard.SetVIf(vif)
-	Return Me
-End Sub
-
-Sub SetVShow(vif As String) As VMDataTable
-	vcard.SetVShow(vif)
 	Return Me
 End Sub
 
@@ -1022,6 +988,7 @@ End Sub
 'set items-per-page
 Sub SetItemsPerPage(varItemsPerPage As String) As VMDataTable
 	If varItemsPerPage = "" Then Return Me
+	varItemsPerPage = BANano.parseInt(varItemsPerPage)
 	If bStatic Then
 		SetAttrSingle("items-per-page", varItemsPerPage)
 		Return Me
@@ -1061,6 +1028,7 @@ End Sub
 'set mobile-breakpoint
 Sub SetMobileBreakpoint(varMobileBreakpoint As String) As VMDataTable
 	If varMobileBreakpoint = "" Then Return Me
+	varMobileBreakpoint = BANano.parseInt(varMobileBreakpoint)
 	If bStatic Then
 		SetAttrSingle("mobile-breakpoint", varMobileBreakpoint)
 		Return Me
@@ -1100,6 +1068,7 @@ End Sub
 'set page
 Sub SetPage(varPage As String) As VMDataTable
 	If varPage = "" Then Return Me
+	varPage = BANano.parseInt(varPage)
 	If bStatic Then
 		SetAttrSingle("page", varPage)
 		Return Me
@@ -1540,15 +1509,13 @@ End Sub
 
 'hide the component
 Sub Hide As VMDataTable
-	SetVShow(showkey)
-	vue.SetData(showkey,False)
+	vcard.SetVisible(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMDataTable
-	SetVShow(showkey)
-	vue.SetData(showkey,True)
+	vcard.SetVisible(True)
 	Return Me
 End Sub
 
@@ -1683,8 +1650,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 End Sub
 
 Sub SetVisible(b As Boolean) As VMDataTable
-	SetVShow(showkey)
-	vue.SetData(showkey,b)
+	vcard.SetVisible(b)
 	Return Me
 End Sub
 

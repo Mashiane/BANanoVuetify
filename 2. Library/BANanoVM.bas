@@ -2085,6 +2085,9 @@ Public Sub DateNow() As String
 	Return vue.DateNow
 End Sub
 
+Public Sub TimeNow() As String
+	Return vue.timenow
+End Sub
 
 Public Sub DateTimeNow() As String
 	Return vue.DateTimeNow

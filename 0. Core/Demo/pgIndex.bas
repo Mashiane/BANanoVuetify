@@ -12,20 +12,29 @@ End Sub
 
 Sub Init
 	vm.Initialize(Me, Main.appname)
+	'add a hamburger
+	vm.NavBar.AddHamburger
+	vm.NavBar.Hamburger.SetVisible(True)
+	'add a logo
+	vm.NavBar.Logo.SetBorderRadius("50%")
+	vm.NavBar.Logo.SetBorderWidth("1px")
+	vm.NavBar.Logo.SetBorderColor("black")
+	vm.NavBar.Logo.SetBorderStyle("solid")
+	vm.NavBar.Logo.SetSize("46px","46px")
+	vm.NavBar.AddLogo("./assets/sponge.png")
+	vm.NavBar.Logo.Show
+	vm.NavBar.AddTitle(Main.AppTitle,"")
+	vm.NavBar.AddSubHeading1(Main.Version)
+	vm.NavBar.AddSpacer
+	vm.NavBar.SetVisible(True)
+	vm.NavBar.SetModeFixed(True)
+	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
+	vm.NavBar.SetDark(True)
 	'vm.Dark = True
 	'vm.SetLocale("ar")
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
-	vm.NavBar.SetModeFixed(True)
-	vm.NavBar.SetHasMenuButton(True)
-	vm.NavBar.UpdateLogo("./assets/sponge.png")
-	vm.NavBar.UpdateTitle($"${Main.appname} ${Main.version}"$)
-	vm.NavBar.Logo.SetBorderRadius("50%")
-	vm.NavBar.Logo.SetBorder("1px", vm.COLOR_BLACK, vm.BORDER_DOTTED)
-	
-	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
-	vm.NavBar.SetDark(True)
 	'
 	'vm.NavBar.AddSearch("txtsearch")
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")

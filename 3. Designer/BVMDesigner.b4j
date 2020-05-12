@@ -119,11 +119,13 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
-Library5=bananovuetify
-Library6=b4xcollections
+Library5=bananovuetifycore
+Library6=bananovuetifyconnect
+Library7=bananovuetifyprism
+Library8=bananovuetifydevice
 Module1=modDesigner
 NumberOfFiles=57
-NumberOfLibraries=6
+NumberOfLibraries=8
 NumberOfModules=1
 Version=8.1
 @EndOfDesignText@
@@ -143,7 +145,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "3.85"
+	Public Version As String = "3.86"
 	Public Port As String = "8080"
 End Sub
 

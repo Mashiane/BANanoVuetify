@@ -16,22 +16,31 @@ Sub Init
 	BuildNavBar
 	BuildNavDrawer
 	AddPages
+	AddContent
 	vm.ux
 End Sub
 
+'build the navigation bar
 Sub BuildNavBar
 	'*copy code after this line
 End Sub
 
+'build the nav drawer
 Sub BuildNavDrawer
 	'*copy code after this line
 End Sub
 
+'add pages to the app
 Sub AddPages
 	'*copy code after this line
 End Sub
 
-'*IMPORTANT
+'add content to this page
+Sub AddContent
+	'*copy code here to add to thos page
+End Sub
+
+'*IMPORTANT when a drawer item is clicked
 Sub draweritems_click(e As BANanoEvent)
 	'get the id from the event
 	Dim elID As String = vm.GetIDFromEvent(e)
@@ -40,7 +49,7 @@ Sub draweritems_click(e As BANanoEvent)
 	End Select
 End Sub
 
-'confirm ok click
+'confirm dialog ok click
 Sub confirm_ok(e As BANanoEvent)
 	Dim sconfirm As String = vm.GetConfirm
 	Select Case sconfirm
@@ -48,17 +57,17 @@ Sub confirm_ok(e As BANanoEvent)
 	End Select
 End Sub
 
-'confirm cancel click
+'confirm dialog cancel click
 Sub cancel_ok(e As BANanoEvent)
 
 End Sub
 
-'alert ok
+'alert dialog ok clock
 Sub alert_ok(e As BANanoEvent)
 
 End Sub
 
-'confirm cancel
+'confirm dialog cancel click
 Sub confirm_cancel(e As BANanoEvent)
 
 End Sub

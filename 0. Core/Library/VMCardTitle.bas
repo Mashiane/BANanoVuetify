@@ -39,6 +39,7 @@ Sub AddSearch(key As String) As VMCardTitle
 	Dim txt As VMTextField
 	txt.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttributes(Array("single-line", "hide-details"))
 	txt.SetLabel("Search").SetAppendIcon("mdi-magnify").SetClearable(True).Setvmodel(key)
+	txt.SetOnChange(Module, $"${key}_change"$)
 	CardTitle.SetText(txt.ToString)
 	Return Me
 End Sub

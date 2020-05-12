@@ -114,13 +114,14 @@ Version=8.1
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
-	Public AppName As String = "BANanoVuetifyCoreDemo"
+	Public AppName As String = "bananovuetifycoredemo"
+	Public AppTitle As String = "BANanoVuetifyCoreDemo"
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.00"
+	Public Version As String = "3.86"
 	Public Port As String = "8080"
 End Sub
 
@@ -132,11 +133,11 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'initialize banano for first use
 	BANano.Initialize("BANano", AppName, Version)
 	BANano.HTML_NAME = "index.html"
-	BANano.Header.Title = AppName
-	BANano.TranspilerOptions.UseServiceWorker = True
+	BANano.Header.Title = AppTitle
+	BANano.TranspilerOptions.UseServiceWorker = False
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
-	BANano.TranspilerOptions.MinifyOnline = True
+	BANano.TranspilerOptions.MinifyOnline = False
 	
 	'
 	'set php settings

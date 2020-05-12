@@ -790,7 +790,7 @@ End Sub
 
 Sub SetDefaults
 	vue.SetState(defaults)
-	expnl.SetActivePanel("0")
+	expnl.OpenPanel(0)
 End Sub
 
 Sub AddCheck(parent As String, vModel As String, text As String, bvalue As Boolean)
@@ -1077,6 +1077,13 @@ Sub DeleteItem
 	BANano.CallSub(module, changeEvent, Null)
 End Sub
 
+Sub btnEmpty_click(e As BANanoEvent)
+	vue.SetData("tableitems", vue.NewList)
+	vue.SetData("tableitem", vue.newmap)
+	ClearContents
+	BANano.CallSub(module, changeEvent, Null)
+End Sub
+
 Sub btnDeleteTable_click(e As BANanoEvent)
 	DeleteItem
 End Sub
@@ -1209,6 +1216,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 					'
 				'add input controls
@@ -1297,6 +1305,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'
 				'add input controls
@@ -1528,6 +1537,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'add input controls
 				Dim tcont As VMContainer
@@ -1593,6 +1603,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'add input controls
 				Dim tcont As VMContainer

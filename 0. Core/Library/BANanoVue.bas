@@ -133,81 +133,81 @@ Sub Class_Globals
 	
 	Private ColorMap As Map
 	'animations
-	Public Attention_Seekers_bounce As String = "bounce"
-	Public Attention_Seekers_flash As String = "flash"
-	Public Attention_Seekers_pulse As String="pulse"
-	Public Attention_Seekers_rubberBand As String="rubberBand"
-	Public Attention_Seekers_shake As String="shake"
-	Public Attention_Seekers_swing As String="swing"
-	Public Attention_Seekers_tada As String="tada"
-	Public Attention_Seekers_wobble As String="wobble"
-	Public Attention_Seekers_jello As String="jello"
-	Public Bouncing_Entrances_bounceIn As String="bounceIn"
-	Public Bouncing_Entrances_bounceInDown As String="bounceInDown"
-	Public Bouncing_Entrances_bounceInLeft As String="bounceInLeft"
-	Public Bouncing_Entrances_bounceInRight As String="bounceInRight"
-	Public Bouncing_EntrancesbounceInUp As String="bounceInUp"
-	Public Bouncing_Exits_bounceOut As String="bounceOut"
-	Public Bouncing_Exits_bounceOutDown As String="bounceOutDown"
-	Public Bouncing_Exits_bounceOutLeft As String="bounceOutLeft"
-	Public Bouncing_Exits_bounceOutRight As String="bounceOutRight"
-	Public Bouncing_Exits_bounceOutUp As String="bounceOutUp"
-	Public Fading_Entrances_fadeIn As String="fadeIn"
-	Public Fading_Entrances_fadeInDown As String="fadeInDown"
-	Public Fading_Entrances_fadeInDownBig As String="fadeInDownBig"
-	Public Fading_Entrances_fadeInLeft As String="fadeInLeft"
-	Public Fading_Entrances_fadeInLeftBig As String="fadeInLeftBig"
-	Public Fading_Entrances_fadeInRight As String="fadeInRight"
-	Public Fading_Entrances_fadeInRightBig As String="fadeInRightBig"
-	Public Fading_Entrances_fadeInUp As String="fadeInUp"
-	Public Fading_Entrances_fadeInUpBig As String="fadeInUpBig"
-	Public Fading_Exits_fadeOut As String="fadeOut"
-	Public Fading_Exits_fadeOutDown As String="fadeOutDown"
-	Public Fading_Exits_fadeOutDownBig As String="fadeOutDownBig"
-	Public Fading_Exits_fadeOutLeft As String="fadeOutLeft"
-	Public Fading_Exits_fadeOutLeftBig As String="fadeOutLeftBig"
-	Public Fading_Exits_fadeOutRight As String="fadeOutRight"
-	Public Fading_Exits_fadeOutRightBig As String="fadeOutRightBig"
-	Public Fading_Exits_fadeOutUp As String="fadeOutUp"
-	Public Fading_Exits_fadeOutUpBig As String="fadeOutUpBig"
-	Public Flippers_flip As String="flip"
-	Public Flippers_flipInX As String="flipInX"
-	Public Flippers_flipInY As String="flipInY"
-	Public Flippers_flipOutX As String="flipOutX"
-	Public Flippers_flipOutY As String="flipOutY"
-	Public Lightspeed_lightSpeedIn As String="lightSpeedIn"
-	Public Lightspeed_lightSpeedOut As String="lightSpeedOut"
-	Public Rotating_Entrances_rotateIn As String="rotateIn"
-	Public Rotating_Entrances_rotateInDownLeft As String="rotateInDownLeft"
-	Public Rotating_Entrances_rotateInDownRight As String="rotateInDownRight"
-	Public Rotating_Entrances_rotateInUpLeft As String="rotateInUpLeft"
-	Public Rotating_Entrances_rotateInUpRight As String="rotateInUpRight"
-	Public Rotating_Exits_rotateOut As String="rotateOut"
-	Public Rotating_Exits_rotateOutDownLeft As String="rotateOutDownLeft"
-	Public Rotating_Exits_rotateOutDownRight As String="rotateOutDownRight"
-	Public Rotating_Exits_rotateOutUpLeft As String="rotateOutUpLeft"
-	Public Rotating_Exits_rotateOutUpRight As String="rotateOutUpRight"
-	Public Sliding_Entrances_slideInUp As String="slideInUp"
-	Public Sliding_Entrances_slideInDown As String="slideInDown"
-	Public Sliding_Entrances_slideInLeft As String="slideInLeft"
-	Public Sliding_Entrances_slideInRight As String="slideInRight"
-	Public Sliding_Exits_slideOutUp As String="slideOutUp"
-	Public Sliding_Exits_slideOutDown As String="slideOutDown"
-	Public Sliding_Exits_slideOutLeft As String="slideOutLeft"
-	Public Sliding_Exits_slideOutRight As String="slideOutRight"
-	Public Zoom_Entrances_zoomIn As String="zoomIn"
-	Public Zoom_Entrances_zoomInDown As String="zoomInDown"
-	Public Zoom_Entrances_zoomInLeft As String="zoomInLeft"
-	Public Zoom_Entrances_zoomInRight As String="zoomInRight"
-	Public Zoom_Entrances_zoomInUp As String="zoomInUp"
-	Public Zoom_Exits_zoomOut As String="zoomOut"
-	Public Zoom_Exits_zoomOutDown As String="zoomOutDown"
-	Public Zoom_Exits_zoomOutLeft As String="zoomOutLeft"
-	Public Zoom_Exits_zoomOutRight As String="zoomOutRight"
-	Public Zoom_Exits_zoomOutUp As String="zoomOutUp"
-	Public Specials_hinge As String="hinge"
-	Public Specials_rollIn As String="rollIn"
-	Public Specials_rollOut As String="rollOut"
+	Public CONST Attention_Seekers_bounce As String = "bounce"
+	Public CONST Attention_Seekers_flash As String = "flash"
+	Public CONST Attention_Seekers_pulse As String="pulse"
+	Public CONST Attention_Seekers_rubberBand As String="rubberBand"
+	Public CONST Attention_Seekers_shake As String="shake"
+	Public CONST Attention_Seekers_swing As String="swing"
+	Public CONST Attention_Seekers_tada As String="tada"
+	Public CONST Attention_Seekers_wobble As String="wobble"
+	Public CONST Attention_Seekers_jello As String="jello"
+	Public CONST Bouncing_Entrances_bounceIn As String="bounceIn"
+	Public CONST Bouncing_Entrances_bounceInDown As String="bounceInDown"
+	Public CONST Bouncing_Entrances_bounceInLeft As String="bounceInLeft"
+	Public CONST Bouncing_Entrances_bounceInRight As String="bounceInRight"
+	Public CONST Bouncing_EntrancesbounceInUp As String="bounceInUp"
+	Public CONST Bouncing_Exits_bounceOut As String="bounceOut"
+	Public CONST Bouncing_Exits_bounceOutDown As String="bounceOutDown"
+	Public CONST Bouncing_Exits_bounceOutLeft As String="bounceOutLeft"
+	Public CONST Bouncing_Exits_bounceOutRight As String="bounceOutRight"
+	Public CONST Bouncing_Exits_bounceOutUp As String="bounceOutUp"
+	Public CONST Fading_Entrances_fadeIn As String="fadeIn"
+	Public CONST Fading_Entrances_fadeInDown As String="fadeInDown"
+	Public CONST Fading_Entrances_fadeInDownBig As String="fadeInDownBig"
+	Public CONST Fading_Entrances_fadeInLeft As String="fadeInLeft"
+	Public CONST Fading_Entrances_fadeInLeftBig As String="fadeInLeftBig"
+	Public CONST Fading_Entrances_fadeInRight As String="fadeInRight"
+	Public CONST Fading_Entrances_fadeInRightBig As String="fadeInRightBig"
+	Public CONST Fading_Entrances_fadeInUp As String="fadeInUp"
+	Public CONST Fading_Entrances_fadeInUpBig As String="fadeInUpBig"
+	Public CONST Fading_Exits_fadeOut As String="fadeOut"
+	Public CONST Fading_Exits_fadeOutDown As String="fadeOutDown"
+	Public CONST Fading_Exits_fadeOutDownBig As String="fadeOutDownBig"
+	Public CONST Fading_Exits_fadeOutLeft As String="fadeOutLeft"
+	Public CONST Fading_Exits_fadeOutLeftBig As String="fadeOutLeftBig"
+	Public CONST Fading_Exits_fadeOutRight As String="fadeOutRight"
+	Public CONST Fading_Exits_fadeOutRightBig As String="fadeOutRightBig"
+	Public CONST Fading_Exits_fadeOutUp As String="fadeOutUp"
+	Public CONST Fading_Exits_fadeOutUpBig As String="fadeOutUpBig"
+	Public CONST Flippers_flip As String="flip"
+	Public CONST Flippers_flipInX As String="flipInX"
+	Public CONST Flippers_flipInY As String="flipInY"
+	Public CONST Flippers_flipOutX As String="flipOutX"
+	Public CONST Flippers_flipOutY As String="flipOutY"
+	Public CONST Lightspeed_lightSpeedIn As String="lightSpeedIn"
+	Public CONST Lightspeed_lightSpeedOut As String="lightSpeedOut"
+	Public CONST Rotating_Entrances_rotateIn As String="rotateIn"
+	Public CONST Rotating_Entrances_rotateInDownLeft As String="rotateInDownLeft"
+	Public CONST Rotating_Entrances_rotateInDownRight As String="rotateInDownRight"
+	Public CONST Rotating_Entrances_rotateInUpLeft As String="rotateInUpLeft"
+	Public CONST Rotating_Entrances_rotateInUpRight As String="rotateInUpRight"
+	Public CONST Rotating_Exits_rotateOut As String="rotateOut"
+	Public CONST Rotating_Exits_rotateOutDownLeft As String="rotateOutDownLeft"
+	Public CONST Rotating_Exits_rotateOutDownRight As String="rotateOutDownRight"
+	Public CONST Rotating_Exits_rotateOutUpLeft As String="rotateOutUpLeft"
+	Public CONST Rotating_Exits_rotateOutUpRight As String="rotateOutUpRight"
+	Public CONST Sliding_Entrances_slideInUp As String="slideInUp"
+	Public CONST Sliding_Entrances_slideInDown As String="slideInDown"
+	Public CONST Sliding_Entrances_slideInLeft As String="slideInLeft"
+	Public CONST Sliding_Entrances_slideInRight As String="slideInRight"
+	Public CONST Sliding_Exits_slideOutUp As String="slideOutUp"
+	Public CONST Sliding_Exits_slideOutDown As String="slideOutDown"
+	Public CONST Sliding_Exits_slideOutLeft As String="slideOutLeft"
+	Public CONST Sliding_Exits_slideOutRight As String="slideOutRight"
+	Public CONST Zoom_Entrances_zoomIn As String="zoomIn"
+	Public CONST Zoom_Entrances_zoomInDown As String="zoomInDown"
+	Public CONST Zoom_Entrances_zoomInLeft As String="zoomInLeft"
+	Public CONST Zoom_Entrances_zoomInRight As String="zoomInRight"
+	Public CONST Zoom_Entrances_zoomInUp As String="zoomInUp"
+	Public CONST Zoom_Exits_zoomOut As String="zoomOut"
+	Public CONST Zoom_Exits_zoomOutDown As String="zoomOutDown"
+	Public CONST Zoom_Exits_zoomOutLeft As String="zoomOutLeft"
+	Public CONST Zoom_Exits_zoomOutRight As String="zoomOutRight"
+	Public CONST Zoom_Exits_zoomOutUp As String="zoomOutUp"
+	Public CONST Specials_hinge As String="hinge"
+	Public CONST Specials_rollIn As String="rollIn"
+	Public CONST Specials_rollOut As String="rollOut"
 	Public Themes As Map
 	Public TargetOptions As Map
 	Public ColumnTypes As Map
@@ -219,6 +219,7 @@ End Sub
 
 'initialize view
 Public Sub Initialize()
+	Log("BANanoVue.Initialize")
 	Themes.Initialize 
 	BOVue.Initialize("Vue")
 	'store = BOVue.RunMethod("observable", Null).Result
@@ -659,6 +660,11 @@ Sub KeyValues2Map(delim As String, keys As String, values As String) As Map
 	Return optm
 End Sub
 
+Sub NewMap As Map
+	Dim nm As Map
+	nm.Initialize
+	Return nm
+End Sub
 
 'javascript getElementById
 Sub getElementById(sid As String) As BANanoObject
@@ -1949,7 +1955,16 @@ Sub AuditTrail(oldM As Map, newM As Map) As Map
 	Return df
 End Sub
 
-Public Sub DateTimeNow() As String
+Public Sub TimeNow() As String
+	Dim lNow As Long
+	Dim dt As String
+	lNow = DateTime.Now
+	DateTime.DateFormat = "HH:mm"
+	dt = DateTime.Date(lNow)
+	Return dt
+End Sub
+
+Public Sub DateNow() As String
 	Dim lNow As Long
 	Dim dt As String
 	lNow = DateTime.Now
@@ -1958,7 +1973,7 @@ Public Sub DateTimeNow() As String
 	Return dt
 End Sub
 
-Public Sub DateNow() As String
+Public Sub DateTimeNow() As String
 	Dim lNow As Long
 	Dim dt As String
 	lNow = DateTime.Now
@@ -2283,12 +2298,19 @@ Sub SetList(k As String, l As Boolean) As BANanoVue
 	Return Me
 End Sub
 
+Sub NotState(stateName As String) As Boolean
+	Dim bcurrent As Boolean = GetState(stateName,False)
+	If bcurrent = Null Then bcurrent = True
+	bcurrent = Not(bcurrent)
+	Return bcurrent
+End Sub
+
 Sub ToggleState(stateName As String) As BANanoVue
 	Dim bcurrent As Boolean = GetState(stateName,False)
 	If bcurrent = Null Then bcurrent = True
 	bcurrent = Not(bcurrent)
 	SetStateSingle(stateName, bcurrent)
-	Return Me	
+	Return Me
 End Sub
 
 Sub ToggleNamedState(stateName As String, state1 As String, state2 As String) As BANanoVue
@@ -3148,11 +3170,35 @@ public Sub readAsText(fr As String) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload
-	promise.CallSub(Me, "ReadFileAsText", Array(fr))
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsText"))
 	Return promise
 End Sub
 
-private Sub ReadFileAsText(FileToRead As Object)
+Sub readAsBinaryString(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsBinaryString"))
+	Return promise
+End Sub
+
+Sub readAsDataURL(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsDataURL"))
+	Return promise
+End Sub
+
+Sub readAsArrayBuffer(fr As String) As BANanoPromise
+	Dim promise As BANanoPromise 'ignore
+		
+	' calling a single upload
+	promise.CallSub(Me, "ReadFile", Array(fr, "readAsArrayBuffer"))
+	Return promise
+End Sub
+
+private Sub ReadFile(FileToRead As Object, MethodName As String)
 	' make a filereader
 	Dim FileReader As BANanoObject
 	FileReader.Initialize2("FileReader", Null)
@@ -3165,7 +3211,7 @@ private Sub ReadFileAsText(FileToRead As Object)
 	FileReader.SetField("onload", BANAno.CallBack(Me, "OnLoad", Array(event)))
 	FileReader.SetField("onerror", BANAno.CallBack(Me, "OnError", Array(event)))
 	' start reading the DataURL
-	FileReader.RunMethod("readAsText", FileToRead)
+	FileReader.RunMethod(MethodName, FileToRead)
 End Sub
 
 private Sub OnLoad(event As Map) As String 'ignore

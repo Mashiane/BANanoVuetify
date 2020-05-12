@@ -5,11 +5,12 @@ Type=StaticCode
 Version=8.1
 @EndOfDesignText@
 'Static code module
-#ignorewarnings: 12
+#ignorewarnings: 12, 9
 Sub Process_Globals
 	Private Mode As String
 	Private ep As VMExpansionPanels
 	Private vm As BANanoVM
+	Private vue As BANanoVue
 	Private ui As VMContainer
 	Private BANano As BANano  'ignore
 	Private bHasBorder As Boolean
@@ -456,15 +457,15 @@ Private sItemkey As String
 Private sItemsperpage As String
 Private bislight As Boolean
 Private bisloading As Boolean
-Private sLoadingtext As String
-Private sLocale As String
+'Private sLoadingtext As String
+'Private sLocale As String
 Private smobilebreakpoint As String
 Private bisMultisort As Boolean
 Private bisMustsort As Boolean
-Private sNodatatext As String
-Private sNoresultstext As String
+'Private sNodatatext As String
+'Private sNoresultstext As String
 Private sPage As String
-Private sSearch As String
+'Private sSearch As String
 Private bisShowexpand As Boolean
 Private bisShowgroupby As Boolean
 Private bisShowselect As Boolean
@@ -561,6 +562,7 @@ Private stabindex As String
 	Private bisTwoline As Boolean
 	Private sKeyfld As String
 	Private sAvatarfld As String
+	Private bismasterdrawer As String
 	Private sIconfld As String
 	Private sTitlefld As String
 	Private sSubtitlefld As String
@@ -663,6 +665,7 @@ Sub Init
 	'
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
+	vue = vm.vue
 	'add a hamburger
 	vm.NavBar.AddHamburger
 	vm.NavBar.Hamburger.SetVisible(True)
@@ -1652,6 +1655,7 @@ Sub Read_Drawer
 	bistemporary = YesNoToBoolean(mattr.getdefault("istemporary", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
 	bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+	bismasterdrawer = YesNoToBoolean(mattr.getdefault("ismasterdrawer", "No"))
 	'
 	sDatasource = mattr.getdefault("datasource", "")
 	sKeyfld = mattr.getdefault("keyfld", "")
@@ -1929,7 +1933,7 @@ Sub Design_CheckBox
 End Sub
 
 Sub Design_Date
-	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, "dp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 	dp.SetVisible(bisvisible)
 	dp.SetDisabled(bisdisabled)
 	dp.SetRange(bisrange)
@@ -2000,7 +2004,7 @@ Sub Design_Date
 End Sub
 
 Sub Design_Chip
-	Dim chip As VMChip = ui.CreateChip($"chip${sname}"$, Me)
+	Dim chip As VMChip = ui.CreateChip(sname, Me)
 	chip.SetStatic(True)
 	Select Case schiptype
 	Case "icon"
@@ -2087,7 +2091,7 @@ End Sub
 
 
 Sub Design_Badge
-	Dim badge As VMBadge = ui.CreateBadge($"badge${sname}"$, Me)
+	Dim badge As VMBadge = ui.CreateBadge(sname, Me)
 	badge.SetStatic(True)
 	badge.SetAvatar(bisAvatar)
 	badge.SetBordered(bisBordered)
@@ -2192,9 +2196,9 @@ End Sub
 Sub Design_Radio
 	If buseoptions Then
 		Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, "rd" & sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
+		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
 	Else
-		Dim rd As VMRadioGroup = ui.NewRadioGroupDataSource(Me, True, "rd" & sname, svmodel, stitle, svalue, ssourcetable, _
+		Dim rd As VMRadioGroup = ui.NewRadioGroupDataSource(Me, True, sname, svmodel, stitle, svalue, ssourcetable, _
 					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
 	End If
 	rd.SetMandatory(bismandatory)
@@ -2235,31 +2239,31 @@ Sub Design_Select
 		Case "select"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			End If
 		Case "combo"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewComboOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewComboOptions(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			End If
 		Case "auto"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, "sel" & sname, svmodel, stitle, bisrequired, bismultiple, _
+				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
 						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
 			End If
 	End Select
@@ -2577,7 +2581,7 @@ Sub Design_Tel
 End Sub
 
 Sub Design_Time
-	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, "tp" & sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 	tp.SetVisible(bisvisible)
 	tp.SetDisabled(bisdisabled)
 	tp.SetAmPmInTitle(bisampm)
@@ -2674,7 +2678,7 @@ Sub Design_Parallax
 End Sub
 
 Sub Design_Container
-	Dim cont As VMContainer = ui.NewContainer(Me, True, "cont" & sname)
+	Dim cont As VMContainer = ui.NewContainer(Me, True, sname)
 	cont.SetElevation(selevation)
 	cont.SetTransition(stransition)
 	cont.SetFluid(bisfluid)
@@ -2750,7 +2754,7 @@ Sub Design_Image
 End Sub
 
 Sub Design_Drawer
-	Dim drw As VMNavigationDrawer = ui.CreateDrawer("drw" & sname, Me)
+	Dim drw As VMNavigationDrawer = ui.CreateDrawer(sname, Me)
 	drw.SetStatic(True)
 	drw.AddTitleSubTitle(smtitle,smsubtitle)
 	drw.SetcolorIntensity(scolor,sintensity)
@@ -2783,10 +2787,18 @@ Sub Design_Drawer
 	drw.Setvisible(bisvisible)
 	'
 	'link events
-	AddCode(sbEvents, $"Sub drw${sname}Items_click(e As BANanoEvent)"$)
-	AddCode(sbEvents, $"Dim itemID As String = vm.GetIDFromEvent(e)"$)
-	AddCode(sbEvents, $"Select Case itemID"$)
-	
+	If bismasterdrawer = False Then
+		AddNewLine(sbEvents)
+		AddCode(sbEvents, $"Sub drw${sname}Items_click(e As BANanoEvent)"$)
+		AddCode(sbEvents, $"Dim itemID As String = vm.GetIDFromEvent(e)"$)
+		AddCode(sbEvents, $"Select Case itemID"$)
+	Else
+		AddNewLine(sbEvents)
+		If lcontents.Size > 0 Then
+			AddInstruction(sbEvents, "pgIndex", "drawerItems_click", "case statement")
+		End If
+	End If
+	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssavatar As String = m.getdefault("avatar", "")
@@ -2800,50 +2812,66 @@ Sub Design_Drawer
 		If bisdivider Then drw.AddDivider1(bisinset)
 		AddCode(sbEvents, $"Case "${sskey}""$)
 	Next
-	AddCode(sbEvents,"End Select")
-	AddCode(sbEvents, "End Sub")
+	'
+	If bismasterdrawer = False Then
+		AddCode(sbEvents,"End Select")
+		AddCode(sbEvents, "End Sub")
+	End If
+	'
 	ui.AddControl(drw.NavigationDrawer, drw.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	
 	'
-	AddInstruction(sb, "Your", "Process_Globals","")
-	AddNewLine(sb)
-	AddCode(sb, $"Private drw${sname} As VMNavigationDrawer"$)
-	AddNewLine(sb)
+	Dim prefix As String = "drw"
+	Dim suffix As String = sname
+	If bismasterdrawer Then
+		prefix = "vm.Drawer"
+		suffix = ""
+	End If
 	
-	AddInstruction(sb, "Your", "Code","before vm.Ux")
-	AddNewLine(sb)
-	AddCode(sb, $"Sub CreateDrawer_${sname}"$)
-	sb.append($"drw${sname} = vm.CreateDrawer("drw${sname}", Me)"$).append(CRLF)
-	CodeLine2(sb, smtitle, smsubtitle, "s", "drw", sname, "AddTitleSubTitle")
-	CodeLine2(sb, scolor, sintensity, "s", "drw", sname, "SetColorIntensity")
-	CodeLine(sb, sminivariantwidth, "s", "drw", sname, "Setminivariantwidth")
-	CodeLine(sb, smobilebreakpoint, "s", "drw", sname, "Setmobilebreakpoint")
-	CodeLine(sb, soverlaycolor, "s", "drw", sname, "Setoverlaycolor")
-	CodeLine(sb, soverlayopacity, "s", "drw", sname, "Setoverlayopacity")
-	CodeLine(sb, ssrc, "s", "drw", sname, "Setsrc")
-	CodeLine(sb, stag, "s", "drw", sname, "Settag")
-	CodeLine(sb, swidth, "s", "drw", sname, "Setwidth")
-	CodeLine(sb, sheight, "s", "drw", sname, "Setheight")
+	If bismasterdrawer = False Then
+		AddInstruction(sb, "Your", "Process_Globals","")
+		AddNewLine(sb)
+		AddCode(sb, $"Private drw${sname} As VMNavigationDrawer"$)
+		AddNewLine(sb)
+	
+		AddInstruction(sb, "Your", "Code","before vm.Ux")
+		AddNewLine(sb)
+		AddCode(sb, $"Sub CreateDrawer_${sname}"$)
+		sb.append($"drw${sname} = vm.CreateDrawer("drw${sname}", Me)"$).append(CRLF)
+	Else
+		AddInstruction(sb, "pgIndex", "BuildNavDrawer", "")
+	End If
+	
+	CodeLine2(sb, smtitle, smsubtitle, "s", prefix, suffix, "AddTitleSubTitle")
+	CodeLine2(sb, scolor, sintensity, "s", prefix, suffix, "SetColorIntensity")
+	CodeLine(sb, sminivariantwidth, "s", prefix, suffix, "Setminivariantwidth")
+	CodeLine(sb, smobilebreakpoint, "s", prefix, suffix, "Setmobilebreakpoint")
+	CodeLine(sb, soverlaycolor, "s", prefix, suffix, "Setoverlaycolor")
+	CodeLine(sb, soverlayopacity, "s", prefix, suffix, "Setoverlayopacity")
+	CodeLine(sb, ssrc, "s", prefix, suffix, "Setsrc")
+	CodeLine(sb, stag, "s", prefix, suffix, "Settag")
+	CodeLine(sb, swidth, "s", prefix, suffix, "Setwidth")
+	CodeLine(sb, sheight, "s", prefix, suffix, "Setheight")
 	'
-	CodeLine(sb, bisabsolute, "b", "drw", sname, "Setabsolute")
-	CodeLine(sb, bisapp, "b", "drw", sname, "Setapp")
-	CodeLine(sb, bisbottom, "b", "drw", sname, "Setbottom")
-	CodeLine(sb, bisclipped, "b", "drw", sname, "Setclipped")
-	CodeLine(sb, bisdark, "b", "drw", sname, "Setdark")
-	CodeLine(sb, bisdisableresizewatcher, "b", "drw", sname, "Setdisableresizewatcher")
-	CodeLine(sb, bisdisableroutewatcher, "b", "drw", sname, "Setdisableroutewatcher")
-	CodeLine(sb, bisexpandonhover, "b", "drw", sname, "Setexpandonhover")
-	CodeLine(sb, bisfixed, "b", "drw", sname, "Setfixed")
-	CodeLine(sb, bisfloating, "b", "drw", sname, "Setfloating")
-	CodeLine(sb, bishideoverlay, "b", "drw", sname, "Sethideoverlay")
-	CodeLine(sb, bislight, "b", "drw", sname, "Setlight")
-	CodeLine(sb, bisminivariant, "b", "drw", sname, "Setminivariant")
-	CodeLine(sb, bispermanent, "b", "drw", sname, "Setpermanent")
-	CodeLine(sb, bisright, "b", "drw", sname, "Setright")
-	CodeLine(sb, bisstateless, "b", "drw", sname, "Setstateless")
-	CodeLine(sb, bistemporary, "b", "drw", sname, "Settemporary")
-	CodeLine(sb, bistouchless, "b", "drw", sname, "Settouchless")
-	CodeLine(sb, bisvisible, "b", "drw", sname, "Setvisible")
+	CodeLine(sb, bisabsolute, "b", prefix, suffix, "Setabsolute")
+	CodeLine(sb, bisapp, "b", prefix, suffix, "Setapp")
+	CodeLine(sb, bisbottom, "b", prefix, suffix, "Setbottom")
+	CodeLine(sb, bisclipped, "b", prefix, suffix, "Setclipped")
+	CodeLine(sb, bisdark, "b", prefix, suffix, "Setdark")
+	CodeLine(sb, bisdisableresizewatcher, "b", prefix, suffix, "Setdisableresizewatcher")
+	CodeLine(sb, bisdisableroutewatcher, "b", prefix, suffix, "Setdisableroutewatcher")
+	CodeLine(sb, bisexpandonhover, "b", prefix, suffix, "Setexpandonhover")
+	CodeLine(sb, bisfixed, "b", prefix, suffix, "Setfixed")
+	CodeLine(sb, bisfloating, "b", prefix, suffix, "Setfloating")
+	CodeLine(sb, bishideoverlay, "b", prefix, suffix, "Sethideoverlay")
+	CodeLine(sb, bislight, "b", prefix, suffix, "Setlight")
+	CodeLine(sb, bisminivariant, "b", prefix, suffix, "Setminivariant")
+	CodeLine(sb, bispermanent, "b", prefix, suffix, "Setpermanent")
+	CodeLine(sb, bisright, "b", prefix, suffix, "Setright")
+	CodeLine(sb, bisstateless, "b", prefix, suffix, "Setstateless")
+	CodeLine(sb, bistemporary, "b", prefix, suffix, "Settemporary")
+	CodeLine(sb, bistouchless, "b", prefix, suffix, "Settouchless")
+	CodeLine(sb, bisvisible, "b", prefix, suffix, "Setvisible")
 	'
 	If buseoptions Then
 		For Each m As Map In lcontents
@@ -2855,33 +2883,34 @@ Sub Design_Drawer
 			Dim sssubtitle As String = m.GetDefault("subtitle", "")
 			Dim ssactionicon As String = m.getdefault("action", "")
 			If sskey = "" Then Continue
-			sb.append($"drw${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "", "${ssactionicon}", "")"$).append(CRLF)
-			If bisdivider Then AddCode(sb,$"drw.AddDivider1(${bisinset})"$)
+			sb.append($"${prefix}${suffix}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "", "${ssactionicon}", "")"$).append(CRLF)
+			If bisdivider Then AddCode(sb,$"${prefix}${suffix}.AddDivider1(${bisinset})"$)
 		Next
 	Else
 		'set data source
 		AddCode(sb, $"vm.setdata("${sDatasource}", vm.newlist)"$)
-		AddCode(sb, $"drw${sname}.SetDataSourceTemplate1("${sDatasource}","${sKeyfld}","${sAvatarfld}","${sIconfld}","${sIconcolorfld}","${sTitlefld}","${sSubtitlefld}","${sSubtitle1fld}","${sActioniconfld}","${sActioniconcolorfld}")"$)
+		AddCode(sb, $"${prefix}${suffix}.SetDataSourceTemplate1("${sDatasource}","${sKeyfld}","${sAvatarfld}","${sIconfld}","${sIconcolorfld}","${sTitlefld}","${sSubtitlefld}","${sSubtitle1fld}","${sActioniconfld}","${sActioniconcolorfld}")"$)
 	End If
 	'
-	AddComment(sb, "Paste code here to to add container components")
-	AddNewLine(sb)		
-	AddCode(sb, $"vm.AddDrawer(drw${sname})"$)
-	AddCode(sb, "End Sub")
-	AddNewLine(sb)
-	AddCode(sb, $"Sub ShowDrawer_${sname}"$)
-	AddCode(sb, $"vm.ShowDrawer("drw${sname}")"$)
-	AddCode(sb, "End Sub")
-	AddNewLine(sb)
-	AddCode(sb, $"Sub HideDrawer_${sname}"$)
-	AddCode(sb, $"vm.HideDrawer("drw${sname}")"$)
-	AddCode(sb, "End Sub")
-	AddNewLine(sb)
-	
+	If bismasterdrawer = False Then
+		AddComment(sb, "Paste code here to to add container components")
+		AddNewLine(sb)		
+		AddCode(sb, $"vm.AddDrawer(drw${sname})"$)
+		AddCode(sb, "End Sub")
+		AddNewLine(sb)
+		AddCode(sb, $"Sub ShowDrawer_${sname}"$)
+		AddCode(sb, $"vm.ShowDrawer("drw${sname}")"$)
+		AddCode(sb, "End Sub")
+		AddNewLine(sb)
+		AddCode(sb, $"Sub HideDrawer_${sname}"$)
+		AddCode(sb, $"vm.HideDrawer("drw${sname}")"$)
+		AddCode(sb, "End Sub")
+		AddNewLine(sb)
+	End If
 End Sub
 
 Sub Design_SpeedDial
-	Dim speeddial As VMSpeedDial = ui.CreateSpeedDial("speeddial" & sname, Me)
+	Dim speeddial As VMSpeedDial = ui.CreateSpeedDial(sname, Me)
 	speeddial.SetStatic(True)
 	speeddial.SetAbsolute(bisabsolute)
 	speeddial.SetBottom(bisbottom)
@@ -2967,7 +2996,7 @@ Sub Design_SpeedDial
 End Sub
 
 Sub Design_Dialog
-	Dim dialog As VMCard = ui.CreateCard("dialog" & sname, Me)
+	Dim dialog As VMCard = ui.CreateCard(sname, Me)
     dialog.SetStatic(True)
 	dialog.IsDialog = True
 	dialog.SetTitle(stitle)
@@ -3057,7 +3086,7 @@ Sub Design_Dialog
 End Sub
 
 Sub Design_Carousel
-	Dim carousel As VMCarousel = ui.CreateCarousel("carousel" & sname, Me)
+	Dim carousel As VMCarousel = ui.CreateCarousel(sname, Me)
 	carousel.SetStatic(True)
 	'
 	carousel.Setactiveclass(sactiveclass)
@@ -3133,7 +3162,7 @@ Sub Design_Carousel
 End Sub
 
 Sub Design_Menu
-	Dim menu As VMMenu = ui.CreateMenu("menu" & sname, Me)
+	Dim menu As VMMenu = ui.CreateMenu(sname, Me)
 	menu.setstatic(True)
 	Select Case menutype
 	Case "icon"
@@ -3275,7 +3304,7 @@ Sub Design_Menu
 End Sub
 
 Sub Design_ToolBar
-	Dim tbl As VMToolBar = ui.CreateToolbar("tbl" & sname, Me)
+	Dim tbl As VMToolBar = ui.CreateToolbar(sname, Me)
 	tbl.SetStatic(True)
 	Select Case sbartype
 	Case "app"
@@ -3383,6 +3412,8 @@ Sub Design_ToolBar
 		Case "sys"
 			CodeLine(sb, True, "b", "tbl", sname, "SetSystemBar")
 		End Select
+	Else
+		AddInstruction(sb, "pgIndex", "BuildNavBar", "")
 	End If
 	'
 	AddComment(sb, "add a hamburger")
@@ -3695,7 +3726,10 @@ Sub Design_Button
 		AddComment(sbEvents, "validate the record")
 		sbEvents.append($"Dim bValid As Boolean = vm.Validate(Record, ${sdialogpage}.Container.Required)"$).append(CRLF)
 		AddComment(sbEvents, "if invalid exit create/update")
-		sbEvents.append($"If bValid = False Then Return"$).append(CRLF)
+		sbEvents.append($"If bValid = False Then"$).append(CRLF)
+		AddCode(sbEvents, $"vm.ShowSnackBarError("The record is incomplete!")"$)
+		AddCode(sbEvents, "Return")
+		AddCode(sbEvents, "End If")
 		AddComment(sbEvents, "add code to save the record!")
 	Case "delete"
 		'delete a record
@@ -4032,12 +4066,15 @@ Sub DesignLayout
 	dnd.SetOnDragOver("ItemDragOver")
 	dnd.SetOnDrop("ItemDrop")
 	'
-	mymac = vm.CreateDevice("myma", Me).SetMacbook
+	mymac.Initialize(vue, "myma", Me)
+	mymac.SetMacbook
 	'
-	myipad = vm.CreateDevice("myipad", Me).SetIpad
+	myipad.Initialize(vue, "myipad", Me)
+	myipad.SetIpad
 	myipad.hide
 	'
-	myiphone = vm.CreateDevice("myiphone", Me).SetIphoneX
+	myiphone.Initialize(vue, "myiphone", Me)
+	myiphone.SetIphoneX
 	myiphone.hide
 		
 	dnd.AddComponent(1, 1, mymac.tostring)
@@ -4099,16 +4136,19 @@ Sub DesignLayout
 	'Dim p As String = previewTB.tostring
 	'schema.AddComponent(2, 1, p)
 	'
-	dbCode = vm.CreatePrism("dbcode", Me).SetLanguage("vb")
+	dbCode.Initialize(vue, "dbcode", Me)
+	dbCode.SetLanguage("vb")
 	dbCode.SetTitle("Table Schema Source Code")
 	schema.AddComponent(2, 1, dbCode.tostring)
 	'
-	pc = vm.CreatePrism("b4xcode", Me).SetLanguage("vb")
+	pc.Initialize(vue, "b4xcode", Me)
+	pc.SetLanguage("vb")
 	pc.SetTitle("B4X Source Code")
 	b4x.AddComponent(1, 1, pc.tostring)
 	
 	'html code
-	htm = vm.CreatePrism("htmlcode", Me).SetLanguage("html")
+	htm.Initialize(vue, "htmlcode", Me)
+	htm.SetLanguage("html")
 	htm.SetTitle("HTML Source Code")
 	html5.AddComponent(1, 1, htm.tostring)
 	'
@@ -4187,6 +4227,18 @@ Sub AddInstruction(sbx As StringBuilder, modName As String, subName As String, p
 End Sub
 
 Sub Design_DBSourceCode
+	Dim prj As Map = vm.getdata("project")
+	Dim pid As String = prj.getdefault("id", "")
+	Dim sprojectname As String = prj.getdefault("projectname", "")
+	Dim sdbtype As String = prj.getdefault("dbtype", "")
+	Dim sdatabasename As String = prj.getdefault("databasename", "")
+	'banano,sqlite,mysql,mssql
+	'
+	If pid = "" Then
+		vm.showsnackbarerror("Please select a project to process first!")
+		Return
+	End If
+	'
 	'get the table name
 	dbCode.SetTitle("Table Schema Source Code")
 	Dim tbName As String = BANano.GetLocalStorage("dbtable")
@@ -4206,7 +4258,6 @@ Sub Design_DBSourceCode
 	'
 	dbCode.SetCode("")
 	If tbName = "" Then Return
-	Dim dialogKey As String = $"dialog${tbName}"$
 	
 	Dim flds As List = vm.getdata("tableitems")
 	'define fields to sort by
@@ -4225,50 +4276,78 @@ Sub Design_DBSourceCode
 	AddComment(sbl, $"INSTRUCTION: Type "${mdlName}" as the module name and click Ok"$)
 	AddNewLine(sbl)
 	AddNewLine(sbl)
-	'navigation bar
-	AddInstruction(sbl, "pgIndex", "BuildNavBar", "")
-	AddComment(sbl,$"code to add the add and refresh navigation buttons for ${tbName}"$)
-	AddCode(sbl, $"vm.NavBar.AddIcon("btnAdd${capName}","add", "Add ${capName}", "")"$)
-	AddCode(sbl, $"vm.NavBar.AddIcon("btnRefresh${capName}","refresh", "Refresh ${stitle}", "")"$)
-	AddNewLine(sbl)
-	AddNewLine(sbl)
-	AddInstruction(sbl, "pgIndex", "BuildNavDrawer" , "")
-	AddComment(sbl,$"code to add an item on the drawer for ${tbName}"$)
-	AddCode(sbl, $"vm.Drawer.AddItem("page${capName}", "", "${stitle}")"$)
-	AddCode(sbl, CRLF)
-	AddCode(sbl, CRLF)
+	'show in navbar
+	If  bisShowonnavbar Then
+		'navigation bar
+		AddInstruction(sbl, "pgIndex", "BuildNavBar", "")
+		AddComment(sbl,$"code to add the add and refresh navigation buttons for ${tbName}"$)
+		AddNewLine(sbl)
+	
+		'navigation bar
+		AddComment(sbl,$"this page should have an icon/button in the navbar"$)
+		If bisicon Then
+			AddCode(sbl, $"vm.NavBar.AddIcon1("nav${capName}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
+		Else
+			AddCode(sbl, $"vm.NavBar.AddButton1("nav${capName}", "${siconname}", "${spagetitle}", "${stooltip}", "")"$)
+		End If
+		AddComment(sbl, $"add add & refresh button to the navbar for ${capName}"$)
+		AddCode(sbl, $"vm.NavBar.AddIcon("btnAdd${capName}","add", "Add ${capName}", "")"$)
+		AddCode(sbl, $"vm.NavBar.AddIcon("btnRefresh${capName}","refresh", "Refresh ${stitle}", "")"$)
+		AddNewLine(sbl)
+		AddNewLine(sbl)
+		'	
+		AddInstruction(sbl, "pgIndex", "" , "")
+		AddComment(sbl, $"add a new ${capName} ${ssingular}"$)
+		AddCode(sbl, $"Sub btnAdd${capName}_click(e As BANanoEvent)"$)
+		AddComment(sbl, $"execute adding ${capName}"$)
+		AddCode(sbl, $"${mdlName}.Add${tbName}"$)
+		AddCode(sbl, "End Sub")
+		AddCode(sbl, CRLF)
+		AddCode(sbl, CRLF)
+		'
+		AddComment(sbl, $"refresh ${capName} listing"$)
+		AddCode(sbl, $"Sub btnRefresh${capName}_click(e As BANanoEvent)"$)
+		AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
+		AddCode(sbl, $"vm.CallMethod("SelectAll_${vm.propercase(tbName)}")"$)
+		AddCode(sbl, "End Sub")
+		AddCode(sbl, CRLF)
+		AddCode(sbl, CRLF)
+	
+	End If
+	
+	'show on drawer
+	If bisShowondrawer Then
+		AddInstruction(sbl, "pgIndex", "BuildNavDrawer" , "")
+		AddComment(sbl,$"this page should show on the drawer"$)
+		AddCode(sbl, $"vm.Drawer.AddIcon1("page${capName}", "${siconname}", "${sIconcolor}", "${spagetitle}", "${stooltip}")"$)
+		If bisdivider Then
+			AddCode(sbl, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
+		End If
+		AddNewLine(sbl)
+		AddNewLine(sbl)
+		'
+		'on click show the page
+		AddInstruction(sbl, "pgIndex", "" , "")
+		AddComment(sbl, $"click ${mdlName} nav button"$)
+		AddCode(sbl, $"Sub nav${capName}_click(e As BANanoEvent)"$)
+		AddComment(sbl, $"show the page ${capName}"$)
+		AddCode(sbl, $"${mdlName}.Show"$)
+		AddCode(sbl, "End Sub")
+		AddCode(sbl, CRLF)
+		'
+		AddInstruction(sbl, "pgIndex", "draweritems_click" , "the case statement")
+		AddCode(sbl, $"Case "page${capName.tolowercase}""$)
+		AddComment(sbl, $"show ${capName}"$)
+		AddCode(sbl, $"${mdlName}.Show"$)
+		AddCode(sbl, CRLF)
+	End If
+	'
 	AddInstruction(sbl, "pgIndex", "AddPages" , "")
 	AddComment(sbl, $"code to add the ${capName} template code to the master HTML template"$)
 	AddCode(sbl, $"vm.AddPage(${mdlName}.name, ${mdlName})"$)
 	AddCode(sbl, CRLF)
 	AddCode(sbl, CRLF)
-	AddInstruction(sbl, "pgIndex", "draweritems_click" , "the case statement")
-	AddCode(sbl, $"Case "page${capName.tolowercase}""$)
-	AddComment(sbl, $"show ${capName}"$)
-	AddCode(sbl, $"${mdlName}.Show"$)
-	AddNewLine(sbl)
-	AddNewLine(sbl)
 	'
-	AddInstruction(sbl, "pgIndex", "" , "")
-	AddComment(sbl, $"add a new ${capName} record"$)
-	AddCode(sbl, $"Sub btnAdd${capName}_click(e As BANanoEvent)"$)
-	AddComment(sbl, $"execute adding ${capName}"$)
-	AddCode(sbl, $"${mdlName}.Add${tbName}"$)
-	AddCode(sbl, "End Sub")
-	AddCode(sbl, CRLF)
-	AddCode(sbl, CRLF)
-	'
-	AddComment(sbl, $"refresh ${capName} listing"$)
-	AddCode(sbl, $"Sub btnRefresh${capName}_click(e As BANanoEvent)"$)
-	'If scanfilter = "Yes" Then
-	'	AddComment(pgIdx, "Reset the filters")
-	'	AddCode(pgIdx, $"vm.CallMethod("ResetFilters${capName}")"$)
-	'End If
-	AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
-	AddCode(sbl, $"vm.CallMethod("SelectAll_${vm.propercase(tbName)}")"$)
-	AddCode(sbl, "End Sub")
-	AddCode(sbl, CRLF)
-	AddCode(sbl, CRLF)
 	
 	'confirm code
 	AddInstruction(sbl, "pgIndex", "confirm_ok" , "the case statement")
@@ -4283,11 +4362,9 @@ Sub Design_DBSourceCode
 	sbl.append(CRLF).append(CRLF)
 	
 	
-	AddInstruction(sbl, "Main", "BANano_Ready" , "")
-	AddComment(sbl, "database variable * DECLARE 'DB' THIS ONCE")
-	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
+	AddInstruction(sbl, "Main", "BANano_Ready" , "before pgIndex.Init call")
 	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 	AddComment(sbl, "resultset variable")
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for table creation")
@@ -4342,12 +4419,12 @@ Sub Design_DBSourceCode
 	AddCode(sbl, $"'Static code module"$)
 	AddCode(sbl, $"#IgnoreWarnings:12"$)
 	AddCode(sbl, $"Sub Process_Globals"$)
-	AddCode(sbl, $"Public name As String = "${tbName}Code""$)
-	AddCode(sbl, $"Public title As String = "${stitle}""$)
+	AddCode(sbl, $"Public Name As String = "${tbName}Code""$)
+	AddCode(sbl, $"Public Title As String = "${stitle}""$)
 	AddCode(sbl, $"Private vm As BANanoVM"$)
 	AddCode(sbl, $"Private BANano As BANano  'ignore"$)
 	sbl.append($"Private dialog${tbName} As VMDialog"$).append(CRLF)
-	sbl.append($"Private datatable${tbName} As VmDataTable"$).append(CRLF)
+	sbl.append($"Private dt${tbName} As VmDataTable"$).append(CRLF)
 	sbl.append($"Private cont As VMContainer"$).append(CRLF)
 	sbl.append($"Private Mode As String"$).append(CRLF)
 	AddCode(sbl, "End Sub")
@@ -4356,10 +4433,11 @@ Sub Design_DBSourceCode
 	AddCode(sbl, "Sub Code")
 	AddComment(sbl, "Establish a reference to the app")
 	AddCode(sbl, "vm = pgIndex.vm")
+	'
 	AddComment(sbl, "create a container to hold all contents based on the page name")
-	AddCode(sbl, $"cont = vm.CreateContainer(name, Me)"$)
+	AddCode(sbl, $"cont = vm.CreateContainer(Name, Me)"$)
 	AddComment(sbl, "add the table")
-	AddCode(sbl, $"CreateListing_${tbName}"$)
+	AddCode(sbl, $"CreateDataTable_${tbName}"$)
 	AddComment(sbl, "hide the container")
 	AddCode(sbl, "cont.Hide")
 	AddComment(sbl, "add the container to the page")
@@ -4373,15 +4451,53 @@ Sub Design_DBSourceCode
 	'
 	AddComment(sbl,"show the page")
 	AddCode(sbl, "Sub Show")
-	AddComment(sbl, "update the navbar title")
-	AddCode(sbl, $"vm.NavBar.UpdateTitle(title)"$)
-	AddComment(sbl, "hide all buttons")
-	AddCode(sbl, "vm.NavBAr.HideItems")
-	AddComment(sbl, $"show buttons for ${mdlName}"$)
-	AddCode(sbl, $"vm.ShowItem("btnAdd${capName}")"$)
-	AddCode(sbl, $"vm.ShowItem("btnRefresh${capName}")"$)
+	'
+	If bisNavbarvisible Then
+		AddComment(sbl, "the navbar is visible for this page")
+		AddCode(sbl,"vm.NavBar.Show")
+	Else
+		AddComment(sbl, "the navbar is hidden for this page")
+		AddCode(sbl, "vm.NavBar.Hide")
+	End If
+	'
+	If bisHamburgervisible Then
+		AddComment(sbl, "show the hamburger for this page")
+		AddCode(sbl, "vm.NavBar.Hamburger.Show")
+	Else
+		AddComment(sbl, "hide the hamburger for this page")
+		AddCode(sbl, "vm.NavBar.Hamburger.Hide")
+	End If
+	'
+	If bisDrawervisible Then
+		AddComment(sbl, "the drawer should be visible for this page")
+		AddCode(sbl, "vm.Drawer.Show")
+	Else
+		AddComment(sbl, "the drawer should be hidden for this page")
+		AddCode(sbl, "vm.Drawer.Hide")
+	End If
+	'
+	If bislogovisible Then
+		AddComment(sbl, "the logo should be visible for this page")
+		AddCode(sbl, "vm.NavBar.Logo.Show")
+	Else
+		AddComment(sbl, "the logo should be hidden for this page")
+		AddCode(sbl, "vm.NavBar.Logo.Hide")
+	End If
+	'update the navbar title
+	If bisUpdatenavtitle Then
+		AddComment(sbl, "update the navbar title")
+		AddCode(sbl, $"vm.NavBar.UpdateTitle(Title)"$)
+	End If
+	If  bisShowonnavbar Then
+		AddComment(sbl, "hide all buttons")
+		AddCode(sbl, "vm.NavBar.HideItems")
+		AddComment(sbl, $"show buttons for ${mdlName}"$)
+		AddCode(sbl, $"vm.ShowItem("btnAdd${capName}")"$)
+		AddCode(sbl, $"vm.ShowItem("btnRefresh${capName}")"$)
+	End If
+	'
 	AddComment(sbl, "2. Show the page and hide others")
-	AddCode(sbl, $"vm.ShowPage(name)"$)
+	AddCode(sbl, $"vm.ShowPage(Name)"$)
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
 	'
@@ -4390,7 +4506,7 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 	AddComment(sbl, "resultset variable")
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for deletion")
@@ -4405,7 +4521,7 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 	AddComment(sbl, "resultset variable")
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for deletion")
@@ -4420,7 +4536,7 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 	AddComment(sbl, "resultset variable")
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for reading")
@@ -4455,7 +4571,7 @@ Sub Design_DBSourceCode
 		AddComment(sbl, "database variable")
 		sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 		AddComment(sbl, "open the database and wait")
-		sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+		sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 		AddComment(sbl, "resultset variable")
 		sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 		AddComment(sbl, "initialize table for reading")
@@ -4470,15 +4586,15 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "create/update record to table")
 	sbl.append($"Sub CreateUpdate_${vm.propercase(tbName)}"$).append(CRLF)
 	AddComment(sbl, "get the record to create/update")
-	sbl.append($"Dim Record As Map = ${dialogKey}.Container.GetData"$).append(CRLF)
+	sbl.append($"Dim Record As Map = ${diagName}.Container.GetData"$).append(CRLF)
 	AddComment(sbl, "validate the record")
-	sbl.append($"Dim bValid As Boolean = vm.Validate(Record, ${dialogKey}.Container.Required)"$).append(CRLF)
+	sbl.append($"Dim bValid As Boolean = vm.Validate(Record, ${diagName}.Container.Required)"$).append(CRLF)
 	AddComment(sbl, "if invalid exit create/update")
 	sbl.append($"If bValid = False Then Return"$).append(CRLF)
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 	AddComment(sbl, "resultset variable")
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for insert/update")
@@ -4498,7 +4614,7 @@ Sub Design_DBSourceCode
 	End If
 	
 	AddComment(sbl, "define schema for record")
-	sbl.append($"alaSQL.SchemaFromDesign(${dialogKey}.Container)"$).append(CRLF)
+	sbl.append($"alaSQL.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
 	AddComment(sbl, "prepare record for database")
 	sbl.append($"alaSQL.RecordFromMap(Record)"$).append(CRLF)
 	AddComment(sbl, "are we creating/updating a record")
@@ -4521,11 +4637,11 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "read record")
 	sbl.append($"Sub Read_${vm.propercase(tbName)}(RecID As String)"$).append(CRLF)
 	AddComment(sbl, "set default values")
-	sbl.append($"${dialogKey}.Container.SetDefaults"$).append(CRLF)
+	sbl.append($"${diagName}.Container.SetDefaults"$).append(CRLF)
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("<dbName>", "<dbName>")"$).append(CRLF)
+	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
 	AddComment(sbl, "resultset variable")
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for reading")
@@ -4581,11 +4697,11 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "set mode to A-add")
 	sbl.append($"Mode = "A""$).append(CRLF)
 	AddComment(sbl, "set default values")
-	sbl.append($"${dialogKey}.Container.SetDefaults"$).append(CRLF)
+	sbl.append($"${diagName}.Container.SetDefaults"$).append(CRLF)
 	AddComment(sbl, "update the title")
-	sbl.append($"${dialogKey}.SetTitle("New ${vm.ProperCase(ssingular)}")"$).append(CRLF)
+	sbl.append($"${diagName}.SetTitle("New ${vm.ProperCase(ssingular)}")"$).append(CRLF)
 	AddComment(sbl, "show dialog")
-	sbl.append($"vm.ShowDialog("${dialogKey}")"$).append(CRLF)
+	sbl.append($"vm.ShowDialog("${diagName}")"$).append(CRLF)
 	sbl.append("End Sub").append(CRLF).append(CRLF).Append(CRLF)
 	'button to add a new record
 	If sisaddnew = "Yes" Then
@@ -4623,6 +4739,7 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"vm.HideDialog("dialog${tbName}")"$)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 	End If
+	'
 	'update the code box
 	dbCode.SetCode(sbl.tostring)
 	'save the code to download later
@@ -4647,14 +4764,14 @@ End Sub
 Sub schemaDT_edit(item As Map)
 	Dim skey As String = item.getdefault("key", "")
 	If skey = "" Then Return
-	pbtable.OpenPanel(1)
+	pbtable.OpenPanel(2)
 	pbtable.edititem(skey)
 End Sub
 
 Sub schemaDT_delete(item As Map)
 	Dim skey As String = item.getdefault("key", "")
 	If skey = "" Then Return
-	pbtable.OpenPanel(1)
+	pbtable.OpenPanel(2)
 	pbtable.edititem(skey)
 	pbtable.DeleteItem
 End Sub
@@ -4772,6 +4889,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim stypeof As String = rec.get("controltype")
 	Dim sattributes As String = rec.get("attributes")
 	Dim mattr As Map = BANano.FromJson(sattributes)
+	Dim sname As String = rec.get("name")
 	'DONT OVERWRITE
 	If avatarMap.containskey(stypeof) Then 
 		mattr.remove("controltype")
@@ -4780,7 +4898,7 @@ Sub mycomponents_click(e As BANanoEvent)
 	vm.setdata("propbag", mattr)
 	vm.setdata("bag", rec)
 	ClearTableThings
-	
+	'
 	'show the property bags
 	Select Case stypeof
 		Case "table"
@@ -5148,7 +5266,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			vm.setdata("controltype", "icon")
 	End Select
 	'
-	Log(mattr)
 	vm.setstate(mattr)
 End Sub
 
@@ -5576,6 +5693,8 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("thumbsize", "32")
 					attr.put("iconpos", "left")
 					attr.put("isdivider", "Yes")
+					attr.put("dialogpage", "vm")
+					attr.put("toolbarsubtitle", "1.00")
 						'
 					Select Case savedid
 						Case "avatar"
@@ -6360,7 +6479,7 @@ Sub DeleteProject
 	rsSQL.Delete(sid)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
 	vm.callmethod("LoadProjects")
-	vm.NavBar.UpdateTitle($"${Main.AppTitle} ${Main.version}"$)
+	vm.NavBar.UpdateTitle($"${Main.AppTitle}"$)
 	vm.SetData("project", vm.newmap)
 	drwprojectdetails.Container.Setdefaults
 End Sub
@@ -6572,7 +6691,7 @@ Sub SavePropertyBag
 		Case "rating"
 			props = pbrating.properties
 		Case "table"
-			isTable = pbtable.istable
+			isTable = True
 			props = pbtable.properties
 			contents = vm.getdata("tableitems")
 			scontents = BANano.tojson(contents)
@@ -6628,6 +6747,13 @@ Sub SavePropertyBag
 	If isTable Then
 	Else
 		vm.setdata("devspace", 0)
+	End If
+	'
+	'we have a table
+	If isTable Then
+		'read last item added
+		Dim tableitem As Map = vm.getdata("tableitem")
+		Log(tableitem)
 	End If
 End Sub
 
@@ -7087,8 +7213,7 @@ Sub PropertyBag_Table
 	pbtable.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
 	pbtable.AddText("d","label","Title","","")
 	pbtable.AddText("d","caption","Caption","","")
-	pbtable.AddText("d","singular","Single Record","","")
-	pbtable.AddText("d","manyrecords","Many Records","","")
+	pbtable.AddText2("d",CreateMap("singular":"Single Record", "manyrecords":"Many Records"))
 	pbtable.AddText2("d",CreateMap("datasourcename":"Data Source", "itemkey":"Item Key"))
 	pbtable.AddRadioGroupH("d","selecttype","Select Type",CreateMap("all":"All","where":"Where"))
 	pbtable.AddText("d","selectfields","Select Fields","","")
@@ -7105,13 +7230,26 @@ Sub PropertyBag_Table
 	'pbtable.AddText("d","headerslength","Headers Length","","")
 	pbtable.AddText2("d",CreateMap("height":"Height","mobilebreakpoint":"Mobile Breakpoint"))
 	pbtable.AddText2("d",CreateMap("page":"Page","itemsperpage":"Items Per Page"))
-	pbtable.AddText("d","loadingtext","Loading Text","","")
-	pbtable.AddText("d","locale","Locale","","")
-	pbtable.AddText("d","nodatatext","No Data Text","","")
-	pbtable.AddText("d","noresultstext","No Results Text","","")
+	'pbtable.AddText("d","loadingtext","Loading Text","","")
+	'pbtable.AddText("d","locale","Locale","","")
+	'pbtable.AddText("d","nodatatext","No Data Text","","")
+	'pbtable.AddText("d","noresultstext","No Results Text","","")
 	'pbtable.AddText("d","search","Search","","")
 	'pbtable.AddText("d","selectablekey","Selectable Key","","")
 	'pbtable.AddText("d","serveritemslength","Server Items Length","","")
+	'
+	pbtable.AddHeading("p", "Page")
+	pbtable.AddText("p","iconname","Icon Name","","")
+	pbtable.AddText("p","tooltip","Tooltip","","")
+	pbtable.AddSelect2("p","iconcolor","Icon Color", vm.ColorOptions, "iconcolorintensity","IconColor Intensity", vm.IntensityOptions)
+	pbtable.AddTextArea("p","description","Description","","")
+	pbtable.AddTextArea("p","keywords","KeyWords","","")
+	'
+	pbtable.AddSwitches("p", CreateMap("isnavbarvisible": "NavBarVisible", "isdrawervisible": "DrawerVisible"))
+	pbtable.AddSwitches("p", CreateMap("ishamburgervisible": "HamburgerVisible", "islogovisible": "LogoVisible"))
+	pbtable.AddSwitches("p", CreateMap("isshowondrawer": "ShowOnDrawer", "isshowonnavbar": "ShowOnNavBar"))
+	pbtable.AddSwitches("p", CreateMap("isupdatenavtitle": "UpdateNavTitle","isdivider":"AddDivider"))
+	pbtable.AddSwitches("p", CreateMap("isinsetdivider": "Inset Divider","isicon":"NavIcon"))
 	'
 	pbtable.AddHeading("c", "Columns")
 	pbtable.AddDataTableColumns("c")
@@ -7142,6 +7280,24 @@ End Sub
 #End Region
 
 Sub Read_Table
+	stooltip = mattr.GetDefault("tooltip", "")
+	sDescription = mattr.getdefault("description", "")
+	bisDrawervisible = YesNoToBoolean(mattr.getdefault("isdrawervisible", "No"))
+	bisHamburgervisible = YesNoToBoolean(mattr.getdefault("ishamburgervisible", "No"))
+	sIconcolor = mattr.getdefault("iconcolor", "")
+	sIconcolorintensity = mattr.getdefault("iconcolorintensity", "")
+	siconname = mattr.getdefault("iconname", "")
+	sKeywords = mattr.getdefault("keywords", "")
+	bislogovisible = YesNoToBoolean(mattr.getdefault("islogovisible", "No"))
+	bisNavbarvisible = YesNoToBoolean(mattr.getdefault("isnavbarvisible", "No"))
+	spagetitle = mattr.getdefault("pagetitle", "")
+	bisShowondrawer = YesNoToBoolean(mattr.getdefault("isshowondrawer", "No"))
+	bisShowonnavbar = YesNoToBoolean(mattr.getdefault("isshowonnavbar", "No"))
+	bisUpdatenavtitle = YesNoToBoolean(mattr.getdefault("isupdatenavtitle", "No"))
+	bisdivider = YesNoToBoolean(mattr.getdefault("isdivider", "No"))
+	bisinsetdivider = YesNoToBoolean(mattr.getdefault("isinsetdivider", "No"))
+	bisicon = YesNoToBoolean(mattr.getdefault("isicon", "No"))
+	'
 	bisautoincrement = YesNoToBoolean(mattr.getdefault("isautoincrement", "No"))
 	bisaddnew = YesNoToBoolean(mattr.getdefault("isaddnew", "No"))
 	bisDelete = YesNoToBoolean(mattr.getdefault("isdelete", "No"))
@@ -7181,15 +7337,15 @@ Sub Read_Table
 	sItemsperpage = mattr.getdefault("itemsperpage", "")
 	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bisloading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
-	sLoadingtext = mattr.getdefault("loadingtext", "")
-	sLocale = mattr.getdefault("locale", "")
+	'sLoadingtext = mattr.getdefault("loadingtext", "")
+	'sLocale = mattr.getdefault("locale", "")
 	smobilebreakpoint = mattr.getdefault("mobilebreakpoint", "")
 	bisMultisort = YesNoToBoolean(mattr.getdefault("ismultisort", "No"))
 	bisMustsort = YesNoToBoolean(mattr.getdefault("ismustsort", "No"))
-	sNodatatext = mattr.getdefault("nodatatext", "")
-	sNoresultstext = mattr.getdefault("noresultstext", "")
+	'sNodatatext = mattr.getdefault("nodatatext", "")
+	'sNoresultstext = mattr.getdefault("noresultstext", "")
 	sPage = mattr.getdefault("page", "")
-	sSearch = mattr.getdefault("search", "")
+	'sSearch = mattr.getdefault("search", "")
 	'sSelectablekey = mattr.getdefault("selectablekey", "")
 	'sServeritemslength = mattr.getdefault("serveritemslength", "")
 	bisShowexpand = YesNoToBoolean(mattr.getdefault("isshowexpand", "No"))
@@ -7303,7 +7459,7 @@ End Sub
 
 Sub Design_Table
 	Design_TablePreview
-	Dim datatable As VMDataTable = ui.CreateDataTable("datatable" & sname, sItemkey, Me)
+	Dim datatable As VMDataTable = ui.CreateDataTable(sname, sItemkey, Me)
 	datatable.SetStatic(True)
 	datatable.SetTitle(stitle)
 	datatable.SetSearchbox(bisSearchbox)
@@ -7328,13 +7484,13 @@ Sub Design_Table
 	datatable.SetItemsperpage(sItemsperpage)
 	datatable.SetLight(bislight)
 	datatable.SetLoading(bisloading)
-	datatable.SetLoadingtext(sLoadingtext)
-	datatable.SetLocale(sLocale)
+	'datatable.SetLoadingtext(sLoadingtext)
+	'datatable.SetLocale(sLocale)
 	datatable.SetMobilebreakpoint(smobilebreakpoint)	
 	datatable.SetMultisort(bisMultisort)
 	datatable.SetMustsort(bisMustsort)
-	datatable.SetNodatatext(sNodatatext)
-	datatable.SetNoresultstext(sNoresultstext)
+	'datatable.SetNodatatext(sNodatatext)
+	'datatable.SetNoresultstext(sNoresultstext)
 	datatable.SetPage(sPage)
 	'datatable.SetSearch(sSearch)
 	'datatable.SetSelectablekey(sSelectablekey)
@@ -7401,55 +7557,55 @@ Sub Design_Table
 	ui.AddControl(datatable.DataTable, datatable.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	'build the code
-	AddCode(sb, $"Sub CreateListing_${sname}"$)
-	sb.append($"Dim datatable${sname} As VmDataTable = vm.CreateDataTable("datatable${sname}", "${sItemkey}", Me)"$).append(CRLF)
-	CodeLine(sb, stitle, "s", "DataTable", sname, "SetTitle")
-	CodeLine(sb, sCaption, "s", "DataTable", sname, "SetCaption")
-	CodeLine(sb, bisSearchbox, "b", "DataTable", sname, "SetSearchbox")
+	AddCode(sb, $"Sub CreateDataTable_${sname}"$)
+	sb.append($"dt${sname} = vm.CreateDataTable("dt${sname}", "${sItemkey}", Me)"$).append(CRLF)
+	CodeLine(sb, stitle, "s", "dt", sname, "SetTitle")
+	CodeLine(sb, sCaption, "s", "dt", sname, "SetCaption")
+	CodeLine(sb, bisSearchbox, "b", "dt", sname, "SetSearchbox")
 	If bisaddnew Then
-		sb.append($"datatable${sname}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
+		sb.append($"dt${sname}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
 	End If
 	'
 	AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
-	CodeLine(sb, bisCalculatewidths, "b", "DataTable", sname, "SetCalculatewidths")
-	CodeLine(sb, bisdark, "b", "DataTable", sname, "SetDark")
-	CodeLine(sb, sDatasourcename, "s", "DataTable", sname, "SetDatasourcename")
-	CodeLine(sb, bisdense, "b", "DataTable", sname, "SetDense")
-	CodeLine(sb, bisDisablefiltering, "b", "DataTable", sname, "SetDisablefiltering")
-	CodeLine(sb, bisDisablepagination, "b", "DataTable", sname, "SetDisablepagination")
-	CodeLine(sb, bisDisablesort, "b", "DataTable", sname, "SetDisablesort")
-	'CodeLine(sb, sExpandicon, "s", "DataTable", sname, "SetExpandicon")
-	'CodeLine(sb, sExpanded, "s", "DataTable", sname, "SetExpanded")
-	'CodeLine(sb, sFilters, "s", "DataTable", sname, "SetFilters")
-	CodeLine(sb, bisFixedheader, "b", "DataTable", sname, "SetFixedheader")
-	'CodeLine(sb, sGroupby, "s", "DataTable", sname, "SetGroupby")
-	'CodeLine(sb, sGroupdesc, "s", "DataTable", sname, "SetGroupdesc")
-	'CodeLine(sb, sHeaderslength, "s", "DataTable", sname, "SetHeaderslength")
-	CodeLine(sb, sheight, "s", "DataTable", sname, "SetHeight")
-	CodeLine(sb, bisHidedefaultfooter, "b", "DataTable", sname, "SetHidedefaultfooter")
-	CodeLine(sb, bisHidedefaultheader, "b", "DataTable", sname, "SetHidedefaultheader")
-	CodeLine(sb, sItemsperpage, "s", "DataTable", sname, "SetItemsperpage")
-	CodeLine(sb, bislight, "b", "DataTable", sname, "SetLight")
-	CodeLine(sb, bisloading, "b", "DataTable", sname, "SetLoading")
-	CodeLine(sb, sLoadingtext, "s", "DataTable", sname, "SetLoadingtext")
-	CodeLine(sb, sLocale, "s", "DataTable", sname, "SetLocale")
-	CodeLine(sb, smobilebreakpoint, "s", "DataTable", sname, "SetMobilebreakpoint")
-	CodeLine(sb, bisMultisort, "b", "DataTable", sname, "SetMultisort")
-	CodeLine(sb, bisMustsort, "b", "DataTable", sname, "SetMustsort")
-	CodeLine(sb, sNodatatext, "s", "DataTable", sname, "SetNodatatext")
-	CodeLine(sb, sNoresultstext, "s", "DataTable", sname, "SetNoresultstext")
-	CodeLine(sb, sPage, "s", "DataTable", sname, "SetPage")
-	'CodeLine(sb, sSearch, "s", "DataTable", sname, "SetSearch")
-	'CodeLine(sb, sSelectablekey, "s", "DataTable", sname, "SetSelectablekey")
-	'CodeLine(sb, sServeritemslength, "s", "DataTable", sname, "SetServeritemslength")
-	CodeLine(sb, bisShowexpand, "b", "DataTable", sname, "SetShowexpand")
-	CodeLine(sb, bisShowgroupby, "b", "DataTable", sname, "SetShowgroupby")
-	CodeLine(sb, bisShowselect, "b", "DataTable", sname, "SetShowselect")
-	CodeLine(sb, bisSingleexpand, "b", "DataTable", sname, "SetSingleexpand")
-	CodeLine(sb, bisSingleselect, "b", "DataTable", sname, "SetSingleselect")
-	'CodeLine(sb, sSortby, "s", "DataTable", sname, "SetSortby")
-	'CodeLine(sb, sSortdesc, "s", "DataTable", sname, "SetSortdesc")
-	CodeLine(sb, bisvisible, "b", "DataTable", sname, "SetVisible")
+	CodeLine(sb, bisCalculatewidths, "b", "dt", sname, "SetCalculatewidths")
+	CodeLine(sb, bisdark, "b", "dt", sname, "SetDark")
+	CodeLine(sb, sDatasourcename, "s", "dt", sname, "SetDatasourcename")
+	CodeLine(sb, bisdense, "b", "dt", sname, "SetDense")
+	CodeLine(sb, bisDisablefiltering, "b", "dt", sname, "SetDisablefiltering")
+	CodeLine(sb, bisDisablepagination, "b", "dt", sname, "SetDisablepagination")
+	CodeLine(sb, bisDisablesort, "b", "dt", sname, "SetDisablesort")
+	'CodeLine(sb, sExpandicon, "s", "dt", sname, "SetExpandicon")
+	'CodeLine(sb, sExpanded, "s", "dt", sname, "SetExpanded")
+	'CodeLine(sb, sFilters, "s", "dt", sname, "SetFilters")
+	CodeLine(sb, bisFixedheader, "b", "dt", sname, "SetFixedheader")
+	'CodeLine(sb, sGroupby, "s", "dt", sname, "SetGroupby")
+	'CodeLine(sb, sGroupdesc, "s", "dt", sname, "SetGroupdesc")
+	'CodeLine(sb, sHeaderslength, "s", "dt", sname, "SetHeaderslength")
+	CodeLine(sb, sheight, "s", "dt", sname, "SetHeight")
+	CodeLine(sb, bisHidedefaultfooter, "b", "dt", sname, "SetHidedefaultfooter")
+	CodeLine(sb, bisHidedefaultheader, "b", "dt", sname, "SetHidedefaultheader")
+	CodeLine(sb, sItemsperpage, "s", "dt", sname, "SetItemsperpage")
+	CodeLine(sb, bislight, "b", "dt", sname, "SetLight")
+	CodeLine(sb, bisloading, "b", "dt", sname, "SetLoading")
+	'CodeLine(sb, sLoadingtext, "s", "dt", sname, "SetLoadingtext")
+	'CodeLine(sb, sLocale, "s", "dt", sname, "SetLocale")
+	CodeLine(sb, smobilebreakpoint, "s", "dt", sname, "SetMobilebreakpoint")
+	CodeLine(sb, bisMultisort, "b", "dt", sname, "SetMultisort")
+	CodeLine(sb, bisMustsort, "b", "dt", sname, "SetMustsort")
+	'CodeLine(sb, sNodatatext, "s", "dt", sname, "SetNodatatext")
+	'CodeLine(sb, sNoresultstext, "s", "dt", sname, "SetNoresultstext")
+	CodeLine(sb, sPage, "s", "dt", sname, "SetPage")
+	'CodeLine(sb, sSearch, "s", "dt", sname, "SetSearch")
+	'CodeLine(sb, sSelectablekey, "s", "dt", sname, "SetSelectablekey")
+	'CodeLine(sb, sServeritemslength, "s", "dt", sname, "SetServeritemslength")
+	CodeLine(sb, bisShowexpand, "b", "dt", sname, "SetShowexpand")
+	CodeLine(sb, bisShowgroupby, "b", "dt", sname, "SetShowgroupby")
+	CodeLine(sb, bisShowselect, "b", "dt", sname, "SetShowselect")
+	CodeLine(sb, bisSingleexpand, "b", "dt", sname, "SetSingleexpand")
+	CodeLine(sb, bisSingleselect, "b", "dt", sname, "SetSingleselect")
+	'CodeLine(sb, sSortby, "s", "dt", sname, "SetSortby")
+	'CodeLine(sb, sSortdesc, "s", "dt", sname, "SetSortdesc")
+	CodeLine(sb, bisvisible, "b", "dt", sname, "SetVisible")
 	'
 	Dim sba As StringBuilder
 	sba.initialize
@@ -7477,21 +7633,21 @@ Sub Design_Table
 		Dim bSortable As Boolean = YesNoToBoolean(xsortable)
 		Select Case xtype
 		Case "action"
-			sba.append($"DataTable${sname}.AddIcon("${xkey}", "${xtitle}", "${xicon}")"$).append(CRLF)
+			sba.append($"dt${sname}.AddIcon("${xkey}", "${xtitle}", "${xicon}")"$).append(CRLF)
 		Case Else
-			sb.append($"DataTable${sname}.AddColumn1("${xkey}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
+			sb.append($"dt${sname}.AddColumn1("${xkey}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
 		End Select
 	Next
 	
-	CodeLine(sb, bisEdit, "b", "DataTable", sname, "SetEdit")
-	CodeLine(sb, bisDelete, "b", "DataTable", sname, "SetDelete")
-	CodeLine(sb, bisClone, "b", "DataTable", sname, "SetClone")
-	CodeLine(sb, bisDownload, "b", "DataTable", sname, "SetDownload")
-	CodeLine(sb, bisPrint, "b", "DataTable", sname, "SetPrint")
-	CodeLine(sb, bisMenu, "b", "DataTable", sname, "SetMenu")
+	CodeLine(sb, bisEdit, "b", "dt", sname, "SetEdit")
+	CodeLine(sb, bisDelete, "b", "dt", sname, "SetDelete")
+	CodeLine(sb, bisClone, "b", "dt", sname, "SetClone")
+	CodeLine(sb, bisDownload, "b", "dt", sname, "SetDownload")
+	CodeLine(sb, bisPrint, "b", "dt", sname, "SetPrint")
+	CodeLine(sb, bisMenu, "b", "dt", sname, "SetMenu")
 	sb.append(sba.tostring)
 	'
-	sb.append($"cont.AddControl(datatable${sname}.DataTable, datatable${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"cont.AddControl(dt${sname}.DataTable, dt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	AddCode(sb, "End Sub")
 End Sub
 
@@ -8363,46 +8519,6 @@ Sub Design_Page
 	End If
 	tbl.AddSpacer
 	
-	
-	If bisNavbarvisible Then
-		AddComment(sb, "the navbar is visible for this page")
-		AddCode(sb,"vm.NavBar.Show")
-		tbl.Show
-	Else
-		AddComment(sb, "the navbar is hidden for this page")
-		AddCode(sb, "vm.NavBar.Hide")
-		tbl.hide
-	End If
-	'
-	If bisHamburgervisible Then
-		AddComment(sb, "show the hamburger for this page")
-		AddCode(sb, "vm.NavBar.Hamburger.SetVisible(True)")
-		tbl.Hamburger.SetVisible(True)
-	Else
-		AddComment(sb, "hide the hamburger for this page")	
-		AddCode(sb, "vm.NavBar.Hamburger.SetVisible(False)")
-		tbl.Hamburger.SetVisible(False)
-	End If
-	'
-	If bisDrawervisible Then
-		AddComment(sb, "the drawer should be visible for this page")
-		AddCode(sb, "vm.Drawer.Show")
-		drawer.Show
-	Else
-		AddComment(sb, "the drawer should be hidden for this page")
-		AddCode(sb, "vm.Drawer.Hide")
-		drawer.Hide	
-	End If
-	'
-	If bislogovisible Then
-		AddComment(sb, "the logo should be visible for this page")
-		AddCode(sb, "vm.NavBar.Logo.Show")
-		tbl.Logo.Show
-	Else
-		AddComment(sb, "the logo should be hidden for this page")
-		AddCode(sb, "vm.NavBar.Logo.Hide")
-		tbl.Logo.Hide
-	End If
 	'show in navbar
 	If  bisShowonnavbar Then
 		'navigation bar
@@ -8425,7 +8541,7 @@ Sub Design_Page
 		AddComment(sb,$"this page should show on the drawer"$)
 		AddCode(sb, $"vm.Drawer.AddIcon1("drw${svmodel.tolowercase}", "${siconname}", "${sIconcolor}", "${spagetitle}", "${stooltip}")"$)
 		If bisdivider Then
-			AddCode(sb, $"vm.Drawer.AddDivider(${bisinsetdivider})"$)
+			AddCode(sb, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
 		End If
 		'
 		'on click show the page
@@ -8447,8 +8563,49 @@ Sub Design_Page
 	AddCode(sb, "End Sub")
 	AddNewLine(sb)
 	'
+	'***** SHOW PAGE
 	AddComment(sb,"show the page")
 	AddCode(sb, "Sub Show")
+	If bisNavbarvisible Then
+		AddComment(sb, "the navbar is visible for this page")
+		AddCode(sb,"vm.NavBar.Show")
+		tbl.Show
+	Else
+		AddComment(sb, "the navbar is hidden for this page")
+		AddCode(sb, "vm.NavBar.Hide")
+		tbl.hide
+	End If
+	'
+	If bisHamburgervisible Then
+		AddComment(sb, "show the hamburger for this page")
+		AddCode(sb, "vm.NavBar.Hamburger.Show")
+		tbl.Hamburger.Show
+	Else
+		AddComment(sb, "hide the hamburger for this page")
+		AddCode(sb, "vm.NavBar.Hamburger.Hide")
+		tbl.Hamburger.Hide
+	End If
+	'
+	If bisDrawervisible Then
+		AddComment(sb, "the drawer should be visible for this page")
+		AddCode(sb, "vm.Drawer.Show")
+		drawer.Show
+	Else
+		AddComment(sb, "the drawer should be hidden for this page")
+		AddCode(sb, "vm.Drawer.Hide")
+		drawer.Hide
+	End If
+	'
+	If bislogovisible Then
+		AddComment(sb, "the logo should be visible for this page")
+		AddCode(sb, "vm.NavBar.Logo.Show")
+		tbl.Logo.Show
+	Else
+		AddComment(sb, "the logo should be hidden for this page")
+		AddCode(sb, "vm.NavBar.Logo.Hide")
+		tbl.Logo.Hide
+	End If
+	
 	'update the navbar title
 	If bisUpdatenavtitle Then
 		AddComment(sb, "update the navbar title")

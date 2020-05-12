@@ -238,6 +238,38 @@ Sub AddSelect(parent As String, vmodel As String, vText As String, options As Ma
 	Return Me
 End Sub
 
+Sub AddSelectM(parent As String, vmodel As String, vText As String, options As Map) As VMProperty
+	vmodel = vmodel.tolowercase
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	Dim sourceName As String = $"${vmodel}items"$
+	Dim sourcefield As String = "id"
+	Dim displayfield As String = "text"
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = vmodel
+	nc.text = vText
+	nc.value = ""
+	nc.typeOf = "selectboxm"
+	nc.sourceName = sourceName
+	nc.options = options
+	nc.sourcefield = sourcefield
+	nc.displayfield = displayfield
+	existing.Add(nc)
+	controls.Put(parent, existing)
+	fields.Add(vmodel)
+	Strings.Add(vmodel)
+	defaults.Put(vmodel,"")
+	Return Me
+End Sub
+
 'get properties
 Sub getProperties As Map
 	Dim rec As Map = CreateMap()
@@ -758,7 +790,7 @@ End Sub
 
 Sub SetDefaults
 	vue.SetState(defaults)
-	expnl.SetActivePanel("0")
+	expnl.OpenPanel(0)
 End Sub
 
 Sub AddCheck(parent As String, vModel As String, text As String, bvalue As Boolean)
@@ -1045,6 +1077,13 @@ Sub DeleteItem
 	BANano.CallSub(module, changeEvent, Null)
 End Sub
 
+Sub btnEmpty_click(e As BANanoEvent)
+	vue.SetData("tableitems", vue.NewList)
+	vue.SetData("tableitem", vue.newmap)
+	ClearContents
+	BANano.CallSub(module, changeEvent, Null)
+End Sub
+
 Sub btnDeleteTable_click(e As BANanoEvent)
 	DeleteItem
 End Sub
@@ -1177,6 +1216,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 					'
 				'add input controls
@@ -1265,6 +1305,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'
 				'add input controls
@@ -1496,6 +1537,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'add input controls
 				Dim tcont As VMContainer
@@ -1561,6 +1603,7 @@ Sub ToString As String
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'add input controls
 				Dim tcont As VMContainer
@@ -1809,6 +1852,28 @@ Sub ToString As String
 				cbo.AddClass("my-2")
 				cbo.SetVShow(nc.vmodel & "show")
 				cbo.SetOnChange(Me, "RaiseChangeEvent")
+				vue.SetData(nc.vmodel & "show", True)
+				Dim scombo As String = cbo.tostring
+				expanel.Content.Container.AddControlS(cbo.Combo, scombo, 1, 1, 12, 12, 12, 12)
+			Case "selectboxm"
+				sText.Add(nc.vmodel)
+				Dim cbo As VMSelect
+				cbo.Initialize(vue, "cbo" & nc.vmodel, module)
+				cbo.SetStatic(True)
+				cbo.Setlabel(nc.Text)
+				cbo.SetVModel(nc.vmodel)
+				cbo.SetOptions(nc.sourceName, nc.options, nc.sourcefield, nc.displayField, False)
+				cbo.RemoveAttr("ref")
+				cbo.SetDense(True)
+				cbo.SetOutlined(True)
+				cbo.SetHideDetails(True)
+				cbo.AddClass("my-2")
+				cbo.SetVShow(nc.vmodel & "show")
+				cbo.SetOnChange(Me, "RaiseChangeEvent")
+				cbo.SetMultiple(True)
+				cbo.SetChips(True)
+				cbo.SetDeletableChips(True)
+				cbo.SetSmallChips(True)
 				vue.SetData(nc.vmodel & "show", True)
 				Dim scombo As String = cbo.tostring
 				expanel.Content.Container.AddControlS(cbo.Combo, scombo, 1, 1, 12, 12, 12, 12)

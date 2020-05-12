@@ -48,6 +48,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub menu_click(e As BANanoEvent)
+	vue.ToggleState("drawer")
+End Sub
+
 Sub SetStatic(b As Boolean) As VMToolBar
 	bStatic = b
 	ToolBar.SetStatic(b)
@@ -112,6 +116,26 @@ Sub AddDivider(bVertical As Boolean, mprops As Map, mstyles As Map, lclasses As 
 	Return Me
 End Sub
 
+
+Sub AddSubHeading1(sText As String) As VMToolBar
+	Dim skey As String = $"${ID}subheading"$
+	Dim d As VMLabel
+	d.Initialize(vue, skey)
+	d.SetStatic(bStatic)
+	d.SetDesignMode(DesignMode)
+	If bStatic Then
+		d.SetSpan.SetText(sText)
+	Else
+		d.SetSpan.SetText($"{{ ${skey} }}"$)
+	End If
+	d.AddClass("subheading").AddClass("mx-2")
+	AddComponent(skey, d.ToString)
+	vue.SetData(skey, sText)
+	HasContent = True
+	Return Me
+End Sub
+
+
 Sub AddSubHeading(sText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMToolBar
 	Dim skey As String = $"${ID}subheading"$
 	Dim d As VMLabel
@@ -123,7 +147,7 @@ Sub AddSubHeading(sText As String, mprops As Map, mstyles As Map, lclasses As Li
 	Else	
 		d.SetSpan.SetText($"{{ ${skey} }}"$)
 	End If
-	d.AddClass("subheading")
+	d.AddClass("subheading").AddClass("mx-2")
 	d.BuildModel(mprops, mstyles, lclasses, loose)
 	AddComponent(skey, d.ToString)
 	vue.SetData(skey, sText)
@@ -213,12 +237,6 @@ Sub AddClass(c As String) As VMToolBar
 	Return Me
 End Sub
 
-Sub menu_click(e As BANanoEvent)
-	vue.ToggleState("drawer")
-	'Drawer.Toggle
-	'NavBar.ToggleMenu
-End Sub
-
 Sub Hide
 	vue.SetStateSingle(ID, False)
 End Sub
@@ -268,6 +286,7 @@ Sub AddSearch(key As String) As VMToolBar
 	txt.SetDesignMode(DesignMode)
 	txt.AddClass("mx-4").SetAttributes(Array("flat", "hide-details","solo-inverted"))
 	txt.SetLabel("Search").SetPrependInnerIcon("search").AddClass("hidden-sm-and-down").SetClearable(True).SetVModel(key)
+	txt.SetOnChange(module, $"${key}_change"$)
 	ToolBar.SetText(txt.ToString)
 	HasContent = True
 	Return Me

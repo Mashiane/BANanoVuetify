@@ -74,5 +74,8 @@ End Sub
 
 Sub BANano_Ready
 	'copy code below this line
+	'*** START: CREATE TABLES
+	'
+	'*** END: CREATE TABLES
 	pgIndex.Init
 End Sub
