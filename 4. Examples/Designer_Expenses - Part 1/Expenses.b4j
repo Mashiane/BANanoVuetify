@@ -9,10 +9,11 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
-Library5=bananovuetify
+Library5=bananovuetifycore
+Library6=bananovuetifyconnect
 Module1=pgIndex
 NumberOfFiles=2
-NumberOfLibraries=5
+NumberOfLibraries=6
 NumberOfModules=1
 Version=8.1
 @EndOfDesignText@
@@ -23,8 +24,8 @@ Version=8.1
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
-	Public AppName As String = "parkinglot"
-	Public AppTitle As String = "Parking Lot"
+	Public AppName As String = "dexpenses"
+	Public AppTitle As String = "Designer Expenses"
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
@@ -32,7 +33,7 @@ Sub Process_Globals
 	Private alaSQL As BANanoAlaSQLE
 	Public Version As String = "1.00"
 	Public Port As String = "8080"
-	Public DBase As String = "parkinglot"
+	Public DBase As String = "template"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -74,5 +75,8 @@ End Sub
 
 Sub BANano_Ready
 	'copy code below this line
+	'*** START: CREATE TABLES
+	'
+	'*** END: CREATE TABLES
 	pgIndex.Init
 End Sub

@@ -5,15 +5,13 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananovuetifycore
-Module1=BANanoAlaSQL
-Module2=BANanoAlaSQLE
-Module3=BANanoMSSQL
-Module4=BANanoMySQL
-Module5=BANanoMySQLE
-Module6=BANanoPHP
+Module1=BANanoAlaSQLE
+Module2=BANanoMSSQLE
+Module3=BANanoMySQLE
+Module4=BANanoPHP
 NumberOfFiles=0
 NumberOfLibraries=4
-NumberOfModules=6
+NumberOfModules=4
 Version=8.1
 @EndOfDesignText@
 '
@@ -21,7 +19,7 @@ Version=8.1
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 1.00
+	#LibraryVersion: 1.01
 #End Region
 
 Sub Process_Globals
@@ -38,7 +36,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = AppName
 	BANano.JAVASCRIPT_NAME = appFile
-	BANano.BuildAsB4XLib("1.00")
+	BANano.BuildAsB4XLib("1.01")
 	ExitApplication
 End Sub
 

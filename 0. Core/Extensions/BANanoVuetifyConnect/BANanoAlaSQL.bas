@@ -117,6 +117,7 @@ Sub GetNextID(fld As String, rsl As List) As String
 	End If
 	nextid = nextid + 1
 	strid = CStr(nextid)
+	nextid = BANano.ParseInt(nextid)
 	Return strid
 End Sub
 

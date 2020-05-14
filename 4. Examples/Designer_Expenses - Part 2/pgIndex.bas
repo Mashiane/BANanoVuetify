@@ -20,6 +20,7 @@ Sub Init
 	vm.ux
 End Sub
 
+'build the navigation bar
 Sub BuildNavBar
 	'*copy code after this line
 	'add a hamburger
@@ -33,93 +34,82 @@ Sub BuildNavBar
 	vm.NavBar.Logo.SetSize("46px","46px")
 	vm.NavBar.AddLogo("./assets/sponge.png")
 	vm.NavBar.Logo.Show
-	vm.NavBar.AddTitle("Categories","")
+	vm.NavBar.AddTitle("Designer Expenses","")
 	vm.NavBar.AddSubHeading1("1.00")
 	vm.NavBar.AddSpacer
 	vm.NavBar.SetFixed(True)
 	vm.NavBar.SetVisible(True)
+	'
 	'this page should have an icon/button in the navbar
-	vm.NavBar.AddButton1("navCategory", "mdi-file-tree-outline", "", "Categories", "")
-	'add add & refresh button to the navbar for Category
-	vm.NavBar.AddIcon("btnAddCategory","add", "Add Category", "")
-	vm.NavBar.AddIcon("btnRefreshCategory","refresh", "Refresh Categories", "")
+	vm.NavBar.AddButton1("navExpenseType", "mdi-account", "Expense Types", "", "")
+
 End Sub
 
+'build the nav drawer
 Sub BuildNavDrawer
 	'*copy code after this line
+	vm.Drawer.Setwidth("300")
+	vm.Drawer.Setvisible(True)
 	'this page should show on the drawer
-	vm.Drawer.AddIcon1("pageCategory", "mdi-file-tree-outline", "", "", "Categories")
+	vm.Drawer.AddIcon1("pageExpenseType", "mdi-account", "", "Expense Types", "")
 	vm.Drawer.AddDivider1(False)
 End Sub
 
-'click modCategory nav button
-Sub navCategory_click(e As BANanoEvent)
-	'show the page Category
-	modCategory.Show
+'click modExpenseType nav button
+Sub navExpenseType_click(e As BANanoEvent)
+	'show the page ExpenseType
+	modExpenseType.Show
 End Sub
 
+'add pages to the app
 Sub AddPages
 	'*copy code after this line
-	'code to add the Category template code to the master HTML template
-	vm.AddPage(modCategory.name, modCategory)
-
+	'code to add the ExpenseType template code to the master HTML template
+	vm.AddPage(modExpenseType.name, modExpenseType)
 End Sub
 
+'add content to this page
 Sub AddContent
 	'*copy code here to add to thos page
 End Sub
 
-'add a new Category category
-Sub btnAddCategory_click(e As BANanoEvent)
-	'execute adding Category
-	modCategory.Addcats
-End Sub
-
-'refresh Category listing
-Sub btnRefreshCategory_click(e As BANanoEvent)
-	'execute code to refresh listing for Category
-	vm.CallMethod("SelectAll_Cats")
-End Sub
-
-'*IMPORTANT
+'*IMPORTANT when a drawer item is clicked
 Sub draweritems_click(e As BANanoEvent)
 	'get the id from the event
 	Dim elID As String = vm.GetIDFromEvent(e)
 	Select Case elID
 		'copy code below this line
-		Case "pagecategory"
-			'show Category
-			modCategory.Show
+		Case "pageexpensetype"
+			'show ExpenseType
+			modExpenseType.Show
 	End Select
 End Sub
 
-'confirm ok click
+'confirm dialog ok click
 Sub confirm_ok(e As BANanoEvent)
 	Dim sconfirm As String = vm.GetConfirm
 	Select Case sconfirm
 		'copy code below this line
-		Case "delete_cats"
+		Case "delete_expensetypes"
 			'read the saved record id
-			Dim RecID As String = vm.GetState("catsid", "")
+			Dim RecID As String = vm.GetState("expensetypestypeid", "")
 			If RecID = "" Then Return
 			'delete the record
-			modCategory.DeleteRecord_Cats(RecID)
-			'execute code to refresh listing for Category
-			vm.CallMethod("SelectAll_Cats")
+			modExpenseType.DeleteRecord_Expensetypes(RecID)
 	End Select
 End Sub
 
-'confirm cancel click
+'confirm dialog cancel click
 Sub cancel_ok(e As BANanoEvent)
 
 End Sub
 
-'alert ok
+'alert dialog ok clock
 Sub alert_ok(e As BANanoEvent)
 
 End Sub
 
-'confirm cancel
+'confirm dialog cancel click
 Sub confirm_cancel(e As BANanoEvent)
 
 End Sub

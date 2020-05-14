@@ -94,6 +94,14 @@ Sub Update(priValue As String) As BANanoAlaSQLE
 	Return Me
 End Sub
 
+Sub Update1(rec As Map, priValue As String) As BANanoAlaSQLE
+	Dim tblWhere As Map = CreateMap()
+	tblWhere.Put(PrimaryKey, priValue)
+	UpdateWhere(rec, tblWhere, Null)
+	Return Me
+End Sub
+
+
 'prepare for new table definition
 Sub SchemaClear As BANanoAlaSQLE
 	Schema.clear
@@ -163,6 +171,12 @@ Sub SchemaFromDesign(vDesign As VMContainer) As BANanoAlaSQLE
 	SchemaAddFloat(vDesign.Doubles)
 	SchemaAddInt(vDesign.Integers)
 	SchemaAddText(vDesign.Strings)
+	'update field types
+	AddStrings(vDesign.Strings)
+	AddIntegers(vDesign.Integers)
+	AddDoubles(vDesign.Doubles)
+	AddBooleans(vDesign.Booleans)
+	AddStrings(vDesign.Dates)
 	Return Me
 End Sub
 
@@ -206,6 +220,7 @@ Sub GetNextID As String
 	End If
 	nextid = nextid + 1
 	strid = CStr(nextid)
+	nextid = BANano.ParseInt(nextid)
 	Return strid
 End Sub
 
@@ -263,7 +278,25 @@ private Sub GetMapValues(sourceMap As Map) As List
 	Dim iTot As Int
 	iTot = sourceMap.Size - 1
 	For iCnt = 0 To iTot
+		'get the value
+		Dim key As String = sourceMap.getkeyat(iCnt)
 		Dim value As String = sourceMap.GetValueAt(iCnt)
+		value = CStr(value)
+		value = value.trim
+		'get the type
+		Dim vtype As String = GetMapType(key)
+		Select Case vtype
+		Case "i"
+			'integer			
+			If value = "" Then value = "0"
+			value = BANano.parseInt(value)
+		Case "d"
+			'double
+			If value = "" Then value = "0"
+			value = BANano.parsefloat(value)
+		Case "s", "b"
+			'string
+		End Select
 		listOfValues.Add(value)
 	Next
 	Return listOfValues
@@ -454,20 +487,26 @@ End Sub
 
 'return a sql map to insert record to table. sql = query string, values = list of values
 Sub Insert As BANanoAlaSQLE
+	Insert1(Record)
+	Return Me
+End Sub
+
+'return a sql map to insert record to table. sql = query string, values = list of values
+Sub Insert1(Rec As Map) As BANanoAlaSQLE
 	Dim sb As StringBuilder
 	Dim columns As StringBuilder
 	Dim values As StringBuilder
-	Dim listOfValues As List = GetMapValues(Record)
-	Dim listOfTypes As List = GetMapTypes(Record)
+	Dim listOfValues As List = GetMapValues(Rec)
+	Dim listOfTypes As List = GetMapTypes(Rec)
 	Dim iCnt As Int
 	Dim iTot As Int
 	sb.Initialize
 	columns.Initialize
 	values.Initialize
 	sb.Append($"INSERT INTO ${EscapeField(TableName)} ("$)
-	iTot = Record.Size - 1
+	iTot = Rec.Size - 1
 	For iCnt = 0 To iTot
-		Dim col As String = Record.GetKeyAt(iCnt)
+		Dim col As String = Rec.GetKeyAt(iCnt)
 		If iCnt > 0 Then
 			columns.Append(", ")
 			values.Append(", ")
@@ -491,6 +530,23 @@ Sub Insert As BANanoAlaSQLE
 	Return Me
 End Sub
 
+private Sub GetMapType(k As String) As String
+	If recType.ContainsKey(k) Then
+		Dim colType As String = recType.GetDefault(k, "STRING")
+		Select Case colType
+			Case "INTEGER", "INT", "BOOL","BOOLEAN"
+				Return "i"
+			Case "BLOB"
+				Return "b"
+			Case "REAL","FLOAT","DOUBLE"
+				Return "d"
+			Case Else
+				Return "s"
+		End Select
+	Else
+		Return "s"
+	End If
+End Sub
 
 'get the list of types
 private Sub GetMapTypes(sourceMap As Map) As List
@@ -503,12 +559,6 @@ private Sub GetMapTypes(sourceMap As Map) As List
 		Dim col As String = sourceMap.GetKeyAt(iCnt)
 		Dim colType As String = recType.GetDefault(col,"STRING")
 		Select Case colType
-			Case "VARCHAR(20)", "VARCHAR(10)", "VARCHAR(30)", "VARCHAR(40)"
-				listOfTypes.add("s")
-			Case "VARCHAR(50)", "VARCHAR(100)", "VARCHAR(255)"
-				listOfTypes.add("s")
-			Case "STRING","VARCHAR","TEXT","DATE","DATETIME","NVARCHAR"
-				listOfTypes.add("s")
 			Case "INTEGER", "INT", "BOOL","BOOLEAN"
 				listOfTypes.add("i")
 			Case "BLOB"
@@ -550,9 +600,9 @@ Sub UpdateWhere(tblfields As Map, tblWhere As Map, operators As List) As BANanoA
 		Dim col As String = tblfields.GetKeyAt(i)
 		sb.Append(EscapeField(col))
 		If i <> iTot Then
-			sb.Append("= ?,")
+			sb.Append(" = ?,")
 		Else
-			sb.Append("= ?")
+			sb.Append(" = ?")
 		End If
 	Next
 	sb.Append($" WHERE "$)

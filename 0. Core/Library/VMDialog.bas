@@ -20,7 +20,7 @@ Sub Class_Globals
 	Private titleKey As String
 	Private contentKey As String
 	Private bStatic As Boolean
-	Public Form As VMForm
+	Private Form As VMForm
 End Sub
 
 'initialize the Dialog
@@ -37,7 +37,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Title = Card.title
 	Content = Card.text
 	Actions = Card.Actions
-	Form = Card.form
+	Form = Card.Form
 	Container = Form.Container
 	Actions.AddSpacer
 	'
@@ -49,21 +49,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 Sub Validate
-	Form.validate
+	Card.Form.validate
 End Sub
 
 Sub Reset
-	Form.Reset	
+	Card.Form.Reset	
 End Sub
 
 Sub ResetValidation
-	Form.ResetValidation
+	Card.Form.ResetValidation
 End Sub
 
 Sub SetStatic(b As Boolean) As VMDialog
 	bStatic = b
 	Dialog.SetStatic(b)
 	Card.setstatic(b)
+	Container.SetStatic(b)
 	Return Me
 End Sub
 
@@ -85,7 +86,7 @@ End Sub
 
 'get required fields
 Sub Required As Map
-	Return Container.required
+	Return Container.Required
 End Sub
 
 'set single style
@@ -651,6 +652,7 @@ Sub SetDesignMode(b As Boolean) As VMDialog
 	Dialog.SetDesignMode(b)
 	DesignMode = b
 	Card.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	Return Me
 End Sub
 

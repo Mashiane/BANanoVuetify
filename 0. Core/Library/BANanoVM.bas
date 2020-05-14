@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Private BANano As BANano
 	Public vue As BANanoVue
@@ -289,6 +289,20 @@ Sub NewMap As Map
 	Dim nm As Map
 	nm.Initialize
 	Return nm
+End Sub
+
+'get the record position from saved items
+Sub ListOfMapsRecordPos(lst As List, k As String, v As String) As Int
+	Dim lTot As Int = lst.Size - 1
+	Dim lCnt As Int
+	For lCnt = 0 To lTot
+		Dim m As Map = lst.Get(lCnt)
+		Dim sk As String = m.GetDefault(k, "")
+		If sk.EqualsIgnoreCase(v) Then
+			Return lCnt
+		End If
+	Next
+	Return -1
 End Sub
 
 'nullify the file select

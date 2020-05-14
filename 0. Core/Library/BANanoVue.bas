@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=7.8
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
 	Public BOVue As BANanoObject
@@ -620,7 +620,21 @@ End Sub
 Sub NewList As List
 	Dim lst As List
 	lst.Initialize
-	Return lst 
+	Return lst
+End Sub
+
+'get the record position from saved items
+Sub ListOfMapsRecordPos(lst As List, k As String, v As String) As Int
+	Dim lTot As Int = lst.Size - 1
+	Dim lCnt As Int
+	For lCnt = 0 To lTot
+		Dim m As Map = lst.Get(lCnt)
+		Dim sk As String = m.GetDefault(k, "")
+		If sk.EqualsIgnoreCase(v) Then
+			Return lCnt
+		End If
+	Next
+	Return -1
 End Sub
 
 'join list to mv string
@@ -1895,11 +1909,13 @@ End Sub
 
 Sub AddComponent(comp As VMElement) As BANanoVue
 	Dim sid As String = comp.id
+	If components.ContainsKey(sid) = True Then Return Me
 	components.Put(sid, comp.Component)
 	Return Me
 End Sub
 
 Sub AddComponentBO(compName As String, comp As BANanoObject) As BANanoVue
+	If components.ContainsKey(compName) = True Then Return Me
 	components.Put(compName, comp)
 	Return Me
 End Sub
@@ -2475,6 +2491,13 @@ End Sub
 'inject the template
 Sub SetTemplate(tmp As String)
 	Template.SetText(tmp)
+End Sub
+
+'add a component library
+Sub AddModule(tag As String, compName As String)
+	Dim comp As BANanoObject
+	comp.Initialize(compName)
+	AddComponentBO(tag, comp)
 End Sub
 
 'use a component module

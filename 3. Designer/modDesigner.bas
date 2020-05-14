@@ -651,18 +651,6 @@ Private stabindex As String
 End Sub
 
 Sub Init
-	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider")
-	fieldtypes = CreateMap("string":"string", "int":"int", "bool":"bool", "date":"date","dbl":"float")
-	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
-	'
-	iconpos.initialize
-	iconpos.put("left", "Left")
-	iconpos.put("right", "Right")
-	iconpos.put("", "None")
-	'
-	lstBags.Initialize
-	avatarMap.initialize
-	'
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
@@ -682,16 +670,6 @@ Sub Init
 	vm.NavBar.AddSpacer
 	vm.NavBar.SetVisible(True)
 	vm.NavBar.SetModeFixed(True)
-	
-	'
-	'get last selected panel
-	Dim sp As String = BANano.GetLocalStorage("selectedpanel")
-	If sp <> Null Then
-		vm.setdata("selectedpanel", BANano.parseint(sp))
-	Else
-		vm.setdata("selectedpanel", 0)
-	End If
-	'
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
@@ -727,6 +705,27 @@ Sub Init
 	vm.NavBar.AddIcon("btnLandScape", "mdi-phone-rotate-landscape", "Rotate", "")
 	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")
 	vm.NavBar.AddIcon("btnRefresh", "refresh", "Refresh", "")
+	
+	'
+	'get last selected panel
+	Dim sp As String = BANano.GetLocalStorage("selectedpanel")
+	If sp <> Null Then
+		vm.setdata("selectedpanel", BANano.parseint(sp))
+	Else
+		vm.setdata("selectedpanel", 0)
+	End If
+	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider")
+	fieldtypes = CreateMap("string":"String", "int":"Integer", "bool":"Boolean", "date":"Date","dbl":"Float")
+	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
+	'
+	iconpos.initialize
+	iconpos.put("left", "Left")
+	iconpos.put("right", "Right")
+	iconpos.put("", "None")
+	'
+	lstBags.Initialize
+	avatarMap.initialize
+	
 	'
 	vm.setdata("showmatrix", "Yes")
 	vm.setdata("hasborder", "Yes")
@@ -794,6 +793,8 @@ Sub Init
 	vm.UX
 	'
 	vm.SetData("project", vm.newmap)
+	vm.SetData("propbag", vm.newmap)
+	vm.SetData("tableitems", vm.newlist)
 	drwprojectdetails.Container.Setdefaults
 	CreateUX
 	vm.CallMethod("LoadProjects")
@@ -804,6 +805,7 @@ Sub Init
 	prjSQL.Initialize("project", "id")
 	prjSQL.SelectAll(Array("*"), Array("projectname"))
 	prjSQL.result = db.executewait(prjSQL.query, prjSQL.args)
+	prjSQL.FromJSON
 	Dim projects As List = prjSQL.result
 	If projects.size = 0 Then
 		vm.ShowSnackBArError("You need to create a new project first!")
@@ -828,8 +830,11 @@ Sub btnDownloadComponents_click(e As BANanoEvent)
 	Dim compSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	compSQL.Initialize("project", "id")
+	compSQL.AddIntegers(Array("id"))
+	compSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
 	compSQL.Read(pid)
 	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
 	If compSQL.result.Size = 0 Then
 		vm.PageResume
 		Return
@@ -857,15 +862,17 @@ Sub btnExtractComponents_click(e As BANanoEvent)
 	'lets import to the db
 	Dim CompList As List
 	CompList.initialize
-	CompList = BANano.FromJSON(compJSON)
+	If compJSON <> "" Then CompList = BANano.FromJSON(compJSON)
 	Dim db As BANanoSQL
 	Dim compSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	compSQL.Initialize("components", "id")
+	compSQL.AddIntegers(Array("id", "row","col","tabindex"))
+	compSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
 	For Each nrec As Map In CompList
-		compSQL.RecordFromMap(nrec)
-		compSQL.Insert
+		compSQL.Insert1(nrec)
 		compSQL.result = db.executewait(compSQL.query, compSQL.args)
+		compSQL.FromJSON
 	Next
 	vm.PageResume
 	CreateUX
@@ -888,6 +895,7 @@ Sub btnSaveComponents2Project_click(e As BANanoEvent)
 	compSQL.Initialize("components", "id")
 	compSQL.SelectAll(Array("*"), Array("row","col"))
 	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
 	'convert to json
 	Dim compJSON As String = BANano.ToJSON(compSQL.result)
 	'save to project
@@ -895,9 +903,11 @@ Sub btnSaveComponents2Project_click(e As BANanoEvent)
 	prj.Put("components", compJSON)
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	compSQL.Initialize("project", "id")
-	compSQL.RecordFromMap(prj)
-	compSQL.Update(pid)
+	compSQL.AddIntegers(Array("id"))
+	compSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
+	compSQL.Update1(prj, pid)
 	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
 	vm.SetData("project", prj)
 	vm.PageResume
 End Sub
@@ -913,8 +923,11 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("project", "id")
+	rsSQL.AddIntegers(Array("id"))
+	rsSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
 	rsSQL.Read(menuID)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.fromjson
 	If rsSQL.result.size = 0 Then Return
 	'read the first record found
 	Dim rec As Map = rsSQL.result.get(0)
@@ -968,6 +981,7 @@ Sub LoadProjects
 	prjSQL.Initialize("project", "id")
 	prjSQL.SelectAll(Array("*"), Array("projectname"))
 	prjSQL.result = db.executewait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
 	vm.setdata("projects", prjSQL.result)
 End Sub
 
@@ -1052,12 +1066,15 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 	Case "A"
 		'add mode
 		pid = DateTime.now
+		pid = BANano.parseint(pid)
 		Record.put("id", pid)
 		db.OpenWait("bvmdesigner", "bvmdesigner")
 		rsSQL.Initialize("project", "id")
-		rsSQL.RecordFromMap(Record)
-		rsSQL.Insert
+		rsSQL.AddIntegers(Array("id"))
+		rsSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
+		rsSQL.Insert1(Record)
 		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+		rsSQL.FromJSON
 	Case "E"
 		Dim prj As Map = vm.GetData("project")
 		Dim pid As String = prj.Get("id")
@@ -1065,9 +1082,11 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 		Record.put("id", pid)
 		db.OpenWait("bvmdesigner", "bvmdesigner")
 		rsSQL.Initialize("project", "id")
-		rsSQL.RecordFromMap(Record)
-		rsSQL.Update(pid)
+		rsSQL.AddIntegers(Array("id"))
+		rsSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
+		rsSQL.Update1(Record, pid)
 		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+		rsSQL.FromJSON
 	End Select
 	Dim sprojectname As String = Record.getdefault("projectname", "")
 	vm.NavBar.UpdateTitle($"${Main.AppTitle} [${sprojectname}]"$)
@@ -1197,7 +1216,8 @@ Sub CreateUX
 	bHasBorder = YesNoToBoolean(vm.getdata("hasborder"))
 	
 	vm.pagepause
-	vm.setdata("myux", Array())
+	vm.setdata("myux", vm.Newlist)
+	dbCode.SetCode("")
 	'
 	Dim db As BANanoSQL
 	Dim gridSQL As BANanoAlaSQLE
@@ -1208,11 +1228,13 @@ Sub CreateUX
 	gridSQL.Initialize("grid", "id")
 	gridSQL.SelectAll(Array("*"), Array("id"))
 	gridSQL.result = db.executewait(gridSQL.query, gridSQL.args)
+	gridSQL.FromJSON
 	'
 	'add the components
 	compSQL.Initialize("components", "id")
 	compSQL.SelectAll(Array("*"), Array("row","col"))
 	compSQL.result = db.executewait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
 	'
 	vm.setdata("myux", compSQL.result)
 	
@@ -3798,7 +3820,11 @@ End Sub
 Sub CodeLine(sbx As StringBuilder, varName As String, varType As String, prefix As String, ssname As String, methodName As String)
 	Select Case varType
 		Case "b"
-			If varName Then sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
+			If methodName.EqualsIgnoreCase("SetVisible") Then
+				sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
+			Else
+				If varName Then sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
+			End If
 		Case "s"
 			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}")"$).append(CRLF)
 	End Select
@@ -3860,6 +3886,7 @@ Sub compMenuitems_click(e As BANanoEvent)
 		compSQL.Initialize("components", "id")
 		compSQL.SelectAll(Array("*"), Array("row","col"))
 		compSQL.result = db.executewait(compSQL.query, compSQL.args)
+		compSQL.FromJSON
 		'convert to json
 		Dim compJSON As String = BANano.ToJSON(compSQL.result)
 		vm.SaveText2File(compJSON, $"${sprojectname}.txt"$)
@@ -3898,10 +3925,12 @@ Sub fucomponent_change(e As BANanoEvent)
 	'lets import to the db
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	compSQL.Initialize("components", "id")
+	compSQL.AddIntegers(Array("id", "row","col","tabindex"))
+	compSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
 	For Each nrec As Map In CompList
-		compSQL.RecordFromMap(nrec)
-		compSQL.Insert
+		compSQL.Insert1(nrec)
 		compSQL.result = db.executewait(compSQL.query, compSQL.args)
+		compSQL.FromJSON
 	Next
 	CreateUX
 End Sub
@@ -3950,6 +3979,7 @@ Sub RemoveLastCompItem
 	rsSQL.Initialize("components", "id")
 	rsSQL.Execute("select id from components order by id desc")
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
 	If rsSQL.result.size > 0 Then
 		'get the record
 		Dim rec As Map = rsSQL.result.get(0)
@@ -3957,8 +3987,11 @@ Sub RemoveLastCompItem
 		Dim sid As String = rec.get("id")
 		'delete the record
 		rsSQL.Initialize("components", "id")
+		rsSQL.AddIntegers(Array("id", "row","col","tabindex"))
+		rsSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
 		rsSQL.Delete(sid)
 		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+		rsSQL.FromJSON
 	End If
 	vm.pageresume
 	CreateUX
@@ -3974,8 +4007,9 @@ Sub ClearComp
 	rsSQL.Initialize("components", "id")
 	rsSQL.DeleteAll
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
+	vm.setdata("tableitems", vm.newlist)
 	vm.pageresume
-	ClearTableThings
 	CreateUX
 End Sub
 
@@ -3989,6 +4023,7 @@ Sub RemoveLastGridItem
 	rsSQL.Initialize("grid", "id")
 	rsSQL.Execute("select id from grid order by id desc")
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.fromjson
 	If rsSQL.result.size > 0 Then
 		'get the record
 		Dim rec As Map = rsSQL.result.get(0)
@@ -3996,8 +4031,11 @@ Sub RemoveLastGridItem
 		Dim sid As String = rec.get("id")
 		'delete the record
 		rsSQL.Initialize("grid", "id")
+		rsSQL.AddIntegers(Array("id"))
+		rsSQL.AddStrings(Array("controltype"))
 		rsSQL.Delete(sid)
 		rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+		rsSQL.FromJSON
 	End If
 	vm.pageresume
 	CreateUX
@@ -4013,6 +4051,7 @@ Sub ClearGrid
 	rsSQL.Initialize("grid", "id")
 	rsSQL.DeleteAll
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
 	vm.pageresume
 	CreateUX
 End Sub
@@ -4172,8 +4211,6 @@ Sub builderlisting_click(e As BANanoEvent)
 	dbFields.initialize
 	dbFields.AddAll(Array("key", "title", "coltype", "colscope" , "colfieldtype" , "coldefaultvalue", "colminrange", "colmaxrange", "colhasset", "colhasget", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
-	schemaDT.SetDataSourceName("tableitems")
-	Design_TablePreview
 End Sub
 
 'show columns applicable to the form input
@@ -4184,8 +4221,6 @@ Sub formlisting_click(e As BANanoEvent)
 	"colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge", _
 	"colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
-	schemaDT.SetDataSourceName("tableitems")
-	Design_TablePreview
 End Sub
 
 'show columns applicable to the table listing
@@ -4194,8 +4229,6 @@ Sub schemalisting_click(e As BANanoEvent)
 	dbFields.initialize
 	dbFields.AddAll(Array("key", "title", "subtitle", "colwidth" , "colalign" , "colsortable", "colontable", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
-	schemaDT.SetDataSourceName("tableitems")
-	Design_TablePreview
 End Sub
 
 'only show columns that are related to the database
@@ -4204,15 +4237,11 @@ Sub schemaDB_click(e As BANanoEvent)
 	dbFields.initialize
 	dbFields.AddAll(Array("key", "title", "coldatatype" , "collength" , "colvalue", "colindexed", "colvaluedisplay", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
-	schemaDT.SetDataSourceName("tableitems")
-	Design_TablePreview
 End Sub
 
 'reset the filter
 Sub schemaReset_click(e As BANanoEvent)
 	schemaDT.ResetFilter
-	schemaDT.SetDataSourceName("tableitems")
-	Design_TablePreview
 End Sub
 
 Sub AddInstruction(sbx As StringBuilder, modName As String, subName As String, partX As String)
@@ -4241,22 +4270,28 @@ Sub Design_DBSourceCode
 	'
 	'get the table name
 	dbCode.SetTitle("Table Schema Source Code")
-	Dim tbName As String = BANano.GetLocalStorage("dbtable")
-	Dim itemkey As String = BANano.getlocalstorage("itemkey")
-	Dim isautoincrement As String = BANano.getlocalStorage("isautoincrement")
-	Dim ssingular As String = BANano.getlocalstorage("singular")
-	Dim snewid As String = BANano.getlocalstorage("newid")
-	Dim sisaddnew As String = BANano.getlocalstorage("isaddnew")
-	Dim stitle As String = BANano.getlocalstorage("title")
-	Dim isdialog As String = BANano.getlocalstorage("isdialog")
-	Dim ds As String = BANano.getlocalstorage("ds")
-	Dim capName As String = vm.propercase(ssingular)
-	capName = capName.replace(" ","")
-	capName = capName.trim
-	Dim mdlName As String = $"mod${capName}"$
-	Dim diagName As String = $"dialog${tbName}"$
 	'
-	dbCode.SetCode("")
+	Read_Table
+	'
+	Dim tbName As String = mattr.get("vmodel")
+	Dim itemkey As String = mattr.get("itemkey")
+	Dim isautoincrement As String = mattr.get("isautoincrement")
+	Dim ssingular As String = mattr.Get("singular")
+	Dim snewid As String = mattr.get("newid")
+	Dim sisaddnew As String = mattr.get("isaddnew")
+	Dim stitle As String = mattr.get("label")
+	Dim isdialog As String = mattr.get("isdialog")
+	Dim sDatasourcename As String = mattr.get("datasourcename")
+	'
+	Dim capName As String = vm.propercase(ssingular)
+	Dim propName As String = vm.propercase(tbName)
+	If capName <> "" Then
+		capName = capName.replace(" ","")
+		capName = capName.trim
+	End If
+	Dim mdlName As String = $"mod${capName}"$
+	Dim diagName As String = $"dlg${tbName}"$
+	'
 	If tbName = "" Then Return
 	
 	Dim flds As List = vm.getdata("tableitems")
@@ -4288,30 +4323,33 @@ Sub Design_DBSourceCode
 		If bisicon Then
 			AddCode(sbl, $"vm.NavBar.AddIcon1("nav${capName}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
 		Else
-			AddCode(sbl, $"vm.NavBar.AddButton1("nav${capName}", "${siconname}", "${spagetitle}", "${stooltip}", "")"$)
+			AddCode(sbl, $"vm.NavBar.AddButton1("nav${capName}", "${siconname}", "${stitle}", "${stooltip}", "")"$)
 		End If
-		AddComment(sbl, $"add add & refresh button to the navbar for ${capName}"$)
-		AddCode(sbl, $"vm.NavBar.AddIcon("btnAdd${capName}","add", "Add ${capName}", "")"$)
-		AddCode(sbl, $"vm.NavBar.AddIcon("btnRefresh${capName}","refresh", "Refresh ${stitle}", "")"$)
 		AddNewLine(sbl)
-		AddNewLine(sbl)
-		'	
-		AddInstruction(sbl, "pgIndex", "" , "")
-		AddComment(sbl, $"add a new ${capName} ${ssingular}"$)
-		AddCode(sbl, $"Sub btnAdd${capName}_click(e As BANanoEvent)"$)
-		AddComment(sbl, $"execute adding ${capName}"$)
-		AddCode(sbl, $"${mdlName}.Add${tbName}"$)
-		AddCode(sbl, "End Sub")
-		AddCode(sbl, CRLF)
-		AddCode(sbl, CRLF)
+		'AddComment(sbl, $"add add & refresh button to the navbar for ${capName}"$)
+		'AddCode(sbl, $"vm.NavBar.AddIcon("btnAdd${capName}","add", "Add ${capName}", "")"$)
+		'AddCode(sbl, $"vm.NavBar.AddIcon("btnRefresh${capName}","refresh", "Refresh ${stitle}", "")"$)
+		'AddNewLine(sbl)
+		'AddNewLine(sbl)
 		'
-		AddComment(sbl, $"refresh ${capName} listing"$)
-		AddCode(sbl, $"Sub btnRefresh${capName}_click(e As BANanoEvent)"$)
-		AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
-		AddCode(sbl, $"vm.CallMethod("SelectAll_${vm.propercase(tbName)}")"$)
-		AddCode(sbl, "End Sub")
-		AddCode(sbl, CRLF)
-		AddCode(sbl, CRLF)
+		'**** CLICK - ADD RECORD	
+		'AddInstruction(sbl, "pgIndex", "" , "")
+		'AddComment(sbl, $"add a new ${capName} ${ssingular}"$)
+		'AddCode(sbl, $"Sub btnAdd${capName}_click(e As BANanoEvent)"$)
+		'AddComment(sbl, $"execute adding ${capName}"$)
+		'AddCode(sbl, $"${mdlName}.Add${tbName}"$)
+		'AddCode(sbl, "End Sub")
+		'AddCode(sbl, CRLF)
+		'AddCode(sbl, CRLF)
+		'
+		'**** CLICK - REFRESH RECORDS
+		'AddComment(sbl, $"refresh ${capName} listing"$)
+		'AddCode(sbl, $"Sub btnRefresh${capName}_click(e As BANanoEvent)"$)
+		'AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
+		'AddCode(sbl, $"vm.CallMethod("SelectAll_${propName}")"$)
+		'AddCode(sbl, "End Sub")
+		'AddCode(sbl, CRLF)
+		'AddCode(sbl, CRLF)
 	
 	End If
 	
@@ -4319,14 +4357,14 @@ Sub Design_DBSourceCode
 	If bisShowondrawer Then
 		AddInstruction(sbl, "pgIndex", "BuildNavDrawer" , "")
 		AddComment(sbl,$"this page should show on the drawer"$)
-		AddCode(sbl, $"vm.Drawer.AddIcon1("page${capName}", "${siconname}", "${sIconcolor}", "${spagetitle}", "${stooltip}")"$)
+		AddCode(sbl, $"vm.Drawer.AddIcon1("page${capName}", "${siconname}", "${sIconcolor}", "${stitle}", "${stooltip}")"$)
 		If bisdivider Then
 			AddCode(sbl, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
 		End If
 		AddNewLine(sbl)
 		AddNewLine(sbl)
-		'
-		'on click show the page
+		
+		'**** NAV CLICK TO SHOW PAGE
 		AddInstruction(sbl, "pgIndex", "" , "")
 		AddComment(sbl, $"click ${mdlName} nav button"$)
 		AddCode(sbl, $"Sub nav${capName}_click(e As BANanoEvent)"$)
@@ -4334,7 +4372,8 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"${mdlName}.Show"$)
 		AddCode(sbl, "End Sub")
 		AddCode(sbl, CRLF)
-		'
+		
+		'**** DRAWER CLICK TO SHOW PAGE
 		AddInstruction(sbl, "pgIndex", "draweritems_click" , "the case statement")
 		AddCode(sbl, $"Case "page${capName.tolowercase}""$)
 		AddComment(sbl, $"show ${capName}"$)
@@ -4342,26 +4381,24 @@ Sub Design_DBSourceCode
 		AddCode(sbl, CRLF)
 	End If
 	'
+	'**** ADD PAGE TO MASTER
 	AddInstruction(sbl, "pgIndex", "AddPages" , "")
 	AddComment(sbl, $"code to add the ${capName} template code to the master HTML template"$)
 	AddCode(sbl, $"vm.AddPage(${mdlName}.name, ${mdlName})"$)
 	AddCode(sbl, CRLF)
 	AddCode(sbl, CRLF)
 	'
-	
-	'confirm code
+	'**** DELETE COMFIRM
 	AddInstruction(sbl, "pgIndex", "confirm_ok" , "the case statement")
 	sbl.append($"Case "delete_${tbName.tolowercase}""$).append(CRLF)
 	AddComment(sbl, "read the saved record id")
 	sbl.append($"Dim RecID As String = vm.GetState("${tbName}${sItemkey}", "")"$).append(CRLF)
 	sbl.append($"If RecID = "" Then Return"$).append(CRLF)
 	AddComment(sbl, "delete the record")
-	sbl.append($"${mdlName}.DeleteRecord_${vm.propercase(tbName)}(RecID)"$).append(CRLF)
-	AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
-	AddCode(sbl, $"vm.CallMethod("SelectAll_${vm.propercase(tbName)}")"$)
+	sbl.append($"${mdlName}.DeleteRecord_${propName}(RecID)"$).append(CRLF)
 	sbl.append(CRLF).append(CRLF)
-	
-	
+	'
+	'**** OPEN DB & CREATE TABLE
 	AddInstruction(sbl, "Main", "BANano_Ready" , "before pgIndex.Init call")
 	AddComment(sbl, "open the database and wait")
 	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
@@ -4411,11 +4448,16 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "generate & run command to create the table")
 	sbl.append($"alaSQL.SchemaCreateTable"$).append(CRLF)
 	sbl.append($"alaSQL.Result = db.ExecuteWait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+	AddCode(sbl, "alaSQL.FromJSON")
 	AddNewLine(sbl)
 	AddNewLine(sbl)
+	'
+	'**** PAGE CODE
 	'copy this code to a code module
 	AddComment(sbl, $"INSTRUCTION: Press and hold Crtl+A to select all code and press Delete key, this will delete all the code"$)
 	AddInstruction(sbl, mdlName, "" , "")
+	'
+	AddNewLine(sbl)
 	AddCode(sbl, $"'Static code module"$)
 	AddCode(sbl, $"#IgnoreWarnings:12"$)
 	AddCode(sbl, $"Sub Process_Globals"$)
@@ -4423,32 +4465,34 @@ Sub Design_DBSourceCode
 	AddCode(sbl, $"Public Title As String = "${stitle}""$)
 	AddCode(sbl, $"Private vm As BANanoVM"$)
 	AddCode(sbl, $"Private BANano As BANano  'ignore"$)
-	sbl.append($"Private dialog${tbName} As VMDialog"$).append(CRLF)
+	sbl.append($"Private dlg${tbName} As VMDialog"$).append(CRLF)
 	sbl.append($"Private dt${tbName} As VmDataTable"$).append(CRLF)
 	sbl.append($"Private cont As VMContainer"$).append(CRLF)
 	sbl.append($"Private Mode As String"$).append(CRLF)
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
-	'code for the page
+	'
+	'**** BUILD PAGE
 	AddCode(sbl, "Sub Code")
 	AddComment(sbl, "Establish a reference to the app")
 	AddCode(sbl, "vm = pgIndex.vm")
 	'
 	AddComment(sbl, "create a container to hold all contents based on the page name")
 	AddCode(sbl, $"cont = vm.CreateContainer(Name, Me)"$)
-	AddComment(sbl, "add the table")
-	AddCode(sbl, $"CreateDataTable_${tbName}"$)
 	AddComment(sbl, "hide the container")
 	AddCode(sbl, "cont.Hide")
+	AddComment(sbl, "add the table to container")
+	AddCode(sbl, $"CreateDataTable_${tbName}"$)
+	AddComment(sbl, "add the dialog to page")
+	sbl.append($"CreateDialog_${propName}"$).append(CRLF)
 	AddComment(sbl, "add the container to the page")
 	AddCode(sbl, "vm.AddContainer(cont)")
-	AddComment(sbl, "add the dialog to the page")
-	sbl.append($"CreateDialog_${vm.propercase(tbName)}"$).append(CRLF)
 	AddComment(sbl, "add method to get all records")
-	AddCode(sbl, $"vm.SetMethod(Me, "SelectAll_${vm.propercase(tbName)}")"$)
+	AddCode(sbl, $"vm.SetMethod(Me, "SelectAll_${propName}")"$)
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
 	'
+	'**** SHOW PAGE
 	AddComment(sbl,"show the page")
 	AddCode(sbl, "Sub Show")
 	'
@@ -4492,17 +4536,21 @@ Sub Design_DBSourceCode
 		AddComment(sbl, "hide all buttons")
 		AddCode(sbl, "vm.NavBar.HideItems")
 		AddComment(sbl, $"show buttons for ${mdlName}"$)
-		AddCode(sbl, $"vm.ShowItem("btnAdd${capName}")"$)
-		AddCode(sbl, $"vm.ShowItem("btnRefresh${capName}")"$)
+		'AddCode(sbl, $"vm.ShowItem("btnAdd${capName}")"$)
+		'AddCode(sbl, $"vm.ShowItem("btnRefresh${capName}")"$)
+		AddCode(sbl, $"vm.HideItem("nav${capName}")"$)
 	End If
 	'
 	AddComment(sbl, "2. Show the page and hide others")
 	AddCode(sbl, $"vm.ShowPage(Name)"$)
+	AddComment(sbl, "load records to table")
+	AddCode(sbl, $"vm.CallMethod("SelectAll_${propName}")"$)
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
 	'
+	'**** DELETE ALL RECORDS
 	AddComment(sbl, "delete all records")
-	sbl.append($"Sub DeleteAll_${vm.propercase(tbName)}"$).append(CRLF)
+	sbl.append($"Sub DeleteAll_${propName}"$).append(CRLF)
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
@@ -4514,10 +4562,14 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "generate & run command to delete all records")
 	sbl.append($"alaSQL.DeleteAll"$).append(CRLF)
 	sbl.append($"alaSQL.Result = db.ExecuteWait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+	AddCode(sbl, "alaSQL.FromJSON")
+	AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
+	AddCode(sbl, $"vm.CallMethod("SelectAll_${propName}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
+	'**** DELETE SINGLE RECORD
 	AddComment(sbl, "delete single record")
-	sbl.append($"Sub DeleteRecord_${vm.propercase(tbName)}(RecordID As String)"$).append(CRLF)
+	sbl.append($"Sub DeleteRecord_${propName}(RecordID As String)"$).append(CRLF)
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
@@ -4526,13 +4578,19 @@ Sub Design_DBSourceCode
 	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
 	AddComment(sbl, "initialize table for deletion")
 	sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
+	AddComment(sbl, "define schema for record")
+	sbl.append($"alaSQL.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
 	AddComment(sbl, "generate & run command to delete single record")
 	sbl.append($"alaSQL.Delete(RecordID)"$).append(CRLF)
 	sbl.append($"alaSQL.Result = db.ExecuteWait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+	AddCode(sbl, "alaSQL.FromJSON")
+	AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
+	AddCode(sbl, $"vm.CallMethod("SelectAll_${propName}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
+	'**** SELECT ALL RECORDS
 	AddComment(sbl, "select all records")
-	sbl.append($"Sub SelectAll_${vm.propercase(tbName)}"$).append(CRLF)
+	sbl.append($"Sub SelectAll_${propName}"$).append(CRLF)
 	AddComment(sbl, "database variable")
 	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 	AddComment(sbl, "open the database and wait")
@@ -4548,8 +4606,15 @@ Sub Design_DBSourceCode
 	ssort = vm.List2ArrayVariable(sorts) 	
 	sbl.append($"alaSQL.SelectAll(Array("*"), Array(${ssort}))"$).append(CRLF)
 	sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
-	sbl.append($"VM.SetData("${ds}", alaSQL.Result)"$).append(CRLF)
+	AddCode(sbl, "alaSQL.FromJSON")
+	AddComment(sbl, "save records to state")
+	sbl.append($"VM.SetData("${sDatasourcename}", alaSQL.Result)"$).append(CRLF)
+	AddComment(sbl, "update the data table records")
+	CodeLine(sbl, sDatasourcename, "s", "dt", tbName, "SetDataSourceName")
+		
 	sbl.append("End Sub").append(CRLF).append(CRLF)
+	'
+	'**** COMBO UPDATES
 	'define sub to load data to selects/combo
 	If kv.size = 2 Then
 		Dim xdisplay As String = kv.getdefault("display", "")
@@ -4567,7 +4632,7 @@ Sub Design_DBSourceCode
 		Dim sFields As String = vm.List2ArrayVariable(fsort)
 		'
 		AddComment(sbl, "load records for selects/combo")
-		sbl.append($"Sub LoadCombo_${vm.propercase(tbName)}"$).append(CRLF)
+		sbl.append($"Sub LoadCombo_${propName}"$).append(CRLF)
 		AddComment(sbl, "database variable")
 		sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
 		AddComment(sbl, "open the database and wait")
@@ -4579,90 +4644,12 @@ Sub Design_DBSourceCode
 		AddComment(sbl, "generate & run command to select records")
 		sbl.append($"alaSQL.SelectAll(Array(${fFields}), Array(${sFields}))"$).append(CRLF)
 		sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+		AddCode(sbl, "alaSQL.FromJSON")
 		sbl.append($"VM.SetData("${tbName}Combo", alaSQL.Result)"$).append(CRLF)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 	End If
-	'insert & update the record to the database
-	AddComment(sbl, "create/update record to table")
-	sbl.append($"Sub CreateUpdate_${vm.propercase(tbName)}"$).append(CRLF)
-	AddComment(sbl, "get the record to create/update")
-	sbl.append($"Dim Record As Map = ${diagName}.Container.GetData"$).append(CRLF)
-	AddComment(sbl, "validate the record")
-	sbl.append($"Dim bValid As Boolean = vm.Validate(Record, ${diagName}.Container.Required)"$).append(CRLF)
-	AddComment(sbl, "if invalid exit create/update")
-	sbl.append($"If bValid = False Then Return"$).append(CRLF)
-	AddComment(sbl, "database variable")
-	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
-	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
-	AddComment(sbl, "resultset variable")
-	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
-	AddComment(sbl, "initialize table for insert/update")
-	sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
-	' we have an auto increment field
-	If isautoincrement.EqualsIgnoreCase("yes") Then
-		AddComment(sbl, "generate max value")
-		sbl.append($"Dim nextID As Int = 0"$).append(CRLF)
-		AddComment(sbl, "generate & run command to get max value")
-		sbl.append($"alaSQL.GetMax"$).append(CRLF)
-		sbl.append($"alaSQL.Result = db.ExecuteWait(alaSQL.query, alaSQL.args)"$).append(CRLF)
-		sbl.append($"nextID = alaSQL.GetNextID"$).append(CRLF)
-		AddComment(sbl, "update the record with the next id")
-		sbl.append($"Record.Put("${itemkey}", nextID)"$).append(CRLF)
-		AddComment(sbl, "initialize table for insert/update after auto-increment")
-		sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
-	End If
-	
-	AddComment(sbl, "define schema for record")
-	sbl.append($"alaSQL.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
-	AddComment(sbl, "prepare record for database")
-	sbl.append($"alaSQL.RecordFromMap(Record)"$).append(CRLF)
-	AddComment(sbl, "are we creating/updating a record")
-	sbl.append($"Select Case Mode"$).append(CRLF)
-	sbl.append($"Case "A""$).Append(CRLF)
-	AddComment(sbl, "insert a record")
-	sbl.append($"alaSQL.Insert"$).append(CRLF)
-	AddComment(sbl, "generate & run command to insert record")
-	sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
-	sbl.append($"Case "E""$).Append(CRLF)
-	AddComment(sbl, "read record id")
-	sbl.append($"Dim RecID As String = Record.Get("${itemkey}")"$).append(CRLF)
-	AddComment(sbl, "update a record")
-	sbl.append($"alaSQL.Update(RecID)"$).append(CRLF)
-	AddComment(sbl, "generate & run command to update record")
-	sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
-	sbl.append($"End Select"$).append(CRLF)
-	sbl.append("End Sub").append(CRLF).append(CRLF)
-	'read record from the database
-	AddComment(sbl, "read record")
-	sbl.append($"Sub Read_${vm.propercase(tbName)}(RecID As String)"$).append(CRLF)
-	AddComment(sbl, "set default values")
-	sbl.append($"${diagName}.Container.SetDefaults"$).append(CRLF)
-	AddComment(sbl, "database variable")
-	sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
-	AddComment(sbl, "open the database and wait")
-	sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
-	AddComment(sbl, "resultset variable")
-	sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
-	AddComment(sbl, "initialize table for reading")
-	sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
-	AddComment(sbl, "generate & run command to read record")
-	sbl.append($"alaSQL.Read(RecID)"$).append(CRLF)
-	sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
-	AddComment(sbl, "was the read successful?")
-	sbl.append($"If alaSQL.Result.Size = 0 Then Return"$).append(CRLF)
-	AddComment(sbl, "the record as found!")
-	sbl.append($"Dim Record As Map = alaSQL.result.get(0)"$).append(CRLF)
-	AddComment(sbl, "Update the dialog details")
-	AddCode(sbl, $"${diagName}.SetTitle("Edit ${vm.propercase(ssingular)}")"$)
-	AddComment(sbl, "set the default values for the dialog")
-	AddCode(sbl, $"${diagName}.Container.SetDefaults"$)
-	AddComment(sbl, "update the state, this updates the v-model(s) for each input control")
-	AddComment(sbl, "save the state and update UI!")
-	sbl.append($"vm.SetState(Record)"$).append(CRLF)
-	AddComment(sbl, "show the modal")
-	AddCode(sbl, $"vm.ShowDialog("${diagName}")"$)
-	sbl.append("End Sub").append(CRLF).append(CRLF)
+	'
+	'**** TABLE ACTIONS
 	'process table actions
 	For Each m As Map In actions
 		Dim xkey As String = m.GetDefault("key","")   'Name
@@ -4678,7 +4665,31 @@ Sub Design_DBSourceCode
 			AddComment(sbl,"set mode to E-dit")
 			sbl.append($"Mode = "E""$).append(CRLF)
 			AddComment(sbl,"read record from database")
-			sbl.append($"Read_${vm.propercase(tbName)}(RecID)"$).append(CRLF)
+			'read record from the database
+			AddComment(sbl, "database variable")
+			sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
+			AddComment(sbl, "open the database and wait")
+			sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
+			AddComment(sbl, "resultset variable")
+			sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
+			AddComment(sbl, "initialize table for reading")
+			sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
+			AddComment(sbl, "define schema for record")
+			sbl.append($"alaSQL.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
+			AddComment(sbl, "generate & run command to read record")
+			sbl.append($"alaSQL.Read(RecID)"$).append(CRLF)
+			sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+			AddCode(sbl, "alaSQL.FromJSON")
+			AddComment(sbl, "was the read successful?")
+			sbl.append($"If alaSQL.Result.Size = 0 Then Return"$).append(CRLF)
+			AddComment(sbl, "the record as found!")
+			sbl.append($"Dim Record As Map = alaSQL.result.get(0)"$).append(CRLF)
+			AddComment(sbl, "Update the dialog details")
+			AddCode(sbl, $"${diagName}.SetTitle("Edit ${capName}")"$)
+			AddComment(sbl, "show the modal")
+			AddCode(sbl, $"${diagName}.Show"$)
+			AddComment(sbl, "update the state, this updates the v-model(s) for each input control")
+			sbl.append($"vm.SetState(Record)"$).append(CRLF)
 		Case "delete"
 			'we are deleting
 			AddComment(sbl, "save the id to delete")
@@ -4692,18 +4703,20 @@ Sub Design_DBSourceCode
 		End Select
 		sbl.append($"End Sub"$).append(CRLF).Append(CRLF).append(CRLF)
 	Next
+	'
+	'**** ADD NEW RECORD
 	'add a new record
-	AddComment(sbl, "add a new record")
+	AddComment(sbl, $"add a new ${ssingular}"$)
 	sbl.append($"Sub Add${tbName}"$).Append(CRLF)
 	AddComment(sbl, "set mode to A-add")
 	sbl.append($"Mode = "A""$).append(CRLF)
-	AddComment(sbl, "set default values")
-	sbl.append($"${diagName}.Container.SetDefaults"$).append(CRLF)
 	AddComment(sbl, "update the title")
-	sbl.append($"${diagName}.SetTitle("New ${vm.ProperCase(ssingular)}")"$).append(CRLF)
+	sbl.append($"${diagName}.SetTitle("New ${capName}")"$).append(CRLF)
 	AddComment(sbl, "show dialog")
-	sbl.append($"vm.ShowDialog("${diagName}")"$).append(CRLF)
+	sbl.append($"${diagName}.Show"$).append(CRLF)
 	sbl.append("End Sub").append(CRLF).append(CRLF).Append(CRLF)
+	'
+	'**** CLICK - ADD NEW BUTTON ON TABLE
 	'button to add a new record
 	If sisaddnew = "Yes" Then
 		AddComment(sbl, "when add new is clicked")
@@ -4711,33 +4724,98 @@ Sub Design_DBSourceCode
 		sbl.append($"Add${tbName}"$).append(CRLF)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 	End If
+	'
+	'**** CREATE DIALOG
 	'create dialog
 	If isdialog Then
 		AddComment(sbl, "create dialog")
 		
-		sbl.append($"Sub CreateDialog_${vm.propercase(tbName)}"$).append(CRLF)
-		sbl.append($"dialog${tbName} = vm.CreateDialog("dialog${tbName}", Me)"$).Append(CRLF)
-		CodeLine(sbl, stitle, "s", "dialog", tbName, "SetTitle")
-		CodeLine2(sbl, $"btnOk${tbName}"$, "Save", "s", "dialog", tbName, "SetOk")
-		CodeLine2(sbl, $"btnCancel${tbName}"$, "Cancel", "s", "dialog", tbName, "SetCancel")
-		CodeLine(sbl, "70%", "s", "dialog", tbName, "Setwidth")
-		CodeLine(sbl, True, "b", "dialog", tbName, "Setpersistent")
-		sbl.append($"vm.AddDialog(dialog${tbName})"$).append(CRLF)
+		sbl.append($"Sub CreateDialog_${propName}"$).append(CRLF)
+		sbl.append($"dlg${tbName} = vm.CreateDialog("dlg${tbName}", Me)"$).Append(CRLF)
+		CodeLine(sbl, stitle, "s", "dlg", tbName, "SetTitle")
+		CodeLine2(sbl, $"btnOk${tbName}"$, "Save", "s", "dlg", tbName, "SetOk")
+		CodeLine2(sbl, $"btnCancel${tbName}"$, "Cancel", "s", "dlg", tbName, "SetCancel")
+		CodeLine(sbl, "700px", "s", "dlg", tbName, "Setwidth")
+		CodeLine(sbl, True, "b", "dlg", tbName, "Setpersistent")
+		sbl.append($"vm.AddDialog(dlg${tbName})"$).append(CRLF)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 		'add the save and cancel code
 		
+		'**** SAVE THE RECORD
 		AddComment(sbl, $"add code to save the ${ssingular}"$)
 		sbl.append($"Sub btnOk${tbName}_click(e As BANanoEvent)"$).append(CRLF)
-		AddComment(sbl, "save the record")
-		sbl.append($"CreateUpdate_${vm.propercase(tbName)}"$).append(CRLF)
+		AddComment(sbl, "create/update record to table")
+		AddComment(sbl, "get the record to create/update")
+		sbl.append($"Dim Record As Map = ${diagName}.Container.GetData"$).append(CRLF)
+		AddComment(sbl, "validate the record")
+		sbl.append($"Dim bValid As Boolean = vm.Validate(Record, ${diagName}.Container.Required)"$).append(CRLF)
+		AddComment(sbl, "if invalid exit create/update")
+		sbl.append($"If bValid = False Then Return"$).append(CRLF)
+		AddComment(sbl, "database variable")
+		sbl.append($"Dim db As BANanoSQL"$).append(CRLF)
+		AddComment(sbl, "open the database and wait")
+		sbl.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
+		AddComment(sbl, "resultset variable")
+		sbl.append($"Dim alaSQL As BANanoAlaSQLE"$).append(CRLF)
+		AddComment(sbl, "check mode")
+		sbl.append($"Select Case Mode"$).append(CRLF)
+		sbl.append($"Case "A""$).Append(CRLF)
+		
+		' we have an auto increment field
+		If isautoincrement.EqualsIgnoreCase("yes") Then
+			AddComment(sbl, "generate max value")
+			sbl.append($"Dim nextID As Int = 0"$).append(CRLF)
+			AddComment(sbl, "generate & run command to get max value")
+			AddComment(sbl, "initialize table")
+			sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
+			sbl.append($"alaSQL.GetMax"$).append(CRLF)
+			sbl.append($"alaSQL.Result = db.ExecuteWait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+			AddCode(sbl, "alaSQL.FromJSON")
+			sbl.append($"nextID = alaSQL.GetNextID"$).append(CRLF)
+			AddComment(sbl, "update the record with the next id")
+			sbl.append($"Record.Put("${itemkey}", nextID)"$).append(CRLF)
+		End If
+		'
+		AddComment(sbl, "initialize table for insert")
+		sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
+		AddComment(sbl, "define schema for record")
+		sbl.append($"alaSQL.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
+		AddComment(sbl, "insert a record")
+		sbl.append($"alaSQL.Insert1(Record)"$).append(CRLF)
+		AddComment(sbl, "generate & run command to insert record")
+		sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+		AddCode(sbl, "alaSQL.FromJSON")
+		'
+		'**** CLICK OK ON DIALOG EDIT RECORD
+		sbl.append($"Case "E""$).Append(CRLF)
+		AddComment(sbl, "read record id")
+		sbl.append($"Dim RecID As String = Record.Get("${itemkey}")"$).append(CRLF)
+		AddComment(sbl, "initialize table for edit")
+		sbl.append($"alaSQL.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
+		AddComment(sbl, "define schema for record")
+		sbl.append($"alaSQL.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
+		AddComment(sbl, "prepare record for database")
+		sbl.append($"alaSQL.RecordFromMap(Record)"$).append(CRLF)
+		AddComment(sbl, "update a record")
+		sbl.append($"alaSQL.Update1(Record, RecID)"$).append(CRLF)
+		AddComment(sbl, "generate & run command to update record")
+		sbl.append($"alaSQL.Result = db.executewait(alaSQL.query, alaSQL.args)"$).append(CRLF)
+		AddCode(sbl, "alaSQL.FromJSON")
+		sbl.append($"End Select"$).append(CRLF)
+		AddComment(sbl, "hide the modal")
+		AddCode(sbl, $"dlg${tbName}.Hide"$)
 		AddComment(sbl, $"execute code to refresh listing for ${capName}"$)
-		AddCode(sbl, $"vm.CallMethod("SelectAll_${vm.propercase(tbName)}")"$)
+		AddCode(sbl, $"vm.CallMethod("SelectAll_${propName}")"$)
+	
 		sbl.append("End Sub").append(CRLF).append(CRLF)
+		
+		
+		'**** CANCEL DIALOG
 		'add code to cancel the dialog
 		AddComment(sbl, $"add code to cancel the dialog for ${ssingular}"$)
 		sbl.append($"Sub btnCancel${tbName}_click(e As BANanoEvent)"$).append(CRLF)
 		AddComment(sbl, "hide the modal")		
-		AddCode(sbl, $"vm.HideDialog("dialog${tbName}")"$)
+		AddCode(sbl, $"dlg${tbName}.Hide"$)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 	End If
 	'
@@ -4766,15 +4844,22 @@ Sub schemaDT_edit(item As Map)
 	Dim skey As String = item.getdefault("key", "")
 	If skey = "" Then Return
 	pbtable.OpenPanel(2)
-	pbtable.edititem(skey)
+	pbtable.EditItem(skey)
 End Sub
 
 Sub schemaDT_delete(item As Map)
 	Dim skey As String = item.getdefault("key", "")
 	If skey = "" Then Return
-	pbtable.OpenPanel(2)
-	pbtable.edititem(skey)
-	pbtable.DeleteItem
+	'read the existing items
+	Dim contents As List = vue.GetData("tableitems")
+	'does the record exist
+	Dim rpos As Int = vm.ListOfMapsRecordPos(contents, "key", skey)
+	rpos = BANano.parseInt(rpos)
+	If rpos <> -1 Then
+		contents.RemoveAt(rpos)
+	End If
+	vue.SetData("tableitems", contents)
+	SavePropertyBag
 End Sub
 
 Sub dbcodecopy_click(e As BANanoEvent)
@@ -4816,56 +4901,21 @@ Sub ComponentsPanel As VMExpansionPanel
 	Return grd
 End Sub
 
-Sub DesignStructure(scontents As String)
-	ReadTableDetails(mattr)
-			
-	If scontents = "" Then
-		'we dont have menu items
-		vm.setdata("tableitems", vm.newlist)
-	Else
-		Dim contents As List = BANano.FromJson(scontents)
-		vm.setdata("tableitems", contents)
-	End If
-	schemaDT.SetDataSourceName("tableitems")
+Sub DesignStructure
 	'apply filter
 	Dim dbFields As List
 	dbFields.initialize
 	dbFields.AddAll(Array("key", "title", "coltype", "colscope" , "colfieldtype" , "coldefaultvalue", "colminrange", "colmaxrange", "colhasset", "colhasget", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
-	Design_TablePreview
 End Sub
 
 
-Sub TableStructure(scontents As String)
-	ReadTableDetails(mattr)
-			
-	If scontents = "" Then
-		'we dont have menu items
-		vm.setdata("tableitems", vm.newlist)
-	Else
-		Dim contents As List = BANano.FromJson(scontents)
-		vm.setdata("tableitems", contents)
-	End If
-	schemaDT.SetDataSourceName("tableitems")
+Sub TableStructure
 	'apply filter
 	Dim dbFields As List
 	dbFields.initialize
 	dbFields.AddAll(Array("key", "title", "coldatatype" , "collength" , "colvalue", "colindexed", "colvaluedisplay", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
-	Design_TablePreview
-End Sub
-
-Sub ClearTableThings
-	vm.setdata("tableitems", vm.newlist)
-	BANano.setlocalstorage("title", "")
-	BANano.SetLocalStorage("dbtable", "")
-	BANano.setlocalstorage("itemkey", "")
-	BANano.SetlocalStorage("isautoincrement", "")
-	BANano.setlocalstorage("singular", "")
-	BANano.setlocalstorage("newid", "")
-	BANano.setlocalstorage("isaddnew", "")
-	BANano.setlocalstorage("ds","")
-	dbCode.SetCode("")
 End Sub
 
 'a component has been clicked
@@ -4881,24 +4931,36 @@ Sub mycomponents_click(e As BANanoEvent)
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("components", "id")
+	rsSQL.AddIntegers(Array("id", "row","col","tabindex"))
+	rsSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
 	rsSQL.Read(itemID)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
 	If rsSQL.result.size = 0 Then Return
 	'read the first record found
 	Dim rec As Map = rsSQL.result.get(0)
 	'read the type of record
 	Dim stypeof As String = rec.get("controltype")
 	Dim sattributes As String = rec.get("attributes")
-	Dim mattr As Map = BANano.FromJson(sattributes)
+	mattr = BANano.FromJson(sattributes)
 	Dim sname As String = rec.get("name")
 	'DONT OVERWRITE
 	If avatarMap.containskey(stypeof) Then 
 		mattr.remove("controltype")
 	End If
 	vm.setdata("propbagtype", stypeof)
-	vm.setdata("propbag", mattr)
-	vm.setdata("bag", rec)
-	ClearTableThings
+	vm.setdata("propbag", rec)
+	dbCode.SetCode("")
+	vm.setdata("tableitems", vm.newlist)
+	Dim scontents As String = rec.getdefault("items", "")
+	Dim contents As List
+	contents.initialize
+	If scontents <> "" Then
+		contents = BANano.FromJson(scontents)
+		vm.setdata("tableitems", contents)
+	End If
+	schemaDT.SetDataSourceName("tableitems")
 	'
 	'show the property bags
 	Select Case stypeof
@@ -4909,10 +4971,8 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbtable.hideitem("id")
 			pbtable.Hideitem("controltype")
 			pbtable.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			'
-			TableStructure(scontents)
+			TableStructure
+			Design_DBSourceCode
 		Case "rating"
 			ShowBag("pbrating")
 			pbrating.SetDefaults
@@ -4926,16 +4986,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbspeeddial.hideitem("id")
 			pbspeeddial.Hideitem("controltype")
 			pbspeeddial.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
-			'
 		Case "page"
 			ShowBag("pbpage")
 			pbpage.SetDefaults
@@ -4957,9 +5007,7 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbbuilder.hideitem("id")
 			pbbuilder.Hideitem("controltype")
 			pbbuilder.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			DesignStructure(scontents)
+			DesignStructure
 			vm.setdata("devspace", 1)
 		Case "panel"
 			ShowBag("pbexpansionpanels")
@@ -4968,16 +5016,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbexpansionpanels.hideitem("id")
 			pbexpansionpanels.Hideitem("controltype")
 			pbexpansionpanels.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
-		
 		Case "stepper"
 			ShowBag("pbstepper")
 			pbstepper.SetDefaults
@@ -4985,16 +5023,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbstepper.hideitem("id")
 			pbstepper.Hideitem("controltype")
 			pbstepper.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
-		
 		Case "tabs"
 			ShowBag("pbtabs")
 			pbtabs.SetDefaults
@@ -5002,15 +5030,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbtabs.hideitem("id")
 			pbtabs.Hideitem("controltype")
 			pbtabs.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
 		Case "list"
 			ShowBag("pblist")
 			pblist.SetDefaults
@@ -5018,15 +5037,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pblist.hideitem("id")
 			pblist.Hideitem("controltype")
 			pblist.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
 		Case "badge"
 			ShowBag("pbbadge")
 			pbbadge.SetDefaults
@@ -5052,15 +5062,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbcarousel.Hideitem("controltype")
 			vm.setdata("controltype", "carousel")
 			pbcarousel.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
 		Case "drawer"
 			ShowBag("pbdrawer")
 			pbdrawer.SetDefaults
@@ -5068,15 +5069,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbdrawer.Hideitem("controltype")
 			vm.setdata("controltype", "drawer")
 			pbdrawer.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
 		Case "menu"
 			ShowBag("pbmenu")
 			pbmenu.SetDefaults
@@ -5084,15 +5076,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbmenu.Hideitem("controltype")
 			vm.setdata("controltype", "menu")
 			pbmenu.ClearContents
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
 		Case "toolbar"
 			ShowBag("pbtoolbar")
 			pbtoolbar.SetDefaults
@@ -5100,16 +5083,6 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbtoolbar.Hideitem("controltype")
 			vm.setdata("controltype", "toolbar")
 			pbtoolbar.ClearContents
-			
-			'get the items
-			Dim scontents As String = rec.getdefault("items", "")
-			If scontents = "" Then
-				'we dont have menu items
-				vm.setdata("tableitems", vm.newlist)
-			Else
-				Dim contents As List = BANano.FromJson(scontents)
-				vm.setdata("tableitems", contents)
-			End If
 		Case "container"
 			ShowBag("pbcontainer")
 			pbcontainer.SetDefaults
@@ -5580,7 +5553,8 @@ Sub ItemDrop(e As BANanoEvent)
 	End If
 	ShowBag("")
 	istool = False
-	ClearTableThings
+	vm.setdata("tableitems", vm.newlist)
+	dbCode.SetCode("")
 	vm.setdata("devspace", 0)
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
@@ -5607,12 +5581,14 @@ Sub ItemDrop(e As BANanoEvent)
 					vm.pagepause
 					db.OpenWait("bvmdesigner", "bvmdesigner")
 					rsSQL.Initialize("grid", "id")
+					rsSQL.AddIntegers(Array("id"))
+					rsSQL.AddStrings(Array("controltype"))
 					Dim nrec As Map = CreateMap()
 					nrec.put("id", DateTime.now)
 					nrec.put("controltype", savedid)
-					rsSQL.RecordFromMap(nrec)
-					rsSQL.Insert
+					rsSQL.Insert1(nrec)
 					rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+					rsSQL.FromJSON
 					vm.pageresume
 				Case Else
 					If avatarMap.containskey(savedid) = False Then Return
@@ -5625,6 +5601,7 @@ Sub ItemDrop(e As BANanoEvent)
 					'get the max rows
 					rsSQL.GetMax
 					rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
+					rsSQL.FromJSON
 					rowPos = rsSQL.GetNextID
 			
 					'
@@ -5634,6 +5611,7 @@ Sub ItemDrop(e As BANanoEvent)
 					Dim avatar As String = ""
 					If avatarMap.containskey(savedid) Then avatar = avatarMap.get(savedid)
 					Dim sid As String = DateTime.now
+					sid = BANano.parseint(sid)
 					'
 					Dim nrec As Map = CreateMap()
 					nrec.put("id", sid)
@@ -5899,12 +5877,21 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("isdelete", "Yes")
 							attr.put("issearchbox", "Yes")
 							attr.put("isdialog", "Yes")
-							attr.put("newid", "btnNewRecord")
+							attr.put("newid", "btnNew")
 							attr.put("newicon","mdi-plus")
 							attr.put("newtooltip", "Add a new record")
 							attr.put("ismultisort", "Yes")
 							attr.Put("issingleselect", "Yes")	
-							attr.put("datasourcename", "records")						
+							attr.put("datasourcename", "records")	
+							attr.put("singular", "record")
+							attr.put("manyrecords","records")
+							attr.put("isnavbarvisible", "Yes")
+							attr.put("isdrawervisible", "No")
+							attr.put("ishamburgervisible", "Yes")
+							attr.put("islogovisible", "Yes")
+							attr.put("isshowondrawer", "Yes")
+							attr.put("isshowonnavbar", "Yes")
+							attr.put("isdivider","Yes")
 							BANano.SetLocalStorage("selectedpanel", 4)
 							
 					End Select
@@ -5916,9 +5903,12 @@ Sub ItemDrop(e As BANanoEvent)
 					nrec.put("attributes", sjson)
 					'
 					rsSQL.Initialize("components", "id")
-					rsSQL.RecordFromMap(nrec)
-					rsSQL.Insert
+			rsSQL.AddIntegers(Array("id", "row","col","tabindex"))
+			rsSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
+					rsSQL.Insert1(nrec)
 					rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+					rsSQL.FromJSON
 					vm.pageresume
 			End Select
 			'
@@ -6441,10 +6431,10 @@ End Sub
 
 Sub DeletePropertyBag
 	'get saved property bag
-	Dim props As Map = vm.getdata("propbag")
+	mattr = vm.getdata("propbag")
 	'get the id
-	Dim sid As String = props.get("id")
-	Dim slabel As String = props.get("label")
+	Dim sid As String = mattr.get("id")
+	Dim slabel As String = mattr.get("label")
 	If sid = "" Then Return
 	vm.setdata("deleteid", sid)
 	vm.ShowConfirm("deletepropbag", $"Confirm Delete: ${slabel}"$, _
@@ -6461,8 +6451,12 @@ Sub DeleteIT
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("components", "id")
+	rsSQL.AddIntegers(Array("id", "row","col","tabindex"))
+	rsSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
 	rsSQL.Delete(sid)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
 	vm.pageresume
 	CreateUX
 End Sub
@@ -6477,8 +6471,11 @@ Sub DeleteProject
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("project", "id")
+	rsSQL.AddIntegers(Array("id"))
+	rsSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
 	rsSQL.Delete(sid)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
 	vm.callmethod("LoadProjects")
 	vm.NavBar.UpdateTitle($"${Main.AppTitle}"$)
 	vm.SetData("project", vm.newmap)
@@ -6575,27 +6572,6 @@ Sub ppbtable_change(e As BANanoEvent)
 	SavePropertyBag
 End Sub
 
-Sub ReadTableDetails(props As Map)
-	Dim vmodel As String = props.getdefault("vmodel", "")
-	Dim itemkey As String = props.getdefault("itemkey", "")
-	Dim isautoincrement As String = props.getdefault("isautoincrement", "No")
-	Dim ssingular As String = props.GetDefault("singular", "")
-	Dim snewid As String = props.getdefault("newid", "")
-	Dim sisaddnew As String = props.getdefault("isaddnew", "")
-	Dim isdialog As String = props.getdefault("isdialog", "No")
-	Dim slabel As String = props.getdefault("label", "")
-	Dim sDatasourcename As String = props.getdefault("datasourcename", "")
-	'
-	BANano.SetLocalStorage("dbtable", vmodel)
-	BANano.setlocalstorage("itemkey", itemkey)
-	BANano.SetlocalStorage("isautoincrement", isautoincrement)
-	BANano.setlocalstorage("singular", ssingular)
-	BANano.setlocalstorage("newid", snewid)
-	BANano.setlocalstorage("isaddnew", sisaddnew)
-	BANano.setlocalstorage("isdialog", isdialog)
-	BANano.Setlocalstorage("title", slabel)
-	BANano.setlocalstorage("ds", sDatasourcename)
-End Sub
 
 'save the property bag
 Sub SavePropertyBag
@@ -6604,108 +6580,89 @@ Sub SavePropertyBag
 	Dim contents As List
 	contents.initialize
 	Dim scontents As String = ""
+	contents = vm.getdata("tableitems")
+	scontents = BANano.tojson(contents)
+	schemaDT.SetDataSourceName("tableitems")
+	dbCode.SetCode("")
 	vm.pagepause
 	Dim spropbagtype As String = vm.getdata("propbagtype")
-	Dim props As Map = CreateMap()
+	mattr = CreateMap()
 	Select Case spropbagtype
 		Case "text", "textarea", "file", "email", "password", "tel", "number"
-			props = pbtextfield.properties
+			mattr = pbtextfield.properties
 		Case "checkbox"
-			props = pbcheckbox.Properties
+			mattr = pbcheckbox.Properties
 		Case "date", "time"
-			props = pbdatepicker.Properties
+			mattr = pbdatepicker.Properties
 		Case "radio"
-			props = pbradiogroup.Properties
+			mattr = pbradiogroup.Properties
 		Case "select", "combo", "auto"
-			props = pbselectbox.Properties
+			mattr = pbselectbox.Properties
 		Case "slider"
-			props = pbslider.properties
+			mattr = pbslider.properties
 		Case "switch"
-			props = pbcheckbox.properties
+			mattr = pbcheckbox.properties
 		Case "label"
-			props = pblabel.properties
-			Dim isloremipsum As String = props.Get("isloremipsum")
+			mattr = pblabel.properties
+			Dim isloremipsum As String = mattr.Get("isloremipsum")
 			If isloremipsum = "Yes" Then
-				props.Put("value", LoremIpsum(1))
-				vm.SetState(props)
+				mattr.Put("value", LoremIpsum(1))
+				vm.SetState(mattr)
 			End If
 		Case "profile", "image"
-			props = pbimage.Properties
+			mattr = pbimage.Properties
 		Case "button"
-			props = pbbutton.properties
+			mattr = pbbutton.properties
 		Case "icon"
-			props = pbicon.properties
+			mattr = pbicon.properties
 		Case "parallax"
-			props = pbparallax.properties
+			mattr = pbparallax.properties
 		Case "container"
-			props = pbcontainer.properties
+			mattr = pbcontainer.properties
 		Case "toolbar"
-			props = pbtoolbar.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbtoolbar.properties
 		Case "menu"
-			props = pbmenu.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbmenu.properties
 		Case "drawer"
-			props = pbdrawer.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbdrawer.properties
 		Case "carousel"
-			props = pbcarousel.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbcarousel.properties
 		Case "panel"
-			props = pbexpansionpanels.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbexpansionpanels.properties
 		Case "page"
-			props = pbpage.properties
+			mattr = pbpage.properties
 		Case "builder"
-			props = pbbuilder.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbbuilder.properties
 		Case "stepper"
-			props = pbstepper.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbstepper.properties
 		Case "tabs"
-			props = pbtabs.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbtabs.properties
 		Case "list"
-			props = pblist.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pblist.properties
 		Case "dialog"
-			props = pbdialog.properties
+			mattr = pbdialog.properties
 		Case "chip"
-			props = pbchip.properties
+			mattr = pbchip.properties
 		Case "badge"
-			props = pbbadge.properties
+			mattr = pbbadge.properties
 		Case "avatar"
-			props = pbavatar.properties
+			mattr = pbavatar.properties
 		Case "speeddial"
-			props = pbspeeddial.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
+			mattr = pbspeeddial.properties
 		Case "rating"
-			props = pbrating.properties
+			mattr = pbrating.properties
 		Case "table"
 			isTable = True
-			props = pbtable.properties
-			contents = vm.getdata("tableitems")
-			scontents = BANano.tojson(contents)
-			'
-			ReadTableDetails(props)
+			mattr = pbtable.properties
+			Design_DBSourceCode
 	End Select
 	'
-	Dim sid As String = props.get("id")
-	Dim srow As String = props.get("row")
-	Dim scol As String = props.get("col")
-	Dim stabindex As String = props.get("tabindex")
-	Dim stitle As String = props.get("label")
-	Dim svmodel As String = props.get("vmodel")
+	Dim sid As String = mattr.get("id")
+	Dim srow As String = mattr.get("row")
+	Dim scol As String = mattr.get("col")
+	Dim stabindex As String = mattr.get("tabindex")
+	Dim stitle As String = mattr.get("label")
+	Dim svmodel As String = mattr.get("vmodel")
 	'
 	'is vmodel valid
 	If avatarMap.containskey(svmodel) Then
@@ -6721,7 +6678,7 @@ Sub SavePropertyBag
 	scol = BANano.parseint(scol)
 	stabindex = BANano.parseint(stabindex)
 	'
-	Dim attr As String = BANano.ToJson(props)
+	Dim attr As String = BANano.ToJson(mattr)
 	Dim nrec As Map = CreateMap()
 	nrec.put("id", sid)
 	nrec.put("row", srow)
@@ -6733,29 +6690,161 @@ Sub SavePropertyBag
 	nrec.put("name", svmodel)
 	nrec.Put("items", scontents)
 	'save the bag
-	vm.setdata("bag", nrec)
+	vm.setdata("propbag", nrec)
 	'
 	Dim db As BANanoSQL
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("components", "id")
-	rsSQL.RecordFromMap(nrec)
-	rsSQL.Update(sid)
+	rsSQL.AddIntegers(Array("id", "row","col","tabindex"))
+	rsSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
+	rsSQL.Update1(nrec,sid)
 	rsSQL.result = db.executewait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
 	vm.pageresume
-	CreateUX
 	'
 	If isTable Then
+		'explode the controls
+		Dim diagName As String = $"dlg${svmodel}"$
+		Dim contSQL As BANanoAlaSQLE
+			
+		For Each item As Map In contents
+			Dim ckey As String = item.getdefault("key", "")
+			Dim ctitle As String = item.getdefault("title", "")
+			Dim ccolcontroltype As String = item.getdefault("colcontroltype", "")
+			Dim ccollength As String = item.getdefault("collength", "")
+			Dim ccoldatatype As String = item.getdefault("coldatatype", "")
+			Dim cicon As String = item.getdefault("icon", "")
+			Dim ccolvalue As String = item.getdefault("colvalue", "")
+			Dim ccollength As String = item.getdefault("collength", "")
+			Dim ccolplaceholder As String = item.getdefault("colplaceholder", "")
+			Dim ccolhelpertext As String = item.getdefault("colhelpertext", "")
+			Dim ccolrequired As String = item.getdefault("colrequired", "")
+			Dim ccolvisible As String = item.getdefault("colvisible", "")
+			Dim ccolontable As String = item.getdefault("colontable", "")
+			Dim ccoloptionkeys As String = item.getdefault("coloptionkeys", "")
+			Dim ccoloptionvalues As String = item.getdefault("coloptionvalues", "")
+			Dim ccolforeigntable As String = item.getdefault("colforeigntable", "")
+			Dim ccolforeignkey As String = item.getdefault("colforeignkey", "")
+			Dim ccolforeignvalue As String = item.getdefault("colforeignvalue", "")
+			'
+			Dim cid As String = DateTime.now
+			cid = BANano.parseint(cid)
+			'
+			Dim nc As Map = CreateMap()
+			nc.put("id", cid)
+			nc.put("label", ctitle)
+			nc.put("controltype", ccolcontroltype)
+			nc.put("parent", diagName)
+			nc.put("vmodel", ckey)
+			nc.put("fieldtype", DataType2FieldType(ccoldatatype))
+			nc.put("iconname", cicon)
+			nc.put("value", ccolvalue)
+			nc.put("placeholder", ccolplaceholder)
+			nc.put("helpertext", ccolhelpertext)
+			nc.put("maxlength", ccollength)
+			nc.put("isrequired", ccolrequired)
+			nc.put("isvisible", ccolvisible)
+			nc.put("ontable", ccolontable)
+			nc.put("keys", ccoloptionkeys)
+			nc.put("values", ccoloptionvalues)
+			nc.put("sourcetable",ccolforeigntable)
+			nc.put("sourcefield",ccolforeignkey)
+			nc.put("displayfield",ccolforeignvalue)
+			nc.put("useoptions", "Yes")
+			nc.put("showlabel", "Yes")
+			nc.put("tformat","24hr")
+			nc.put("isforinput", "Yes")
+			nc.put("minvalue", "0")
+			nc.put("maxvalue", "100")
+			nc.put("slidervalue", "20")
+			nc.put("stepvalue", "1")
+			nc.put("truevalue", "Yes")
+			nc.put("falsevalue", "No")
+			'
+			Dim matr As List
+			matr.initialize
+			matr.AddAll(Array("colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge"))
+			matr.addall(Array("coloffsetxlarge", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge"))
+			'
+			For Each k As String In matr
+				Dim v As String = item.GetDefault(k, "")
+				Dim nk As String = vm.MidString2(k, 4)
+				nc.put(nk, v)
+			Next
+			'
+			Dim crow As String = item.getdefault("colrow","")
+			Dim ccol As String = item.getdefault("colcolumn", "")
+			crow = BANano.parseint(crow)
+			ccol = BANano.parseint(ccol)
+			'convert to attributes
+			Dim attrJSON As String = BANano.ToJson(nc)
+			'create a new record
+			Dim nrec As Map = CreateMap()
+			nrec.put("controltype", ccolcontroltype)
+			nrec.put("id", cid)
+			nrec.put("row", crow)
+			nrec.put("col", ccol)
+			nrec.put("parentid", diagName)
+			nrec.put("name", ckey)
+			nrec.put("vmodel", ckey)
+			nrec.put("attributes", attrJSON)
+			nrec.put("label", ctitle)
+			nrec.put("icon", cicon)
+			'
+			'we need to search for the component
+			contSQL.Initialize("components", "vmodel")
+			contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+			contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
+			Dim cw As Map = CreateMap()
+			cw.put("vmodel", ckey)
+			contSQL.SelectWhere(Array("*"), cw, Array("="), Array("id"))
+			contSQL.result = db.executewait(contSQL.query, contSQL.args)
+			contSQL.FromJSON
+			'if we have zero, add it
+			If contSQL.affectedRows = 0 Then
+				contSQL.Initialize("components", "id")
+				contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+				contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
+				contSQL.Insert1(nrec)
+				contSQL.Result = db.executewait(contSQL.query, contSQL.args)
+				contSQL.FromJSON
+			Else
+				'update existing record
+				Dim oldrec As Map = contSQL.result.get(0)
+				attrJSON = oldrec.get("attributes")
+				Dim olda As Map = BANano.fromjson(attrJSON)
+				For Each k As String In nc.keys
+					Dim v As String = nc.get(k)
+					If k <> "id" Then olda.put(k, v)
+				Next
+				attrJSON = BANano.tojson(olda)
+				oldrec.Put("attributes", attrJSON)
+				contSQL.Initialize("components", "vmodel")
+				contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+				contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+				contSQL.Update1(oldrec, ckey)
+				contSQL.result = db.executewait(contSQL.query, contSQL.args)
+				contSQL.FromJSON
+			End If
+		Next
 	Else
 		vm.setdata("devspace", 0)
 	End If
-	'
-	'we have a table
-	If isTable Then
-		'read last item added
-		Dim tableitem As Map = vm.getdata("tableitem")
-		Log(tableitem)
-	End If
+	CreateUX
+End Sub
+
+'convert data type to field type
+Sub DataType2FieldType(xvalue As String) As String
+	xvalue = xvalue.tolowercase	
+	xvalue = xvalue.replace("text", "string")
+	xvalue = xvalue.replace("float", "dbl")
+	xvalue = xvalue.replace("blob", "string")
+	xvalue = xvalue.replace("none", "string")
+	Return xvalue
 End Sub
 
 Sub MapRemovePrefix(m As Map) As Map
@@ -7206,7 +7295,6 @@ Sub PropertyBag_Table
 	vm.setdata("pbtable", False)
 	lstBags.add("pbtable")
 	pbtable = vm.CreateProperty("ppbtable", Me)
-	pbtable.IsTable = True
 	pbtable.SetVShow("pbtable")
 	pbtable.AddHeading("d","Details")
 	pbtable.AddText("d","id","ID","","")
@@ -7358,108 +7446,8 @@ Sub Read_Table
 	'sSortdesc = mattr.getdefault("sortdesc", "")
 End Sub
 
-Sub Design_TablePreview
-	dbCode.SetCode("")
-	If istool Then Return
-	Design_DBSourceCode
-'	previewTB = vm.CreateDataTable("previewSchema", sItemkey, Me)
-'	previewTB.SetTitle(slabel)
-'	previewTB.SetSearchbox(bisSearchbox)
-'	previewTB.SetCaption(sCaption)
-'	previewTB.SetCalculatewidths(bisCalculatewidths)
-'	previewTB.SetDark(bisdark)
-'	previewTB.SetDatasourcename(sDatasourcename)
-'	previewTB.SetDense(bisdense)
-'	previewTB.SetDisablefiltering(bisDisablefiltering)
-'	previewTB.SetDisablepagination(bisDisablepagination)
-'	previewTB.SetDisablesort(bisDisablesort)
-'	'previewTB.SetExpandicon(sExpandicon)
-'	'previewTB.SetExpanded(sExpanded)
-'	'previewTB.SetFilters(sFilters)
-'	previewTB.SetFixedheader(bisFixedheader)
-'	'previewTB.SetGroupby(sGroupby)
-'	'previewTB.SetGroupdesc(sGroupdesc)
-'	'previewTB.SetHeaderslength(sHeaderslength)
-'	previewTB.SetHeight(sheight)
-'	previewTB.SetHidedefaultfooter(bisHidedefaultfooter)
-'	previewTB.SetHidedefaultheader(bisHidedefaultheader)
-'	previewTB.SetItemsperpage(sItemsperpage)
-'	previewTB.SetLight(bislight)
-'	previewTB.SetLoading(bisloading)
-'	previewTB.SetLoadingtext(sLoadingtext)
-'	previewTB.SetLocale(sLocale)
-'	previewTB.SetMobilebreakpoint(smobilebreakpoint)
-'	previewTB.SetMultisort(bisMultisort)
-'	previewTB.SetMustsort(bisMustsort)
-'	previewTB.SetNodatatext(sNodatatext)
-'	previewTB.SetNoresultstext(sNoresultstext)
-'	previewTB.SetPage(sPage)
-'	'previewTB.SetSearch(sSearch)
-'	'previewTB.SetSelectablekey(sSelectablekey)
-'	'previewTB.SetServeritemslength(sServeritemslength)
-'	previewTB.SetShowexpand(bisShowexpand)
-'	previewTB.SetShowgroupby(bisShowgroupby)
-'	previewTB.SetShowselect(bisShowselect)
-'	previewTB.SetSingleexpand(bisSingleexpand)
-'	previewTB.SetSingleselect(bisSingleselect)
-'	'previewTB.SetSortby(sSortby)
-'	'previewTB.SetSortdesc(sSortdesc)
-'	'previewTB.SetTabindex(stabindex)
-'	previewTB.SetVisible(bisvisible)
-'	'add columns
-'	'
-'	If bisaddnew Then
-'		previewTB.SetAddNew(snewid, snewicon, snewtooltip)
-'	End If
-'	'add columns
-'	For Each m As Map In lcontents
-'		Dim xkey As String = m.GetDefault("key","")   'Name
-'		Dim xtitle As String = m.GetDefault("title","")  'Title
-'		Dim xtype As String = m.GetDefault("subtitle","")  'Type
-'		Dim xwidth As String = m.GetDefault("colwidth", "")  'Width
-'		Dim xalign As String = m.GetDefault("colalign", "")  'Align
-'		Dim xcomponent As String = m.GetDefault("colcontroltype","") 'Component
-'		Dim xdatatype As String = m.GetDefault("coldatatype", "")   'Data Type
-'		Dim xlength As String = m.GetDefault("collength","")  'Length
-'		Dim xvalue As String = m.GetDefault("colvalue", "")   'Value
-'		Dim xsortable As String = m.GetDefault("colsortable", "No")    'Sortable
-'		Dim xrequired As String = m.GetDefault("colrequired", "No")    'Required
-'		Dim xvisible As String = m.GetDefault("colvisible", "No")      'Visible
-'		Dim xactive As String = m.getdefault("colactive", "No")        'Active
-'		Dim xontable As Boolean = YesNoToBoolean(m.GetDefault("colontable", "No"))      'On Table
-'		Dim xindexed As String = m.GetDefault("colindexed", "No")      'Indexed
-'		If xkey = "" Then Continue
-'		If xontable = False Then Continue
-'		Dim bSortable As Boolean = YesNoToBoolean(xsortable)
-'		Select Case xtype
-'		Case "action"
-'		Case Else		
-'			previewTB.AddColumn1(xkey, xtitle, xtype, xwidth, bSortable, xalign)
-'		End Select
-'	Next
-'	
-'	previewTB.SetEdit(bisEdit)
-'	previewTB.SetDelete(bisDelete)
-'	previewTB.SetClone(bisClone)
-'	previewTB.SetDownload(bisDownload)
-'	previewTB.SetPrint(bisPrint)
-'	previewTB.SetMenu(bisMenu)
-'	For Each m As Map In lcontents
-'		Dim xkey As String = m.GetDefault("key","")   'Name
-'		Dim xtitle As String = m.GetDefault("title","")  'Title
-'		Dim xtype As String = m.GetDefault("subtitle","")  'Type
-'		Dim xicon As String = m.GetDefault("icon", "")
-'		Select Case xtype
-'		Case "action"
-'			previewTB.AddIcon(xkey, xtitle, xicon)
-'		End Select
-'	Next
-'	'
-'	previewTB.BANanoReplace
-End Sub
 
 Sub Design_Table
-	Design_TablePreview
 	Dim datatable As VMDataTable = ui.CreateDataTable(sname, sItemkey, Me)
 	datatable.SetStatic(True)
 	datatable.SetTitle(stitle)
@@ -7568,9 +7556,10 @@ Sub Design_Table
 	End If
 	'
 	AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
+	CodeLine(sb, sDatasourcename, "s", "dt", sname, "SetDatasourcename")
 	CodeLine(sb, bisCalculatewidths, "b", "dt", sname, "SetCalculatewidths")
 	CodeLine(sb, bisdark, "b", "dt", sname, "SetDark")
-	CodeLine(sb, sDatasourcename, "s", "dt", sname, "SetDatasourcename")
+	
 	CodeLine(sb, bisdense, "b", "dt", sname, "SetDense")
 	CodeLine(sb, bisDisablefiltering, "b", "dt", sname, "SetDisablefiltering")
 	CodeLine(sb, bisDisablepagination, "b", "dt", sname, "SetDisablepagination")
@@ -7648,8 +7637,11 @@ Sub Design_Table
 	CodeLine(sb, bisMenu, "b", "dt", sname, "SetMenu")
 	sb.append(sba.tostring)
 	'
-	sb.append($"cont.AddControl(dt${sname}.DataTable, dt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"cont.AddControl(dt${sname}.DataTable, dt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	
+	'
 End Sub
 
 #Region Chip

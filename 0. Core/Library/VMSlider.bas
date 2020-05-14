@@ -28,6 +28,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetOnClickPrepend($"${ID}_prepend"$)
 	xmodel = ""
 	Slider.typeOf = "slide"
+	Slider.fieldType = "int"
 	bStatic = False
 	bIsRange = False
 	Return Me

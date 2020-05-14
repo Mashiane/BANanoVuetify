@@ -48,6 +48,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	hasImage = False
 	bStatic = False
 	hasLabel = False
+	Avatar.typeOf = "avatar"
 	Return Me
 End Sub
 

@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Public TextField As VMElement
 	Public ID As String
@@ -36,6 +36,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vmodel = ""
 	bMultiple = False
 	ErrorText = ""
+	TextField.fieldType = "string"
+	TextField.typeOf = "textfield"
 	Return Me
 End Sub
 

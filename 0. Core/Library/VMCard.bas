@@ -16,7 +16,6 @@ Sub Class_Globals
 	Public Text As VMCardText
 	Public Actions As VMCardActions
 	Public IsDialog As Boolean
-	Public Container As VMContainer
 	Public ToolBar As VMToolBar
 	Public Form As VMForm
 	Private lst As List
@@ -24,6 +23,7 @@ Sub Class_Globals
 	Public IsTable As Boolean
 	Private bStatic As Boolean
 	Private titleKey As String
+	Public Container As VMContainer
 End Sub
 
 'initialize the Card
@@ -39,15 +39,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Title.Initialize(vue, $"${ID}title"$, Module)
 	Text.Initialize(vue, $"${ID}text"$, Module)
 	Actions.Initialize(vue, $"${ID}actions"$, Module)
-	'Container.Initialize(vue, $"${ID}cont"$, Module)
 	Form.Initialize(vue, $"${ID}form"$, Module)
 	ToolBar.Initialize(vue, $"${ID}bar"$, Module).SetToolBar(True)
+	Container = Form.Container
 	lst.Initialize 
 	extra.Initialize 
 	IsTable = False
 	bStatic = False
 	titleKey = $"${ID}title"$
-	Container = Form.container
 	Return Me
 End Sub
 
@@ -86,9 +85,9 @@ Sub SetStatic(b As Boolean) As VMCard
 	Title.setstatic(b)
 	Text.setstatic(b)
 	Actions.SetStatic(b)
-	Container.SetStatic(b)
 	ToolBar.SetStatic(b)
 	Form.SetStatic(b)
+	Container.SetStatic(b)
 	Return Me
 End Sub
 
@@ -771,8 +770,9 @@ Sub SetDesignMode(b As Boolean) As VMCard
 	Title.SetDesignMode(b)
 	Text.SetDesignMode(b)
 	Actions.SetDesignMode(b)
-	Container.SetDesignMode(b)
+	Form.SetDesignMode(b)
 	ToolBar.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub

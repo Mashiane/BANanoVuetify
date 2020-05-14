@@ -191,17 +191,18 @@ Sub BANano_Ready
 	'prepare the database
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	alaSQL.Initialize("grid", "id")
-	alaSQL.SchemaAddField("id", alaSQL.DB_INT)
-	alaSQL.SchemaAddField("controltype", alaSQL.DB_TEXT)
+	alaSQL.SchemaAddIntegers(Array("id"))
+	alaSQL.SchemaAddStrings(Array("controltype"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
 	'create the table for the components
 	alaSQL.Initialize("components", "id")
-	alaSQL.SchemaAddField("controltype", alaSQL.DB_TEXT)
 	alaSQL.SchemaAddIntegers(Array("id", "row","col","tabindex"))
-	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items"))
+	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
 	'
 	'create the project table
 	alaSQL.Initialize("project", "id")
@@ -209,5 +210,6 @@ Sub BANano_Ready
 	alaSQL.SchemaAddStrings(Array("projectname","dbtype","databasename","components"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
 	modDesigner.init
 End Sub

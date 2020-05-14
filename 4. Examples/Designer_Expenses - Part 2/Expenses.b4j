@@ -1,19 +1,22 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=config.php
-File2=sponge.png
+File1=alasql.min.js
+File2=config.php
+File3=sponge.png
 FileGroup1=Default Group
 FileGroup2=Default Group
+FileGroup3=Default Group
 Group=Default Group
 Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
-Library5=bananovuetify
-Module1=modCategory
+Library5=bananovuetifycore
+Library6=bananovuetifyconnect
+Module1=modExpenseType
 Module2=pgIndex
-NumberOfFiles=2
-NumberOfLibraries=5
+NumberOfFiles=3
+NumberOfLibraries=6
 NumberOfModules=2
 Version=8.1
 @EndOfDesignText@
@@ -24,8 +27,8 @@ Version=8.1
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
-	Public AppName As String = "categories"
-	Public AppTitle As String = "Categories"
+	Public AppName As String = "dexpenses"
+	Public AppTitle As String = "Designer Expenses"
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
@@ -75,18 +78,20 @@ End Sub
 
 Sub BANano_Ready
 	'copy code below this line
+	'*** START: CREATE TABLES
 	'open the database and wait
-	db.OpenWait("ecommerce", "ecommerce")
+	db.OpenWait("expenses", "expenses")
 	'resultset variable
 	Dim alaSQL As BANanoAlaSQLE
 	'initialize table for table creation
-	alaSQL.Initialize("cats", "id")
+	alaSQL.Initialize("expensetypes", "typeid")
 	'add each field to the schema
-	alaSQL.SchemaAddField("id", "INT")
-	alaSQL.SchemaAddField("categoryname", "TEXT")
+	alaSQL.SchemaAddField("typeid", "INT")
+	alaSQL.SchemaAddField("typename", "TEXT")
 	'generate & run command to create the table
 	alaSQL.SchemaCreateTable
 	alaSQL.Result = db.ExecuteWait(alaSQL.query, alaSQL.args)
-	'
+	alaSQL.FromJSON
+	'*** END: CREATE TABLES
 	pgIndex.Init
 End Sub

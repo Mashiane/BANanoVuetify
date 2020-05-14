@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Public Container As VMElement
 	Public ID As String
@@ -1935,7 +1935,8 @@ private Sub CreateGrid
 		Dim idxpos As Int = Exclusions.IndexOf(el.id)
 		If idxpos = -1 Then
 			Select Case el.typeOf
-				Case "button", "list", "image", "label", "profile"
+				Case "button", "list", "image", "label", "profile", "table", _
+					"alert", "badge", "avatar","banner","nav"
 					el.fieldType = ""
 					el.IsRequired = False
 				Case Else
@@ -1943,7 +1944,8 @@ private Sub CreateGrid
 					Defaults.Put(el.vmodel, el.value)
 			End Select
 			If el.isrequired Then Required.put(el.vmodel, el.vmodel)
-			Select Case el.fieldType
+			If (el.vmodel <> "") And (el.fieldType <> "") Then
+				Select Case el.fieldType
 				Case "int"
 					Integers.Add(el.vmodel)
 				Case "bool"
@@ -1954,7 +1956,8 @@ private Sub CreateGrid
 					Dates.Add(el.vmodel)
 				Case "dbl"
 					Doubles.Add(el.vmodel)
-			End Select
+				End Select
+			End If
 		End If
 	Next
 	

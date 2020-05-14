@@ -57,6 +57,8 @@ Sub SetConnection(shost As String, susername As String, spassword As String, sdb
 	Return Me
 End Sub
 
+
+
 'convert the json
 Sub FromJSON As BANanoMSSQL
 	OK = False
@@ -77,6 +79,14 @@ Sub Update(priValue As String) As BANanoMSSQL
 	UpdateWhere(TableName, Record, tblWhere, Null)
 	Return Me
 End Sub
+
+Sub Update1(Rec As Map, priValue As String) As BANanoMSSQL
+	Dim tblWhere As Map = CreateMap()
+	tblWhere.Put(PrimaryKey, priValue)
+	UpdateWhere(TableName, Rec, tblWhere, Null)
+	Return Me
+End Sub
+
 
 Sub EQOperators(sm As Map) As List    'ignore
 	Dim nl As List
@@ -112,12 +122,19 @@ Sub SchemaAddBooleans(bools As List) As BANanoMSSQL
 	Return Me
 End Sub
 '
+
 Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMSSQL
 	SchemaAddBoolean(vDesign.Booleans)
 	SchemaAddDate(vDesign.Dates)
 	SchemaAddFloat(vDesign.Doubles)
 	SchemaAddInt(vDesign.Integers)
 	SchemaAddText(vDesign.Strings)
+	'update field types
+	AddStrings(vDesign.Strings)
+	AddIntegers(vDesign.Integers)
+	AddDoubles(vDesign.Doubles)
+	AddBooleans(vDesign.Booleans)
+	AddStrings(vDesign.Dates)
 	Return Me
 End Sub
 
@@ -269,6 +286,7 @@ Sub GetNextID As String
 	End If
 	nextid = nextid + 1
 	strid = CStr(nextid)
+	nextid = BANano.ParseInt(nextid)
 	Return strid
 End Sub
 
@@ -402,23 +420,36 @@ private Sub GetMapTypes(sourceMap As Map) As List
 		Dim col As String = sourceMap.GetKeyAt(iCnt)
 		Dim colType As String = recType.GetDefault(col,"STRING")
 		Select Case colType
-			Case "VARCHAR(20)", "VARCHAR(10)", "VARCHAR(30)", "VARCHAR(40)","VARCHAR","NVARCHAR"
-				listOfTypes.add("s")
-			Case "VARCHAR(50)", "VARCHAR(100)", "VARCHAR(255)"
-				listOfTypes.add("s")
-			Case "STRING","VARCHAR","TEXT","DATE","DATETIME","NVARCHAR"
-				listOfTypes.add("s")
 			Case "INTEGER", "INT", "BOOL","BOOLEAN"
 				listOfTypes.add("i")
+			Case "BLOB"
+				listOfTypes.add("b")
 			Case "REAL","FLOAT","DOUBLE"
 				listOfTypes.add("d")
-			Case "BLOB"
-				listOfTypes.Add("b")
 			Case Else
 				listOfTypes.add("s")
 		End Select
 	Next
 	Return listOfTypes
+End Sub
+
+
+private Sub GetMapType(k As String) As String
+	If recType.ContainsKey(k) Then
+		Dim colType As String = recType.GetDefault(k, "STRING")
+		Select Case colType
+			Case "INTEGER", "INT", "BOOL","BOOLEAN"
+				Return "i"
+			Case "BLOB"
+				Return "b"
+			Case "REAL","FLOAT","DOUBLE"
+				Return "d"
+			Case Else
+				Return "s"
+		End Select
+	Else
+		Return "s"
+	End If
 End Sub
 
 'get map values
@@ -429,7 +460,25 @@ private Sub GetMapValues(sourceMap As Map) As List
 	Dim iTot As Int
 	iTot = sourceMap.Size - 1
 	For iCnt = 0 To iTot
+		'get the value
+		Dim key As String = sourceMap.getkeyat(iCnt)
 		Dim value As String = sourceMap.GetValueAt(iCnt)
+		value = CStr(value)
+		value = value.trim
+		'get the type
+		Dim vtype As String = GetMapType(key)
+		Select Case vtype
+			Case "i"
+				'integer
+				If value = "" Then value = "0"
+				value = BANano.parseInt(value)
+			Case "d"
+				'double
+				If value = "" Then value = "0"
+				value = BANano.parsefloat(value)
+			Case "s", "b"
+				'string
+		End Select
 		listOfValues.Add(value)
 	Next
 	Return listOfValues
@@ -452,23 +501,29 @@ End Sub
 
 'return a sql insert statement
 Sub Insert As BANanoMSSQL
+	Insert1(Record)
+	Return Me
+End Sub
+
+'return a sql insert statement
+Sub Insert1(Rec As Map) As BANanoMSSQL
 	If Schema.Size = 0 Then
 		Log($"BANanoMSSQL.Insert: '${TableName}' schema is not set!"$)
 	End If
 	Dim sb As StringBuilder
 	Dim columns As StringBuilder
 	Dim values As StringBuilder
-	Dim listOfValues As List = GetMapValues(Record)
-	Dim listOfTypes As List = GetMapTypes(Record)
+	Dim listOfValues As List = GetMapValues(Rec)
+	Dim listOfTypes As List = GetMapTypes(Rec)
 	Dim iCnt As Int
 	Dim iTot As Int
 	sb.Initialize
 	columns.Initialize
 	values.Initialize
 	sb.Append($"INSERT INTO ${EscapeField(TableName)} ("$)
-	iTot = Record.Size - 1
+	iTot = Rec.Size - 1
 	For iCnt = 0 To iTot
-		Dim col As String = Record.GetKeyAt(iCnt)
+		Dim col As String = Rec.GetKeyAt(iCnt)
 		If iCnt > 0 Then
 			columns.Append(", ")
 			values.Append(", ")
@@ -486,6 +541,8 @@ Sub Insert As BANanoMSSQL
 	command = "insert"
 	Return Me
 End Sub
+
+
 
 'join list to multi value string
 private Sub JoinFields(delimiter As String, lst As List) As String
