@@ -290,8 +290,7 @@ End Sub
 Sub SetTooltip(tt As String) As VMButton
 	If tt = "" Then Return Me
 	hasToolTip = True
-	tooltip.SetLeft(True)
-	'
+	tooltip.SetBottom(True)	
 	Button.SetAttrSingle("v-on", "on")
 	span.SetText(tt)
 	Return Me

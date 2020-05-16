@@ -9,9 +9,10 @@ Module1=BANanoAlaSQLE
 Module2=BANanoMSSQLE
 Module3=BANanoMySQLE
 Module4=BANanoPHP
+Module5=BANanoSQLiteE
 NumberOfFiles=0
 NumberOfLibraries=4
-NumberOfModules=4
+NumberOfModules=5
 Version=8.1
 @EndOfDesignText@
 '

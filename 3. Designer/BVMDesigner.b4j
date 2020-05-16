@@ -211,5 +211,13 @@ Sub BANano_Ready
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON
-	modDesigner.init
+	
+	'create the tables
+	alaSQL.Initialize("tables", "tablename")
+	alaSQL.SchemaAddStrings(Array("tablename", "primarykey", "displayfields"))
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
+	'
+	modDesigner.initWait
 End Sub

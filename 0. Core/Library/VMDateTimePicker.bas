@@ -37,6 +37,19 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'set autofocus
+Sub SetAutofocus(varAutofocus As Boolean) As VMDateTimePicker
+	If varAutofocus = False Then Return Me
+	If bStatic Then
+		TextField.SetAttrSingle("autofocus", varAutofocus)
+	Else
+		Dim pp As String = $"${ID}Autofocus"$
+		vue.SetStateSingle(pp, varAutofocus)
+		TextField.Bind(":autofocus", pp)
+	End If
+	Return Me
+End Sub
+
 Sub SetOnClickClear(eventHandler As Object, methodName As String) As VMDateTimePicker
 	TextField.SetOnClickClear(eventHandler, methodName)
 	Return Me

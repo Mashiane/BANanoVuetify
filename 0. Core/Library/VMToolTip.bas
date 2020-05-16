@@ -56,7 +56,7 @@ Sub SetVModel(k As String) As VMToolTip
 	Return Me
 End Sub
 
-Sub SetVIf(vif As string) As VMToolTip
+Sub SetVIf(vif As String) As VMToolTip
 	ToolTip.SetVIf(vif)
 	Return Me
 End Sub
@@ -603,7 +603,7 @@ Sub SetTabIndex(ti As String) As VMToolTip
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As string, bbind As Boolean) As VMToolTip
+Sub SetName(varName As String, bbind As Boolean) As VMToolTip
 	ToolTip.SetName(varName, bbind)
 	Return Me
 End Sub

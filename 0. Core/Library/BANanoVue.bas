@@ -606,6 +606,37 @@ Public Sub Initialize()
 	ControlTypes.Put("None", "None")
 End Sub
 
+
+'remove the delimiter from stringbuilder
+Sub RemDelim(sValue As String, Delim As String) As String
+	Dim sw As Boolean = sValue.EndsWith(Delim)
+	If sw Then
+		Dim lDelim As Int = Delim.Length
+		Dim nValue As String = sValue
+		sw = nValue.EndsWith(Delim)
+		If sw Then
+			nValue = nValue.SubString2(0, nValue.Length-lDelim)
+		End If
+		Return nValue
+	Else
+		Return sValue
+	End If
+End Sub
+
+Sub JoinMapKeys(m As Map, delim As String) As String
+	Dim sb As StringBuilder
+	sb.Initialize
+	Dim kTot As Int = m.Size - 1
+	Dim kCnt As Int
+	Dim strKey As String = m.getkeyat(0)
+	sb.Append(strKey)
+	For kCnt = 1 To kTot
+		Dim strKey As String = m.getkeyat(kCnt)
+		sb.Append(delim).append(strKey)
+	Next
+	Return sb.ToString
+End Sub
+
 'return sentences of lorem ipsum
 Sub Rand_LoremIpsum(count As Int) As String
 	Dim str As String = $"Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."$

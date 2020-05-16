@@ -2,38 +2,23 @@
 Group=Default Group
 ModulesStructureVersion=1
 Type=Class
-Version=7.51
+Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
 	Private recType As Map
-	Public const DB_VARCHAR_20 As String = "VARCHAR(20)"
-	Public const DB_VARCHAR_10 As String = "VARCHAR(10)"
-	Public const DB_VARCHAR_30 As String = "VARCHAR(30)"
-	Public const DB_VARCHAR_40 As String = "VARCHAR(40)"
-	Public const DB_VARCHAR_50 As String = "VARCHAR(50)"
-	Public const DB_VARCHAR_100 As String = "VARCHAR(100)"
-	Public const DB_VARCHAR_255 As String = "VARCHAR(255)"
-	Public const DB_STRING As String = "TEXT"
-	Public const DB_INT As String = "INT"
-	Public const DB_FLOAT As String = "FLOAT"
-	Public const DB_BLOB As String = "BLOB"
 	Public const DB_BOOL As String = "BOOL"
+	Public const DB_INT As String = "INT"
+	Public const DB_STRING As String = "STRING"
 	Public const DB_REAL As String = "REAL"
 	Public const DB_DATE As String = "DATE"
+	Public const DB_BLOB As String = "BLOB"
 	Public const DB_INTEGER As String = "INTEGER"
 	Public const DB_TEXT As String = "TEXT"
-	'Public const DB_TINYINT As String = "TINYINT"
-	'Public const DB_SMALLINT As String = "SMALLINT"
-	'Public const DB_MEDIUMINT As String = "MEDIUMINT"
-	'Public const DB_BIGINT As String = "BIGINT"
+	Public const DB_FLOAT As String = "FLOAT"
 	Private BANano As BANano   'ignore
 	Public MethodName As String
-	Public MethodNameDynamic As String
 	Private Schema As Map
-	Private host As String
-	Private username As String
-	Private password As String
 	Public DBase As String
 	Public result As List
 	Public command As String
@@ -50,40 +35,18 @@ Sub Class_Globals
 	Public Record As Map
 End Sub
 
-'set database connection settings
-Sub SetConnection(shost As String, susername As String, spassword As String, sdbname As String) As BANanoMySQLE
-	host = shost
-	username = susername
-	password = spassword
-	DBase = sdbname
-	Return Me
-End Sub
-
 Sub RecordFromMap(sm As Map)
-	Record.Initialize 
+	Record.Initialize
 	For Each k As String In sm.Keys
 		Dim v As Object = sm.Get(k)
 		Record.Put(k, v)
 	Next
 End Sub
 
-'convert the json
-Sub FromJSON As BANanoMySQLE
-	OK = False
-	Dim m As Map = BANano.FromJson(json)
-	response = m.Get("response")
-	error = m.Get("error")
-	result = m.Get("result")
-	affectedRows = m.Get("affectedRows")
-	If response = "Success" Then
-		OK = True
-	End If
-	Return Me
-End Sub
 
 
 'return a sql to delete record of table where one exists
-Sub GetMax As BANanoMySQLE
+Sub GetMax As BANanoSQLiteE
 	Dim sb As String = $"SELECT MAX(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
 	query = sb
 	command = "getmax"
@@ -91,7 +54,7 @@ Sub GetMax As BANanoMySQLE
 End Sub
 
 'return a sql to delete record of table where one exists
-Sub GetMin As BANanoMySQLE
+Sub GetMin As BANanoSQLiteE
 	Dim sb As String = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
 	query = sb
 	command = "getmin"
@@ -100,7 +63,7 @@ End Sub
 
 
 'get table names
-Sub GetTableNames As BANanoMySQLE
+Sub GetTableNames As BANanoSQLiteE
 	Dim sb As String = $"select table_name from information_schema.tables where table_schema = '${DBase}'"$
 	query = sb
 	command = "select"
@@ -108,7 +71,7 @@ Sub GetTableNames As BANanoMySQLE
 End Sub
 
 'get table structure
-Sub GetTableStructure As BANanoMySQLE
+Sub GetTableStructure As BANanoSQLiteE
 	Dim sb As String = $"describe ${EscapeField(TableName)}"$
 	query = sb
 	command = "select"
@@ -138,12 +101,11 @@ End Sub
 
 
 'initialize the class, a field named "id" is assumed to be an integer
-Public Sub Initialize(dbName As String, tblName As String, PK As String) As BANanoMySQLE
+Public Sub Initialize(dbName As String, tblName As String, PK As String) As BANanoSQLiteE
 	Schema.Initialize
 	recType.Initialize
-	Record.Initialize 
-	MethodName = "BANanoMySQL"
-	MethodNameDynamic = "BANanoMySQLDynamic"
+	Record.Initialize
+	MethodName = "BANanoSQLite"
 	result.Initialize
 	command = ""
 	PrimaryKey = PK
@@ -159,25 +121,22 @@ Public Sub Initialize(dbName As String, tblName As String, PK As String) As BANa
 	affectedRows = 0
 	json = ""
 	OK = False
-	host = ""
-	username = ""
-	password = ""
 	Return Me
 End Sub
 
 'prepare for new table definition
-Sub SchemaClear As BANanoMySQLE
+Sub SchemaClear As BANanoSQLiteE
 	Schema.clear
 	Return Me
 End Sub
 
-Sub SetField(fldName As String, fldValue As Object) As BANanoMySQLE
+Sub SetField(fldName As String, fldValue As Object) As BANanoSQLiteE
 	Record.Put(fldName, fldValue)
 	Return Me
 End Sub
 
 'schema add boolean
-Sub SchemaAddBoolean(bools As List) As BANanoMySQLE
+Sub SchemaAddBoolean(bools As List) As BANanoSQLiteE
 	For Each b As String In bools
 		Schema.Put(b, DB_BOOL)
 	Next
@@ -185,7 +144,7 @@ Sub SchemaAddBoolean(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 '
-Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMySQLE
+Sub SchemaFromDesign(vDesign As VMContainer) As BANanoSQLiteE
 	SchemaAddBoolean(vDesign.Booleans)
 	SchemaAddDate(vDesign.Dates)
 	SchemaAddFloat(vDesign.Doubles)
@@ -201,7 +160,7 @@ Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMySQLE
 End Sub
 
 
-Sub SchemaAddInt(bools As List) As BANanoMySQLE
+Sub SchemaAddInt(bools As List) As BANanoSQLiteE
 	For Each b As String In bools
 		Schema.Put(b, DB_INT)
 	Next
@@ -209,7 +168,7 @@ Sub SchemaAddInt(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 
-Sub SchemaAddFloat(bools As List) As BANanoMySQLE
+Sub SchemaAddFloat(bools As List) As BANanoSQLiteE
 	For Each b As String In bools
 		Schema.Put(b, DB_FLOAT)
 	Next
@@ -217,7 +176,7 @@ Sub SchemaAddFloat(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 
-Sub SchemaAddBlob(bools As List) As BANanoMySQLE
+Sub SchemaAddBlob(bools As List) As BANanoSQLiteE
 	For Each b As String In bools
 		Schema.Put(b, DB_BLOB)
 	Next
@@ -225,7 +184,7 @@ Sub SchemaAddBlob(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 
-Sub SchemaAddText(bools As List) As BANanoMySQLE
+Sub SchemaAddText(bools As List) As BANanoSQLiteE
 	For Each b As String In bools
 		Schema.Put(b, DB_STRING)
 	Next
@@ -233,11 +192,11 @@ Sub SchemaAddText(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 
-Sub SchemaCreateTable(tblName As String, PK As String, Auto As String) As BANanoMySQLE
+Sub SchemaCreateTable(tblName As String, PK As String, Auto As String) As BANanoSQLiteE
 	Return CreateTable(tblName, Schema, PK, Auto)
 End Sub
 
-Sub SchemaAddDate(bools As List) As BANanoMySQLE
+Sub SchemaAddDate(bools As List) As BANanoSQLiteE
 	For Each b As String In bools
 		Schema.Put(b, DB_DATE)
 	Next
@@ -270,19 +229,12 @@ Sub Map2Json(mp As Map) As String
 End Sub
 
 
-'excape fields with ``
 Private Sub EscapeField(f As String) As String
-	Return $"`${f}`"$
-End Sub
-
-'return string for test connection operation
-Sub Connection As BANanoMySQLE
-	command = "connection"
-	Return Me
+	Return $"[${f}]"$
 End Sub
 
 ' return string to create database
-Sub CreateDatabase As BANanoMySQLE
+Sub CreateDatabase As BANanoSQLiteE
 	Dim sSQL As String = $"CREATE DATABASE IF NOT EXISTS ${EscapeField(DBase)}"$
 	query = sSQL
 	command = "createdb"
@@ -290,21 +242,21 @@ Sub CreateDatabase As BANanoMySQLE
 End Sub
 
 'drop the database
-Sub DropDataBase As BANanoMySQLE
+Sub DropDataBase As BANanoSQLiteE
 	Dim sSQL As String = $"DROP DATABASE ${EscapeField(DBase)}"$
 	query = sSQL
 	command = "dropdb"
 	Return Me
 End Sub
 
-Sub Execute(strSQL As String) As BANanoMySQLE
+Sub Execute(strSQL As String) As BANanoSQLiteE
 	query = strSQL
 	command = "execute"
 	Return Me
 End Sub
 
 'return a sql command to create the table
-public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto As String) As BANanoMySQLE
+public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto As String) As BANanoSQLiteE
 	Dim fldName As String
 	Dim fldType As String
 	Dim fldTot As Int
@@ -323,11 +275,15 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto A
 		sb.Append(EscapeField(fldName))
 		sb.Append(" ")
 		sb.Append(fldType)
+		Select Case fldType
+		Case "STRING", "TEXT"
+			sb.Append(" COLLATE NOCASE")
+		End Select
 		If fldName.EqualsIgnoreCase(PK) Then
-			sb.Append(" NOT NULL PRIMARY KEY")
+			sb.Append(" PRIMARY KEY")
 		End If
 		If fldName.EqualsIgnoreCase(Auto) Then
-			sb.Append(" AUTO_INCREMENT")
+			sb.Append(" AUTOINCREMENT")
 		End If
 	Next
 	sb.Append(")")
@@ -338,8 +294,9 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto A
 	Return Me
 End Sub
 
+
 'return sql command to drop a table
-public Sub DropTable As BANanoMySQLE
+public Sub DropTable As BANanoSQLiteE
 	'define the qry to execute
 	Dim query As String = "DROP TABLE " & EscapeField(TableName)
 	query = query
@@ -439,16 +396,16 @@ End Sub
 
 
 'return a sql insert statement
-Sub Insert As BANanoMySQLE
+Sub Insert As BANanoSQLiteE
 	Insert1(Record)
 	Return Me
 End Sub
 
 'return a sql insert statement
-Sub Insert1(Rec As Map) As BANanoMySQLE
+Sub Insert1(Rec As Map) As BANanoSQLiteE
 	If Schema.Size = 0 Then
 		Log($"BANanoMySQL.Insert: '${TableName}' schema is not set!"$)
-	End If	
+	End If
 	Dim sb As StringBuilder
 	Dim columns As StringBuilder
 	Dim values As StringBuilder
@@ -484,7 +441,7 @@ End Sub
 
 
 'return a sql insert statement
-Sub InsertReplace As BANanoMySQLE
+Sub InsertReplace As BANanoSQLiteE
 	Dim sb As StringBuilder
 	Dim columns As StringBuilder
 	Dim values As StringBuilder
@@ -518,7 +475,7 @@ Sub InsertReplace As BANanoMySQLE
 End Sub
 
 'delete a single value based on the primary key
-Sub Delete(primaryValue As String) As BANanoMySQLE
+Sub Delete(primaryValue As String) As BANanoSQLiteE
 	Dim qw As Map = CreateMap()
 	qw.Put(PrimaryKey, primaryValue)
 	DeleteWhere(TableName, qw, Array("="))
@@ -559,7 +516,7 @@ private Sub Join(delimiter As String, lst As List) As String
 End Sub
 
 'read
-Sub Read(primaryValue As String) As BANanoMySQLE
+Sub Read(primaryValue As String) As BANanoSQLiteE
 	Dim qw As Map = CreateMap()
 	qw.Put(PrimaryKey, primaryValue)
 	SelectWhere(TableName, Array("*"), qw, Null, Array(PrimaryKey))
@@ -567,7 +524,7 @@ Sub Read(primaryValue As String) As BANanoMySQLE
 End Sub
 
 'exists
-Sub Exists(primaryValue As String) As BANanoMySQLE
+Sub Exists(primaryValue As String) As BANanoSQLiteE
 	Dim qw As Map = CreateMap()
 	qw.Put(PrimaryKey, primaryValue)
 	SelectWhere(TableName, Array(PrimaryKey), qw, Null, Array(PrimaryKey))
@@ -575,7 +532,7 @@ Sub Exists(primaryValue As String) As BANanoMySQLE
 End Sub
 
 'return a sql to select record of table where one exists
-Sub SelectWhere(tblName As String, tblfields As List, tblWhere As Map, operators As List, orderBy As List) As BANanoMySQLE
+Sub SelectWhere(tblName As String, tblfields As List, tblWhere As Map, operators As List, orderBy As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
 		Log($"BANanoMySQL.SelectWhere: '${tblName}' schema is not set!"$)
 	End If
@@ -620,7 +577,7 @@ Sub SelectWhere(tblName As String, tblfields As List, tblWhere As Map, operators
 End Sub
 
 'return a sql to select record of table where one exists
-Sub SelectDistinctWhere(tblName As String, tblfields As List, tblWhere As Map, operators As List, orderBy As List) As BANanoMySQLE
+Sub SelectDistinctWhere(tblName As String, tblfields As List, tblWhere As Map, operators As List, orderBy As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
 		Log($"BANanoMySQL.SelectWhere: '${tblName}' schema is not set!"$)
 	End If
@@ -665,7 +622,7 @@ Sub SelectDistinctWhere(tblName As String, tblfields As List, tblWhere As Map, o
 End Sub
 
 'return a sql to delete record of table where one exists
-Sub DeleteAll As BANanoMySQLE
+Sub DeleteAll As BANanoSQLiteE
 	Dim sb As String = $"DELETE FROM ${EscapeField(TableName)}"$
 	query = sb
 	command = "delete"
@@ -683,10 +640,10 @@ End Sub
 
 
 'return a sql to delete record of table where one exists
-Sub DeleteWhere(tblName As String, tblWhere As Map, operators As List) As BANanoMySQLE
+Sub DeleteWhere(tblName As String, tblWhere As Map, operators As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
 		Log($"BANanoMySQL.DeleteWhere: '${tblName}' schema is not set!"$)
-	End If	
+	End If
 	If operators = Null Then operators = EQOperators(tblWhere)
 	Dim listOfTypes As List = GetMapTypes(tblWhere)
 	Dim listOfValues As List = GetMapValues(tblWhere)
@@ -713,7 +670,7 @@ End Sub
 
 
 'return a sql to select record of table where one exists
-Sub SelectAll(tblfields As List, orderBy As List) As BANanoMySQLE
+Sub SelectAll(tblfields As List, orderBy As List) As BANanoSQLiteE
 	'are we selecting all fields or just some
 	Dim fld1 As String = tblfields.Get(0)
 	Dim selFIelds As String = ""
@@ -739,7 +696,7 @@ Sub SelectAll(tblfields As List, orderBy As List) As BANanoMySQLE
 End Sub
 
 'return a sql to select record of table where one exists
-Sub SelectDistinctAll(tblfields As List, orderBy As List) As BANanoMySQLE
+Sub SelectDistinctAll(tblfields As List, orderBy As List) As BANanoSQLiteE
 	'are we selecting all fields or just some
 	Dim fld1 As String = tblfields.Get(0)
 	Dim selFIelds As String = ""
@@ -766,30 +723,16 @@ End Sub
 
 Sub Build As Map
 	Dim b As Map = CreateMap()
-	b.Put("command", command)
-	b.Put("query", query)
-	b.Put("args", args)
-	b.Put("types", types)
-	Return b
-End Sub
-
-'build with connection settings
-Sub BuildDynamic As Map
-	Dim b As Map = CreateMap()
-	b.Put("command", command)
-	b.Put("query", query)
-	b.Put("args", args)
-	b.Put("types", types)
-	b.put("host", host)
-	b.Put("username", username)
-	b.Put("password", password)
 	b.Put("dbname", DBase)
+	b.Put("command", command)
+	b.Put("query", query)
+	b.Put("args", args)
+	b.Put("types", types)
 	Return b
 End Sub
-
 
 'specify strings field types, this is default for all strings
-private Sub AddStrings(fieldNames As List) As BANanoMySQLE
+private Sub AddStrings(fieldNames As List) As BANanoSQLiteE
 	For Each strfld As String In fieldNames
 		recType.Put(strfld,"STRING")
 	Next
@@ -797,7 +740,7 @@ private Sub AddStrings(fieldNames As List) As BANanoMySQLE
 End Sub
 
 'specify integer field types
-private Sub AddIntegers(fieldNames As List) As BANanoMySQLE
+private Sub AddIntegers(fieldNames As List) As BANanoSQLiteE
 	For Each strfld As String In fieldNames
 		recType.Put(strfld,"INT")
 	Next
@@ -805,7 +748,7 @@ private Sub AddIntegers(fieldNames As List) As BANanoMySQLE
 End Sub
 
 'specify double field types
-private Sub AddDoubles(fieldNames As List) As BANanoMySQLE
+private Sub AddDoubles(fieldNames As List) As BANanoSQLiteE
 	For Each strfld As String In fieldNames
 		recType.Put(strfld,"DOUBLE")
 	Next
@@ -813,7 +756,7 @@ private Sub AddDoubles(fieldNames As List) As BANanoMySQLE
 End Sub
 
 'specify double field types
-private Sub AddBooleans(fieldNames As List) As BANanoMySQLE
+private Sub AddBooleans(fieldNames As List) As BANanoSQLiteE
 	For Each strfld As String In fieldNames
 		recType.Put(strfld,"BOOL")
 	Next
@@ -826,21 +769,21 @@ Sub FirstRecord As Map
 End Sub
 
 'specify blob field types
-private Sub AddBlobs(fieldNames As List) As BANanoMySQLE
+private Sub AddBlobs(fieldNames As List) As BANanoSQLiteE
 	For Each strfld As String In fieldNames
 		recType.Put(strfld,"BLOB")
 	Next
 	Return Me
 End Sub
 
-Sub Update(priValue As String) As BANanoMySQLE
+Sub Update(priValue As String) As BANanoSQLiteE
 	Dim tblWhere As Map = CreateMap()
 	tblWhere.Put(PrimaryKey, priValue)
 	UpdateWhere(TableName, Record, tblWhere, Null)
 	Return Me
 End Sub
 
-Sub Update1(Rec As Map, priValue As String) As BANanoMySQLE
+Sub Update1(Rec As Map, priValue As String) As BANanoSQLiteE
 	Dim tblWhere As Map = CreateMap()
 	tblWhere.Put(PrimaryKey, priValue)
 	UpdateWhere(TableName, Rec, tblWhere, Null)
@@ -848,10 +791,10 @@ Sub Update1(Rec As Map, priValue As String) As BANanoMySQLE
 End Sub
 
 'return a sql to update records of table where one exists
-Sub UpdateWhere(tblName As String, tblfields As Map, tblWhere As Map, operators As List) As BANanoMySQLE
+Sub UpdateWhere(tblName As String, tblfields As Map, tblWhere As Map, operators As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
 		Log($"BANanoMySQL.UpdateWhere: '${tblName}' schema is not set!"$)
-	End If	
+	End If
 	If operators = Null Then operators = EQOperators(tblWhere)
 	Dim listOfTypes As List = GetMapTypes(tblfields)
 	Dim listOfTypes1 As List = GetMapTypes(tblWhere)
@@ -893,7 +836,7 @@ End Sub
 
 
 'return a sql to update all records of table
-Sub UpdateAll(tblFields As Map, operators As List) As BANanoMySQLE
+Sub UpdateAll(tblFields As Map, operators As List) As BANanoSQLiteE
 	If operators = Null Then operators = EQOperators(tblFields)
 	Dim listOfTypes As List = GetMapTypes(tblFields)
 	Dim args As List = GetMapValues(tblFields)
@@ -919,185 +862,92 @@ Sub UpdateAll(tblFields As Map, operators As List) As BANanoMySQLE
 	Return Me
 End Sub
 
+
+'convert the json
+Sub FromJSON As BANanoSQLiteE
+	OK = False
+	Dim m As Map = BANano.FromJson(json)
+	response = m.Get("response")
+	error = m.Get("error")
+	result = m.Get("result")
+	affectedRows = m.Get("affectedRows")
+	If response = "Success" Then
+		OK = True
+	End If
+	Return Me
+End Sub
+
+
 #if PHP
-function prepareMySQL($conn, $query, $types, $args) {
-	//paramater types to execute
-	/* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
-	$stmt = $conn->prepare($query);
-	if(is_array($types)){
-		$a_params = array();
-		$param_type = '';
-		$n = count($types);
-		for($i = 0; $i < $n; $i++) {
-			$param_type .= $types[$i];
+function preparesqlite($db, $sql, $types, $values) {
+		/* Bind parameters. Types: s = string, i = integer, d = double,  b = blob */
+		$stmt = $db->prepare($sql);
+		if(is_array($types)){
+			$n = count($types);
+			for($i = 0; $i < $n; $i++) {
+				$param_type = $types[$i];
+				$param_value = $values[$i];
+				$loc = $i + 1;
+				switch($param_type){
+					case "s":
+						$stmt->bindValue($loc, $param_value, SQLITE3_TEXT);
+						break;
+					case "i":
+						$stmt->bindValue($loc, $param_value, SQLITE3_INTEGER);
+						break;
+					case "d":
+						$stmt->bindValue($loc, $param_value, SQLITE3_FLOAT);
+						break;
+					case "b":
+						$stmt->bindValue($loc, $param_value, SQLITE3_BLOB);
+						break;
+				}
+			}
 		}
-		$a_params[] = & $param_type;
-		//values to execute
-		for($i = 0; $i < $n; $i++) {
-			$a_params[] = & $args[$i];
-		}
-		call_user_func_array(array($stmt, 'bind_param'), $a_params);
-	}
-	return $stmt;
+		return $stmt;
 }
 
-function BANanoMySQL($command, $query, $args, $types) {
-	$resp = array();
+function BANanoSQLite($dbname,$command,$query,$args,$types) {
+	$db;
+   	//set the header
 	header('Access-Control-Allow-Origin: *');
 	header('content-type: application/json; charset=utf-8');
-	require_once './assets/config.php';
-    //connect To MySQL
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-    //we cannot connect Return an error
-    if ($conn->connect_error) {
-        $response = $conn->connect_error;
-        $resp['response'] = "Error";
-		$resp['error'] = $response;
-		$resp['result'] = array();
-		$output = json_encode($resp);
-        die($output);
-    }
-    mysqli_set_charset($conn, 'utf8');
-    //$query = mysqli_real_escape_string($conn, $query);
-    $commands = array('delete', 'update', 'replace', 'insert', 'connection', 'createdb', 'dropdb', 'createtable', 'droptable');
-    if (in_array($command, $commands)) {
-        $command = 'changes';
-    }
-    switch ($command) {
-    case "changes":
-        $stmt = prepareMySQL($conn, $query, $types, $args);
-        if (! $stmt -> execute()) {
-			$response = $stmt->error;
-        	$resp['response'] = "Error";
-			$resp['error'] = $response;
-			$resp['result'] = array();
-			$output = json_encode($resp);
-	        die($output);
-		}
-	
-		$affRows = $conn->affected_rows;
-    	$resp['response'] = "Success";
-		$resp['error'] = '';
-		$resp['result'] = array();
-		$resp['affectedRows'] = $affRows;
-		$output = json_encode($resp);
-        break;
-    default:
-        $stmt = prepareMySQL($conn, $query, $types, $args);
-        //$result = $stmt->execute();
-		//$result = $stmt->get_result();
-        
-		if (!($result = $stmt->execute())) {
-			$response = $stmt->error;
-        	$resp['response'] = "Error";
-			$resp['error'] = $response;
-			$resp['result'] = array();
-			$output = json_encode($resp);
-	        die($output);
-		}
-		
-		if (!($result = $stmt->get_result())) {
-			$response = $stmt->error;
-        	$resp['response'] = "Error";
-			$resp['error'] = $response;
-			$resp['result'] = array();
-			$output = json_encode($resp);
-	        die($output);
-		}
-		
-		$affRows = $conn->affected_rows;
-    	$rows = array();
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
-        }
-    	$resp['response'] = "Success";
-		$resp['error'] = '';
-		$resp['result'] = $rows;
-		$resp['affectedRows'] = $affRows;
-		$output = json_encode($resp);
-        break;
+   	$db = new SQLite3($dbname, SQLITE3_OPEN_CREATE | SQLITE3_OPEN_READWRITE);
+	if(!$db) {
+  		$response = $db->lastErrorMsg();
+  		$rows = Array();
+		$rows[] = $response;
+		$output = json_encode($rows);
+	  	die($output);
 	}
-	echo ($output);
-    $stmt->close();
-    $conn->close();
-}
-
-function BANanoMySQLDynamic($command, $query, $args, $types, $host, $username, $password, $dbname) {
-	$resp = array();
-	header('Access-Control-Allow-Origin: *');
-	header('content-type: application/json; charset=utf-8');
-	//connect To MySQL
-    $conn = new mysqli($host, $username, $password, $dbname);
-    //we cannot connect Return an error
-    if ($conn->connect_error) {
-        $response = $conn->connect_error;
-        $resp['response'] = "Error";
-		$resp['error'] = $response;
-		$resp['result'] = array();
-		$output = json_encode($resp);
-        die($output);
-    }
-    mysqli_set_charset($conn, 'utf8');
-    $commands = array('delete', 'update', 'replace', 'insert', 'connection', 'createdb', 'dropdb', 'createtable', 'droptable');
-    if (in_array($command, $commands)) {
-        $command = 'changes';
-    }
-    switch ($command) {
-    case "changes":
-        $stmt = prepareMySQL($conn, $query, $types, $args);
-        if (! $stmt -> execute()) {
-			$response = $stmt->error;
-        	$resp['response'] = "Error";
-			$resp['error'] = $response;
-			$resp['result'] = array();
-			$output = json_encode($resp);
-	        die($output);
-		}
-	
-		$affRows = $conn->affected_rows;
-    	$resp['response'] = "Success";
-		$resp['error'] = '';
-		$resp['result'] = array();
-		$resp['affectedRows'] = $affRows;
-		$output = json_encode($resp);
-        break;
-    default:
-        $stmt = prepareMySQL($conn, $query, $types, $args);
-        //$result = $stmt->execute();
-		//$result = $stmt->get_result();
-        
-		if (!($result = $stmt->execute())) {
-			$response = $stmt->error;
-        	$resp['response'] = "Error";
-			$resp['error'] = $response;
-			$resp['result'] = array();
-			$output = json_encode($resp);
-	        die($output);
-		}
-		
-		if (!($result = $stmt->get_result())) {
-			$response = $stmt->error;
-        	$resp['response'] = "Error";
-			$resp['error'] = $response;
-			$resp['result'] = array();
-			$output = json_encode($resp);
-	        die($output);
-		}
-		
-		$affRows = $conn->affected_rows;
-    	$rows = array();
-        while ($row = $result->fetch_assoc()) {
-            $rows[] = $row;
-        }
-    	$resp['response'] = "Success";
-		$resp['error'] = '';
-		$resp['result'] = $rows;
-		$resp['affectedRows'] = $affRows;
-		$output = json_encode($resp);
-        break;
+	$commands = array('delete', 'update', 'replace', 'insert', 'createtable', 'droptable');
+	if(in_array($command,$commands)) {
+    	$command = 'changes';
 	}
-	echo ($output);
-    $stmt->close();
-    $conn->close();
+	switch($command){
+		case "changes":
+			//build the prepared statement
+			$stmt = preparesqlite($db, $query, $types, $args);
+			$res = $stmt->execute();
+			$changes = $db->changes();
+			$res->finalize();
+			$rows = Array();
+			$rows[] = $changes;
+			$output = json_encode($rows);
+	  		echo $output;
+			break;
+	   	default:
+		    $stmt = preparesqlite($db, $query, $types, $args);
+			$res = $stmt->execute();
+			$rows = Array();
+			while($row = $res->fetchArray(1)) {
+				$rows[] = $row;
+			}
+			$res->finalize();
+			$output = json_encode($rows);
+	  		echo $output;
+			break;
+	}
+	$db->close();
 }
-#end if
+#End If

@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=modDesigner,CreateUX,1221,0,modDesigner,ItemDrop,5571,1,modDesigner,RemoveLastGridItem,4025,1,modDesigner,ClearGrid,4034,0,modDesigner,Design_Table,7548,0,modDesigner,Read_Table,7360,0,modDesigner,Design_DBSourceCode,4612,1,modDesigner,Design_ToolBar,3440,0,modDesigner,Design_TextArea,1863,0,modDesigner,CodeLine,3822,3,modDesigner,Design_TextField,3799,0
+NavigationStack=modDesigner,PropertyBag_DatePicker,6261,0,modDesigner,PropertyBag_Select,6511,0,modDesigner,Design_Select,2436,1,modDesigner,PropertyBag_TextField,6684,0,modDesigner,CreateUX,1549,0,modDesigner,Design_Switch,1962,0,modDesigner,Design_TextArea,1942,0,modDesigner,CodeLine,3920,0,modDesigner,CreateProjectDrawer,1092,0,modDesigner,Design_TextField,3900,0,Main,Process_Globals,18,0
 SelectedBuild=0
 VisibleModules=

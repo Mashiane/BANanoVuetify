@@ -112,6 +112,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	contentitems.Add("colisconsant")
 	contentitems.Add("colscope")
 	contentitems.Add("colfieldtype")
+	contentitems.Add("colislookup")
 	'
 	IsTable = False
 	Return Me
@@ -230,6 +231,35 @@ Sub AddSelect(parent As String, vmodel As String, vText As String, options As Ma
 	nc.options = options
 	nc.sourcefield = sourcefield
 	nc.displayfield = displayfield
+	existing.Add(nc)
+	controls.Put(parent, existing)
+	fields.Add(vmodel)
+	Strings.Add(vmodel)
+	defaults.Put(vmodel,"")
+	Return Me
+End Sub
+
+Sub AddSelectDS(parent As String, vmodel As String, vText As String, source As String, keyField As String, valueField As String, methodName As String) As VMProperty
+	vmodel = vmodel.tolowercase
+	parent = parent.tolowercase
+	If parent = "" Then parent = "main"
+	Dim existing As List
+	If controls.ContainsKey(parent) Then
+		existing = controls.Get(parent)
+	Else
+		existing.Initialize
+	End If
+	'
+	Dim nc As PropControls
+	nc.Initialize
+	nc.vmodel = vmodel
+	nc.text = vText
+	nc.value = ""
+	nc.typeOf = "selectboxds"
+	nc.sourceName = source
+	nc.sourcefield = keyField
+	nc.displayfield = valueField
+	nc.methodName = methodName
 	existing.Add(nc)
 	controls.Put(parent, existing)
 	fields.Add(vmodel)
@@ -955,6 +985,9 @@ Sub btnAddTable_click(e As BANanoEvent)
 	m.Put("coloptionvalues", "One,Two,Three")
 	m.Put("colforeignkey", "id")
 	m.Put("colforeignvalue", "text")
+	m.Put("colforeigntable", "")
+	
+	m.Put("colislookup", "No")
 	m.Put("colvisible", "Yes")
 	m.Put("colactive", "Yes")
 	m.Put("colontable", "Yes")
@@ -1163,7 +1196,7 @@ End Sub
 
 Sub MultiSwitches(nc As PropControls, options As Map) As VMContainer
 	Dim acont As VMContainer
-	acont.Initialize(vue, "", module).SetTag("div")
+	acont.Initialize(vue, "", module).SetTag("div").AddClass("my-1")
 	acont.NoGutters = True
 	acont.SetFluid(True)
 	Dim colPos As Int = 0
@@ -1279,6 +1312,8 @@ Sub ToString As String
 				Dim iconfound As Boolean = False
 				Dim lenfound As Boolean = False
 				Dim forfound As Boolean = False
+				Dim datfound As Boolean = False
+				Dim disfound As Boolean = False
 				'
 				itemtypes.Initialize 
 				nc.vmodel = "items"
@@ -1308,22 +1343,14 @@ Sub ToString As String
 				nc.options.Put("colwidth", "Width")
 				nc.options.Put("icon", "Icon")
 				nc.options.Put("colalign", "Col Align")
-				nc.options.Put("colvaluedisplay", "Value / Display")
 				nc.options.Put("colcontroltype", "Component")
 				nc.options.Put("coldatatype", "Data Type")
 				nc.options.Put("collength", "Length")
 				nc.options.Put("colvalue", "Value")
 				'
-				nc.options.Put("colplaceholder", "Place Holder")
-				nc.options.Put("colhelpertext", "Helper Text")
-				
-				nc.options.Put("colforeigntable", "Foreign Table")
-				nc.options.Put("colforeignkey", "Foreign Key")
-				nc.options.Put("colforeignvalue", "Foreign Value")
-				'
-				nc.options.Put("coloptionkeys", "Option Keys (,)")
-				nc.options.Put("coloptionvalues", "Option Values (,)")
-				
+				nc.options.Put("colforeigntable","Data Source")
+				nc.options.Put("colforeignkey", "Item Value")
+				nc.options.Put("colforeignvalue", "Item Text")
 				'
 				nc.options.Put("colsortable", "Sortable")
 				nc.options.Put("colrequired", "Required")
@@ -1331,6 +1358,7 @@ Sub ToString As String
 				nc.options.Put("colactive", "Active")
 				nc.options.Put("colontable", "On Table")
 				nc.options.Put("colindexed", "Indexed")
+				nc.options.Put("colislookup", "Look Up")
 				'
 				nc.options.Put("colrow", "Row")
 				nc.options.Put("colcolumn", "Col")
@@ -1364,22 +1392,27 @@ Sub ToString As String
 						lenfound = False
 					End If
 						
-					If forfound	Then
-						Dim vc As VMContainer = MultiText(nc, CreateMap("colforeigntable":"For.Table","colforeignkey":"For.Key","colforeignvalue":"For.Value"))
+					If datfound Then
+						Dim vc As VMContainer = MultiSelect(nc, "colcontroltype", _
+						"Component", vue.ControlTypes, "coldatatype", "Data Type", vue.DataTypes)
 						tcont.AddControlS(vc.Container, vc.ToString, 1, 1, 12, 12, 12, 12)
-						forfound = False
+						itemtypes.put("colcontroltype", "String")
+						itemtypes.Put("coldatatype", "String")
+						datfound = False
+					End If
+					
+					If disfound Then
+						Dim vc As VMContainer = MultiText(nc, CreateMap("colforeignkey":"Item Value","colforeignvalue":"Item Text"))
+						tcont.AddControlS(vc.Container, vc.ToString, 1, 1, 12, 12, 12, 12)
+						disfound = False
 					End If
 					
 					Select Case k
-					Case "colforeignvalue"
-						forfound = True
-						itemtypes.Put(k, "String")
-						vue.SetData(vmodel,"")
 					Case "colvalue"
 						lenfound = True
 						itemtypes.Put(k, "String")
 						vue.SetData(vmodel,"")
-					Case "colwidth", "collength", "colforeigntable","colforeignkey"
+					Case "colwidth", "collength"
 						itemtypes.Put(k, "String")
 						vue.SetData(vmodel,"")
 					Case "icon"
@@ -1393,17 +1426,8 @@ Sub ToString As String
 						itemtypes.Put(k, "String")
 					Case "colsizesmall","colsizemedium","colsizelarge","colsizexlarge"
 						itemtypes.Put(k, "String")
-					Case "colsortable" ,"colrequired", "colvisible","colindexed","colactive","colontable"
+					Case "colsortable" ,"colrequired", "colvisible","colindexed","colactive","colontable","colislookup"
 						itemtypes.put(k, "Boolean")
-					Case "colvaluedisplay"
-						Dim rgx As VMRadioGroup
-						rgx.Initialize(vue, "rgvaluedisplay", module).SetStatic(True).SetVModel(vmodel).Setlabel(v)
-						rgx.SetOptions(CreateMap("isvalue":"Value","isdisplay":"Display","isnone":"None"))
-						vue.SetData(vmodel, "isnone")
-						rgx.SetDense(True).SetRow(True).RemoveAttr("ref").SetHideDetails(True)
-						rgx.AddClass("my-2")
-						tcont.AddControlS(rgx.RadioGroup, rgx.ToString, 1, 1, 12, 12, 12, 12)
-						itemtypes.put(k, "String")
 					Case "colalign"
 						Dim rg As VMRadioGroup
 						rg.Initialize(vue, "rgalign", module).SetStatic(True).SetVModel(vmodel).Setlabel(v)
@@ -1414,19 +1438,12 @@ Sub ToString As String
 						tcont.AddControlS(rg.RadioGroup, rg.ToString, 1, 1, 12, 12, 12, 12)
 						itemtypes.put(k, "String")
 					Case "colcontroltype"
-						Dim cbot1 As VMSelect
-						cbot1.Initialize(vue, "colcontroltype", module).SetStatic(True).Setlabel(v).SetVModel(vmodel)
-						cbot1.SetOptions("colcontroltypes", vue.ControlTypes, "id", "text", False)
-						cbot1.RemoveAttr("ref").SetDense(True).SetOutlined(True).SetHideDetails(True).AddClass("my-2")
-						tcont.AddControlS(cbot1.Combo, cbot1.ToString, 1, 1, 12, 12, 12, 12)
-						itemtypes.put(k,"String")
+						itemtypes.Put(k, "String")
+						vue.SetData(vmodel, "")
 					Case "coldatatype"
-						Dim cbot As VMSelect
-						cbot.Initialize(vue, "coldatatype", module).SetStatic(True).Setlabel(v).SetVModel(vmodel)
-						cbot.SetOptions("coldatatypes", vue.DataTypes, "id", "text", False)
-						cbot.RemoveAttr("ref").SetDense(True).SetOutlined(True).SetHideDetails(True).AddClass("my-2")
-						tcont.AddControlS(cbot.Combo, cbot.ToString, 1, 1, 12, 12, 12, 12)
-						itemtypes.put(k,"String")
+						datfound = True
+						itemtypes.Put(k, "String")
+						vue.SetData(vmodel,"")
 					Case "subtitle"
 						Dim cbo As VMSelect
 						cbo.Initialize(vue, "cbosubtitle", module).SetStatic(True).Setlabel(v).SetVModel(vmodel)
@@ -1434,6 +1451,25 @@ Sub ToString As String
 						cbo.RemoveAttr("ref").SetDense(True).SetOutlined(True).SetHideDetails(True).AddClass("my-2")
 						tcont.AddControlS(cbo.Combo, cbo.ToString, 1, 1, 12, 12, 12, 12)
 						itemtypes.put(k,"String")
+					Case "colforeigntable"
+						'"Data Source")
+						Dim cbo As VMSelect
+						cbo.Initialize(vue, "colforeigntable" , module).SetStatic(True).Setlabel("Data Source").SetVModel(vmodel)
+						cbo.SetDataSource("tablenames", "tablename", "tablename", False)
+						cbo.RemoveAttr("ref").SetDense(True).SetOutlined(True)
+						cbo.SetHideDetails(True).AddClass("my-2")
+						cbo.SetOnChange(module, "colforeigntable_change")
+						tcont.AddControlS(cbo.Combo, cbo.ToString, 1, 1, 12, 12, 12, 12)
+						itemtypes.put(k,"String")
+					Case "colforeignkey"
+						'Item Value")
+						itemtypes.put(k,"String")
+						vue.SetData(vmodel,"")
+					Case "colforeignvalue"
+						'Item Text")
+						itemtypes.put(k,"String")
+						disfound = True
+						vue.SetData(vmodel,"")
 					Case Else
 						Dim tw As VMTextField
 						tw.Initialize(vue, vmodel, module).SetStatic(True).Setlabel(v)
@@ -1454,6 +1490,7 @@ Sub ToString As String
 				xm.Put("colactive", "Active")
 				xm.Put("colontable", "On Table")
 				xm.Put("colindexed", "Indexed")
+				xm.Put("colislookup", "Look Up")
 				
 				Dim acont As VMContainer
 				acont.Initialize(vue, "abc", module).SetTag("div")
@@ -1629,7 +1666,7 @@ Sub ToString As String
 				expanel.Container.AddControlS(bcont.Container, bcont.ToString, 1, 1, 12, 12, 12, 12)
 			Case "switches"
 				Dim acont As VMContainer
-				acont.Initialize(vue, "a" & nc.vmodel, module).SetTag("div")
+				acont.Initialize(vue, "a" & nc.vmodel, module).SetTag("div").AddClass("my-0")
 				acont.NoGutters = True
 				acont.SetFluid(True)
 				Dim colPos As Int = 0
@@ -1641,6 +1678,7 @@ Sub ToString As String
 					sw.Initialize(vue, "sw" & k, module).SetStatic(True).SetVModel(k).SetSwitch
 					sw.Setlabel(v).SetTrueValue("Yes").SetFalseValue("No").SetHideDetails(True).SetFieldType("string")
 					sw.RemoveAttr("ref").SetDense(True).SetOnChange(Me, "RaiseChangeEvent").SetInset(True)
+					sw.AddClass("my-2")
 					acont.AddControlS(sw.CheckBox, sw.ToString, 1, colPos, 6, 6, 6, 6)
 					vue.SetData(k, "No")
 				Next
@@ -1824,6 +1862,24 @@ Sub ToString As String
 				scont.AddControlS(sxl.TextField, sxl.ToString, 3, 4, 3, 3, 3, 3)
 				'
 				expanel.Content.Container.AddControlS(scont.Container, scont.ToString, 1, 1, 12, 12, 12, 12)
+			Case "selectboxds"
+				sText.Add(nc.vmodel)
+				Dim cbo As VMSelect
+				cbo.Initialize(vue, "cbo" & nc.vmodel, module)
+				cbo.SetStatic(True)
+				cbo.Setlabel(nc.Text)
+				cbo.SetVModel(nc.vmodel)
+				cbo.SetDataSource(nc.sourceName, nc.sourcefield, nc.displayfield, False)
+				cbo.RemoveAttr("ref")
+				cbo.SetDense(True)
+				cbo.SetOutlined(True)
+				cbo.SetHideDetails(True)
+				cbo.AddClass("my-2")
+				cbo.SetVShow(nc.vmodel & "show")
+				cbo.SetOnChange(module, nc.methodname)
+				vue.SetData(nc.vmodel & "show", True)
+				Dim scombo As String = cbo.tostring
+				expanel.Content.Container.AddControlS(cbo.Combo, scombo, 1, 1, 12, 12, 12, 12)
 			Case "selectbox"
 				sText.Add(nc.vmodel)
 				Dim cbo As VMSelect
