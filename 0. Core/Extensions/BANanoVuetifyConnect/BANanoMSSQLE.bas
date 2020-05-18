@@ -73,6 +73,14 @@ Sub FromJSON As BANanoMSSQLE
 End Sub
 
 
+'return a sql to delete record of table where one exists
+Sub DeleteAll As BANanoMSSQLE
+	Dim sb As String = $"DELETE FROM ${EscapeField(TableName)}"$
+	query = sb
+	command = "delete"
+	Return Me
+End Sub
+
 Sub SchemaAddField(fldName As String, fldType As String)
 	Schema.Put(fldName, fldType)
 End Sub
@@ -246,22 +254,23 @@ public Sub CreateTable(tblFields As Map) As BANanoMSSQLE
 		fldName = tblFields.GetKeyAt(fldCnt)
 		fldType = tblFields.Get(fldName)
 		fldType = fldType.Replace("STRING", "TEXT")
+		fldType = fldType.Replace("TEXT", "VARCHAR(255)")
 		If fldCnt > 0 Then
 			sb.Append(", ")
 		End If
 		sb.Append(EscapeField(fldName))
 		sb.Append(" ")
 		sb.Append(fldType)
-		If fldName.EqualsIgnoreCase(PrimaryKey) Then
-			sb.Append(" NOT NULL PRIMARY KEY")
-		End If
 		If fldName.EqualsIgnoreCase(Auto) Then
-			sb.Append(" AUTO_INCREMENT")
+			sb.Append(" IDENTITY(1,1)")
+		End If
+		If fldName.EqualsIgnoreCase(PrimaryKey) Then
+			sb.Append(" PRIMARY KEY")
 		End If
 	Next
 	sb.Append(")")
 	'define the qry to execute
-	query = "CREATE TABLE IF NOT EXISTS " & EscapeField(TableName) & " " & sb.ToString
+	query = "CREATE TABLE " & EscapeField(TableName) & " " & sb.ToString
 	command = "createtable"
 	Return Me
 End Sub
@@ -704,15 +713,6 @@ Sub SelectDistinctWhere(tblName As String, tblfields As List, tblWhere As Map, o
 	args = listOfValues
 	types = listOfTypes
 	command = "select"
-	Return Me
-End Sub
-
-
-'return a sql to delete record of table where one exists
-Sub DeleteAll(tblName As String) As BANanoMSSQLE
-	Dim sb As String = $"DELETE FROM ${EscapeField(tblName)}"$
-	query = sb
-	command = "delete"
 	Return Me
 End Sub
 

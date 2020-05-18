@@ -142,7 +142,7 @@ Module99=VMStepperContent
 NumberOfFiles=8
 NumberOfLibraries=3
 NumberOfModules=119
-Version=8.1
+Version=8.27
 @EndOfDesignText@
 
 #IgnoreWarnings: 12, 15
@@ -155,7 +155,7 @@ Version=8.1
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.05"
+	Public Version As String = "4.06"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

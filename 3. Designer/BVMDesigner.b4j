@@ -145,7 +145,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.05"
+	Public Version As String = "4.06"
 	Public Port As String = "8080"
 End Sub
 

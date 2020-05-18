@@ -358,6 +358,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoVM,CreateButton,1966,0,Main,Process_Globals,12,0,VMProperty,SaveItem,1039,0,VMProperty,btnSaveTable_click,1034,0,VMProperty,btnSaveItem_click,1027,6,VMProperty,AddItem,1024,0,VMProperty,ToString,1960,6,VMProperty,ClearContents,1102,0,VMProperty,DeleteItem,1107,0,VMProperty,btnDeleteItem_click,1104,3
+NavigationStack=BANanoVM,CreateButton,1966,0,VMProperty,SaveItem,1039,0,VMProperty,btnSaveTable_click,1034,0,VMProperty,btnSaveItem_click,1027,6,VMProperty,AddItem,1024,0,VMProperty,ToString,1960,6,VMProperty,ClearContents,1102,0,VMProperty,DeleteItem,1107,0,VMProperty,btnDeleteItem_click,1104,3,Main,Process_Globals,12,0
 SelectedBuild=0
 VisibleModules=72

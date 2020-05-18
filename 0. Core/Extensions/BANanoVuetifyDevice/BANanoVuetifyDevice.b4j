@@ -13,7 +13,7 @@ Module1=VMDevice
 NumberOfFiles=2
 NumberOfLibraries=4
 NumberOfModules=1
-Version=8.1
+Version=8.27
 @EndOfDesignText@
 '
 #IgnoreWarnings: 12, 15

@@ -1,11 +1,9 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
 File1=config.php
-File2=expenses.db
-File3=sponge.png
+File2=sponge.png
 FileGroup1=Default Group
 FileGroup2=Default Group
-FileGroup3=Default Group
 Group=Default Group
 Library1=jcore
 Library2=jfx
@@ -17,7 +15,7 @@ Module1=modExpenseCategories
 Module2=modExpenses
 Module3=modExpenseTypes
 Module4=pgIndex
-NumberOfFiles=3
+NumberOfFiles=2
 NumberOfLibraries=6
 NumberOfModules=4
 Version=8.27
@@ -29,14 +27,13 @@ Version=8.27
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
-	Public AppName As String = "sqliteexpenses"
-	Public AppTitle As String = "SQLite Expenses"
+	Public AppName As String = "mssqlexpenses"
+	Public AppTitle As String = "MSSQL Expenses"
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
 	Public Version As String = "1.00"
 	Public Port As String = "8080"
-	Public DBase As String = "expenses.db"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -79,9 +76,9 @@ End Sub
 Sub BANano_Ready
 '	'copy code below this line
 '	'*** START: CREATE TABLES
-'	Dim rsExpenseCategories As BANanoSQLiteE
+'	Dim rsExpenseCategories As BANanoMSSQLE
 '	'initialize table for table creation
-'	rsExpenseCategories.Initialize("expenses.db", "expensecategories", "catid", "catid")
+'	rsExpenseCategories.Initialize("expenses", "expensecategories", "catid", "catid")
 '	'add each field to the schema
 '	rsExpenseCategories.SchemaAddField("catid", "INT")
 '	rsExpenseCategories.SchemaAddField("catname", "TEXT")
@@ -89,11 +86,12 @@ Sub BANano_Ready
 '	rsExpenseCategories.SchemaCreateTable
 '	rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 '	rsExpenseCategories.FromJSON
+'	Log(rsExpenseCategories.error)
 '	'
 '	'resultset variable
-'	Dim rsExpenseTypes As BANanoSQLiteE
+'	Dim rsExpenseTypes As BANanoMSSQLE
 '	'initialize table for table creation
-'	rsExpenseTypes.Initialize("expenses.db", "expensetypes", "typeid", "typeid")
+'	rsExpenseTypes.Initialize("expenses", "expensetypes", "typeid", "typeid")
 '	'add each field to the schema
 '	rsExpenseTypes.SchemaAddField("typeid", "INT")
 '	rsExpenseTypes.SchemaAddField("typename", "TEXT")
@@ -101,12 +99,13 @@ Sub BANano_Ready
 '	rsExpenseTypes.SchemaCreateTable
 '	rsExpenseTypes.JSON = BANano.CallInlinePHPWait(rsExpenseTypes.MethodName, rsExpenseTypes.Build)
 '	rsExpenseTypes.FromJSON
-'
+'	Log(rsExpenseTypes.error)
+'	
 '	'
 '	'resultset variable
-'	Dim rsExpenses As BANanoSQLiteE
+'	Dim rsExpenses As BANanoMSSQLE
 '	'initialize table for table creation
-'	rsExpenses.Initialize("expenses.db", "expenses", "expid", "expid")
+'	rsExpenses.Initialize("expenses", "expenses", "expid", "expid")
 '	'add each field to the schema
 '	rsExpenses.SchemaAddField("expid", "INT")
 '	rsExpenses.SchemaAddField("expdate", "TEXT")
@@ -118,7 +117,9 @@ Sub BANano_Ready
 '	rsExpenses.SchemaCreateTable
 '	rsExpenses.JSON = BANano.CallInlinePHPWait(rsExpenses.MethodName, rsExpenses.Build)
 '	rsExpenses.FromJSON
-'	'
+'	Log(rsExpenses.error)
+'		
+'
 	'*** END: CREATE TABLES
 	pgIndex.Init
 End Sub

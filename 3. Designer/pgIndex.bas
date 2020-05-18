@@ -5222,6 +5222,10 @@ Sub Design_DBSourceCode
 				sbl.append($"Record.Put("${itemkey}", nextID)"$).append(CRLF)
 			Case "sqlite"
 				sbl.append($"Record.Put("${itemkey}", Null)"$).append(CRLF)
+			Case "mssql"
+				'remove the auto key as its identity
+				AddComment(sbl, "remove the primary key")
+				AddCode(sbl, $"Record.Remove("${itemkey}")"$)
 			End Select
 		End If
 		'
@@ -5257,6 +5261,14 @@ Sub Design_DBSourceCode
 			sbl.append($"${rsName}.Initialize("${tbName}", "${itemkey}")"$).append(CRLF)
 		Case "sqlite", "mysql", "mssql"
 			sbl.append($"${rsName}.Initialize("${sdatabasename}", "${tbName}", "${itemkey}", "${auto}")"$).append(CRLF)
+				If bisautoincrement = True Then
+					Select Case sdbtype
+					Case "mssql"
+						'remove the primary key for addition
+						AddComment(sbl, "remove the primary key")
+						AddCode(sbl, $"Record.Remove("${itemkey}")"$)
+					End Select
+				End If
 		End Select
 		'
 		AddComment(sbl, "define schema for record")
