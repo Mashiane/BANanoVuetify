@@ -48,6 +48,7 @@ Sub Class_Globals
 	Public TableName As String
 	Public PrimaryKey As String
 	Public Record As Map
+	Public Auto As String
 End Sub
 
 'set database connection settings
@@ -79,6 +80,11 @@ Sub FromJSON As BANanoMySQLE
 		OK = True
 	End If
 	Return Me
+End Sub
+
+
+Sub SchemaAddField(fldName As String, fldType As String)
+	Schema.Put(fldName, fldType)
 End Sub
 
 
@@ -138,7 +144,7 @@ End Sub
 
 
 'initialize the class, a field named "id" is assumed to be an integer
-Public Sub Initialize(dbName As String, tblName As String, PK As String) As BANanoMySQLE
+Public Sub Initialize(dbName As String, tblName As String, PK As String, AI As String) As BANanoMySQLE
 	Schema.Initialize
 	recType.Initialize
 	Record.Initialize 
@@ -162,6 +168,7 @@ Public Sub Initialize(dbName As String, tblName As String, PK As String) As BANa
 	host = ""
 	username = ""
 	password = ""
+	Auto = AI
 	Return Me
 End Sub
 
@@ -233,8 +240,8 @@ Sub SchemaAddText(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 
-Sub SchemaCreateTable(tblName As String, PK As String, Auto As String) As BANanoMySQLE
-	Return CreateTable(tblName, Schema, PK, Auto)
+Sub SchemaCreateTable As BANanoMySQLE
+	Return CreateTable(Schema)
 End Sub
 
 Sub SchemaAddDate(bools As List) As BANanoMySQLE
@@ -304,7 +311,7 @@ Sub Execute(strSQL As String) As BANanoMySQLE
 End Sub
 
 'return a sql command to create the table
-public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto As String) As BANanoMySQLE
+public Sub CreateTable(tblFields As Map) As BANanoMySQLE
 	Dim fldName As String
 	Dim fldType As String
 	Dim fldTot As Int
@@ -323,7 +330,7 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto A
 		sb.Append(EscapeField(fldName))
 		sb.Append(" ")
 		sb.Append(fldType)
-		If fldName.EqualsIgnoreCase(PK) Then
+		If fldName.EqualsIgnoreCase(PrimaryKey) Then
 			sb.Append(" NOT NULL PRIMARY KEY")
 		End If
 		If fldName.EqualsIgnoreCase(Auto) Then
@@ -332,8 +339,7 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto A
 	Next
 	sb.Append(")")
 	'define the qry to execute
-	Dim query As String = "CREATE TABLE IF NOT EXISTS " & EscapeField(tblName) & " " & sb.ToString
-	query = query
+	query = "CREATE TABLE IF NOT EXISTS " & EscapeField(TableName) & " " & sb.ToString
 	command = "createtable"
 	Return Me
 End Sub
@@ -341,8 +347,7 @@ End Sub
 'return sql command to drop a table
 public Sub DropTable As BANanoMySQLE
 	'define the qry to execute
-	Dim query As String = "DROP TABLE " & EscapeField(TableName)
-	query = query
+	query = "DROP TABLE " & EscapeField(TableName)
 	command = "droptable"
 	Return Me
 End Sub
@@ -672,7 +677,7 @@ Sub DeleteAll As BANanoMySQLE
 	Return Me
 End Sub
 
-private Sub EQOperators(sm As Map) As List
+private Sub EQOperators(sm As Map) As List  'ignore
 	Dim nl As List
 	nl.initialize
 	For Each k As String In sm.Keys

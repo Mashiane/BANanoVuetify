@@ -45,6 +45,7 @@ Sub Class_Globals
 	Private host As String
 	Private username As String
 	Private password As String
+	Private Auto As String
 End Sub
 
 
@@ -56,8 +57,6 @@ Sub SetConnection(shost As String, susername As String, spassword As String, sdb
 	DBase = sdbname
 	Return Me
 End Sub
-
-
 
 'convert the json
 Sub FromJSON As BANanoMSSQLE
@@ -72,6 +71,67 @@ Sub FromJSON As BANanoMSSQLE
 	End If
 	Return Me
 End Sub
+
+
+Sub SchemaAddField(fldName As String, fldType As String)
+	Schema.Put(fldName, fldType)
+End Sub
+
+
+Sub SchemaAddBlob(bools As List) As BANanoMSSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_BLOB)
+	Next
+	AddBlobs(bools)
+	Return Me
+End Sub
+
+
+'schema add boolean
+Sub SchemaAddBoolean(bools As List) As BANanoMSSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_BOOL)
+	Next
+	AddBooleans(bools)
+	Return Me
+End Sub
+
+
+Sub SchemaAddDate(bools As List) As BANanoMSSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_DATE)
+	Next
+	AddStrings(bools)
+	Return Me
+End Sub
+
+
+Sub SchemaAddFloat(bools As List) As BANanoMSSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_FLOAT)
+	Next
+	AddDoubles(bools)
+	Return Me
+End Sub
+
+Sub SchemaAddText(bools As List) As BANanoMSSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_STRING)
+	Next
+	AddStrings(bools)
+	Return Me
+End Sub
+
+
+
+Sub SchemaAddInt(bools As List) As BANanoMSSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_INT)
+	Next
+	AddIntegers(bools)
+	Return Me
+End Sub
+
 
 Sub Update(priValue As String) As BANanoMSSQLE
 	Dim tblWhere As Map = CreateMap()
@@ -160,52 +220,9 @@ Sub SchemaAddStrings(strings As List) As BANanoMSSQLE
 End Sub
 
 
-'schema add boolean
-Sub SchemaAddBoolean(bools As List) As BANanoMSSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_BOOL)
-	Next
-	Return Me
-End Sub
-'
-Sub SchemaAddInt(bools As List) As BANanoMSSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_INT)
-	Next
-	Return Me
-End Sub
 
-Sub SchemaAddFloat(bools As List) As BANanoMSSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_FLOAT)
-	Next
-	Return Me
-End Sub
-
-Sub SchemaAddBlob(bools As List) As BANanoMSSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_BLOB)
-	Next
-	Return Me
-End Sub
-
-Sub SchemaAddText(bools As List) As BANanoMSSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_STRING)
-	Next
-	Return Me
-End Sub
-
-Sub SchemaAddDate(bools As List) As BANanoMSSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_DATE)
-	Next
-	Return Me
-End Sub
-
-
-Sub SchemaCreateTable(tblName As String, PK As String, Auto As String) As BANanoMSSQLE
-	Return CreateTable(tblName, Schema, PK, Auto)
+Sub SchemaCreateTable As BANanoMSSQLE
+	Return CreateTable(Schema)
 End Sub
 
 
@@ -216,7 +233,7 @@ End Sub
 
 
 'return a sql command to create the table
-public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto As String) As BANanoMSSQLE
+public Sub CreateTable(tblFields As Map) As BANanoMSSQLE
 	Dim fldName As String
 	Dim fldType As String
 	Dim fldTot As Int
@@ -235,7 +252,7 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto A
 		sb.Append(EscapeField(fldName))
 		sb.Append(" ")
 		sb.Append(fldType)
-		If fldName.EqualsIgnoreCase(PK) Then
+		If fldName.EqualsIgnoreCase(PrimaryKey) Then
 			sb.Append(" NOT NULL PRIMARY KEY")
 		End If
 		If fldName.EqualsIgnoreCase(Auto) Then
@@ -244,8 +261,7 @@ public Sub CreateTable(tblName As String, tblFields As Map, PK As String, Auto A
 	Next
 	sb.Append(")")
 	'define the qry to execute
-	Dim query As String = "CREATE TABLE IF NOT EXISTS " & EscapeField(tblName) & " " & sb.ToString
-	query = query
+	query = "CREATE TABLE IF NOT EXISTS " & EscapeField(TableName) & " " & sb.ToString
 	command = "createtable"
 	Return Me
 End Sub
@@ -297,7 +313,7 @@ private Sub CStr(o As Object) As String
 End Sub
 
 'initialize the class and pass the PHP sub name to call
-Sub Initialize(dbName As String, tblName As String, PK As String) As BANanoMSSQLE
+Sub Initialize(dbName As String, tblName As String, PK As String, AI As String) As BANanoMSSQLE
 	recType.Initialize
 	Schema.Initialize
 	Record.Initialize
@@ -322,6 +338,7 @@ Sub Initialize(dbName As String, tblName As String, PK As String) As BANanoMSSQL
 	username = ""
 	password = ""
 	DBase = ""
+	Auto = AI
 	Return Me
 End Sub
 

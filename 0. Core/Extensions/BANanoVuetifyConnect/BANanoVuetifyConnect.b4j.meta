@@ -16,6 +16,6 @@ ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
-NavigationStack=BANanoSQLiteE,EscapeField,241,0,BANanoSQLiteE,Class_Globals,19,0,BANanoSQLiteE,GetMin,65,0,BANanoSQLiteE,GetTableNames,74,0,BANanoSQLiteE,RecordFromMap,38,0,BANanoSQLiteE,UpdateAll,854,0,BANanoSQLiteE,CreateTable,270,0,BANanoSQLiteE,DropTable,296,0,BANanoSQLiteE,FromJSON,921,0,BANanoMySQLE,UpdateAll,1034,0
+NavigationStack=BANanoMySQLE,FromJSON,65,0,BANanoMSSQLE,SchemaAddField,73,0,BANanoMSSQLE,Class_Globals,29,0,BANanoMSSQLE,FromJSON,60,0,BANanoMSSQLE,SchemaAddBlob,83,0,BANanoMSSQLE,SchemaAddDate,96,0,BANanoMySQLE,AddBlobs,827,0,BANanoMySQLE,UpdateAll,1046,0,BANanoSQLiteE,FromJSON,981,0,BANanoSQLiteE,Initialize,109,0,BANanoSQLiteE,CreateTable,280,0
 SelectedBuild=0
 VisibleModules=

@@ -54,6 +54,60 @@ public Sub Initialize(tblName As String, priKey As String) As BANanoAlaSQLE
 End Sub
 
 
+Sub SchemaAddBlob(bools As List) As BANanoAlaSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_BLOB)
+	Next
+	AddBlobs(bools)
+	Return Me
+End Sub
+
+
+'schema add boolean
+Sub SchemaAddBoolean(bools As List) As BANanoAlaSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_BOOL)
+	Next
+	AddBooleans(bools)
+	Return Me
+End Sub
+
+
+Sub SchemaAddDate(bools As List) As BANanoAlaSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_DATE)
+	Next
+	AddStrings(bools)
+	Return Me
+End Sub
+
+
+Sub SchemaAddFloat(bools As List) As BANanoAlaSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_FLOAT)
+	Next
+	AddDoubles(bools)
+	Return Me
+End Sub
+
+Sub SchemaAddText(bools As List) As BANanoAlaSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_STRING)
+	Next
+	AddStrings(bools)
+	Return Me
+End Sub
+
+
+
+Sub SchemaAddInt(bools As List) As BANanoAlaSQLE
+	For Each b As String In bools
+		Schema.Put(b, DB_INT)
+	Next
+	AddIntegers(bools)
+	Return Me
+End Sub
+
 Sub SchemaAddField(fldName As String, fldType As String)
 	Schema.Put(fldName, fldType)
 End Sub
@@ -108,29 +162,6 @@ Sub SchemaClear As BANanoAlaSQLE
 	Return Me
 End Sub
 
-'schema add boolean
-Sub SchemaAddBoolean(bools As List) As BANanoAlaSQLE
-	For Each b As String In bools
-		Schema.Put(b, DB_BOOL)
-	Next
-	Return Me
-End Sub
-'
-Sub SchemaAddInt(ints As List) As BANanoAlaSQLE
-	For Each b As String In ints
-		Schema.Put(b, DB_INT)
-	Next
-	Return Me
-End Sub
-
-
-Sub SchemaAddBlob(blobs As List) As BANanoAlaSQLE
-	For Each b As String In blobs
-		Schema.Put(b, DB_BLOB)
-	Next
-	Return Me
-End Sub
-
 Sub SchemaAddBlobs(blobs As List) As BANanoAlaSQLE
 	SchemaAddBlob(blobs)
 	Return Me
@@ -177,28 +208,6 @@ Sub SchemaFromDesign(vDesign As VMContainer) As BANanoAlaSQLE
 	AddDoubles(vDesign.Doubles)
 	AddBooleans(vDesign.Booleans)
 	AddStrings(vDesign.Dates)
-	Return Me
-End Sub
-
-
-Sub SchemaAddFloat(floats As List) As BANanoAlaSQLE
-	For Each b As String In floats
-		Schema.Put(b, DB_FLOAT)
-	Next
-	Return Me
-End Sub
-
-Sub SchemaAddText(texts As List) As BANanoAlaSQLE
-	For Each b As String In texts
-		Schema.Put(b, DB_TEXT)
-	Next
-	Return Me
-End Sub
-
-Sub SchemaAddDate(dates As List) As BANanoAlaSQLE
-	For Each b As String In dates
-		Schema.Put(b, DB_DATE)
-	Next
 	Return Me
 End Sub
 

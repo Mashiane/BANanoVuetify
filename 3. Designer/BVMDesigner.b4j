@@ -123,11 +123,11 @@ Library5=bananovuetifycore
 Library6=bananovuetifyconnect
 Library7=bananovuetifyprism
 Library8=bananovuetifydevice
-Module1=modDesigner
+Module1=pgIndex
 NumberOfFiles=57
 NumberOfLibraries=8
 NumberOfModules=1
-Version=8.1
+Version=8.27
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -145,7 +145,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.01"
+	Public Version As String = "4.05"
 	Public Port As String = "8080"
 End Sub
 
@@ -219,5 +219,5 @@ Sub BANano_Ready
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON
 	'
-	modDesigner.initWait
+	pgIndex.initWait
 End Sub

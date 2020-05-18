@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=modDesigner,PropertyBag_DatePicker,6261,0,modDesigner,PropertyBag_Select,6511,0,modDesigner,Design_Select,2436,1,modDesigner,PropertyBag_TextField,6684,0,modDesigner,CreateUX,1549,0,modDesigner,Design_Switch,1962,0,modDesigner,Design_TextArea,1942,0,modDesigner,CodeLine,3920,0,modDesigner,CreateProjectDrawer,1092,0,modDesigner,Design_TextField,3900,0,Main,Process_Globals,18,0
+NavigationStack=pgIndex,btnProject_click,1196,1,pgIndex,btnbtnCancelProject_click,1254,0,pgIndex,Read_Badge,1310,0,pgIndex,CreateDialog_Multifields,837,0,pgIndex,InitWait,831,0,pgIndex,SaveComponents,1084,0,pgIndex,draweritems_click,1113,0,pgIndex,btnbtnSaveProject_click,1302,0,pgIndex,DeleteProject,7046,0,Main,BANano_Ready,92,0,pgIndex,Design_DBSourceCode,5230,5
 SelectedBuild=0
 VisibleModules=
