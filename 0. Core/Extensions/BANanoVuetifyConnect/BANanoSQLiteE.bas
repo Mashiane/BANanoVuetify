@@ -274,16 +274,13 @@ public Sub CreateTable(tblFields As Map) As BANanoSQLiteE
 		fldName = tblFields.GetKeyAt(fldCnt)
 		fldType = tblFields.Get(fldName)
 		fldType = fldType.Replace("STRING", "TEXT")
+		If fldType = DB_INT Then fldType = DB_INTEGER
 		If fldCnt > 0 Then
 			sb.Append(", ")
 		End If
 		sb.Append(EscapeField(fldName))
 		sb.Append(" ")
-		If fldName.EqualsIgnoreCase(PrimaryKey) Then
-			sb.Append("INTEGER")
-		Else
-			sb.Append(fldType)
-		End If
+		sb.Append(fldType)
 		Select Case fldType
 		Case "STRING", "TEXT"
 			sb.Append(" COLLATE NOCASE")
