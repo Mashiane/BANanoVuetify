@@ -39,9 +39,13 @@ Sub BuildNavBar
 	vm.NavBar.AddSpacer
 	vm.NavBar.SetFixed(True)
 	vm.NavBar.SetVisible(True)
-	
+	'
 	'this page should have an icon/button in the navbar
-	vm.NavBar.AddButton1("navExpenseCategories", "mdi-account", "Expense Categories", "Maintain expense categories", "")
+	'this page should have an icon/button in the navbar
+	vm.NavBar.AddButton1("navExpenses", "mdi-golf", "Expenses", "Maintain expenses", "")
+	vm.NavBar.AddButton1("navExpenseType", "mdi-account", "Expense Types", "", "")
+	vm.NavBar.AddButton1("navExpenseCategory", "mdi-bucket", "Expense Categories", "", "")
+
 
 End Sub
 
@@ -51,24 +55,43 @@ Sub BuildNavDrawer
 	vm.Drawer.Setwidth("300")
 	vm.Drawer.Setvisible(True)
 	'this page should show on the drawer
-	vm.Drawer.AddIcon1("pageExpenseCategories", "mdi-account", "", "Expense Categories", "Maintain expense categories")
+	vm.Drawer.AddIcon1("pageExpenses", "mdi-golf", "", "Expenses", "Maintain expenses")
 	vm.Drawer.AddDivider1(False)
+	'this page should show on the drawer
+	vm.Drawer.AddIcon1("pageExpenseType", "mdi-account", "", "Expense Types", "")
+	vm.Drawer.AddDivider1(False)
+	vm.Drawer.AddIcon1("pageExpenseCategory", "mdi-bucket", "", "Expense Categories", "")
+	vm.Drawer.AddDivider1(False)
+End Sub
 
-
+'click modExpenses nav button
+Sub navExpenses_click(e As BANanoEvent)
+	'show the page Expenses
+	modExpenses.Show
 End Sub
 
 
-'click modExpenseCategories nav button
-Sub navExpenseCategories_click(e As BANanoEvent)
-	'show the page Expense Categories
+'click modExpenseType nav button
+Sub navExpenseType_click(e As BANanoEvent)
+	'show the page ExpenseType
+	modExpenseTypes.Show
+End Sub
+
+'click modExpenseCategory nav button
+Sub navExpenseCategory_click(e As BANanoEvent)
+	'show the page ExpenseCategory
 	modExpenseCategories.Show
 End Sub
 
 'add pages to the app
 Sub AddPages
 	'*copy code after this line
-	'code to add the Expense Categories template code to the master HTML template
+	'code to add the ExpenseType template code to the master HTML template
+	vm.AddPage(modExpenseTypes.name, modExpenseTypes)
+	'code to add the ExpenseCategory template code to the master HTML template
 	vm.AddPage(modExpenseCategories.name, modExpenseCategories)
+	'code to add the Expenses template code to the master HTML template
+	vm.AddPage(modExpenses.name, modExpenses)
 End Sub
 
 'add content to this page
@@ -82,9 +105,16 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	Select Case elID
 		'copy code below this line
-		Case "pageexpensecategories"
-			'show Expense Categories
+		Case "pageexpensetype"
+			'show ExpenseType
+			modExpenseTypes.Show
+		Case "pageexpensecategory"
+			'show ExpenseCategory
 			modExpenseCategories.Show
+		Case "pageexpenses"
+			'show Expenses
+			modExpenses.Show
+
 	End Select
 End Sub
 
@@ -93,13 +123,24 @@ Sub confirm_ok(e As BANanoEvent)
 	Dim sconfirm As String = vm.GetConfirm
 	Select Case sconfirm
 		'copy code below this line
+		Case "delete_expensetypes"
+			'read the saved record id
+			Dim RecID As String = vm.GetState("expensetypestypeid", "")
+			If RecID = "" Then Return
+			'delete the record
+			modExpenseTypes.DeleteRecord_Expensetypes(RecID)
 		Case "delete_expensecategories"
 			'read the saved record id
 			Dim RecID As String = vm.GetState("expensecategoriescatid", "")
 			If RecID = "" Then Return
 			'delete the record
-			modExpenseCategories.DeleteRecord_ExpenseCategories(RecID)
-
+			modExpenseCategories.DeleteRecord_Expensecategories(RecID)
+		Case "delete_expenses"
+			'read the saved record id
+			Dim RecID As String = vm.GetState("expensesexpid", "")
+			If RecID = "" Then Return
+			'delete the record
+			modExpenses.DeleteRecord_Expenses(RecID)
 	End Select
 End Sub
 
