@@ -1,0 +1,121 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=config.php
+File2=sponge.png
+FileGroup1=Default Group
+FileGroup2=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananopostprocessor
+Library5=bananovuetifycore
+Library6=bananovuetifyconnect
+Module1=modExpenseCategories
+Module2=modExpenses
+Module3=modExpenseTypes
+Module4=pgIndex
+NumberOfFiles=2
+NumberOfLibraries=6
+NumberOfModules=4
+Version=8.27
+@EndOfDesignText@
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "mysqlexpenses"
+	Public AppTitle As String = "MySQL Expenses"
+	Private Publish As String = "C:\laragon\www"
+	Private BP As BANanoPostProcessor
+	Public ServerIP As String = "localhost"
+	Public Version As String = "1.00"
+	Public Port As String = "8080"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'post processor
+	BP.Initialize
+	BP.RedirectOutput(File.DirApp,"log.txt")
+	'
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, Version)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppTitle
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.transpileroptions.MergeAllCSSFiles = True
+	BANano.transpileroptions.MergeAllJavascriptFiles = True
+	'
+	'set php settings
+	BANano.PHP_NAME = $"${AppName}.php"$
+	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")
+	
+	BANano.Build(Publish)
+	BP.OpenLog(File.DirApp, "log.txt")
+	
+	BP.PublishPath = Publish
+	BP.ShortName = AppName
+	BP.AssetsPath = BANano.ASSETS_FOLDER
+	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
+	BP.StylesPath = BANano.STYLES_FOLDER
+	BP.ScriptFile = BANano.JAVASCRIPT_NAME
+	BP.UnzipFonts
+	BP.OpenOnPort(True, Port)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	'copy code below this line
+	'*** START: CREATE TABLES
+	Dim rsExpenseCategories As BANanoMySQLE
+	'initialize table for table creation
+	rsExpenseCategories.Initialize("expenses", "expensecategories", "catid", "catid")
+	'add each field to the schema
+	rsExpenseCategories.SchemaAddField("catid", "INT")
+	rsExpenseCategories.SchemaAddField("catname", "TEXT")
+	'generate & run command to create the table
+	rsExpenseCategories.SchemaCreateTable
+	rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
+	Log(rsExpenseCategories.error)
+	rsExpenseCategories.FromJSON
+	'
+	Dim rsExpenseTypes As BANanoMySQLE
+	'initialize table for table creation
+	rsExpenseTypes.Initialize("expenses", "expensetypes", "typeid", "typeid")
+	'add each field to the schema
+	rsExpenseTypes.SchemaAddField("typeid", "INT")
+	rsExpenseTypes.SchemaAddField("typename", "TEXT")
+	'generate & run command to create the table
+	rsExpenseTypes.SchemaCreateTable
+	rsExpenseTypes.JSON = BANano.CallInlinePHPWait(rsExpenseTypes.MethodName, rsExpenseTypes.Build)
+	rsExpenseTypes.FromJSON
+	'
+	Dim rsExpenses As BANanoMySQLE
+	'initialize table for table creation
+	rsExpenses.Initialize("expenses", "expenses", "expid", "expid")
+	'add each field to the schema
+	rsExpenses.SchemaAddField("expid", "INT")
+	rsExpenses.SchemaAddField("expdate", "TEXT")
+	rsExpenses.SchemaAddField("expcatid", "INT")
+	rsExpenses.SchemaAddField("exptypeid", "INT")
+	rsExpenses.SchemaAddField("expamount", "FLOAT")
+	rsExpenses.SchemaAddField("expdesc", "TEXT")
+	'generate & run command to create the table
+	rsExpenses.SchemaCreateTable
+	rsExpenses.JSON = BANano.CallInlinePHPWait(rsExpenses.MethodName, rsExpenses.Build)
+	rsExpenses.FromJSON
+
+
+	'
+	'*** END: CREATE TABLES
+	pgIndex.Init
+End Sub

@@ -274,6 +274,7 @@ public Sub CreateTable(tblFields As Map) As BANanoSQLiteE
 		fldName = tblFields.GetKeyAt(fldCnt)
 		fldType = tblFields.Get(fldName)
 		fldType = fldType.Replace("STRING", "TEXT")
+		fldType = fldType.Replace("TEXT", "VARCHAR(255)")
 		If fldType = DB_INT Then fldType = DB_INTEGER
 		If fldCnt > 0 Then
 			sb.Append(", ")
@@ -282,15 +283,12 @@ public Sub CreateTable(tblFields As Map) As BANanoSQLiteE
 		sb.Append(" ")
 		sb.Append(fldType)
 		Select Case fldType
-		Case "STRING", "TEXT"
+		Case "STRING", "TEXT", "VARCHAR(255)"
 			sb.Append(" COLLATE NOCASE")
 		End Select
 		If fldName.EqualsIgnoreCase(PrimaryKey) Then
 			sb.Append(" PRIMARY KEY")
 		End If
-		'If fldName.EqualsIgnoreCase(Auto) Then
-		'	sb.Append(" AUTOINCREMENT")
-		'End If
 	Next
 	sb.Append(")")
 	'define the qry to execute

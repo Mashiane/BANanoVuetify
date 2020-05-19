@@ -324,6 +324,7 @@ public Sub CreateTable(tblFields As Map) As BANanoMySQLE
 		fldName = tblFields.GetKeyAt(fldCnt)
 		fldType = tblFields.Get(fldName)
 		fldType = fldType.Replace("STRING", "TEXT")
+		fldType = fldType.Replace("TEXT", "VARCHAR(255)")
 		If fldCnt > 0 Then
 			sb.Append(", ")
 		End If
