@@ -64,8 +64,8 @@ End Sub
 'refresh the table records
 Sub Refresh
 	'vm.pagepause
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensecategories", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensecategories", "id", "id")
 	dbsql.SelectAll(Array("*"), Array("text"))
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -100,8 +100,8 @@ Sub btnSaveCategory_click(e As BANanoEvent)
 	Dim bValid As Boolean = vm.validate(rec, mdlExpenseCategory.Required)
 	If bValid = False Then Return
 		
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensecategories", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensecategories", "id", "id")
 	dbsql.SchemaFromDesign(mdlExpenseCategory.Container)
 	Select Case Mode
 	Case "A"
@@ -168,8 +168,8 @@ Sub Delete
 	'get the category to be deleted
 	Dim sid As String = vm.getstate("categoryid", "")
 	If sid = "" Then Return
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensecategories", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensecategories", "id", "id")
 	dbsql.Delete(sid)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON

@@ -15,13 +15,14 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
-Library5=bananovuetify
+Library5=bananovuetifycore
+Library6=bananovuetifyconnect
 Module1=modTables
 Module2=pgIndex
 NumberOfFiles=5
-NumberOfLibraries=5
+NumberOfLibraries=6
 NumberOfModules=2
-Version=8.1
+Version=8.27
 @EndOfDesignText@
 #Region Project Attributes 
 	#MergeLibraries: True
@@ -88,13 +89,13 @@ Sub BANano_Ready
 	'open the database
 	db.OpenWait("alasql", "formutilities")
 	'create the necessary tables
-	Dim tblTables As BANanoAlaSQL
-	tblTables.Initialize
+	Dim tblTables As BANanoAlaSQLE
+	tblTables.Initialize("tables", "tablename")
 	tblTables.SchemaAddText(Array("tablename","description","primarykey","autoincrement"))
 	'build the resultset
-	Dim rs As AlaSQLResultSet = tblTables.SchemaCreateTable("tables", "tablename")
+	tblTables.SchemaCreateTable
 	'execute the table creation
-	db.ExecuteWait(rs.query, rs.args)
+	db.ExecuteWait(tblTables.query, tblTables.args)
 	'open the page
 	pgIndex.init
 End Sub

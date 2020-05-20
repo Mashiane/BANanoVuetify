@@ -70,8 +70,8 @@ End Sub
 'load all existing expense types
 Sub Refresh
 	'vm.pagepause
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensetypes", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensetypes", "id", "id")
 	dbsql.SelectAll(Array("*"), Array("text"))
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -94,8 +94,8 @@ Sub btnSaveExpenseType_click(e As BANanoEvent)
 	Dim bValid As Boolean = vm.validate(rec, mdlExpenseType.Container.Required)
 	If bValid = False Then Return
 			
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensetypes", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensetypes", "id", "id")
 	dbsql.SchemaFromDesign(mdlExpenseType.Container)
 	Select Case Mode
 		Case "A"
@@ -163,8 +163,8 @@ Sub Delete
 	Dim sid As String = vm.getstate("expensetypeid", "")
 	If sid = "" Then Return
 	'connect to the database
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensetypes", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensetypes", "id", "id")
 	dbsql.Delete(sid)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON

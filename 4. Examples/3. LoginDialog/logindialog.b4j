@@ -13,13 +13,13 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
-Library5=bananovuetify
+Library5=bananovuetifycore
 Module1=pgIndex
 Module2=pgLogin
 NumberOfFiles=4
 NumberOfLibraries=5
 NumberOfModules=2
-Version=8.1
+Version=8.27
 @EndOfDesignText@
 #Region Project Attributes 
 	#MergeLibraries: True

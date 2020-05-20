@@ -4752,6 +4752,7 @@ Sub Design_DBSourceCode
 	sbl.append($"Private dt${tbName} As VMDataTable"$).append(CRLF)
 	sbl.append($"Private cont As VMContainer"$).append(CRLF)
 	sbl.append($"Private Mode As String"$).append(CRLF)
+	AddCode(sbl, "Private vue As BANanoVue")
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
 	'
@@ -4759,6 +4760,7 @@ Sub Design_DBSourceCode
 	AddCode(sbl, "Sub Code")
 	AddComment(sbl, "Establish a reference to the app")
 	AddCode(sbl, "vm = pgIndex.vm")
+	AddCode(sbl, "vue = vm.vue")
 	'
 	AddComment(sbl, "create a container to hold all contents based on the page name")
 	AddCode(sbl, $"cont = vm.CreateContainer(Name, Me)"$)
@@ -9159,6 +9161,7 @@ Sub Design_Page
 	AddCode(sb, $"Public Name As String = "${svmodel}Code""$)
 	AddCode(sb, $"Public Title As String = "${spagetitle}""$)
 	AddCode(sb, $"Private vm As BANanoVM"$)
+	AddCode(sb, "Private vue As BANanoVue")
 	AddCode(sb, $"Private BANano As BANano  'ignore"$)
 	sb.append($"Private cont As VMContainer"$).append(CRLF)
 	AddCode(sb, "End Sub")
@@ -9167,6 +9170,7 @@ Sub Design_Page
 	AddCode(sb, "Sub Code")
 	AddComment(sb, "Establish a reference to the app")
 	AddCode(sb, "vm = pgIndex.vm")
+	AddCode(sb, "vue = vm.vue")
 	AddComment(sb, "create a container to hold all contents based on the page name")
 	AddCode(sb, $"cont = vm.CreateContainer(Name, Me)"$)
 	AddComment(sb, "the container should be hidden initialy")

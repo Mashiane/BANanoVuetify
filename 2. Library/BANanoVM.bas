@@ -4,8 +4,9 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
+	Public Modules As Map
 	Private BANano As BANano
 	Public vue As BANanoVue
 	Private Pages As List
@@ -16,12 +17,9 @@ Sub Class_Globals
 	Public Drawer As VMNavigationDrawer
 	Public NavBar As VMToolBar
 	Public Footer As VMFooter
-	Private module As Object
+	Private Module As Object
 	Public Elevation As Map
 	Public Transition As Map
-	Private Chartkick As BANanoObject
-	Private Chart As BANanoObject
-	Private VueGoogleMaps As BANanoObject
 	Public IntensityOptions As Map
 	Public ColorOptions As Map
 	Public BorderOptions As Map
@@ -29,8 +27,6 @@ Sub Class_Globals
 	Public vuetify As BANanoObject
 	Public Confirm As VMDialog
 	Public Alert As VMDialog
-	Private arcCounter As BANanoObject
-	Private circleCounter As BANanoObject
 	Public DisplayOptions As Map
 	Public TextAlignmentOptions As Map
 	Public FontWeightOptions As Map
@@ -67,7 +63,7 @@ Sub Class_Globals
 	Public const COLOR_WHITE As String = "white"
 	Public const COLOR_YELLOW As String = "yellow"
 	Public const COLOR_NONE As String = ""
-	Public const COLOR_PRIMARY As String = "primary"	
+	Public const COLOR_PRIMARY As String = "primary"
 	Public const COLOR_SECONDARY As String = "secondary"
 	Public const COLOR_ACCENT As String = "accent"
 	Public const COLOR_ERROR As String = "error"
@@ -165,40 +161,26 @@ Sub Class_Globals
 	Public Dark As Boolean
 	Private Options As Map
 	Private lang As String
-	Public Fake As VMFake
 	Private drawers As List
 	Private placeHolder As Int
-	Private PrismComponent As BANanoObject
 	Public Floats As Map
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize(eventHandler As Object, appName As String)
 	'initialize vue
-	Fake.Initialize
 	vue.Initialize
+	Modules.Initialize 
+	Modules = vue.modules
 	placeHolder = 0
-	Options.Initialize 
-	drawers.Initialize 
+	Options.Initialize
+	drawers.Initialize
 	RTL = False
 	Dark = False
-	module = eventHandler
+	Module = eventHandler
 	lang = "en"
-	Floats .Initialize 
+	Floats .Initialize
 	
-	Chartkick.initialize("Chartkick")
-	Chart.Initialize("Chart")
-	vue.Use(Chartkick.RunMethod("use", Chart))
-	'
-	PrismComponent.Initialize("PrismComponent")
-	vue.AddComponentBO("prism", PrismComponent)
-	'
-	arcCounter.Initialize("arcCounter")
-	vue.AddComponentBO("arc-counter", arcCounter)
-	'
-	circleCounter.Initialize("circleCounter")
-	vue.AddComponentBO("circle-counter", circleCounter)
-	'
 	'initialize the pages
 	Pages.initialize
 	'
@@ -212,7 +194,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.SetAppBar(True)
 	NavBar.Show
 	'
-		'
+	'
 	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
 	'
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
@@ -220,8 +202,8 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'
 	'put loader on page
 	SetStateSingle("pageloader", False)
-	Overlay = CreateOverlay("pageloader", module).SetValue("pageloader")
-	Dim vpc As VMProgressCircular = CreateProgressCircular("", module).SetSize(200).SetIndeterminate(True).SetColor("blue")
+	Overlay = CreateOverlay("pageloader", Module).SetValue("pageloader")
+	Dim vpc As VMProgressCircular = CreateProgressCircular("", Module).SetSize(200).SetIndeterminate(True).SetColor("blue")
 	vpc.Pop(Overlay.Overlay)
 	Overlay.Pop(VContent)
 	'
@@ -254,19 +236,61 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'
 	InitColors
 	'
-	If SubExists(module, "confirm_ok") = False Then
+	If SubExists(Module, "confirm_ok") = False Then
 		Log("Initialize.confirm_ok - please add this event to trap confirm dialog!")
 	End If
 	'
-	If SubExists(module, "confirm_cancel") = False Then
+	If SubExists(Module, "confirm_cancel") = False Then
 		Log("Initialize.confirm_cancel - please add this event to trap confirm dialog!")
-	End If	
+	End If
 	'
-	If SubExists(module, "alert_ok") = False Then
+	If SubExists(Module, "alert_ok") = False Then
 		Log("Initialize.alert_ok - please add this event to trap alert dialog!")
 	End If
 End Sub
 
+Sub AddModule(tagName As String) As BANanoVM
+	tagName = tagName.tolowercase
+	Modules.Put(tagName, tagName)
+	Return Me
+End Sub
+
+Sub ModuleExist(tagName As String) As Boolean
+	tagName = tagName.tolowercase
+	Dim b As Boolean = Modules.ContainsKey(tagName)
+	Return b
+End Sub
+
+'remove the delimiter from stringbuilder
+Sub RemDelim(sValue As String, Delim As String) As String
+	Dim sw As Boolean = sValue.EndsWith(Delim)
+	If sw Then
+		Dim lDelim As Int = Delim.Length
+		Dim nValue As String = sValue
+		sw = nValue.EndsWith(Delim)
+		If sw Then
+			nValue = nValue.SubString2(0, nValue.Length-lDelim)
+		End If
+		Return nValue
+	Else
+		Return sValue
+	End If
+End Sub
+
+
+Sub JoinMapKeys(m As Map, delim As String) As String
+	Dim sb As StringBuilder
+	sb.Initialize
+	Dim kTot As Int = m.Size - 1
+	Dim kCnt As Int
+	Dim strKey As String = m.getkeyat(0)
+	sb.Append(strKey)
+	For kCnt = 1 To kTot
+		Dim strKey As String = m.getkeyat(kCnt)
+		sb.Append(delim).append(strKey)
+	Next
+	Return sb.ToString
+End Sub
 
 'return sentences of lorem ipsum
 Sub Rand_LoremIpsum(count As Int) As String
@@ -301,8 +325,22 @@ End Sub
 
 Sub NewMap As Map
 	Dim nm As Map
-	nm.Initialize 
+	nm.Initialize
 	Return nm
+End Sub
+
+'get the record position from saved items
+Sub ListOfMapsRecordPos(lst As List, k As String, v As String) As Int
+	Dim lTot As Int = lst.Size - 1
+	Dim lCnt As Int
+	For lCnt = 0 To lTot
+		Dim m As Map = lst.Get(lCnt)
+		Dim sk As String = m.GetDefault(k, "")
+		If sk.EqualsIgnoreCase(v) Then
+			Return lCnt
+		End If
+	Next
+	Return -1
 End Sub
 
 'nullify the file select
@@ -571,32 +609,8 @@ Sub CreateProperty(eID As String, eventHandler As Object) As VMProperty
 	Return el
 End Sub
 
-Sub CreatePrism(eID As String, eventHandler As Object) As VMPrism
-	Dim el As VMPrism
-	el.Initialize(vue, eID, eventHandler)
-	Return el
-End Sub
 
 
-Sub CreateArcCounter(eID As String, eventHandler As Object) As VMArcCounter
-	Dim el As VMArcCounter
-	el.Initialize(vue, eID, eventHandler)
-	Return el
-End Sub
-
-
-Sub CreateCircleCounter(eID As String, eventHandler As Object) As VMCircleCounter
-	Dim el As VMCircleCounter
-	el.Initialize(vue, eID, eventHandler)
-	Return el
-End Sub
-
-
-Sub CreateEChart(eID As String, eventHandler As Object) As VMEChart
-	Dim el As VMEChart
-	el.Initialize(vue, eID, eventHandler)
-	Return el
-End Sub
 
 Sub CreateDiv(sid As String) As VMElement
 	Return vue.CreateDiv(sid)
@@ -628,12 +642,6 @@ Sub CreateSkeletonLoader(eID As String, eventHandler As Object) As VMSkeletonLoa
 	Return el
 End Sub
 
-
-Sub CreateQuill(eID As String, eventHandler As Object) As VMQuill
-	Dim el As VMQuill
-	el.Initialize(vue, eID, eventHandler)
-	Return el
-End Sub
 
 Sub CreateBanner(eID As String, eventHandler As Object) As VMBanner
 	Dim el As VMBanner
@@ -807,30 +815,6 @@ Public Sub MonthNow() As String
 	Return vue.monthnow
 End Sub
 
-Sub CreateGMap(sid As String, eventHandler As Object) As VMGMap
-	Dim el As VMGMap
-	el.Initialize(vue, sid, eventHandler)
-	Return el
-End Sub
-
-Sub CreateDevice(sid As String, eventHandler As Object) As VMDevice
-	Dim el As VMDevice
-	el.Initialize(vue, sid, eventHandler)
-	Return el
-End Sub
-
-Sub SetGMapKey(key As String)
-	VueGoogleMaps.Initialize("VueGoogleMaps")
-	Dim opt As Map = CreateMap()
-	Dim load As Map = CreateMap()
-	load.Put("key", key)
-	load.Put("libraries", "places")
-	opt.Put("load", load)
-	opt.Put("installComponents", True)
-	vue.Use1(VueGoogleMaps, opt)
-End Sub
-
-
 'join list to mv string
 Sub Join(delimiter As String, lst As List) As String
 	Return vue.Join(delimiter, lst)
@@ -849,13 +833,6 @@ End Sub
 'copy a state from one to another
 Sub State2Another(source As String, target As String, defaultValue As Object)
 	vue.State2Another(source, target, defaultValue)
-End Sub
-
-Sub CreateChartKick(sid As String, eventHandler As Object) As VMChartKick
-	Dim el As VMChartKick
-	el.Initialize(vue, sid, eventHandler)
-	
-	Return el
 End Sub
 
 'update value of progress bar
@@ -1067,7 +1044,7 @@ private Sub InitColors
 	DisplayOptions.Put("caption", "Caption")
 	DisplayOptions.Put("overline", "Overline")
 	'
-	TextAlignmentOptions.Initialize 
+	TextAlignmentOptions.Initialize
 	TextAlignmentOptions.put("", "None")
 	TextAlignmentOptions.put("text-left", "Left")
 	TextAlignmentOptions.put("text-center", "Center")
@@ -1082,7 +1059,7 @@ private Sub InitColors
 	FontWeightOptions.Put("font-weight-regular", "Regular")
 	FontWeightOptions.Put("font-weight-light", "Light")
 	FontWeightOptions.Put("font-weight-thin", "Thin")
-	'	
+	'
 	IntensityOptions.Initialize
 	IntensityOptions.put("","Normal")
 	IntensityOptions.put("lighten-1","Lighten 1")
@@ -1215,7 +1192,7 @@ private Sub InitColors
 	Direction.Put("right", "Right")
 	'
 	Dim fList As List
-	fList.Initialize 
+	fList.Initialize
 	fList.AddAll(Array("float-left", "float-right", "float-none", "float-sm-left", "float-sm-right", "float-sm-none", _
 	"float-md-left", "float-md-right", "float-md-none", "float-lg-left", "float-lg-right", "float-lg-none", "float-xl-left", _
 	"float-xl-right", "float-xl-none"))
@@ -1225,18 +1202,6 @@ End Sub
 
 Sub MergeMaps(oldm As Map, newm As Map) As Map
 	Return vue.MergeMaps(oldm, newm)
-End Sub
-
-Sub CreateInfoBox(sid As String, eventHandler As Object) As VMInfoBox
-	Dim el As VMInfoBox
-	el.Initialize(vue, sid, eventHandler)
-	Return el
-End Sub
-
-Sub CreateCountTo(sid As String, eventHandler As Object) As VMCountTo
-	Dim el As VMCountTo
-	el.Initialize(vue, sid, eventHandler)
-	Return el
 End Sub
 
 Sub AddComponent(comp As VMElement)
@@ -1481,7 +1446,7 @@ End Sub
 
 Sub SetData(prop As String, valuex As Object) As BANanoVM
 	vue.SetStateSingle(prop, valuex)
-	Return Me	
+	Return Me
 End Sub
 
 Sub GetData(prop As String) As Object
@@ -1582,13 +1547,13 @@ End Sub
 
 Sub CreateSlider(sid As String, eventHandler As Object) As VMSlider
 	Dim el As VMSlider
-	el.Initialize(vue, sid, eventHandler)	
+	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub
 
 Sub CreateTabs(sid As String, eventHandler As Object) As VMTabs
 	Dim el As VMTabs
-	el.Initialize(vue, sid, eventHandler)	
+	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub
 
@@ -1794,7 +1759,7 @@ Sub ShowPage(name As String)
 	HideDrawers
 	Dim nm As Map = CreateMap()
 	For Each page As String In Pages
-		nm.Put($"${page}show"$, False)	
+		nm.Put($"${page}show"$, False)
 	Next
 	nm.Put($"${name}show"$, True)
 	SetState(nm)
@@ -1890,7 +1855,7 @@ End Sub
 
 Sub CreateExpansionPanels(sid As String, eventHandler As Object) As VMExpansionPanels
 	Dim el As VMExpansionPanels
-	el.Initialize(vue, sid, eventHandler)	
+	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub
 
@@ -1916,13 +1881,13 @@ End Sub
 
 Sub CreateChip(sid As String, eventHandler As Object) As VMChip
 	Dim el As VMChip
-	el.Initialize(vue, sid, eventHandler)	
+	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub
 
 Sub CreateCarouselItem(sid As String, eventHandler As Object) As VMCarouselItem
 	Dim el As VMCarouselItem
-	el.Initialize(vue, sid, eventHandler)	
+	el.Initialize(vue, sid, eventHandler)
 	Return el
 End Sub
 
@@ -2008,7 +1973,7 @@ End Sub
 
 Sub CreateElement(sid As String, stag As String) As VMElement
 	Dim el As VMElement
-	el.Initialize(vue,sid).SetTag(stag)	
+	el.Initialize(vue,sid).SetTag(stag)
 	Return el
 End Sub
 
@@ -2060,13 +2025,13 @@ End Sub
 Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar
 	Dim el As VMToolBar
 	el.Initialize(vue, sid, moduleObj)
-	el.SetToolBar(True)	
+	el.SetToolBar(True)
 	Return el
 End Sub
 
 Sub CreateOverlay(sid As String, moduleObj As Object) As VMOverlay
 	Dim el As VMOverlay
-	el.Initialize(vue, sid, moduleObj)	
+	el.Initialize(vue, sid, moduleObj)
 	Return el
 End Sub
 
@@ -2177,7 +2142,7 @@ Sub CreateDrawer(sid As String, eventHandler As Object) As VMNavigationDrawer
 	Dim el As VMNavigationDrawer
 	el.Initialize(vue, sid, eventHandler)
 	el.RemoveAttr("app")
-	Return el 
+	Return el
 End Sub
 
 'add a container
@@ -2232,7 +2197,7 @@ Sub NewRadioGroup(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	If bLabelOnTop Then
 		el.SetColumn(bLabelOnTop)
 	Else
-	 	el.SetRow(True)
+		el.SetRow(True)
 	End If
 	Return el
 End Sub
@@ -2323,22 +2288,6 @@ End Sub
 '	Return el
 'End Sub
 '
-
-Sub NewInfoBox(eventHandler As Object, bStatic As Boolean, sname As String, sText As String, sIcon As String, sIconBackgroundColor As String, iStart As String, iFinish As String) As VMInfoBox
-	Dim el As VMInfoBox = CreateInfoBox(sname, eventHandler)
-	'el.setstatic(bStatic)
-	el.InfoBox.typeof = "infobox"
-	el.InfoBox.fieldType = "string"
-	If iStart <> Null Then el.SetFrom(iStart)
-	If iFinish <> Null Then el.SetTo(iFinish)
-	If sIcon <> Null Then el.SetIcon(sIcon)
-	If sIconBackgroundColor <> Null Then el.SetIconBackgroundColor(sIconBackgroundColor)
-	el.SetText(sText)
-	If iFinish <> Null Then el.Countit.SetText(iFinish)
-	el.SetDuration("1000")
-	Return el
-End Sub
-
 ''
 Sub NewSlider(eventHandler As Object,bStatic As Boolean,sid As String, vmodel As String, slabel As String, iMinValue As String, iMaxValue As String,iTabIndex As Int) As VMSlider
 	Dim el As VMSlider = CreateSlider(sid, eventHandler)
@@ -2362,7 +2311,7 @@ Sub NewTextField(eventHandler As Object,bStatic As Boolean,sid As String, vmodel
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	el.SetPrependIcon(sIcon)
-	If iMaxLen > 0 Then 
+	If iMaxLen > 0 Then
 		el.SetMaxLength(iMaxLen)
 		el.SetCounter(True)
 	End If
@@ -2400,7 +2349,7 @@ Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 	el.Setlabel(slabel)
 	el.Setrequired(bRequired)
 	el.SetPrependIcon(sIcon)
-	If iMaxLen > 0 Then 
+	If iMaxLen > 0 Then
 		el.SetCounter(iMaxLen)
 		el.SetMaxLength(iMaxLen)
 	End If
@@ -2448,7 +2397,7 @@ Sub NewImage(eventHandler As Object,bStatic As Boolean,sname As String, vmodel A
 	el.SetWidth(swidth)
 	el.SetHeight(sheight)
 	el.SetAlt(salt)
-	el.SetVModel(vmodel, src)	
+	el.SetVModel(vmodel, src)
 	Return el
 End Sub
 '
@@ -2461,9 +2410,9 @@ Sub NewLabel(bStatic As Boolean,sname As String, vmodel As String, sSize As Stri
 	el.SetTag(sSize)
 	el.SetVModel(vmodel, sText)
 	Select Case sSize
-	Case vue.SIZE_BLOCKQUOTE
-		el.AddClass("blockquote")	
-	End Select	
+		Case vue.SIZE_BLOCKQUOTE
+			el.AddClass("blockquote")
+	End Select
 	Return el
 End Sub
 

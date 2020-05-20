@@ -10,7 +10,7 @@ Sub Process_Globals
 	Public name As String = "tablescode"
 	Public tables As VMDataTable
 	Private db As BANanoSQL
-	Private alaSQL As BANanoAlaSQL
+	Private alaSQL As BANanoAlaSQLE
 	Public mdlTable As VMDialog
 	Public Mode As String
 	Public BANano As BANano
@@ -74,16 +74,16 @@ Sub btnSaveTable_click(e As BANanoEvent)
 	'open the database
 	db.OpenWait("alasql", "formutilities")
 	'
-	alaSQL.Initialize
+	alaSQL.Initialize("tables", "tablename")
 	Select Case Mode
 	Case "A"
 		'does the table exist
-		Dim rsTables As AlaSQLResultSet = alaSQL.Exists("tables", "tablename", stablename)
-		rsTables.result = db.ExecuteWait(rsTables.query, rsTables.args)
-		If rsTables.result.size = 0 Then
-			Dim rsInsert As AlaSQLResultSet = alaSQL.Insert("tables", rec)
+		alaSQL.Exists(stablename)
+		db.ExecuteWait(alaSQL.query, alaSQL.args)
+		If alaSQL.result.size = 0 Then
+			alaSQL.Insert1(rec)
 			'execute the table creation
-			rsInsert.result = db.ExecuteWait(rsInsert.query, rsInsert.args)
+			alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 			vm.CallMethod("RefreshTables")
 			vm.hidedialog("mdlTable")
 		Else
@@ -94,13 +94,13 @@ Sub btnSaveTable_click(e As BANanoEvent)
 		Dim oldname As String =	BANano.GetSessionStorage("oldname")
 		If oldname.EqualsIgnoreCase(stablename) Then
 			'the table names are the same
-			Dim rsEdit As AlaSQLResultSet = alaSQL.Update("tables", "tablename", stablename, rec)
-			rsEdit.result = db.ExecuteWait(rsEdit.query, rsEdit.args)
+			alaSQL.Update1(rec, oldname)
+			alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 		Else
 			'the table names have changed
 			'update the table details using the old name
-			Dim rsEdit As AlaSQLResultSet = alaSQL.Update("tables", "tablename", oldname, rec)	
-			rsEdit.result = db.ExecuteWait(rsEdit.query, rsEdit.args)
+			alaSQL.Update1(rec, oldname)	
+			alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 		End If
 		vm.CallMethod("RefreshTables")
 		vm.hidedialog("mdlTable")
@@ -116,12 +116,12 @@ Sub RefreshTables
 	'open the database
 	db.OpenWait("alasql", "formutilities")
 	'init library
-	alaSQL.Initialize 
+	alaSQL.Initialize("tables", "tablename") 
 	'select all records in table
-	Dim rsTables As AlaSQLResultSet = alaSQL.SelectAll("tables", Array("*"), Array("tablename"))
+	alaSQL.SelectAll(Array("*"), Array("tablename"))
 	'execute the table creation
-	rsTables.result = db.ExecuteWait(rsTables.query, rsTables.args)
-	tables.SetDataSource(rsTables.result)
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	tables.SetDataSource(alaSQL.result)
 	vm.pageresume
 End Sub
 

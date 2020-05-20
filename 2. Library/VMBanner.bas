@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Public Banner As VMElement
 	Public ID As String
@@ -28,6 +28,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Else
 		Actions.Initialize(vue, $"${ID}actions"$, Module).SetSlotActions
 	End If
+	Banner.typeOf = "banner"
 	Return Me
 End Sub
 

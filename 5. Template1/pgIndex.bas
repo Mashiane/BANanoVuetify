@@ -8,11 +8,13 @@ Version=8.1
 Sub Process_Globals
 	Private BANano As BANano  'ignore
 	Public vm As BANanoVM
+	Private vue As BANanoVue
 End Sub
 
 Sub Init
 	'initialize the page
 	vm.Initialize(Me, Main.appname)
+	vue = vm.vue
 	BuildNavBar
 	BuildNavDrawer
 	AddPages

@@ -891,12 +891,12 @@ End Sub
 'set return-object
 Sub SetReturnObject(varReturnObject As Boolean) As VMSelect
 	Select Case Combo.typeOf
-	Case "select", "auto"
+	Case "auto", "select"
 		If varReturnObject = False Then Return Me
-	Case "auto"
+	Case "combo"
 		If varReturnObject = True Then Return Me
 	End Select
-	SetAttrSingle("return-object", varReturnObject)
+	SetAttrSingle(":return-object", varReturnObject)
 	Return Me
 End Sub
 

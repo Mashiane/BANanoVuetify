@@ -1,0 +1,63 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=bmap.min.js
+File2=echarts.min.js
+File3=v-chart.js
+File4=v-chart.min.css
+FileGroup1=Default Group
+FileGroup2=Default Group
+FileGroup3=Default Group
+FileGroup4=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananovuetifycore
+Module1=VMEChart
+NumberOfFiles=4
+NumberOfLibraries=4
+NumberOfModules=1
+Version=8.27
+@EndOfDesignText@
+'https://www.b4x.com/android/forum/threads/bananohashes-4-types-4-algorithm-plus-1.112222/#content
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+	#LibraryVersion: 1.00
+	#LibraryName: BANanoVuetifyECharts
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "BANanoVuetifyECharts"
+	Public Version As String = "1.00"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	Dim appFile As String = $"app${Version}.js"$
+	
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, Version)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppName
+	BANano.JAVASCRIPT_NAME = appFile
+	'
+	BANano.Header.AddJavascriptFIle("echarts.min.js")
+	BANano.Header.AddJavascriptFile("bmap.min.js")
+	BANano.Header.AddJavascriptFile("v-chart.js")
+	BANano.Header.AddCSSFile("v-chart.min.css")
+	
+	'
+	BANano.BuildAsB4XLib(Version)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	
+End Sub

@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Public RadioGroup As VMElement
 	Public ID As String
@@ -26,6 +26,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v	
 	RadioGroup.typeOf = "radiogroup"
+	RadioGroup.fieldType = "string"
 	items.Initialize 
 	bStatic = False
 	xmodel = ""

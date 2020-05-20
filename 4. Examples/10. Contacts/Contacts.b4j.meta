@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=pgIndex,selcity_change,136,0,pgIndex,Init,13,0,pgIndex,AddPages,28,0,Main,AppStart,19,0,pgIndex,swtnotifications_change,142,0,pgIndex,btnSave_click,146,0,pgIndex,confirm_ok,58,0,pgIndex,cancel_ok,69,0,pgIndex,OurContacts,71,2,pgIndex,BuildNavBar,35,0
+NavigationStack=pgIndex,selcity_change,136,0,pgIndex,Init,13,0,pgIndex,AddPages,28,0,pgIndex,swtnotifications_change,142,0,pgIndex,btnSave_click,146,0,pgIndex,confirm_ok,58,0,pgIndex,cancel_ok,69,0,pgIndex,OurContacts,71,2,pgIndex,BuildNavBar,35,0,Main,AppStart,19,0
 SelectedBuild=0
 VisibleModules=

@@ -1,0 +1,92 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=sponge.png
+FileGroup1=Default Group
+Group=Default Group
+Library1=jcore
+Library10=bananovuetifygooglemap
+Library11=bananovuetifyinfobox
+Library12=bananovuetifyprism
+Library13=bananovuetifyquill
+Library14=bananovuetifycirclecounter
+Library15=bananoexcel
+Library2=jfx
+Library3=banano
+Library4=bananopostprocessor
+Library5=bananovuetifycore
+Library6=bananovuetifyarccounter
+Library7=bananovuetifychartkick
+Library8=bananovuetifydevice
+Library9=bananovuetifyecharts
+Module1=modArcCounter
+Module10=pgIndex
+Module2=modChartKick
+Module3=modDevice
+Module4=modECharts
+Module5=modFiles
+Module6=modGMap
+Module7=modInfoBox
+Module8=modPrism
+Module9=modQuill
+NumberOfFiles=1
+NumberOfLibraries=15
+NumberOfModules=10
+Version=8.27
+@EndOfDesignText@
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "bvmextensions"
+	Public AppTitle As String = "BVM Extensions Demo"
+	Private Publish As String = "C:\laragon\www"
+	Private BP As BANanoPostProcessor
+	Public ServerIP As String = "localhost"
+	Public Version As String = "4.06"
+	Private Port As String = "8080"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'post processor
+	BP.Initialize
+	BP.RedirectOutput(File.DirApp,"log.txt")
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, DateTime.now)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppTitle
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	BANano.TranspilerOptions.MinifyOnline = False
+	'
+	'set php settings
+	BANano.PHP_NAME = $"${AppName}.php"$
+	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")	
+	'
+	BANano.Build(Publish)
+	BP.OpenLog(File.DirApp, "log.txt")
+	
+	BP.PublishPath = Publish
+	BP.ShortName = AppName
+	BP.AssetsPath = BANano.ASSETS_FOLDER
+	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
+	BP.StylesPath = BANano.STYLES_FOLDER
+	BP.ScriptFile = BANano.JAVASCRIPT_NAME
+	BP.UnzipFonts
+	BP.OpenOnPort(True,Port)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+Sub BANano_Ready
+	pgIndex.Init
+End Sub

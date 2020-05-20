@@ -26,6 +26,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	bStatic = False
 	vmodel = ""
+	Rating.typeOf = "rating"
+	Rating.fieldType = "dbl"
 	Return Me
 End Sub
 

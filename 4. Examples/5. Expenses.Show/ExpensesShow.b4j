@@ -7,16 +7,20 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
-Library5=bananovuetify
+Library5=bananovuetifycore
+Library6=bananovuetifychartkick
+Library7=bananovuetifyconnect
+Library8=bananovuetifyinfobox
+Library9=bananoexcel
 Module1=modDashboard
 Module2=modExpenseCategories
 Module3=modExpenses
 Module4=modExpenseTypes
 Module5=pgIndex
 NumberOfFiles=1
-NumberOfLibraries=5
+NumberOfLibraries=9
 NumberOfModules=5
-Version=8.1
+Version=8.27
 @EndOfDesignText@
 '#Region Project Attributes 
 	#MergeLibraries: True

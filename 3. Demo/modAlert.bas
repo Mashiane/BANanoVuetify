@@ -38,7 +38,7 @@ Sub Code
 	vm.CreateAlert("a12", Me, "error").SetContent("I'm an alert.").SetBorder("left").SetColoredBorder(True).SetElevation(2).SetColorIntensity(vm.COLOR_INDIGO, vm.INTENSITY_LIGHTEN2).AddToContainer(cont, 2, 1)
 	'
 	vm.SetData("alert1", True)
-	Dim sContent As String = vm.Fake.Rand_LoremIpsum(1)
+	Dim sContent As String = vm.Rand_LoremIpsum(1)
 	vm.CreateAlert("a13", Me, "").SetVModel("alert1").SetContent(sContent).SetBorder("left").SetCloseText("Close Alert").SetDismissible(True).SetDark(True).SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4).AddToContainer(cont, 3, 1)
 	
 	

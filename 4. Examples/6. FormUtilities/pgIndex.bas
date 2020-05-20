@@ -9,7 +9,7 @@ Sub Process_Globals
 	Private BANano As BANano  'ignore
 	Public vm As BANanoVM
 	Private db As BANanoSQL
-	Private alaSQL As BANanoAlaSQL
+	Private alaSQL As BANanoAlaSQLE
 End Sub
 
 Sub Init
@@ -98,10 +98,10 @@ Sub confirm_ok(e As BANanoEvent)
 		Dim stablename As String = vm.getstate("tablename","")
 		'open the database
 		db.OpenWait("alasql", "formutilities")
-		alaSQL.Initialize
-		Dim rsDelete As AlaSQLResultSet = alaSQL.Delete("tables", "tablename", stablename)
-		rsDelete.result = db.ExecuteWait(rsDelete.query, rsDelete.args)
-		Log(rsDelete.result)
+		alaSQL.Initialize("tables", "tablename")
+		alaSQL.Delete(stablename)
+		alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+		Log(alaSQL.result)
 		vm.CallMethod("RefreshTables")
 	End Select
 End Sub

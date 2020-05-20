@@ -4,7 +4,7 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12
+#IgnoreWarnings:12, 9
 Sub Class_Globals
 	Public Container As VMElement
 	Public ID As String
@@ -339,14 +339,6 @@ Sub NewLabel(bStatic As Boolean,sname As String, vmodel As String, sSize As Stri
 	Return el
 End Sub
 
-
-Sub CreateInfoBox(sid As String, eventHandler As Object) As VMInfoBox
-	Dim el As VMInfoBox
-	el.Initialize(vue, sid, eventHandler)
-	el.SetDesignMode(DesignMode)
-	Return el
-End Sub
-
 Sub CreateIcon(sid As String, moduleObj As Object) As VMIcon
 	Dim el As VMIcon
 	el.Initialize(vue, sid, moduleObj)
@@ -361,23 +353,6 @@ Sub NewIcon(eventHandler As Object,bStatic As Boolean,sname As String, sIcon As 
 	el.SetText(sIcon)
 	el.SetAttributes(Array(sSize))
 	el.SetColorIntensity(scolor,sintensity)
-	Return el
-End Sub
-
-
-Sub NewInfoBox(eventHandler As Object, bStatic As Boolean, sname As String, sText As String, sIcon As String, sIconBackgroundColor As String, iStart As String, iFinish As String) As VMInfoBox
-	Dim el As VMInfoBox = CreateInfoBox(sname, eventHandler)
-	el.SetDesignMode(DesignMode)
-	'el.setstatic(bStatic)
-	el.InfoBox.typeof = "infobox"
-	el.InfoBox.fieldType = "string"
-	If iStart <> Null Then el.SetFrom(iStart)
-	If iFinish <> Null Then el.SetTo(iFinish)
-	If sIcon <> Null Then el.SetIcon(sIcon)
-	If sIconBackgroundColor <> Null Then el.SetIconBackgroundColor(sIconBackgroundColor)
-	el.SetText(sText)
-	If iFinish <> Null Then el.Countit.SetText(iFinish)
-	el.SetDuration("1000")
 	Return el
 End Sub
 
@@ -1960,7 +1935,8 @@ private Sub CreateGrid
 		Dim idxpos As Int = Exclusions.IndexOf(el.id)
 		If idxpos = -1 Then
 			Select Case el.typeOf
-				Case "button", "list", "image", "label", "profile"
+				Case "button", "list", "image", "label", "profile", "table", _
+					"alert", "badge", "avatar","banner","nav"
 					el.fieldType = ""
 					el.IsRequired = False
 				Case Else
@@ -1968,7 +1944,8 @@ private Sub CreateGrid
 					Defaults.Put(el.vmodel, el.value)
 			End Select
 			If el.isrequired Then Required.put(el.vmodel, el.vmodel)
-			Select Case el.fieldType
+			If (el.vmodel <> "") And (el.fieldType <> "") Then
+				Select Case el.fieldType
 				Case "int"
 					Integers.Add(el.vmodel)
 				Case "bool"
@@ -1979,7 +1956,8 @@ private Sub CreateGrid
 					Dates.Add(el.vmodel)
 				Case "dbl"
 					Doubles.Add(el.vmodel)
-			End Select
+				End Select
+			End If
 		End If
 	Next
 	

@@ -26,12 +26,12 @@ Sub Code
 	expx.Bind(":key", "i")
 	expx.Bind(":id", "i")
 	expx.Header.SetText("Item")
-	expx.Content.SetText(vm.Fake.Rand_LoremIpsum(1))
+	expx.Content.SetText(vm.Rand_LoremIpsum(1))
 	ep.AddPanel(expx)	
 	cont.AddComponent(1, 1, ep.tostring)
 	'
 	Dim lbl1 As VMLabel = vm.CreateLabel("").SetH1
-	lbl1.SetText(vm.Fake.Rand_LoremIpsum(1))
+	lbl1.SetText(vm.Rand_LoremIpsum(1))
 	
 	Dim contbtna As VMContainer
 	contbtna = vm.CreateContainer("contbtna", Me)

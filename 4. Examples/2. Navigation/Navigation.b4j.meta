@@ -10,6 +10,6 @@ ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
-NavigationStack=modPage2,btn1_click,30,0,modPage1,btn0_click,34,0,pgIndex,npage2_click,78,0,pgIndex,npage1_click,65,0,pgIndex,draweritems_click,50,4,modPage1,Code,26,5,modPage2,Code,23,0,Main,BANano_Ready,63,0,Main,AppStart,51,0,pgIndex,Init,22,6
+NavigationStack=modPage2,btn1_click,30,0,modPage1,btn0_click,34,0,pgIndex,npage2_click,78,0,pgIndex,npage1_click,65,0,pgIndex,draweritems_click,50,4,modPage1,Code,26,5,modPage2,Code,23,0,Main,BANano_Ready,63,0,pgIndex,Init,22,6,Main,AppStart,32,0
 SelectedBuild=0
 VisibleModules=3,1,2

@@ -140,8 +140,8 @@ Sub btnApplyFilter_click(e As BANanoEvent)
 	Dim qry As String = "select expenses.id, expenses.expense_date, expenses.expense_description, expenses.expense_amount, expensecategories.text as expense_category,"
 	qry = qry & "expensetypes.text As expense_type from expenses, expensecategories, expensetypes where expenses.expense_category = expensecategories.id and expenses.expense_type = "
 	qry = qry & $"expensetypes.id and expenses.expense_date >= '${sstartdate}' and expenses.expense_date <= '${sfinishdate}' and expensecategories.id in (${scat}) and expensetypes.id in (${styp}) order by expenses.expense_date desc"$
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.Execute(qry)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -178,8 +178,8 @@ Sub btnSaveExpense_click(e As BANanoEvent)
 	If bValid = False Then Return
 	'
 	'expense is valid
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.SchemaFromDesign(mdlExpenses.Container)
 	dbsql.RecordFromMap(Expense)
 	Select Case Mode
@@ -231,8 +231,8 @@ Sub Refresh
 	Dim qry As String = "select expenses.id, expenses.expense_date, expenses.expense_description, expenses.expense_amount, expensecategories.text as expense_category,"
 	qry = qry & "expensetypes.text As expense_type from expenses, expensecategories, expensetypes where expenses.expense_category = expensecategories.id and expenses.expense_type = "
 	qry = qry & "expensetypes.id order by expenses.expense_date desc"
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.Execute(qry)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -250,8 +250,8 @@ Sub expensetable_edit(rec As Map)
 	If sid = "" Then Return
 	'turn the mode to edit
 	Mode = "E"
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.Read(sid)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -274,8 +274,8 @@ Sub expensetable_clone(item As Map)
 	If sid = "" Then Return
 	'turn the mode to edit
 	Mode = "A"
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.Read(sid)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -307,8 +307,8 @@ End Sub
 Sub Delete
 	Dim sid As String = vm.getstate("expenseid", "")
 	If sid = "" Then Return
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.Delete(sid)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -349,8 +349,8 @@ Sub PrintExpenses
 	Dim qry As String = "select expenses.id, expenses.expense_date, expenses.expense_description, expenses.expense_amount, expensecategories.text as expense_category,"
 	qry = qry & "expensetypes.text As expense_type from expenses, expensecategories, expensetypes where expenses.expense_category = expensecategories.id and expenses.expense_type = "
 	qry = qry & "expensetypes.id order by expenses.expense_date desc"
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expenses", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expenses", "id", "id")
 	dbsql.Execute(qry)
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON

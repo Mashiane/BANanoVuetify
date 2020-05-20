@@ -46,7 +46,7 @@ Sub Code
 	avat.SetIcon("mdi-lock","", CreateMap("color" : "white"), Null, Null)
 	'
 	banner1.AddComponent(avat.ToString)
-	banner1.SetText(vm.Fake.Rand_LoremIpsum(1))
+	banner1.SetText(vm.Rand_LoremIpsum(1))
 	banner1.AddAction(vm.CreateButton("btnDismis", Me).SetLabel("Dismiss").SetPrimary(True).SetTransparent(True))
 	banner1.AddAction(vm.CreateButton("btnRetry", Me).SetLabel("Retry").SetPrimary(True).SetTransparent(True))
 	'

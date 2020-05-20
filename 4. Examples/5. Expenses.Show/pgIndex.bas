@@ -40,8 +40,8 @@ End Sub
 
 Sub LoadTypes
 	vm.SetStateSingle("types", Array())
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensetypes", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensetypes", "id", "id")
 	dbsql.SelectAll(Array("id","text"), Array("text"))
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON
@@ -52,8 +52,8 @@ End Sub
 
 Sub LoadCategories
 	vm.SetStateSingle("categories", Array())
-	Dim dbsql As BANanoMySQL
-	dbsql.Initialize(Main.dbase, "expensecategories", "id")
+	Dim dbsql As BANanoMySQLE
+	dbsql.Initialize(Main.dbase, "expensecategories", "id", "id")
 	dbsql.SelectAll(Array("id","text"), Array("text"))
 	dbsql.json = BANano.CallInlinePHPWait(dbsql.methodname, dbsql.Build)
 	dbsql.FromJSON

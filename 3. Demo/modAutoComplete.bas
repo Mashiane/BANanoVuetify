@@ -244,6 +244,8 @@ End Sub
 
 
 Sub SearchItems(xval As String)
+	Dim hasIW As Boolean = BANano.CheckInternetConnectionWait
+	If hasIW = False Then Return
 	'get the already existing list of items
 	Dim items As List = vm.GetState("itemsa", Array())
 	'get the loading status

@@ -30,7 +30,6 @@ Sub Init
 	vm.NavBar.SetModeFixed(True)
 	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	vm.NavBar.SetDark(True)
-	
 	'vm.Dark = True
 	'vm.SetLocale("ar")
 	vm.RTL = False
@@ -38,8 +37,6 @@ Sub Init
 	vm.SnackBar.SetTop(True)
 	'
 	'vm.NavBar.AddSearch("txtsearch")
-	vm.NavBar.AddSearch("appsearch")
-	vm.NavBar.AddSpacer
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")
 	vm.NavBar.AddIcon("btnButton", "mdi-magnify", "My button", "")
 	'
@@ -83,17 +80,13 @@ Sub Init
 	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
 	'
 	vm.UX
-	vm.showpage(modInfoBox.name)
-End Sub
-
-Sub appsearch_change(e As BANanoEvent)
-	Dim sappsearch As String = vm.getdata("appsearch")
+	vm.showpage(modButtons.name)
 End Sub
 
 Sub BuildDrawer
 	vm.Drawer.List.SetDense(True)
 	vm.Drawer.SetWidth("300")
-	vm.Drawer.AddTitleSubTitle(Main.AppTitle, $"Version ${Main.version}"$)
+	vm.Drawer.AddTitleSubTitle("BANanoVuetifyCore", $"Version ${Main.version}"$)
 	vm.Drawer.AddDivider
 	vm.Drawer.AddItem("alerts", "", "Alerts")
 	vm.Drawer.AddItem("toolbars", "", "Toolbars")
@@ -115,7 +108,6 @@ Sub BuildDrawer
 	vm.Drawer.AddItem("datepicker", "", "Date Picker")
 	vm.Drawer.AddItem("timepicker", "", "Time Picker")
 	vm.Drawer.AddItem("fileinput", "", "File Input")
-	vm.Drawer.AddItem("files", "", "Files")
 	vm.Drawer.AddItem("form", "", "Form")
 	vm.Drawer.AddItem("radiogroups", "", "Radio Groups")
 	vm.Drawer.AddItem("selects", "", "Selects")
@@ -145,21 +137,12 @@ Sub BuildDrawer
 	'vm.Drawer.AddItem("tooltips", "", "Tooltips")
 	vm.Drawer.AddItem("treeview", "", "TreeView")
 	vm.Drawer.AddItem("design", "", "Grid Design")
-	vm.Drawer.AddItem("chartkick", "", "Chart Kick")
-	vm.Drawer.AddItem("device", "", "Device")
-	vm.drawer.AddItem("gmap", "", "Google Map")
-	vm.drawer.AddItem("quill", "", "Quill")
-	vm.drawer.AddItem("infobox", "", "Info Box")
-	vm.drawer.AddItem("prism", "", "Prism")
 	vm.drawer.AddItem("carousel", "", "Carousel")
 	vm.drawer.AddItem("messageboard", "", "Message Board")
 	vm.Drawer.AddItem("expansionpanel", "", "Expansion Panel")
 	vm.Drawer.AddItem("parallax", "", "Parallax")
 	vm.Drawer.AddItem("colorpicker", "", "Color Picker")
 	vm.drawer.AddItem("rating", "", "Rating")
-	vm.drawer.additem("echarts", "", "ECharts")
-	vm.drawer.additem("arccounter", "", "Arc Counter")
-	'vm.drawer.Additem("selectsides", "", "Select Sides")
 End Sub
 
 'when the ok button is clicked for a confirm dialog
@@ -199,18 +182,6 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
 	Select Case elID
-	Case "selectsides"
-		'vm.NavBar.UpdateTitle(modSelectSides.title)
-		'vm.ShowPage(modSelectSides.name)
-	Case "files"
-		vm.NavBar.UpdateTitle(modFiles.title)
-		vm.ShowPage(modFiles.name)
-	Case "arccounter"
-		vm.NavBar.UpdateTitle(modArcCounter.title)
-		vm.ShowPage(modArcCounter.name)
-	Case "echarts"
-		vm.NavBar.UpdateTitle(modECharts.title)
-		vm.ShowPage(modECharts.name)
 	Case "modloadingskeleton"
 		vm.NavBar.UpdateTitle(modLoadingSkeleton.title)
 		vm.ShowPage(modLoadingSkeleton.name)
@@ -232,25 +203,6 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "carousel"
 		vm.NavBar.UpdateTitle(modCarousel.title)
 		vm.ShowPage(modCarousel.name)
-	Case "prism"
-		vm.NavBar.UpdateTitle(modPrism.title)
-		vm.ShowPage(modPrism.name)
-	Case "quill"
-		vm.NavBar.UpdateTitle(modQuill.title)
-		vm.ShowPage(modQuill.name)
-	Case "infobox"
-		vm.NavBar.UpdateTitle(modInfoBox.title)
-		vm.ShowPage(modInfoBox.name)
-		modInfoBox.refresh
-	Case "gmap"
-		vm.NavBar.UpdateTitle(modGMap.title)
-		vm.ShowPage(modGMap.name)
-	Case "device"
-		vm.NavBar.UpdateTitle(modDevice.title)
-		vm.ShowPage(modDevice.name)
-	Case "chartkick"
-		vm.NavBar.UpdateTitle(modChartKick.title)
-		vm.ShowPage(modChartKick.name)
 	Case "alerts"
 		vm.NavBar.UpdateTitle(modAlert.title)
 		vm.ShowPage(modAlert.name)
@@ -429,12 +381,6 @@ Sub AddPages
 	vm.AddPage(modBottomNavigation.name, modBottomNavigation)
 	vm.AddPage(modBottomSheet.name, modBottomSheet)
 	vm.AddPage(modAlert.name, modAlert)
-	vm.addpage(modChartKick.name, modChartKick)
-	vm.addpage(modDevice.name, modDevice)
-	vm.addpage(modGMap.name, modGMap)
-	vm.addpage(modInfoBox.name, modInfoBox)
-	vm.AddPage(modQuill.name, modQuill)
-	vm.addpage(modPrism.name, modPrism)
 	vm.AddPage(modCarousel.name, modCarousel)
 	vm.AddPage(modMessageBoard.name, modMessageBoard)
 	vm.AddPage(modExpansionPanels.name, modExpansionPanels)
@@ -442,8 +388,4 @@ Sub AddPages
 	vm.addpage(modColorPicker.name, modColorPicker)
 	vm.addpage(modRating.name, modRating)
 	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
-	vm.addpage(modECharts.name, modECharts)
-	vm.AddPage(modArcCounter.name, modArcCounter)
-	vm.AddPage(modFiles.name, modFiles)
-	'vm.addpage(modSelectSides.name, modSelectSides)
 End Sub

@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=Main,Process_Globals,15,0,pgIndex,appsearch_change,100,0,pgIndex,confirm_cancel,79,0,pgIndex,BuildNavBar,19,0
+NavigationStack=pgIndex,appsearch_change,100,0,pgIndex,confirm_cancel,79,0,pgIndex,BuildNavBar,19,0,Main,Process_Globals,13,0
 SelectedBuild=0
 VisibleModules=1

@@ -6,25 +6,22 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-	Public Form As VMElement
+	Public Container As VMContainer
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean
 	Private Module As Object
-	Public Container As VMContainer
 	Private bStatic As Boolean
 End Sub
 
 'initialize the Form
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMForm
 	ID = sid.tolowercase
-	Form.Initialize(v, ID)
-	Form.SetTag("v-form")
+	Container.Initialize(v, ID, eventHandler).SetTag("v-form")
 	DesignMode = False
 	Module = eventHandler
 	vue = v
-	Container.Initialize(vue, $"${ID}cont"$, Module)
 	bStatic = False
 	SetVModel(ID)
 	SetAttrSingle("ref", ID)
@@ -47,19 +44,19 @@ End Sub
 
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMForm
-	Form.SetRC(sRow, sCol)
+	Container.SetRC(sRow, sCol)
 	Return Me
 End Sub
 
 'set the offsets for this item
 Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMForm
-	Form.SetDeviceOffsets(OS, OM, OL, OX)
+	Container.SetDeviceOffsets(OS, OM, OL, OX)
 	Return Me
 End Sub
 
 'set the sizes for this item
 Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMForm
-	Form.SetDeviceSizes(SS, SM, SL, SX)
+	Container.SetDeviceSizes(SS, SM, SL, SX)
 	Return Me
 End Sub
 
@@ -71,7 +68,7 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 End Sub
 
 Sub SetAttrLoose(loose As String) As VMForm
-	Form.SetAttrLoose(loose)
+	Container.SetAttrLoose(loose)
 	Return Me
 End Sub
 
@@ -84,8 +81,7 @@ End Sub
 
 'get component
 Sub ToString As String
-	Container.Pop(Form)
-	Return Form.ToString
+	Return Container.ToString
 End Sub
 
 'apply a theme to an element
@@ -100,17 +96,17 @@ Sub UseTheme(themeName As String) As VMForm
 End Sub
 
 private Sub SetVModel(k As String) As VMForm
-	Form.SetVModel(k)
+	Container.SetVModel(k)
 	Return Me
 End Sub
 
 Sub SetVIf(vif As Object) As VMForm
-	Form.SetVIf(vif)
+	Container.SetVIf(vif)
 	Return Me
 End Sub
 
 Sub SetVShow(vif As Object) As VMForm
-	Form.SetVShow(vif)
+	Container.SetVShow(vif)
 	Return Me
 End Sub
 
@@ -122,13 +118,13 @@ End Sub
 'add a child
 Sub AddChild(child As VMElement) As VMForm
 	Dim childHTML As String = child.ToString
-	Form.SetText(childHTML)
+	Container.SetText(childHTML)
 	Return Me
 End Sub
 
 'set text
 Sub SetText(t As Object) As VMForm
-	Form.SetText(t)
+	Container.SetText(t)
 	Return Me
 End Sub
 
@@ -139,19 +135,19 @@ End Sub
 
 'add a class
 Sub AddClass(c As String) As VMForm
-	Form.AddClass(c)
+	Container.AddClass(c)
 	Return Me
 End Sub
 
 'set an attribute
 Sub SetAttr(attr As Map) As VMForm
-	Form.SetAttr(attr)
+	Container.SetAttr(attr)
 	Return Me
 End Sub
 
 'set style
 Sub SetStyle(sm As Map) As VMForm
-	Form.SetStyle(sm)
+	Container.SetStyle(sm)
 	Return Me
 End Sub
 
@@ -170,7 +166,7 @@ Sub SetLazyValidation(varLazyValidation As Boolean) As VMForm
 	End If
 	Dim pp As String = $"${ID}LazyValidation"$
 	vue.SetStateSingle(pp, varLazyValidation)
-	Form.Bind(":lazy-validation", pp)
+	Container.Bind(":lazy-validation", pp)
 	Return Me
 End Sub
 
@@ -206,24 +202,15 @@ End Sub
 
 
 Sub Hide As VMForm
-	Form.SetVisible(False)
+	Container.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMForm
-	Form.SetVisible(True)
+	Container.SetVisible(True)
 	Return Me
 End Sub
 
-Sub Enable As VMForm
-	Form.Enable(True)
-	Return Me
-End Sub
-
-Sub Disable As VMForm
-	Form.Disable(True)
-	Return Me
-End Sub
 
 
 'bind a property to state
@@ -235,71 +222,63 @@ End Sub
 
 
 public Sub RemoveAttr(sName As String) As VMForm
-	Form.RemoveAttr(sName)
+	Container.RemoveAttr(sName)
 	Return Me
 End Sub
 
 'set padding
 Sub SetPaddingAll(p As String) As VMForm
-	Form.SetPaddingAll(p)
+	Container.SetPaddingAll(p)
 	Return Me
 End Sub
 
 Sub SetMarginAll(p As String) As VMForm
-	Form.setmarginall(p)
+	Container.setmarginall(p)
 	Return Me
 End Sub
 
 Sub SetDesignMode(b As Boolean) As VMForm
-	Form.SetDesignMode(b)
 	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
 
 Sub SetStatic(b As Boolean) As VMForm
-	Form.SetStatic(b)
 	Container.SetStatic(b)
 	bStatic = b
 	Return Me
 End Sub
 
 Sub SetTabIndex(ti As String) As VMForm
-	Form.SetTabIndex(ti)
+	Container.SetTabIndex(ti)
 	Return Me
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
 Sub SetName(varName As Object, bbind As Boolean) As VMForm
-	Form.SetName(varName, bbind)
+	Container.SetName(varName, bbind)
 	Return Me
 End Sub
-
-Sub SetDisabled(b As Boolean) As VMForm
-	Form.SetDisabled(b)
-	Return Me
-End Sub
-
 
 Sub SetStyleSingle(prop As String, value As String) As VMForm
-	Form.SetStyleSingle(prop, value)
+	Container.SetStyleSingle(prop, value)
 	Return Me
 End Sub
 
 Sub SetAttrSingle(prop As String, value As String) As VMForm
-	Form.SetAttrSingle(prop, value)
+	Container.SetAttrSingle(prop, value)
 	Return Me
 End Sub
 
 
 Sub SetHeight(h As String) As VMForm
-	Form.SetStyleSingle("height", h)
+	Container.SetStyleSingle("height", h)
 	Return Me
 End Sub
 
 
 Sub SetWidth(w As String) As VMForm
-	Form.SetStyleSingle("width", w)
+	Container.SetStyleSingle("width", w)
 	Return Me
 End Sub
 
@@ -310,11 +289,11 @@ End Sub
 
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMForm
-Form.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	Container.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 
 Sub SetVisible(b As Boolean) As VMForm
-Form.SetVisible(b)
-Return Me
+	Container.SetVisible(b)
+	Return Me
 End Sub
