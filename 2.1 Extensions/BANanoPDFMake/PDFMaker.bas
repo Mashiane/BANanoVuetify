@@ -43,7 +43,7 @@ Public Sub Initialize As PDFMaker
 	BANano.DependsOnAsset("pdfmake.min.js")
 	BANano.DependsOnAsset("vfs_fonts.js")
 	BANano.DependsOnAsset("jquery-3.4.1.min.js")
-	BANano.DependsOnAsset("jquery.media.js")
+	BANano.DependsOnAsset("jquery.media.min.js")
 	
 	'Log("PDFMaker.Initialize")
 	pdf.Initialize("pdfMake")

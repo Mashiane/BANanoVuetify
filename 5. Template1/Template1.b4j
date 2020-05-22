@@ -30,10 +30,9 @@ Sub Process_Globals
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
-	Private alaSQL As BANanoAlaSQLE
+	'
 	Public Version As String = "1.00"
 	Public Port As String = "8080"
-	Public DBase As String = "template"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

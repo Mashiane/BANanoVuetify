@@ -79,6 +79,40 @@ Sub AddTabSlider As VMTabs
 	Return Me
 End Sub
 
+'add a tab item with html string
+Sub AddTabItem(tabID As String, tabLabel As String, tabIcon As String, tabContent As String)
+	tabID = tabID.ToLowerCase
+	Dim tabi As VMTab
+	tabi.Initialize(vue, tabID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tabi.SetKey(tabID)
+	tabi.SetHref($"#tab${tabID}"$)
+	Select Case iconPos
+		Case "right"
+			tabi.SetText(tabLabel)
+			tabi.SetIcon(tabIcon)
+		Case "left"
+			tabi.SetText(tabLabel)
+			tabi.SetIcon(tabIcon)
+	End Select
+	AddComponent(tabi.ToString)
+	'add the tab item
+	Dim tabitem As VMTabItem
+	tabitem.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tabitem.SetKey(tabID)
+	tabitem.SetValue($"tab${tabID}"$)
+	'
+	Dim vcard As VMElement
+	vcard.Initialize(vue, "").SetTag("v-card").SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrLoose("flat")
+	'
+	Dim vcardtext As VMElement
+	vcardtext.Initialize(vue,"").SetTag("v-card-text").SetStatic(bStatic).SetDesignMode(DesignMode)
+	vcardtext.AddComponent(tabContent)
+	vcard.AddComponent(vcardtext.ToString)
+	tabitem.AddComponent(vcard.ToString)
+	titems.Add(tabitem.ToString)
+	hasContent = True
+End Sub
+
 'manual installation
 Sub AddTab(tabID As String, tabLabel As String, tabIcon As String, tabContent As VMContainer)
 	tabID = tabID.ToLowerCase

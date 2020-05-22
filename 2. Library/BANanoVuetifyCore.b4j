@@ -4,10 +4,11 @@ File1=fonts.zip
 File2=materialdesignicons.min.css
 File3=materialfont.min.css
 File4=roboto.min.css
-File5=vue.min.js
-File6=vue-router.min.js
-File7=vuetify.min.css
-File8=vuetify.min.js
+File5=upload.php
+File6=vue.min.js
+File7=vue-router.min.js
+File8=vuetify.min.css
+File9=vuetify.min.js
 FileGroup1=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
@@ -16,6 +17,7 @@ FileGroup5=Default Group
 FileGroup6=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
+FileGroup9=Default Group
 Group=Default Group
 Library1=jcore
 Library2=jfx
@@ -139,7 +141,7 @@ Module96=VMSparkLine
 Module97=VMSpeedDial
 Module98=VMStepper
 Module99=VMStepperContent
-NumberOfFiles=8
+NumberOfFiles=9
 NumberOfLibraries=3
 NumberOfModules=119
 Version=8.27
@@ -155,7 +157,7 @@ Version=8.27
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.06"
+	Public Version As String = "4.07"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

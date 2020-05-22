@@ -10,6 +10,7 @@ Sub Process_Globals
 	Private dlgmultifields As VMDialog
 	Private isDirty As Boolean
 	Private Mode As String
+	Private tblBox As VMTabs
 	Private ep As VMExpansionPanels
 	Private vm As BANanoVM
 	Private vue As BANanoVue
@@ -22,6 +23,8 @@ Sub Process_Globals
 	Private sconfirmfield As String
 	Private bislookup As Boolean
 	Private sdatabasename As String
+	Private sprojectname As String
+	Private sdbtype As String
 	Private bisautofocus As Boolean
 	'
 	Private sbuttontype As String
@@ -68,7 +71,6 @@ Sub Process_Globals
 	Private myipad As VMDevice
 	Private myiphone As VMDevice
 	Private iconsizes As Map
-	Private myComponents As VMDataTable
 	'
 	Private controltype As String
 	Private srow As String
@@ -384,6 +386,7 @@ Sub Process_Globals
 	Private swidth As String
 	Private bisattach As Boolean
 	Private bisbackdrop As Boolean
+	Private bisshowonopen As Boolean
 	Private bisdisabled As Boolean
 	Private biseager As Boolean
 	Private bisfullscreen As Boolean
@@ -654,12 +657,16 @@ Private stabindex As String
 	Private bisinsetdivider As Boolean
 	Private bisicon As Boolean
 	Private drwprojectdetails As VMNavigationDrawer
+	Private ssenderemail As String
+	Private ssendtoemail As String
+	Private sccemail As String
 End Sub
 
 Sub InitWait
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
+	'
 	'add a hamburger
 	vm.NavBar.AddHamburger
 	vm.NavBar.Hamburger.SetVisible(True)
@@ -797,6 +804,7 @@ Sub InitWait
 	'
 	vm.SetMethod(Me, "LoadProjects")
 	vm.SetMethod(Me, "LoadTables")
+	vm.SetMethod(Me, "LoadContainers")
 	'
 	CreateDialog_Multifields
 	'
@@ -808,7 +816,7 @@ Sub InitWait
 	drwprojectdetails.Container.Setdefaults
 	CreateUX
 	vm.CallMethod("LoadProjects")
-	sdatabasename = ""
+	vm.CallMethod("LoadContainers")
 	'
 	Dim db As BANanoSQL
 	Dim prjSQL As BANanoAlaSQLE
@@ -832,7 +840,7 @@ Sub InitWait
 		Return
 	End If
 	Mode = "E"
-	Dim sprojectname As String = prjRec.getdefault("projectname", "")
+	sprojectname = prjRec.getdefault("projectname", "")
 	sdatabasename = prjRec.getdefault("databasename","")
 	vm.NavBar.UpdateTitle($"${Main.AppTitle} [${sprojectname}]"$)
 	vm.setdata("project", prjRec)
@@ -888,9 +896,11 @@ Sub btnAddFields_click(e As BANanoEvent)
 	If smultifields.Contains(",") Then
 		Dim xitems() As String = BANano.Split(",", smultifields)
 		For Each xi As String In xitems
+			Dim xtitle As String = vm.BeautifyName(xi)
+			xi = xtitle.tolowercase
 			Dim ni As Map = CreateMap()
 			ni.Put("key", xi)
-			ni.put("title", xi)
+			ni.put("title", xtitle)
 			ni.put("coldatatype", smultidatatype)
 			ni.put("colscope", "Public")
 			ni.put("subtitle", "text")
@@ -924,8 +934,10 @@ Sub btnAddFields_click(e As BANanoEvent)
 		Next
 	Else
 		Dim ni As Map = CreateMap()
+		Dim xtitle As String = vm.BeautifyName(smultifields)
+		smultifields = xtitle.tolowercase
 		ni.Put("key", smultifields)
-		ni.put("title", smultifields)
+		ni.put("title", xtitle)
 		ni.put("coldatatype", smultidatatype)
 		ni.put("colscope", "Public")
 		ni.put("subtitle", "text")
@@ -1181,6 +1193,59 @@ Sub LoadTables
 	vm.setdata("tablenames", prjSQL.result)
 End Sub
 
+Sub LoadContainers
+	Dim db As BANanoSQL
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("components", "id")
+	prjSQL.Execute("select vmodel,controltype from components where controltype in ('page','dialog','panel','container','drawer','tabs','card','footer','form','parallax') order by vmodel")
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	'prefix the items
+	Dim newList As List = vm.NewList
+	
+	For Each item As Map In prjSQL.result
+		Dim xvmodel As String = item.getdefault("vmodel", "")
+		Dim xcontroltype As String = item.getdefault("controltype", "")
+		Dim itemName As String = ""
+		Select Case xcontroltype
+		Case "page"
+			itemName = $"vm.Container"$
+		Case "dialog"
+			itemName = $"dlg${xvmodel}.Container"$
+		Case "panel"
+			itemName = $"exp${xvmodel}.Container"$
+		Case "container"
+			itemName = $"cont${xvmodel}.Container"$
+		Case "drawer"
+			itemName = $"drw${xvmodel}.Container"$
+		Case "tabs"
+			itemName = $"tabs${xvmodel}.Container"$
+		Case "card"
+			itemName = $""$
+		Case "footer"
+		Case "form"
+		Case "parallax"
+			itemName = $"prlx${xvmodel}.Container"$
+		End Select
+		'
+		If itemName <> "" Then
+			Dim ni As Map = CreateMap()
+			ni.put("component", itemName)
+			newList.Add(ni)
+		End If
+	Next
+	'
+	Dim ni As Map = CreateMap()
+	ni.put("component", "vm")
+	newList.Add(ni)
+	'
+	Dim ni As Map = CreateMap()
+	ni.put("component", "vm.Container")
+	newList.Add(ni)
+	
+	vm.setdata("containers", newList)
+End Sub
 
 Sub LoadProjects
 	'"projectname","dbtype","databasename"
@@ -1221,8 +1286,35 @@ Sub CreateProjectDrawer
 	txtprojectname.SetClearable(True)
 	txtprojectname.SetHideDetails(True)
 	txtprojectname.SetVisible(True)
-	txtprojectname.SetDense(True)
+	txtprojectname.SetDense(True).AddClass("my-2")
 	drwprojectdetails.Container.AddControl(txtprojectname.textfield, txtprojectname.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	'
+	Dim txtsenderemail As VMTextField = vm.NewTextField(Me, True, "txtsenderemail", "senderemail", "Sender Email", "", False, "", 0, "", "", 0)
+	txtsenderemail.SetFieldType("string")
+	txtsenderemail.SetOutlined(True)
+	txtsenderemail.SetDense(True)
+	txtsenderemail.SetClearable(True)
+	txtsenderemail.SetHideDetails(True)
+	txtsenderemail.SetVisible(True).AddClass("my-2")
+	drwprojectdetails.Container.AddControl(txtsenderemail.textfield, txtsenderemail.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+
+	Dim txtsendtoemail As VMTextField = vm.NewTextField(Me, True, "txtsendtoemail", "sendtoemail", "Send To", "", False, "", 0, "", "", 0)
+	txtsendtoemail.SetFieldType("string")
+	txtsendtoemail.SetOutlined(True)
+	txtsendtoemail.SetDense(True)
+	txtsendtoemail.SetClearable(True)
+	txtsendtoemail.SetHideDetails(True)
+	txtsendtoemail.SetVisible(True).AddClass("my-2")
+	drwprojectdetails.Container.AddControl(txtsendtoemail.textfield, txtsendtoemail.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+
+	Dim txtccemail As VMTextField = vm.NewTextField(Me, True, "txtccemail", "ccemail", "CC To", "", False, "", 0, "", "", 0)
+	txtccemail.SetFieldType("string")
+	txtccemail.SetOutlined(True)
+	txtccemail.SetDense(True)
+	txtccemail.SetClearable(True)
+	txtccemail.SetHideDetails(True)
+	txtccemail.SetVisible(True).AddClass("my-2")
+	drwprojectdetails.Container.AddControl(txtccemail.textfield, txtccemail.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 
 	Dim dbtypekeys As String = "banano,sqlite,mysql,mssql"
 	Dim dbtypevalues As String = "BANanoSQL,SQLite,MySQL,MSSQL"
@@ -1240,7 +1332,7 @@ Sub CreateProjectDrawer
 	txtdatabasename.SetDense(True)
 	txtdatabasename.SetClearable(True)
 	txtdatabasename.SetHideDetails(True)
-	txtdatabasename.SetVisible(True)
+	txtdatabasename.SetVisible(True).AddClass("my-2")
 	drwprojectdetails.Container.AddControl(txtdatabasename.textfield, txtdatabasename.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 
 	Dim btnbtnCancelProject As VMButton = vm.NewButton(Me, True, "btnbtnCancelProject", "Cancel", True, False, False, True)
@@ -1286,7 +1378,7 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 		db.OpenWait("bvmdesigner", "bvmdesigner")
 		rsSQL.Initialize("project", "id")
 		rsSQL.AddIntegers(Array("id"))
-		rsSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
+		rsSQL.AddStrings(Array("projectname","dbtype","databasename","components", "senderemail","sendtoemail","ccemail"))
 		rsSQL.Insert1(Record)
 		rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 		rsSQL.FromJSON
@@ -1298,13 +1390,16 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 		db.OpenWait("bvmdesigner", "bvmdesigner")
 		rsSQL.Initialize("project", "id")
 		rsSQL.AddIntegers(Array("id"))
-		rsSQL.AddStrings(Array("projectname","dbtype","databasename","components"))
+		rsSQL.AddStrings(Array("projectname","dbtype","databasename","components", "senderemail","sendtoemail","ccemail"))
 		rsSQL.Update1(Record, pid)
 		rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 		rsSQL.FromJSON
 	End Select
-	Dim sprojectname As String = Record.getdefault("projectname", "")
+	sprojectname = Record.getdefault("projectname", "")
 	sdatabasename = Record.getdefault("databasename","")
+	ssenderemail = Record.getdefault("senderemail","")
+	ssendtoemail = Record.getdefault("sendtoemail","")
+	sccemail = Record.getdefault("ccemail","")
 	vm.NavBar.UpdateTitle($"${Main.AppTitle} [${sprojectname}]"$)
 	vm.SetData("project", Record)
 	BANano.SetLocalStorage("project", Record)
@@ -1433,8 +1528,11 @@ Sub CreateUX
 	bHasBorder = YesNoToBoolean(vm.getdata("hasborder"))
 	
 	vm.pagepause
+	'clear components
 	vm.setdata("myux", vm.Newlist)
+	'clear source code for the schema
 	dbCode.SetCode("")
+	vm.CallMethod("LoadContainers")
 	'
 	Dim db As BANanoSQL
 	Dim gridSQL As BANanoAlaSQLE
@@ -1452,10 +1550,43 @@ Sub CreateUX
 	compSQL.SelectAll(Array("*"), Array("row","col"))
 	compSQL.result = db.ExecuteWait(compSQL.query, compSQL.args)
 	compSQL.FromJSON
-	'
+	'update components
 	vm.setdata("myux", compSQL.result)
 	
 	sb.initialize
+	'
+	Dim prj As Map = vm.getdata("project")
+	Dim pid As String = prj.getdefault("id", "")
+	sprojectname = prj.getdefault("projectname", "")
+	sdbtype = prj.getdefault("dbtype", "")
+	sdatabasename = prj.getdefault("databasename", "")
+	ssenderemail = prj.getdefault("senderemail","")
+	ssendtoemail = prj.getdefault("sendtoemail","")
+	sccemail = prj.getdefault("ccemail","")
+	'
+	Dim trimPRJ As String = sprojectname.replace(" ","")
+	trimPRJ = trimPRJ.trim
+	trimPRJ = trimPRJ.tolowercase
+	'
+	AddComment(sb, "INSTRUCTIONS: Copy the 5. Template1 folder to a new folder")
+	AddComment(sb, $"INSTRUCTION: Rename the new folder to "${sprojectname}""$)
+	AddComment(sb, $"INSTRUCTION: Open the folder and rename the .b4j file to "${trimPRJ}.b4j""$)
+	'Template1.b4j.meta
+	AddComment(sb, $"INSTRUCTION: Delete the "Template1.b4j.meta" file from the folder"$)
+	AddComment(sb, $"INSTRUCTION: Double click the "${trimPRJ}.b4j" file to open B4J"$)
+	AddComment(sb, $"INSTRUCTION: In the Main module on Line 8, replace the "template" for AppName to be "${trimPRJ}""$)
+	AddComment(sb, $"INSTRUCTION: In the Main module on Line 9, replace the "template" for AppTitle to be "${sprojectname}""$)
+	'
+	Select Case sdbtype
+	Case "banano"
+		AddComment(sb, $"INSTRUCTION: Delete the config.php file in the Files tab of the B4J project, leave this if you will connect to other databases"$)
+		AddComment(sb, $"INSTRUCTION: You will need to run your app and stop it, open the Files tab and click Sync and then run your app again for alasql.js to load!"$)
+	Case Else
+		AddComment(sb, $"INSTRUCTION: Comment out line 13 & 14"$)
+	End Select
+	AddComment(sb, $"INSTRUCTION: Update your version on line 15"$)
+	AddComment(sb, $"INSTRUCTION: Update your Port number on line 16"$)
+	
 	
 	AddComment(sb, "INSTRUCTION: In your B4J project, click Project > Add New Module > Code Module")
 	AddComment(sb, $"INSTRUCTION: Type the name of <Your Module> as the module name and click Ok"$)
@@ -1508,7 +1639,7 @@ Sub CreateUX
 		sl = mattr.get("sizelarge")
 		sx = mattr.get("sizexlarge")
 		'
-		sparent = mattr.getdefault("parent", "vm")
+		sparent = mattr.getdefault("parent", "vm.Container")
 		splaceholder = mattr.getdefault("placeholder", "")
 		bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
 		siconname = mattr.GetDefault("iconname", "")
@@ -2095,7 +2226,7 @@ Sub Design_TextArea
 	CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
 	CodeLine(sb, bisvisible, "b", "txta", sname, "SetVisible")
 
-	sb.append($"${sparent}.Container.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Switch
@@ -2133,7 +2264,7 @@ Sub Design_Switch
 	If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
 	AddCode(sb, $"swt${sname}.SetOnChange(Me, "swt${sname}_change")"$)
-	sb.append($"${sparent}.Container.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	
 	'add events
 	AddCode(sbEvents, $"Private Sub swt${sname}_change(value As Object)"$)
@@ -2172,7 +2303,7 @@ Sub Design_CheckBox
 	AddCode(sb, $"chk${sname}.SetOnChange(Me, "chk${sname}_change")"$)
 	If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'
-	sb.append($"${sparent}.Container.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub chk${sname}_change(value As Object)"$)
@@ -2244,7 +2375,7 @@ Sub Design_Date
 	CodeLine(sb, bishidedetails, "b", "dp", sname, "TextField.SetHideDetails")
 	AddCode(sb, $"dp${sname}.SetOnChange(Me, "dp${sname}_change")"$)
 	
-	sb.append($"${sparent}.Container.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub dp${sname}_change(value As Object)"$)
@@ -2327,7 +2458,7 @@ Sub Design_Chip
 	CodeLine(sb, bisXlarge, "b", "chp", sname, "SetXlarge")
 	CodeLine(sb, bisXsmall, "b", "chp", sname, "SetXsmall")
 	
-	sb.append($"${sparent}.Container.AddControl(chp${sname}.Chip, chp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(chp${sname}.Chip, chp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub chp${sname}_close(e As BANanoEvent)"$)
@@ -2394,7 +2525,7 @@ Sub Design_Badge
 	CodeLine(sb, stransition, "s", "bdg", sname, "SetTransition")
 	CodeLine(sb, bisvisible, "b", "bdg", sname, "SetVisible")
 	
-	sb.append($"${sparent}.Container.AddControl(bdg${sname}.Badge, bdg${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(bdg${sname}.Badge, bdg${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 
@@ -2435,7 +2566,7 @@ Sub Design_File
 	AddCode(sb, $"fi${sname}.SetOnFile(Me, "fi${sname}_change")"$)
 	CodeLine(sb, bisvisible, "b", "fi", sname, "SetVisible")
 	
-	sb.append($"${sparent}.Container.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub fi${sname}_change(fileList As List)"$)
@@ -2476,7 +2607,7 @@ Sub Design_Radio
 	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
 	CodeLine(sb, bisvisible, "b", "rd", sname, "SetVisible")
 	AddCode(sb, $"rd${sname}.SetOnChange(Me, "rd${sname}_change")"$)
-	sb.append($"${sparent}.Container.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub rd${sname}_change(value As Object)"$)
@@ -2597,7 +2728,7 @@ Sub Design_Select
 	CodeLine(sb, bisvisible, "b", "sel", sname, "SetVisible")
 	AddCode(sb, $"sel${sname}.SetOnChange(Me, "sel${sname}_change")"$)
 	'
-	sb.append($"${sparent}.Container.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddInstruction(sbEvents, "<Your Module>", "", "")
@@ -2649,7 +2780,7 @@ Sub Design_Slider
 	CodeLine2(sb, strackcolor, strackintensity, "s", "sld", sname, "SetTrackColorIntensity")
 	If bisthumblabel Then CodeLine(sb, bisthumblabel, "b", "sld", sname, "SetThumblabel")
 	If bisthumbalways Then CodeLine(sb, bisthumbalways, "b", "sld", sname, "SetThumblabelalways")
-	sb.append($"${sparent}.Container.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(sld${sname}.Slider, sld${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Label
@@ -2702,7 +2833,7 @@ Sub Design_Label
 	CodeLine(sb, bisvisible, "b", "lbl", sname, "Setvisible")
 	If stextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
 
-	sb.append($"${sparent}.Container.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 
 End Sub
@@ -2744,7 +2875,7 @@ Sub Design_Email
 	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
 	CodeLine(sb, bisvisible, "b", "txt", sname, "SetVisible")
 
-	sb.append($"${sparent}.Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 
 End Sub
@@ -2787,7 +2918,7 @@ Sub Design_Password
 	CodeLine(sb, svalue, "s", "pwd", sname, "SetValue")
 	CodeLine(sb, bisvisible, "b", "pwd", sname, "SetVisible")
 
-	sb.append($"${sparent}.Container.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 
 End Sub
@@ -2829,7 +2960,7 @@ Sub Design_Tel
 	CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
 	CodeLine(sb, bisvisible, "b", "tel", sname, "SetVisible")
 		
-	sb.append($"${sparent}.Container.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 
 End Sub
@@ -2891,7 +3022,7 @@ Sub Design_Time
 	CodeLine(sb, bclearable, "b", "tp", sname, "TextField.SetClearable")
 	CodeLine(sb, bishidedetails, "b", "tp", sname, "TextField.SetHideDetails")
 	AddCode(sb, $"tp${sname}.SetOnChange(Me, "tp${sname}_change")"$)
-	sb.append($"${sparent}.Container.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub tp${sname}_change(value As Object)"$)
@@ -2918,7 +3049,7 @@ Sub Design_Icon
 	CodeLine(sb, bisleft, "b", "icn", sname, "SetLeft")
 	CodeLine(sb, bisright, "b", "icn", sname, "SetRight")
 	CodeLine(sb, bisvisible, "b", "icn", sname, "SetVisible")
-	sb.append($"${sparent}.Container.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Parallax
@@ -2928,7 +3059,7 @@ Sub Design_Parallax
 	'
 	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sheight}", "${ssrc}", "${salt}")"$).append(CRLF)
 	CodeLine(sb, bisvisible, "b", "prlx", sname, "SetVisible")
-	sb.append($"${sparent}.Container.AddControl(prlx${sname}.Parallax, prlx${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(prlx${sname}.Parallax, prlx${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Container
@@ -2970,7 +3101,7 @@ Sub Design_Container
 	CodeLine(sb, sminheight, "s", "cont", sname, "SetMinHeight")
 	CodeLine(sb, smaxheight, "s", "cont", sname, "SetMaxHeight")
 	If scolor <> "" Then sb.append($"cont${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
-	sb.append($"${sparent}.Container.AddControl(cont${sname}.Container, cont${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(cont${sname}.Container, cont${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Image
@@ -3003,7 +3134,7 @@ Sub Design_Image
 	CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
 	CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
 	CodeLine(sb, bisvisible, "b", "img", sname, "SetVisible")
-	sb.append($"${sparent}.Container.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 End Sub
 
@@ -3088,7 +3219,7 @@ Sub Design_Drawer
 		AddCode(sb, $"Private drw${sname} As VMNavigationDrawer"$)
 		AddNewLine(sb)
 	
-		AddInstruction(sb, "Your", "Code","before vm.Ux")
+		AddInstruction(sb, "Your", "Code","")
 		AddNewLine(sb)
 		AddCode(sb, $"Sub CreateDrawer_${sname}"$)
 		sb.append($"drw${sname} = vm.CreateDrawer("drw${sname}", Me)"$).append(CRLF)
@@ -3246,7 +3377,7 @@ Sub Design_SpeedDial
 	End If
 	
 	'
-	sb.append($"${sparent}.Container.AddControl(spd${sname}.SpeedDial, spd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(spd${sname}.SpeedDial, spd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Dialog
@@ -3303,7 +3434,21 @@ Sub Design_Dialog
 	AddInstruction(sb, "<Your Module>", "Process_Globals","")
 	AddNewLine(sb)
 	sb.append($"Private dlg${sname} As VMDialog"$).append(CRLF).append(CRLF)
+	'
 	
+	AddNewLine(sb)
+	AddInstruction(sb, "<Your Module>", "Code","")
+	AddComment(sb, "add the dialog to page")
+	sb.append($"CreateDialog_${sname}"$).append(CRLF)
+	'
+	If bisshowonopen Then
+		AddNewLine(sb)
+		AddInstruction(sb, "<Your Module>", "Show","")
+		AddComment(sb, "show the dialog on open")
+		sb.append($"dlg${sname}.Show"$).append(CRLF)
+	End If
+	
+	AddNewLine(sb)
 	AddInstruction(sb, "<Your Module>", "", "")
 	AddNewLine(sb)
 	AddComment(sb, "create dialog")
@@ -3338,9 +3483,35 @@ Sub Design_Dialog
 	CodeLine(sb, bisretainfocus, "b", "dlg", sname, "Setretainfocus")
 	CodeLine(sb, bisscrollable, "b", "dlg", sname, "Setscrollable")
 	CodeLine(sb, bisslotactivator, "b", "dlg", sname, "Setslotactivator")
-	CodeLine(sb, bistitleprimary, "b", "dlg", sname, "Settitleprimary")
+	CodeLine(sb, bistitleprimary, "b", "dlg", sname, "SetTitlePrimary")
 	sb.append($"vm.AddDialog(dlg${sname})"$).append(CRLF)
 	sb.append("End Sub").append(CRLF)
+	'
+	'**** SAVE THE RECORD
+	AddNewLine(sb)
+	AddComment(sb, $"add code to process the details of ${sname}"$)
+	sb.append($"Sub ${sOkid}_click(e As BANanoEvent)"$).append(CRLF)
+	AddComment(sb, "get the record")
+	sb.append($"Dim Record As Map = dlg${sname}.Container.GetData"$).append(CRLF)
+	AddComment(sb, "validate the record")
+	sb.append($"Dim bValid As Boolean = vm.Validate(Record, dlg${sname}.Container.Required)"$).append(CRLF)
+	AddComment(sb, "if invalid exit")
+	AddCode(sb, $"If bValid = False Then"$)
+	AddCode(sb, $"vm.ShowSnackBarError("The information could not be validated!")"$)
+	AddCode(sb, "Return")
+	AddCode(sb, "End If")
+	AddCode(sb, "End Sub")
+	AddNewLine(sb)
+	'
+	'**** CANCEL DIALOG
+	'add code to cancel the dialog
+	AddNewLine(sb)
+	AddComment(sb, $"add code to cancel the dialog for ${sname}"$)
+	sb.append($"Sub ${sCancelid}_click(e As BANanoEvent)"$).append(CRLF)
+	AddComment(sb, "hide the modal")
+	AddCode(sb, $"dlg${sname}.Hide"$)
+	sb.append("End Sub").append(CRLF).append(CRLF)
+	
 End Sub
 
 Sub Design_Carousel
@@ -3416,7 +3587,7 @@ Sub Design_Carousel
 		If sskey = "" Then Continue
 		CodeLine(sb, ssavatar, "s", "car", sname, "AddItem1")
 	Next
-	sb.append($"${sparent}.Container.AddControl(car${sname}.Carousel, car${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(car${sname}.Carousel, car${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Menu
@@ -3557,7 +3728,7 @@ Sub Design_Menu
 		If bisdivider Then CodeLine(sb, True, "b", "menu", sname, "AddDivider1")
 	Next
 		
-	sb.append($"${sparent}.Container.AddControl(menu${sname}.Menu, menu${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(menu${sname}.Menu, menu${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 
 End Sub
 
@@ -3850,7 +4021,7 @@ Sub Design_ToolBar
 	
 	'
 	If biscurrent = False Then
-		sb.append($"${sparent}.Container.AddControl(tbl${sname}.ToolBar, tbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+		sb.append($"${sparent}.AddControl(tbl${sname}.ToolBar, tbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	End If
 End Sub
 
@@ -3944,11 +4115,43 @@ Sub Design_Button
 		Case "x-large"
 			CodeLine(sb, True, "b", "btn", sname, "SetXLarge")
 	End Select
-	sb.append($"${sparent}.Container.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(btn${sname}.Button, btn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'add events
 	'
 	AddCode(sbEvents, $"Private Sub btn${sname}_click(e As BANanoEvent)"$)
 	Select Case sclickaction
+	Case "contactus"
+		'send contact us email
+		AddComment(sbEvents, "get the record to create/update")
+		sbEvents.append($"Dim Record As Map = ${sdialogpage}.Container.GetData"$).append(CRLF)
+		AddComment(sbEvents, "validate the record")
+		sbEvents.append($"Dim bValid As Boolean = vm.Validate(Record, ${sdialogpage}.Container.Required)"$).append(CRLF)
+		AddComment(sbEvents, "if invalid exit create/update")
+		sbEvents.append($"If bValid = False Then"$).append(CRLF)
+		AddCode(sbEvents, $"vm.ShowSnackBarError("The details entered are incomplete!")"$)
+		AddCode(sbEvents, "Return")
+		AddCode(sbEvents, "End If")
+		AddComment(sbEvents, "read the contents!")
+		AddCode(sbEvents, $"Dim sfullname As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim semail As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim sphone As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim scomment As String = Record.get(?)"$)
+		AddComment(sbEvents, "Build the message")
+		AddCode(sbEvents, $"Dim nmsg As String = "Full Name: " & sfullname & "\r\nEmail Address: " & semail & "\r\nTelephone: " & sphone & "\r\nMessage:\r\n" & scomment"$)
+		AddCode(sbEvents, $"Dim se As Map = CreateMap("from":"${ssenderemail}","to":"${ssendtoemail}","cc":"${sccemail}","subject":"Contact Us: " & sfullname, "msg":nmsg)"$)
+		AddComment(sbEvents, "Send the message and wait for response")
+		AddCode(sbEvents, $"Dim Result As String = BANano.CallInlinePHPWait("SendEmail", se)"$)
+		AddCode(sbEvents, $"Dim ResultM As Map = BANano.FromJSON(Result)"$)
+		AddComment(sbEvents, "What is the result of the response from SMTP")
+		AddCode(sbEvents, $"Dim Response As String = ResultM.Get("response")"$)
+		AddCode(sbEvents, $"Select Case Response"$)
+		AddCode(sbEvents, $"Case "failure""$)
+		AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced sending the information!")"$)
+		AddCode(sbEvents, "Case Else")
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("Information was sent successfully.")"$)
+		AddCode(sbEvents, "End Select")
+		AddNewLine(sbEvents)
+		'
 	Case "add"
 		'add a record
 		AddComment(sbEvents, "set mode to A-dd")
@@ -3985,7 +4188,7 @@ Sub Design_Button
 		sbEvents.append($"Dim bValid As Boolean = vm.Validate(Record, ${sdialogpage}.Container.Required)"$).append(CRLF)
 		AddComment(sbEvents, "if invalid exit create/update")
 		sbEvents.append($"If bValid = False Then"$).append(CRLF)
-		AddCode(sbEvents, $"vm.ShowSnackBarError("The record is incomplete!")"$)
+			AddCode(sbEvents, $"vm.ShowSnackBarError("The details entered are incomplete!")"$)
 		AddCode(sbEvents, "Return")
 		AddCode(sbEvents, "End If")
 		AddComment(sbEvents, "add code to save the record!")
@@ -4052,7 +4255,7 @@ Sub Design_TextField
 	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
 	CodeLine(sb, bisvisible, "b", "txt", sname, "SetVisible")
 
-	sb.append($"${sparent}.Container.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub CodeLine(sbx As StringBuilder, varName As String, varType As String, prefix As String, ssname As String, methodName As String)
@@ -4305,6 +4508,7 @@ Sub ClearGrid
 	CreateUX
 End Sub
 
+'create the layout of the page
 Sub DesignLayout
 	vm.Container.AddRows(1)
 	vm.Container.AddColumns(1,2,2,2,2)
@@ -4338,11 +4542,19 @@ Sub DesignLayout
 	ep.AddPanel(LayoutPanel)
 	ep.AddPanel(ToolsPanel)
 	'
-	Dim page As VMExpansionPanel = ComponentsPanel
-	ep.AddPanel(page)
-	'
-	vm.container.AddComponent(1, 1, ep.tostring)
-	'
+	'create toolbox tabs
+	tblBox = vm.CreateTabs("tblbox", Me).SetVModel("tblbox")
+	tblBox.AddTabSlider
+	tblBox.AddTabItem("tblbox1","Toolbox", "", ep.tostring)
+	'list of components
+	Dim myComponents1 As VMList = vm.CreateList("mycomponents", Me)
+	myComponents1.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "")
+	myComponents1.SetDense(True)
+	tblBox.AddTabItem("comps","Components", "", myComponents1.tostring)
+	
+	'add tab as toolbox
+	vm.container.AddComponent(1, 1, tblBox.tostring)
+	
 	tabs = vm.CreateTabs("tabs", Me).SetGrow(True).SetIconsAndText(True).SetCentered(True).SetVModel("devspace")
 	tabs.OnToolBar = False
 	'
@@ -4413,7 +4625,7 @@ Sub DesignLayout
 	schemaDT.AddColumns(CreateMap("colsetranges": "Set Ranges"))
 	schemaDT.AddColumns(CreateMap("colhasset": "Set"))
 	schemaDT.AddColumns(CreateMap("colhasget": "Get"))
-	'	
+	's
 	schemaDT.SetEdit(True)
 	schemaDT.SetDelete(True)
 	schemaDT.SetDataSourceName("tableitems")
@@ -4513,8 +4725,8 @@ Sub Design_DBSourceCode
 	Dim rsType As String
 	Dim prj As Map = vm.getdata("project")
 	Dim pid As String = prj.getdefault("id", "")
-	Dim sprojectname As String = prj.getdefault("projectname", "")
-	Dim sdbtype As String = prj.getdefault("dbtype", "")
+	sprojectname = prj.getdefault("projectname", "")
+	sdbtype = prj.getdefault("dbtype", "")
 	sdatabasename = prj.getdefault("databasename", "")
 	Select Case sdbtype
 	Case "banano"
@@ -4550,6 +4762,7 @@ Sub Design_DBSourceCode
 	Dim isdialog As String = mattr.get("isdialog")
 	Dim sDatasourcename As String = mattr.get("datasourcename")
 	'
+	itemkey = itemkey.tolowercase
 	If bisautoincrement Then auto = itemkey
 	tbName = tbName.tolowercase
 	'
@@ -4558,7 +4771,7 @@ Sub Design_DBSourceCode
 	Dim dlg As String = dlg.replace(" ","")
 	dlg = dlg.trim
 	'
-	Dim mdlName As String = $"mod${dlg}"$
+	Dim mdlName As String = $"pg${dlg}"$
 	Dim diagName As String = $"dlg${dlg}"$
 	Dim rsName As String = $"rs${dlg}"$
 	'
@@ -4586,15 +4799,11 @@ Sub Design_DBSourceCode
 	AddComment(sbl, $"INSTRUCTION: Type "${mdlName}" as the module name and click Ok"$)
 	AddNewLine(sbl)
 	AddNewLine(sbl)
-	'show in navbar
-	If  bisShowonnavbar Then
-		'navigation bar
-		AddInstruction(sbl, "pgIndex", "BuildNavBar", "")
-		AddComment(sbl,$"code to add the add and refresh navigation buttons for ${stitle}"$)
-		AddNewLine(sbl)
 	
-		'navigation bar
-		AddComment(sbl,$"this page should have an icon/button in the navbar"$)
+	'show on navbar
+	If  bisShowonnavbar Then
+		AddInstruction(sbl, "pgIndex", "BuildNavBar" , "")
+		AddComment(sbl,$"Add ${stitle} to navbar"$)
 		If bisicon Then
 			AddCode(sbl, $"vm.NavBar.AddIcon1("nav${dlg}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
 		Else
@@ -4607,7 +4816,7 @@ Sub Design_DBSourceCode
 		'AddNewLine(sbl)
 		'AddNewLine(sbl)
 		'
-		'**** CLICK - ADD RECORD	
+		'**** CLICK - ADD RECORD
 		'AddInstruction(sbl, "pgIndex", "" , "")
 		'AddComment(sbl, $"add a new ${dlg} ${ssingular}"$)
 		'AddCode(sbl, $"Sub btnAdd${dlg}_click(e As BANanoEvent)"$)
@@ -4626,19 +4835,6 @@ Sub Design_DBSourceCode
 		'AddCode(sbl, CRLF)
 		'AddCode(sbl, CRLF)
 	
-	End If
-	
-	'show on drawer
-	If bisShowondrawer Then
-		AddInstruction(sbl, "pgIndex", "BuildNavDrawer" , "")
-		AddComment(sbl,$"this page should show on the drawer"$)
-		AddCode(sbl, $"vm.Drawer.AddIcon1("page${dlg}", "${siconname}", "${sIconcolor}", "${stitle}", "${stooltip}")"$)
-		If bisdivider Then
-			AddCode(sbl, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
-		End If
-		AddNewLine(sbl)
-		AddNewLine(sbl)
-		
 		'**** NAV CLICK TO SHOW PAGE
 		AddInstruction(sbl, "pgIndex", "" , "")
 		AddComment(sbl, $"click ${mdlName} nav button"$)
@@ -4647,7 +4843,17 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"${mdlName}.Show"$)
 		AddCode(sbl, "End Sub")
 		AddCode(sbl, CRLF)
-		
+	End If
+	
+	'show on drawer
+	If bisShowondrawer Then
+		AddInstruction(sbl, "pgIndex", "BuildNavDrawer", "")
+		AddComment(sbl,$"Add ${stitle} to drawer"$)
+		AddCode(sbl, $"vm.Drawer.AddIcon1("page${dlg}", "${siconname}", "${sIconcolor}", "${stitle}", "${stooltip}")"$)
+		If bisdivider Then
+			AddCode(sbl, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
+		End If
+		AddNewLine(sbl)
 		'**** DRAWER CLICK TO SHOW PAGE
 		AddInstruction(sbl, "pgIndex", "draweritems_click" , "inside the case statement")
 		AddCode(sbl, $"Case "page${dlg.tolowercase}""$)
@@ -4656,6 +4862,7 @@ Sub Design_DBSourceCode
 		AddCode(sbl, CRLF)
 	End If
 	'
+		
 	'**** ADD PAGE TO MASTER
 	AddInstruction(sbl, "pgIndex", "AddPages" , "")
 	AddComment(sbl, $"code to add the ${stitle} template code to the master HTML template"$)
@@ -4708,9 +4915,9 @@ Sub Design_DBSourceCode
 		Dim xvalue As String = m.GetDefault("colvalue", "")   'Value
 		Dim xindexed As String = m.GetDefault("colindexed", "No")      'Indexed
 		Dim xsortable As Boolean = YesNoToBoolean(m.GetDefault("colsortable", "No"))    'Sortable
-		Dim xcolvaluedisplay As String = m.GetDefault("colvaluedisplay", "")   'Value / Display
 		
 		If xkey = "" Then Continue
+		xkey= xkey.tolowercase
 		Select Case xtype
 		Case "action"
 			'add to a list of actions
@@ -4719,6 +4926,7 @@ Sub Design_DBSourceCode
 			sbl.append($"${rsName}.SchemaAddField("${xkey}", "${xdatatype}")"$).append(CRLF)
 			'we can sort by this field
 			If xsortable Then sorts.add(xkey)
+			'add columns to format
 		End Select
 	Next
 	AddComment(sbl, "generate & run command to create the table")
@@ -4774,11 +4982,13 @@ Sub Design_DBSourceCode
 	AddCode(sbl, "vm.AddContainer(cont)")
 	AddComment(sbl, "add method to get all records")
 	AddCode(sbl, $"vm.SetMethod(Me, "SelectAll_${dlg}")"$)
+	'
 	'set methods for foreign linkages
 	For Each f As Map In foreign
 		Dim scolforeigntable As String = f.getdefault("colforeigntable", "")
 		AddCode(sbl, $"vm.SetMethod(Me, "Load_${scolforeigntable}")"$)
 	Next
+	'
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
 	'
@@ -4822,12 +5032,13 @@ Sub Design_DBSourceCode
 		AddComment(sbl, "update the navbar title")
 		AddCode(sbl, $"vm.NavBar.UpdateTitle(Title)"$)
 	End If
+	'
 	If  bisShowonnavbar Then
-		AddComment(sbl, "hide all buttons")
-		AddCode(sbl, "vm.NavBar.HideItems")
-		AddComment(sbl, $"show buttons for ${mdlName}"$)
+		AddComment(sbl, $"show ${stitle} on navbar"$)
 		'AddCode(sbl, $"vm.ShowItem("btnAdd${dlg}")"$)
 		'AddCode(sbl, $"vm.ShowItem("btnRefresh${dlg}")"$)
+		AddCode(sbl, $"vm.ShowItem("nav${dlg}")"$)
+	Else
 		AddCode(sbl, $"vm.HideItem("nav${dlg}")"$)
 	End If
 	'
@@ -4947,9 +5158,9 @@ Sub Design_DBSourceCode
 		For Each m As Map In flds
 			Dim fld As String = m.GetDefault("key","")
 			Dim xsortable As Boolean = YesNoToBoolean(m.GetDefault("colsortable", "No"))
-			Dim xontable As Boolean = YesNoToBoolean(m.GetDefault("colontable", "No"))
+			'Dim xontable As Boolean = YesNoToBoolean(m.GetDefault("colontable", "No"))
 			If fld = "" Then Continue
-			If xontable = False Then Continue
+			'If xontable = False Then Continue
 			
 			sbCommand.append($"${tbName}.${fld},"$)
 			'	
@@ -4959,6 +5170,10 @@ Sub Design_DBSourceCode
 				Dim scolforeigntable As String = m.getdefault("colforeigntable", "")
 				Dim ccolforeignkey As String = m.getdefault("colforeignkey", "")
 				Dim ccolforeignvalue As String = m.getdefault("colforeignvalue", "")
+				'
+				scolforeigntable = scolforeigntable.tolowercase
+				ccolforeignkey = ccolforeignkey.tolowercase
+				ccolforeignvalue = ccolforeignvalue.tolowercase
 				'add the foreign value field
 				sbCommand.append($"${scolforeigntable}.${ccolforeignvalue},"$)
 				'add sortable
@@ -4999,7 +5214,7 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "save records to state")
 	sbl.append($"VM.SetData("${sDatasourcename}", ${rsName}.Result)"$).append(CRLF)
 	AddComment(sbl, "update the data table records")
-	CodeLine(sbl, sDatasourcename, "s", "dt", tbName, "SetDataSourceName")
+	CodeLine(sbl, $"${rsName}.Result"$, "s", "dt", tbName, "SetDataSource")
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
 	'**** IS LOOKUP TABLE
@@ -5424,21 +5639,6 @@ Sub btnDeleteProp_click(e As BANanoEvent)
 	DeletePropertyBag
 End Sub
 '
-
-Sub ComponentsPanel As VMExpansionPanel
-	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep0grid", "ep1", Me)
-	grd.Header.SetText("My Components")
-	grd.Container.SetTag("div")
-	grd.Container.AddRows(1).AddColumns12
-	'
-	Dim myComponents1 As VMList = vm.CreateList("mycomponents", Me)
-	myComponents1.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "")
-	
-	grd.Container.AddComponent(1,1,myComponents1.tostring)
-
-	Return grd
-End Sub
-
 Sub DesignStructure
 	'apply filter
 	Dim dbFields As List
@@ -5461,6 +5661,7 @@ End Sub
 'a component has been clicked
 Sub mycomponents_click(e As BANanoEvent)
 	istool = False
+	vm.CallMethod("LoadContainers")
 	drwprojectdetails.hide
 	Dim itemID As String = vm.GetIDFromEvent(e)
 	itemID = BANano.parseint(itemID)
@@ -6170,7 +6371,7 @@ Sub ItemDrop(e As BANanoEvent)
 					'
 					Dim attr As Map = CreateMap()
 					attr.put("buttontype", "normal")
-					attr.put("parent", "vm")
+					attr.put("parent", "vm.Container")
 					attr.put("fieldtype", "string")
 					attr.put("id", sid)
 					attr.put("vmodel", slabel)
@@ -6534,7 +6735,8 @@ Sub PropertyBag_Slider
 	pbslider.AddHeading("d","Details")
 	pbslider.AddText("d","id","ID","","")
 	pbslider.AddSelect("d", "controltype", "Type", controltypes)
-	pbslider.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbslider.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbslider.AddText("d","vmodel","VModel","","")
 	pbslider.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbslider.AddText2("d", CreateMap("label": "Label", "slidervalue": "Value(,)"))
 	pbslider.AddText2("d", CreateMap("stepvalue": "Step Value"))
@@ -6568,7 +6770,8 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddHeading("d","Details")
 	pbdatepicker.AddText("d","id","ID","","")
 	pbdatepicker.AddSelect("d", "controltype", "Type", controltypes)
-	pbdatepicker.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
+	pbdatepicker.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbdatepicker.AddText("d","vmodel","VModel","","")
 	pbdatepicker.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbdatepicker.AddText2("d", CreateMap("label": "Label", "value":"Value"))
 	pbdatepicker.AddText("d","iconname","Icon Name","","")
@@ -6610,7 +6813,7 @@ End Sub
 #Region Button Property Bag
 Sub PropertyBag_Button
 	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record", _
-	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","":"None","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer")
+	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","":"None","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer","contactus":"Contact Us")
 	vm.setdata("pbbutton", False)
 	lstBags.add("pbbutton")
 	pbbutton = vm.CreateProperty("ppbbutton", Me)
@@ -6618,7 +6821,8 @@ Sub PropertyBag_Button
 	pbbutton.AddHeading("d","Details")
 	pbbutton.AddText("d","id","ID","","")
 	pbbutton.AddSelect("d", "controltype", "Type", controltypes)
-	pbbutton.AddText2("d",CreateMap("parent":"Parent","vmodel":"ID"))
+	pbbutton.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbbutton.AddText("d","vmodel","ID","","")
 	pbbutton.AddText2("d",CreateMap("label":"Label", "iconname":"Icon Name"))
 	pbbutton.AddRadioGroupH("d", "iconpos", "Icon Position", iconpos)
 	pbbutton.AddRadioGroupH("d", "buttontype", "Button Type", CreateMap("normal":"Normal","icon":"Icon","fab":"FAB"))
@@ -6655,7 +6859,8 @@ Sub PropertyBag_Icon
 	pbicon.AddHeading("d","Details")
 	pbicon.AddText("d","id","ID","","")
 	pbicon.AddText("d", "controltype", "Type", "", "icon")
-	pbicon.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
+	pbicon.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbicon.AddText("d","vmodel","VModel","","")
 	pbicon.AddText("d","iconname","Icon Name","","mdi-account-circle")
 	pbicon.AddSelect("d", "size", "Icon Size", iconsizes)
 	pbicon.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
@@ -6681,7 +6886,8 @@ Sub PropertyBag_Image
 	pbimage.AddHeading("d","Details")
 	pbimage.AddText("d","id","ID","","")
 	pbimage.AddText("d", "controltype", "Type", "", "image")
-	pbimage.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbimage.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbimage.AddText("d","vmodel","ID","","")
 	pbimage.AddText("d","src","Src","","./assets/sponge.png")
 	pbimage.AddText("d","lazysrc","Lazy Src","","")
 	pbimage.AddText("d","alt","Alt","","")
@@ -6711,7 +6917,8 @@ Sub PropertyBag_CheckBox
 	pbcheckbox.AddHeading("d","Details")
 	pbcheckbox.AddText("d","id","ID","","")
 	pbcheckbox.AddSelect("d", "controltype", "Type", controltypes)
-	pbcheckbox.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbcheckbox.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbcheckbox.AddText("d","vmodel","VModel","","")
 	pbcheckbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbcheckbox.AddText2("d",CreateMap("label":"Label", "value": "Value"))
 	pbcheckbox.AddText2("d",CreateMap("truevalue":"True Value", "falsevalue":"False Value"))
@@ -6743,14 +6950,18 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddHeading("d","Details")
 	pbradiogroup.AddText("d","id","ID","","")
 	pbradiogroup.AddText("d", "controltype", "Type", "", "radio")
-	pbradiogroup.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
+	pbradiogroup.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbradiogroup.AddText("d","vmodel","VModel","","")
 	pbradiogroup.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbradiogroup.AddText2("d",CreateMap("label":"Label","value":"Value"))
-	pbradiogroup.AddText("d","sourcetable","Data Source","","")
-	pbradiogroup.AddText2("d", CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
-	pbradiogroup.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
-	pbradiogroup.AddTextArea("d","values","Item Texts (,)", "", "One,Two,Three")
 	pbradiogroup.AddNumber("d","tabindex","Tab Index","","")
+	
+	pbradiogroup.AddHeading("ds","Data Source")
+	pbradiogroup.AddSelectDS("ds", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
+	pbradiogroup.AddText2("ds", CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
+	pbradiogroup.AddSwitches("ds", CreateMap("useoptions": "Use These Items"))
+	pbradiogroup.AddTextArea("ds","keys","Item Values (,)","", "1,2,3")
+	pbradiogroup.AddTextArea("ds","values","Item Texts (,)", "", "One,Two,Three")
 	'
 	pbradiogroup.AddHeading("e","Settings")
 	pbradiogroup.AddSwitches("e", CreateMap("showlabel": "Show Label", "labelontop": "Column"))
@@ -6820,7 +7031,8 @@ Sub PropertyBag_Select
 	pbselectbox.AddHeading("d","Details")
 	pbselectbox.AddText("d","id","ID","","")
 	pbselectbox.AddSelect("d", "controltype", "Type", controltypes)
-	pbselectbox.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbselectbox.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbselectbox.AddText("d","vmodel","VModel","","")
 	pbselectbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbselectbox.AddText2("d",CreateMap("label":"Label", "value": "Value"))
 	pbselectbox.AddText("d","iconname","Icon Name","","")
@@ -6828,11 +7040,13 @@ Sub PropertyBag_Select
 	pbselectbox.AddNumber("d","tabindex","Tab Index","","")
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
 	pbselectbox.AddText("d","errortext","Error Text","","")
-	pbselectbox.AddSelectDS("d", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
-	pbselectbox.AddText2("d",CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
-	pbselectbox.AddSwitches("d", CreateMap("useoptions": "Use These Items"))
-	pbselectbox.AddTextArea("d","keys","Item Values (,)","", "1,2,3")
-	pbselectbox.AddTextArea("d","values","Item Texts (,)", "", "One,Two,Three")
+	'
+	pbselectbox.AddHeading("ds","Data Source")
+	pbselectbox.AddSelectDS("ds", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
+	pbselectbox.AddText2("ds",CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
+	pbselectbox.AddSwitches("ds", CreateMap("useoptions": "Use These Items"))
+	pbselectbox.AddTextArea("ds","keys","Item Values (,)","", "1,2,3")
+	pbselectbox.AddTextArea("ds","values","Item Texts (,)", "", "One,Two,Three")
 	'
 	pbselectbox.AddHeading("e","Settings")
 	pbselectbox.AddSwitches("e", CreateMap("isrequired": "Required", "isautofocus": "Auto Focus"))
@@ -6862,7 +7076,8 @@ Sub PropertyBag_Parallax
 	pbparallax.AddHeading("d","Details")
 	pbparallax.AddText("d","id","ID","","")
 	pbparallax.AddText("d", "controltype", "Type", "","parallax")
-	pbparallax.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
+	pbparallax.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbparallax.AddText("d","vmodel","ID","","")
 	pbparallax.AddText("d","height","Height","","500")
 	pbparallax.AddText("d","src","Src","","./assets/material.jpg")
 	pbparallax.AddText("d","alt","Alt","","")
@@ -6885,7 +7100,8 @@ Sub PropertyBag_Container
 	pbcontainer.AddHeading("d","Details")
 	pbcontainer.AddText("d","id","ID","","")
 	pbcontainer.AddText("d", "controltype", "Type", "","container")
-	pbcontainer.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
+	pbcontainer.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbcontainer.AddText("d","vmodel","ID","","")
 	pbcontainer.AddSelect2("d","elevation","Elevation",vm.elevation, "transition","Transition",vm.Transition)
 	pbcontainer.AddText2("d",CreateMap("borderradius":"Border Radius", "borderwidth":"Border Width"))
 	pbcontainer.AddSelect2("d","bordercolor","Border Color", vm.ColorOptions, "borderstyle","Border Style",vm.BorderOptions)
@@ -6911,7 +7127,8 @@ Sub PropertyBag_Toolbar
 	pbtoolbar.AddHeading("d","Details")
 	pbtoolbar.AddText("d","id","ID","","")
 	pbtoolbar.AddText("d", "controltype", "Type", "","toolbar")
-	pbtoolbar.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
+	pbtoolbar.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbtoolbar.AddText("d","vmodel","ID","","")
 	pbtoolbar.AddRadioGroupH("d", "bartype", "Type", CreateMap("app":"AppBar","tool":"ToolBar","sys":"SystemBar"))
 	pbtoolbar.AddSelect("d","elevation","Elevation",vm.elevation)
 	pbtoolbar.AddText2("d",CreateMap("extensionheight":"Extension Height","searchkey":"Search Key"))
@@ -6965,7 +7182,8 @@ Sub PropertyBag_Label
 	pblabel.AddHeading("d","Details")
 	pblabel.AddText("d","id","ID","","")
 	pblabel.AddText("d", "controltype", "Type", "","label")
-	pblabel.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pblabel.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pblabel.AddText("d","vmodel","ID","","")
 	pblabel.AddSelect2("d", "labelsize", "Size", mlabelsize,"fontweight", "Font Weight", vm.FontWeightOptions)
 	pblabel.AddTextArea("d","value","Text","","")
 	pblabel.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
@@ -6996,7 +7214,8 @@ Sub PropertyBag_TextField
 	pbtextfield.AddHeading("d","Details")
 	pbtextfield.AddText("d","id","ID","","")
 	pbtextfield.AddSelect("d", "controltype", "Type", controltypes)
-	pbtextfield.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbtextfield.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbtextfield.AddText("d","vmodel","VModel","","")
 	pbtextfield.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbtextfield.AddText2("d", CreateMap("label": "Label","value": "Value"))
 	pbtextfield.AddText("d","iconname","Icon Name","","")
@@ -7227,6 +7446,8 @@ Sub SavePropertyBag
 			mattr = pbexpansionpanels.properties
 		Case "page"
 			mattr = pbpage.properties
+			spagetitle = mattr.getdefault("pagetitle", "")
+			mattr.put("label", spagetitle)
 		Case "builder"
 			mattr = pbbuilder.properties
 		Case "stepper"
@@ -7237,6 +7458,10 @@ Sub SavePropertyBag
 			mattr = pblist.properties
 		Case "dialog"
 			mattr = pbdialog.properties
+			Dim svmodel As String = mattr.get("vmodel")
+			mattr.put("okid", $"btnOk${svmodel}"$)
+			mattr.put("cancelid", $"btnCancel${svmodel}"$)
+			vm.SetState(mattr)
 		Case "chip"
 			mattr = pbchip.properties
 		Case "badge"
@@ -7392,7 +7617,7 @@ Sub SavePropertyBag
 			nc.put("id", cid)
 			nc.put("label", ctitle)
 			nc.put("controltype", ccolcontroltype)
-			nc.put("parent", diagName)
+			nc.put("parent", diagName & ".Container")
 			nc.put("vmodel", ckey)
 			nc.put("fieldtype", DataType2FieldType(ccoldatatype))
 			nc.put("iconname", cicon)
@@ -7550,7 +7775,8 @@ Sub PropertyBag_Menu
 	pbmenu.AddHeading("d","Details")
 	pbmenu.AddText("d","id","ID","","")
 	pbmenu.AddText("d", "controltype", "Type", "","menu")
-	pbmenu.AddText2("d",CreateMap("parent":"Parent","vmodel":"ID"))
+	pbmenu.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbmenu.AddText("d","vmodel","ID","","")
 	pbmenu.AddRadioGroupH("d", "menutype", "Type", CreateMap("icon":"Icon","btn":"Button"))
 	pbmenu.AddText2("d",CreateMap("activator":"Activator", "closedelay":"Close Delay"))
 	pbmenu.AddText("d","contentclass","Content Class","","")
@@ -7646,7 +7872,8 @@ Sub PropertyBag_Carousel
 	pbcarousel.AddHeading("d","Details")
 	pbcarousel.AddText("d","id","ID","","")
 	pbcarousel.AddText("d", "controltype", "Type", "","carousel")
-	pbcarousel.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbcarousel.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbcarousel.AddText("d","vmodel","ID","","")
 	pbcarousel.AddText("d","activeclass","ActiveClass","","")
 	pbcarousel.AddText("d","delimitericon","DelimiterIcon","","")
 	pbcarousel.AddText2("d", CreateMap("height":"Height", "interval":"Interval"))
@@ -7684,7 +7911,7 @@ Sub PropertyBag_Dialog
 	pbdialog.AddHeading("d","Details")
 	pbdialog.AddText("d","id","ID","","")
 	pbdialog.AddText("d", "controltype", "Type", "","dialog")
-	pbdialog.AddText("d","vmodel","VModel","","")
+	pbdialog.AddText("d","vmodel","ID","","")
 	pbdialog.AddText("d","label","Title","","")
 	pbdialog.AddText2("d",CreateMap("okid":"Ok ID","okcaption":"Ok Caption"))
 	pbdialog.AddText2("d",CreateMap("cancelid":"Cancel ID", "cancelcaption":"Cancel Caption"))
@@ -7697,11 +7924,11 @@ Sub PropertyBag_Dialog
 	pbdialog.AddText2("d",CreateMap("width":"Width","maxwidth":"MaxWidth"))
 	'
 	pbdialog.AddHeading("e","Settings")
+	pbdialog.AddSwitches("e", CreateMap("islight": "Light", "isshowonopen":"Show on Open"))
 	pbdialog.AddSwitches("e", CreateMap("isattach": "Attach", "isbackdrop": "Backdrop"))
 	pbdialog.AddSwitches("e", CreateMap("isdark": "Dark", "isdisabled": "Disabled"))
 	pbdialog.AddSwitches("e", CreateMap("iseager": "Eager", "isfullscreen": "Fullscreen"))
 	pbdialog.AddSwitches("e", CreateMap("ishideoverlay": "HideOverlay", "isinternalactivator": "InternalActivator"))
-	pbdialog.AddSwitches("e", CreateMap("islight": "Light"))
 	pbdialog.AddSwitches("e", CreateMap("isnoclickanimation": "NoClickAnimation", "isopenonhover": "OpenOnHover"))
 	pbdialog.AddSwitches("e", CreateMap("ispersistent": "Persistent", "isretainfocus": "RetainFocus"))
 	pbdialog.AddSwitches("e", CreateMap("isscrollable": "Scrollable", "isslotactivator": "SlotActivator"))
@@ -7734,6 +7961,7 @@ Sub Read_Dialog
 	'
 	bisattach = YesNoToBoolean(mattr.getdefault("isattach", "No"))
 	bisbackdrop = YesNoToBoolean(mattr.getdefault("isbackdrop", "No"))
+	bisshowonopen = YesNoToBoolean(mattr.getdefault("isshowonopen", "No"))
 	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
 	bisfullscreen = YesNoToBoolean(mattr.getdefault("isfullscreen", "No"))
@@ -7840,7 +8068,8 @@ Sub PropertyBag_Rating
 	pbrating.AddHeading("d","Details")
 	pbrating.AddText("d","id","ID","","")
 	pbrating.AddText("d", "controltype", "Type", "","rating")
-	pbrating.AddText2("d",CreateMap("parent":"Parent","vmodel":"VModel"))
+	pbrating.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbrating.AddText("d","vmodel","VModel","","")
 	pbrating.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbrating.AddText2("d",CreateMap("value":"Value", "length":"Length"))
 	pbrating.AddText2("d",CreateMap("opendelay":"OpenDelay", "size":"Size"))
@@ -7950,7 +8179,7 @@ Sub Design_Rating
 	CodeLine2(sb, scolor, sintensity, "b", "rat", sname, "SetColorIntensity")
 	CodeLine2(sb, sBackgroundcolor, sBackgroundintensity, "b", "rat", sname, "SetBackgroundColorIntensity")
 	AddCode(sb, $"Rating${sname}.SetOnInput(Me, "Rating${sname}_input")"$)
-	sb.append($"${sparent}.Container.AddControl(rat${sname}.Rating, rat${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(rat${sname}.Rating, rat${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	'add events
 	AddCode(sbEvents, $"Private Sub rat${sname}_input(value As Object)"$)
@@ -7968,7 +8197,8 @@ Sub PropertyBag_Table
 	pbtable.AddHeading("d","Details")
 	pbtable.AddText("d","id","ID","","")
 	pbtable.AddText("d", "controltype", "Type", "","table")
-	pbtable.AddText2("d",CreateMap("parent":"Parent", "vmodel":"Table Name"))
+	pbtable.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbtable.AddText("d","vmodel","Table Name","","")
 	pbtable.AddText("d","label","Title","","")
 	pbtable.AddText("d","caption","Caption","","")
 	pbtable.AddText2("d",CreateMap("singular":"Single Record", "manyrecords":"Many Records"))
@@ -8069,8 +8299,10 @@ Sub Read_Table
 	bisSearchbox = YesNoToBoolean(mattr.getdefault("issearchbox", "No"))
 	bisdialog = YesNoToBoolean(mattr.getdefault("isdialog", "No"))
 	sSelectfields = mattr.getdefault("selectfields", "")
+	sSelectfields = sSelectfields.tolowercase
 	sSelecttype = mattr.getdefault("selecttype", "")
 	sSortfields = mattr.getdefault("sortfields", "")
+	sSortfields = sSortfields.tolowercase
 	snewid = mattr.getdefault("newid", "")
 	snewicon = mattr.getdefault("newicon", "")
 	snewtooltip = mattr.getdefault("newtooltip", "")
@@ -8094,6 +8326,7 @@ Sub Read_Table
 	bisHidedefaultfooter = YesNoToBoolean(mattr.getdefault("ishidedefaultfooter", "No"))
 	bisHidedefaultheader = YesNoToBoolean(mattr.getdefault("ishidedefaultheader", "No"))
 	sItemkey = mattr.getdefault("itemkey", "")
+	sItemkey = sItemkey.tolowercase
 	sItemsperpage = mattr.getdefault("itemsperpage", "")
 	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bisloading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
@@ -8116,7 +8349,9 @@ Sub Read_Table
 	'sSortby = mattr.getdefault("sortby", "")
 	'sSortdesc = mattr.getdefault("sortdesc", "")
 	sdisplayfield = mattr.getdefault("displayfield","")
+	sdisplayfield = sdisplayfield.tolowercase
 	sconfirmfield = mattr.getdefault("confirmfield", "")
+	sconfirmfield = sconfirmfield.tolowercase
 	bislookup = YesNoToBoolean(mattr.getdefault("islookup", "No"))
 End Sub
 
@@ -8129,7 +8364,7 @@ Sub Design_Table
 	datatable.SetCaption(sCaption)
 	datatable.SetCalculatewidths(bisCalculatewidths)
 	datatable.SetDark(bisdark)
-	datatable.SetDatasourcename(sDatasourcename)
+	'datatable.SetDatasourcename(sDatasourcename)
 	datatable.SetDense(bisdense)
 	datatable.SetDisablefiltering(bisDisablefiltering)
 	datatable.SetDisablepagination(bisDisablepagination)
@@ -8238,8 +8473,8 @@ Sub Design_Table
 		sb.append($"dt${sname}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
 	End If
 	'
-	AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
-	CodeLine(sb, sDatasourcename, "s", "dt", sname, "SetDatasourcename")
+	'AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
+	'CodeLine(sb, sDatasourcename, "s", "dt", sname, "SetDatasourcename")
 	CodeLine(sb, bisCalculatewidths, "b", "dt", sname, "SetCalculatewidths")
 	CodeLine(sb, bisdark, "b", "dt", sname, "SetDark")
 	
@@ -8308,6 +8543,8 @@ Sub Design_Table
 		If xkey = "" Then Continue
 		If xontable = False Then Continue
 		Dim bSortable As Boolean = YesNoToBoolean(xsortable)
+		xkey = xkey.tolowercase
+		ccolforeignvalue = ccolforeignvalue.tolowercase
 		Select Case xtype
 		Case "action"
 			sba.append($"dt${sname}.AddIcon("${xkey}", "${xtitle}", "${xicon}")"$).append(CRLF)
@@ -8344,7 +8581,8 @@ Sub PropertyBag_Chip
 	pbchip.AddHeading("d","Details")
 	pbchip.AddText("d","id","ID","","")
 	pbchip.AddText("d", "controltype", "Type", "","chip")
-	pbchip.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbchip.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbchip.AddText("d","vmodel","VModel","","")
 	pbchip.AddText("d", "label","Label","","")
 	pbchip.AddText("d","src","Src","","./assets/sponge.png")
 	pbchip.AddText("d","iconname","Icon Name","","")
@@ -8383,7 +8621,8 @@ Sub PropertyBag_Badge
 	pbbadge.AddHeading("d","Details")
 	pbbadge.AddText("d","id","ID","","")
 	pbbadge.AddText("d", "controltype", "Type", "","badge")
-	pbbadge.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbbadge.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbbadge.AddText("d","vmodel","VModel","","")
 	pbbadge.AddText2("d",CreateMap("content":"Content", "iconname":"Icon"))
 	pbbadge.AddRadioGroupH("d", "badgetype", "Type", CreateMap("iscontent":"Content","isicon":"Icon"))
 	pbbadge.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
@@ -8416,7 +8655,8 @@ Sub PropertyBag_Avatar
 	pbavatar.AddHeading("d","Details")
 	pbavatar.AddText("d","id","ID","","")
 	pbavatar.AddText("d", "controltype", "Type", "","avatar")
-	pbavatar.AddText2("d", CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbavatar.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbavatar.AddText("d","vmodel","VModel","","")
 	pbavatar.AddText2("d", CreateMap("badge":"Badge","label":"Label"))
 	pbavatar.AddText2("d", CreateMap("iconname": "Icon Name", "size": "Size"))
 	pbavatar.AddText("d", "src", "Src","", "")
@@ -8510,7 +8750,7 @@ Sub Design_Avatar
 		CodeLine(sb, ssrc, "s", "avt", sname, "SetImageonly")
 	End Select
 	
-	sb.append($"${sparent}.Container.AddControl(avt${sname}.Avatar, avt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(avt${sname}.Avatar, avt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 End Sub
 
@@ -8524,7 +8764,8 @@ Sub PropertyBag_List
 	pblist.AddHeading("d","Details")
 	pblist.AddText("d","id","ID","","")
 	pblist.AddText("d", "controltype", "Type", "","list")
-	pblist.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
+	pblist.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pblist.AddText("d","vmodel","ID","","")
 	pblist.AddText("d","datasource","Data Source","","")
 	pblist.AddText2("d",CreateMap("keyfld":"Key Fld", "avatarfld":"Avatar Fld"))
 	pblist.AddText2("d",CreateMap("iconfld":"Icon Fld", "iconcolorfld":"Icon Color Fld"))
@@ -8694,7 +8935,7 @@ Sub Design_List
 		AddCode(sb, $"lst${sname}.SetDataSourceTemplate1("${sDatasource}","${sKeyfld}","${sAvatarfld}","${sIconfld}","${sIconcolorfld}","${sTitlefld}","${sSubtitlefld}","${sSubtitle1fld}","${sActioniconfld}","${sActioniconcolorfld}")"$)
 	End If
 	
-	sb.append($"${sparent}.Container.AddControl(lst${sname}.Avatar, lst${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(lst${sname}.Avatar, lst${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 #Region Tabs
@@ -8707,7 +8948,8 @@ Sub PropertyBag_Tabs
 	pbtabs.AddHeading("d","Details")
 	pbtabs.AddText("d","id","ID","","")
 	pbtabs.AddText("d", "controltype", "Type", "","tabs")
-	pbtabs.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbtabs.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbtabs.AddText("d","vmodel","VModel","","")
 	pbtabs.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
 	pbtabs.AddSelect2("d","backgroundcolor","BackgroundColor", vm.ColorOptions, "backgroundcolorintensity","BackgroundColor Intensity", vm.IntensityOptions)
 	pbtabs.AddSelect2("d","slidercolor","SliderColor", vm.ColorOptions, "slidercolorintensity","SliderColor Intensity", vm.IntensityOptions)
@@ -8782,8 +9024,14 @@ Sub Design_Stepper
 		If sskey = "" Then Continue
 		stp.AddStep1(sskey, sstitle, ssubtitle, "")
 		'
+		AddComment(sb, $"Create the ${sstitle} step"$)
+		AddCode(sb, $"Sub CreateContainer_${sskey} As VMContainer"$)
 		sb.append($"Dim cont${sskey} As VMContainer"$).append(CRLF)
 		AddCode(sb, $"cont${sskey} = vm.CreateContainer("cont${sskey}", Me)"$)
+		AddComment(sb, "Add components for the container here!")
+		AddNewLine(sb)
+		AddCode(sb, $"Return cont${sskey}"$)
+		AddCode(sb, $"End Sub"$)
 		AddNewLine(sb)
 
 	Next
@@ -8804,10 +9052,11 @@ Sub Design_Stepper
 		Dim sstitle As String = m.getdefault("title", "")
 		Dim ssubtitle As String = m.getdefault("subtitle", "")
 		If sskey = "" Then Continue
+		AddCode(sb, $"Dim cont${sskey} As VMContainer = CreateContainer_${sskey}"$)
 		AddCode(sb, $"stp${sname}.AddStep1("${sskey}", "${sstitle}", "${ssubtitle}", cont${sskey}.ToString)"$)
 	Next
 			
-	sb.append($"${sparent}.Container.AddControl(stp${sname}.Stepper, stp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(stp${sname}.Stepper, stp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 	AddCode(sbEvents, $"Public Sub stp${sname}_change(value As Object)"$)
 	AddCode(sbEvents, "End Sub")
@@ -8852,8 +9101,14 @@ Sub Design_Tabs
 		If sskey = "" Then Continue
 		tabs.AddTab(sskey, sstitle, ssiconname, Null)
 		'create the containers
+		AddComment(sb, $"Create the ${sstitle} tab"$)
+		AddCode(sb, $"Sub CreateContainer_${sskey} As VMContainer"$)
 		sb.append($"Dim cont${sskey} As VMContainer"$).append(CRLF)
 		AddCode(sb, $"cont${sskey} = vm.CreateContainer("cont${sskey}", Me)"$)
+		AddComment(sb, "Add components for the container here!")
+		AddNewLine(sb)
+		AddCode(sb, $"Return cont${sskey}"$)
+		AddCode(sb, $"End Sub"$)
 		AddNewLine(sb)
 	Next
 	ui.AddControl(tabs.Tabs, tabs.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
@@ -8887,6 +9142,7 @@ Sub Design_Tabs
 	AddCode(sb, $"tabs${sname}.SetOnChange(me, "tabs${sname}_change")"$)
 	'
 	AddCode(sbEvents, $"Public Sub tabs${sname}_change(value As Object)"$)
+	AddCode(sbEvents, $"VM.ShowSnackSuccess(value)"$)
 	AddCode(sbEvents, "End Sub")
 	AddNewLine(sbEvents)
 	'
@@ -8895,10 +9151,11 @@ Sub Design_Tabs
 		Dim ssiconname As String = m.getdefault("icon", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		If sskey = "" Then Continue
+		AddCode(sb, $"Dim cont${sskey} As VMContainer = CreateContainer_${sskey}"$)
 		AddCode(sb, $"tabs${sname}.AddTab("${sskey}", "${sstitle}", "${ssiconname}", cont${sskey})"$)
 	Next
 		
-	sb.append($"${sparent}.Container.AddControl(tabs${sname}.Tabs, tabs${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(tabs${sname}.Tabs, tabs${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 #Region Stepper
@@ -8911,7 +9168,8 @@ Sub PropertyBag_Stepper
 	pbstepper.AddHeading("d","Details")
 	pbstepper.AddText("d","id","ID","","")
 	pbstepper.AddText("d", "controltype", "Type", "","stepper")
-	pbstepper.AddText2("d",CreateMap("parent":"Parent", "vmodel":"VModel"))
+	pbstepper.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbstepper.AddText("d","vmodel","VModel","","")
 	pbstepper.AddText("d","stepactive","StepActive","","")
 	'
 	pbstepper.AddHeading("a", "Items")
@@ -8949,7 +9207,8 @@ Sub PropertyBag_ExpansionPanels
 	pbexpansionpanels.AddHeading("d","Details")
 	pbexpansionpanels.AddText("d","id","ID","","")
 	pbexpansionpanels.AddText("d", "controltype", "Type", "","expansionpanels")
-	pbexpansionpanels.AddText2("d",CreateMap("parent":"Parent", "vmodel":"ID"))
+	pbexpansionpanels.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbexpansionpanels.AddText("d","vmodel","VModel","","")
 	pbexpansionpanels.AddText("d","activepanel","Active","","1")
 	'
 	pbexpansionpanels.AddHeading("a", "Items")
@@ -9043,7 +9302,7 @@ Sub Design_ExpansionPanels
 		If sskey = "" Then Continue
 		AddCode(sb, $"exp${sname}.AddPanel1("${sskey}", "${sstitle}", cont${sskey})"$)
 	Next
-	sb.append($"${sparent}.Container.AddControl(exp${sname}.ExpansionPanels, exp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(exp${sname}.ExpansionPanels, exp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 
 	'
 	AddNewLine(sb)
@@ -9144,6 +9403,10 @@ Sub Design_Page
 	'
 	Dim mdlName As String = $"pg${svmodel}"$
 	
+	'draw a fake drawer
+	Dim drawer As VMNavigationDrawer = ui.CreateDrawer("drawerx", Me)
+	Dim tbl As VMToolBar = ui.CreateToolbar("tblx", Me)
+	
 	'
 	AddInstruction(sbi, "pgIndex", "AddPages" , "")
 	AddComment(sbi, $"code to add the ${svmodel} template code to the master HTML template"$)
@@ -9153,6 +9416,45 @@ Sub Design_Page
 	AddComment(sb, "INSTRUCTION: In your B4J project, click Project > Add New Module > Code Module")
 	AddComment(sb, $"INSTRUCTION: Type "${mdlName}" as the module name and click Ok"$)
 	AddNewLine(sb)
+	
+	If  bisShowonnavbar Then
+		'navigation bar
+		AddInstruction(sb, "pgIndex", "BuildNavBar" , "")
+		AddComment(sb,$"this page should have an icon/button in the navbar"$)
+		If bisicon Then
+			AddCode(sb, $"vm.NavBar.AddIcon1("nav${svmodel}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
+		Else
+			AddCode(sb, $"vm.NavBar.AddButton1("nav${svmodel}", "${siconname}", "${spagetitle}", "${stooltip}", "")"$)
+		End If
+		AddNewLine(sb)
+		'
+		'**** NAV CLICK TO SHOW PAGE
+		AddInstruction(sb, "pgIndex", "" , "")
+		AddComment(sb, $"click ${mdlName} nav button"$)
+		AddCode(sb, $"Sub nav${svmodel}_click(e As BANanoEvent)"$)
+		AddComment(sb, $"show the page ${stitle}"$)
+		AddCode(sb, $"${mdlName}.Show"$)
+		AddCode(sb, "End Sub")
+		AddCode(sb, CRLF)
+	End If
+	'
+	'show on drawer
+	If bisShowondrawer Then
+		AddInstruction(sb, "pgIndex", "BuildNavDrawer", "")
+		AddComment(sb,$"Add ${spagetitle} to drawer"$)
+		AddCode(sb, $"vm.Drawer.AddIcon1("page${svmodel}", "${siconname}", "${sIconcolor}", "${spagetitle}", "${stooltip}")"$)
+		If bisdivider Then
+			AddCode(sb, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
+		End If
+		AddNewLine(sb)
+		'**** DRAWER CLICK TO SHOW PAGE
+		AddInstruction(sb, "pgIndex", "draweritems_click" , "inside the case statement")
+		AddCode(sb, $"Case "page${svmodel.tolowercase}""$)
+		AddComment(sb, $"show ${stitle}"$)
+		AddCode(sb, $"${mdlName}.Show"$)
+		AddCode(sb, CRLF)
+	End If
+	'
 	AddComment(sb, $"INSTRUCTION: Press and hold Crtl+A to select all code and press Delete key, this will delete all the code"$)
 	AddInstruction(sb, mdlName, "" , "")
 	AddCode(sb, $"'Static code module"$)
@@ -9175,14 +9477,15 @@ Sub Design_Page
 	AddCode(sb, $"cont = vm.CreateContainer(Name, Me)"$)
 	AddComment(sb, "the container should be hidden initialy")
 	AddCode(sb, "cont.Hide")
+	AddComment(sb, "Add component here")
+	AddNewLine(sb)
+	AddComment(sb, "add container to the page")
+	AddCode(sb, "vm.AddContainer(cont)")
 	AddNewLine(sb)
 	'
-	'draw a fake drawer
-	Dim drawer As VMNavigationDrawer = ui.CreateDrawer("drawerx", Me)
 	drawer.SetStatic(True)
 	drawer.Setabsolute(True)
 	'draw a fake toolbar
-	Dim tbl As VMToolBar = ui.CreateToolbar("tblx", Me)
 	tbl.SetStatic(True)
 	tbl.SetFixed(True)
 	'
@@ -9208,12 +9511,9 @@ Sub Design_Page
 	'show in navbar
 	If  bisShowonnavbar Then
 		'navigation bar
-		AddComment(sb,$"this page should have an icon/button in the navbar"$)
 		If bisicon Then
-			AddCode(sb, $"vm.NavBar.AddIcon1("nav${svmodel}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
 			tbl.AddIcon1(svmodel, siconname, sIconcolor, stooltip, "")
 		Else
-			AddCode(sb, $"vm.NavBar.AddButton1("nav${svmodel}", "${siconname}", "${spagetitle}", "${stooltip}", "")"$)
 			tbl.AddButton1(svmodel, siconname, spagetitle, stooltip, "")
 		End If
 	End If
@@ -9223,27 +9523,6 @@ Sub Design_Page
 		If bisdivider Then
 			drawer.AddDivider1(bisinsetdivider)
 		End If
-		'
-		AddComment(sb,$"this page should show on the drawer"$)
-		AddCode(sb, $"vm.Drawer.AddIcon1("drw${svmodel.tolowercase}", "${siconname}", "${sIconcolor}", "${spagetitle}", "${stooltip}")"$)
-		If bisdivider Then
-			AddCode(sb, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
-		End If
-		'
-		'on click show the page
-		AddInstruction(sbi, "pgIndex", "" , "")
-		AddComment(sbi, $"click ${mdlName} nav button"$)
-		AddCode(sbi, $"Sub nav${svmodel}_click(e As BANanoEvent)"$)
-		AddComment(sbi, $"show the page ${svmodel}"$)
-		AddCode(sbi, $"${mdlName}.Show"$)
-		AddCode(sbi, "End Sub")
-		AddCode(sbi, CRLF)
-		'
-		AddInstruction(sbi, "pgIndex", "draweritems_click" , "inside the case statement")
-		AddCode(sbi, $"Case "drw${svmodel.tolowercase}""$)
-		AddComment(sbi, $"show ${spagetitle}"$)
-		AddCode(sbi, $"${mdlName}.Show"$)
-		AddCode(sbi, CRLF)
 	End If
 	'
 	AddCode(sb, "End Sub")
@@ -9300,10 +9579,10 @@ Sub Design_Page
 	End If
 	'
 	If  bisShowonnavbar Then
-		AddComment(sb, "hide all buttons in the navbar")
-		AddCode(sb, "vm.NavBar.HideItems")
 		AddComment(sb, $"show buttons for ${mdlName}"$)
 		AddCode(sb, $"vm.ShowItem("nav${svmodel}")"$)
+	Else
+		AddCode(sb, $"vm.HideItem("nav${svmodel}")"$)
 	End If
 	
 	AddComment(sb, "Show the page and hide others")

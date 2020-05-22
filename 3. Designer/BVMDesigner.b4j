@@ -10,49 +10,51 @@ File15=checkbox.png
 File16=chip.png
 File17=combo.png
 File18=config.php
-File19=container.png
+File19=contactus.txt
 File2=2.jpg
-File20=dark-beach.jpg
-File21=database.png
-File22=datepicker.png
-File23=dialog.png
-File24=email.png
-File25=icon.png
-File26=image.png
-File27=label.png
-File28=list.png
-File29=material.jpg
+File20=container.png
+File21=dark-beach.jpg
+File22=database.png
+File23=datepicker.png
+File24=dialog.png
+File25=email.png
+File26=icon.png
+File27=image.png
+File28=label.png
+File29=list.png
 File3=3.jpg
-File30=menu.png
-File31=page.png
-File32=panel.png
-File33=parallax.png
-File34=password.png
-File35=planet.jpg
-File36=profilepic.png
-File37=radio.png
-File38=rating.png
-File39=select.png
+File30=material.jpg
+File31=menu.png
+File32=newproject.json
+File33=page.png
+File34=panel.png
+File35=parallax.png
+File36=password.png
+File37=planet.jpg
+File38=profilepic.png
+File39=radio.png
 File4=4.jpg
-File40=sidebar.png
-File41=sky.jpg
-File42=slider.png
-File43=speeddial.png
-File44=sponge.png
-File45=squirrel.jpg
-File46=stepper.png
-File47=switch.png
-File48=table.png
-File49=tabs.png
+File40=rating.png
+File41=select.png
+File42=sidebar.png
+File43=sky.jpg
+File44=slider.png
+File45=speeddial.png
+File46=sponge.png
+File47=squirrel.jpg
+File48=stepper.png
+File49=switch.png
 File5=5.jpg
-File50=telephone.png
-File51=text.png
-File52=textarea.png
-File53=time.png
-File54=toolbar.png
-File55=upload.php
-File56=uploader.png
-File57=vbanner.jpg
+File50=table.png
+File51=tabs.png
+File52=telephone.png
+File53=text.png
+File54=textarea.png
+File55=time.png
+File56=toolbar.png
+File57=upload.php
+File58=uploader.png
+File59=vbanner.jpg
 File6=alasql.min.js
 File7=autocomplete.png
 File8=avatar.png
@@ -67,7 +69,7 @@ FileGroup15=Default Group
 FileGroup16=Default Group
 FileGroup17=Default Group
 FileGroup18=Default Group
-FileGroup19=Default Group
+FileGroup19=Templates
 FileGroup2=Default Group
 FileGroup20=Default Group
 FileGroup21=Default Group
@@ -82,7 +84,7 @@ FileGroup29=Default Group
 FileGroup3=Default Group
 FileGroup30=Default Group
 FileGroup31=Default Group
-FileGroup32=Default Group
+FileGroup32=Templates
 FileGroup33=Default Group
 FileGroup34=Default Group
 FileGroup35=Default Group
@@ -110,6 +112,8 @@ FileGroup54=Default Group
 FileGroup55=Default Group
 FileGroup56=Default Group
 FileGroup57=Default Group
+FileGroup58=Default Group
+FileGroup59=Default Group
 FileGroup6=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
@@ -124,7 +128,7 @@ Library6=bananovuetifyconnect
 Library7=bananovuetifyprism
 Library8=bananovuetifydevice
 Module1=pgIndex
-NumberOfFiles=57
+NumberOfFiles=59
 NumberOfLibraries=8
 NumberOfModules=1
 Version=8.27
@@ -145,7 +149,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.06"
+	Public Version As String = "4.07"
 	Public Port As String = "8080"
 End Sub
 
@@ -196,6 +200,7 @@ Sub BANano_Ready
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON
+	'
 	'create the table for the components
 	alaSQL.Initialize("components", "id")
 	alaSQL.SchemaAddIntegers(Array("id", "row","col","tabindex"))
@@ -207,7 +212,7 @@ Sub BANano_Ready
 	'create the project table
 	alaSQL.Initialize("project", "id")
 	alaSQL.SchemaAddInt(Array("id"))
-	alaSQL.SchemaAddStrings(Array("projectname","dbtype","databasename","components"))
+	alaSQL.SchemaAddStrings(Array("projectname","dbtype","databasename","components","senderemail","sendtoemail","ccemail"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON

@@ -770,6 +770,10 @@ Sub ProperCase(myStr As String) As String
 	Return vue.ProperCase(myStr)
 End Sub
 
+Sub BeautifyName(namx As String) As String
+	Return vue.BeautifyName(namx)
+End Sub
+
 Sub Capitalize(t As String) As String
 	Return vue.Capitalize(t)
 End Sub

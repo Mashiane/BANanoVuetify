@@ -1,12 +1,12 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=beautify.js
-File2=beautify-css.js
-File3=beautify-html.js
+File1=beautify.min.js
+File2=beautify-css.min.js
+File3=beautify-html.min.js
 File4=fileSaver.min.js
 File5=jszip.min.js
-File6=prism.css
-File7=prism.js
+File6=prism.min.css
+File7=prism.min.js
 File8=vue-prism-component.min.js
 FileGroup1=Default Group
 FileGroup2=Default Group
@@ -38,7 +38,7 @@ Version=8.27
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyPrism"
-	Public Version As String = "1.01"
+	Public Version As String = "1.02"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -52,12 +52,12 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'
 	BANano.Header.AddJavascriptFile("fileSaver.min.js")
 	BANano.Header.AddJavascriptFile("jszip.min.js")
-	BANano.Header.AddCSSFile("prism.css")		
-	BANano.Header.AddJavascriptFile("prism.js")
+	BANano.Header.AddCSSFile("prism.min.css")		
+	BANano.Header.AddJavascriptFile("prism.min.js")
 	BANano.Header.AddJavascriptFile("vue-prism-component.min.js")
-	BANano.Header.AddJavascriptFile("beautify.js")
-	BANano.Header.AddJavascriptFile("beautify-css.js")
-	BANano.Header.AddJavascriptFile("beautify-html.js")
+	BANano.Header.AddJavascriptFile("beautify.min.js")
+	BANano.Header.AddJavascriptFile("beautify-css.min.js")
+	BANano.Header.AddJavascriptFile("beautify-html.min.js")
 	'
 	BANano.BuildAsB4XLib(Version)
 	ExitApplication

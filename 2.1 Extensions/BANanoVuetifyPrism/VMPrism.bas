@@ -31,13 +31,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	BANano.DependsOnAsset("fileSaver.min.js")
 	BANano.DependsOnAsset("jszip.min.js")
 	'
-	BANano.DependsOnAsset("prism.css")
-	BANano.DependsOnAsset("prism.js")
+	BANano.DependsOnAsset("prism.min.css")
+	BANano.DependsOnAsset("prism.min.js")
 	BANano.DependsOnAsset("vue-prism-component.min.js")
 	'
-	BANano.DependsOnAsset("beautify.js")
-	BANano.DependsOnAsset("beautify-css.js")
-	BANano.DependsOnAsset("beautify-html.js")
+	BANano.DependsOnAsset("beautify.min.js")
+	BANano.DependsOnAsset("beautify-css.min.js")
+	BANano.DependsOnAsset("beautify-html.min.js")
 	'
 	ID = sid.tolowercase
 	PrismComponent.Initialize(v, ID)
