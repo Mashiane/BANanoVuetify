@@ -67,6 +67,7 @@ Sub BuildDrawer
 	vm.drawer.additem("echarts", "", "ECharts")
 	vm.drawer.additem("arccounter", "", "Arc Counter")
 	vm.drawer.additem("files", "", "Read Text & Excel Files")
+	'vm.drawer.additem("selectsides", "", "Select Sides")
 End Sub
 
 'when the ok button is clicked for a confirm dialog
@@ -105,6 +106,9 @@ Sub draweritems_click(e As BANanoEvent)
 	'get the id from the event
 	Dim elID As String = vm.GetIDFromEvent(e)
 	Select Case elID
+	Case "selectsides"
+		'vm.NavBar.UpdateTitle(modSelectSides.title)
+		'vm.ShowPage(modSelectSides.name)
 	Case "arccounter"
 		vm.NavBar.UpdateTitle(modArcCounter.title)
 		vm.ShowPage(modArcCounter.name)
@@ -180,4 +184,5 @@ Sub AddPages
 	vm.addpage(modECharts.name, modECharts)
 	vm.AddPage(modArcCounter.name, modArcCounter)
 	vm.AddPage(modFiles.name, modFiles)
+	'vm.AddPage(modSelectSides.name, modSelectSides)
 End Sub

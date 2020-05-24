@@ -33,7 +33,6 @@ Sub Class_Globals
 	Public TableName As String
 	Public PrimaryKey As String
 	Public Record As Map
-	Private Auto As String
 End Sub
 
 Sub RecordFromMap(sm As Map)
@@ -125,7 +124,6 @@ Public Sub Initialize(dbName As String, tblName As String, PK As String, AI As S
 	affectedRows = 0
 	json = ""
 	OK = False
-	Auto = AI
 	Return Me
 End Sub
 
@@ -841,7 +839,7 @@ End Sub
 Sub UpdateAll(tblFields As Map, operators As List) As BANanoSQLiteE
 	If operators = Null Then operators = EQOperators(tblFields)
 	Dim listOfTypes As List = GetMapTypes(tblFields)
-	Dim args As List = GetMapValues(tblFields)
+	Dim listOfValues As List = GetMapValues(tblFields)
 	Dim sb As StringBuilder
 	sb.Initialize
 	sb.Append($"UPDATE ${EscapeField(TableName)} SET "$)
@@ -858,7 +856,7 @@ Sub UpdateAll(tblFields As Map, operators As List) As BANanoSQLiteE
 		End If
 	Next
 	query = sb.tostring
-	args = args
+	args = listOfValues
 	types = listOfTypes
 	command = "update"
 	Return Me

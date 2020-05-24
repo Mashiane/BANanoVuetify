@@ -139,10 +139,12 @@ Sub Class_Globals
 	Public DataTypes As Map
 	Public ControlTypes As Map
 	Public Modules As Map
+	Public SourceCode As StringBuilder
 End Sub
 
 'initialize view
 Public Sub Initialize()
+	SourceCode.Initialize
 	Themes.Initialize 
 	Modules.Initialize 
 	BOVue.Initialize("Vue")
@@ -530,6 +532,38 @@ Public Sub Initialize()
 	ControlTypes.Put("None", "None")
 End Sub
 
+Sub SourceCodeBuilder
+	SourceCode.Initialize
+End Sub
+
+Sub AddNewLine
+	SourceCode.append(CRLF)
+End Sub
+
+Sub AddCode(scomment As String)
+	SourceCode.append(scomment).append(CRLF)
+End Sub
+
+Sub AddComment(sc As String)
+	SourceCode.append($"'${sc}"$).append(CRLF)
+End Sub
+
+Sub AddNewLine1(sbx As StringBuilder)
+	sbx.append(CRLF)
+End Sub
+
+Sub AddCode1(sbx As StringBuilder, scomment As String)
+	sbx.append(scomment).append(CRLF)
+End Sub
+
+Sub AddComment1(sbx As StringBuilder, sc As String)
+	sbx.append($"'${sc}"$).append(CRLF)
+End Sub
+
+Sub GetSourceCode As String
+	Return SourceCode.tostring
+End Sub
+
 Sub AddModule(tagName As String) As BANanoVue
 	tagName = tagName.tolowercase
 	Modules.Put(tagName, tagName)
@@ -717,14 +751,14 @@ Sub GetFileDetails(fileObj As Map) As FileObject
 End Sub
 
 
-Sub BeautifySourceCode(slang As String, sourceCode As String) As String
+Sub BeautifySourceCode(slang As String, sc As String) As String
 	Select Case slang
 	Case "js"
-		Dim res As String = BANAno.RunJavascriptMethod("js_beautify", Array(sourceCode))
+		Dim res As String = BANAno.RunJavascriptMethod("js_beautify", Array(sc))
 	Case "css"
-		Dim res As String = BANAno.RunJavascriptMethod("css_beautify", Array(sourceCode))
+		Dim res As String = BANAno.RunJavascriptMethod("css_beautify", Array(sc))
 	Case "html"
-		Dim res As String = BANAno.RunJavascriptMethod("html_beautify", Array(sourceCode))
+		Dim res As String = BANAno.RunJavascriptMethod("html_beautify", Array(sc))
 	End Select
 	Return res
 End Sub
@@ -1876,6 +1910,16 @@ Sub SaveText2File(content As String, fileName As String)
 	Dim blob As BANanoObject
 	blob.Initialize2("Blob",Array(fc, CreateMap("type": "text/plain;charset=utf-8")))
 	BANAno.RunJavascriptMethod("saveAs",Array(blob,fileName))
+End Sub
+
+Sub SaveBinaryArray2File(iUint8Array As Object, dbName As String)
+	Dim fc As List
+	fc.Initialize
+	fc.Add(iUint8Array)
+	'
+	Dim blob As BANanoObject
+	blob.Initialize2("Blob",Array(fc, CreateMap("type": "application/octet-stream")))
+	BANAno.RunJavascriptMethod("saveAs",Array(blob, dbName))
 End Sub
 
 

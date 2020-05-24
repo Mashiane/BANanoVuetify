@@ -171,9 +171,7 @@ End Sub
 Sub ToString As String
 	vue.SetStateSingle("item", 1)
 	If Container.HasContent Then SetText(Container.ToString)
-	If List.HasContent Then 
-		List.Pop(NavigationDrawer)
-	End If
+	If List.HasContent Then List.Pop(NavigationDrawer)
 	If BottomSection.HasContent Then BottomSection.Pop(NavigationDrawer)
 	Return NavigationDrawer.ToString
 End Sub

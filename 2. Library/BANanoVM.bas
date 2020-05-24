@@ -36,9 +36,7 @@ Sub Class_Globals
 	Public ColumnAlign As Map
 	Public DataTypes As Map
 	Public ControlTypes As Map
-	
-	'Public zircleBO As BANanoObject
-	'Public zircle As BANanoObject
+	Public BottomNav As VMBottomNavigation
 	'
 	Public const COLOR_AMBER As String = "amber"
 	Public const COLOR_BLACK As String = "black"
@@ -186,7 +184,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
 	VContent.Initialize(vue, $"${appName}content"$).SetTag("v-content")
-	Container.Initialize(vue, $"${appName}container"$, eventHandler)
+	Container.Initialize(vue, $"${appName}container"$, eventHandler).SetFluid(True)
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	Drawer.SetApp(True)
 	Drawer.SetVModel("drawer")
@@ -194,9 +192,10 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.SetAppBar(True)
 	NavBar.Show
 	'
+	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetApp(True)
 	'
-	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetAttrSingle("app", True)
-	'
+	BottomNav.Initialize(vue, $"${appName}bn"$, eventHandler).SetApp(True)
+	
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
 	SnackBar.Pop(VContent)
 	'
@@ -2110,13 +2109,19 @@ Sub UX
 	Options.Put("rtl", RTL)
 	Options.Put("theme", theme)
 	Options.Put("lang", mlang)
-	'
+	'add drawer first
 	Drawer.Pop(VApp)
+	'add navbar
 	NavBar.Pop(VApp)
 	
+	'add container to content
 	Container.Pop(VContent)
+	'add content
 	VContent.Pop(VApp)
-	Footer.Pop(VApp)
+	'add footer
+	If Footer.HasContent Then Footer.Pop(VApp)
+	'add bottom nan
+	If BottomNav.HasContent Then BottomNav.Pop(VApp)
 	
 	'template built from all pages
 	vue.SetTemplate(VApp.ToString)
@@ -2408,7 +2413,6 @@ End Sub
 '
 Sub NewLabel(bStatic As Boolean,sname As String, vmodel As String, sSize As String, sText As String) As VMLabel
 	vmodel = vmodel.tolowercase
-	vue.SetStateSingle(vmodel, sText)
 	Dim el As VMLabel = CreateLabel(sname)
 	el.setstatic(bStatic)
 	el.SetTag(sSize)

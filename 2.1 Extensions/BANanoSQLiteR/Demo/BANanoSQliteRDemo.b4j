@@ -1,0 +1,139 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=chinook.db
+FileGroup1=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananosqliter
+NumberOfFiles=1
+NumberOfLibraries=4
+NumberOfModules=0
+Version=8.27
+@EndOfDesignText@
+#Region Project Attributes 
+#End Region
+
+Sub Process_Globals
+	Private BANano As BANano
+	Private SQLite As BANanoSQLiteR
+	Private AppName As String = "BANanoSQLiteDemoR"
+	Private Publish As String = "C:\laragon\www"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, DateTime.now)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppName
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	BANano.TranspilerOptions.MinifyOnline = False
+	
+	BANano.Build(Publish)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+
+Sub BANano_Ready
+	SQLite.OpenDatabase(Me, "sqlite_opened", "./assets/chinook.db")
+End Sub
+
+Sub sqlite_opened
+	Log("sqlite opened")
+	Log("initialize 'users' table")
+	SQLite.Initialize("users", "id")
+	SQLite.SchemaAddInt(Array("id"))
+	SQLite.SchemaAddText(Array("firstname", "lastname", "telephone"))
+	Log("create 'users' table")
+	SQLite.SchemaCreateTable
+	'
+	'get the list of tables
+	Log("list available tables")
+	SQLite.TableNames
+	Log(SQLite.Result)
+	'
+	'add some records
+	Log("add a record")
+	Dim Record As Map = CreateMap()
+	Record.put("firstname", "Anele")
+	Record.Put("lastname", "Mbanga")
+	Record.put("telephone", "987654321")
+	'define data types
+	SQLite.ResetTypes
+	SQLite.AddIntegers(Array("id"))
+	SQLite.AddStrings(Array("firstname", "lastname", "telephone"))
+	SQLite.Insert1(Record)
+	'
+	Log("add another record")
+	Dim Record As Map = CreateMap()
+	Record.put("firstname", "Ndim")
+	Record.Put("lastname", "Mbanga")
+	Record.put("telephone", "0123456789")
+	'define data types
+	SQLite.ResetTypes
+	SQLite.AddIntegers(Array("id"))
+	SQLite.AddStrings(Array("firstname", "lastname", "telephone"))
+	SQLite.Insert1(Record)
+	'
+	'get added records
+	Log("get all records")
+	SQLite.SelectAll(Array("*"), Array("firstname","lastname"))
+	Log(SQLite.result)
+	'
+	'read a record
+	Log("read user(1)")
+	SQLite.Read(1)
+	Log(SQLite.result)
+	'
+	'select where & define data types
+	Log("select user firstname=Ndim")
+	SQLite.ResetTypes
+	SQLite.AddIntegers(Array("id"))
+	SQLite.AddStrings(Array("firstname", "lastname", "telephone"))
+	Dim sw As Map = CreateMap()
+	sw.Put("firstname", "Ndim")
+	SQLite.SelectWhere(Array("*"), sw, Array("="), Array("firstname"))
+	Log(SQLite.Result)
+	'
+	'update a record
+	Log("update 'users' record(1) telephone based on primary key")
+	SQLite.ResetTypes
+	SQLite.AddIntegers(Array("id"))
+	SQLite.AddStrings(Array("firstname", "lastname", "telephone"))
+	Dim Record As Map = CreateMap()
+	Record.put("telephone", "11111111")
+	SQLite.Update1(Record, "1")
+	'
+	'view records after update
+	Log("see all users after update")
+	SQLite.SelectAll(Array("*"), Array("firstname","lastname"))
+	Log(SQLite.result)
+	'
+	Log("delete a record based on primary key field")
+	SQLite.ResetTypes
+	SQLite.AddIntegers(Array("id"))
+	SQLite.AddStrings(Array("firstname", "lastname", "telephone"))
+	SQLite.Delete("1")
+	'
+	Log("see all users after delete")
+	SQLite.SelectAll(Array("*"), Array("firstname","lastname"))
+	Log(SQLite.result)
+	'
+	Log("execute own query")
+	SQLite.Execute("select * from Album")
+	Log(SQLite.result)
+	
+	'close the database
+	SQLite.close
+	
+	'export the database
+	'SQLite.Export("runtime.db")
+End Sub

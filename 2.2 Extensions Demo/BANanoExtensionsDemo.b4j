@@ -1,7 +1,9 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=sponge.png
+File1=SampleData.xlsx
+File2=sponge.png
 FileGroup1=Default Group
+FileGroup2=Default Group
 Group=Default Group
 Library1=jcore
 Library10=bananovuetifygooglemap
@@ -10,6 +12,7 @@ Library12=bananovuetifyprism
 Library13=bananovuetifyquill
 Library14=bananovuetifycirclecounter
 Library15=bananoexcel
+Library16=bananovuetifyselectsides
 Library2=jfx
 Library3=banano
 Library4=bananopostprocessor
@@ -19,7 +22,8 @@ Library7=bananovuetifychartkick
 Library8=bananovuetifydevice
 Library9=bananovuetifyecharts
 Module1=modArcCounter
-Module10=pgIndex
+Module10=modSelectSides
+Module11=pgIndex
 Module2=modChartKick
 Module3=modDevice
 Module4=modECharts
@@ -28,9 +32,9 @@ Module6=modGMap
 Module7=modInfoBox
 Module8=modPrism
 Module9=modQuill
-NumberOfFiles=1
-NumberOfLibraries=15
-NumberOfModules=10
+NumberOfFiles=2
+NumberOfLibraries=16
+NumberOfModules=11
 Version=8.27
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
@@ -46,7 +50,7 @@ Sub Process_Globals
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.06"
+	Public Version As String = "4.07"
 	Private Port As String = "8080"
 End Sub
 

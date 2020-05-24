@@ -57,11 +57,13 @@ Sub Class_Globals
 	Public ShowMatrix As Boolean
 	Public NoGutters As Boolean
 	Private cStatic As Boolean
+	Public HasContent As Boolean
 End Sub
 
 'initialize the Container
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMContainer
 	ID = sid.tolowercase
+	HasContent = False
 	rowClasses.Initialize
 	rowStyles.Initialize	
 	attributes.Initialize
@@ -103,7 +105,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	cStatic = True
 	Return Me
 End Sub
-
 
 Sub CreateList(sid As String, eventHandler As Object) As VMList
 	Dim el As VMList
@@ -860,10 +861,6 @@ Sub SetMinHeight(h As String) As VMContainer
 	Return Me
 End Sub
 
-Sub HasContent As Boolean
-	Return Container.hascontent
-End Sub
-
 'set transition
 Sub SetTransition(varTransition As String) As VMContainer
 	If varTransition = "" Then Return Me
@@ -1105,6 +1102,7 @@ Sub Clear As VMContainer
 	Components.Initialize
 	rowStyles.Initialize 
 	rowClasses.Initialize 
+	HasContent = False
 	Return Me
 End Sub
 
@@ -1122,6 +1120,7 @@ Sub AddRows(iRows As Int) As VMContainer
 	Dim rowKey As String = $"${ID}r${LastRow}"$
 	'lets save the row on the map
 	Rows.Put(rowKey,nRow)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -1156,6 +1155,7 @@ Sub AddColumnsOS(iColumns As Int, osm As Int, omd As Int, olg As Int, oxl As Int
 		'save it back
 		Rows.Put(rowkey,oldRow)
 	End If
+	HasContent = True
 	Return Me
 End Sub
 
@@ -1646,6 +1646,7 @@ Sub AddComponent(rowPos As Int, colPos As Int, elHTML As String)
 		lst.Add(elHTML)
 		Components.Put(cellKey,lst)
 	End If
+	hascontent = True
 End Sub
 
 'backward compatibility
@@ -1671,6 +1672,7 @@ End Sub
 
 'add a control that will be automatically grid designed
 Sub AddControl1(el As VMElement, template As String)
+	HasContent = True
 	Controls.Add(el)
 	bControls = True
 	'get the row
@@ -1787,12 +1789,14 @@ End Sub
 Sub AddChild(child As VMElement) As VMContainer
 	Dim childHTML As String = child.ToString
 	Container.SetText(childHTML)
+	hascontent = True
 	Return Me
 End Sub
 
 'set text
 Sub SetText(t As String) As VMContainer
 	Container.SetText(t)
+	hascontent = True
 	Return Me
 End Sub
 

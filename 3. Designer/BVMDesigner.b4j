@@ -191,6 +191,7 @@ Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 	Return True
 End Sub
 
+
 Sub BANano_Ready
 	'prepare the database
 	db.OpenWait("bvmdesigner", "bvmdesigner")
