@@ -79,6 +79,14 @@ Sub AddTabSlider As VMTabs
 	Return Me
 End Sub
 
+Sub SetTabSlider(b As Boolean) As VMTabs
+	If b = False Then Return Me
+	AddComponent("<v-tabs-slider></v-tabs-slider>")
+	hasContent = True
+	Return Me
+End Sub
+
+
 'add a tab item with html string
 Sub AddTabItem(tabID As String, tabLabel As String, tabIcon As String, tabContent As String)
 	tabID = tabID.ToLowerCase

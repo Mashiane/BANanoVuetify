@@ -355,7 +355,6 @@ Sub Process_Globals
 	Private bisshowarrowsonhover As Boolean
 	Private bistouchless As Boolean
 	Private sverticaldelimiter As String
-	Private bisinset As Boolean
 	'
 	Private biscaption As Boolean
 	Private bisdisabled As Boolean
@@ -609,6 +608,7 @@ Private stabindex As String
 	Private stabindex As String
 	Private bisvisible As Boolean
 	Private bisiconposright As Boolean
+	Private bistabslider As Boolean
 	'
 	Private bisAltlabels As Boolean
 	Private bisdark As Boolean
@@ -626,7 +626,6 @@ Private stabindex As String
 	Private bisflat As Boolean
 	Private bisFocusable As Boolean
 	Private bisHover As Boolean
-	Private bisinset As Boolean
 	Private bislight As Boolean
 	Private bismandatory As Boolean
 	Private bismultiple As Boolean
@@ -660,6 +659,9 @@ Private stabindex As String
 	Private ssenderemail As String
 	Private ssendtoemail As String
 	Private sccemail As String
+	'
+	Private bisitemdiv As Boolean
+	Private bisitemnogutter As Boolean
 End Sub
 
 Sub InitWait
@@ -1220,7 +1222,7 @@ Sub LoadContainers
 		Case "drawer"
 			itemName = $"drw${xvmodel}.Container"$
 		Case "tabs"
-			itemName = $"tabs${xvmodel}.Container"$
+			itemName = $"tbs${xvmodel}.Container"$
 		Case "card"
 			itemName = $""$
 		Case "footer"
@@ -1239,6 +1241,11 @@ Sub LoadContainers
 	Dim ni As Map = CreateMap()
 	ni.put("component", "vm")
 	newList.Add(ni)
+	'
+	Dim ni As Map = CreateMap()
+	ni.put("component", "cont")
+	newList.Add(ni)
+	
 	'
 	Dim ni As Map = CreateMap()
 	ni.put("component", "vm.Container")
@@ -1655,6 +1662,8 @@ Sub CreateUX
 		bisPrimary = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
 		bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 		bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+		bisitemdiv = YesNoToBoolean(mattr.getdefault("isitemdiv", "No"))
+		bisitemnogutter = YesNoToBoolean(mattr.GetDefault("isitemnogutter", "No"))
 		bontable = YesNoToBoolean(mattr.getdefault("ontable", "No"))
 		bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 		bisnow = YesNoToBoolean(mattr.getdefault("isnow", "No"))
@@ -3069,6 +3078,7 @@ Sub Design_Container
 	cont.SetFluid(bisfluid)
 	cont.SetShowMatrix(bisshowmatrix)
 	cont.SetNoGutters(bisnogutters)
+	cont.SetDiv(bisitemdiv)
 	cont.SetVisible(bisvisible)
 	cont.SetBorderRadius(sborderradius)
 	cont.SetBorderWidth(sborderwidth)
@@ -3083,12 +3093,13 @@ Sub Design_Container
 	cont.SetMaxHeight(smaxheight)
 	ui.AddControl(cont.Container, cont.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	sb.append($"Dim cont${sname} As VMContainer = vm.NewContainer(Me, ${bStatic}, "cont${sname}")"$).append(CRLF)
+	sb.append($"Dim cont${sname} As VMContainer = vm.NewContainer(Me, cont${bStatic}, "cont${sname}")"$).append(CRLF)
+	CodeLine(sb, bisnogutters, "b", "cont", sname, "SetNoGutters")
+	CodeLine(sb, bisitemdiv, "b", "cont", sname, "SetDiv")
 	CodeLine(sb, selevation, "s", "cont", sname, "SetElevation")
 	CodeLine(sb, stransition, "s", "cont", sname, "SetTransition")
 	CodeLine(sb, bisfluid, "b", "cont", sname, "SetFluid")
 	CodeLine(sb, bisshowmatrix, "b", "cont", sname, "SetShowMatrix")
-	CodeLine(sb, bisnogutters, "b", "cont", sname, "SetNoGutters")
 	CodeLine(sb, bisvisible, "b", "cont", sname, "SetVisible")
 	CodeLine(sb, sborderradius, "s", "cont", sname, "SetBorderRadius")
 	CodeLine(sb, sborderwidth, "s", "cont", sname, "SetBorderWidth")
@@ -4555,7 +4566,7 @@ Sub DesignLayout
 	'add tab as toolbox
 	vm.container.AddComponent(1, 1, tblBox.tostring)
 	
-	tabs = vm.CreateTabs("tabs", Me).SetGrow(True).SetIconsAndText(True).SetCentered(True).SetVModel("devspace")
+	tabs = vm.CreateTabs("tabsd", Me).SetGrow(True).SetIconsAndText(True).SetCentered(True).SetVModel("devspace")
 	tabs.OnToolBar = False
 	'
 	dnd = vm.CreateContainer("dnd", Me).SetFluid(True)
@@ -5214,7 +5225,7 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "save records to state")
 	sbl.append($"VM.SetData("${sDatasourcename}", ${rsName}.Result)"$).append(CRLF)
 	AddComment(sbl, "update the data table records")
-	CodeLine(sbl, $"${rsName}.Result"$, "s", "dt", tbName, "SetDataSource")
+	AddCode(sbl, $"dt${tbName}.SetDataSource(${rsName}.Result)"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
 	'**** IS LOOKUP TABLE
@@ -7109,8 +7120,9 @@ Sub PropertyBag_Container
 	pbcontainer.AddHeightWidths("d")
 	'
 	pbcontainer.AddHeading("e","Settings")
-	pbcontainer.AddSwitches("e", CreateMap("isvisible": "Visible", "isfluid": "Fluid"))
-	pbcontainer.AddSwitches("e", CreateMap("isshowmatrix": "Show Matrix", "isnogutters": "No Gutters"))
+	pbcontainer.AddSwitches("e", CreateMap("isitemdiv": "Div", "isnogutters": "No Gutters"))
+	pbcontainer.AddSwitches("e", CreateMap("isfluid": "Fluid", "isshowmatrix": "Show Matrix"))
+	pbcontainer.AddSwitches("e", CreateMap("isvisible": "Visible"))
 	'
 	pbcontainer.AddHeading("f","Matrix")
 	pbcontainer.AddMatrix("f")
@@ -8781,6 +8793,7 @@ Sub PropertyBag_List
 	'
 	pblist.AddHeading("e","Settings")
 	pblist.AddSwitches("e", CreateMap("isoptions": "Use Items", "isdivider":"Divide Each"))
+	pblist.AddSwitches("e", CreateMap("isinsetdivider": "Inset Divider"))
 	pblist.AddSwitches("e", CreateMap("isdark": "Dark", "isdense": "Dense"))
 	pblist.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isexpand": "Expand"))
 	pblist.AddSwitches("e", CreateMap("isflat": "Flat", "islight": "Light"))
@@ -8831,6 +8844,7 @@ Sub Read_List
 	sSubtitle1fld = mattr.getdefault("subtitle1fld", "")
 	sActioniconfld = mattr.getdefault("actioniconfld", "")
 	sActioniconcolorfld = mattr.getdefault("actioniconcolorfld", "")
+	bisinsetdivider = YesNoToBoolean(mattr.getdefault("isinsetdivider", "No"))
 End Sub
 
 Sub Design_List
@@ -8880,12 +8894,15 @@ Sub Design_List
 			If sskey = "" Then Continue
 			lst.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, ssubtitle1, _
 			ssactionicon, sactioncolor)
-			If bisdivider Then lst.AddDivider1(True)
+			If bisdivider Then lst.AddDivider1(bisinsetdivider)
 			AddCode(sbEvents, $"Case "${sskey}""$)
+			AddCode(sbEvents, $"vm.ShowSnackBarSuccess("${sstitle}")"$)
 		Next
 	End If
 	AddCode(sbEvents,"End Select")
 	AddCode(sbEvents, "End Sub")
+	
+	
 	'
 	ui.AddControl(lst.List, lst.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
@@ -8927,7 +8944,9 @@ Sub Design_List
 			'
 			If sskey = "" Then Continue
 			AddCode(sb, $"lst${sname}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "${ssubtitle1}", "${ssactionicon}", "${sactioncolor}")"$)
-			If bisdivider Then CodeLine(sb, True, "b", "lst", sname, "AddDivider1")
+			If bisdivider Then 
+				AddCode(sb, $"lst${sname}.AddDivider1(${bisinsetdivider})"$)
+			End If
 		Next
 	Else
 		'set data source
@@ -8935,7 +8954,7 @@ Sub Design_List
 		AddCode(sb, $"lst${sname}.SetDataSourceTemplate1("${sDatasource}","${sKeyfld}","${sAvatarfld}","${sIconfld}","${sIconcolorfld}","${sTitlefld}","${sSubtitlefld}","${sSubtitle1fld}","${sActioniconfld}","${sActioniconcolorfld}")"$)
 	End If
 	
-	sb.append($"${sparent}.AddControl(lst${sname}.Avatar, lst${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(lst${sname}.List, lst${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 #Region Tabs
@@ -8961,15 +8980,15 @@ Sub PropertyBag_Tabs
 	pbtabs.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title", "icon":"Icon"))
 	
 	pbtabs.AddHeading("e","Settings")
+	pbtabs.AddSwitches("e", CreateMap("isitemdiv": "ItemDiv", "isitemnogutter": "ItemNoGutter"))
+	pbtabs.AddSwitches("e", CreateMap("isiconposright": "IconPos Right","istabslider":"AddTabSlider"))
 	pbtabs.AddSwitches("e", CreateMap("isalignwithtitle": "AlignWithTitle", "iscenteractive": "CenterActive"))
 	pbtabs.AddSwitches("e", CreateMap("iscentered": "Centered", "isdark": "Dark"))
 	pbtabs.AddSwitches("e", CreateMap("isfixedtabs": "FixedTabs", "isgrow": "Grow"))
 	pbtabs.AddSwitches("e", CreateMap("ishideslider": "HideSlider", "isiconsandtext": "IconsAndText"))
 	pbtabs.AddSwitches("e", CreateMap("islight": "Light", "isoptional": "Optional"))
 	pbtabs.AddSwitches("e", CreateMap("isright": "Right", "isshowarrows": "ShowArrows"))
-	pbtabs.AddSwitches("e", CreateMap("isvertical": "Vertical", "isvisible": "Visible"))
-	pbtabs.AddSwitches("e", CreateMap("isiconposright": "IconPos Right"))
-	'
+	pbtabs.AddSwitches("e", CreateMap("isvertical": "Vertical", "isvisible": "Visible"))	'
 	pbtabs.AddHeading("f","Matrix")
 	pbtabs.AddMatrix("f")
 	vm.container.AddComponent(1, 3, pbtabs.tostring)
@@ -9004,6 +9023,7 @@ Sub Read_Tabs
 	bisvertical = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
 	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	bisiconposright = YesNoToBoolean(mattr.getdefault("isiconposright","No"))
+	bistabslider = YesNoToBoolean(mattr.getdefault("istabslider","No"))
 End Sub
 
 Sub Design_Stepper
@@ -9024,10 +9044,17 @@ Sub Design_Stepper
 		If sskey = "" Then Continue
 		stp.AddStep1(sskey, sstitle, ssubtitle, "")
 		'
+		AddNewLine(sb)
 		AddComment(sb, $"Create the ${sstitle} step"$)
 		AddCode(sb, $"Sub CreateContainer_${sskey} As VMContainer"$)
 		sb.append($"Dim cont${sskey} As VMContainer"$).append(CRLF)
 		AddCode(sb, $"cont${sskey} = vm.CreateContainer("cont${sskey}", Me)"$)
+		If bisitemdiv Then
+			AddCode(sb, $"cont${sskey}.SetDiv(True)"$)
+		End If
+		If bisitemnogutter Then
+			AddCode(sb, $"cont${sskey}.SetNoGutters(True)"$)
+		End If
 		AddComment(sb, "Add components for the container here!")
 		AddNewLine(sb)
 		AddCode(sb, $"Return cont${sskey}"$)
@@ -9065,9 +9092,9 @@ Sub Design_Stepper
 End Sub
 
 Sub Design_Tabs
-	Dim tabs As VMTabs = ui.CreateTabs($"tabs${sname}"$, Me)
+	Dim tabs As VMTabs = ui.CreateTabs($"tbs${sname}"$, Me)
 	tabs.SetStatic(True)
-	tabs.AddTabSlider
+	tabs.SetTabSlider(bistabslider)
 	tabs.SetActiveclass(sactiveclass)
 	tabs.SetAlignwithtitle(bisAlignwithtitle)
 	tabs.SetBackgroundcolorintensity(sBackgroundcolor, sBackgroundcolorintensity)
@@ -9101,10 +9128,17 @@ Sub Design_Tabs
 		If sskey = "" Then Continue
 		tabs.AddTab(sskey, sstitle, ssiconname, Null)
 		'create the containers
+		AddNewLine(sb)
 		AddComment(sb, $"Create the ${sstitle} tab"$)
 		AddCode(sb, $"Sub CreateContainer_${sskey} As VMContainer"$)
 		sb.append($"Dim cont${sskey} As VMContainer"$).append(CRLF)
 		AddCode(sb, $"cont${sskey} = vm.CreateContainer("cont${sskey}", Me)"$)
+		If bisitemdiv Then
+			AddCode(sb, $"cont${sskey}.SetDiv(True)"$)
+		End If
+		If bisitemnogutter Then
+			AddCode(sb, $"cont${sskey}.SetNoGutters(True)"$)
+		End If
 		AddComment(sb, "Add components for the container here!")
 		AddNewLine(sb)
 		AddCode(sb, $"Return cont${sskey}"$)
@@ -9113,36 +9147,36 @@ Sub Design_Tabs
 	Next
 	ui.AddControl(tabs.Tabs, tabs.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
-	AddCode(sb, $"Dim tabs${sname} As VMTabs = vm.CreateTabs("tabs${sname}", Me)"$)
-	CodeLine(sb, True, "b", "Tabs", sname, "AddTabSlider")
-	CodeLine(sb, sactiveclass, "s", "Tabs", sname, "SetActiveclass")
-	CodeLine(sb, bisAlignwithtitle, "b", "Tabs", sname, "SetAlignwithtitle")
-	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", "Tabs", sname, "SetBackgroundcolorintensity")
-	CodeLine(sb, bisCenteractive, "b", "Tabs", sname, "SetCenteractive")
-	CodeLine(sb, bisCentered, "b", "Tabs", sname, "SetCentered")
-	CodeLine2(sb, scolor, sColorintensity, "s", "Tabs", sname, "SetColorintensity")
-	CodeLine(sb, bisdark, "b", "Tabs", sname, "SetDark")
-	CodeLine(sb, bisFixedtabs, "b", "Tabs", sname, "SetFixedtabs")
-	CodeLine(sb, bisGrow, "b", "Tabs", sname, "SetGrow")
-	CodeLine(sb, sheight, "s", "Tabs", sname, "SetHeight")
-	CodeLine(sb, bisHideslider, "b", "Tabs", sname, "SetHideslider")
-	CodeLine(sb, bisiconposright, "b", "Tabs", sname, "SetIconposright")
-	CodeLine(sb, bisIconsandtext, "b", "Tabs", sname, "SetIconsandtext")
-	CodeLine(sb, bislight, "b", "Tabs", sname, "SetLight")
-	CodeLine(sb, smobilebreakpoint, "s", "Tabs", sname, "SetMobilebreakpoint")
-	CodeLine(sb, sNexticon, "s", "Tabs", sname, "SetNexticon")
-	CodeLine(sb, bisOptional, "b", "Tabs", sname, "SetOptional")
-	CodeLine(sb, sPrevicon, "s", "Tabs", sname, "SetPrevicon")
-	CodeLine(sb, bisright, "b", "Tabs", sname, "SetRight")
-	CodeLine(sb, bisshowarrows, "b", "Tabs", sname, "SetShowarrows")
-	CodeLine2(sb, sSlidercolor, sSlidercolorintensity, "s", "Tabs", sname, "SetSlidercolorintensity")
-	CodeLine(sb, sSlidersize, "s", "Tabs", sname, "SetSlidersize")
-	CodeLine(sb, bisvertical, "b", "Tabs", sname, "SetVertical")
-	CodeLine(sb, bisvisible, "b", "Tabs", sname, "SetVisible")
-	AddCode(sb, $"tabs${sname}.SetOnChange(me, "tabs${sname}_change")"$)
+	AddCode(sb, $"Dim tbs${sname} As VMTabs = vm.CreateTabs("tbs${sname}", Me)"$)
+	CodeLine(sb, bistabslider, "b", "tbs", sname, "SetTabSlider")
+	CodeLine(sb, sactiveclass, "s", "tbs", sname, "SetActiveclass")
+	CodeLine(sb, bisAlignwithtitle, "b", "tbs", sname, "SetAlignwithtitle")
+	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", "tbs", sname, "SetBackgroundcolorintensity")
+	CodeLine(sb, bisCenteractive, "b", "tbs", sname, "SetCenteractive")
+	CodeLine(sb, bisCentered, "b", "tbs", sname, "SetCentered")
+	CodeLine2(sb, scolor, sColorintensity, "s", "tbs", sname, "SetColorintensity")
+	CodeLine(sb, bisdark, "b", "tbs", sname, "SetDark")
+	CodeLine(sb, bisFixedtabs, "b", "tbs", sname, "SetFixedtabs")
+	CodeLine(sb, bisGrow, "b", "tbs", sname, "SetGrow")
+	CodeLine(sb, sheight, "s", "tbs", sname, "SetHeight")
+	CodeLine(sb, bisHideslider, "b", "tbs", sname, "SetHideslider")
+	CodeLine(sb, bisiconposright, "b", "tbs", sname, "SetIconposright")
+	CodeLine(sb, bisIconsandtext, "b", "tbs", sname, "SetIconsandtext")
+	CodeLine(sb, bislight, "b", "tbs", sname, "SetLight")
+	CodeLine(sb, smobilebreakpoint, "s", "tbs", sname, "SetMobilebreakpoint")
+	CodeLine(sb, sNexticon, "s", "tbs", sname, "SetNexticon")
+	CodeLine(sb, bisOptional, "b", "tbs", sname, "SetOptional")
+	CodeLine(sb, sPrevicon, "s", "tbs", sname, "SetPrevicon")
+	CodeLine(sb, bisright, "b", "tbs", sname, "SetRight")
+	CodeLine(sb, bisshowarrows, "b", "tbs", sname, "SetShowarrows")
+	CodeLine2(sb, sSlidercolor, sSlidercolorintensity, "s", "tbs", sname, "SetSlidercolorintensity")
+	CodeLine(sb, sSlidersize, "s", "tbs", sname, "SetSlidersize")
+	CodeLine(sb, bisvertical, "b", "tbs", sname, "SetVertical")
+	CodeLine(sb, bisvisible, "b", "tbs", sname, "SetVisible")
+	AddCode(sb, $"tbs${sname}.SetOnChange(me, "tbs${sname}_change")"$)
 	'
-	AddCode(sbEvents, $"Public Sub tabs${sname}_change(value As Object)"$)
-	AddCode(sbEvents, $"VM.ShowSnackSuccess(value)"$)
+	AddCode(sbEvents, $"Public Sub tbs${sname}_change(value As Object)"$)
+	AddCode(sbEvents, $"VM.ShowSnackBarSuccess(value)"$)
 	AddCode(sbEvents, "End Sub")
 	AddNewLine(sbEvents)
 	'
@@ -9152,10 +9186,10 @@ Sub Design_Tabs
 		Dim sstitle As String = m.getdefault("title", "")
 		If sskey = "" Then Continue
 		AddCode(sb, $"Dim cont${sskey} As VMContainer = CreateContainer_${sskey}"$)
-		AddCode(sb, $"tabs${sname}.AddTab("${sskey}", "${sstitle}", "${ssiconname}", cont${sskey})"$)
+		AddCode(sb, $"tbs${sname}.AddTab("${sskey}", "${sstitle}", "${ssiconname}", cont${sskey})"$)
 	Next
 		
-	sb.append($"${sparent}.AddControl(tabs${sname}.Tabs, tabs${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	sb.append($"${sparent}.AddControl(tbs${sname}.Tabs, tbs${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 #Region Stepper
@@ -9176,6 +9210,7 @@ Sub PropertyBag_Stepper
 	pbstepper.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title", "subtitle":"Description"))
 	'
 	pbstepper.AddHeading("e","Settings")
+	pbstepper.AddSwitches("e", CreateMap("isitemdiv": "ItemDiv", "isitemnogutter": "ItemNoGutter"))
 	pbstepper.AddSwitches("e", CreateMap("isaltlabels": "AltLabels", "isdark": "Dark"))
 	pbstepper.AddSwitches("e", CreateMap("islight": "Light", "isnonlinear": "NonLinear"))
 	pbstepper.AddSwitches("e", CreateMap("isvertical": "Vertical", "isvisible": "Visible"))
@@ -9215,6 +9250,7 @@ Sub PropertyBag_ExpansionPanels
 	pbexpansionpanels.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title"))
 	'
 	pbexpansionpanels.AddHeading("e","Settings")
+	pbexpansionpanels.AddSwitches("e", CreateMap("isitemdiv": "ItemDiv", "isitemnogutter": "ItemNoGutter"))
 	pbexpansionpanels.AddSwitches("e", CreateMap("isaccordion": "Accordion", "isdark": "Dark"))
 	pbexpansionpanels.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isflat": "Flat"))
 	pbexpansionpanels.AddSwitches("e", CreateMap("isfocusable": "Focusable", "ishover": "Hover"))
@@ -9272,8 +9308,21 @@ Sub Design_ExpansionPanels
 		If sskey = "" Then Continue
 		expnl.AddPanel1(sskey, sstitle, Null)
 		'create the containers
+		AddNewLine(sb)
+		AddComment(sb, $"Create the ${sstitle} tab"$)
+		AddCode(sb, $"Sub CreateContainer_${sskey} As VMContainer"$)
 		sb.append($"Dim cont${sskey} As VMContainer"$).append(CRLF)
 		AddCode(sb, $"cont${sskey} = vm.CreateContainer("cont${sskey}", Me)"$)
+		If bisitemdiv Then
+			AddCode(sb, $"cont${sskey}.SetDiv(True)"$)
+		End If
+		If bisitemnogutter Then
+			AddCode(sb, $"cont${sskey}.SetNoGutters(True)"$)
+		End If
+		AddComment(sb, "Add components for the container here!")
+		AddNewLine(sb)
+		AddCode(sb, $"Return cont${sskey}"$)
+		AddCode(sb, $"End Sub"$)
 		AddNewLine(sb)
 	Next
 	ui.AddControl(expnl.ExpansionPanels, expnl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
@@ -9300,6 +9349,7 @@ Sub Design_ExpansionPanels
 		Dim sskey As String = m.getdefault("key", "")
 		Dim sstitle As String = m.getdefault("title", "")
 		If sskey = "" Then Continue
+		AddCode(sb, $"Dim cont${sskey} As VMContainer = CreateContainer_${sskey}"$)
 		AddCode(sb, $"exp${sname}.AddPanel1("${sskey}", "${sstitle}", cont${sskey})"$)
 	Next
 	sb.append($"${sparent}.AddControl(exp${sname}.ExpansionPanels, exp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)

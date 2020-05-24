@@ -133,6 +133,12 @@ Sub SetStatic(b As Boolean) As VMContainer
 	Return Me
 End Sub
 
+Sub SetDiv(b As Boolean) As VMContainer
+	If b = False Then Return Me
+	SetTag("div")
+	Return Me
+End Sub
+
 Sub CreateDataTable(cID As String, PrimaryKey As String, eventHandler As Object) As VMDataTable
 	Dim el As VMDataTable
 	el.Initialize(vue, cID,PrimaryKey,  eventHandler)
