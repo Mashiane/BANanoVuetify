@@ -15,7 +15,7 @@ Module1=BANanoHashes
 NumberOfFiles=3
 NumberOfLibraries=4
 NumberOfModules=1
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 'https://www.b4x.com/android/forum/threads/bananohashes-4-types-4-algorithm-plus-1.112222/#content
 #IgnoreWarnings: 12, 15
@@ -29,7 +29,7 @@ Version=8.27
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoEncrypt"
-	Public Version As String = "1.00"
+	Public Version As String = "1.01"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -56,9 +56,4 @@ End Sub
 
 Sub BANano_Ready
 	
-End Sub
-
-Sub Md5Hash(value As String, key As String, raw As Boolean) As String
-	Dim res As Object = BANano.RunJavascriptMethod("md5", Array(value, key, raw))
-	Return res
 End Sub

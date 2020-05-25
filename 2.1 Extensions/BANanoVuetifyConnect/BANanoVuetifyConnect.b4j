@@ -18,7 +18,7 @@ Module6=BANanoSQLiteR
 NumberOfFiles=2
 NumberOfLibraries=4
 NumberOfModules=6
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 '
 #IgnoreWarnings: 12, 15
@@ -30,7 +30,7 @@ Version=8.27
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyConnect"
-	Public Version As String = "1.07"
+	Public Version As String = "1.08"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

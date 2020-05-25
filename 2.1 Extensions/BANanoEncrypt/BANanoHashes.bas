@@ -27,6 +27,11 @@ Public Sub Initialize(input As String, key As String) As BANanoHashes
 	Return Me
 End Sub
 
+Sub Md5Hash(value As String, key As String, raw As Boolean) As String
+	Dim res As Object = BANano.RunJavascriptMethod("md5", Array(value, key, raw))
+	Return res
+End Sub
+
 'bcrypt generate salt
 Sub GenerateSalt(rounds As Int) As String
 	Dim salt As String = BANano.RunJavascriptMethod("gensalt", Array(rounds))

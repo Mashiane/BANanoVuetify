@@ -7,6 +7,7 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private sbRead As StringBuilder
 	Private dlgmultifields As VMDialog
 	Private isDirty As Boolean
 	Private Mode As String
@@ -853,8 +854,8 @@ End Sub
 Sub CreateDialog_Multifields
 	dlgmultifields = vm.CreateDialog("dlgmultifields", Me)
 	dlgmultifields.Settitle("Add Mulitple Items")
-	dlgmultifields.SetOk("btnAddFields","Ok")
 	dlgmultifields.SetCancel("btnCancelFields","Cancel")
+	dlgmultifields.SetOk("btnAddFields","Ok")
 	dlgmultifields.Setwidth("700px")
 	dlgmultifields.Setretainfocus(True)
 	Dim txtamultifields As VMTextField = vm.NewTextArea(Me, True, "txtamultifields", "multifields", "Items (,)", "", True, False, "", 0, "", "", 0)
@@ -1531,6 +1532,7 @@ Sub YesNoToBoolean(xvalue As String) As Boolean
 End Sub
 
 Sub CreateUX
+	sbRead.initialize
 	bShowMatrix = YesNoToBoolean(vm.getdata("showmatrix"))
 	bHasBorder = YesNoToBoolean(vm.getdata("hasborder"))
 	
@@ -1867,7 +1869,14 @@ Sub CreateUX
 				Design_Button
 		End Select
 	Next
-	
+	'
+	If sbRead.Length > 0 Then
+		AddNewLine(sb)
+		AddInstruction(sb, "<Your Module>", "", "in case you need this!")
+		sb.Append(sbRead.tostring)
+		AddNewLine(sb)
+	End If
+	'
 	'update with events
 	sb.append(sbEvents.tostring)
 	'
@@ -2196,6 +2205,7 @@ Sub Design_Grid(gridSQL As BANanoAlaSQLE)
 End Sub
 
 Sub Design_TextArea
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txta.SetSolo(bissolo)
 	txta.SetValue(svalue)
@@ -2215,6 +2225,10 @@ Sub Design_TextArea
 	txta.SetVisible(bisvisible)
 	txta.SetAutoFocus(bisautofocus)
 	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
@@ -2239,6 +2253,7 @@ Sub Design_TextArea
 End Sub
 
 Sub Design_Switch
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
 	swt.SetColorIntensity(scolor, sintensity)
 	swt.SetRequired(bisrequired)
@@ -2254,6 +2269,10 @@ Sub Design_Switch
 	swt.SetFieldType(sfieldtype)
 	swt.SetVisible(bisvisible)
 	ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bStatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
@@ -2282,6 +2301,7 @@ Sub Design_Switch
 End Sub
 
 Sub Design_CheckBox
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
 	chk.SetColorIntensity(scolor, sintensity)
 	chk.SetRequired(bisrequired)
@@ -2296,6 +2316,10 @@ Sub Design_CheckBox
 	chk.SetFieldType(sfieldtype)
 	chk.SetVisible(bisvisible)
 	ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
@@ -2321,6 +2345,7 @@ Sub Design_CheckBox
 End Sub
 
 Sub Design_Date
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 	dp.SetVisible(bisvisible)
 	dp.SetDisabled(bisdisabled)
@@ -2352,6 +2377,10 @@ Sub Design_Date
 				
 	ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
 	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 		
 	CodeLine(sb, sfieldtype, "s", "dp", sname, "SetFieldType")
@@ -2431,6 +2460,9 @@ Sub Design_Chip
 	chip.SetXsmall(bisXsmall)
 	ui.AddControl(chip.Chip, chip.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	
 	AddCode(sb, $"Dim chp${sname} As VMChip = vm.CreateChip("chp${sname}", Me)"$)
 	CodeLine(sb, stitle, "s", "chp", sname, "SetText")
@@ -2508,6 +2540,9 @@ Sub Design_Badge
 	badge.SetVisible(bisvisible)
 	ui.AddControl(badge.Badge, badge.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	
 	AddCode(sb, $"Dim bdg${sname} As VMBadge = vm.CreateBadge("bdg${sname}", Me)"$)
 	CodeLine(sb, bisAvatar, "b", "bdg", sname, "SetAvatar")
@@ -2541,6 +2576,7 @@ End Sub
 
 
 Sub Design_File
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim fi As VMTextField = ui.NewFileInput(Me, True, False, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
 	fi.SetSolo(bissolo)
 	fi.SetOutlined(bisoutlined)
@@ -2557,6 +2593,10 @@ Sub Design_File
 	fi.SetFieldType(sfieldtype)
 	fi.SetVisible(bisvisible)
 	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 			
 	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, False, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
@@ -2584,6 +2624,7 @@ Sub Design_File
 End Sub
 
 Sub Design_Radio
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	If buseoptions Then
 		Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
 		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
@@ -2599,6 +2640,10 @@ Sub Design_Radio
 	rd.SetFieldType(sfieldtype)
 	rd.SetVisible(bisvisible)
 	ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	If buseoptions Then
 		sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
@@ -2625,6 +2670,7 @@ Sub Design_Radio
 End Sub
 
 Sub Design_Select
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Select Case controltype
 		Case "select"
 			If buseoptions Then
@@ -2679,6 +2725,10 @@ Sub Design_Select
 	sel.SetVisible(bisvisible)
 	sel.SetAutoFocus(bisautofocus)
 	ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	'define the code for the control
 	Select Case controltype
@@ -2749,6 +2799,7 @@ Sub Design_Select
 End Sub
 
 Sub Design_Slider
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
 	sld.SetValue(sslidervalue)
 	sld.SetColorIntensity(scolor, sintensity)
@@ -2769,6 +2820,10 @@ Sub Design_Slider
 	If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
 	sld.SetVisible(bisvisible)
 	ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bStatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, sslidervalue, "s", "sld", sname, "SetValue")
@@ -2820,6 +2875,10 @@ Sub Design_Label
 	lbl.Setvisible(bisvisible)
 	ui.AddControl(lbl.Label, lbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bStatic}, "lbl${sname}", "${svmodel}", "${slabelsize}", "${svalue}")"$).append(CRLF)
 	CodeLine(sb, sdisplay, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
@@ -2848,6 +2907,7 @@ Sub Design_Label
 End Sub
 
 Sub Design_Email
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
 	email.SetFieldType(sfieldtype)
 	email.SetSolo(bissolo)
@@ -2865,6 +2925,10 @@ Sub Design_Email
 	email.SetHideDetails(bishidedetails)
 	email.SetVisible(bisvisible)
 	ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim txt${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
 
@@ -2890,6 +2954,7 @@ Sub Design_Email
 End Sub
 
 Sub Design_Password
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	pwd.SetFieldType(sfieldtype)
 	pwd.SetSolo(bissolo)
@@ -2908,6 +2973,10 @@ Sub Design_Password
 	pwd.SetVisible(bisvisible)
 				
 	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
@@ -2933,6 +3002,7 @@ Sub Design_Password
 End Sub
 
 Sub Design_Tel
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
 	tel.SetFieldType(sfieldtype)
 	tel.SetSolo(bissolo)
@@ -2950,6 +3020,10 @@ Sub Design_Tel
 	tel.SetHideDetails(bishidedetails)
 	tel.SetVisible(bisvisible)
 	ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
@@ -2975,6 +3049,7 @@ Sub Design_Tel
 End Sub
 
 Sub Design_Time
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
 	tp.SetVisible(bisvisible)
 	tp.SetDisabled(bisdisabled)
@@ -3003,6 +3078,10 @@ Sub Design_Time
 	tp.TextField.SetHideDetails(bishidedetails)
 			
 	ui.AddControl(tp.DateTimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim tp${sname} As VMDateTimePicker = vm.NewTimePicker(Me, ${bStatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
@@ -3050,6 +3129,10 @@ Sub Design_Icon
 	icn.SetVisible(bisvisible)
 	ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
 	CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
@@ -3065,6 +3148,10 @@ Sub Design_Parallax
 	Dim para As VMParallax = ui.NewParallax(Me, True, sname, sheight, ssrc, salt)
 	para.SetVisible(bisvisible)
 	ui.AddControl(para.Parallax, para.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sheight}", "${ssrc}", "${salt}")"$).append(CRLF)
 	CodeLine(sb, bisvisible, "b", "prlx", sname, "SetVisible")
@@ -3092,6 +3179,10 @@ Sub Design_Container
 	cont.SetMinHeight(sminheight)
 	cont.SetMaxHeight(smaxheight)
 	ui.AddControl(cont.Container, cont.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim cont${sname} As VMContainer = vm.NewContainer(Me, cont${bStatic}, "cont${sname}")"$).append(CRLF)
 	CodeLine(sb, bisnogutters, "b", "cont", sname, "SetNoGutters")
@@ -3131,6 +3222,10 @@ Sub Design_Image
 	img.SetCenterOnParent(bcenteronparent)
 				
 	ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bStatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")"$).append(CRLF)
 	CodeLine(sb, slazysrc, "s", "img", sname, "SetLazysrc")
@@ -3347,6 +3442,10 @@ Sub Design_SpeedDial
 	Next
 	ui.AddControl(speeddial.SpeedDial, speeddial.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	sb.append($"Dim spd${sname} As VMSpeedDial = vm.CreateSpeedDial("spd${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, bisabsolute, "b", "spd", sname, "SetAbsolute")
 	CodeLine(sb, bisbottom, "b", "spd", sname, "SetBottom")
@@ -3467,8 +3566,8 @@ Sub Design_Dialog
 	sb.append($"dlg${sname} = vm.CreateDialog("dlg${sname}", Me)"$).Append(CRLF)
 	'
 	CodeLine(sb, stitle, "s", "dlg", sname, "Settitle")
-	CodeLine2(sb, sOkid, sOkcaption, "s", "dlg", sname, "SetOk")
 	CodeLine2(sb, sCancelid, sCancelcaption, "s", "dlg", sname, "SetCancel")
+	CodeLine2(sb, sOkid, sOkcaption, "s", "dlg", sname, "SetOk")
 	CodeLine(sb, sactivator, "s", "dlg", sname, "Setactivator")
 	CodeLine(sb, scontentclass, "s", "dlg", sname, "Setcontentclass")
 	CodeLine(sb, sorigin, "s", "dlg", sname, "Setorigin")
@@ -3564,6 +3663,9 @@ Sub Design_Carousel
 	'
 	ui.AddControl(carousel.Carousel, carousel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'create the source code
 	sb.append($"Dim car${sname} As VMCarousel = vm.CreateCarousel("car${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, sactiveclass, "s", "car", sname, "Setactiveclass")
@@ -3675,6 +3777,10 @@ Sub Design_Menu
 	'
 	ui.AddControl(menu.Menu, menu.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim menu${sname} As VMMenu = vm.CreateMenu("menu${sname}", Me)"$).append(CRLF)
 	Select Case menutype
@@ -3843,6 +3949,10 @@ Sub Design_ToolBar
 	ui.AddControl(tbl.toolbar, tbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	If biscurrent = False Then 
+		AddNewLine(sb)
+		AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+		AddNewLine(sb)
+		'
 		sb.append($"Dim tbl${sname} As VMToolBar = ui.CreateToolBar("tbl${sname}", Me)"$).append(CRLF)
 		Select Case sbartype
 		Case "app"
@@ -4081,7 +4191,10 @@ Sub Design_Button
 	'
 	ui.AddControl(btn.button, btn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'build the source code
-				
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "btn${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
 	If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
 	If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
@@ -4227,6 +4340,7 @@ Sub Design_Button
 End Sub
 
 Sub Design_TextField
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txt.SetFieldType(sfieldtype)
 	txt.SetSolo(bissolo)
@@ -4245,6 +4359,10 @@ Sub Design_TextField
 	txt.SetVisible(bisvisible)
 	txt.SetAutoFocus(bisautofocus)
 	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	
@@ -8136,6 +8254,7 @@ Sub Read_Rating
 End Sub
 
 Sub Design_Rating
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim rating As VMRating = ui.CreateRating("rating" & sname, Me)
 	rating.SetStatic(True)
 	rating.SetValue(svalue)
@@ -8164,6 +8283,10 @@ Sub Design_Rating
 	rating.SetColorIntensity(scolor, sintensity)
 	'
 	ui.AddControl(rating.Rating, rating.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	sb.append($"Dim rat${sname} As VMRating = vm.CreateRating("rat${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, svalue, "s", "rat", sname, "SetValue")
@@ -8737,6 +8860,10 @@ Sub Design_Avatar
 	End Select	
 	ui.AddControl(avatar.Avatar, avatar.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	sb.append($"Dim avt${sname} As VMAvatar = vm.CreateAvatar("avt${sname}", Me)"$).Append(CRLF)
 	CodeLine(sb, sBadge, "s", "avt", sname, "SetBadge")
 	CodeLine2(sb, scolor, sColorintensity, "s", "avt", sname, "SetColorintensity")
@@ -8906,6 +9033,10 @@ Sub Design_List
 	'
 	ui.AddControl(lst.List, lst.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	sb.append($"Dim lst${sname} As VMList = vm.CreateList("lst${sname}", Me)"$).Append(CRLF)
 	CodeLine2(sb, scolor, sColorintensity, "s", "lst", sname, "SetColorintensity")
 	CodeLine(sb, bisdark, "b", "lst", sname, "SetDark")
@@ -9064,6 +9195,10 @@ Sub Design_Stepper
 	Next
 	ui.AddControl(stp.Stepper, stp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	'
 	AddCode(sb, $"Dim stp${sname} As VMStepper = vm.CreateStepper("stp${sname}", Me)"$)
 	CodeLine(sb, bisAltlabels, "b", "stp", sname, "SetAltlabels")
 	CodeLine(sb, bisdark, "b", "stp", sname, "SetDark")
@@ -9146,6 +9281,10 @@ Sub Design_Tabs
 		AddNewLine(sb)
 	Next
 	ui.AddControl(tabs.Tabs, tabs.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	'
 	AddCode(sb, $"Dim tbs${sname} As VMTabs = vm.CreateTabs("tbs${sname}", Me)"$)
 	CodeLine(sb, bistabslider, "b", "tbs", sname, "SetTabSlider")
@@ -9326,7 +9465,10 @@ Sub Design_ExpansionPanels
 		AddNewLine(sb)
 	Next
 	ui.AddControl(expnl.ExpansionPanels, expnl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-
+	
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 '
 	AddCode(sb, $"Dim exp${sname} As VMExpansionPanels = vm.CreateExpansionPanels("exp${sname}", Me)"$)
 	CodeLine(sb, bisAccordion, "b", "exp", sname, "SetAccordion")

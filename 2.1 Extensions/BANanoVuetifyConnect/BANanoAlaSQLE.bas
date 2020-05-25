@@ -844,6 +844,66 @@ Sub SelectWhere(tblfields As List, tblWhere As Map, operators As List, orderBy A
 	Return Me
 End Sub
 
+Sub AndOrOperators(sm As Map) As List    'ignore
+	Dim nl As List
+	nl.initialize
+	For Each k As String In sm.Keys
+		nl.Add("AND")
+	Next
+	Return nl
+End Sub
+
+'return a sql to select record of table where one exists
+Sub SelectWhere1(tblfields As List, tblWhere As Map, operators As List, AndOr As List, orderBy As List) As BANanoAlaSQLE
+	If operators = Null Then operators = EQOperators(tblWhere)
+	If AndOr = Null Then AndOr = AndOrOperators(tblWhere)
+	Dim listOfTypes As List = GetMapTypes(tblWhere)
+	Dim listOfValues As List = GetMapValues(tblWhere)
+	'are we selecting all fields or just some
+	Dim fld1 As String = tblfields.Get(0)
+	Dim selFIelds As String = ""
+	Select Case fld1
+		Case "*"
+			selFIelds = "*"
+		Case Else
+			selFIelds = JoinFields(",", tblfields)
+	End Select
+	Dim sb As StringBuilder
+	sb.Initialize
+	sb.Append($"SELECT ${selFIelds} FROM ${EscapeField(TableName)} WHERE "$)
+	Dim i As Int
+	Dim iWhere As Int = tblWhere.Size - 1
+	For i = 0 To iWhere
+		If i > 0 Then
+			Dim sandor As String = AndOr.get(i)
+			sb.Append($" ${sandor} "$)
+		End If
+		Dim col As String = tblWhere.GetKeyAt(i)
+		sb.Append(col)
+		Dim opr As String = operators.Get(i)
+		sb.Append($" ${opr} ?"$)
+	Next
+	If orderBy <> Null Then
+		'order by
+		Dim stro As String = JoinFields(",", orderBy)
+		If stro.Length > 0 Then
+			sb.Append(" ORDER BY ").Append(stro)
+		End If
+	End If
+	query = sb.tostring
+	args = listOfValues
+	types = listOfTypes
+	command = "select"
+	response = ""
+	error = ""
+	result = NewList
+	json = ""
+	affectedRows = 0
+	Return Me
+End Sub
+
+
+
 
 'join list to mv string
 private Sub Join(delimiter As String, lst As List) As String

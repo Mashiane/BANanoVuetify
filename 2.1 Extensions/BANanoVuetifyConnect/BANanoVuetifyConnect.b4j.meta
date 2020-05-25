@@ -19,6 +19,6 @@ ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
 ModuleClosedNodes6=
-NavigationStack=BANanoSQLiteR,NewDatabase,98,0,BANanoSQLiteR,Prepare,116,0,BANanoSQLiteR,Run,130,0,BANanoSQLiteR,Exec,160,0,BANanoSQLiteR,ColumnNames,170,0,BANanoSQLiteR,Count,184,0,BANanoSQLiteR,SchemaAddBoolean,193,0,BANanoSQLiteR,SchemaAddDate,202,0,BANanoSQLiteR,SchemaAddText,213,0,BANanoSQLiteR,SchemaAddInt,232,0,BANanoSQLiteR,SchemaAddField,238,0
+NavigationStack=BANanoAlaSQLE,CreateTable,408,0,BANanoMSSQLE,NewList,118,0,BANanoMSSQLE,SelectWhere1,106,0,BANanoMySQLE,RecordFromMap,63,0,BANanoMySQLE,SelectWhere1,128,0,BANanoMySQLE,NewList,128,0,BANanoSQLiteE,AndOrOperators,77,0,BANanoSQLiteE,NewList,140,0,BANanoSQLiteR,OpenDatabaseFromArrayBuffer,52,0,BANanoSQLiteE,SelectWhere1,113,0
 SelectedBuild=0
 VisibleModules=

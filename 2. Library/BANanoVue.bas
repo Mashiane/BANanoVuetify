@@ -570,6 +570,15 @@ Sub AddModule(tagName As String) As BANanoVue
 	Return Me
 End Sub
 
+Sub DateIsAfter(date1 As String, date2 As String) As Boolean
+	Dim d1 As Int = DateIconv(date1)
+	Dim d2 As Int = DateIconv(date2)
+	d1 = BANAno.parseint(d1)
+	d2 = BANAno.parseInt(d2)
+	Dim b As Boolean = BANAno.IIf(d1 > d2, True, False)
+	Return b
+End Sub
+
 Sub ModuleExist(tagName As String) As Boolean
 	tagName = tagName.tolowercase
 	Dim b As Boolean = Modules.ContainsKey(tagName)
@@ -590,6 +599,35 @@ Sub RemDelim(sValue As String, Delim As String) As String
 	Else
 		Return sValue
 	End If
+End Sub
+
+Sub DateIconv(sdate As String) As Long
+	Dim lps As Long = DateTime.DateParse(sdate)
+	Return lps
+End Sub
+
+Sub DateOconv(lDate As Long) As String
+	DateTime.DateFormat = "yyyy-MM-dd"
+	Dim sdate As String = DateTime.Date(lDate)
+	Return sdate
+End Sub
+
+'break a string at uppercase to have a space
+Sub StringBreakAtUpperCase(st As String) As String
+	If st.Length = 0 Then Return ""
+	Dim k As Int
+	Dim s As String
+	Dim newst As String = st.CharAt(0)
+	For i = 1 To st.Length - 1
+		s = st.CharAt(i)
+		k = Asc(s)
+		If (k > 64) And (k < 91) And (st.CharAt(i-1) <> " ") Then
+			newst = newst & " " & s
+		Else
+			newst = newst & s
+		End If
+	Next
+	Return newst
 End Sub
 
 Sub JoinMapKeys(m As Map, delim As String) As String
@@ -984,10 +1022,22 @@ Public Sub MonthNow() As String
 End Sub
 
 Sub DateAdd(mDate As String, HowManyDays As Int) As String
+	HowManyDays = BANAno.parseInt(HowManyDays)
 	Dim ConvertDate, NewDateDay As Long
 	ConvertDate = DateTime.DateParse(mDate)
 	NewDateDay = DateTime.Add(ConvertDate, 0, 0, HowManyDays)
 	Return DateTime.Date(NewDateDay)
+End Sub
+
+'Returns the number of days that have passed between two dates.
+'Pass the dates as a String
+Sub NumberOfDaysBetweenDates(CurrentDate As String, OtherDate As String) As Int
+	Dim CurrDate, OthDate As Long
+	CurrDate = DateTime.DateParse(CurrentDate)
+	OthDate = DateTime.DateParse(OtherDate)
+	Dim tpd As Long = DateTime.TicksPerDay
+	Dim iOut As Long = (CurrDate - OthDate)/tpd
+	Return iOut
 End Sub
 
 Public Sub CDbl(value As String) As Double
@@ -1345,6 +1395,16 @@ End Sub
 Sub GeneratePassword(IntNum As Int) As String
 	Return RandomString(IntNum,True,True,True,"")
 End Sub
+
+'remove a delimiter from a string
+Sub RemDelimSB(delimiter As String, value As StringBuilder) As StringBuilder
+	If value.tostring.EndsWith(delimiter) = True Then
+		Dim delimLen As Int = delimiter.length
+		value.Remove(value.Length-delimLen,value.Length)
+	End If
+	Return value
+End Sub
+
 
 Sub Space(HM As Int) As String
 	Dim RS As String = ""
