@@ -102,10 +102,8 @@ Sub SetActiveClass(varActiveClass As Object) As VMWindowItem
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMWindowItem
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	WindowItem.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMWindowItem
+	WindowItem.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

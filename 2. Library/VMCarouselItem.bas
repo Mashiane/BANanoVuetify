@@ -123,13 +123,7 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMCarouselItem
-	If varDisabled = False Then Return Me
-	If bStatic Then
-		SetAttrSingle("disabled", varDisabled)
-	End If
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	CarouselItem.Bind(":disabled", pp)
+	CarouselItem.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

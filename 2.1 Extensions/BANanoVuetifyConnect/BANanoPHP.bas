@@ -14,6 +14,7 @@ function GetFile($fileName) {
 }
 
 function SendEmail($from,$to,$cc,$subject,$msg) { 
+    $msg = str_replace("|", "\r\n", $msg);
 	$msg = str_replace("\n.", "\n..", $msg); 
 	// use wordwrap() if lines are longer than 70 characters 
 	$msg = wordwrap($msg,70,"\r\n"); 

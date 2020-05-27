@@ -143,10 +143,8 @@ Sub SetDark(varDark As Object) As VMPagination
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMPagination
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	Pagination.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMPagination
+	Pagination.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

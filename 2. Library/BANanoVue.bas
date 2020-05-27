@@ -140,6 +140,8 @@ Sub Class_Globals
 	Public ControlTypes As Map
 	Public Modules As Map
 	Public SourceCode As StringBuilder
+	Public HashType As Map
+	Public Algorithm As Map
 End Sub
 
 'initialize view
@@ -500,7 +502,21 @@ Public Sub Initialize()
 	DataTypes.Put("BLOB", "Blob")
 	DataTypes.Put("DATE", "Date")
 	DataTypes.Put("None", "None")
-	
+	'
+	HashType.Initialize
+	HashType.Put("MD5", "MD5")
+	HashType.Put("SHA1", "SHA1")
+	HashType.Put("SHA256", "SHA256")
+	HashType.Put("SHA512", "SHA512")
+	HashType.Put("RMD160", "RMD160")
+	HashType.Put("", "None")
+	 
+	Algorithm.Initialize
+	Algorithm.Put("hex", "hex")
+	Algorithm.Put("b64", "b64")
+	Algorithm.Put("hex_hmac", "hex_hmac")
+	Algorithm.Put("b64_hmac", "b64_hmac")
+	Algorithm.Put("", "None")
 	'
 	ControlTypes.Initialize
 	ControlTypes.put("text", "Text")
@@ -562,6 +578,15 @@ End Sub
 
 Sub GetSourceCode As String
 	Return SourceCode.tostring
+End Sub
+
+Sub YesNoToBoolean(xvalue As String) As Boolean
+	Select Case xvalue
+		Case "Yes","yes"
+			Return True
+		Case Else
+			Return False
+	End Select
 End Sub
 
 Sub AddModule(tagName As String) As BANanoVue

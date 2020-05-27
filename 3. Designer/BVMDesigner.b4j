@@ -149,7 +149,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.08"
+	Public Version As String = "4.09"
 	Public Port As String = "8080"
 End Sub
 
@@ -166,6 +166,8 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
 	BANano.TranspilerOptions.MinifyOnline = False
+	BANano.TranspilerOptions.IgnoreB4JLibrary("BANanoPostProcessor")
+
 	
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$
@@ -225,5 +227,5 @@ Sub BANano_Ready
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON
 	'
-	pgIndex.initWait
+	pgIndex.init
 End Sub

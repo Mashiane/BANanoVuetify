@@ -102,10 +102,8 @@ Sub SetCloseDelay(varCloseDelay As Object) As VMHover
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMHover
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	Hover.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMHover
+	Hover.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

@@ -372,7 +372,6 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMDateTimePicker
-	If varDisabled = False Then Return Me
 	DateTimePicker.SetDisabled(varDisabled)
 	Return Me
 End Sub

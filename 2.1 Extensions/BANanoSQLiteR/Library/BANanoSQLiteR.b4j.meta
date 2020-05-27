@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=BANanoSQLiteR,NewDatabase,32,6,BANanoSQLiteR,Initialize,103,0,BANanoSQLiteR,Run,127,0,BANanoSQLiteR,Prepare,107,4,BANanoSQLiteR,OpenDatabaseFromArrayBuffer,77,0,BANanoSQLiteR,Export,46,6,BANanoSQLiteR,Class_Globals,29,1,BANanoSQLiteR,OpenDatabase,66,1,BANanoSQLiteR,Close,52,6,Main,AppStart,24,5
+NavigationStack=BANanoSQLiteR,Prepare,107,4,BANanoSQLiteR,OpenDatabaseFromArrayBuffer,77,0,BANanoSQLiteR,Export,46,6,BANanoSQLiteR,Class_Globals,29,1,BANanoSQLiteR,OpenDatabase,66,1,BANanoSQLiteR,Close,52,6,Main,AppStart,24,5,BANanoSQLiteR,ResetTypes,409,0,Main,Process_Globals,13,0,BANanoSQLiteR,SchemaFromDesign,407,6,BANanoSQLiteR,SelectWhere1,75,0
 SelectedBuild=0
 VisibleModules=1

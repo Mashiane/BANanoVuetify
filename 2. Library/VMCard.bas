@@ -314,14 +314,7 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMCard
-	If varDisabled = False Then Return Me
-	If bStatic Then
-		SetAttrSingle("disabled", varDisabled)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	Card.Bind(":disabled", pp)
+	Card.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

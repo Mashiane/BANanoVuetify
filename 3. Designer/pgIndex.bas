@@ -7,6 +7,7 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private rsType As String
 	Private sbRead As StringBuilder
 	Private dlgmultifields As VMDialog
 	Private isDirty As Boolean
@@ -27,6 +28,16 @@ Sub Process_Globals
 	Private sprojectname As String
 	Private sdbtype As String
 	Private bisautofocus As Boolean
+	Private shashtype As String
+	Private salg As String
+	Private bisupdatable As Boolean
+	Private smatchto As String
+	Private bisdatenow As Boolean
+	Private bistimenow As Boolean
+	Private bisdatetimenow As Boolean
+	Private bisreadonly As Boolean
+	Private stablename As String
+	Private sprimarykey As String
 	'
 	Private sbuttontype As String
 	Private pbtextfield As VMProperty   	
@@ -134,7 +145,6 @@ Sub Process_Globals
 	Private bisinset As Boolean
 	Private bisindeterminate As Boolean
 	Private bisitalic As Boolean
-	Private bisreadonly As Boolean
 	'
 	Private bfitwidth As Boolean
 	Private shref As String
@@ -169,7 +179,6 @@ Sub Process_Globals
 	Private sborderstyle As String
 	Private saspectratio As String
 	'
-	Private bisreadonly As Boolean
 	Private bisvertical As Boolean
 	Private bisthumbalways As Boolean
 	Private bisthumblabel As Boolean
@@ -284,7 +293,6 @@ Sub Process_Globals
 	Private biscloseonclick As Boolean
 	Private biscloseoncontentclick As Boolean
 	Private bisdisablekeys As Boolean
-	Private bisdisabled As Boolean
 	Private biseager As Boolean
 	Private bisfixed As Boolean
 	Private bisinternalactivator As Boolean
@@ -358,7 +366,6 @@ Sub Process_Globals
 	Private sverticaldelimiter As String
 	'
 	Private biscaption As Boolean
-	Private bisdisabled As Boolean
 	Private bisdisplay1 As Boolean
 	Private bisdisplay2 As Boolean
 	Private bisdisplay3 As Boolean
@@ -387,7 +394,6 @@ Sub Process_Globals
 	Private bisattach As Boolean
 	Private bisbackdrop As Boolean
 	Private bisshowonopen As Boolean
-	Private bisdisabled As Boolean
 	Private biseager As Boolean
 	Private bisfullscreen As Boolean
 	Private bishideoverlay As Boolean
@@ -443,7 +449,6 @@ Sub Process_Globals
 	Private sLength As String
 	Private bislight As Boolean
 	Private sopendelay As String
-	Private bisreadonly As Boolean
 	Private bisRipple As Boolean
 	Private bisSmall As Boolean
 	Private stabindex As String
@@ -516,7 +521,6 @@ Private stabindex As String
 	Private sCloseicon As String
 	Private scolor As String
 	Private sColorintensity As String
-	Private bisdisabled As Boolean
 	Private bisDraggable As Boolean
 	Private bisExact As Boolean
 	Private bisFilter As Boolean
@@ -546,7 +550,6 @@ Private stabindex As String
 	Private bisbottom As Boolean
 	Private sContent As String
 	Private bisdark As Boolean
-	Private bisdisabled As Boolean
 	Private bisDot As Boolean
 	Private bisInline As Boolean
 	Private bisleft As Boolean
@@ -623,7 +626,6 @@ Private stabindex As String
 	Private bisAccordion As Boolean
 	Private sActivepanel As String
 	Private bisdark As Boolean
-	Private bisdisabled As Boolean
 	Private bisflat As Boolean
 	Private bisFocusable As Boolean
 	Private bisHover As Boolean
@@ -631,7 +633,6 @@ Private stabindex As String
 	Private bismandatory As Boolean
 	Private bismultiple As Boolean
 	Private bisPopout As Boolean
-	Private bisreadonly As Boolean
 	Private bistile As Boolean
 	Private bisvisible As Boolean
 	'
@@ -665,7 +666,7 @@ Private stabindex As String
 	Private bisitemnogutter As Boolean
 End Sub
 
-Sub InitWait
+Sub Init
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
@@ -1536,6 +1537,23 @@ Sub CreateUX
 	bShowMatrix = YesNoToBoolean(vm.getdata("showmatrix"))
 	bHasBorder = YesNoToBoolean(vm.getdata("hasborder"))
 	
+	Dim prj As Map = vm.getdata("project")
+	Dim pid As String = prj.getdefault("id", "")
+	sprojectname = prj.getdefault("projectname", "")
+	sdbtype = prj.getdefault("dbtype", "")
+	sdatabasename = prj.getdefault("databasename", "")
+	Select Case sdbtype
+	Case "banano"
+		rsType = "BANanoAlaSQLE"
+	Case "sqlite"
+		rsType = "BANanoSQLiteE"
+		If sdatabasename.endswith(".db") = False Then sdatabasename = $"${sdatabasename}.db"$
+	Case "mysql"
+		rsType = "BANanoMySQLE"
+	Case "mssql"
+		rsType = "BANanoMSSQLE"
+	End Select
+	
 	vm.pagepause
 	'clear components
 	vm.setdata("myux", vm.Newlist)
@@ -1669,10 +1687,16 @@ Sub CreateUX
 		bontable = YesNoToBoolean(mattr.getdefault("ontable", "No"))
 		bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 		bisnow = YesNoToBoolean(mattr.getdefault("isnow", "No"))
+		bisupdatable = YesNoToBoolean(mattr.getdefault("isupdatable", "No"))
 		sdialogpage = mattr.getdefault("dialogpage", "")
 		sclickaction = mattr.getdefault("clickaction","")
 		siconpos = mattr.getdefault("iconpos", "left")
 		sbuttontype = mattr.getdefault("buttontype", "normal")
+		smatchto = mattr.getdefault("matchto", "")
+		bisdatenow = YesNoToBoolean(mattr.getdefault("isdatenow", "No"))
+		bistimenow = YesNoToBoolean(mattr.getdefault("istimenow", "No"))
+		bisdatetimenow = YesNoToBoolean(mattr.getdefault("isdatetimenow", "No"))
+		bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
 		'
 		bisautofocus = YesNoToBoolean(mattr.getdefault("isautofocus", "No"))
 		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
@@ -1698,7 +1722,6 @@ Sub CreateUX
 		bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 		bisindeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
 		bisitalic = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
-		bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
 		'
 		bfitwidth = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
 		shref = mattr.getdefault("href","")
@@ -1772,6 +1795,8 @@ Sub CreateUX
 		bisfluid = YesNoToBoolean(mattr.getdefault("isfluid", "No"))
 		bisshowmatrix = YesNoToBoolean(mattr.getdefault("isshowmatrix", "No"))
 		bisnogutters = YesNoToBoolean(mattr.getdefault("isnogutters", "No"))
+		shashtype = mattr.getdefault("hashtype", "")
+		salg = mattr.getdefault("alg", "")
 		'
 		bStatic = True
 		'
@@ -1923,7 +1948,6 @@ Sub Read_Label
 End Sub
 
 Sub Read_Slider
-	bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
 	bisvertical = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
 	bisthumbalways = YesNoToBoolean(mattr.getdefault("isthumbalways", "No"))
 	bisthumblabel = YesNoToBoolean(mattr.getdefault("isthumblabel", "No"))
@@ -2224,6 +2248,8 @@ Sub Design_TextArea
 	txta.SetFieldType(sfieldtype)
 	txta.SetVisible(bisvisible)
 	txta.SetAutoFocus(bisautofocus)
+	txta.SetReadOnly(bisreadonly)
+	txta.SetDisabled(bisdisabled)
 	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2233,6 +2259,8 @@ Sub Design_TextArea
 	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
+	CodeLine(sb, bisreadonly, "b", "txta", sname, "SetReadonly")
+	CodeLine(sb, bisdisabled, "b", "txta", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "txta", sname, "SetValue")
 	CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txta", sname, "SetOutlined")
@@ -2924,6 +2952,8 @@ Sub Design_Email
 	email.SetClearable(bclearable)
 	email.SetHideDetails(bishidedetails)
 	email.SetVisible(bisvisible)
+	email.SetReadOnly(bisreadonly)
+	email.SetDisabled(bisdisabled)
 	ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2933,6 +2963,8 @@ Sub Design_Email
 	sb.append($"Dim txt${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
+	CodeLine(sb, bisreadonly, "b", "txt", sname, "SetReadonly")
+	CodeLine(sb, bisdisabled, "b", "txt", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
 	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
@@ -2954,7 +2986,38 @@ Sub Design_Email
 End Sub
 
 Sub Design_Password
+	Dim bHasHash As Boolean = False
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
+	'encrypt
+	If shashtype <> "" And salg <> "" Then
+		bHasHash = True
+		AddComment(sbRead, "Reference the BANanoEncrypt Library...")
+		AddCode(sbRead, $"Dim bencrypt As BANanoHashes"$)
+		AddComment(sbRead, "Initialize the encryption")
+		AddCode(sbRead, $"bencrypt.Initialize(s${svmodel}, Main.AppName)"$)
+		AddComment(sbRead, "Encrypt the content")
+		AddCode(sbRead, $"Dim s${svmodel}hash As String = bencrypt.Hash("${shashtype}", "${salg}")"$)
+		AddComment(sbRead, "update the content")
+		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel}hash)"$)
+	End If
+	'check matching
+	If smatchto <> "" Then
+		AddComment(sbRead, "Check match")
+		AddCode(sbRead, $"s${smatchto} = Record.Get("${smatchto}")"$)
+		If bHasHash Then
+			AddCode(sbRead, $"s${svmodel} = Record.Get("${svmodel}")"$)
+		End If
+		AddCode(sbRead, $"If s${smatchto} <> s${svmodel} Then"$)
+		AddCode(sbRead, $"vm.ShowSnackBarError("The passwords do not match!")"$)
+		AddCode(sbRead, "Return")
+		AddCode(sbRead, "End If")
+	End If
+	'is not updatable
+	If bisupdatable = False Then
+		AddComment(sbRead, "Should not be updated...")
+		AddCode(sbRead, $"Record.Remove("${svmodel}")"$)
+	End If
+		
 	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	pwd.SetFieldType(sfieldtype)
 	pwd.SetSolo(bissolo)
@@ -2971,6 +3034,8 @@ Sub Design_Password
 	pwd.SetHideDetails(bishidedetails)
 	pwd.SetValue(svalue)
 	pwd.SetVisible(bisvisible)
+	pwd.SetReadOnly(bisreadonly)
+	pwd.SetDisabled(bisdisabled)
 				
 	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
@@ -2981,6 +3046,8 @@ Sub Design_Password
 	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
 	CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
+	CodeLine(sb, bisreadonly, "b", "pwd", sname, "SetReadonly")
+	CodeLine(sb, bisdisabled, "b", "pwd", sname, "SetDisabled")
 	CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "pwd", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "pwd", sname, "SetFilled")
@@ -3019,6 +3086,8 @@ Sub Design_Tel
 	tel.SetClearable(bclearable)
 	tel.SetHideDetails(bishidedetails)
 	tel.SetVisible(bisvisible)
+	tel.SetReadOnly(bisreadonly)
+	tel.SetDisabled(bisdisabled)
 	ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3028,6 +3097,8 @@ Sub Design_Tel
 	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
 	CodeLine(sb, svalue, "s", "tel", sname, "SetValue")
+	CodeLine(sb, bisreadonly, "b", "tel", sname, "SetReadonly")
+	CodeLine(sb, bisdisabled, "b", "tel", sname, "SetDisabled")
 	CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "tel", sname, "SetOutlined")
@@ -3544,8 +3615,7 @@ Sub Design_Dialog
 	AddInstruction(sb, "<Your Module>", "Process_Globals","")
 	AddNewLine(sb)
 	sb.append($"Private dlg${sname} As VMDialog"$).append(CRLF).append(CRLF)
-	'
-	
+	'	
 	AddNewLine(sb)
 	AddInstruction(sb, "<Your Module>", "Code","")
 	AddComment(sb, "add the dialog to page")
@@ -3610,6 +3680,192 @@ Sub Design_Dialog
 	AddCode(sb, $"vm.ShowSnackBarError("The information could not be validated!")"$)
 	AddCode(sb, "Return")
 	AddCode(sb, "End If")
+	'execute other stuff
+	
+	Dim diagName As String = $"dlg${sname}"$
+	Dim rsName As String = $"rslt${stablename}"$
+	Select Case sclickaction
+	Case "read"
+		sb.append($"Dim RecID As String = Record.Get("${sprimarykey}")"$).append(CRLF)
+		AddComment(sb,"read record from database")
+		'read record from the database
+		Select Case sdbtype
+		Case "banano"
+			AddComment(sb, "database variable")
+			sb.append($"Dim db As BANanoSQL"$).append(CRLF)
+			AddComment(sb, "open the database and wait")
+			sb.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
+			AddComment(sb, "resultset variable")
+			sb.append($"Dim ${rsName} As ${rsType}"$).append(CRLF)
+			AddComment(sb, "initialize table for reading")
+			sb.append($"${rsName}.Initialize("${stablename}", "${sprimarykey}")"$).append(CRLF)
+		Case "sqlite", "mysql", "mssql"
+			sb.append($"Dim ${rsName} As ${rsType}"$).append(CRLF)
+			AddComment(sb, "initialize table for table creation")
+			sb.append($"${rsName}.Initialize("${sdatabasename}", "${stablename}", "${sprimarykey}", "${sprimarykey}")"$).append(CRLF)
+		End Select
+		'
+		AddComment(sb, "define schema for record")
+		sb.append($"${rsName}.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
+		AddComment(sb, "generate & run command to read record")
+		sb.append($"${rsName}.Read(RecID)"$).append(CRLF)
+		Select Case sdbtype
+		Case "banano"
+			sb.append($"${rsName}.Result = db.ExecuteWait(${rsName}.query, ${rsName}.args)"$).append(CRLF)
+		Case "sqlite", "mysql", "mssql"
+			AddCode(sb, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
+		End Select
+		AddCode(sb, $"${rsName}.FromJSON"$)
+		AddComment(sb, "was the read successful?")
+		sb.append($"If ${rsName}.Result.Size = 0 Then Return"$).append(CRLF)
+		AddComment(sb, "the record as found!")
+		sb.append($"Dim Record As Map = ${rsName}.result.get(0)"$).append(CRLF)
+		AddComment(sb, "update the state, this updates the v-model(s) for each input control")
+		sb.append($"vm.SetState(Record)"$).append(CRLF)
+	Case "sendcredentials"
+		AddComment(sbEvents, "read the contents!")
+		AddCode(sbEvents, $"Dim sfirstname As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim semail As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim spassword As String = Record.get(?)"$)
+		AddComment(sbEvents, "Build the message")
+		AddCode(sbEvents, $"Dim nmsg As String = "Good Day " & sfirstname & "||Your Sign In credentials are the following:||Your Email: " & semail & "||Your Password: " & spassword||Regards|${sprojectname} Development Team|"$)
+		Dim subject As String = $"${sprojectname}: Sign In Credentials"$
+		AddCode(sbEvents, $"Dim se As Map = CreateMap()"$)
+		AddCode(sbEvents, $"se.put("from", "${ssenderemail}")"$)
+		AddCode(sbEvents, $"se.put("to", "${ssendtoemail}")"$)
+		AddCode(sbEvents, $"se.put("cc", "${sccemail}")"$)
+		AddCode(sbEvents, $"se.put("subject", "${subject}")"$)
+		AddCode(sbEvents, $"se.put("msg", nmsg)"$)
+		AddComment(sbEvents, "Send the message and wait for response")
+		AddCode(sbEvents, $"vm.PagePause"$)
+		AddCode(sbEvents, $"Dim Result As String = BANano.CallInlinePHPWait("SendEmail", se)"$)
+		AddCode(sbEvents, $"Dim ResultM As Map = BANano.FromJSON(Result)"$)
+		AddComment(sbEvents, "What is the result of the response from SMTP")
+		AddCode(sbEvents, $"Dim Response As String = ResultM.Get("response")"$)
+		AddCode(sbEvents, $"vm.PageResume"$)
+		AddCode(sbEvents, $"Select Case Response"$)
+		AddCode(sbEvents, $"Case "failure""$)
+		AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced sending the email!")"$)
+		AddCode(sbEvents, "Case Else")
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("Information was sent successfully.")"$)
+		AddCode(sbEvents, "End Select")
+		AddNewLine(sbEvents)
+	Case "contactus"
+		AddComment(sbEvents, "read the contents!")
+		AddCode(sbEvents, $"Dim sfullname As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim semail As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim sphone As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim scomment As String = Record.get(?)"$)
+		AddComment(sbEvents, "Build the message")
+		AddCode(sbEvents, $"Dim nmsg As String = "Full Name: " & sfullname & "||Email Address: " & semail & "||Telephone: " & sphone & "||Message:||" & scomment"$)
+		AddCode(sbEvents, $"Dim se As Map = CreateMap()"$)
+		AddCode(sbEvents, $"se.put("from", "${ssenderemail}")"$)
+		AddCode(sbEvents, $"se.put("to", "${ssendtoemail}")"$)
+		AddCode(sbEvents, $"se.put("cc", "${sccemail}")"$)
+		AddCode(sbEvents, $"se.put("subject", "${sprojectname} Contact Us: " & sfullname)"$)
+		AddCode(sbEvents, $"se.put("msg", nmsg)"$)
+		AddComment(sbEvents, "Send the message and wait for response")
+		AddCode(sbEvents, $"vm.PagePause"$)
+		AddCode(sbEvents, $"Dim Result As String = BANano.CallInlinePHPWait("SendEmail", se)"$)
+		AddCode(sbEvents, $"Dim ResultM As Map = BANano.FromJSON(Result)"$)
+		AddComment(sbEvents, "What is the result of the response from SMTP")
+		AddCode(sbEvents, $"Dim Response As String = ResultM.Get("response")"$)
+		AddCode(sbEvents, $"vm.PageResume"$)
+		AddCode(sbEvents, $"Select Case Response"$)
+		AddCode(sbEvents, $"Case "failure""$)
+		AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced sending the information!")"$)
+		AddCode(sbEvents, "Case Else")
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("Information was sent successfully.")"$)
+		AddCode(sbEvents, "End Select")
+		AddNewLine(sbEvents)
+	Case "add"
+		Select Case sdbtype
+		Case "banano"
+			AddComment(sb, "database variable")
+			sb.append($"Dim db As BANanoSQL"$).append(CRLF)
+			AddComment(sb, "open the database and wait")
+			sb.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
+			'add a record to database
+			If bisautoincrement = True Then
+				Select Case sdbtype
+				Case "banano"
+					AddComment(sb, "generate max value")
+					sb.append($"Dim nextID As Int = 0"$).append(CRLF)
+					AddComment(sb, "generate & run command to get max value")
+					AddComment(sb, "initialize table")
+					sb.append($"${rsName}.Initialize("${stablename}", "${sprimarykey}")"$).append(CRLF)
+					sb.append($"${rsName}.GetMax"$).append(CRLF)
+					sb.append($"${rsName}.Result = db.ExecuteWait(${rsName}.query, ${rsName}.args)"$).append(CRLF)
+					AddCode(sb, $"${rsName}.FromJSON"$)
+					sb.append($"nextID = ${rsName}.GetNextID"$).append(CRLF)
+					AddComment(sb, "update the record with the next id")
+					sb.append($"Record.Put("${sprimarykey}", nextID)"$).append(CRLF)
+				Case "sqlite"
+					sb.append($"Record.Put("${sprimarykey}", Null)"$).append(CRLF)
+				Case "mssql"
+					'remove the auto key as its identity
+					AddComment(sb, "remove the primary key")
+					AddCode(sb, $"Record.Remove("${sprimarykey}")"$)
+				End Select
+			End If
+			
+			AddComment(sb, "initialize table for insert")
+			sb.append($"${rsName}.Initialize("${stablename}", "${sprimarykey}")"$).append(CRLF)
+		Case "sqlite", "mysql", "mssql"
+			sb.append($"${rsName}.Initialize("${sdatabasename}", "${stablename}", "${sprimarykey}", "${sprimarykey}")"$).append(CRLF)
+		End Select
+		'
+		AddComment(sb, "define schema for record")
+		sb.append($"${rsName}.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
+		AddComment(sb, "insert a record")
+		sb.append($"${rsName}.Insert1(Record)"$).append(CRLF)
+		AddComment(sb, "generate & run command to insert record")
+		Select Case sdbtype
+		Case "banano"
+			sb.append($"${rsName}.Result = db.ExecuteWait(${rsName}.query, ${rsName}.args)"$).append(CRLF)
+		Case "sqlite", "mysql", "mssql"
+			AddCode(sb, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
+		End Select
+		AddCode(sb, $"${rsName}.FromJSON"$)
+	Case "save"
+		AddComment(sb, "read record id")
+		sb.append($"Dim RecID As String = Record.Get("${sprimarykey}")"$).append(CRLF)
+		'
+		AddComment(sb, "initialize table for update")
+		Select Case sdbtype
+		Case "banano"
+			AddComment(sb, "database variable")
+			sb.append($"Dim db As BANanoSQL"$).append(CRLF)
+			AddComment(sb, "open the database and wait")
+			sb.append($"db.OpenWait("${sdatabasename}", "${sdatabasename}")"$).append(CRLF)
+			sb.append($"${rsName}.Initialize("${stablename}", "${sprimarykey}")"$).append(CRLF)
+		Case "sqlite", "mysql", "mssql"
+			sb.append($"${rsName}.Initialize("${sdatabasename}", "${stablename}", "${sprimarykey}", "${sprimarykey}")"$).append(CRLF)
+			If bisautoincrement = True Then
+				Select Case sdbtype
+				Case "mssql"
+					'remove the primary key for addition
+					AddComment(sb, "remove the primary key")
+					AddCode(sb, $"Record.Remove("${sprimarykey}")"$)
+				End Select
+			End If
+		End Select
+			'
+		AddComment(sb, "define schema for record")
+		sb.append($"${rsName}.SchemaFromDesign(${diagName}.Container)"$).append(CRLF)
+		AddComment(sb, "update a record")
+		sb.append($"${rsName}.Update1(Record, RecID)"$).append(CRLF)
+		AddComment(sb, "generate & run command to update record")
+		Select Case sdbtype
+		Case "banano"
+			sb.append($"${rsName}.Result = db.ExecuteWait(${rsName}.query, ${rsName}.args)"$).append(CRLF)
+		Case "sqlite", "mysql", "mssql"
+			AddCode(sb, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
+		End Select
+		AddCode(sb, $"${rsName}.FromJSON"$)
+		sb.append($"End Select"$).append(CRLF)
+	Case "delete"
+	End Select
 	AddCode(sb, "End Sub")
 	AddNewLine(sb)
 	'
@@ -4244,6 +4500,34 @@ Sub Design_Button
 	'
 	AddCode(sbEvents, $"Private Sub btn${sname}_click(e As BANanoEvent)"$)
 	Select Case sclickaction
+	Case "sendcredentials"
+		AddComment(sbEvents, "read the contents!")
+		AddCode(sbEvents, $"Dim sfirstname As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim semail As String = Record.get(?)"$)
+		AddCode(sbEvents, $"Dim spassword As String = Record.get(?)"$)
+		AddComment(sbEvents, "Build the message")
+		AddCode(sbEvents, $"Dim nmsg As String = "Good Day " & sfirstname & "||Your Sign In credentials are the following:||Your Email: " & semail & "||Your Password: " & spassword||Regards|${sprojectname} Development Team|"$)
+		Dim subject As String = $"${sprojectname}: Sign In Credentials"$
+		AddCode(sbEvents, $"Dim se As Map = CreateMap()"$)
+		AddCode(sbEvents, $"se.put("from", "${ssenderemail}")"$)
+		AddCode(sbEvents, $"se.put("to", "${ssendtoemail}")"$)
+		AddCode(sbEvents, $"se.put("cc", "${sccemail}")"$)
+		AddCode(sbEvents, $"se.put("subject", "${subject}")"$)
+		AddCode(sbEvents, $"se.put("msg", nmsg)"$)
+		AddComment(sbEvents, "Send the message and wait for response")
+		AddCode(sbEvents, $"vm.PagePause"$)
+		AddCode(sbEvents, $"Dim Result As String = BANano.CallInlinePHPWait("SendEmail", se)"$)
+		AddCode(sbEvents, $"Dim ResultM As Map = BANano.FromJSON(Result)"$)
+		AddComment(sbEvents, "What is the result of the response from SMTP")
+		AddCode(sbEvents, $"Dim Response As String = ResultM.Get("response")"$)
+		AddCode(sbEvents, $"vm.PageResume"$)
+		AddCode(sbEvents, $"Select Case Response"$)
+		AddCode(sbEvents, $"Case "failure""$)
+		AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced sending the email!")"$)
+		AddCode(sbEvents, "Case Else")
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("Information was sent successfully.")"$)
+		AddCode(sbEvents, "End Select")
+		AddNewLine(sbEvents)
 	Case "contactus"
 		'send contact us email
 		AddComment(sbEvents, "get the record to create/update")
@@ -4261,13 +4545,20 @@ Sub Design_Button
 		AddCode(sbEvents, $"Dim sphone As String = Record.get(?)"$)
 		AddCode(sbEvents, $"Dim scomment As String = Record.get(?)"$)
 		AddComment(sbEvents, "Build the message")
-		AddCode(sbEvents, $"Dim nmsg As String = "Full Name: " & sfullname & "\r\nEmail Address: " & semail & "\r\nTelephone: " & sphone & "\r\nMessage:\r\n" & scomment"$)
-		AddCode(sbEvents, $"Dim se As Map = CreateMap("from":"${ssenderemail}","to":"${ssendtoemail}","cc":"${sccemail}","subject":"Contact Us: " & sfullname, "msg":nmsg)"$)
+		AddCode(sbEvents, $"Dim nmsg As String = "Full Name: " & sfullname & "||Email Address: " & semail & "||Telephone: " & sphone & "||Message:||" & scomment"$)
+		AddCode(sbEvents, $"Dim se As Map = CreateMap()"$)
+		AddCode(sbEvents, $"se.put("from", "${ssenderemail}")"$)
+		AddCode(sbEvents, $"se.put("to", "${ssendtoemail}")"$)
+		AddCode(sbEvents, $"se.put("cc", "${sccemail}")"$)
+		AddCode(sbEvents, $"se.put("subject", "${sprojectname} Contact Us: " & sfullname)"$)
+		AddCode(sbEvents, $"se.put("msg", nmsg)"$)
 		AddComment(sbEvents, "Send the message and wait for response")
+		AddCode(sbEvents, $"vm.PagePause"$)
 		AddCode(sbEvents, $"Dim Result As String = BANano.CallInlinePHPWait("SendEmail", se)"$)
 		AddCode(sbEvents, $"Dim ResultM As Map = BANano.FromJSON(Result)"$)
 		AddComment(sbEvents, "What is the result of the response from SMTP")
 		AddCode(sbEvents, $"Dim Response As String = ResultM.Get("response")"$)
+		AddCode(sbEvents, $"vm.PageResume"$)
 		AddCode(sbEvents, $"Select Case Response"$)
 		AddCode(sbEvents, $"Case "failure""$)
 		AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced sending the information!")"$)
@@ -4341,6 +4632,22 @@ End Sub
 
 Sub Design_TextField
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
+	'set time now
+	If bisdatenow Then
+		AddCode(sbRead, $"s${svmodel} = vue.DateNow"$)
+		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel})"$)
+	End If
+	'set time now
+	If bistimenow Then
+		AddCode(sbRead, $"s${svmodel} = vue.TimeNow"$)
+		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel})"$)
+	End If
+	'set date time now
+	If bisdatetimenow Then
+		AddCode(sbRead, $"s${svmodel} = vue.DateTimeNow"$)
+		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel})"$)
+	End If
+	
 	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, imaxlen, shelpertext, serrortext, stabindex)
 	txt.SetFieldType(sfieldtype)
 	txt.SetSolo(bissolo)
@@ -4358,6 +4665,8 @@ Sub Design_TextField
 	txt.SetHideDetails(bishidedetails)
 	txt.SetVisible(bisvisible)
 	txt.SetAutoFocus(bisautofocus)
+	txt.SetReadOnly(bisreadonly)
+	txt.SetDisabled(bisdisabled)
 	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -4368,6 +4677,8 @@ Sub Design_TextField
 	
 	'
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
+	CodeLine(sb, bisreadonly, "b", "txt", sname, "SetReadonly")
+	CodeLine(sb, bisdisabled, "b", "txt", sname, "SetDisabled")
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
@@ -4643,6 +4954,8 @@ Sub DesignLayout
 	vm.Container.AddColumns(1,2,2,2,2)
 	vm.Container.AddColumns(1,7,7,7,7)
 	vm.Container.AddColumns(1,3,3,3,3)
+	'vm.Container.SetStyleRC(1, 3, "overflow-y", "scroll")
+	'vm.Container.SetStyleRC(1, 1, "overflow-y", "scroll")
 	'
 	'vm.Container.SetBorderRC(1, 2, "1px", vm.COLOR_LIGHTBLUE, vm.BORDER_DASHED)
 	'
@@ -4851,7 +5164,6 @@ Sub AddInstruction(sbx As StringBuilder, modName As String, subName As String, p
 End Sub
 
 Sub Design_DBSourceCode
-	Dim rsType As String
 	Dim prj As Map = vm.getdata("project")
 	Dim pid As String = prj.getdefault("id", "")
 	sprojectname = prj.getdefault("projectname", "")
@@ -4882,7 +5194,7 @@ Sub Design_DBSourceCode
 	Dim auto As String = ""
 	Dim tbName As String = mattr.get("vmodel")
 	Dim itemkey As String = mattr.get("itemkey")
-	Dim bisautoincrement As Boolean = YesNoToBoolean(mattr.getdefault("isautoincrement", "No"))
+	bisautoincrement = YesNoToBoolean(mattr.getdefault("isautoincrement", "No"))
 	Dim ssingular As String = mattr.Get("singular")
 	Dim smanyrecords As String = mattr.get("manyrecords")
 	Dim snewid As String = mattr.get("newid")
@@ -4991,7 +5303,6 @@ Sub Design_DBSourceCode
 		AddCode(sbl, CRLF)
 	End If
 	'
-		
 	'**** ADD PAGE TO MASTER
 	AddInstruction(sbl, "pgIndex", "AddPages" , "")
 	AddComment(sbl, $"code to add the ${stitle} template code to the master HTML template"$)
@@ -5135,10 +5446,10 @@ Sub Design_DBSourceCode
 	'
 	If bisHamburgervisible Then
 		AddComment(sbl, "show the hamburger for this page")
-		AddCode(sbl, "vm.NavBar.Hamburger.Show")
+		AddCode(sbl, "vm.NavBar.Hamburger.SetVisible(True)")
 	Else
 		AddComment(sbl, "hide the hamburger for this page")
-		AddCode(sbl, "vm.NavBar.Hamburger.Hide")
+		AddCode(sbl, "vm.NavBar.Hamburger.SetVisible(False)")
 	End If
 	'
 	If bisDrawervisible Then
@@ -6499,6 +6810,7 @@ Sub ItemDrop(e As BANanoEvent)
 					
 					'
 					Dim attr As Map = CreateMap()
+					attr.put("isupdatable", "Yes")
 					attr.put("buttontype", "normal")
 					attr.put("parent", "vm.Container")
 					attr.put("fieldtype", "string")
@@ -6548,6 +6860,7 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("isdivider", "Yes")
 					attr.put("dialogpage", "vm")
 					attr.put("toolbarsubtitle", "1.00")
+					attr.put("isclearable", "No")
 						'
 					Select Case savedid
 						Case "avatar"
@@ -6570,6 +6883,8 @@ Sub ItemDrop(e As BANanoEvent)
 						Case "password"
 							attr.put("iconname", "mdi-lock-outline")
 							attr.put("istoggle", "Yes")
+							attr.put("hashtype", "SHA256")
+							attr.put("alg", "b64")
 						Case "tel"
 							attr.put("iconname", "mdi-phone")
 						Case "textarea"
@@ -6767,7 +7082,8 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("isshowonnavbar", "Yes")
 							attr.put("isdivider","Yes")
 							BANano.SetLocalStorage("selectedpanel", 4)
-							
+						Case "switch", "checkbox"
+							attr.put("value", "No")
 					End Select
 					'
 					'save just in case
@@ -6942,7 +7258,7 @@ End Sub
 #Region Button Property Bag
 Sub PropertyBag_Button
 	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record", _
-	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","":"None","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer","contactus":"Contact Us")
+	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer","contactus":"Contact Us", "sendcredentials":"User Credentials","":"None")
 	vm.setdata("pbbutton", False)
 	lstBags.add("pbbutton")
 	pbbutton = vm.CreateProperty("ppbbutton", Me)
@@ -7349,6 +7665,8 @@ Sub PropertyBag_TextField
 	pbtextfield.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbtextfield.AddText2("d", CreateMap("label": "Label","value": "Value"))
 	pbtextfield.AddText("d","iconname","Icon Name","","")
+	pbtextfield.AddText("d","matchto","Match To","","")
+	pbtextfield.AddSelect2("d", "hashtype", "Hash Type", vue.HashType, "alg", "Algorithm", vue.Algorithm)
 	pbtextfield.AddText("d", "placeholder","Placeholder","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
 	pbtextfield.AddText("d","errortext","Error Text","","")
@@ -7356,7 +7674,9 @@ Sub PropertyBag_TextField
 	'
 	pbtextfield.AddHeading("e","Settings")
 	pbtextfield.AddSwitches("e", CreateMap("isrequired": "Required", "isautofocus": "Auto Focus"))
-	pbtextfield.AddSwitches("e", CreateMap("ishidedetails": "Hide Details", "isclearable": "Clearable"))
+	pbtextfield.AddSwitches("e", CreateMap("isdatenow":"Date Now", "istimenow":"Time Now"))
+	pbtextfield.AddSwitches("e", CreateMap("isdatetimenow":"Date Time Now", "isreadonly": "Read Only"))
+	pbtextfield.AddSwitches("e", CreateMap("ishidedetails": "Hide Details", "isupdatable": "Updatable"))
 	pbtextfield.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
 	pbtextfield.AddSwitches("e", CreateMap("isautogrow": "Autogrow", "ontable": "On Table"))
 	pbtextfield.AddSwitches("e", CreateMap("issolo": "Solo", "isoutlined": "Outlined"))
@@ -7364,7 +7684,7 @@ Sub PropertyBag_TextField
 	pbtextfield.AddSwitches("e", CreateMap("issingleline": "Single Line", "ispersistenthint": "Persistent Hint"))
 	pbtextfield.AddSwitches("e", CreateMap("isshaped": "Shaped - FOS", "isloading": "Loading"))
 	pbtextfield.AddSwitches("e", CreateMap("isflat": "Flat - Solo", "isrounded": "Rounded - FOS"))
-	pbtextfield.AddSwitches("e", CreateMap("istoggle": "Show Toggle Icons"))
+	pbtextfield.AddSwitches("e", CreateMap("istoggle": "Show Toggle Icons", "isclearable": "Clearable"))
 	'
 	pbtextfield.AddHeading("f","Matrix")
 	pbtextfield.AddMatrix("f")
@@ -7777,6 +8097,7 @@ Sub SavePropertyBag
 			nc.put("stepvalue", "1")
 			nc.put("truevalue", "Yes")
 			nc.put("falsevalue", "No")
+			nc.put("isupdatable", "Yes")
 			'
 			Dim matr As List
 			matr.initialize
@@ -8034,6 +8355,7 @@ End Sub
 
 #Region Dialog
 Sub PropertyBag_Dialog
+	Dim ops As Map = CreateMap("add":"Create Record", "read":"Read Record", "save":"Update Record","delete":"Delete Record", "contactus":"Contact Us", "sendcredentials":"User Credentials", "":"None")
 	vm.setdata("pbdialog", False)
 	lstBags.add("pbdialog")
 	pbdialog = vm.CreateProperty("ppbdialog", Me)
@@ -8045,6 +8367,9 @@ Sub PropertyBag_Dialog
 	pbdialog.AddText("d","label","Title","","")
 	pbdialog.AddText2("d",CreateMap("okid":"Ok ID","okcaption":"Ok Caption"))
 	pbdialog.AddText2("d",CreateMap("cancelid":"Cancel ID", "cancelcaption":"Cancel Caption"))
+	pbdialog.AddText2("d",CreateMap("tablename":"Data Source", "primarykey":"Primary Key"))
+	pbdialog.AddSwitches("d", CreateMap("isautoincrement": "Auto Increment"))
+	pbdialog.AddSelect("d","clickaction", "On Click Action", ops)
 	pbdialog.AddText("d","activator","Activator","","")
 	pbdialog.AddText("d","contentclass","ContentClass","","")
 	pbdialog.AddText("d","origin","Origin","","")
@@ -8088,7 +8413,11 @@ Sub Read_Dialog
 	sCancelcaption = mattr.getdefault("cancelcaption", "")
 	sOkid = mattr.getdefault("okid", "")
 	sOkcaption = mattr.getdefault("okcaption", "")
+	stablename = mattr.getdefault("tablename", "")
+	sprimarykey = mattr.getdefault("primarykey", "")
+	sclickaction = mattr.getdefault("clickaction", "")
 	'
+	bisautoincrement = YesNoToBoolean(mattr.getdefault("isautoincrement", "No"))
 	bisattach = YesNoToBoolean(mattr.getdefault("isattach", "No"))
 	bisbackdrop = YesNoToBoolean(mattr.getdefault("isbackdrop", "No"))
 	bisshowonopen = YesNoToBoolean(mattr.getdefault("isshowonopen", "No"))
@@ -8243,7 +8572,6 @@ Sub Read_Rating
 	sLength = mattr.getdefault("length", "")
 	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	sopendelay = mattr.getdefault("opendelay", "")
-	bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
 	bisRipple = YesNoToBoolean(mattr.getdefault("isripple", "No"))
 	ssize = mattr.getdefault("size", "")
 	bisSmall = YesNoToBoolean(mattr.getdefault("issmall", "No"))
@@ -8289,6 +8617,8 @@ Sub Design_Rating
 	AddNewLine(sb)
 	'
 	sb.append($"Dim rat${sname} As VMRating = vm.CreateRating("rat${sname}", Me)"$).append(CRLF)
+	CodeLine(sb, bisreadonly, "b", "rat", sname, "SetReadonly")
+	CodeLine(sb, bisdisabled, "b", "rat", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "rat", sname, "SetValue")
 	CodeLine(sb, sfieldtype, "s", "rat", sname, "SetFieldType")
 	CodeLine(sb, sclosedelay, "s", "rat", sname, "SetClosedelay")
@@ -9416,7 +9746,6 @@ Sub Read_ExpansionPanels
 	bismandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
 	bismultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
 	bisPopout = YesNoToBoolean(mattr.getdefault("ispopout", "No"))
-	bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
@@ -9735,12 +10064,12 @@ Sub Design_Page
 	'
 	If bisHamburgervisible Then
 		AddComment(sb, "show the hamburger for this page")
-		AddCode(sb, "vm.NavBar.Hamburger.Show")
-		tbl.Hamburger.Show
+		AddCode(sb, "vm.NavBar.Hamburger.SetVisible(True)")
+		tbl.Hamburger.SetVisible(True)
 	Else
 		AddComment(sb, "hide the hamburger for this page")
-		AddCode(sb, "vm.NavBar.Hamburger.Hide")
-		tbl.Hamburger.Hide
+		AddCode(sb, "vm.NavBar.Hamburger.SetVisible(False)")
+		tbl.Hamburger.SetVisible(False)
 	End If
 	'
 	If bisDrawervisible Then

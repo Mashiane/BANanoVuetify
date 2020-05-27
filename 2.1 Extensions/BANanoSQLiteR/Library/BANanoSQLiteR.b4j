@@ -12,21 +12,21 @@ Module1=BANanoSQLiteR
 NumberOfFiles=2
 NumberOfLibraries=3
 NumberOfModules=1
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 'https://www.b4x.com/android/forum/threads/bananohashes-4-types-4-algorithm-plus-1.112222/#content
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
-	#LibraryVersion: 1.00
+	#LibraryVersion: 1.01
 	#LibraryName: BANanoSQLiteR
 #End Region
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoSQLiteR"
-	Public Version As String = "1.00"
+	Public Version As String = "1.01"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

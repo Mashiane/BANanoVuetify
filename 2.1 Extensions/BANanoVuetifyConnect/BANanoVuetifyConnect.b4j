@@ -1,9 +1,5 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=fileSaver.min.js
-File2=sql.js
-FileGroup1=Default Group
-FileGroup2=Default Group
 Group=Default Group
 Library1=jcore
 Library2=jfx
@@ -14,10 +10,9 @@ Module2=BANanoMSSQLE
 Module3=BANanoMySQLE
 Module4=BANanoPHP
 Module5=BANanoSQLiteE
-Module6=BANanoSQLiteR
-NumberOfFiles=2
+NumberOfFiles=0
 NumberOfLibraries=4
-NumberOfModules=6
+NumberOfModules=5
 Version=8.3
 @EndOfDesignText@
 '
@@ -30,7 +25,7 @@ Version=8.3
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyConnect"
-	Public Version As String = "1.08"
+	Public Version As String = "1.10"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -42,9 +37,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.Title = AppName
 	BANano.JAVASCRIPT_NAME = appFile
 	'
-	BANano.Header.AddJavascriptFile("sql.js")
-	BANano.Header.AddJavascriptFile("fileSaver.min.js")
-	
 	BANano.BuildAsB4XLib(Version)
 	ExitApplication
 End Sub

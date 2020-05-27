@@ -243,6 +243,7 @@ Sub AddSelect(parent As String, vmodel As String, vText As String, options As Ma
 	Return Me
 End Sub
 
+'add select using a datasource with event specified
 Sub AddSelectDS(parent As String, vmodel As String, vText As String, source As String, keyField As String, valueField As String, methodName As String) As VMProperty
 	vmodel = vmodel.tolowercase
 	parent = parent.tolowercase
@@ -272,6 +273,7 @@ Sub AddSelectDS(parent As String, vmodel As String, vText As String, source As S
 	Return Me
 End Sub
 
+'add select from data source
 Sub AddSelect1(parent As String, vmodel As String, vText As String, source As String, keyField As String, valueField As String) As VMProperty
 	vmodel = vmodel.tolowercase
 	parent = parent.tolowercase
@@ -301,6 +303,7 @@ Sub AddSelect1(parent As String, vmodel As String, vText As String, source As St
 End Sub
 
 
+'add select multiple selects
 Sub AddSelectM(parent As String, vmodel As String, vText As String, options As Map) As VMProperty
 	vmodel = vmodel.tolowercase
 	parent = parent.tolowercase

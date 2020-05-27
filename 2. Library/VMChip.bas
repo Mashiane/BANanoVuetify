@@ -239,14 +239,7 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMChip
-	If varDisabled = False Then Return Me
-	If bStatic Then
-		SetAttrSingle("disabled", varDisabled)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	Chip.Bind(":disabled", pp)
+	Chip.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

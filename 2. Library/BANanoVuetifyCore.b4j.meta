@@ -358,6 +358,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=Main,Process_Globals,10,0,BANanoVue,RemDelim,588,0,BANanoVue,DateIconv,593,0,BANanoVue,ProjectDate,1052,0,BANanoVue,DateOconv,599,6,BANanoVue,JoinMapKeys,625,0,BANanoVue,StringBreakAtUpperCase,613,0,BANanoVue,NumberOfDaysBetweenDates,1025,6,BANanoVue,AddModule,566,0,BANanoVue,DateIsAfter,569,6
+NavigationStack=VMItem,SetActiveClass,95,0,VMPagination,SetDisabled,140,1,VMPagination,SetDark,136,0,VMWindowItem,SetDisabled,100,1,Main,Application_Error,52,0,Main,Process_Globals,12,4,Main,BANano_Ready,54,6,BANanoVue,GetSourceCode,576,0,BANanoVue,YesNoToBoolean,576,0,Main,AppStart,37,0
 SelectedBuild=0
 VisibleModules=2

@@ -15,7 +15,7 @@ Module1=pgIndex
 NumberOfFiles=2
 NumberOfLibraries=6
 NumberOfModules=1
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 #Region Project Attributes 
 	#MergeLibraries: True
@@ -28,7 +28,10 @@ Sub Process_Globals
 	Public AppTitle As String = "Template"
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
-	Public ServerIP As String = "localhost"
+	'actual web address of your site
+	Public ActualIP As String = "www.mywebsite.com"
+	'debug web address
+	Public DebugIP As String = "localhost"
 	Private db As BANanoSQL
 	'
 	Public Version As String = "1.00"
@@ -50,7 +53,12 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$
-	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
+	#if Debug
+		BANano.PHPHost = $"http://${DebugIP}:${Port}/${AppName}/"$
+	#else
+		'assume we are running from port 80
+		BANano.PHPHost = $"http://${ActualIP}/${AppName}/"$
+	#End if
 	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")
 	
 	BANano.Build(Publish)

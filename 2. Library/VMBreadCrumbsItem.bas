@@ -110,10 +110,8 @@ Sub SetAppend(varAppend As Object) As VMBreadCrumbsItem
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	BreadCrumbsItem.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As boolean) As VMBreadCrumbsItem
+	BreadCrumbsItem.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

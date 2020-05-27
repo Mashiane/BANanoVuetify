@@ -135,10 +135,8 @@ Sub SetDark(varDark As Object) As VMBottomSheet
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMBottomSheet
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	BottomSheet.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMBottomSheet
+	BottomSheet.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

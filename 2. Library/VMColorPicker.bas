@@ -138,10 +138,8 @@ Sub SetDark(varDark As Object) As VMColorPicker
 End Sub
 
 'set disabled
-Sub SetDisabled(varDisabled As Object) As VMColorPicker
-	Dim pp As String = $"${ID}Disabled"$
-	vue.SetStateSingle(pp, varDisabled)
-	ColorPicker.Bind(":disabled", pp)
+Sub SetDisabled(varDisabled As Boolean) As VMColorPicker
+	ColorPicker.SetDisabled(varDisabled)
 	Return Me
 End Sub
 

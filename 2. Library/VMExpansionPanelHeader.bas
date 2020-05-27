@@ -130,7 +130,6 @@ End Sub
 
 'set disabled-icon-rotate
 Sub SetDisabledIconRotate(varDisabledIconRotate As Boolean) As VMExpansionPanelHeader
-	If varDisabledIconRotate = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("color", varDisabledIconRotate)
 		Return Me

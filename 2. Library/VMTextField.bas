@@ -461,7 +461,6 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMTextField
-	If varDisabled = False Then Return Me
 	TextField.SetDisabled(varDisabled)
 	Return Me
 End Sub
