@@ -142,10 +142,12 @@ Sub Class_Globals
 	Public SourceCode As StringBuilder
 	Public HashType As Map
 	Public Algorithm As Map
+	Public Errors As Map
 End Sub
 
 'initialize view
 Public Sub Initialize()
+	Errors.Initialize
 	SourceCode.Initialize
 	Themes.Initialize 
 	Modules.Initialize 
@@ -546,6 +548,12 @@ Public Sub Initialize()
 	ControlTypes.put("carousel", "Carousel")
 	ControlTypes.put("speeddial", "Speed Dial")
 	ControlTypes.Put("None", "None")
+End Sub
+
+'add an error to the collection
+Sub AddError(vmodel As String, vError As String)
+	vmodel = vmodel.tolowercase
+	Errors.Put(vmodel, vError)
 End Sub
 
 Sub SourceCodeBuilder
@@ -2153,10 +2161,20 @@ Sub CopyMap(source As Map, keys As List) As Map
 	Return nm
 End Sub
 
+'return the first error in the list
+Sub GetError As String
+	Dim strError As String = Errors.GetValueAt(0)
+	Return strError
+End Sub
 
 Sub Validate(rec As Map, required As Map) As Boolean
+	Errors.Initialize
 	Dim iv As Int = 0
 	For Each k As String In required.Keys
+		Dim error As String = required.GetDefault(k, "")
+		If error = "" Then
+			error = $"The ${k} should be specified!"$
+		End If
 		'get the message
 		If rec.ContainsKey(k) Then
 			Dim v As String = rec.GetDefault(k,"")
@@ -2164,7 +2182,8 @@ Sub Validate(rec As Map, required As Map) As Boolean
 			v = v.trim
 			If v = "" Then
 				iv = iv + 1
-				ShowError(k)
+				ShowError(k, error)
+				Errors.Put(k, error)
 			Else
 				HideError(k)
 			End If
@@ -2177,18 +2196,25 @@ Sub Validate(rec As Map, required As Map) As Boolean
 	End If
 End Sub
 
-Sub ShowErrorMessage(k As String, v As String)
-	Dim pp As String = $"${k}ErrorMessages"$
-	SetStateSingle(pp, v)
-End Sub
-
-
-Sub ShowError(elID As String)
-	SetBoolean($"${elID}error"$, True)
+Sub ShowError(elID As String, elError As String)
+	elID = elID.tolowercase
+	Dim pp As String = $"${elID}ErrorMessages"$
+	Dim nl As List
+	nl = NewList
+	nl.Add(elError)
+	SetData(pp, nl)
+	Dim pp1 As String = $"${elID}Error"$
+	SetData(pp1, True)
 End Sub
 
 Sub HideError(elID As String)
-	SetBoolean($"${elID}error"$, False)
+	elID = elID.tolowercase
+	Dim pp As String = $"${elID}ErrorMessages"$
+	Dim nl As List
+	nl = NewList
+	SetData(pp, nl)
+	Dim pp1 As String = $"${elID}Error"$
+	SetData(pp1, False)
 End Sub
 
 Sub GetFileParentPath(Path As String) As String

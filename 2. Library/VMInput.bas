@@ -204,9 +204,11 @@ Sub SetErrorCount(varErrorCount As Object) As VMInput
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As String) As VMInput
+Sub SetErrorMessages(b As Boolean) As VMInput
+	If b = False Then Return Me
+	Dim nl As List = vue.NewList
 	Dim pp As String = $"${vmodel}ErrorMessages"$
-	vue.SetStateSingle(pp, varErrorMessages)
+	vue.SetData(pp, nl)
 	Input.Bind(":error-messages", pp)
 	Return Me
 End Sub
@@ -304,7 +306,7 @@ Sub SetRules(varRules As Boolean) As VMInput
 	If varRules = False Then Return Me
 	If bStatic Then Return Me
 	If DesignMode Then Return Me
-	Dim pp As String = $"${ID}Rules"$
+	Dim pp As String = $"${vmodel}Rules"$
 	Input.Bind(":rules", pp)
 	vue.SetData(pp, vue.NewList)
 	Return Me

@@ -32,6 +32,7 @@ Sub Process_Globals
 	Private salg As String
 	Private bisupdatable As Boolean
 	Private smatchto As String
+	Private sdonotmatchto As String
 	Private bisdatenow As Boolean
 	Private bistimenow As Boolean
 	Private bisdatetimenow As Boolean
@@ -859,14 +860,14 @@ Sub CreateDialog_Multifields
 	dlgmultifields.SetOk("btnAddFields","Ok")
 	dlgmultifields.Setwidth("700px")
 	dlgmultifields.Setretainfocus(True)
-	Dim txtamultifields As VMTextField = vm.NewTextArea(Me, True, "txtamultifields", "multifields", "Items (,)", "", True, False, "", 0, "", "", 0)
+	Dim txtamultifields As VMTextField = vm.NewTextArea(Me, False, "txtamultifields", "multifields", "Items (,)", "", True, False, "", 0, "", "", 0)
 	txtamultifields.SetFieldType("string")
 	txtamultifields.SetOutlined(True)
 	txtamultifields.SetVisible(True)
 	txtamultifields.SetHideDetails(True)
 	dlgmultifields.Container.AddControl(txtamultifields.TextField, txtamultifields.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
-	Dim selmultidatatype As VMSelect = vm.NewComboOptions(Me, True, "selmultidatatype", "multidatatype", "Data Type", True, False, "", vue.DataTypes, "id", "text", False, "", "", 0)
+	Dim selmultidatatype As VMSelect = vm.NewComboOptions(Me, False, "selmultidatatype", "multidatatype", "Data Type", True, False, "", vue.DataTypes, "id", "text", False, "", "", 0)
 	selmultidatatype.SetFieldType("string")
 	selmultidatatype.SetVisible(True)
 	selmultidatatype.SetHideDetails(True)
@@ -888,7 +889,8 @@ Sub btnAddFields_click(e As BANanoEvent)
 	Dim bValid As Boolean = vm.Validate(flds, dlgmultifields.Container.Required)
 	'if invalid exit create/update
 	If bValid = False Then
-		vm.ShowSnackBar("Please ensure that the item names and data type are specified!")
+		Dim strError As String = vue.GetError
+		vm.ShowSnackBar(strError)
 		Return
 	End If
 	'read the details we want to add
@@ -1289,7 +1291,7 @@ Sub CreateProjectDrawer
 	drwprojectdetails.Setabsolute(True)
 	drwprojectdetails.Setright(True)
 	'
-	Dim txtprojectname As VMTextField = vm.NewTextField(Me, True, "txtprojectname", "projectname", "Project Name", "", True, "", 0, "", "", 0)
+	Dim txtprojectname As VMTextField = vm.NewTextField(Me, False, "txtprojectname", "projectname", "Project Name", "", True, "", 0, "", "", 0)
 	txtprojectname.SetFieldType("string")
 	txtprojectname.SetOutlined(True)
 	txtprojectname.SetClearable(True)
@@ -1298,7 +1300,7 @@ Sub CreateProjectDrawer
 	txtprojectname.SetDense(True).AddClass("my-2")
 	drwprojectdetails.Container.AddControl(txtprojectname.textfield, txtprojectname.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
-	Dim txtsenderemail As VMTextField = vm.NewTextField(Me, True, "txtsenderemail", "senderemail", "Sender Email", "", False, "", 0, "", "", 0)
+	Dim txtsenderemail As VMTextField = vm.NewTextField(Me, False, "txtsenderemail", "senderemail", "Sender Email", "", False, "", 0, "", "", 0)
 	txtsenderemail.SetFieldType("string")
 	txtsenderemail.SetOutlined(True)
 	txtsenderemail.SetDense(True)
@@ -1307,7 +1309,7 @@ Sub CreateProjectDrawer
 	txtsenderemail.SetVisible(True).AddClass("my-2")
 	drwprojectdetails.Container.AddControl(txtsenderemail.textfield, txtsenderemail.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 
-	Dim txtsendtoemail As VMTextField = vm.NewTextField(Me, True, "txtsendtoemail", "sendtoemail", "Send To", "", False, "", 0, "", "", 0)
+	Dim txtsendtoemail As VMTextField = vm.NewTextField(Me, False, "txtsendtoemail", "sendtoemail", "Send To", "", False, "", 0, "", "", 0)
 	txtsendtoemail.SetFieldType("string")
 	txtsendtoemail.SetOutlined(True)
 	txtsendtoemail.SetDense(True)
@@ -1316,7 +1318,7 @@ Sub CreateProjectDrawer
 	txtsendtoemail.SetVisible(True).AddClass("my-2")
 	drwprojectdetails.Container.AddControl(txtsendtoemail.textfield, txtsendtoemail.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 
-	Dim txtccemail As VMTextField = vm.NewTextField(Me, True, "txtccemail", "ccemail", "CC To", "", False, "", 0, "", "", 0)
+	Dim txtccemail As VMTextField = vm.NewTextField(Me, False, "txtccemail", "ccemail", "CC To", "", False, "", 0, "", "", 0)
 	txtccemail.SetFieldType("string")
 	txtccemail.SetOutlined(True)
 	txtccemail.SetDense(True)
@@ -1328,14 +1330,14 @@ Sub CreateProjectDrawer
 	Dim dbtypekeys As String = "banano,sqlite,mysql,mssql"
 	Dim dbtypevalues As String = "BANanoSQL,SQLite,MySQL,MSSQL"
 	Dim dbtypemap As Map = vm.keyvalues2map(",", dbtypekeys, dbtypevalues)
-	Dim rddbtype As VMRadioGroup = vm.NewRadioGroup(Me, True, "rddbtype", "dbtype", "Database Type", "banano", dbtypemap, False, True, 0)
+	Dim rddbtype As VMRadioGroup = vm.NewRadioGroup(Me, False, "rddbtype", "dbtype", "Database Type", "banano", dbtypemap, False, True, 0)
 	rddbtype.SetFieldType("string")
 	rddbtype.SetHideDetails(True)
 	rddbtype.SetVisible(True)
 	rddbtype.AddClass("my-2")
 	drwprojectdetails.Container.AddControl(rddbtype.RadioGroup, rddbtype.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 
-	Dim txtdatabasename As VMTextField = vm.NewTextField(Me, True, "txtdatabasename", "databasename", "Database Name", "", True, "", 0, "", "", 0)
+	Dim txtdatabasename As VMTextField = vm.NewTextField(Me, False, "txtdatabasename", "databasename", "Database Name", "", True, "", 0, "", "", 0)
 	txtdatabasename.SetFieldType("string")
 	txtdatabasename.SetOutlined(True)
 	txtdatabasename.SetDense(True)
@@ -1344,13 +1346,13 @@ Sub CreateProjectDrawer
 	txtdatabasename.SetVisible(True).AddClass("my-2")
 	drwprojectdetails.Container.AddControl(txtdatabasename.textfield, txtdatabasename.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 
-	Dim btnbtnCancelProject As VMButton = vm.NewButton(Me, True, "btnbtnCancelProject", "Cancel", True, False, False, True)
+	Dim btnbtnCancelProject As VMButton = vm.NewButton(Me, False, "btnbtnCancelProject", "Cancel", True, False, False, True)
 	btnbtnCancelProject.SetColorIntensity("red", "")
 	btnbtnCancelProject.Setoutlined(True)
 	btnbtnCancelProject.SetVisible(True)
 	drwprojectdetails.Container.AddControl(btnbtnCancelProject.Button, btnbtnCancelProject.tostring, 2, 1, 0, 0, 0, 0, 12, 6, 6, 6)
 
-	Dim btnbtnSaveProject As VMButton = vm.NewButton(Me, True, "btnbtnSaveProject", "Save", True, False, False, True)
+	Dim btnbtnSaveProject As VMButton = vm.NewButton(Me, False, "btnbtnSaveProject", "Save", True, False, False, True)
 	btnbtnSaveProject.SetColorIntensity("green", "")
 	btnbtnSaveProject.Setoutlined(True)
 	btnbtnSaveProject.SetVisible(True)
@@ -1369,7 +1371,8 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 	Dim bValid As Boolean = vm.Validate(Record, drwprojectdetails.Container.Required)
 	'if invalid exit create/update
 	If bValid = False Then
-		vm.ShowSnackBar("Please ensure that the project name and database name are specified!")
+		Dim strError As String = vue.GetError
+		vm.ShowSnackBar(strError)
 		Return
 	End If
 	'
@@ -1542,6 +1545,10 @@ Sub CreateUX
 	sprojectname = prj.getdefault("projectname", "")
 	sdbtype = prj.getdefault("dbtype", "")
 	sdatabasename = prj.getdefault("databasename", "")
+	ssenderemail = prj.getdefault("senderemail","")
+	ssendtoemail = prj.getdefault("sendtoemail","")
+	sccemail = prj.getdefault("ccemail","")
+	
 	Select Case sdbtype
 	Case "banano"
 		rsType = "BANanoAlaSQLE"
@@ -1581,15 +1588,6 @@ Sub CreateUX
 	vm.setdata("myux", compSQL.result)
 	
 	sb.initialize
-	'
-	Dim prj As Map = vm.getdata("project")
-	Dim pid As String = prj.getdefault("id", "")
-	sprojectname = prj.getdefault("projectname", "")
-	sdbtype = prj.getdefault("dbtype", "")
-	sdatabasename = prj.getdefault("databasename", "")
-	ssenderemail = prj.getdefault("senderemail","")
-	ssendtoemail = prj.getdefault("sendtoemail","")
-	sccemail = prj.getdefault("ccemail","")
 	'
 	Dim trimPRJ As String = sprojectname.replace(" ","")
 	trimPRJ = trimPRJ.trim
@@ -1693,6 +1691,7 @@ Sub CreateUX
 		siconpos = mattr.getdefault("iconpos", "left")
 		sbuttontype = mattr.getdefault("buttontype", "normal")
 		smatchto = mattr.getdefault("matchto", "")
+		sdonotmatchto = mattr.getdefault("donotmatchto", "")
 		bisdatenow = YesNoToBoolean(mattr.getdefault("isdatenow", "No"))
 		bistimenow = YesNoToBoolean(mattr.getdefault("istimenow", "No"))
 		bisdatetimenow = YesNoToBoolean(mattr.getdefault("isdatetimenow", "No"))
@@ -1798,7 +1797,7 @@ Sub CreateUX
 		shashtype = mattr.getdefault("hashtype", "")
 		salg = mattr.getdefault("alg", "")
 		'
-		bStatic = True
+		bStatic = False
 		'
 		Select Case controltype
 			Case "page"
@@ -3000,6 +2999,18 @@ Sub Design_Password
 		AddComment(sbRead, "update the content")
 		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel}hash)"$)
 	End If
+	'check do not match
+	If sdonotmatchto <> "" Then
+		AddComment(sbRead, "Check do not match")
+		AddCode(sbRead, $"s${sdonotmatchto} = Record.Get("${smatchto}")"$)
+		If bHasHash Then
+			AddCode(sbRead, $"s${svmodel} = Record.Get("${svmodel}")"$)
+		End If
+		AddCode(sbRead, $"If s${sdonotmatchto} = s${svmodel} Then"$)
+		AddCode(sbRead, $"vm.ShowSnackBarError("The '${sdonotmatchto}' and '${svmodel}' should not match!")"$)
+		AddCode(sbRead, "Return")
+		AddCode(sbRead, "End If")
+	End If
 	'check matching
 	If smatchto <> "" Then
 		AddComment(sbRead, "Check match")
@@ -3677,7 +3688,8 @@ Sub Design_Dialog
 	sb.append($"Dim bValid As Boolean = vm.Validate(Record, dlg${sname}.Container.Required)"$).append(CRLF)
 	AddComment(sb, "if invalid exit")
 	AddCode(sb, $"If bValid = False Then"$)
-	AddCode(sb, $"vm.ShowSnackBarError("The information could not be validated!")"$)
+	AddCode(sb, $"Dim strError As String = vue.GetError"$)
+	AddCode(sb, $"vm.ShowSnackBarError(strError)"$)
 	AddCode(sb, "Return")
 	AddCode(sb, "End If")
 	'execute other stuff
@@ -4451,7 +4463,7 @@ Sub Design_Button
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, True, "btn${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
+	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, ${bStatic}, "btn${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
 	If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
 	If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
 	If sto <> "" Then sb.append($"btn${sname}.setto("${sto}")"$).append(CRLF)
@@ -4536,7 +4548,8 @@ Sub Design_Button
 		sbEvents.append($"Dim bValid As Boolean = vm.Validate(Record, ${sdialogpage}.Container.Required)"$).append(CRLF)
 		AddComment(sbEvents, "if invalid exit create/update")
 		sbEvents.append($"If bValid = False Then"$).append(CRLF)
-		AddCode(sbEvents, $"vm.ShowSnackBarError("The details entered are incomplete!")"$)
+		AddCode(sbEvents, $"Dim strError As String = vue.GetError"$)
+		AddCode(sbEvents, $"vm.ShowSnackBarError(strError)"$)
 		AddCode(sbEvents, "Return")
 		AddCode(sbEvents, "End If")
 		AddComment(sbEvents, "read the contents!")
@@ -4603,7 +4616,8 @@ Sub Design_Button
 		sbEvents.append($"Dim bValid As Boolean = vm.Validate(Record, ${sdialogpage}.Container.Required)"$).append(CRLF)
 		AddComment(sbEvents, "if invalid exit create/update")
 		sbEvents.append($"If bValid = False Then"$).append(CRLF)
-			AddCode(sbEvents, $"vm.ShowSnackBarError("The details entered are incomplete!")"$)
+			AddCode(sbEvents, $"Dim strError As String = vue.GetError"$)
+			AddCode(sbEvents, $"vm.ShowSnackBarError(strError)"$)
 		AddCode(sbEvents, "Return")
 		AddCode(sbEvents, "End If")
 		AddComment(sbEvents, "add code to save the record!")
@@ -5842,7 +5856,8 @@ Sub Design_DBSourceCode
 		sbl.append($"Dim bValid As Boolean = vm.Validate(Record, ${diagName}.Container.Required)"$).append(CRLF)
 		AddComment(sbl, "if invalid exit create/update")
 		AddCode(sbl, $"If bValid = False Then"$)
-		AddCode(sbl, $"vm.ShowSnackBarError("The ${ssingular} could not be validated!")"$)		
+		AddCode(sbl, $"Dim strError As String = vue.GetError"$)
+		AddCode(sbl, $"vm.ShowSnackBarError(strError)"$)		
 		AddCode(sbl, "Return")
 		AddCode(sbl, "End If")
 		Select Case sdbtype
@@ -7666,6 +7681,7 @@ Sub PropertyBag_TextField
 	pbtextfield.AddText2("d", CreateMap("label": "Label","value": "Value"))
 	pbtextfield.AddText("d","iconname","Icon Name","","")
 	pbtextfield.AddText("d","matchto","Match To","","")
+	pbtextfield.AddText("d","donotmatchto","Do Not Match To","","")
 	pbtextfield.AddSelect2("d", "hashtype", "Hash Type", vue.HashType, "alg", "Algorithm", vue.Algorithm)
 	pbtextfield.AddText("d", "placeholder","Placeholder","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
@@ -7852,17 +7868,47 @@ Sub SavePropertyBag
 	vm.pagepause
 	Dim spropbagtype As String = vm.getdata("propbagtype")
 	mattr = CreateMap()
+	Dim serrortext As String
+	Dim bisrequired As Boolean
+	Dim slabel As String
 	Select Case spropbagtype
 		Case "text", "textarea", "file", "email", "password", "tel", "number"
 			mattr = pbtextfield.properties
+			serrortext = mattr.getdefault("errortext", "")
+			bisrequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			slabel = mattr.getdefault("label", "")
+			slabel = slabel.tolowercase
+			If bisrequired And serrortext = "" Then
+				serrortext = $"The ${slabel} is required!"$
+				mattr.Put("errortext", serrortext)
+				vm.SetState(mattr)
+			End If
 		Case "checkbox"
 			mattr = pbcheckbox.Properties
 		Case "date", "time"
 			mattr = pbdatepicker.Properties
+			serrortext = mattr.getdefault("errortext", "")
+			bisrequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			slabel = mattr.getdefault("label", "")
+			slabel = slabel.tolowercase
+			If bisrequired And serrortext = "" Then
+				serrortext = $"The ${slabel} is required!"$
+				mattr.Put("errortext", serrortext)
+				vm.SetState(mattr)
+			End If
 		Case "radio"
 			mattr = pbradiogroup.Properties
 		Case "select", "combo", "auto"
 			mattr = pbselectbox.Properties
+			serrortext = mattr.getdefault("errortext", "")
+			bisrequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			slabel = mattr.getdefault("label", "")
+			slabel = slabel.tolowercase
+			If bisrequired And serrortext = "" Then
+				serrortext = $"The ${slabel} is required!"$
+				mattr.Put("errortext", serrortext)
+				vm.SetState(mattr)
+			End If
 		Case "slider"
 			mattr = pbslider.properties
 		Case "switch"
@@ -8098,6 +8144,10 @@ Sub SavePropertyBag
 			nc.put("truevalue", "Yes")
 			nc.put("falsevalue", "No")
 			nc.put("isupdatable", "Yes")
+			If ccolrequired = "Yes" Then
+				serrortext = $"The ${ctitle.tolowercase} is required!"$
+				nc.Put("errortext", serrortext)
+			End If
 			'
 			Dim matr As List
 			matr.initialize

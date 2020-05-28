@@ -42,6 +42,7 @@ Sub Class_Globals
 	Private bUsesRequired As Boolean
 	Private bUsedDisabled As Boolean
 	Private bUsesShow As Boolean
+	Public ErrorMessage As String
 	'
 	Public R As String
 	Public C As String
@@ -91,6 +92,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	
 	Element.Initialize(ID,"div")
 	classList.Initialize 
+	ErrorMessage = ""
 	vue = v
 	MT = ""
 	MB = ""
@@ -166,6 +168,11 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	ActualID = ""
 	Host = ""
 	Exclude = False
+	Return Me
+End Sub
+
+Sub SetErrorText(eTxt As String) As VMElement
+	ErrorMessage = eTxt
 	Return Me
 End Sub
 

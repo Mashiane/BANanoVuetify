@@ -296,13 +296,11 @@ Sub SetErrorCount(varErrorCount As Int) As VMSlider
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As Object) As VMSlider
-	If bStatic Then
-		SetAttrSingle("error-messages", varErrorMessages)
-		Return Me
-	End If
+Sub SetErrorMessages(b As Boolean) As VMSlider
+	If b = False Then Return Me
+	Dim nl As List = vue.NewList
 	Dim pp As String = $"${xmodel}ErrorMessages"$
-	vue.SetStateSingle(pp, varErrorMessages)
+	vue.SetData(pp, nl)
 	Slider.Bind(":error-messages", pp)
 	Return Me
 End Sub
@@ -497,7 +495,7 @@ Sub SetRules(varRules As Boolean) As VMSlider
 	If varRules = False Then Return Me
 	If bStatic Then Return Me
 	If DesignMode Then Return Me
-	Dim pp As String = $"${ID}Rules"$
+	Dim pp As String = $"${xmodel}Rules"$
 	Slider.Bind(":rules", pp)
 	vue.SetData(pp, vue.NewList)
 	Return Me

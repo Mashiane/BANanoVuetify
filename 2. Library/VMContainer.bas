@@ -269,8 +269,10 @@ Sub NewAutoCompleteDataSource(eventHandler As Object,bStatic As Boolean,sname As
 	el.SetMultiple(bMultiple)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	el.SetVModel(vmodel)
-	'el.SetError(False)
-	'el.SetErrorMessages(sErrorText)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.Combo.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -454,8 +456,10 @@ Sub NewSelectDataSource(eventHandler As Object,bStatic As Boolean,sname As Strin
 	el.SetMultiple(bMultiple)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	el.SetVModel(vmodel)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.Combo.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -472,8 +476,10 @@ Sub NewSelectOptions(eventHandler As Object,bStatic As Boolean,sname As String, 
 	el.Setmultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.Combo.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -490,8 +496,10 @@ Sub NewComboDataSource(eventHandler As Object,bStatic As Boolean,sname As String
 	el.SetMultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.Combo.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -509,8 +517,10 @@ Sub NewComboOptions(eventHandler As Object,bStatic As Boolean,sname As String, v
 	el.Setmultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.Combo.ErrorMessage = sErrorText
 	Return el
 End Sub
 '
@@ -638,8 +648,10 @@ Sub NewDatePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.SetVModel(vmodel)
 	el.SetPlaceHolder(sPlaceholder)
 	el.SetHint(sHint)
-	'el.TextField.SetErrorMessages(sErrorText)
-	'el.TextField.SetError(False)
+	el.TextField.SetRules(True)
+	el.TextField.SetErrorMessages(True)
+	el.DateTimePicker.ErrorMessage = sErrorText
+	el.TextField.SetError(False)
 	el.SetForInput
 	Return el
 End Sub
@@ -655,9 +667,11 @@ Sub NewTimePicker(eventHandler As Object, bStatic As Boolean, sid As String, vmo
 	el.SetPlaceHolder(sPlaceholder)
 	el.SetHint(sHint)
 	el.SetTabIndex(iTabIndex)
-	'el.TextFIeld.SetErrorMessages(sErrorText)
-	'el.TextField.SetError(False)
+	el.TextField.SetRules(True)
+	el.TextField.SetErrorMessages(True)
+	el.TextField.SetError(False)
 	el.SetForInput
+	el.DateTimePicker.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -691,8 +705,10 @@ Sub NewTextField(eventHandler As Object,bStatic As Boolean,sid As String, vmodel
 	el.SetTabIndex(iTabIndex)
 	el.SetVModel(vmodel)
 	el.SetType("text")
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.TextField.ErrorMessage = sErrorText
 	Return el
 End Sub
 '
@@ -725,8 +741,10 @@ Sub NewTextArea(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 	el.SetTabIndex(iTabIndex)
 	el.SetAutoGrow(bAutoGrow)
 	el.SetVModel(vmodel)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.TextField.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -753,8 +771,10 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean,bUpload As Boolean, s
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	vue.SetData(vmodel, Null)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.TextField.ErrorMessage = sErrorText
 	Return el
 End Sub
 '
@@ -781,8 +801,10 @@ Sub NewAutoCompleteOptions(eventHandler As Object,bStatic As Boolean,sname As St
 	el.Setmultiple(bMultiple)
 	el.SetVModel(vmodel)
 	el.SetOptions($"${vmodel}items"$, optionsm, sourceField, displayField, returnObject)
-	'el.SetErrorMessages(sErrorText)
-	'el.SetError(False)
+	el.SetRules(True)
+	el.SetError(False)
+	el.SetErrorMessages(True)
+	el.Combo.ErrorMessage = sErrorText
 	Return el
 End Sub
 
@@ -905,17 +927,12 @@ Sub SetDefaults
 	vue.SetState(Defaults)
 	vue.SetState(visibility)
 	For Each k As String In Required.Keys
-		HideError(k)
+		vue.HideError(k)
 	Next
 End Sub
 
-Sub ShowErrorMessage(k As String, v As String)
-	Dim pp As String = $"${k}ErrorMessages"$
-	vue.setdata(pp, v)
-End Sub
-
-Sub AddRequired(r As String) As VMContainer
-	Required.put(r,r)
+Sub AddRequired(r As String,e As String) As VMContainer
+	Required.put(r, e)
 	Return Me
 End Sub
 
@@ -975,14 +992,6 @@ End Sub
 'validate the records
 Sub Validate(rec As Map) As Boolean
 	Return vue.Validate(rec, Required)
-End Sub
-
-Sub ShowError(elID As String)
-	vue.SetBoolean($"${elID}error"$, True)
-End Sub
-
-Sub HideError(elID As String)
-	vue.SetBoolean($"${elID}error"$, False)
 End Sub
 
 Sub LinkRecordTypes(rec As Map) As Map
@@ -1953,7 +1962,7 @@ private Sub CreateGrid
 					Fields.Add(el.vmodel)
 					Defaults.Put(el.vmodel, el.value)
 			End Select
-			If el.isrequired Then Required.put(el.vmodel, el.vmodel)
+			If el.isrequired Then Required.put(el.vmodel, el.ErrorMessage)
 			If (el.vmodel <> "") And (el.fieldType <> "") Then
 				Select Case el.fieldType
 				Case "int"

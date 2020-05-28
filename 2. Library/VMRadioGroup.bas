@@ -369,16 +369,15 @@ Sub SetErrorCount(varErrorCount As String) As VMRadioGroup
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As String) As VMRadioGroup
-	If bStatic Then
-		SetAttrSingle("error-messages", varErrorMessages)
-		Return Me
-	End If
+Sub SetErrorMessages(b As Boolean) As VMRadioGroup
+	If b = False Then Return Me
+	Dim nl As List = vue.NewList
 	Dim pp As String = $"${xmodel}ErrorMessages"$
-	vue.SetStateSingle(pp, varErrorMessages)
+	vue.SetData(pp, nl)
 	RadioGroup.Bind(":error-messages", pp)
 	Return Me
 End Sub
+
 
 'set hide-details
 Sub SetHideDetails(varHideDetails As Boolean) As VMRadioGroup
@@ -565,7 +564,7 @@ Sub SetRules(varRules As Boolean) As VMRadioGroup
 	If varRules = False Then Return Me
 	If bStatic Then Return Me
 	If DesignMode Then Return Me
-	Dim pp As String = $"${ID}Rules"$
+	Dim pp As String = $"${xmodel}Rules"$
 	RadioGroup.Bind(":rules", pp)
 	vue.SetData(pp, vue.NewList)
 	Return Me

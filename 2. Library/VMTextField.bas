@@ -490,13 +490,11 @@ Sub SetErrorCount(varErrorCount As String) As VMTextField
 End Sub
 
 'set error-messages
-Sub SetErrorMessages(varErrorMessages As String) As VMTextField
-	If bStatic Then
-		SetAttrSingle("error-messages", varErrorMessages)
-		Return Me
-	End If
+Sub SetErrorMessages(b As Boolean) As VMTextField
+	If b = False Then Return Me
+	Dim nl As List = vue.NewList
 	Dim pp As String = $"${vmodel}ErrorMessages"$
-	vue.SetStateSingle(pp, varErrorMessages)
+	vue.SetData(pp, nl)
 	TextField.Bind(":error-messages", pp)
 	Return Me
 End Sub
@@ -779,7 +777,7 @@ Sub SetRules(b As Boolean) As VMTextField
 	If b = False Then Return Me
 	If bStatic Then Return Me
 	If DesignMode Then Return Me
-	Dim pp As String = $"${ID}rules"$
+	Dim pp As String = $"${vmodel}rules"$
 	TextField.Bind(":rules", pp)
 	vue.SetData(pp, vue.NewList)
 	Return Me

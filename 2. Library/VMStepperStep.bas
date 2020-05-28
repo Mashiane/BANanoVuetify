@@ -15,6 +15,7 @@ Sub Class_Globals
 	Public Content As String
 	Public Description As String
 	Private bStatic As Boolean
+	Private xmodel As String
 End Sub
 
 'initialize the StepperStep
@@ -28,6 +29,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Content = ""
 	Description = ""
 	bStatic = False
+	xmodel = ""
 	Return Me
 End Sub
 
@@ -68,6 +70,7 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMStepperStep
+	xmodel = k.tolowercase
 	StepperStep.SetVModel(k)
 	Return Me
 End Sub
@@ -213,7 +216,7 @@ Sub SetRules(varRules As Boolean) As VMStepperStep
 	If varRules = False Then Return Me
 	If bStatic Then Return Me
 	If DesignMode Then Return Me
-	Dim pp As String = $"${ID}Rules"$
+	Dim pp As String = $"${xmodel}Rules"$
 	StepperStep.Bind(":rules", pp)
 	vue.SetData(pp, vue.NewList)
 	Return Me

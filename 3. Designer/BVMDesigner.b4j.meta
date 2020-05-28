@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=pgIndex,Init,842,0,pgIndex,draweritems_click,1134,0,pgIndex,btnbtnSaveProject_click,1405,0,pgIndex,DeleteProject,7677,0,pgIndex,DeleteIT,7659,0,pgIndex,ppbtextfield_change,7683,0,pgIndex,PropertyBag_Dialog,8295,0,pgIndex,PropertyBag_Button,7198,4,pgIndex,Design_Dialog,3746,6,pgIndex,Design_Button,4522,1
+NavigationStack=pgIndex,DeletePropertyBag,7692,0,pgIndex,ppbtable_change,7833,0,pgIndex,SavePropertyBag,8132,6,pgIndex,PropertyBag_TextField,7662,0,pgIndex,Design_Password,3006,1,pgIndex,Process_Globals,31,0,pgIndex,CreateUX,1690,1,pgIndex,Design_TextField,4662,0,Main,Process_Globals,18,0,Main,AppStart,29,0
 SelectedBuild=0
 VisibleModules=
