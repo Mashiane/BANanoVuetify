@@ -211,6 +211,15 @@ Sub setProperties(m As Map)
 	vue.SetState(m)
 End Sub
 
+Sub AddMarginsPaddings(parent As String)
+	AddText2(parent, CreateMap("margintop":"MT","marginbottom":"MB","marginleft":"ML","marginright":"MR"))
+	AddText2(parent, CreateMap("margins":"MS","margine":"ME", "marginx":"MX","marginy":"MY"))
+	AddText2(parent, CreateMap("paddingtop":"PT","paddingbottom":"PB","paddingleft":"PL","paddingright":"PR"))
+	AddText2(parent, CreateMap("paddings":"PS","paddinge":"PE", "paddingx":"PX","paddingy":"PY"))
+	AddText2(parent, CreateMap("margina":"MA","paddinga":"PA"))
+End Sub
+
+
 Sub AddSelect(parent As String, vmodel As String, vText As String, options As Map) As VMProperty
 	vmodel = vmodel.tolowercase
 	parent = parent.tolowercase
@@ -1797,6 +1806,8 @@ Sub ToString As String
 				Dim m As Map = nc.options
 				Dim tTot As Int = m.Size
 				Select Case tTot
+				Case 12
+					colSize = 1
 				Case 1
 					colSize = 12
 				Case 2
@@ -1805,10 +1816,8 @@ Sub ToString As String
 					colSize = 4
 				Case 4
 					colSize = 3
-				Case 6
-					colSize = 2
 				Case Else
-					Log("VMProperty.MultiText - item sizes should be 1, 2, 3, 4, 6")
+					colSize = 2
 				End Select
 				'
 				Dim colPos As Int = 0

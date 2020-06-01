@@ -239,7 +239,8 @@ private Sub BuildOptions
 	titObj.Put("display", Title.display)
 	titObj.Put("text", Title.text)
 	chartOptions.Put("title", titObj)
-	
+	'
+	If colors.Size > 0 Then chartOptions.Put("colors", colors)
 	vue.SetStateSingle(coptions, chartOptions)
 End Sub
 
@@ -285,6 +286,28 @@ Sub AddXYColor(X As String, y As String, color As String) As VMChartKick
 		Dim xColor As String = vue.GetColorHex(color)
 		colors.Add(xColor)
 	End If
+	Return Me
+End Sub
+
+Sub SetDifferentColors(seriesCurve As Boolean) As VMChartKick
+	series.Initialize 
+	Dim exdata As List = data.Get("a")
+	Dim colCnt As Int = 0
+	For Each cudata As List In exdata
+		If cudata.Size = 2 Then
+			Dim c As String = ""
+			Dim x As String = cudata.get(0)
+			Dim y As String = cudata.get(1)
+			If colors.size > 0 Then
+				c = colors.get(colCnt)
+			End If
+			Dim xd As Map = CreateMap()
+			xd.put(x, y)
+			AddSeries(x, c, seriesCurve, xd)
+		End If
+		colCnt = colCnt + 1
+	Next
+	colors.initialize
 	Return Me
 End Sub
 

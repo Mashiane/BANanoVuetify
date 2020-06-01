@@ -67,6 +67,7 @@ Sub BuildDrawer
 	vm.drawer.additem("echarts", "", "ECharts")
 	vm.drawer.additem("arccounter", "", "Arc Counter")
 	vm.drawer.additem("files", "", "Read Text & Excel Files")
+	vm.drawer.additem("pdf", "", "PDF Object")
 	'vm.drawer.additem("selectsides", "", "Select Sides")
 End Sub
 
@@ -106,6 +107,8 @@ Sub draweritems_click(e As BANanoEvent)
 	'get the id from the event
 	Dim elID As String = vm.GetIDFromEvent(e)
 	Select Case elID
+	Case "pdf"
+		modPDF.show
 	Case "selectsides"
 		'vm.NavBar.UpdateTitle(modSelectSides.title)
 		'vm.ShowPage(modSelectSides.name)
@@ -184,5 +187,6 @@ Sub AddPages
 	vm.addpage(modECharts.name, modECharts)
 	vm.AddPage(modArcCounter.name, modArcCounter)
 	vm.AddPage(modFiles.name, modFiles)
+	vm.AddPage(modPDF.name, modPDF)
 	'vm.AddPage(modSelectSides.name, modSelectSides)
 End Sub

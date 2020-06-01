@@ -39,6 +39,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetVOnce(t As Boolean) As VMImage
+	Image.setvonce(t)
+	Return Me
+End Sub
+
+Sub SetOnClick(EventHandler As Object, methodName As String) As VMImage
+	methodName = methodName.tolowercase
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, e)
+	SetAttr(CreateMap("v-on:click": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
 
 Sub SetStatic(b As Boolean) As VMImage
 	bStatic = b

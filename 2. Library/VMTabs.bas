@@ -36,6 +36,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetVOnce(t As Boolean) As VMTabs
+	Tabs.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetIconPosRight(b As Boolean) As VMTabs
 	If b = False Then Return Me
 	iconPos = "right"

@@ -21,6 +21,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	ListItem.Initialize(v, ID)
 	ListItem.SetTag("v-list-item")
+	ListItem.SetAttrLoose("link")
 	DesignMode = False
 	Module = eventHandler
 	vue = v

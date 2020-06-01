@@ -37,6 +37,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetVOnce(t As Boolean) As VMNavigationDrawer
+	NavigationDrawer.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String)
 	List.SetDataSourceTemplate1(datasource, key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
 End Sub

@@ -516,13 +516,7 @@ End Sub
 'set elevation
 Sub SetElevation(varElevation As String) As VMCard
 	If varElevation = "" Then Return Me
-	If bStatic Then
-		SetAttrSingle("elevation", varElevation)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}Elevation"$
-	vue.SetStateSingle(pp, varElevation)
-	Card.Bind(":elevation", pp)
+	AddClass($"elevation-${varElevation}"$)
 	Return Me
 End Sub
 

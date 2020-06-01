@@ -18,12 +18,16 @@ Sub Class_Globals
 	Private banano As BANano   'ignore
 	Private module As Object
 	Private banano As BANano
+	Private bStatic As Boolean
+	Private DesignMode As Boolean
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMInfoBox
 	banano.DependsOnAsset("info-box.min.css")
 	banano.DependsOnAsset("vue-count-to.min.js")
 	banano.DependsOnAsset("helpers.min.css")
+	bStatic = False
+	DesignMode = False
 	'
 	module = eventHandler
 	ID = sid.ToLowerCase
@@ -32,12 +36,24 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Icon.Initialize(vue, $"${ID}icn"$).SetTag("div").AddClass("icon")
 	Content.Initialize(vue,$"${ID}content"$).SetTag("div").AddClass("content")
 	Text.Initialize(vue,$"${ID}text"$).SetTag("div").AddClass("text") 
+	'
 	CountIt.Initialize(vue, $"${ID}number"$, module).AddClass("number")
 	CountIt.CountTo.SetRef($"${ID}number"$)
 	i.Initialize(vue,$"${ID}i"$).SetTag("i").AddClass("material-icons")
 	hasIcon = False
 	InfoBox.SetOnClick(module, $"${ID}_click"$)
 	SetKey(ID)
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMInfoBox
+	bStatic = b
+	Content.setstatic(b)
+	InfoBox.SetStatic(b)
+	Icon.SetStatic(b)
+	Text.SetStatic(b)
+	CountIt.SetStatic(b)
+	i.SetStatic(b)
 	Return Me
 End Sub
 
@@ -98,7 +114,13 @@ End Sub
 
 
 Sub SetDesignMode(b As Boolean) As VMInfoBox
+	DesignMode = b
 	InfoBox.SetDesignMode(b)
+	Content.SetDesignMode(b)
+	Icon.SetDesignMode(b)
+	Text.SetDesignMode(b)
+	i.SetDesignMode(b)
+	CountIt.SetDesignMode(b)
 	Return Me
 End Sub
 
@@ -155,6 +177,10 @@ Sub SetColor(foreColor As String) As VMInfoBox
 End Sub
 
 Sub SetText(txt As String) As VMInfoBox
+	If bStatic Then
+		Text.SetText(txt)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}text"$
 	vue.SetStateSingle(pp, txt)
 	Text.SetText($"{{ ${pp} }}"$)
@@ -168,12 +194,43 @@ End Sub
 
 Sub SetTo(endTo As String) As VMInfoBox
 	CountIt.SetEndval(endTo)
+	CountIt.SetText(endTo)
 	Return Me
 End Sub
 
 Sub SetDuration(speed As String) As VMInfoBox
 	speed = banano.parseInt(speed)
 	CountIt.SetDuration(speed)
+	Return Me
+End Sub
+
+Sub SetAutoplay(varAutoplay As Boolean) As VMInfoBox
+	CountIt.SetAutoPlay(varAutoplay)
+	Return Me
+End Sub
+
+Sub SetDecimals(varDecimals As String) As VMInfoBox
+	CountIt.SetDecimals(varDecimals)
+	Return Me
+End Sub
+
+Sub SetDecimal(varDecimal As String) As VMInfoBox
+	CountIt.SetDecimal(varDecimal)
+	Return Me
+End Sub
+
+Sub SetSeparator(varSeparator As String) As VMInfoBox
+	CountIt.SetSeparator(varSeparator)
+	Return Me
+End Sub
+
+Sub SetPrefix(varPrefix As String) As VMInfoBox
+	CountIt.SetPrefix(varPrefix)
+	Return Me
+End Sub
+
+Sub SetSuffix(varSuffix As String) As VMInfoBox
+	CountIt.SetSuffix(varSuffix)
 	Return Me
 End Sub
 
@@ -253,26 +310,11 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMInfoBox
-InfoBox.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMInfoBox
-InfoBox.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMInfoBox
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+	InfoBox.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMInfoBox
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+Sub SetVisible(b As Boolean) As VMInfoBox
+	InfoBox.SetVisible(b)
 	Return Me
 End Sub

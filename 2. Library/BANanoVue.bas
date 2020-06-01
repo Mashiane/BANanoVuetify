@@ -547,6 +547,7 @@ Public Sub Initialize()
 	ControlTypes.put("menu", "Menu")
 	ControlTypes.put("carousel", "Carousel")
 	ControlTypes.put("speeddial", "Speed Dial")
+	ControlTypes.Put("quill", "Quill Editor")
 	ControlTypes.Put("None", "None")
 End Sub
 
@@ -808,14 +809,28 @@ End Sub
 
 Sub GetFileDetails(fileObj As Map) As FileObject
 	Dim sname As String = fileObj.Get("name")
-	Dim slastModifiedDate As String = fileObj.Get("lastModifiedDate")
+	Dim slastModifiedDate As BANanoObject = fileObj.Get("lastModifiedDate")
 	Dim ssize As String = fileObj.Get("size")
 	Dim stype As String = fileObj.Get("type")
 	'
+	Dim yyyy As String = slastModifiedDate.RunMethod("getFullYear", Null).Result
+	Dim dd As String = slastModifiedDate.RunMethod("getDate", Null).Result
+	Dim mm As String = slastModifiedDate.RunMethod("getMonth", Null).Result
+	Dim hh As String = slastModifiedDate.RunMethod("getHours", Null).Result
+	Dim minutes As String = slastModifiedDate.RunMethod("getMinutes", Null).Result
+	'pad the details
+	dd = PadRight(dd, 2, "0")
+	mm = PadRight(mm, 2, "0")
+	hh = PadRight(hh, 2, "0")
+	minutes = PadRight(minutes, 2, "0")
+	'
+	Dim fd As String = $"${yyyy}-${mm}-${dd} ${hh}:${minutes}"$
+	'
+	
 	Dim ff As FileObject
 	ff.Initialize
 	ff.FileName = sname
-	ff.FileDate = slastModifiedDate
+	ff.FileDate = fd
 	ff.FileSize = ssize
 	ff.FileType = stype
 	Return ff
@@ -2046,7 +2061,7 @@ Sub SetOptionBO(optionName As String, optionObject As BANanoObject)
 	Options.Put(optionName, optionObject)
 End Sub
 
-Sub AddComponent(comp As VMElement) As BANanoVue
+Sub AddComponent(comp As VMComponent) As BANanoVue
 	Dim sid As String = comp.id
 	If components.ContainsKey(sid) = True Then Return Me
 	components.Put(sid, comp.Component)
@@ -2059,8 +2074,7 @@ Sub AddComponentBO(compName As String, comp As BANanoObject) As BANanoVue
 	Return Me
 End Sub
 
-
-Sub AddRoute(path As String, comp As VMElement)
+Sub AddRoute(path As String, comp As VMComponent)
 	If comp.name = "" Then
 		Log("AddRoute: Please specify the name of the Route!")
 	End If

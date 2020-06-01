@@ -37,8 +37,8 @@ End Sub
 'add a search box
 Sub AddSearch(key As String) As VMCardTitle
 	Dim txt As VMTextField
-	txt.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttributes(Array("single-line", "hide-details"))
-	txt.SetLabel("Search").SetAppendIcon("mdi-magnify").SetClearable(True).Setvmodel(key)
+	txt.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttributes(Array("flat", "single-line", "hide-details"))
+	txt.SetLabel("Search").SetAppendIcon("mdi-magnify").SetClearable(True).Setvmodel(key).AddClass("mx-4")
 	txt.SetOnChange(Module, $"${key}_change"$)
 	CardTitle.SetText(txt.ToString)
 	Return Me
@@ -123,19 +123,6 @@ Sub AddSpacer As VMCardTitle
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCardTitle
-	If varColor = "" Then Return Me
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	If bStatic Then
-		SetAttrSingle("color", scolor)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, scolor)
-	CardTitle.Bind(":color", pp)
-	Return Me
-End Sub
 
 'get component
 Sub ToString As String
@@ -303,5 +290,21 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCardT
 	Dim sIntensity As String = $"text--${varIntensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
+	Return Me
+End Sub
+
+
+'set color intensity
+Sub SetColor(varColor As String) As VMCardTitle
+	If varColor = "" Then Return Me
+	AddClass(varColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCardTitle
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	AddClass(scolor)
 	Return Me
 End Sub

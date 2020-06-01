@@ -32,6 +32,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+Sub SetVOnce(t As Boolean) As VMList
+	List.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMList
 	bStatic = b
 	List.SetStatic(b)

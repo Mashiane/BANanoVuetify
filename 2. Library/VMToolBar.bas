@@ -22,17 +22,22 @@ Sub Class_Globals
 	Private compx As Int
 	Private bStatic As Boolean
 	Private tTitle As String
+	Public RightHamburger As VMElement
+	Private spanCnt As Int
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMToolBar
 	ID = sid.ToLowerCase
 	vue = v
+	spanCnt = 0
 	module = eventHandler
 	ToolBar.Initialize(vue, ID).SetVModel(ID)
 	'
 	'build the hamburger menu
 	Hamburger.Initialize(vue, "menu").SetTag("v-app-bar-nav-icon").SetOnClickStop(Me, "menu_click")
-	objects.Initialize 
+	RightHamburger.Initialize(vue, "rightmenu").SetTag("v-app-bar-nav-icon")
+	RightHamburger.SetVisible(False)
+	objects.Initialize
 	DesignMode = False
 	Extension.Initialize(vue, $"${ID}tmpl"$, module).SetSlotExtension
 	Tabs.Initialize(vue, $"${ID}tabls"$, module)
@@ -40,11 +45,32 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'
 	tTitle = $"${ID}title"$
 	Title.Initialize(vue, "appbartitle").SetTag("v-toolbar-title")
+	Title.SetCursorPointer
 	'
 	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").AddClass("my-1").BindStyleSingle("opacity", "1")
-	
+	Logo.Image.SetCursorPointer
+	'
 	compx = 0
 	bStatic = False
+	Return Me
+End Sub
+
+Sub AddSpan(spanText As String) As VMToolBar
+	spanCnt = spanCnt + 1
+	Dim elID As String = "span" & spanCnt
+	Dim span As VMElement
+	span.Initialize(vue, elID).SetTag("span").SetText(spanText)
+	AddComponent(elID, span.ToString)
+	Return Me
+End Sub
+
+Sub SetOnMenuClick(eventHandler As Object, MethodName As String) As VMToolBar
+	Hamburger.SetOnClickStop(eventHandler, MethodName)
+	Return Me
+End Sub
+
+Sub SetOnRightMenuClick(eventHandler As Object, MethodName As String) As VMToolBar
+	RightHamburger.SetOnClickStop(eventHandler, MethodName)
 	Return Me
 End Sub
 
@@ -85,8 +111,14 @@ End Sub
 'add a hamburger menu
 Sub AddHamburger As VMToolBar
 	Hamburger.SetVisible(True)
-	Hamburger.Pop(ToolBar)
-	HasContent = True
+	AddComponent(Hamburger.ID, Hamburger.ToString)
+	Return Me
+End Sub
+
+'add a right hand hamburger
+Sub AddRightHamburger As VMToolBar
+	RightHamburger.SetVisible(True)
+	AddComponent(RightHamburger.ID, RightHamburger.ToString)
 	Return Me
 End Sub
 
@@ -171,6 +203,11 @@ Sub AddComponent(key As String, comp As String) As VMToolBar
 End Sub
 
 Sub AddButton(btn As VMButton) As VMToolBar
+	AddComponent(btn.ID, btn.ToString)
+	Return Me
+End Sub
+
+Sub AddAvatar(btn As VMAvatar) As VMToolBar
 	AddComponent(btn.ID, btn.ToString)
 	Return Me
 End Sub
@@ -274,6 +311,7 @@ Sub AddSwitch(sid As String, vmodel As String, vlabel As String) As VMToolBar
 	el.show
 	el.AddClass("mx-2")
 	ToolBar.SetText(el.ToString)
+	objects.Add(sid)
 	HasContent = True
 	Return Me
 End Sub
@@ -284,17 +322,17 @@ Sub AddSearch(key As String) As VMToolBar
 	txt.Initialize(vue, key, module)
 	txt.SetStatic(bStatic)
 	txt.SetDesignMode(DesignMode)
-	txt.AddClass("mx-4").SetAttributes(Array("flat", "hide-details","solo-inverted"))
+	txt.AddClass("mx-4").SetAttributes(Array("flat", "hide-details", "single-line"))
 	txt.SetLabel("Search").SetPrependInnerIcon("search").AddClass("hidden-sm-and-down").SetClearable(True).SetVModel(key)
 	txt.SetOnChange(module, $"${key}_change"$)
 	ToolBar.SetText(txt.ToString)
+	objects.Add(key)
 	HasContent = True
 	Return Me
 End Sub
 
 Sub AddMenu(menu As VMMenu) As VMToolBar
-	menu.Pop(ToolBar)
-	HasContent = True
+	AddComponent(menu.ID, menu.ToString)
 	Return Me
 End Sub
 
@@ -316,9 +354,7 @@ Sub AddIcon(key As String, iconName As String, toolTip As String, badge As Strin
 		btn.SetHasBadge(True)
 		btn.SetBadge(badge)
 	End If
-	btn.Pop(ToolBar)
-	objects.Add(key)
-	HasContent = True
+	AddComponent(btn.ID, btn.ToString)
 	Return Me
 End Sub
 
@@ -334,9 +370,7 @@ Sub AddIcon1(key As String, iconName As String, iconColor As String, toolTip As 
 		btn.SetHasBadge(True)
 		btn.SetBadge(badge)
 	End If
-	btn.Pop(ToolBar)
-	objects.Add(key)
-	HasContent = True
+	AddComponent(btn.ID, btn.ToString)
 	Return Me
 End Sub
 
@@ -1027,8 +1061,7 @@ Sub AddButton1(key As String, iconName As String, text As String, toolTip As Str
 		btn.SetHasBadge(True)
 		btn.SetBadge(badge)
 	End If
-	btn.Pop(ToolBar)
-	HasContent = True
+	AddComponent(btn.ID, btn.ToString)
 	Return Me
 End Sub
 
@@ -1044,8 +1077,7 @@ Sub AddItem(key As String, iconName As String, color As String, text As String, 
 		btn.SetHasBadge(True)
 		btn.SetBadge(badge)
 	End If
-	btn.Pop(ToolBar)
-	HasContent = True
+	AddComponent(btn.ID, btn.ToString)
 	Return Me
 End Sub
 
@@ -1068,14 +1100,7 @@ End Sub
 'add a child
 Sub AddChild(child As VMElement) As VMToolBar
 	Dim childHTML As String = child.ToString
-	ToolBar.SetText(childHTML)
-	HasContent = True
-	Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMToolBar
-	ToolBar.SetText(t)
+	AddComponent(child.ID, childHTML)
 	Return Me
 End Sub
 

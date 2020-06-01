@@ -32,7 +32,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
-
 Sub SetStatic(b As Boolean) As VMFooter
 	bStatic = b
 	Footer.SetStatic(b)
@@ -52,6 +51,19 @@ End Sub
 
 Sub AddSpacer As VMFooter
 	Footer.AddSpacer
+	Return Me
+End Sub
+
+Sub AddSpan(spanText As String) As VMFooter
+	Dim span As VMElement
+	span.Initialize(vue, "").SetTag("span").SetText(spanText)
+	AddComponent(span.ToString)
+	Return Me
+End Sub
+
+Sub AddCopyRight(cYear As String) As VMFooter
+	Dim spanText As String = $"&copy; ${cYear}"$
+	AddSpan(spanText)
 	Return Me
 End Sub
 

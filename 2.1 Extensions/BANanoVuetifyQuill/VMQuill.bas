@@ -12,6 +12,7 @@ Private vue As BANanoVue
 Private BANano As BANano  'ignore
 Private DesignMode As Boolean
 Private Module As Object
+Private bStatic As Boolean
 End Sub
 
 'initialize the Quill
@@ -28,6 +29,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMQuill
+	bStatic = b
+	Quill.SetStatic(b)
 	Return Me
 End Sub
 
@@ -360,19 +367,12 @@ Quill.SetVisible(b)
 Return Me
 End Sub
 
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMQuill
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+Sub SetHeight(h As String) As VMQuill
+	Quill.SetHeight(h)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMQuill
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+Sub SetWidth(w As String) As VMQuill
+	Quill.SetWidth(w)
 	Return Me
 End Sub

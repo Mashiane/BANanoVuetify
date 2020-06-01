@@ -125,7 +125,14 @@ Sub Code
 	scatterChart1.AddSeries("Female", "", False, CreateMap(174.0: 73.6, 162.6: 61.4, 174.0: 55.5, 162.6: 63.6, 161.3: 60.9))
 	scatterChart1.AddSeries("Male", "", False, CreateMap(174.0: 80.0, 176.5: 82.3, 180.3: 73.6, 167.6: 74.1, 188.0: 85.9))
 	cont.AddComponent(4,3, scatterChart1.tostring)
-
+	'
+	Dim colChart4 As VMChartKick
+	colChart4.Initialize(vue, "colChart4", Me).SetColumnChart.SetWidth("300px").SetHeight("300px")
+	colChart4.AddXYColor("a", "32", vue.COLOR_AMBER)
+	colChart4.AddXYColor("b", "46", vue.COLOR_BLACK)
+	colChart4.AddXYColor("c", "28", vue.COLOR_BLUE)
+	colChart4.SetDifferentColors(False)
+	cont.AddComponent(4,4, colChart4.tostring)
 	'add container to page
 	vm.AddContainer(cont)
 End Sub

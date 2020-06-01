@@ -34,6 +34,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetVOnce(t As Boolean) As VMMenu
+	Menu.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMMenu
 	bStatic = b
 	Menu.SetStatic(b)

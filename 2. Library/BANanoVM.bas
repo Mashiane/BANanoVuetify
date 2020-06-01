@@ -246,6 +246,14 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	If SubExists(Module, "alert_ok") = False Then
 		Log("Initialize.alert_ok - please add this event to trap alert dialog!")
 	End If
+	'
+	If SubExists(Module, "logo_click") = False Then
+		Log("Initialize.logo_click - please add this event to trap logo click event if needed!")
+	End If
+	'
+	If SubExists(Module, "title_click") = False Then
+		Log("Initialize.title_click - please add this event to trap title click event if needed!")
+	End If
 End Sub
 
 Sub AddModule(tagName As String) As BANanoVM
@@ -1183,6 +1191,7 @@ private Sub InitColors
 	ControlTypes.put("menu", "Menu")
 	ControlTypes.put("carousel", "Carousel")
 	ControlTypes.put("speeddial", "Speed Dial")
+	ControlTypes.Put("quill", "Quill Editor")
 	ControlTypes.Put("None", "None")
 	'
 	Direction.Initialize
@@ -1204,7 +1213,7 @@ Sub MergeMaps(oldm As Map, newm As Map) As Map
 	Return vue.MergeMaps(oldm, newm)
 End Sub
 
-Sub AddComponent(comp As VMElement)
+Sub AddComponent(comp As VMComponent)
 	vue.AddComponent(comp)
 End Sub
 
@@ -1232,7 +1241,7 @@ Sub CreateComponent(id As String) As VMElement
 	Return el
 End Sub
 
-Sub AddRoute(path As String, comp As VMElement) As BANanoVM
+Sub AddRoute(path As String, comp As VMComponent) As BANanoVM
 	vue.AddRoute(path, comp)
 	Return Me
 End Sub
@@ -1785,29 +1794,6 @@ Sub GetPrompt As String
 	Return ss
 End Sub
 
-''build your own alert
-'Sub AddAlert(alertid As String, eventHandler As Object, title As String, AlertContent As String, ConfirmText As String)
-'	alertid = alertid.tolowercase
-'	Dim myalert As VMAlert = CreateAlert(alertid,eventHandler).SetStatic(True).SetTitle(title).SetConfirmText(ConfirmText).SetContent(AlertContent)
-'	myalert.Pop(Content)
-'End Sub
-'
-''build your own confirm
-'Sub AddConfirm(confirmid As String, eventHandler As Object, title As String, ConfirmContent As String, ConfirmText As String, CancelText As String)
-'	confirmid = confirmid.tolowercase
-'	Dim myalert As VMConfirm = CreateConfirm(confirmid,eventHandler).SetStatic(True).SetTitle(title).SetConfirmText(ConfirmText).SetContent(ConfirmContent).SetCancelText(CancelText)
-'	myalert.Pop(Content)
-'End Sub
-'
-''build your own prompt
-'Sub AddPrompt(promptid As String, eventHandler As Object, title As String, Message As String,  placeHolder As String, maxLen As Int,ConfirmText As String, CancelText As String)
-'	promptid = promptid.tolowercase
-'	vue.SetStateSingle(promptid, Null)
-'	Dim myprompt As VMPrompt = CreatePrompt(promptid, eventHandler).SetStatic(True).SetTitle(title).SetContent(Message).SetMaxLength(maxLen).SetPlaceHolder(placeHolder)
-'	myprompt.SetConfirmText(ConfirmText).SetCancelText(CancelText)
-'	myprompt.Pop(Content)
-'End Sub
-
 Sub SetCallBack(moduleObj As Object, methodName As String) As BANanoVM
 	methodName = methodName.tolowercase
 	If SubExists(moduleObj, methodName) = False Then Return Me
@@ -1827,19 +1813,6 @@ Sub RemoveMethod(methodName As String) As BANanoVM
 	vue.RemoveMethod(methodName)
 	Return Me
 End Sub
-
-
-
-'Sub ShowPrompt(Title As String, Message As String,Placeholder As String, MaxLen As Int, ConfirmText As String, CancelText As String)
-'	vue.SetStateSingle("promptvalue",Null)
-'	vue.SetState(CreateMap("promptplaceholder":Placeholder, "prompttitle":Title,"promptcontent":Message, "promptconfirmtext":ConfirmText,"promptcanceltext":CancelText,"promptmaxlength":MaxLen))
-'	Prompt.Show
-'End Sub
-'
-'Sub ShowSnackBar(Message As String)
-'	vue.SetState(CreateMap("snackmessage":Message))
-'	Snack.show
-'End Sub
 
 Sub CreateSnackBar(sid As String, eventHandler As Object) As VMSnackBar
 	Dim el As VMSnackBar
@@ -2134,6 +2107,23 @@ Sub UX
 	vuetify = vue.BOVue.GetField(svuetify)
 End Sub
 
+'scroll to, 300, 0, easeInOutCubic
+Sub ScrollTo(elID As String, duration As Int, offset As Int, easing As String)
+	Try
+		elID = elID.tolowercase
+		Dim el As BANanoObject = vue.refs.GetField(elID)
+		If duration = Null Then duration = 300
+		If easing = "" Then easing = "easeInOutCubic"
+		Dim opt As Map = CreateMap()
+		opt.Put("duration", duration)
+		opt.Put("offset", offset)
+		opt.Put("easing", easing)
+		vuetify.RunMethod("goTo", Array(el, opt))
+	Catch
+		Log("ScrollTo Error")
+	End Try
+End Sub
+
 Sub SetLocale(slang As String) As BANanoVM
 	lang = slang
 	Try
@@ -2399,6 +2389,7 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, 
 	el.SetPlaceHolder(splaceholder)
 	el.SetVModel(vmodel)
 	el.Setlabel(slabel)
+	el.SetClearable(False)
 	el.SetRequired(bRequired)
 	vue.SetData(vmodel, Null)
 	el.SetRules(True)

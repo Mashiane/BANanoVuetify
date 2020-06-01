@@ -7,6 +7,33 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private saccept As String
+	Private sfilenamevmodel As String
+	Private sfiledatevmodel As String
+	Private sfilesizevmodel As String
+	Private sfiletypevmodel As String
+	Private sfloat As String
+	Private smargintop As String
+	Private smarginbottom As String
+	Private smarginleft As String
+	Private smarginright As String
+	Private smargins As String
+	Private smargine As String
+	Private smarginx As String
+	Private smarginy As String
+	Private smargina As String
+	Private spaddingtop As String
+	Private spaddingbottom As String
+	Private spaddingleft As String
+	Private spaddingright As String
+	Private spaddings As String
+	Private spaddinge As String
+	Private spaddingx As String
+	Private spaddingy As String
+	Private spaddinga As String
+	
+	Private bisupload As Boolean
+	Private sAction As String
 	Private rsType As String
 	Private sbRead As StringBuilder
 	Private dlgmultifields As VMDialog
@@ -39,6 +66,28 @@ Sub Process_Globals
 	Private bisreadonly As Boolean
 	Private stablename As String
 	Private sprimarykey As String
+	Private sinfotype As String
+	Private bisautoplay As String
+	Private sDecimal As String
+	Private sDecimals As String
+	Private sPrefix As String
+	Private sSuffix As String
+	Private sSeparator As String
+
+	'
+	Private sBackgroundcolor As String
+	Private sColor As String
+	Private bisDisabled As Boolean
+	Private sDuration As String
+	Private sFrom As String
+	Private bisHoverexpandeffect As Boolean
+	Private bisHoverzoomeffect As Boolean
+	Private sIcon As String
+	Private sIconbackgroundcolor As String
+	Private sIconcolor As String
+	Private sText As String
+	Private sTo As String
+	Private bisVisible As Boolean
 	'
 	Private sbuttontype As String
 	Private pbtextfield As VMProperty   	
@@ -84,6 +133,9 @@ Sub Process_Globals
 	Private myipad As VMDevice
 	Private myiphone As VMDevice
 	Private iconsizes As Map
+	Private pbquill As VMProperty
+	Private pbinfobox As VMProperty
+	Private pbfileselect As VMProperty
 	'
 	Private controltype As String
 	Private srow As String
@@ -119,8 +171,8 @@ Sub Process_Globals
 	Private bautogrow As Boolean
 	Private svalue As String
 	Private bisPrimary As Boolean
-	Private bisvisible As Boolean
-	Private bisdisabled As Boolean
+	Private bisVisible As Boolean
+	Private bisDisabled As Boolean
 	Private bontable As Boolean
 	Private bisdark As Boolean
 	'
@@ -150,7 +202,7 @@ Sub Process_Globals
 	Private bfitwidth As Boolean
 	Private shref As String
 	Private starget As String
-	Private sto As String
+	Private sTo As String
 	Private bistext As Boolean
 	Private bisdepressed As Boolean
 	Private bistile As Boolean
@@ -165,7 +217,7 @@ Sub Process_Globals
 	Private smaxheight As String
 	'
 	Private stooltip As String
-	Private scolor As String
+	Private sColor As String
 	Private sintensity As String
 	'
 	Private stextcolor As String
@@ -284,7 +336,6 @@ Sub Process_Globals
 	Private spositiony As String
 	Private sreturnvalue As String
 	Private stabindex As String
-	Private stextcolor As String
 	Private stransition As String
 	'
 	Private bisabsolute As Boolean
@@ -311,7 +362,7 @@ Sub Process_Globals
 	Private jcontents As String
 	Private lcontents As List
 	Private bisspacer As Boolean
-	Private scolor As String
+	Private sColor As String
 	Private sheight As String
 	Private sminivariantwidth As String
 	Private smobilebreakpoint As String
@@ -356,7 +407,6 @@ Sub Process_Globals
 	Private bishidedelimiters As Boolean
 	Private bislight As Boolean
 	Private bismandatory As Boolean
-	Private bismultiple As Boolean
 	Private bisnexticon As Boolean
 	Private bisprevicon As Boolean
 	Private bisprogress As Boolean
@@ -428,7 +478,7 @@ Sub Process_Globals
 	Private bisright As Boolean
 	Private bisSmall As Boolean
 	Private starget As String
-	Private sto As String
+	Private sTo As String
 	Private bistop As Boolean
 	Private stransition As String
 	Private bisXlarge As Boolean
@@ -438,7 +488,7 @@ Sub Process_Globals
 	Private sBackgroundintensity As String
 	Private bisClearable As Boolean
 	Private sclosedelay As String
-	Private scolor As String
+	Private sColor As String
 	Private sintensity As String
 	Private bisdense As Boolean
 	Private sEmptyicon As String
@@ -520,7 +570,7 @@ Private stabindex As String
 	Private bisAppend As Boolean
 	Private bisClose As Boolean
 	Private sCloseicon As String
-	Private scolor As String
+	Private sColor As String
 	Private sColorintensity As String
 	Private bisDraggable As Boolean
 	Private bisExact As Boolean
@@ -538,9 +588,7 @@ Private stabindex As String
 	Private bisRipple As Boolean
 	Private bisSmall As Boolean
 	Private starget As String
-	Private stextcolor As String
-	Private sTextcolorintensity As String
-	Private sto As String
+	Private sTo As String
 	Private bisXlarge As Boolean
 	Private bisXsmall As Boolean
 	Private siconpos As String
@@ -592,7 +640,7 @@ Private stabindex As String
 	Private sBackgroundcolorintensity As String
 	Private bisCenteractive As Boolean
 	Private bisCentered As Boolean
-	Private scolor As String
+	Private sColor As String
 	Private sColorintensity As String
 	Private bisdark As Boolean
 	Private bisFixedtabs As Boolean
@@ -611,7 +659,7 @@ Private stabindex As String
 	Private sSlidercolorintensity As String
 	Private sSlidersize As String
 	Private stabindex As String
-	Private bisvisible As Boolean
+	Private bisVisible As Boolean
 	Private bisiconposright As Boolean
 	Private bistabslider As Boolean
 	'
@@ -622,7 +670,7 @@ Private stabindex As String
 	Private sStepactive As String
 	Private stabindex As String
 	Private bisvertical As Boolean
-	Private bisvisible As Boolean
+	Private bisVisible As Boolean
 	'
 	Private bisAccordion As Boolean
 	Private sActivepanel As String
@@ -632,10 +680,9 @@ Private stabindex As String
 	Private bisHover As Boolean
 	Private bislight As Boolean
 	Private bismandatory As Boolean
-	Private bismultiple As Boolean
 	Private bisPopout As Boolean
 	Private bistile As Boolean
-	Private bisvisible As Boolean
+	Private bisVisible As Boolean
 	'
 	Private sBuildertype As String
 	Private sDecription As String
@@ -688,12 +735,15 @@ Sub Init
 	vm.NavBar.AddSpacer
 	vm.NavBar.SetVisible(True)
 	vm.NavBar.SetModeFixed(True)
+	vm.NavBar.SetClippedLeft(True)
+	vm.Drawer.SetClipped(True)  
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
 	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	vm.NavBar.SetDark(True)
 	vm.Footer.Hide
+	'vm.Container.SetFillHeight(True)
 	'
 	vm.Drawer.AddTitleSubTitle("Projects", "")
 	'
@@ -733,7 +783,8 @@ Sub Init
 	Else
 		vm.setdata("selectedpanel", 0)
 	End If
-	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider")
+	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider", _
+	"quill": "quill","infobox":"infobox","fileselect":"fileselect")
 	fieldtypes = CreateMap("string":"String", "int":"Integer", "bool":"Boolean", "date":"Date","dbl":"Float")
 	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
 	'
@@ -785,6 +836,9 @@ Sub Init
 	PropertyBag_ExpansionPanels
 	PropertyBag_Builder
 	PropertyBag_Page
+	PropertyBag_Quill
+	PropertyBag_InfoBox
+	PropertyBag_FileSelect
 	'
 	'add an invisible file uploader
 	vm.AddFileSelect(Me, "fucomponent")
@@ -805,11 +859,13 @@ Sub Init
 	
 	'load the list of projects
 	vm.setdata("projects", vm.newlist)
+	vm.setdata("components", vm.newlist)
 	vm.Drawer.SetDataSourceTemplate1("projects","id","","","","projectname","","","","")
 	'
 	vm.SetMethod(Me, "LoadProjects")
 	vm.SetMethod(Me, "LoadTables")
 	vm.SetMethod(Me, "LoadContainers")
+	vm.SetMethod(Me, "LoadComponents")
 	'
 	CreateDialog_Multifields
 	'
@@ -1199,6 +1255,17 @@ Sub LoadTables
 	vm.setdata("tablenames", prjSQL.result)
 End Sub
 
+Sub LoadComponents
+	Dim db As BANanoSQL
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("components", "id")
+	prjSQL.SelectAll(Array("vmodel"), Array("vmodel"))
+	prjSQL.result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	vm.setdata("components", prjSQL.result)
+End Sub
+
 Sub LoadContainers
 	Dim db As BANanoSQL
 	Dim prjSQL As BANanoAlaSQLE
@@ -1423,12 +1490,12 @@ Sub Read_Badge
 	bisAvatar = YesNoToBoolean(mattr.getdefault("isavatar", "No"))
 	bisBordered = YesNoToBoolean(mattr.getdefault("isbordered", "No"))
 	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
-	scolor = mattr.getdefault("color", "")
+	sColor = mattr.getdefault("color", "")
 	sbadgetype = mattr.getdefault("badgetype", "iscontent")
 	sColorintensity = mattr.getdefault("colorintensity", "")
 	sContent = mattr.getdefault("content", "")
 	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisDot = YesNoToBoolean(mattr.getdefault("isdot", "No"))
 	bisInline = YesNoToBoolean(mattr.getdefault("isinline", "No"))
 	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
@@ -1449,9 +1516,9 @@ Sub Read_Chip
 	bisClose = YesNoToBoolean(mattr.getdefault("isclose", "No"))
 	sCloseicon = mattr.getdefault("closeicon", "")
 	schiptype = mattr.getdefault("chiptype","")
-	scolor = mattr.getdefault("color", "")
+	sColor = mattr.getdefault("color", "")
 	sColorintensity = mattr.getdefault("colorintensity", "")
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisDraggable = YesNoToBoolean(mattr.getdefault("isdraggable", "No"))
 	bisExact = YesNoToBoolean(mattr.getdefault("isexact", "No"))
 	bisFilter = YesNoToBoolean(mattr.getdefault("isfilter", "No"))
@@ -1471,9 +1538,9 @@ Sub Read_Chip
 	stag = mattr.getdefault("tag", "")
 	starget = mattr.getdefault("target", "")
 	stextcolor = mattr.getdefault("textcolor", "")
-	sTextcolorintensity = mattr.getdefault("textcolorintensity", "")
-	sto = mattr.getdefault("to", "")
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sTextintensity = mattr.getdefault("textintensity", "")
+	sTo = mattr.getdefault("to", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	bisXlarge = YesNoToBoolean(mattr.getdefault("isxlarge", "No"))
 	bisXsmall = YesNoToBoolean(mattr.getdefault("isxsmall", "No"))
 End Sub
@@ -1664,6 +1731,7 @@ Sub CreateUX
 		sl = mattr.get("sizelarge")
 		sx = mattr.get("sizexlarge")
 		'
+		sfloat = mattr.getdefault("float", "")
 		sparent = mattr.getdefault("parent", "vm.Container")
 		splaceholder = mattr.getdefault("placeholder", "")
 		bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
@@ -1678,8 +1746,8 @@ Sub CreateUX
 		svalue = mattr.getdefault("value", "")
 		bisdivider = YesNoToBoolean(mattr.getdefault("isdivider", "No"))
 		bisPrimary = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
-		bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
-		bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+		bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+		bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 		bisitemdiv = YesNoToBoolean(mattr.getdefault("isitemdiv", "No"))
 		bisitemnogutter = YesNoToBoolean(mattr.GetDefault("isitemnogutter", "No"))
 		bontable = YesNoToBoolean(mattr.getdefault("ontable", "No"))
@@ -1696,6 +1764,32 @@ Sub CreateUX
 		bistimenow = YesNoToBoolean(mattr.getdefault("istimenow", "No"))
 		bisdatetimenow = YesNoToBoolean(mattr.getdefault("isdatetimenow", "No"))
 		bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
+		bisupload = YesNoToBoolean(mattr.getdefault("isupload", "No"))
+		saccept = mattr.getdefault("accept", "")
+		sfilenamevmodel = mattr.getdefault("filenamevmodel", "")
+		sfiledatevmodel = mattr.getdefault("filedatevmodel", "")
+		sfilesizevmodel = mattr.getdefault("filesizevmodel", "")
+		sfiletypevmodel = mattr.getdefault("filetypevmodel", "")	
+		'margins and padding
+		
+		smargintop = mattr.getdefault("margintop", "")
+		smarginbottom = mattr.getdefault("marginbottom", "")
+		smarginleft = mattr.getdefault("marginleft", "")
+		smarginright = mattr.getdefault("marginright", "")
+		smargins = mattr.getdefault("margins", "")
+		smargine = mattr.getdefault("margine", "")
+		smarginx = mattr.getdefault("marginx", "")
+		smarginy = mattr.getdefault("marginy", "")
+		smargina = mattr.getdefault("margina", "")
+		spaddingtop = mattr.getdefault("paddingtop", "")
+		spaddingbottom = mattr.getdefault("paddingbottom", "")
+		spaddingleft = mattr.getdefault("paddingleft", "")
+		spaddingright = mattr.getdefault("paddingright", "")
+		spaddings = mattr.getdefault("paddings", "")
+		spaddinge = mattr.getdefault("paddinge", "")
+		spaddingx = mattr.getdefault("paddingx", "")
+		spaddingy = mattr.getdefault("paddingy", "")
+		spaddinga = mattr.getdefault("paddinga", "")
 		'
 		bisautofocus = YesNoToBoolean(mattr.getdefault("isautofocus", "No"))
 		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
@@ -1725,7 +1819,7 @@ Sub CreateUX
 		bfitwidth = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
 		shref = mattr.getdefault("href","")
 		starget = mattr.getdefault("target","")
-		sto = mattr.getdefault("to","")
+		sTo = mattr.getdefault("to","")
 		bistext = YesNoToBoolean(mattr.getdefault("istext", "No"))
 		bisdepressed = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
 		bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
@@ -1740,10 +1834,10 @@ Sub CreateUX
 		smaxheight = mattr.getdefault("maxheight", "")
 		'
 		stooltip = mattr.getdefault("tooltip", "")
-		scolor = mattr.getdefault("color","")
+		sColor = mattr.getdefault("color","")
 		sintensity = mattr.getdefault("intensity","")
-		If scolor = "undefined" Then scolor = ""
-		If scolor = "none" Then scolor = ""
+		If sColor = "undefined" Then sColor = ""
+		If sColor = "none" Then sColor = ""
 		If sintensity = "undefined" Then sintensity = ""
 		If sintensity = "none" Then sintensity = ""
 		'
@@ -1891,6 +1985,15 @@ Sub CreateUX
 				Design_Image
 			Case "button"
 				Design_Button
+			Case "infobox"
+				Read_InfoBox
+				Design_InfoBox
+			Case "quill"
+				Read_Quill
+				Design_Quill
+			Case "fileselect"
+				Read_FileSelect
+				Design_FileSelect			
 		End Select
 	Next
 	'
@@ -1926,10 +2029,11 @@ Sub CreateUX
 	vm.pageresume
 End Sub
 
+
 Sub Read_Label
 	'read label
 	biscaption = YesNoToBoolean(mattr.getdefault("iscaption", "No"))
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisdisplay1 = YesNoToBoolean(mattr.getdefault("isdisplay1", "No"))
 	bisdisplay2 = YesNoToBoolean(mattr.getdefault("isdisplay2", "No"))
 	bisdisplay3 = YesNoToBoolean(mattr.getdefault("isdisplay3", "No"))
@@ -2035,9 +2139,9 @@ End Sub
 
 
 Sub Read_Drawer
-	scolor = mattr.getdefault("color", "")
-	If scolor = "undefined" Then scolor = ""
-	If scolor = "none" Then scolor = ""
+	sColor = mattr.getdefault("color", "")
+	If sColor = "undefined" Then sColor = ""
+	If sColor = "none" Then sColor = ""
 	sintensity = mattr.getdefault("intensity","")
 	sheight = mattr.getdefault("height", "")
 	sminivariantwidth = mattr.getdefault("minivariantwidth", "")
@@ -2245,10 +2349,35 @@ Sub Design_TextArea
 	txta.SetHideDetails(bishidedetails)
 	txta.SetAutoGrow(bautogrow)
 	txta.SetFieldType(sfieldtype)
-	txta.SetVisible(bisvisible)
+	txta.SetVisible(bisVisible)
 	txta.SetAutoFocus(bisautofocus)
 	txta.SetReadOnly(bisreadonly)
-	txta.SetDisabled(bisdisabled)
+	txta.SetDisabled(bisDisabled)
+	If smargintop <> "" Then txta.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then txta.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then txta.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then txta.AddClass("mr-" & smarginright)
+	If smargins <> "" Then txta.AddClass("ms-" & smargins)
+	If smargine <> "" Then txta.AddClass("me-" & smargine)
+	If smarginx <> "" Then txta.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then txta.AddClass("my-" & smarginy)
+	If smargina <> "" Then txta.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then txta.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then txta.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then txta.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then txta.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then txta.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then txta.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then txta.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then txta.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then txta.AddClass("pa-" & spaddinga)
+
+
+	'
+	
+	If sfloat <> "" Then
+		txta.Addclass(sfloat)
+	End If
 	ui.AddControl(txta.TextField, txta.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2257,9 +2386,12 @@ Sub Design_TextArea
 	'
 	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 
+	If sfloat <> "" Then
+		AddCode(sb, $"txta${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, sfieldtype, "s", "txta", sname, "SetFieldType")
 	CodeLine(sb, bisreadonly, "b", "txta", sname, "SetReadonly")
-	CodeLine(sb, bisdisabled, "b", "txta", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "txta", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "txta", sname, "SetValue")
 	CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txta", sname, "SetOutlined")
@@ -2274,7 +2406,27 @@ Sub Design_TextArea
 	CodeLine(sb, bisrounded, "b", "txta", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txta", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
-	CodeLine(sb, bisvisible, "b", "txta", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "txta", sname, "SetVisible")
+	'
+	Dim pres As String = "txta"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 
 	sb.append($"${sparent}.AddControl(txta${sname}.TextField, txta${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
@@ -2282,9 +2434,9 @@ End Sub
 Sub Design_Switch
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
-	swt.SetColorIntensity(scolor, sintensity)
+	swt.SetColorIntensity(sColor, sintensity)
 	swt.SetRequired(bisrequired)
-	swt.SetDisabled(bisdisabled)
+	swt.SetDisabled(bisDisabled)
 	swt.SetDark(bisdark)
 	swt.SetValue(svalue)
 	swt.SetDense(bisdense)
@@ -2294,7 +2446,30 @@ Sub Design_Switch
 	swt.SetMultiple(bismultiple)
 	swt.SetInset(bisinset).SetFlat(bisflat)
 	swt.SetFieldType(sfieldtype)
-	swt.SetVisible(bisvisible)
+	swt.SetVisible(bisVisible)
+	If smargintop <> "" Then swt.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then swt.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then swt.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then swt.AddClass("mr-" & smarginright)
+	If smargins <> "" Then swt.AddClass("ms-" & smargins)
+	If smargine <> "" Then swt.AddClass("me-" & smargine)
+	If smarginx <> "" Then swt.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then swt.AddClass("my-" & smarginy)
+	If smargina <> "" Then swt.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then swt.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then swt.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then swt.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then swt.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then swt.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then swt.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then swt.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then swt.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then swt.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		swt.Addclass(sfloat)
+	End If
 	ui.AddControl(swt.checkbox, swt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2305,7 +2480,10 @@ Sub Design_Switch
 	CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
 	CodeLine(sb, sfieldtype, "s", "swt", sname, "SetFieldType")
 	CodeLine(sb, svalue, "s", "swt", sname, "SetValue")
-	CodeLine(sb, bisdisabled, "b", "swt", sname, "SetDisabled")
+	If sfloat <> "" Then
+		AddCode(sb, $"swt${sname}.AddClass("${sfloat}")"$)
+	End If
+	CodeLine(sb, bisDisabled, "b", "swt", sname, "SetDisabled")
 	CodeLine(sb, bisdark, "b", "swt", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "swt", sname, "SetDense")
 	CodeLine(sb, bishidedetails, "b", "swt", sname, "SetHideDetails")
@@ -2314,9 +2492,29 @@ Sub Design_Switch
 	CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
 	CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
 	CodeLine(sb, bisflat, "b", "swt", sname, "SetFlat")
-	CodeLine(sb, bisvisible, "b", "swt", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "swt", sname, "SetVisible")
+	'
+	Dim pres As String = "swt"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	
-	If scolor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	If sColor <> "" Then sb.append($"swt${sname}.SetColorIntensity("${sColor}", "${sintensity}")"$).append(CRLF)
 	'
 	AddCode(sb, $"swt${sname}.SetOnChange(Me, "swt${sname}_change")"$)
 	sb.append($"${sparent}.AddControl(swt${sname}.CheckBox, swt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
@@ -2330,9 +2528,9 @@ End Sub
 Sub Design_CheckBox
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
-	chk.SetColorIntensity(scolor, sintensity)
+	chk.SetColorIntensity(sColor, sintensity)
 	chk.SetRequired(bisrequired)
-	chk.SetDisabled(bisdisabled)
+	chk.SetDisabled(bisDisabled)
 	chk.SetDark(bisdark)
 	chk.SetDense(bisdense)
 	chk.SetHideDetails(bishidedetails)
@@ -2341,7 +2539,30 @@ Sub Design_CheckBox
 	chk.SetMultiple(bismultiple)
 	chk.SetValue(svalue)
 	chk.SetFieldType(sfieldtype)
-	chk.SetVisible(bisvisible)
+	chk.SetVisible(bisVisible)
+	If smargintop <> "" Then chk.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then chk.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then chk.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then chk.AddClass("mr-" & smarginright)
+	If smargins <> "" Then chk.AddClass("ms-" & smargins)
+	If smargine <> "" Then chk.AddClass("me-" & smargine)
+	If smarginx <> "" Then chk.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then chk.AddClass("my-" & smarginy)
+	If smargina <> "" Then chk.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then chk.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then chk.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then chk.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then chk.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then chk.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then chk.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then chk.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then chk.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then chk.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		chk.Addclass(sfloat)
+	End If
 	ui.AddControl(chk.checkbox, chk.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2351,17 +2572,41 @@ Sub Design_CheckBox
 	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
 	CodeLine(sb, svalue, "s", "chk", sname, "SetValue")
-	CodeLine(sb, bisdisabled, "b", "chk", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "chk", sname, "SetDisabled")
 	CodeLine(sb, bisdark, "b", "chk", sname, "SetDark")
+	If sfloat <> "" Then
+		AddCode(sb, $"chk${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisdense, "b", "chk", sname, "SetDense")
 	CodeLine(sb, bishidedetails, "b", "chk", sname, "SetHideDetails")
 	CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
 	CodeLine(sb, bislight, "b", "chk", sname, "SetLight")
 	CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
 	CodeLine(sb, sfieldtype, "s", "chk", sname, "SetFieldType")
-	CodeLine(sb, bisvisible, "b", "chk", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "chk", sname, "SetVisible")
+	'
+	Dim pres As String = "chk"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	
 	AddCode(sb, $"chk${sname}.SetOnChange(Me, "chk${sname}_change")"$)
-	If scolor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	If sColor <> "" Then sb.append($"chk${sname}.SetColorIntensity("${sColor}", "${sintensity}")"$).append(CRLF)
 	'
 	sb.append($"${sparent}.AddControl(chk${sname}.CheckBox, chk${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -2374,8 +2619,8 @@ End Sub
 Sub Design_Date
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
-	dp.SetVisible(bisvisible)
-	dp.SetDisabled(bisdisabled)
+	dp.SetVisible(bisVisible)
+	dp.SetDisabled(bisDisabled)
 	dp.SetRange(bisrange)
 	dp.SetShowWeek(bisshowweek)
 	dp.SetDark(bisdark)
@@ -2401,7 +2646,29 @@ Sub Design_Date
 	dp.TextField.SetClearable(bclearable)
 	dp.TextField.SetHideDetails(bishidedetails)
 	dp.SetAutofocus(bisautofocus)
-				
+	If smargintop <> "" Then dp.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then dp.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then dp.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then dp.AddClass("mr-" & smarginright)
+	If smargins <> "" Then dp.AddClass("ms-" & smargins)
+	If smargine <> "" Then dp.AddClass("me-" & smargine)
+	If smarginx <> "" Then dp.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then dp.AddClass("my-" & smarginy)
+	If smargina <> "" Then dp.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then dp.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then dp.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then dp.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then dp.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then dp.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then dp.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then dp.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then dp.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then dp.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		dp.Addclass(sfloat)
+	End If
 	ui.AddControl(dp.DateTimePicker, dp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2411,9 +2678,12 @@ Sub Design_Date
 	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 		
 	CodeLine(sb, sfieldtype, "s", "dp", sname, "SetFieldType")
-	CodeLine(sb, bisvisible, "b", "dp", sname, "SetVisible")
-	CodeLine(sb, bisdisabled, "b", "dp", sname, "SetDisabled")
+	CodeLine(sb, bisVisible, "b", "dp", sname, "SetVisible")
+	CodeLine(sb, bisDisabled, "b", "dp", sname, "SetDisabled")
 	CodeLine(sb, bisrange, "b", "dp", sname, "SetRange")
+	If sfloat <> "" Then
+		AddCode(sb, $"dp${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisshowweek, "b", "dp", sname, "SetShowWeek")
 	CodeLine(sb, bisdark, "b", "dp", sname, "SetDark")
 	CodeLine(sb, svalue, "s", "dp", sname, "SetValue")
@@ -2438,6 +2708,26 @@ Sub Design_Date
 	CodeLine(sb, bisrounded, "b", "dp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "dp", sname, "TextField.SetClearable")
 	CodeLine(sb, bishidedetails, "b", "dp", sname, "TextField.SetHideDetails")
+	'
+	Dim pres As String = "dp"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	AddCode(sb, $"dp${sname}.SetOnChange(Me, "dp${sname}_change")"$)
 	
 	sb.append($"${sparent}.AddControl(dp${sname}.DateTimePicker, dp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
@@ -2462,9 +2752,9 @@ Sub Design_Chip
 	chip.SetActive(bisActive)
 	chip.SetAppend(bisAppend)
 	chip.SetClose(bisClose)
-	chip.SetColorintensity(scolor, sColorintensity)
+	chip.SetColorintensity(sColor, sColorintensity)
 	chip.SetDark(bisdark)
-	chip.SetDisabled(bisdisabled)
+	chip.SetDisabled(bisDisabled)
 	chip.SetDraggable(bisDraggable)
 	chip.SetExact(bisExact)
 	chip.SetFilter(bisFilter)
@@ -2480,11 +2770,35 @@ Sub Design_Chip
 	chip.SetRipple(bisRipple)
 	chip.SetSmall(bisSmall)
 	chip.SetTarget(starget)
-	chip.SetTextcolorintensity(stextcolor, sTextcolorintensity)
-	chip.SetTo(sto)
-	chip.SetVisible(bisvisible)
+	chip.SetTextcolorintensity(stextcolor, stextintensity)
+	chip.SetTo(sTo)
+	chip.SetVisible(bisVisible)
 	chip.SetXlarge(bisXlarge)
 	chip.SetXsmall(bisXsmall)
+	'
+	If smargintop <> "" Then chip.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then chip.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then chip.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then chip.AddClass("mr-" & smarginright)
+	If smargins <> "" Then chip.AddClass("ms-" & smargins)
+	If smargine <> "" Then chip.AddClass("me-" & smargine)
+	If smarginx <> "" Then chip.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then chip.AddClass("my-" & smarginy)
+	If smargina <> "" Then chip.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then chip.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then chip.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then chip.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then chip.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then chip.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then chip.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then chip.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then chip.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then chip.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		chip.Addclass(sfloat)
+	End If
 	ui.AddControl(chip.Chip, chip.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2502,9 +2816,12 @@ Sub Design_Chip
 	CodeLine(sb, bisActive, "b", "chp", sname, "SetActive")
 	CodeLine(sb, bisAppend, "b", "chp", sname, "SetAppend")
 	CodeLine(sb, bisClose, "b", "chp", sname, "SetClose")
-	CodeLine2(sb, scolor, sColorintensity, "s", "chp", sname, "SetColorintensity")
+	If sfloat <> "" Then
+		AddCode(sb, $"chp${sname}.AddClass("${sfloat}")"$)
+	End If
+	CodeLine2(sb, sColor, sColorintensity, "s", "chp", sname, "SetColorintensity")
 	CodeLine(sb, bisdark, "b", "chp", sname, "SetDark")
-	CodeLine(sb, bisdisabled, "b", "chp", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "chp", sname, "SetDisabled")
 	CodeLine(sb, bisDraggable, "b", "chp", sname, "SetDraggable")
 	CodeLine(sb, bisExact, "b", "chp", sname, "SetExact")
 	CodeLine(sb, bisFilter, "b", "chp", sname, "SetFilter")
@@ -2520,11 +2837,31 @@ Sub Design_Chip
 	CodeLine(sb, bisRipple, "b", "chp", sname, "SetRipple")
 	CodeLine(sb, bisSmall, "b", "chp", sname, "SetSmall")
 	CodeLine(sb, starget, "s", "chp", sname, "SetTarget")
-	CodeLine2(sb, stextcolor, sTextcolorintensity, "s", "chp", sname, "SetTextcolorintensity")
-	CodeLine(sb, sto, "s", "chp", sname, "SetTo")
-	CodeLine(sb, bisvisible, "b", "chp", sname, "SetVisible")
+	CodeLine2(sb, stextcolor, stextintensity, "s", "chp", sname, "SetTextcolorintensity")
+	CodeLine(sb, sTo, "s", "chp", sname, "SetTo")
+	CodeLine(sb, bisVisible, "b", "chp", sname, "SetVisible")
 	CodeLine(sb, bisXlarge, "b", "chp", sname, "SetXlarge")
 	CodeLine(sb, bisXsmall, "b", "chp", sname, "SetXsmall")
+	'
+	Dim pres As String = "chp"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	
 	sb.append($"${sparent}.AddControl(chp${sname}.Chip, chp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -2545,7 +2882,7 @@ Sub Design_Badge
 	badge.SetAvatar(bisAvatar)
 	badge.SetBordered(bisBordered)
 	badge.SetBottom(bisbottom)
-	badge.SetColorintensity(scolor, sColorintensity)
+	badge.SetColorintensity(sColor, sColorintensity)
 	Select Case sbadgetype
 	Case "iscontent"
 		badge.SetContent(sContent)
@@ -2553,7 +2890,7 @@ Sub Design_Badge
 		badge.SetIcon(siconname)
 	End Select
 	badge.SetDark(bisdark)
-	badge.SetDisabled(bisdisabled)
+	badge.SetDisabled(bisDisabled)
 	badge.SetDot(bisDot)
 	badge.SetInline(bisInline)
 	badge.SetLeft(bisleft)
@@ -2564,7 +2901,31 @@ Sub Design_Badge
 	badge.SetOverlap(bisOverlap)
 	badge.SetTile(bistile)
 	badge.SetTransition(stransition)
-	badge.SetVisible(bisvisible)
+	badge.SetVisible(bisVisible)
+	'
+	If smargintop <> "" Then badge.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then badge.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then badge.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then badge.AddClass("mr-" & smarginright)
+	If smargins <> "" Then badge.AddClass("ms-" & smargins)
+	If smargine <> "" Then badge.AddClass("me-" & smargine)
+	If smarginx <> "" Then badge.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then badge.AddClass("my-" & smarginy)
+	If smargina <> "" Then badge.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then badge.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then badge.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then badge.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then badge.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then badge.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then badge.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then badge.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then badge.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then badge.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		badge.Addclass(sfloat)
+	End If
 	ui.AddControl(badge.Badge, badge.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2575,15 +2936,18 @@ Sub Design_Badge
 	CodeLine(sb, bisAvatar, "b", "bdg", sname, "SetAvatar")
 	CodeLine(sb, bisBordered, "b", "bdg", sname, "SetBordered")
 	CodeLine(sb, bisbottom, "b", "bdg", sname, "SetBottom")
-	CodeLine2(sb, scolor, sColorintensity, "s", "bdg", sname, "SetColorintensity")
+	CodeLine2(sb, sColor, sColorintensity, "s", "bdg", sname, "SetColorintensity")
 	Select Case sbadgetype
 	Case "iscontent"
 		CodeLine(sb, sContent, "s", "bdg", sname, "SetContent")
 	Case "isicon"
 		CodeLine(sb, siconname, "s", "bdg", sname, "SetIcon")
 	End Select
+	If sfloat <> "" Then
+		AddCode(sb, $"bdg${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisdark, "b", "bdg", sname, "SetDark")
-	CodeLine(sb, bisdisabled, "b", "bdg", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "bdg", sname, "SetDisabled")
 	CodeLine(sb, bisDot, "b", "bdg", sname, "SetDot")
 	CodeLine(sb, bisInline, "b", "bdg", sname, "SetInline")
 	CodeLine(sb, bisleft, "b", "bdg", sname, "SetLeft")
@@ -2594,16 +2958,67 @@ Sub Design_Badge
 	CodeLine(sb, bisOverlap, "b", "bdg", sname, "SetOverlap")
 	CodeLine(sb, bistile, "b", "bdg", sname, "SetTile")
 	CodeLine(sb, stransition, "s", "bdg", sname, "SetTransition")
-	CodeLine(sb, bisvisible, "b", "bdg", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "bdg", sname, "SetVisible")
+	'
+	Dim pres As String = "bdg"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	
 	sb.append($"${sparent}.AddControl(bdg${sname}.Badge, bdg${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
-
-
-
 Sub Design_File
-	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
+	'we are dealing with 1 file
+	If bismultiple = False Then
+		If sfilenamevmodel <> "" Then 
+			AddCode(sbRead, $"Dim sFileName As String = vue.GetData("${sfilenamevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfilenamevmodel}", sFileName)"$)
+		End If
+		If sfiledatevmodel <> "" Then 
+			AddCode(sbRead, $"Dim sFileDate As String = vue.GetData("${sfiledatevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfiledatevmodel}", sFileDate)"$)
+		End If
+		If sfilesizevmodel <> "" Then 
+			AddCode(sbRead, $"Dim sFileSize As String = vue.GetData("${sfilesizevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfilesizevmodel}", sFileSize)"$)
+		End If
+		If sfiletypevmodel <> "" Then 
+			AddCode(sbRead, $"Dim sFileType As String = vue.GetData("${sfiletypevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfiletypevmodel}", sFileType)"$)
+		End If
+	Else
+		AddNewLine(sbEvents)
+		AddInstruction(sbEvents, "<Your Module>", "Process_Globals", "")
+		AddCode(sbEvents, "Private numFiles As Int")
+		AddCode(sbEvents, "Private totFiles As Int")
+		AddCode(sbEvents, "Private fl As List")
+		AddNewLine(sbEvents)
+	End If
+	
+	'is not updatable
+	If bisupdatable = False Then
+		AddComment(sbRead, "Should not be updated...")
+		AddCode(sbRead, $"Record.Remove("fm${svmodel}")"$)
+	Else
+		AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("fm${svmodel}")"$)
+	End If
+	'
 	Dim fi As VMTextField = ui.NewFileInput(Me, True, False, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
 	fi.SetSolo(bissolo)
 	fi.SetOutlined(bisoutlined)
@@ -2618,18 +3033,49 @@ Sub Design_File
 	fi.SetClearable(bclearable)
 	fi.SetHideDetails(bishidedetails)
 	fi.SetFieldType(sfieldtype)
-	fi.SetVisible(bisvisible)
+	fi.SetVisible(bisVisible)
+	fi.SetAccept(saccept)
+	fi.SetMultiple(bismultiple)
+	'
+	If smargintop <> "" Then fi.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then fi.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then fi.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then fi.AddClass("mr-" & smarginright)
+	If smargins <> "" Then fi.AddClass("ms-" & smargins)
+	If smargine <> "" Then fi.AddClass("me-" & smargine)
+	If smarginx <> "" Then fi.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then fi.AddClass("my-" & smarginy)
+	If smargina <> "" Then fi.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then fi.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then fi.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then fi.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then fi.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then fi.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then fi.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then fi.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then fi.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then fi.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		fi.Addclass(sfloat)
+	End If
 	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 			
-	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, False, "fi${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, ${bisupload}, "fi${sname}", "fm${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
+	CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
+	CodeLine(sb, saccept, "s", "fi", sname, "SetAccept")
 	CodeLine(sb, bisoutlined, "b", "fi", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "fi", sname, "SetFilled")
 	CodeLine(sb, bisdense, "b", "fi", sname, "SetDense")
+	If sfloat <> "" Then
+		AddCode(sb, $"fi${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bissingleline, "b", "fi", sname, "SetSingleLine")
 	CodeLine(sb, bispersistenthint, "b", "fi", sname, "SetPersistentHint")
 	CodeLine(sb, bisshaped, "b", "fi", sname, "SetShaped")
@@ -2640,12 +3086,123 @@ Sub Design_File
 	CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
 	CodeLine(sb, sfieldtype, "s", "fi", sname, "SetFieldType")
 	AddCode(sb, $"fi${sname}.SetOnFile(Me, "fi${sname}_change")"$)
-	CodeLine(sb, bisvisible, "b", "fi", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "fi", sname, "SetVisible")
+	'
+	Dim pres As String = "fi"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	
 	sb.append($"${sparent}.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
-	'add events
-	AddCode(sbEvents, $"Private Sub fi${sname}_change(fileList As List)"$)
+	If bismultiple = False Then
+		AddNewLine(sbEvents)
+		AddCode(sbEvents, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+		AddNewLine(sbEvents)
+		AddComment(sbEvents, "we are uploading a single file")
+		AddCode(sbEvents, $"Private Sub fi${sname}_change(fileO As Map)"$)
+		AddComment(sbEvents, "clear the relevant vmodels")
+		If sfilenamevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
+		If sfiledatevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", "")"$)
+		If sfilesizevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", "")"$)
+		If sfiletypevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", "")"$)
+		AddComment(sbEvents, "the file is blank")
+		AddCode(sbEvents, $"If fileO = Null Then Return"$)
+		AddComment(sbEvents, "get file details")
+		AddCode(sbEvents, $"Dim fo As FileObject = vue.GetFileDetails(fileO)"$)
+		If sfilenamevmodel <> "" Then 
+			AddCode(sbEvents, $"Dim sFileName As String = fo.FileName"$)
+			AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
+		End If
+		If sfiledatevmodel <> "" Then 
+			AddCode(sbEvents, $"Dim sFileDate As String = fo.FileDate"$)
+			AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", sFileDate)"$)
+		End If
+		If sfilesizevmodel <> "" Then 
+			AddCode(sbEvents, $"Dim sFileSize As String = fo.FileSize"$)
+			AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", sFileSize)"$)
+		End If
+		If sfiletypevmodel <> "" Then 
+			AddCode(sbEvents, $"Dim sFileType As String = fo.FileType"$)
+			AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", sFileType)"$)
+		End If
+		'
+		If bisupload Then
+			AddComment(sbEvents, "start uploading file")
+			AddCode(sbEvents, $"Dim fd As BANanoObject"$)
+			AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
+			AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
+			AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
+			AddComment(sbEvents, "get the result of the upload")
+			AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
+			AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
+			AddCode(sbEvents, $"Select Case sResult"$)
+			AddCode(sbEvents, $"Case "success""$)
+			If sfilenamevmodel <> "" Then
+				AddCode(sbEvents, $"sFileName = "./assets/" & sFileName"$)
+				AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
+			End If
+			AddCode(sbEvents, $"vm.ShowSnackBarSuccess(sFileName & " was uploaded successfully.")"$)
+			AddCode(sbEvents, $"Case "error""$)
+			If sfilenamevmodel <> "" Then
+				AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
+			End If
+			AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced uploading " & sFileName)"$)
+			AddCode(sbEvents, $"End Select"$)
+		End If
+	
+	Else
+		AddComment(sbEvents, "we are uploading multiple files")
+		AddCode(sbEvents, $"Private Sub fi${sname}_change(fileList As List)"$)
+		AddCode(sbEvents, $"If fileList = Null Then Return"$)
+		AddComment(sbEvents, "write code to process the files after select")
+		AddCode(sbEvents, "numFiles = 0")
+		AddComment(sbEvents, "store list of files uploaded")
+		AddCode(sbEvents, "fl.Initialize")
+		AddComment(sbEvents, "start uploading file, how many times we need")
+		AddCode(sbEvents, "totFiles = fileList.Size")
+		AddCode(sbEvents, "For Each fileO As Object In fileList")
+		AddComment(sbEvents, "get the file object and add it to list")
+		AddCode(sbEvents, "Dim fde As FileObject = vue.GetFileDetails(fileO)")
+		AddCode(sbEvents, "fl.Add(fde)")
+		AddComment(sbEvents, "upload each file")
+		AddCode(sbEvents, $"Dim fd As BANanoObject"$)
+		AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
+		AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
+		AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
+		AddComment(sbEvents, "get the result of the upload")
+		AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
+		AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
+		AddCode(sbEvents, $"Select Case sResult"$)
+		AddCode(sbEvents, $"Case "success""$)
+		AddComment(sbEvents, "count files uploaded")
+		AddCode(sbEvents, "numFiles = numFiles + 1")
+		AddCode(sbEvents, $"Case "error""$)
+		AddCode(sbEvents, "End Select")	
+		AddCode(sbEvents, "Next")
+		'determine uploaded and all files
+		AddComment(sbEvents, "detect uploaded files")
+		AddCode(sbEvents, "if totFiles = numFiles Then")
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("All " & totFiles & " were uploaded successfully.")"$)
+		AddCode(sbEvents, "else")
+		AddCode(sbEvents, $"vm.ShowSnackBarError(numFiles & " of " & totFiles & " were uploaded successfully. Please retry.")"$)
+		AddCode(sbEvents, "end if")
+	End If
 	AddCode(sbEvents, "End Sub")
 	AddNewLine(sbEvents)
 End Sub
@@ -2660,12 +3217,35 @@ Sub Design_Radio
 					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
 	End If
 	rd.SetMandatory(bismandatory)
-	rd.SetDisabled(bisdisabled)
+	rd.SetDisabled(bisDisabled)
 	rd.SetDense(bisdense)
 	rd.SetMultiple(bismultiple)
 	rd.SetHideDetails(bishidedetails)
 	rd.SetFieldType(sfieldtype)
-	rd.SetVisible(bisvisible)
+	rd.SetVisible(bisVisible)
+	If smargintop <> "" Then rd.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then rd.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then rd.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then rd.AddClass("mr-" & smarginright)
+	If smargins <> "" Then rd.AddClass("ms-" & smargins)
+	If smargine <> "" Then rd.AddClass("me-" & smargine)
+	If smarginx <> "" Then rd.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then rd.AddClass("my-" & smarginy)
+	If smargina <> "" Then rd.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then rd.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then rd.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then rd.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then rd.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then rd.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then rd.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then rd.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then rd.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then rd.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		rd.Addclass(sfloat)
+	End If
 	ui.AddControl(rd.RadioGroup, rd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2682,11 +3262,35 @@ Sub Design_Radio
 	End If
 	CodeLine(sb, bismandatory, "b", "rd", sname, "SetMandatory")
 	CodeLine(sb, sfieldtype, "s", "rd", sname, "SetFieldType")
-	CodeLine(sb, bisdisabled, "b", "rd", sname, "SetDisabled")
+	If sfloat <> "" Then
+		AddCode(sb, $"rd${sname}.AddClass("${sfloat}")"$)
+	End If
+	CodeLine(sb, bisDisabled, "b", "rd", sname, "SetDisabled")
 	CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
 	CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
 	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
-	CodeLine(sb, bisvisible, "b", "rd", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "rd", sname, "SetVisible")
+	'
+	Dim pres As String = "rd"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	
 	AddCode(sb, $"rd${sname}.SetOnChange(Me, "rd${sname}_change")"$)
 	sb.append($"${sparent}.AddControl(rd${sname}.RadioGroup, rd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -2749,8 +3353,31 @@ Sub Design_Select
 	sel.SetDeletableChips(bisdeletablechips)
 	sel.SetValue(svalue)
 	sel.SetFieldType(sfieldtype)
-	sel.SetVisible(bisvisible)
+	sel.SetVisible(bisVisible)
 	sel.SetAutoFocus(bisautofocus)
+	If smargintop <> "" Then sel.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then sel.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then sel.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then sel.AddClass("mr-" & smarginright)
+	If smargins <> "" Then sel.AddClass("ms-" & smargins)
+	If smargine <> "" Then sel.AddClass("me-" & smargine)
+	If smarginx <> "" Then sel.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then sel.AddClass("my-" & smarginy)
+	If smargina <> "" Then sel.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then sel.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then sel.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then sel.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then sel.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then sel.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then sel.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then sel.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then sel.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then sel.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		sel.Addclass(sfloat)
+	End If
 	ui.AddControl(sel.Combo, sel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2805,13 +3432,36 @@ Sub Design_Select
 	CodeLine(sb, bisshaped, "b", "sel", sname, "SetShaped")
 	CodeLine(sb, bisloading, "b", "sel", sname, "SetLoading")
 	CodeLine(sb, bisflat, "b", "sel", sname, "SetFlat")
+	If sfloat <> "" Then
+		AddCode(sb, $"sel${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisrounded, "b", "sel", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "sel", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "sel", sname, "SetHideDetails")
 	CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
 	CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
 	CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
-	CodeLine(sb, bisvisible, "b", "sel", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "sel", sname, "SetVisible")
+	'
+	Dim pres As String = "sel"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	AddCode(sb, $"sel${sname}.SetOnChange(Me, "sel${sname}_change")"$)
 	'
 	sb.append($"${sparent}.AddControl(sel${sname}.Combo, sel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
@@ -2829,7 +3479,7 @@ Sub Design_Slider
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
 	sld.SetValue(sslidervalue)
-	sld.SetColorIntensity(scolor, sintensity)
+	sld.SetColorIntensity(sColor, sintensity)
 	sld.SetHideDetails(bishidedetails)
 	sld.SetDark(bisdark)
 	sld.SetValue(svalue)
@@ -2845,7 +3495,30 @@ Sub Design_Slider
 	sld.SetFieldType(sfieldtype)
 	If bisthumblabel Then sld.SetThumbLabel(bisthumblabel)
 	If bisthumbalways Then sld.SetThumbLabelAlways(bisthumbalways)
-	sld.SetVisible(bisvisible)
+	sld.SetVisible(bisVisible)
+	If sfloat <> "" Then
+		sld.Addclass(sfloat)
+	End If
+	If smargintop <> "" Then sld.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then sld.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then sld.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then sld.AddClass("mr-" & smarginright)
+	If smargins <> "" Then sld.AddClass("ms-" & smargins)
+	If smargine <> "" Then sld.AddClass("me-" & smargine)
+	If smarginx <> "" Then sld.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then sld.AddClass("my-" & smarginy)
+	If smargina <> "" Then sld.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then sld.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then sld.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then sld.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then sld.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then sld.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then sld.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then sld.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then sld.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then sld.AddClass("pa-" & spaddinga)
+
+
 	ui.AddControl(sld.slider, sld.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2854,11 +3527,14 @@ Sub Design_Slider
 	'
 	sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bStatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})"$).append(CRLF)
 	CodeLine(sb, sslidervalue, "s", "sld", sname, "SetValue")
-	CodeLine2(sb, scolor, sintensity, "s", "sld", sname, "SetColorIntensity")
+	CodeLine2(sb, sColor, sintensity, "s", "sld", sname, "SetColorIntensity")
 	CodeLine(sb, bishidedetails, "b", "sld", sname, "SetHidedetails")
 	CodeLine(sb, sfieldtype, "s", "sld", sname, "SetFieldType")
 	CodeLine(sb, svalue, "s", "sld", sname, "SetValue")
 	CodeLine(sb, bisdark, "b", "sld", sname, "SetDark")
+	If sfloat <> "" Then
+		AddCode(sb, $"sld${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisreadonly, "b", "sld", sname, "SetReadonly")
 	CodeLine(sb, bisvertical, "b", "sld", sname, "SetVertical")
 	CodeLine(sb, sstepvalue, "s", "sld", sname, "SetStep")
@@ -2866,7 +3542,28 @@ Sub Design_Slider
 	CodeLine(sb, sappendicon, "s", "sld", sname, "SetAppendIcon")
 	CodeLine(sb, bisdense, "b", "sld", sname, "SetDense")
 	CodeLine(sb, sthumbsize, "s", "sld", sname, "SetThumbSize")
-	CodeLine(sb, bisvisible, "b", "sld", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "sld", sname, "SetVisible")
+	
+	Dim pres As String = "sld"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	
 	CodeLine2(sb, sthumbcolor, sthumbintensity, "s", "sld", sname, "SetThumbColorIntensity")
 	CodeLine2(sb, strackcolor, strackintensity, "s", "sld", sname, "SetTrackColorIntensity")
 	If bisthumblabel Then CodeLine(sb, bisthumblabel, "b", "sld", sname, "SetThumblabel")
@@ -2899,7 +3596,30 @@ Sub Design_Label
 	lbl.Settextlowercase(bistextlowercase)
 	lbl.Settextuppercase(bistextuppercase)
 	lbl.Settitle(bistitle)
-	lbl.Setvisible(bisvisible)
+	lbl.Setvisible(bisVisible)
+	If smargintop <> "" Then lbl.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then lbl.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then lbl.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then lbl.AddClass("mr-" & smarginright)
+	If smargins <> "" Then lbl.AddClass("ms-" & smargins)
+	If smargine <> "" Then lbl.AddClass("me-" & smargine)
+	If smarginx <> "" Then lbl.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then lbl.AddClass("my-" & smarginy)
+	If smargina <> "" Then lbl.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then lbl.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then lbl.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then lbl.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then lbl.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then lbl.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then lbl.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then lbl.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then lbl.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then lbl.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		lbl.Addclass(sfloat)
+	End If
 	ui.AddControl(lbl.Label, lbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2911,7 +3631,9 @@ Sub Design_Label
 	CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, sfontweight, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, bisitalic, "b", "lbl", sname, "SetItalic")
-	
+	If sfloat <> "" Then
+		AddCode(sb, $"lbl${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, biscaption, "b", "lbl", sname, "Setcaption")
 	CodeLine(sb, bisdisplay1, "b", "lbl", sname, "Setdisplay1")
 	CodeLine(sb, bisdisplay2, "b", "lbl", sname, "Setdisplay2")
@@ -2925,7 +3647,27 @@ Sub Design_Label
 	CodeLine(sb, bistextlowercase, "b", "lbl", sname, "Settextlowercase")
 	CodeLine(sb, bistextuppercase, "b", "lbl", sname, "Settextuppercase")
 	CodeLine(sb, bistitle, "b", "lbl", sname, "Settitle")
-	CodeLine(sb, bisvisible, "b", "lbl", sname, "Setvisible")
+	CodeLine(sb, bisVisible, "b", "lbl", sname, "Setvisible")
+	'
+	Dim pres As String = "lbl"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	If stextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
 
 	sb.append($"${sparent}.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
@@ -2950,9 +3692,32 @@ Sub Design_Email
 	email.SetRounded(bisrounded)
 	email.SetClearable(bclearable)
 	email.SetHideDetails(bishidedetails)
-	email.SetVisible(bisvisible)
+	email.SetVisible(bisVisible)
 	email.SetReadOnly(bisreadonly)
-	email.SetDisabled(bisdisabled)
+	email.SetDisabled(bisDisabled)
+	If smargintop <> "" Then email.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then email.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then email.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then email.AddClass("mr-" & smarginright)
+	If smargins <> "" Then email.AddClass("ms-" & smargins)
+	If smargine <> "" Then email.AddClass("me-" & smargine)
+	If smarginx <> "" Then email.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then email.AddClass("my-" & smarginy)
+	If smargina <> "" Then email.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then email.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then email.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then email.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then email.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then email.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then email.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then email.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then email.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then email.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		email.Addclass(sfloat)
+	End If
 	ui.AddControl(email.TextField, email.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -2963,7 +3728,10 @@ Sub Design_Email
 
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 	CodeLine(sb, bisreadonly, "b", "txt", sname, "SetReadonly")
-	CodeLine(sb, bisdisabled, "b", "txt", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "txt", sname, "SetDisabled")
+	If sfloat <> "" Then
+		AddCode(sb, $"txt${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
 	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
@@ -2977,7 +3745,27 @@ Sub Design_Email
 	CodeLine(sb, bisrounded, "b", "txt", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
-	CodeLine(sb, bisvisible, "b", "txt", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "txt", sname, "SetVisible")
+	'
+	Dim pres As String = "txt"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 
 	sb.append($"${sparent}.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -3044,10 +3832,32 @@ Sub Design_Password
 	pwd.SetClearable(bclearable)
 	pwd.SetHideDetails(bishidedetails)
 	pwd.SetValue(svalue)
-	pwd.SetVisible(bisvisible)
+	pwd.SetVisible(bisVisible)
 	pwd.SetReadOnly(bisreadonly)
-	pwd.SetDisabled(bisdisabled)
-				
+	pwd.SetDisabled(bisDisabled)
+	If smargintop <> "" Then pwd.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then pwd.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then pwd.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then pwd.AddClass("mr-" & smarginright)
+	If smargins <> "" Then pwd.AddClass("ms-" & smargins)
+	If smargine <> "" Then pwd.AddClass("me-" & smargine)
+	If smarginx <> "" Then pwd.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then pwd.AddClass("my-" & smarginy)
+	If smargina <> "" Then pwd.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then pwd.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then pwd.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then pwd.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then pwd.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then pwd.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then pwd.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then pwd.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then pwd.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then pwd.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		pwd.Addclass(sfloat)
+	End If
 	ui.AddControl(pwd.TextField, pwd.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3058,8 +3868,11 @@ Sub Design_Password
 	'
 	CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
 	CodeLine(sb, bisreadonly, "b", "pwd", sname, "SetReadonly")
-	CodeLine(sb, bisdisabled, "b", "pwd", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "pwd", sname, "SetDisabled")
 	CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
+	If sfloat <> "" Then
+		AddCode(sb, $"pwd${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisoutlined, "b", "pwd", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "pwd", sname, "SetFilled")
 	CodeLine(sb, bisdense, "b", "pwd", sname, "SetDense")
@@ -3072,7 +3885,27 @@ Sub Design_Password
 	CodeLine(sb, bclearable, "b", "pwd", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "pwd", sname, "SetHideDetails")
 	CodeLine(sb, svalue, "s", "pwd", sname, "SetValue")
-	CodeLine(sb, bisvisible, "b", "pwd", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "pwd", sname, "SetVisible")
+	'
+	Dim pres As String = "pwd"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 
 	sb.append($"${sparent}.AddControl(pwd${sname}.textfield, pwd${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -3096,9 +3929,32 @@ Sub Design_Tel
 	tel.SetRounded(bisrounded)
 	tel.SetClearable(bclearable)
 	tel.SetHideDetails(bishidedetails)
-	tel.SetVisible(bisvisible)
+	tel.SetVisible(bisVisible)
 	tel.SetReadOnly(bisreadonly)
-	tel.SetDisabled(bisdisabled)
+	tel.SetDisabled(bisDisabled)
+	If smargintop <> "" Then tel.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then tel.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then tel.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then tel.AddClass("mr-" & smarginright)
+	If smargins <> "" Then tel.AddClass("ms-" & smargins)
+	If smargine <> "" Then tel.AddClass("me-" & smargine)
+	If smarginx <> "" Then tel.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then tel.AddClass("my-" & smarginy)
+	If smargina <> "" Then tel.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then tel.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then tel.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then tel.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then tel.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then tel.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then tel.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then tel.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then tel.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then tel.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		tel.Addclass(sfloat)
+	End If
 	ui.AddControl(tel.TextField, tel.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3109,9 +3965,12 @@ Sub Design_Tel
 
 	CodeLine(sb, svalue, "s", "tel", sname, "SetValue")
 	CodeLine(sb, bisreadonly, "b", "tel", sname, "SetReadonly")
-	CodeLine(sb, bisdisabled, "b", "tel", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "tel", sname, "SetDisabled")
 	CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
+	If sfloat <> "" Then
+		AddCode(sb, $"tel${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisoutlined, "b", "tel", sname, "SetOutlined")
 	CodeLine(sb, bisfilled, "b", "tel", sname, "SetFilled")
 	CodeLine(sb, bisdense, "b", "tel", sname, "SetDense")
@@ -3123,7 +3982,27 @@ Sub Design_Tel
 	CodeLine(sb, bisrounded, "b", "tel", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "tel", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
-	CodeLine(sb, bisvisible, "b", "tel", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "tel", sname, "SetVisible")
+	'
+	Dim pres As String = "tel"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 		
 	sb.append($"${sparent}.AddControl(tel${sname}.textfield, tel${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -3133,8 +4012,8 @@ End Sub
 Sub Design_Time
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
-	tp.SetVisible(bisvisible)
-	tp.SetDisabled(bisdisabled)
+	tp.SetVisible(bisVisible)
+	tp.SetDisabled(bisDisabled)
 	tp.SetAmPmInTitle(bisampm)
 	tp.SetDark(bisdark)
 	tp.SetValue(svalue)
@@ -3158,7 +4037,29 @@ Sub Design_Time
 	tp.TextField.SetRounded(bisrounded)
 	tp.TextField.SetClearable(bclearable)
 	tp.TextField.SetHideDetails(bishidedetails)
-			
+	If smargintop <> "" Then tp.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then tp.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then tp.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then tp.AddClass("mr-" & smarginright)
+	If smargins <> "" Then tp.AddClass("ms-" & smargins)
+	If smargine <> "" Then tp.AddClass("me-" & smargine)
+	If smarginx <> "" Then tp.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then tp.AddClass("my-" & smarginy)
+	If smargina <> "" Then tp.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then tp.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then tp.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then tp.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then tp.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then tp.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then tp.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then tp.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then tp.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then tp.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		tp.Addclass(sfloat)
+	End If
 	ui.AddControl(tp.DateTimePicker, tp.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3168,8 +4069,11 @@ Sub Design_Time
 	sb.append($"Dim tp${sname} As VMDateTimePicker = vm.NewTimePicker(Me, ${bStatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 	'
 	CodeLine(sb, svalue, "s", "tp", sname, "SetValue")
-	CodeLine(sb, bisvisible, "b", "tp", sname, "SetVisible")
-	CodeLine(sb, bisdisabled, "b", "tp", sname, "SetDisabled")
+	CodeLine(sb, bisVisible, "b", "tp", sname, "SetVisible")
+	CodeLine(sb, bisDisabled, "b", "tp", sname, "SetDisabled")
+	If sfloat <> "" Then
+		AddCode(sb, $"tp${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisampm, "b", "tp", sname, "SetAmPmInTitle")
 	CodeLine(sb, bisdark, "b", "tp", sname, "SetDark")
 	CodeLine(sb, bisnow, "b", "tp", sname, "SetIsNow")
@@ -3191,6 +4095,28 @@ Sub Design_Time
 	CodeLine(sb, bisrounded, "b", "tp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "tp", sname, "TextField.SetClearable")
 	CodeLine(sb, bishidedetails, "b", "tp", sname, "TextField.SetHideDetails")
+	
+	'
+	Dim pres As String = "tp"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	
 	AddCode(sb, $"tp${sname}.SetOnChange(Me, "tp${sname}_change")"$)
 	sb.append($"${sparent}.AddControl(tp${sname}.DateTimePicker, tp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -3201,34 +4127,103 @@ Sub Design_Time
 End Sub
 
 Sub Design_Icon
-	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, siconname, ssize, scolor, sintensity)
+	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, siconname, ssize, sColor, sintensity)
 	icn.SetDark(bisdark)
 	icn.SetDense(bisdense)
-	icn.SetDisabled(bisdisabled)
+	icn.SetDisabled(bisDisabled)
 	icn.SetCenterOnParent(bcenteronparent)
 	icn.SetLeft(bisleft)
 	icn.SetRight(bisright)
-	icn.SetVisible(bisvisible)
+	icn.SetVisible(bisVisible)
+	If smargintop <> "" Then icn.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then icn.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then icn.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then icn.AddClass("mr-" & smarginright)
+	If smargins <> "" Then icn.AddClass("ms-" & smargins)
+	If smargine <> "" Then icn.AddClass("me-" & smargine)
+	If smarginx <> "" Then icn.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then icn.AddClass("my-" & smarginy)
+	If smargina <> "" Then icn.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then icn.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then icn.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then icn.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then icn.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then icn.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then icn.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then icn.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then icn.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then icn.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		icn.Addclass(sfloat)
+	End If
 	ui.AddControl(icn.Icon, icn.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${scolor}", "${sintensity}")"$).append(CRLF)
+	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${sColor}", "${sintensity}")"$).append(CRLF)
 	CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
+	If sfloat <> "" Then
+		AddCode(sb, $"icn${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
-	CodeLine(sb, bisdisabled, "b", "icn", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "icn", sname, "SetDisabled")
 	CodeLine(sb, bcenteronparent, "b", "icn", sname, "SetCenterOnParent")
 	CodeLine(sb, bisleft, "b", "icn", sname, "SetLeft")
 	CodeLine(sb, bisright, "b", "icn", sname, "SetRight")
-	CodeLine(sb, bisvisible, "b", "icn", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "icn", sname, "SetVisible")
+	'
+	Dim pres As String = "icn"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	sb.append($"${sparent}.AddControl(icn${sname}.Icon, icn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
 Sub Design_Parallax
 	Dim para As VMParallax = ui.NewParallax(Me, True, sname, sheight, ssrc, salt)
-	para.SetVisible(bisvisible)
+	para.SetVisible(bisVisible)
+	If sfloat <> "" Then
+		para.Addclass(sfloat)
+	End If
+	If smargintop <> "" Then para.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then para.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then para.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then para.AddClass("mr-" & smarginright)
+	If smargins <> "" Then para.AddClass("ms-" & smargins)
+	If smargine <> "" Then para.AddClass("me-" & smargine)
+	If smarginx <> "" Then para.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then para.AddClass("my-" & smarginy)
+	If smargina <> "" Then para.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then para.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then para.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then para.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then para.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then para.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then para.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then para.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then para.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then para.AddClass("pa-" & spaddinga)
+
+
 	ui.AddControl(para.Parallax, para.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3236,7 +4231,30 @@ Sub Design_Parallax
 	AddNewLine(sb)
 	'
 	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sheight}", "${ssrc}", "${salt}")"$).append(CRLF)
-	CodeLine(sb, bisvisible, "b", "prlx", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "prlx", sname, "SetVisible")
+	'
+	Dim pres As String = "prlx"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	If sfloat <> "" Then
+		AddCode(sb, $"prlx${sname}.AddClass("${sfloat}")"$)
+	End If
 	sb.append($"${sparent}.AddControl(prlx${sname}.Parallax, prlx${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
@@ -3248,18 +4266,41 @@ Sub Design_Container
 	cont.SetShowMatrix(bisshowmatrix)
 	cont.SetNoGutters(bisnogutters)
 	cont.SetDiv(bisitemdiv)
-	cont.SetVisible(bisvisible)
+	cont.SetVisible(bisVisible)
 	cont.SetBorderRadius(sborderradius)
 	cont.SetBorderWidth(sborderwidth)
 	cont.SetBorderColor(sbordercolor)
 	cont.SetBorderStyle(sborderstyle)
-	cont.SetColorIntensity(scolor, sintensity)
+	cont.SetColorIntensity(sColor, sintensity)
 	cont.SetWidth(swidth)
 	cont.SetHeight(sheight)
 	cont.SetMinWidth(sminwidth)
 	cont.SetMaxWidth(smaxwidth)
 	cont.SetMinHeight(sminheight)
 	cont.SetMaxHeight(smaxheight)
+	If smargintop <> "" Then cont.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then cont.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then cont.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then cont.AddClass("mr-" & smarginright)
+	If smargins <> "" Then cont.AddClass("ms-" & smargins)
+	If smargine <> "" Then cont.AddClass("me-" & smargine)
+	If smarginx <> "" Then cont.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then cont.AddClass("my-" & smarginy)
+	If smargina <> "" Then cont.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then cont.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then cont.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then cont.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then cont.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then cont.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then cont.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then cont.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then cont.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then cont.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		cont.Addclass(sfloat)
+	End If
 	ui.AddControl(cont.Container, cont.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3272,8 +4313,11 @@ Sub Design_Container
 	CodeLine(sb, selevation, "s", "cont", sname, "SetElevation")
 	CodeLine(sb, stransition, "s", "cont", sname, "SetTransition")
 	CodeLine(sb, bisfluid, "b", "cont", sname, "SetFluid")
+	If sfloat <> "" Then
+		AddCode(sb, $"cont${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisshowmatrix, "b", "cont", sname, "SetShowMatrix")
-	CodeLine(sb, bisvisible, "b", "cont", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "cont", sname, "SetVisible")
 	CodeLine(sb, sborderradius, "s", "cont", sname, "SetBorderRadius")
 	CodeLine(sb, sborderwidth, "s", "cont", sname, "SetBorderWidth")
 	CodeLine(sb, sbordercolor, "s", "cont", sname, "SetBorderColor")
@@ -3284,7 +4328,27 @@ Sub Design_Container
 	CodeLine(sb, smaxwidth, "s", "cont", sname, "SetMaxWidth")
 	CodeLine(sb, sminheight, "s", "cont", sname, "SetMinHeight")
 	CodeLine(sb, smaxheight, "s", "cont", sname, "SetMaxHeight")
-	If scolor <> "" Then sb.append($"cont${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	'
+	Dim pres As String = "cont"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	If sColor <> "" Then sb.append($"cont${sname}.SetColorIntensity("${sColor}", "${sintensity}")"$).append(CRLF)
 	sb.append($"${sparent}.AddControl(cont${sname}.Container, cont${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
@@ -3300,7 +4364,30 @@ Sub Design_Image
 	img.SetMaxWidth(smaxwidth)
 	img.SetMinHeight(sminheight)
 	img.SetMaxHeight(smaxheight)
-	img.SetVisible(bisvisible)
+	img.SetVisible(bisVisible)
+	If smargintop <> "" Then img.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then img.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then img.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then img.AddClass("mr-" & smarginright)
+	If smargins <> "" Then img.AddClass("ms-" & smargins)
+	If smargine <> "" Then img.AddClass("me-" & smargine)
+	If smarginx <> "" Then img.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then img.AddClass("my-" & smarginy)
+	If smargina <> "" Then img.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then img.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then img.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then img.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then img.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then img.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then img.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then img.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then img.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then img.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		img.Addclass(sfloat)
+	End If
 	img.SetCenterOnParent(bcenteronparent)
 				
 	ui.AddControl(img.Image, img.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
@@ -3311,6 +4398,9 @@ Sub Design_Image
 	'
 	sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bStatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")"$).append(CRLF)
 	CodeLine(sb, slazysrc, "s", "img", sname, "SetLazysrc")
+	If sfloat <> "" Then
+		AddCode(sb, $"img${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, sborderradius, "s", "img", sname, "SetBorderRadius")
 	CodeLine(sb, sborderwidth, "s", "img", sname, "SetBorderWidth")
 	CodeLine(sb, sbordercolor, "s", "img", sname, "SetBorderColor")
@@ -3321,7 +4411,28 @@ Sub Design_Image
 	CodeLine(sb, sminheight, "s", "img", sname, "SetMinHeight")
 	CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
 	CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
-	CodeLine(sb, bisvisible, "b", "img", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "img", sname, "SetVisible")
+	'
+	Dim pres As String = "img"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	
 	sb.append($"${sparent}.AddControl(img${sname}.Image, img${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
 End Sub
@@ -3330,7 +4441,7 @@ Sub Design_Drawer
 	Dim drw As VMNavigationDrawer = ui.CreateDrawer(sname, Me)
 	drw.SetStatic(True)
 	drw.AddTitleSubTitle(smtitle,smsubtitle)
-	drw.SetcolorIntensity(scolor,sintensity)
+	drw.SetcolorIntensity(sColor,sintensity)
 	drw.Setminivariantwidth(sminivariantwidth)
 	drw.Setmobilebreakpoint(smobilebreakpoint)
 	drw.Setoverlaycolor(soverlaycolor)
@@ -3357,7 +4468,30 @@ Sub Design_Drawer
 	drw.Setstateless(bisstateless)
 	drw.Settemporary(bistemporary)
 	drw.Settouchless(bistouchless)
-	drw.Setvisible(bisvisible)
+	drw.Setvisible(bisVisible)
+	If smargintop <> "" Then drw.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then drw.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then drw.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then drw.AddClass("mr-" & smarginright)
+	If smargins <> "" Then drw.AddClass("ms-" & smargins)
+	If smargine <> "" Then drw.AddClass("me-" & smargine)
+	If smarginx <> "" Then drw.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then drw.AddClass("my-" & smarginy)
+	If smargina <> "" Then drw.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then drw.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then drw.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then drw.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then drw.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then drw.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then drw.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then drw.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then drw.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then drw.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		drw.Addclass(sfloat)
+	End If
 	'
 	'link events
 	If bismasterdrawer = False Then
@@ -3416,10 +4550,33 @@ Sub Design_Drawer
 	End If
 	
 	CodeLine2(sb, smtitle, smsubtitle, "s", prefix, suffix, "AddTitleSubTitle")
-	CodeLine2(sb, scolor, sintensity, "s", prefix, suffix, "SetColorIntensity")
+	CodeLine2(sb, sColor, sintensity, "s", prefix, suffix, "SetColorIntensity")
 	CodeLine(sb, sminivariantwidth, "s", prefix, suffix, "Setminivariantwidth")
 	CodeLine(sb, smobilebreakpoint, "s", prefix, suffix, "Setmobilebreakpoint")
 	CodeLine(sb, soverlaycolor, "s", prefix, suffix, "Setoverlaycolor")
+	'
+	CodeLine(sb, "mt-" & smargintop, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", prefix, suffix, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", prefix, suffix, "AddClass")
+	'
+	If sfloat <> "" Then
+		AddCode(sb, $"${prefix}${suffix}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, soverlayopacity, "s", prefix, suffix, "Setoverlayopacity")
 	CodeLine(sb, ssrc, "s", prefix, suffix, "Setsrc")
 	CodeLine(sb, stag, "s", prefix, suffix, "Settag")
@@ -3444,7 +4601,7 @@ Sub Design_Drawer
 	CodeLine(sb, bisstateless, "b", prefix, suffix, "Setstateless")
 	CodeLine(sb, bistemporary, "b", prefix, suffix, "Settemporary")
 	CodeLine(sb, bistouchless, "b", prefix, suffix, "Settouchless")
-	CodeLine(sb, bisvisible, "b", prefix, suffix, "Setvisible")
+	CodeLine(sb, bisVisible, "b", prefix, suffix, "Setvisible")
 	'
 	If buseoptions Then
 		For Each m As Map In lcontents
@@ -3502,14 +4659,37 @@ Sub Design_SpeedDial
 	speeddial.SetRight(bisright)
 	speeddial.SetSmall(bisSmall)
 	speeddial.SetTarget(starget)
-	speeddial.SetTo(sto)
+	speeddial.SetTo(sTo)
 	speeddial.SetTop(bistop)
 	speeddial.SetTransition(stransition)
-	speeddial.SetVisible(bisvisible)
+	speeddial.SetVisible(bisVisible)
 	speeddial.SetXlarge(bisXlarge)
 	speeddial.SetXsmall(bisXsmall)
-	speeddial.SetColorIntensity(scolor, sintensity)
+	speeddial.SetColorIntensity(sColor, sintensity)
 	speeddial.SetTextColorIntensity(stextcolor, stextintensity)
+	If smargintop <> "" Then speeddial.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then speeddial.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then speeddial.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then speeddial.AddClass("mr-" & smarginright)
+	If smargins <> "" Then speeddial.AddClass("ms-" & smargins)
+	If smargine <> "" Then speeddial.AddClass("me-" & smargine)
+	If smarginx <> "" Then speeddial.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then speeddial.AddClass("my-" & smarginy)
+	If smargina <> "" Then speeddial.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then speeddial.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then speeddial.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then speeddial.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then speeddial.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then speeddial.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then speeddial.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then speeddial.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then speeddial.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then speeddial.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		speeddial.Addclass(sfloat)
+	End If
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -3536,6 +4716,9 @@ Sub Design_SpeedDial
 	CodeLine(sb, sFinalicon, "s", "spd", sname, "SetFinalicon")
 	CodeLine(sb, bisfixed, "b", "spd", sname, "SetFixed")
 	CodeLine(sb, shref, "s", "spd", sname, "SetHref")
+	If sfloat <> "" Then
+		AddCode(sb, $"spd${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, smastericon, "s", "spd", sname, "SetIcon")
 	CodeLine(sb, sInitialicon, "s", "spd", sname, "SetInitialicon")
 	CodeLine(sb, bisLarge, "b", "spd", sname, "SetLarge")
@@ -3547,13 +4730,35 @@ Sub Design_SpeedDial
 	CodeLine(sb, bisSmall, "b", "spd", sname, "SetSmall")
 	CodeLine(sb, stabindex, "s", "spd", sname, "SetTabindex")
 	CodeLine(sb, starget, "s", "spd", sname, "SetTarget")
-	CodeLine(sb, sto, "s", "spd", sname, "SetTo")
+	CodeLine(sb, sTo, "s", "spd", sname, "SetTo")
 	CodeLine(sb, bistop, "b", "spd", sname, "SetTop")
 	CodeLine(sb, stransition, "s", "spd", sname, "SetTransition")
-	CodeLine(sb, bisvisible, "b", "spd", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "spd", sname, "SetVisible")
 	CodeLine(sb, bisXlarge, "b", "spd", sname, "SetXlarge")
 	CodeLine(sb, bisXsmall, "b", "spd", sname, "SetXsmall")
-	CodeLine2(sb, scolor, sintensity, "s", "spd", sname, "SetColorIntensity")
+	
+	'
+	Dim pres As String = "spd"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+
+	CodeLine2(sb, sColor, sintensity, "s", "spd", sname, "SetColorIntensity")
 	CodeLine2(sb, stextcolor, stextintensity, "s", "spd", sname, "SetTextColorIntensity")
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -3582,10 +4787,13 @@ Sub Design_Dialog
 	dialog.SetOK(sOkid, sOkcaption)
 	dialog.Settitleprimary(bistitleprimary)
 	dialog.Setdark(bisdark)
-	dialog.Setdisabled(bisdisabled)
+	dialog.Setdisabled(bisDisabled)
 	dialog.Setwidth(swidth)
 	dialog.Setmaxwidth(smaxwidth)
 	dialog.Setlight(bislight)
+	If sfloat <> "" Then
+		dialog.Addclass(sfloat)
+	End If
 	ui.AddControl(dialog.Card, dialog.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 
 	
@@ -3662,7 +4870,7 @@ Sub Design_Dialog
 	CodeLine(sb, bisattach, "b", "dlg", sname, "Setattach")
 	CodeLine(sb, bisbackdrop, "b", "dlg", sname, "Setbackdrop")
 	CodeLine(sb, bisdark, "b", "dlg", sname, "Setdark")
-	CodeLine(sb, bisdisabled, "b", "dlg", sname, "Setdisabled")
+	CodeLine(sb, bisDisabled, "b", "dlg", sname, "Setdisabled")
 	CodeLine(sb, biseager, "b", "dlg", sname, "Seteager")
 	CodeLine(sb, bisfullscreen, "b", "dlg", sname, "Setfullscreen")
 	CodeLine(sb, bishideoverlay, "b", "dlg", sname, "Sethideoverlay")
@@ -3697,6 +4905,8 @@ Sub Design_Dialog
 	Dim diagName As String = $"dlg${sname}"$
 	Dim rsName As String = $"rslt${stablename}"$
 	Select Case sclickaction
+	Case "showfs"
+		'show file select
 	Case "read"
 		sb.append($"Dim RecID As String = Record.Get("${sprimarykey}")"$).append(CRLF)
 		AddComment(sb,"read record from database")
@@ -3920,7 +5130,30 @@ Sub Design_Carousel
 	carousel.Setshowarrowsonhover(bisshowarrowsonhover)
 	carousel.Settouchless(bistouchless)
 	carousel.Setvertical(bisvertical)
-	carousel.Setvisible(bisvisible)
+	carousel.Setvisible(bisVisible)
+	If smargintop <> "" Then carousel.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then carousel.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then carousel.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then carousel.AddClass("mr-" & smarginright)
+	If smargins <> "" Then carousel.AddClass("ms-" & smargins)
+	If smargine <> "" Then carousel.AddClass("me-" & smargine)
+	If smarginx <> "" Then carousel.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then carousel.AddClass("my-" & smarginy)
+	If smargina <> "" Then carousel.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then carousel.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then carousel.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then carousel.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then carousel.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then carousel.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then carousel.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then carousel.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then carousel.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then carousel.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		carousel.Addclass(sfloat)
+	End If
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -3953,6 +5186,9 @@ Sub Design_Carousel
 	CodeLine(sb, bismandatory, "b", "car", sname, "Setmandatory")
 	'CodeLine(sb, bismultiple, "b", "car", sname, "Setmultiple")
 	CodeLine(sb, bisnexticon, "b", "car", sname, "Setnexticon")
+	If sfloat <> "" Then
+		AddCode(sb, $"car${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisprevicon, "b", "car", sname, "Setprevicon")
 	CodeLine(sb, bisprogress, "b", "car", sname, "Setprogress")
 	CodeLine(sb, bisreverse, "b", "car", sname, "Setreverse")
@@ -3960,7 +5196,27 @@ Sub Design_Carousel
 	CodeLine(sb, bisshowarrowsonhover, "b", "car", sname, "Setshowarrowsonhover")
 	CodeLine(sb, bistouchless, "b", "car", sname, "Settouchless")
 	CodeLine(sb, bisvertical, "b", "car", sname, "Setvertical")
-	CodeLine(sb, bisvisible, "b", "car", sname, "Setvisible")
+	CodeLine(sb, bisVisible, "b", "car", sname, "Setvisible")
+	'
+	Dim pres As String = "car"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -4006,7 +5262,7 @@ Sub Design_Menu
 	menu.Setcloseoncontentclick(biscloseoncontentclick)
 	menu.Setdark(bisdark)
 	menu.Setdisablekeys(bisdisablekeys)
-	menu.Setdisabled(bisdisabled)
+	menu.Setdisabled(bisDisabled)
 	menu.Seteager(biseager)
 	menu.Setfixed(bisfixed)
 	menu.Setinternalactivator(bisinternalactivator)
@@ -4020,7 +5276,30 @@ Sub Design_Menu
 	menu.Setright(bisright)
 	menu.Setslotactivator(bisslotactivator)
 	menu.Settop(bistop)
-	menu.SetVisible(bisvisible)
+	menu.SetVisible(bisVisible)
+	If smargintop <> "" Then menu.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then menu.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then menu.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then menu.AddClass("mr-" & smarginright)
+	If smargins <> "" Then menu.AddClass("ms-" & smargins)
+	If smargine <> "" Then menu.AddClass("me-" & smargine)
+	If smarginx <> "" Then menu.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then menu.AddClass("my-" & smarginy)
+	If smargina <> "" Then menu.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then menu.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then menu.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then menu.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then menu.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then menu.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then menu.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then menu.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then menu.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then menu.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		menu.Addclass(sfloat)
+	End If
 	'
 	'link events
 	AddCode(sbEvents, $"Sub menu${sname}Items_click(e As BANanoEvent)"$)
@@ -4058,7 +5337,7 @@ Sub Design_Menu
 	Case "btn"
 		CodeLine2a(sb, siconname, stitle, "s", "menu", sname, "SetButton")
 	End Select
-	CodeLine(sb, bisvisible, "b", "menu", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "menu", sname, "SetVisible")
 	CodeLine(sb, sactivator, "s", "menu", sname, "Setactivator")
 	CodeLine(sb, sclosedelay, "s", "menu", sname, "Setclosedelay")
 	CodeLine(sb, scontentclass, "s", "menu", sname, "Setcontentclass")
@@ -4072,6 +5351,9 @@ Sub Design_Menu
 	CodeLine(sb, snudgewidth, "s", "menu", sname, "Setnudgewidth")
 	CodeLine(sb, sopendelay, "s", "menu", sname, "Setopendelay")
 	CodeLine(sb, sorigin, "s", "menu", sname, "Setorigin")
+	If sfloat <> "" Then
+		AddCode(sb, $"menu${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, spositionx, "s", "menu", sname, "Setpositionx")
 	CodeLine(sb, spositiony, "s", "menu", sname, "Setpositiony")
 	CodeLine(sb, sreturnvalue, "s", "menu", sname, "Setreturnvalue")
@@ -4085,7 +5367,7 @@ Sub Design_Menu
 	CodeLine(sb, biscloseoncontentclick, "b", "menu", sname, "Setcloseoncontentclick")
 	CodeLine(sb, bisdark, "b", "menu", sname, "Setdark")
 	CodeLine(sb, bisdisablekeys, "b", "menu", sname, "Setdisablekeys")
-	CodeLine(sb, bisdisabled, "b", "menu", sname, "Setdisabled")
+	CodeLine(sb, bisDisabled, "b", "menu", sname, "Setdisabled")
 	CodeLine(sb, biseager, "b", "menu", sname, "Seteager")
 	CodeLine(sb, bisfixed, "b", "menu", sname, "Setfixed")
 	CodeLine(sb, bisinternalactivator, "b", "menu", sname, "Setinternalactivator")
@@ -4099,6 +5381,26 @@ Sub Design_Menu
 	CodeLine(sb, bisright, "b", "menu", sname, "Setright")
 	CodeLine(sb, bisslotactivator, "b", "menu", sname, "Setslotactivator")
 	CodeLine(sb, bistop, "b", "menu", sname, "Settop")
+	'
+	Dim pres As String = "menu"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -4155,7 +5457,8 @@ Sub Design_ToolBar
 	
 	If bisspacer Then tbl.AddSpacer
 	
-	tbl.SetColorIntensity(scolor, sintensity)
+	tbl.SetColorIntensity(sColor, sintensity)
+	tbl.SetTextColorIntensity(stextcolor, stextintensity)
 	'
 	tbl.SetMaxWidth(smaxwidth)
 	tbl.SetWidth(swidth)
@@ -4185,7 +5488,30 @@ Sub Design_ToolBar
 	tbl.Setscrolloffscreen(bisscrolloffscreen)
 	tbl.Setshort(bisshort)
 	tbl.Setshrinkonscroll(bisshrinkonscroll)
-	tbl.Setvisible(bisvisible)
+	tbl.Setvisible(bisVisible)
+	If smargintop <> "" Then tbl.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then tbl.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then tbl.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then tbl.AddClass("mr-" & smarginright)
+	If smargins <> "" Then tbl.AddClass("ms-" & smargins)
+	If smargine <> "" Then tbl.AddClass("me-" & smargine)
+	If smarginx <> "" Then tbl.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then tbl.AddClass("my-" & smarginy)
+	If smargina <> "" Then tbl.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then tbl.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then tbl.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then tbl.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then tbl.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then tbl.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then tbl.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then tbl.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then tbl.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then tbl.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		tbl.Addclass(sfloat)
+	End If
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -4250,7 +5576,11 @@ Sub Design_ToolBar
 		CodeLine(sb, sborderwidth, "s", "tbl", sname, "Logo.SetBorderWidth")
 		CodeLine(sb, sbordercolor, "s", "tbl", sname, "Logo.SetBorderColor")
 		CodeLine(sb, sborderstyle, "s", "tbl", sname, "Logo.SetBorderStyle")
+		If sfloat <> "" Then
+			AddCode(sb, $"tbl${sname}.AddClass("${sfloat}")"$)
+		End If
 		CodeLine2(sb, slogowidth, slogoheight, "s", "tbl", sname, "Logo.SetSize")
+		AddCode(sb, $"tbl${sname}.Logo.SetOnClick(Me, "logo_click")"$)
 		CodeLine(sb, slogourl, "s", "tbl", sname, "AddLogo")
 		If bislogovisible Then
 			AddCode(sb, $"tbl${sname}.Logo.Show"$)
@@ -4258,11 +5588,15 @@ Sub Design_ToolBar
 			AddCode(sb, $"tbl${sname}.Logo.Hide"$)
 		End If
 	Else
+		If sfloat <> "" Then
+			AddCode(sb, $"vm.NavBar.AddClass("${sfloat}")"$)
+		End If
 		CodeLine(sb, sborderradius, "s", "vm.NavBar", "", "Logo.SetBorderRadius")
 		CodeLine(sb, sborderwidth, "s", "vm.NavBar", "", "Logo.SetBorderWidth")
 		CodeLine(sb, sbordercolor, "s", "vm.NavBar", "", "Logo.SetBorderColor")
 		CodeLine(sb, sborderstyle, "s", "vm.NavBar", "", "Logo.SetBorderStyle")
 		CodeLine2(sb, slogowidth, slogoheight, "s", "vm.NavBar", "", "Logo.SetSize")
+		AddCode(sb, $"vm.NavBar.Logo.SetOnClick(Me, "logo_click")"$)
 		CodeLine(sb, slogourl, "s", "vm.NavBar", "", "AddLogo")
 		If bislogovisible Then
 			AddCode(sb, "vm.NavBar.Logo.Show")
@@ -4272,7 +5606,10 @@ Sub Design_ToolBar
 	End If
 	'
 	If biscurrent = False Then
-		If bistitle Then CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
+		If bistitle Then 
+			AddCode(sb, $"tbl${sname}.Title.SetOnClick(Me, "title_click")"$)
+			CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
+		End If
 		If bissubtitle Then CodeLine(sb, stoolbarsubtitle, "s", "tbl", sname, "AddSubHeading1")
 		If bissearch Then
 			sb.append($"tbl${sname}.AddSpacer"$).append(CRLF)
@@ -4294,7 +5631,8 @@ Sub Design_ToolBar
 		CodeLine(sb, sminheight, "s", "tbl", sname, "SetMinHeight")
 		CodeLine(sb, smaxheight, "s", "tbl", sname, "SetMaxHeight")
 		'
-		CodeLine2(sb, scolor, sintensity, "s", "tbl", sname, "SetColorIntensity")
+		CodeLine2(sb, sColor, sintensity, "s", "tbl", sname, "SetColorIntensity")
+		CodeLine2(sb, stextcolor, stextintensity, "s", "tbl", sname, "SetTextcolorintensity")
 		
 		CodeLine(sb, bisdense, "b", "tbl", sname, "SetDense")
 		CodeLine(sb, bisdark, "b", "tbl", sname, "SetDark")
@@ -4315,9 +5653,32 @@ Sub Design_ToolBar
 		CodeLine(sb, bisscrolloffscreen, "b", "tbl", sname, "SetScrollOffScreen")
 		CodeLine(sb, bisshort, "b", "tbl", sname, "SetShort")
 		CodeLine(sb, bisshrinkonscroll, "b", "tbl", sname, "SetShrinkOnScroll")
-		CodeLine(sb, bisvisible, "b", "tbl", sname, "SetVisible")
+		CodeLine(sb, bisVisible, "b", "tbl", sname, "SetVisible")
+		'
+		Dim pres As String = "tbl"
+		CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+		CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+		CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+		CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+		CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+		CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+		CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+		CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+		CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+		CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+		CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+		CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+		CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+		CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+		CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+		CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+		CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+		CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	Else
-		If bistitle Then CodeLine2(sb, stitle, stitleclass, "s", "vm.NavBar", "", "AddTitle")
+		If bistitle Then 
+			AddCode(sb, $"vm.NavBar.Title.SetOnClick(Me, "title_click")"$)
+			CodeLine2(sb, stitle, stitleclass, "s", "vm.NavBar", "", "AddTitle")
+		End If
 		If bissubtitle Then CodeLine(sb, stoolbarsubtitle, "s", "vm.NavBar", "", "AddSubHeading1")
 		If bissearch Then
 			sb.append($"vm.NavBar.AddSpacer"$).append(CRLF)
@@ -4325,7 +5686,8 @@ Sub Design_ToolBar
 		End If
 		If bisspacer Then sb.append($"vm.NavBar.AddSpacer"$).append(CRLF)
 		'
-		CodeLine2(sb, scolor, sintensity, "s", "vm.NavBar", "", "SetColorIntensity")
+		CodeLine2(sb, sColor, sintensity, "s", "vm.NavBar", "", "SetColorIntensity")
+		CodeLine2(sb, stextcolor, stextintensity, "s", "vm.NavBar", "", "SetTextcolorintensity")
 		CodeLine(sb, sextensionheight, "s", "vm.NavBar", "", "SetExtensionHeight")
 		CodeLine(sb, sscrolltarget, "s", "vm.NavBar", "", "SetScrollTarget")
 		CodeLine(sb, sscrollthreshold, "s", "vm.NavBar", "", "SetScrollThreshold")
@@ -4360,7 +5722,27 @@ Sub Design_ToolBar
 		CodeLine(sb, bisscrolloffscreen, "b", "vm.NavBar", "", "SetScrollOffScreen")
 		CodeLine(sb, bisshort, "b", "vm.NavBar", "", "SetShort")
 		CodeLine(sb, bisshrinkonscroll, "b", "vm.NavBar", "", "SetShrinkOnScroll")
-		CodeLine(sb, bisvisible, "b", "vm.NavBar", "", "SetVisible")
+		CodeLine(sb, bisVisible, "b", "vm.NavBar", "", "SetVisible")
+		'
+		Dim pres As String = "vm.NavBar"
+		CodeLine(sb, "mt-" & smargintop, "s", pres, "", "AddClass")
+		CodeLine(sb, "mb-" & smarginbottom, "s", pres, "", "AddClass")
+		CodeLine(sb, "ml-" & smarginleft, "s", pres, "", "AddClass")
+		CodeLine(sb, "mr-" & smarginright, "s", pres, "", "AddClass")
+		CodeLine(sb, "ms-" & smargins, "s", pres, "", "AddClass")
+		CodeLine(sb, "me-" & smargine, "s", pres, "", "AddClass")
+		CodeLine(sb, "mx-" & smarginx, "s", pres, "", "AddClass")
+		CodeLine(sb, "my-" & smarginy, "s", pres, "", "AddClass")
+		CodeLine(sb, "ma-" & smargina, "s", pres, "", "AddClass")
+		CodeLine(sb, "pt-" & spaddingtop, "s", pres, "", "AddClass")
+		CodeLine(sb, "pb-" & spaddingbottom, "s", pres, "", "AddClass")
+		CodeLine(sb, "pl-" & spaddingleft, "s", pres, "", "AddClass")
+		CodeLine(sb, "pr-" & spaddingright, "s", pres, "", "AddClass")
+		CodeLine(sb, "ps-" & spaddings, "s", pres, "", "AddClass")
+		CodeLine(sb, "pe-" & spaddinge, "s", pres, "", "AddClass")
+		CodeLine(sb, "px-" & spaddingx, "s", pres, "", "AddClass")
+		CodeLine(sb, "py-" & spaddingy, "s", pres, "", "AddClass")
+		CodeLine(sb, "pa-" & spaddinga, "s", pres, "", "AddClass")
 	End If
 	
 	AddNewLine(sb)	
@@ -4418,11 +5800,11 @@ Sub Design_Button
 	Dim btn As VMButton = ui.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
 	btn.Sethref(shref)
 	btn.SetTarget(starget)
-	btn.setto(sto)
+	btn.setto(sTo)
 	btn.SetTooltip(stooltip)
-	btn.SetColorIntensity(scolor, sintensity)
+	btn.SetColorIntensity(sColor, sintensity)
 	btn.SetTextColorIntensity(stextcolor, stextintensity)
-	btn.SetDisabled(bisdisabled).Setoutlined(bisoutlined)
+	btn.SetDisabled(bisDisabled).Setoutlined(bisoutlined)
 	btn.SetRounded(bisrounded).SetTransparent(bistext)
 	'
 	Select Case sbuttontype
@@ -4445,7 +5827,30 @@ Sub Design_Button
 	btn.SetMaxWidth(smaxwidth)
 	btn.SetMinHeight(sminheight)
 	btn.SetMaxHeight(smaxheight)
-	btn.SetVisible(bisvisible)
+	btn.SetVisible(bisVisible)
+	If smargintop <> "" Then btn.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then btn.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then btn.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then btn.AddClass("mr-" & smarginright)
+	If smargins <> "" Then btn.AddClass("ms-" & smargins)
+	If smargine <> "" Then btn.AddClass("me-" & smargine)
+	If smarginx <> "" Then btn.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then btn.AddClass("my-" & smarginy)
+	If smargina <> "" Then btn.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then btn.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then btn.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then btn.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then btn.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then btn.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then btn.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then btn.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then btn.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then btn.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then 
+		btn.AddClass(sfloat)
+	End If
 	Select Case ssize
 		Case "small"
 			btn.setsmall(True)
@@ -4466,14 +5871,18 @@ Sub Design_Button
 	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, ${bStatic}, "btn${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
 	If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
 	If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
-	If sto <> "" Then sb.append($"btn${sname}.setto("${sto}")"$).append(CRLF)
+	If sTo <> "" Then sb.append($"btn${sname}.setto("${sTo}")"$).append(CRLF)
 	If stooltip <> "" Then sb.append($"btn${sname}.SetTooltip("${stooltip}")"$).append(CRLF)
-	If scolor <> "" Then sb.append($"btn${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
+	If sColor <> "" Then sb.append($"btn${sname}.SetColorIntensity("${sColor}", "${sintensity}")"$).append(CRLF)
 	If stextcolor <> "" Then sb.append($"btn${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
-	If bisdisabled Then sb.append($"btn${sname}.SetDisabled(${bisdisabled})"$).append(CRLF)
+	If bisDisabled Then sb.append($"btn${sname}.SetDisabled(${bisDisabled})"$).append(CRLF)
 	If bisoutlined Then sb.append($"btn${sname}.Setoutlined(${bisoutlined})"$).append(CRLF)
 	If bisrounded Then sb.append($"btn${sname}.SetRounded(${bisrounded})"$).append(CRLF)
 	If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
+	If sfloat <> "" Then 
+		AddCode(sb, $"btn${sname}.AddClass("${sfloat}")"$)
+	End If
+	
 	
 	Select Case sbuttontype
 	Case "normal"
@@ -4495,7 +5904,27 @@ Sub Design_Button
 	If smaxwidth <> "" Then sb.append($"btn${sname}.SetMaxWidth("${smaxwidth}")"$).append(CRLF)
 	If sminheight <> "" Then sb.append($"btn${sname}.SetMinHeight("${sminheight}")"$).append(CRLF)
 	If smaxheight <> "" Then sb.append($"btn${sname}.SetMaxHeight("${smaxheight}")"$).append(CRLF)
-	CodeLine(sb, bisvisible, "b", "btn", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "btn", sname, "SetVisible")
+	'
+	Dim pres As String = "btn"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
 	Select Case ssize
 		Case "small"
@@ -4512,6 +5941,10 @@ Sub Design_Button
 	'
 	AddCode(sbEvents, $"Private Sub btn${sname}_click(e As BANanoEvent)"$)
 	Select Case sclickaction
+	Case "showfs"
+		'show file select
+		AddComment(sbEvents, "show file select")
+		AddCode(sbEvents, $"vm.ShowFileSelect("${sdialogpage}")"$)
 	Case "sendcredentials"
 		AddComment(sbEvents, "read the contents!")
 		AddCode(sbEvents, $"Dim sfirstname As String = Record.get(?)"$)
@@ -4645,7 +6078,49 @@ Sub Design_Button
 End Sub
 
 Sub Design_TextField
+	Dim bHasHash As Boolean = False
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
+	'encrypt
+	If shashtype <> "" And salg <> "" Then
+		bHasHash = True
+		AddComment(sbRead, "Reference the BANanoEncrypt Library...")
+		AddCode(sbRead, $"Dim bencrypt As BANanoHashes"$)
+		AddComment(sbRead, "Initialize the encryption")
+		AddCode(sbRead, $"bencrypt.Initialize(s${svmodel}, Main.AppName)"$)
+		AddComment(sbRead, "Encrypt the content")
+		AddCode(sbRead, $"Dim s${svmodel}hash As String = bencrypt.Hash("${shashtype}", "${salg}")"$)
+		AddComment(sbRead, "update the content")
+		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel}hash)"$)
+	End If
+	'check do not match
+	If sdonotmatchto <> "" Then
+		AddComment(sbRead, "Check do not match")
+		AddCode(sbRead, $"s${sdonotmatchto} = Record.Get("${smatchto}")"$)
+		If bHasHash Then
+			AddCode(sbRead, $"s${svmodel} = Record.Get("${svmodel}")"$)
+		End If
+		AddCode(sbRead, $"If s${sdonotmatchto} = s${svmodel} Then"$)
+		AddCode(sbRead, $"vm.ShowSnackBarError("The '${sdonotmatchto}' and '${svmodel}' should not match!")"$)
+		AddCode(sbRead, "Return")
+		AddCode(sbRead, "End If")
+	End If
+	'check matching
+	If smatchto <> "" Then
+		AddComment(sbRead, "Check match")
+		AddCode(sbRead, $"s${smatchto} = Record.Get("${smatchto}")"$)
+		If bHasHash Then
+			AddCode(sbRead, $"s${svmodel} = Record.Get("${svmodel}")"$)
+		End If
+		AddCode(sbRead, $"If s${smatchto} <> s${svmodel} Then"$)
+		AddCode(sbRead, $"vm.ShowSnackBarError("The passwords do not match!")"$)
+		AddCode(sbRead, "Return")
+		AddCode(sbRead, "End If")
+	End If
+	'is not updatable
+	If bisupdatable = False Then
+		AddComment(sbRead, "Should not be updated...")
+		AddCode(sbRead, $"Record.Remove("${svmodel}")"$)
+	End If
 	'set time now
 	If bisdatenow Then
 		AddCode(sbRead, $"s${svmodel} = vue.DateNow"$)
@@ -4677,10 +6152,33 @@ Sub Design_TextField
 	txt.SetRounded(bisrounded)
 	txt.SetClearable(bclearable)
 	txt.SetHideDetails(bishidedetails)
-	txt.SetVisible(bisvisible)
+	txt.SetVisible(bisVisible)
 	txt.SetAutoFocus(bisautofocus)
 	txt.SetReadOnly(bisreadonly)
-	txt.SetDisabled(bisdisabled)
+	txt.SetDisabled(bisDisabled)
+	If smargintop <> "" Then txt.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then txt.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then txt.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then txt.AddClass("mr-" & smarginright)
+	If smargins <> "" Then txt.AddClass("ms-" & smargins)
+	If smargine <> "" Then txt.AddClass("me-" & smargine)
+	If smarginx <> "" Then txt.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then txt.AddClass("my-" & smarginy)
+	If smargina <> "" Then txt.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then txt.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then txt.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then txt.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then txt.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then txt.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then txt.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then txt.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then txt.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then txt.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		txt.Addclass(sfloat)
+	End If
 	ui.AddControl(txt.textfield, txt.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -4692,7 +6190,7 @@ Sub Design_TextField
 	'
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
 	CodeLine(sb, bisreadonly, "b", "txt", sname, "SetReadonly")
-	CodeLine(sb, bisdisabled, "b", "txt", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "txt", sname, "SetDisabled")
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
 	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
@@ -4707,7 +6205,31 @@ Sub Design_TextField
 	CodeLine(sb, bisrounded, "b", "txt", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
-	CodeLine(sb, bisvisible, "b", "txt", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "txt", sname, "SetVisible")
+	'
+	Dim pres As String = "txt"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	If sfloat <> "" Then
+		AddCode(sb, $"txt${sname}.AddClass("${sfloat}")"$)
+	End If
+	
 
 	sb.append($"${sparent}.AddControl(txt${sname}.textfield, txt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
@@ -4721,6 +6243,25 @@ Sub CodeLine(sbx As StringBuilder, varName As String, varType As String, prefix 
 				If varName Then sbx.append($"${prefix}${ssname}.${methodName}(${varName})"$).append(CRLF)
 			End If
 		Case "s"
+			If varName = "mt-" Then varName = ""
+			If varName = "mb-" Then varName = ""
+			If varName = "ml-" Then varName = ""
+			If varName = "mr-" Then varName = ""
+			If varName = "ms-" Then varName = ""
+			If varName = "me-" Then varName = ""
+			If varName = "mx-" Then varName = ""
+			If varName = "my-" Then varName = ""
+			If varName = "ma-" Then varName = ""
+			If varName = "pt-" Then varName = ""
+			If varName = "pb-" Then varName = ""
+			If varName = "pl-" Then varName = ""
+			If varName = "pr-" Then varName = ""
+			If varName = "ps-" Then varName = ""
+			If varName = "pe-" Then varName = ""
+			If varName = "px-" Then varName = ""
+			If varName = "py-" Then varName = ""
+			If varName = "pa-" Then varName = ""
+		
 			If varName <> "" Then sbx.append($"${prefix}${ssname}.${methodName}("${varName}")"$).append(CRLF)
 	End Select
 End Sub
@@ -4989,7 +6530,7 @@ Sub DesignLayout
 	ep.AddPanel(display)
 	'***
 	' form inputs
-	Dim inputs As VMExpansionPanel = FormPanel
+	Dim inputs As VMExpansionPanel = FormInputPanel
 	ep.AddPanel(inputs)
 	'
 	Dim nav As VMExpansionPanel = NavigationPanel
@@ -6117,6 +7658,7 @@ End Sub
 Sub mycomponents_click(e As BANanoEvent)
 	istool = False
 	vm.CallMethod("LoadContainers")
+	vm.CallMethod("LoadComponents")
 	drwprojectdetails.hide
 	Dim itemID As String = vm.GetIDFromEvent(e)
 	itemID = BANano.parseint(itemID)
@@ -6306,6 +7848,27 @@ Sub mycomponents_click(e As BANanoEvent)
 			pbtextfield.hideitem("id")
 			pbtextfield.Hideitem("controltype")
 			vm.setdata("controltype", "textarea")
+			
+		Case "quill"
+			ShowBag("pbquill")
+			pbquill.SetDefaults
+			pbquill.hideitem("id")
+			pbquill.Hideitem("controltype")
+			vm.setdata("controltype", "quill")
+			
+		Case "fileselect"
+			ShowBag("pbfileselect")
+			pbfileselect.SetDefaults
+			pbfileselect.hideitem("id")
+			pbfileselect.Hideitem("controltype")
+			vm.setdata("controltype", "fileselect")
+		
+		Case "infobox"
+			ShowBag("pbinfobox")
+			pbinfobox.SetDefaults
+			pbinfobox.hideitem("id")
+			pbinfobox.Hideitem("controltype")
+			vm.setdata("controltype", "infobox")
 			
 		Case "checkbox"
 			ShowBag("pbcheckbox")
@@ -6539,6 +8102,9 @@ Sub DisplayPanel As VMExpansionPanel
 	'
 	Dim avatar As VMImage = ToolboxImage("avatar", "./assets/avatar.png", "Avatar")
 	grd.Container.AddComponent(2,3,avatar.tostring)
+	'
+	Dim infobox As VMImage = ToolboxImage("infobox", "./assets/infobox.png", "Info Box")
+	grd.Container.AddComponent(2,4,infobox.tostring)
 	
 	'
 	Return grd
@@ -6551,7 +8117,7 @@ Sub ToolboxImage(eid As String, url As String, tt As String) As VMImage
 	Return img
 End Sub
 
-Sub FormPanel As VMExpansionPanel
+Sub FormInputPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep2grid", "ep1", Me)
 	grd.Header.SetText("Form Inputs")
 	grd.Container.SetTag("div")
@@ -6607,7 +8173,12 @@ Sub FormPanel As VMExpansionPanel
 	'
 	Dim rating As VMImage = ToolboxImage("rating", "./assets/rating.png", "Rating")
 	grd.Container.AddComponent(5,1,rating.tostring)
-	
+	'
+	Dim quill As VMImage = ToolboxImage("quill", "./assets/quill.png", "Quill")
+	grd.Container.AddComponent(5,2,quill.tostring)
+	'
+	Dim fileselect As VMImage = ToolboxImage("fileselect", "./assets/fileselect.png", "File Select")
+	grd.Container.AddComponent(5,3,fileselect.tostring)
 	Return grd
 End Sub
 
@@ -6924,6 +8495,27 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("width", "100")
 							attr.put("height", "100")
 							BANano.SetLocalStorage("selectedpanel", 1)
+						Case "file"
+							attr.Put("isupload", "Yes")
+							attr.put("isupdatable", "No")
+							attr.put("isclearable", "No")
+						Case "fileselect"
+							attr.put("parent", "vm")
+							attr.put("action", "readAsText")
+						Case "infobox"
+							BANano.SetLocalStorage("selectedpanel", 1)
+							attr.put("icon", "shopping_cart")
+							attr.put("iconcolor", "red")
+							attr.put("text", "New Orders")
+							attr.put("from", "0")
+							attr.put("to", "500")
+							attr.put("duration", "3000")
+							attr.put("decimal", ".")
+							attr.put("decimals", "0")
+							attr.put("separator", ",")
+							attr.put("infotype", "stylenone")
+							attr.put("isautoplay", "Yes")
+							attr.put("ishoverzoomeffect", "Yes")
 						Case "image"
 							attr.put("src", "./assets/bird.jpg")
 							BANano.SetLocalStorage("selectedpanel", 1)
@@ -7206,7 +8798,10 @@ Sub PropertyBag_Slider
 	pbslider.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbslider.AddSelect2("d","thumbcolor","Thumb Color", vm.ColorOptions, "thumbintensity","Thumb Intensity", vm.IntensityOptions)
 	pbslider.AddSelect2("d","trackcolor","Track Color", vm.ColorOptions, "trackintensity","Track Intensity", vm.IntensityOptions)
-	
+	pbslider.AddSelect("d","float", "Float", vm.Floats)
+	'
+	pbslider.AddHeading("m","Margins & Padding")
+	pbslider.AddMarginsPaddings("m")
 	'
 	pbslider.AddHeading("e","Settings")
 	pbslider.AddSwitches("e", CreateMap("isrequired": "Required", "isvisible": "Visible"))
@@ -7245,6 +8840,10 @@ Sub PropertyBag_DatePicker
 	'pbdatepicker.AddSelect("d","color","T:Color", vm.ColorOptions)
 	'pbdatepicker.AddSelect("d","intensity","T:Intensity", vm.IntensityOptions)
 	pbdatepicker.AddNumber("d","tabindex","Tab Index","","")
+	pbdatepicker.AddSelect("d","float", "Float", vm.Floats)
+	'
+	pbdatepicker.AddHeading("m","Margins & Padding")
+	pbdatepicker.AddMarginsPaddings("m")
 	'
 	pbdatepicker.AddHeading("e","Settings")
 	pbdatepicker.AddSwitches("e", CreateMap("isrequired": "Required", "isautofocus": "Auto Focus"))
@@ -7273,7 +8872,7 @@ End Sub
 #Region Button Property Bag
 Sub PropertyBag_Button
 	Dim ops As Map = CreateMap("add":"Add Record","edit":"Edit Record","save":"Save Record","delete":"Delete Record", _
-	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer","contactus":"Contact Us", "sendcredentials":"User Credentials","":"None")
+	"showdialog":"Show Dialog","hidedialog":"Hide Dialog","showpage":"Show Page","showdrawer":"Show Drawer", "hidedrawer":"Hide Drawer","contactus":"Contact Us", "sendcredentials":"User Credentials","showfs":"Show File Select","":"None")
 	vm.setdata("pbbutton", False)
 	lstBags.add("pbbutton")
 	pbbutton = vm.CreateProperty("ppbbutton", Me)
@@ -7289,13 +8888,17 @@ Sub PropertyBag_Button
 	pbbutton.AddText("d","href","Href","","")
 	pbbutton.AddText("d","to","Navigate To","","")
 	pbbutton.AddSelect2("d","target","Target", vm.TargetOptions, "size", "Size", iconsizes)
-	pbbutton.AddText("d","dialogpage","Dialog / Page Name / Drawer","","")
+	pbbutton.AddText("d","dialogpage","Dialog / Page Name / Drawer / File Select","","")
 	pbbutton.AddSelect("d","clickaction", "On Click Action", ops)
 	pbbutton.AddText("d","tooltip","Tooltip","","")
 	pbbutton.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbbutton.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
 	pbbutton.AddNumber("d","tabindex","Tab Index","","")
-	pbbutton.AddHeightWidths("f")
+	pbbutton.AddSelect("d","float", "Float", vm.Floats)
+	pbbutton.AddHeightWidths("d")
+	'
+	pbbutton.AddHeading("m","Margins & Padding")
+	pbbutton.AddMarginsPaddings("m")
 	'
 	pbbutton.AddHeading("e","Settings")
 	pbbutton.AddSwitches("e", CreateMap("istext": "Text", "isfitwidth": "Fit Width/Block"))
@@ -7324,6 +8927,11 @@ Sub PropertyBag_Icon
 	pbicon.AddText("d","iconname","Icon Name","","mdi-account-circle")
 	pbicon.AddSelect("d", "size", "Icon Size", iconsizes)
 	pbicon.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
+	pbicon.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbicon.AddHeading("m","Margins & Padding")
+	pbicon.AddMarginsPaddings("m")
 	'
 	pbicon.AddHeading("e","Settings")
 	pbicon.AddSwitches("e", CreateMap("iscenteronparent": "CenterOnParent", "isdark": "Dark"))
@@ -7356,7 +8964,11 @@ Sub PropertyBag_Image
 	pbimage.AddText2("d", CreateMap("borderradius":"Border Radius", "borderwidth":"Border Width"))
 	pbimage.AddSelect2("d","bordercolor","Border Color", vm.ColorOptions, "borderstyle","Border Style",vm.BorderOptions)
 	pbimage.AddText("d","aspectratio","Aspect Ratio","","")
-	pbimage.AddHeightWidths("f")
+	pbimage.AddSelect("d","float", "Float", vm.Floats)
+	pbimage.AddHeightWidths("d")
+	'
+	pbimage.AddHeading("m","Margins & Padding")
+	pbimage.AddMarginsPaddings("m")
 	'
 	pbimage.AddHeading("e","Settings")
 	pbimage.AddSwitches("e", CreateMap("isvisible": "Visible", "ontable": "On Table"))
@@ -7385,6 +8997,11 @@ Sub PropertyBag_CheckBox
 	pbcheckbox.AddText2("d", CreateMap("tabindex":"Tab Index"))
 	pbcheckbox.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbcheckbox.AddSelect("d","switchloading","Loading", vm.ColorOptions)
+	pbcheckbox.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbcheckbox.AddHeading("m","Margins & Padding")
+	pbcheckbox.AddMarginsPaddings("m")
 	'
 	pbcheckbox.AddHeading("e","Settings")
 	pbcheckbox.AddSwitches("e", CreateMap("isrequired": "Required", "isprimary": "Primary"))
@@ -7415,6 +9032,8 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbradiogroup.AddText2("d",CreateMap("label":"Label","value":"Value"))
 	pbradiogroup.AddNumber("d","tabindex","Tab Index","","")
+	pbradiogroup.AddSelect("d","float", "Float", vm.Floats)
+	
 	
 	pbradiogroup.AddHeading("ds","Data Source")
 	pbradiogroup.AddSelectDS("ds", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
@@ -7422,6 +9041,9 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddSwitches("ds", CreateMap("useoptions": "Use These Items"))
 	pbradiogroup.AddTextArea("ds","keys","Item Values (,)","", "1,2,3")
 	pbradiogroup.AddTextArea("ds","values","Item Texts (,)", "", "One,Two,Three")
+	'
+	pbradiogroup.AddHeading("m","Margins & Padding")
+	pbradiogroup.AddMarginsPaddings("m")
 	'
 	pbradiogroup.AddHeading("e","Settings")
 	pbradiogroup.AddSwitches("e", CreateMap("showlabel": "Show Label", "labelontop": "Column"))
@@ -7500,6 +9122,8 @@ Sub PropertyBag_Select
 	pbselectbox.AddNumber("d","tabindex","Tab Index","","")
 	pbselectbox.AddText("d","helpertext","Helper Text","","")
 	pbselectbox.AddText("d","errortext","Error Text","","")
+	pbselectbox.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbselectbox.AddHeading("ds","Data Source")
 	pbselectbox.AddSelectDS("ds", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
@@ -7507,6 +9131,9 @@ Sub PropertyBag_Select
 	pbselectbox.AddSwitches("ds", CreateMap("useoptions": "Use These Items"))
 	pbselectbox.AddTextArea("ds","keys","Item Values (,)","", "1,2,3")
 	pbselectbox.AddTextArea("ds","values","Item Texts (,)", "", "One,Two,Three")
+	'
+	pbselectbox.AddHeading("m","Margins & Padding")
+	pbselectbox.AddMarginsPaddings("m")
 	'
 	pbselectbox.AddHeading("e","Settings")
 	pbselectbox.AddSwitches("e", CreateMap("isrequired": "Required", "isautofocus": "Auto Focus"))
@@ -7541,6 +9168,11 @@ Sub PropertyBag_Parallax
 	pbparallax.AddText("d","height","Height","","500")
 	pbparallax.AddText("d","src","Src","","./assets/material.jpg")
 	pbparallax.AddText("d","alt","Alt","","")
+	pbparallax.AddSelect("d","float", "Float", vm.Floats)
+	
+	
+	pbparallax.AddHeading("m","Margins & Padding")
+	pbparallax.AddMarginsPaddings("m")
 	
 	pbparallax.AddHeading("e","Settings")
 	pbparallax.AddSwitches("e", CreateMap("isvisible": "Visible"))
@@ -7566,7 +9198,11 @@ Sub PropertyBag_Container
 	pbcontainer.AddText2("d",CreateMap("borderradius":"Border Radius", "borderwidth":"Border Width"))
 	pbcontainer.AddSelect2("d","bordercolor","Border Color", vm.ColorOptions, "borderstyle","Border Style",vm.BorderOptions)
 	pbcontainer.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
+	pbcontainer.AddSelect("d","float", "Float", vm.Floats)
 	pbcontainer.AddHeightWidths("d")
+	'
+	pbcontainer.AddHeading("m","Margins & Padding")
+	pbcontainer.AddMarginsPaddings("m")
 	'
 	pbcontainer.AddHeading("e","Settings")
 	pbcontainer.AddSwitches("e", CreateMap("isitemdiv": "Div", "isnogutters": "No Gutters"))
@@ -7599,6 +9235,8 @@ Sub PropertyBag_Toolbar
 	pbtoolbar.AddText("d","titleclass","Title Class(es)","","")
 	pbtoolbar.AddText("d","toolbarsubtitle","Sub Heading","","")
 	pbtoolbar.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
+	pbtoolbar.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
+	pbtoolbar.AddSelect("d","float", "Float", vm.Floats)
 	pbtoolbar.AddHeightWidths("d")
 	'
 	pbtoolbar.AddHeading("b", "Logo")
@@ -7610,6 +9248,9 @@ Sub PropertyBag_Toolbar
 	pbtoolbar.AddHeading("a", "Items")
 	pbtoolbar.AddToolbarItems("a")
 
+	'
+	pbtoolbar.AddHeading("m","Margins & Padding")
+	pbtoolbar.AddMarginsPaddings("m")
 	'
 	pbtoolbar.AddHeading("e","Settings")
 	pbtoolbar.AddSwitches("e", CreateMap("iscurrent":"Master NavBar","isflat":"Flat"))
@@ -7649,6 +9290,11 @@ Sub PropertyBag_Label
 	pblabel.AddTextArea("d","value","Text","","")
 	pblabel.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
 	pblabel.AddSelect2("d", "display", "Display", vm.DisplayOptions, "align", "Text Align", vm.TextAlignmentOptions)
+	pblabel.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pblabel.AddHeading("m","Margins & Padding")
+	pblabel.AddMarginsPaddings("m")
 	
 	pblabel.AddHeading("e","Settings")
 	pblabel.AddSwitches("e", CreateMap("iscaption": "Caption","isloremipsum": "Lorem Ipsum"))
@@ -7680,13 +9326,26 @@ Sub PropertyBag_TextField
 	pbtextfield.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbtextfield.AddText2("d", CreateMap("label": "Label","value": "Value"))
 	pbtextfield.AddText("d","iconname","Icon Name","","")
-	pbtextfield.AddText("d","matchto","Match To","","")
-	pbtextfield.AddText("d","donotmatchto","Do Not Match To","","")
+	pbtextfield.AddSelect1("d", "matchto", "Match To", "components", "vmodel", "vmodel")
+	pbtextfield.AddSelect1("d", "donotmatchto", "Do No Match To", "components", "vmodel", "vmodel")
 	pbtextfield.AddSelect2("d", "hashtype", "Hash Type", vue.HashType, "alg", "Algorithm", vue.Algorithm)
 	pbtextfield.AddText("d", "placeholder","Placeholder","","")
 	pbtextfield.AddText("d","helpertext","Helper Text","","")
 	pbtextfield.AddText("d","errortext","Error Text","","")
 	pbtextfield.AddText2("d",CreateMap("tabindex":"Tab Index", "maxlength":"Max Length/Counter"))
+	pbtextfield.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbtextfield.AddHeading("g","File")
+	pbtextfield.AddSwitches("g", CreateMap("isupload": "Upload File", "ismultiple": "Multiple"))
+	pbtextfield.AddText("g","accept","Accept","","")
+	pbtextfield.AddText("g","filenamevmodel","File Name VModel","","")
+	pbtextfield.AddText("g","filedatevmodel","File Date VModel","","")
+	pbtextfield.AddText("g","filesizevmodel","File Size VModel","","")
+	pbtextfield.AddText("g","filetypevmodel","File Type VModel","","")
+	'
+	pbtextfield.AddHeading("m","Margins & Padding")
+	pbtextfield.AddMarginsPaddings("m")
 	'
 	pbtextfield.AddHeading("e","Settings")
 	pbtextfield.AddSwitches("e", CreateMap("isrequired": "Required", "isautofocus": "Auto Focus"))
@@ -7856,6 +9515,8 @@ End Sub
 'save the property bag
 Sub SavePropertyBag
 	isDirty = True
+	vm.CallMethod("LoadContainers")
+	vm.CallMethod("LoadComponents")
 	Dim isTable As Boolean = False
 	'get the saved property bag
 	Dim contents As List
@@ -7883,6 +9544,12 @@ Sub SavePropertyBag
 				mattr.Put("errortext", serrortext)
 				vm.SetState(mattr)
 			End If
+		Case "quill"
+			mattr = pbquill.Properties
+		Case "fileselect"
+			mattr = pbfileselect.properties
+		Case "infobox"
+			mattr = pbinfobox.properties	
 		Case "checkbox"
 			mattr = pbcheckbox.Properties
 		Case "date", "time"
@@ -8290,10 +9957,16 @@ Sub PropertyBag_Menu
 	pbmenu.AddText2("d", CreateMap("positionx":"Position X","positiony":"Position Y"))
 	pbmenu.AddText("d","returnvalue","Return Value","","")
 	pbmenu.AddSelect("d","transition","Transition",vm.Transition)
+	pbmenu.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbmenu.AddHeading("a", "Items")
 	pbmenu.AddMenuItems("a")
 	'
+	'
+	pbmenu.AddHeading("m","Margins & Padding")
+	pbmenu.AddMarginsPaddings("m")
+	
 	pbmenu.AddHeading("e","Settings")
 	pbmenu.AddSwitches("e", CreateMap("isdivider":"Divide Each"))
 	pbmenu.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isallowoverflow": "AllowOverflow"))
@@ -8331,6 +10004,8 @@ Sub PropertyBag_Drawer
 	pbdrawer.AddText2("d",CreateMap("overlayopacity":"OverlayOpacity","tag":"Tag"))
 	pbdrawer.AddText("d","src","Src","","")
 	pbdrawer.AddText2("d", CreateMap("width":"Width","height":"Height"))
+	pbdrawer.AddSelect("d","float", "Float", vm.Floats)
+	
 	
 	pbdrawer.AddHeading("s", "Data Source")
 	pbdrawer.AddText("s","datasource","Data Source","","")
@@ -8343,6 +10018,10 @@ Sub PropertyBag_Drawer
 	pbdrawer.AddHeading("a", "Items")
 	pbdrawer.AddMenuItems("a")
 	'
+	'
+	pbdrawer.AddHeading("m","Margins & Padding")
+	pbdrawer.AddMarginsPaddings("m")
+	
 	pbdrawer.AddHeading("e","Settings")
 	pbdrawer.AddSwitches("e", CreateMap("ismasterdrawer": "Master Drawer", "useoptions": "Use Items"))
 	pbdrawer.AddSwitches("e", CreateMap("isdivider":"Divide Each", "isinset":"Inset Divider"))
@@ -8380,10 +10059,15 @@ Sub PropertyBag_Carousel
 	pbcarousel.AddText2("d", CreateMap("height":"Height", "interval":"Interval"))
 	pbcarousel.AddText("d","mmax","Max","","")
 	pbcarousel.AddSelect2("d","progresscolor","Progress Color", vm.ColorOptions, "progresscolorintensity","Progress Color Intensity", vm.IntensityOptions)
+	pbcarousel.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbcarousel.AddHeading("i", "Items")
 	pbcarousel.AddCarouselItems("i")
-
+	'
+	pbcarousel.AddHeading("m","Margins & Padding")
+	pbcarousel.AddMarginsPaddings("m")
+	'
 	pbcarousel.AddHeading("e","Settings")
 	pbcarousel.AddSwitches("e", CreateMap("iscontinuous": "Continuous", "iscycle": "Cycle"))
 	pbcarousel.AddSwitches("e", CreateMap("isdark": "Dark"))
@@ -8405,7 +10089,7 @@ End Sub
 
 #Region Dialog
 Sub PropertyBag_Dialog
-	Dim ops As Map = CreateMap("add":"Create Record", "read":"Read Record", "save":"Update Record","delete":"Delete Record", "contactus":"Contact Us", "sendcredentials":"User Credentials", "":"None")
+	Dim ops As Map = CreateMap("add":"Create Record", "read":"Read Record", "save":"Update Record","delete":"Delete Record", "contactus":"Contact Us", "sendcredentials":"User Credentials", "showfs":"Show File Select", "":"None")
 	vm.setdata("pbdialog", False)
 	lstBags.add("pbdialog")
 	pbdialog = vm.CreateProperty("ppbdialog", Me)
@@ -8471,7 +10155,7 @@ Sub Read_Dialog
 	bisattach = YesNoToBoolean(mattr.getdefault("isattach", "No"))
 	bisbackdrop = YesNoToBoolean(mattr.getdefault("isbackdrop", "No"))
 	bisshowonopen = YesNoToBoolean(mattr.getdefault("isshowonopen", "No"))
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
 	bisfullscreen = YesNoToBoolean(mattr.getdefault("isfullscreen", "No"))
 	bishideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
@@ -8518,10 +10202,15 @@ Sub PropertyBag_SpeedDial
 	pbspeeddial.AddText("d","mode","Mode","","")
 	pbspeeddial.AddText("d","origin","Origin","","")
 	pbspeeddial.AddSelect2("d","target","Target", vm.TargetOptions, "transition","Transition",vm.Transition)
+	pbspeeddial.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbspeeddial.AddHeading("a", "Items")
 	pbspeeddial.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title", "icon":"Icon", "iconcolor":"Icon Color"))
 	'
+	pbspeeddial.AddHeading("m","Margins & Padding")
+	pbspeeddial.AddMarginsPaddings("m")
+	
 	pbspeeddial.AddHeading("e","Settings")
 	pbspeeddial.AddSwitches("e", CreateMap("isopenonhover": "OpenOnHover","ismainclick":"Trap Click"))
 	pbspeeddial.AddSwitches("e", CreateMap("istop": "Top", "isbottom": "Bottom"))
@@ -8541,7 +10230,7 @@ End Sub
 Sub Read_SpeedDial
 bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
 bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
-scolor = mattr.getdefault("color", "")
+sColor = mattr.getdefault("color", "")
 	smastericon = mattr.getdefault("mastericon","")
 sintensity = mattr.getdefault("intensity", "")
 sDirection = mattr.getdefault("direction", "")
@@ -8560,7 +10249,7 @@ stabindex = mattr.getdefault("tabindex", "")
 starget = mattr.getdefault("target", "")
 stextcolor = mattr.getdefault("textcolor", "")
 stextintensity = mattr.getdefault("textintensity", "")
-sto = mattr.getdefault("to", "")
+sTo = mattr.getdefault("to", "")
 bistop = YesNoToBoolean(mattr.getdefault("istop", "No"))
 stransition = mattr.getdefault("transition", "")
 bisXlarge = YesNoToBoolean(mattr.getdefault("isxlarge", "No"))
@@ -8589,6 +10278,11 @@ Sub PropertyBag_Rating
 	pbrating.AddText("d","fullicon","Full Icon","","")
 	pbrating.AddText("d","halficon","Half Icon","","")
 	pbrating.AddText("d","tabindex","Tab Index","","")
+	pbrating.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbrating.AddHeading("m","Margins & Padding")
+	pbrating.AddMarginsPaddings("m")
 	'
 	pbrating.AddHeading("e","Settings")
 	pbrating.AddSwitches("e", CreateMap("isdark": "Dark", "islight": "Light"))
@@ -8610,7 +10304,7 @@ Sub Read_Rating
 	sBackgroundintensity = mattr.getdefault("backgroundintensity", "")
 	bisClearable = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
 	sclosedelay = mattr.getdefault("closedelay", "")
-	scolor = mattr.getdefault("color", "")
+	sColor = mattr.getdefault("color", "")
 	sintensity = mattr.getdefault("intensity", "")
 	bisdense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
 	sEmptyicon = mattr.getdefault("emptyicon", "")
@@ -8626,7 +10320,7 @@ Sub Read_Rating
 	ssize = mattr.getdefault("size", "")
 	bisSmall = YesNoToBoolean(mattr.getdefault("issmall", "No"))
 	stabindex = mattr.getdefault("tabindex", "")
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	bisXlarge = YesNoToBoolean(mattr.getdefault("isxlarge", "No"))
 	bisXsmall = YesNoToBoolean(mattr.getdefault("isxsmall", "No"))
 End Sub
@@ -8654,11 +10348,34 @@ Sub Design_Rating
 	rating.SetSize(ssize)
 	rating.SetSmall(bisSmall)
 	rating.SetTabindex(stabindex)
-	rating.SetVisible(bisvisible)
+	rating.SetVisible(bisVisible)
 	rating.SetXlarge(bisXlarge)
 	rating.SetXsmall(bisXsmall)
 	rating.SetBackgroundColorIntensity(sBackgroundcolor, sBackgroundintensity)
-	rating.SetColorIntensity(scolor, sintensity)
+	rating.SetColorIntensity(sColor, sintensity)
+	If smargintop <> "" Then rating.AddClass("mt-" & smargintop)
+If smarginbottom <> "" Then rating.AddClass("mb-" & smarginbottom)
+If smarginleft <> "" Then rating.AddClass("ml-" & smarginleft)
+If smarginright <> "" Then rating.AddClass("mr-" & smarginright)
+If smargins <> "" Then rating.AddClass("ms-" & smargins)
+If smargine <> "" Then rating.AddClass("me-" & smargine)
+If smarginx <> "" Then rating.AddClass("mx-" & smarginx)
+If smarginy <> "" Then rating.AddClass("my-" & smarginy)
+If smargina <> "" Then rating.AddClass("ma-" & smargina)
+If spaddingtop <> "" Then rating.AddClass("pt-" & spaddingtop)
+If spaddingbottom <> "" Then rating.AddClass("pb-" & spaddingbottom)
+If spaddingleft <> "" Then rating.AddClass("pl-" & spaddingleft)
+If spaddingright <> "" Then rating.AddClass("pr-" & spaddingright)
+If spaddings <> "" Then rating.AddClass("ps-" & spaddings)
+If spaddinge <> "" Then rating.AddClass("pe-" & spaddinge)
+If spaddingx <> "" Then rating.AddClass("px-" & spaddingx)
+If spaddingy <> "" Then rating.AddClass("py-" & spaddingy)
+If spaddinga <> "" Then rating.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		rating.Addclass(sfloat)
+	End If
 	'
 	ui.AddControl(rating.Rating, rating.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
@@ -8668,12 +10385,15 @@ Sub Design_Rating
 	'
 	sb.append($"Dim rat${sname} As VMRating = vm.CreateRating("rat${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, bisreadonly, "b", "rat", sname, "SetReadonly")
-	CodeLine(sb, bisdisabled, "b", "rat", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "rat", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "rat", sname, "SetValue")
 	CodeLine(sb, sfieldtype, "s", "rat", sname, "SetFieldType")
 	CodeLine(sb, sclosedelay, "s", "rat", sname, "SetClosedelay")
 	CodeLine(sb, bisdark, "b", "rat", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "rat", sname, "SetDense")
+	If sfloat <> "" Then
+		AddCode(sb, $"rat${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, sEmptyicon, "s", "rat", sname, "SetEmptyicon")
 	CodeLine(sb, sFullicon, "s", "rat", sname, "SetFullicon")
 	CodeLine(sb, sHalficon, "s", "rat", sname, "SetHalficon")
@@ -8688,10 +10408,30 @@ Sub Design_Rating
 	CodeLine(sb, ssize, "s", "rat", sname, "SetSize")
 	CodeLine(sb, bisSmall, "b", "rat", sname, "SetSmall")
 	CodeLine(sb, stabindex, "s", "rat", sname, "SetTabindex")
-	CodeLine(sb, bisvisible, "b", "rat", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "rat", sname, "SetVisible")
 	CodeLine(sb, bisXlarge, "b", "rat", sname, "SetXlarge")
 	CodeLine(sb, bisXsmall, "b", "rat", sname, "SetXsmall")
-	CodeLine2(sb, scolor, sintensity, "b", "rat", sname, "SetColorIntensity")
+	'
+	Dim pres As String = "rat"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	CodeLine2(sb, sColor, sintensity, "b", "rat", sname, "SetColorIntensity")
 	CodeLine2(sb, sBackgroundcolor, sBackgroundintensity, "b", "rat", sname, "SetBackgroundColorIntensity")
 	AddCode(sb, $"Rating${sname}.SetOnInput(Me, "Rating${sname}_input")"$)
 	sb.append($"${sparent}.AddControl(rat${sname}.Rating, rat${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
@@ -8735,6 +10475,8 @@ Sub PropertyBag_Table
 	'pbtable.AddText("d","headerslength","Headers Length","","")
 	pbtable.AddText2("d",CreateMap("height":"Height","mobilebreakpoint":"Mobile Breakpoint"))
 	pbtable.AddText2("d",CreateMap("page":"Page","itemsperpage":"Items Per Page"))
+	pbtable.AddSelect("d","float", "Float", vm.Floats)
+	
 	'pbtable.AddText("d","loadingtext","Loading Text","","")
 	'pbtable.AddText("d","locale","Locale","","")
 	'pbtable.AddText("d","nodatatext","No Data Text","","")
@@ -8758,6 +10500,9 @@ Sub PropertyBag_Table
 	'
 	pbtable.AddHeading("c", "Columns")
 	pbtable.AddDataTableColumns("c")
+	'
+	pbtable.AddHeading("m","Margins & Padding")
+	pbtable.AddMarginsPaddings("m")
 	'
 	pbtable.AddHeading("e","Settings")
 	pbtable.AddSwitches("e", CreateMap("isautoincrement": "Auto Increment", "isaddnew":"Add New"))
@@ -8916,7 +10661,27 @@ Sub Design_Table
 	'datatable.SetSortby(sSortby)
 	'datatable.SetSortdesc(sSortdesc)
 	datatable.SetTabindex(stabindex)	
-	datatable.SetVisible(bisvisible)
+	datatable.SetVisible(bisVisible)
+	If smargintop <> "" Then datatable.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then datatable.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then datatable.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then datatable.AddClass("mr-" & smarginright)
+	If smargins <> "" Then datatable.AddClass("ms-" & smargins)
+	If smargine <> "" Then datatable.AddClass("me-" & smargine)
+	If smarginx <> "" Then datatable.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then datatable.AddClass("my-" & smarginy)
+	If smargina <> "" Then datatable.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then datatable.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then datatable.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then datatable.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then datatable.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then datatable.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then datatable.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then datatable.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then datatable.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then datatable.AddClass("pa-" & spaddinga)
+
+
 	'add columns
 	'
 	If bisaddnew Then
@@ -8964,6 +10729,9 @@ Sub Design_Table
 	datatable.SetDownload(bisDownload)
 	datatable.SetPrint(bisPrint)
 	datatable.SetMenu(bisMenu)
+	If sfloat <> "" Then
+		datatable.Addclass(sfloat)
+	End If
 	For Each m As Map In lcontents
 		Dim xkey As String = m.GetDefault("key","")   'Name
 		Dim xtitle As String = m.GetDefault("title","")  'Title
@@ -8994,6 +10762,9 @@ Sub Design_Table
 	CodeLine(sb, bisdark, "b", "dt", sname, "SetDark")
 	
 	CodeLine(sb, bisdense, "b", "dt", sname, "SetDense")
+	If sfloat <> "" Then
+		AddCode(sb, $"dt${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisDisablefiltering, "b", "dt", sname, "SetDisablefiltering")
 	CodeLine(sb, bisDisablepagination, "b", "dt", sname, "SetDisablepagination")
 	CodeLine(sb, bisDisablesort, "b", "dt", sname, "SetDisablesort")
@@ -9028,7 +10799,27 @@ Sub Design_Table
 	CodeLine(sb, bisSingleselect, "b", "dt", sname, "SetSingleselect")
 	'CodeLine(sb, sSortby, "s", "dt", sname, "SetSortby")
 	'CodeLine(sb, sSortdesc, "s", "dt", sname, "SetSortdesc")
-	CodeLine(sb, bisvisible, "b", "dt", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "dt", sname, "SetVisible")
+	'
+	Dim pres As String = "dt"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
 	Dim sba As StringBuilder
 	sba.initialize
@@ -9108,6 +10899,12 @@ Sub PropertyBag_Chip
 	pbchip.AddText("d","href","Href","","")
 	pbchip.AddText("d","to","To","","")
 	pbchip.AddSelect("d","target","Target", vm.TargetOptions)
+	pbchip.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbchip.AddHeading("m","Margins & Padding")
+	pbchip.AddMarginsPaddings("m")
+	'
 	pbchip.AddHeading("e","Settings")
 	pbchip.AddSwitches("e", CreateMap("isactive": "Active", "isappend": "Append"))
 	pbchip.AddSwitches("e", CreateMap("isclose": "Close", "isdark": "Dark"))
@@ -9143,7 +10940,13 @@ Sub PropertyBag_Badge
 	pbbadge.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
 	pbbadge.AddText2("d",CreateMap("offsetx":"Offset X", "offsety":"Offset Y"))
 	pbbadge.AddSelect2("d","origin","Origin",vm.Transition,"transition","Transition",vm.Transition)
+	pbbadge.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
+	'
+	pbbadge.AddHeading("m","Margins & Padding")
+	pbbadge.AddMarginsPaddings("m")
+	
 	pbbadge.AddHeading("e","Settings")
 	pbbadge.AddSwitches("e", CreateMap("isavatar": "Avatar", "isbordered": "Bordered"))
 	pbbadge.AddSwitches("e", CreateMap("isbottom": "Bottom", "isdark": "Dark"))
@@ -9178,14 +10981,20 @@ Sub PropertyBag_Avatar
 	pbavatar.AddRadioGroupH("d", "avatartype", "Type", CreateMap("islabel":"Label","isicon":"Icon", "isimage":"Image"))
 	pbavatar.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
 	pbavatar.AddSelect2("d","textcolor","TextColor", vm.ColorOptions, "textcolorintensity","TextColor Intensity", vm.IntensityOptions)
+	pbavatar.AddSelect("d","float", "Float", vm.Floats)
+	
+	pbavatar.AddHeightWidths("d")
 	'
+	'
+	pbavatar.AddHeading("m","Margins & Padding")
+	pbavatar.AddMarginsPaddings("m")
+	
 	pbavatar.AddHeading("e","Settings")
 	pbavatar.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isvisible": "Visible"))
 	pbavatar.AddSwitches("e", CreateMap("isleft": "Left", "isright": "Right"))
 	pbavatar.AddSwitches("e", CreateMap("ishasbadge": "HasBadge", "istile": "Tile"))
 	'
 	pbavatar.AddHeading("f","Matrix")
-	pbavatar.AddHeightWidths("f")
 	pbavatar.AddMatrix("f")
 	vm.container.AddComponent(1, 3, pbavatar.tostring)
 End Sub
@@ -9193,9 +11002,9 @@ End Sub
 
 Sub Read_Avatar
 	sBadge = mattr.getdefault("badge", "")
-	scolor = mattr.getdefault("color", "")
+	sColor = mattr.getdefault("color", "")
 	sColorintensity = mattr.getdefault("colorintensity", "")
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisHasbadge = YesNoToBoolean(mattr.getdefault("ishasbadge", "No"))
 	sheight = mattr.getdefault("height", "")
 	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
@@ -9207,17 +11016,17 @@ Sub Read_Avatar
 	ssize = mattr.getdefault("size", "")
 	savatartype = mattr.GetDefault("avatartype","")
 	stextcolor = mattr.getdefault("textcolor", "")
-	sTextcolorintensity = mattr.getdefault("textcolorintensity", "")
+	stextintensity = mattr.getdefault("textintensity", "")
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 Sub Design_Avatar
 	Dim avatar As VMAvatar = ui.CreateAvatar($"avatar${sname}"$, Me)
 	avatar.setstatic(True)
 	avatar.SetBadge(sBadge)
-	avatar.SetColorintensity(scolor, sColorintensity)
-	avatar.SetDisabled(bisdisabled)
+	avatar.SetColorintensity(sColor, sColorintensity)
+	avatar.SetDisabled(bisDisabled)
 	avatar.SetHasbadge(bisHasbadge)
 	avatar.SetHeight(sheight)
 	avatar.SetLeft(bisleft)
@@ -9227,9 +11036,32 @@ Sub Design_Avatar
 	avatar.SetMinwidth(sminwidth)
 	avatar.SetRight(bisright)
 	avatar.SetSize(ssize)
-	avatar.SetTextcolorintensity(stextcolor, sTextcolorintensity)
+	avatar.SetTextcolorintensity(stextcolor, stextintensity)
 	avatar.SetTile(bistile)	
-	avatar.SetVisible(bisvisible)
+	avatar.SetVisible(bisVisible)
+	If smargintop <> "" Then avatar.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then avatar.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then avatar.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then avatar.AddClass("mr-" & smarginright)
+	If smargins <> "" Then avatar.AddClass("ms-" & smargins)
+	If smargine <> "" Then avatar.AddClass("me-" & smargine)
+	If smarginx <> "" Then avatar.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then avatar.AddClass("my-" & smarginy)
+	If smargina <> "" Then avatar.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then avatar.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then avatar.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then avatar.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then avatar.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then avatar.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then avatar.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then avatar.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then avatar.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then avatar.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		avatar.Addclass(sfloat)
+	End If
 	Select Case savatartype
 	Case "islabel"
 		avatar.SetTextOnly(stitle)
@@ -9246,28 +11078,50 @@ Sub Design_Avatar
 	'
 	sb.append($"Dim avt${sname} As VMAvatar = vm.CreateAvatar("avt${sname}", Me)"$).Append(CRLF)
 	CodeLine(sb, sBadge, "s", "avt", sname, "SetBadge")
-	CodeLine2(sb, scolor, sColorintensity, "s", "avt", sname, "SetColorintensity")
-	CodeLine(sb, bisdisabled, "b", "avt", sname, "SetDisabled")
+	CodeLine2(sb, sColor, sColorintensity, "s", "avt", sname, "SetColorintensity")
+	CodeLine(sb, bisDisabled, "b", "avt", sname, "SetDisabled")
 	CodeLine(sb, bisHasbadge, "b", "avt", sname, "SetHasbadge")
 	CodeLine(sb, sheight, "s", "avt", sname, "SetHeight")
 	CodeLine(sb, bisleft, "b", "avt", sname, "SetLeft")
+	If sfloat <> "" Then
+		AddCode(sb, $"avt${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, smaxheight, "s", "avt", sname, "SetMaxheight")
 	CodeLine(sb, smaxwidth, "s", "avt", sname, "SetMaxwidth")
 	CodeLine(sb, sminheight, "s", "avt", sname, "SetMinheight")
 	CodeLine(sb, sminwidth, "s", "avt", sname, "SetMinwidth")
 	CodeLine(sb, bisright, "b", "avt", sname, "SetRight")
 	CodeLine(sb, ssize, "s", "avt", sname, "SetSize")
-	CodeLine2(sb, stextcolor, sTextcolorintensity, "s", "avt", sname, "SetTextcolorintensity")
+	CodeLine2(sb, stextcolor, stextintensity, "s", "avt", sname, "SetTextcolorintensity")
 	CodeLine(sb, bistile, "b", "avt", sname, "SetTile")
-	CodeLine(sb, bisvisible, "b", "avt", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "avt", sname, "SetVisible")
 	Select Case savatartype
 	Case "islabel"
 		CodeLine(sb, stitle, "s", "avt", sname, "SetTextonly")
 	Case "isicon"
 		CodeLine(sb, siconname, "s", "avt", sname, "SetIcononly")
 	Case "isimage"
-		CodeLine(sb, ssrc, "s", "avt", sname, "SetImageonly")
+			CodeLine(sb, ssrc, "s", "avt", sname, "SetImageonly")
 	End Select
+	Dim pres As String = "avt"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	
 	sb.append($"${sparent}.AddControl(avt${sname}.Avatar, avt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -9291,13 +11145,18 @@ Sub PropertyBag_List
 	pblist.AddText2("d",CreateMap("titlefld":"Title Fld", "subtitlefld":"Subtitle 1 Fld"))
 	pblist.AddText2("d",CreateMap("subtitle1fld":"Subtitle 2 Fld", "actioniconfld":"Action Icon Fld"))
 	pblist.AddText2("d",CreateMap("actioniconcolorfld":"Action Icon Color Fld"))
-	'	
 	pblist.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
 	pblist.AddSelect("d","elevation","Elevation",vm.elevation)
+	pblist.AddSelect("d","float", "Float", vm.Floats)
+	
+	pblist.AddHeightWidths("d")
 	'
 	pblist.AddHeading("a", "Items")
 	pblist.AddCrudList("a", CreateMap("key":"Item Key","avatar":"Avatar","icon":"Icon Name", "iconcolor": "Icon Color", "title":"Title","subtitle":"Sub Title 1","subtitle1":"Sub Title 2", "action":"Action Icon","actioncolor":"Action Color"))
 	'
+	pblist.AddHeading("m","Margins & Padding")
+	pblist.AddMarginsPaddings("m")
+	
 	pblist.AddHeading("e","Settings")
 	pblist.AddSwitches("e", CreateMap("isoptions": "Use Items", "isdivider":"Divide Each"))
 	pblist.AddSwitches("e", CreateMap("isinsetdivider": "Inset Divider"))
@@ -9310,18 +11169,17 @@ Sub PropertyBag_List
 	pblist.AddSwitches("e", CreateMap("istwoline": "TwoLine", "isvisible": "Visible"))
 	'
 	pblist.AddHeading("f","Matrix")
-	pblist.AddHeightWidths("f")
 	pblist.AddMatrix("f")
 	vm.container.AddComponent(1, 3, pblist.tostring)
 End Sub
 #End Region
 
 Sub Read_List
-	scolor = mattr.getdefault("color", "")
+	sColor = mattr.getdefault("color", "")
 	sColorintensity = mattr.getdefault("colorintensity", "")
 	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisdense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	selevation = mattr.getdefault("elevation", "")
 	bisExpand = YesNoToBoolean(mattr.getdefault("isexpand", "No"))
 	bisflat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
@@ -9339,7 +11197,7 @@ Sub Read_List
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 	bisTwoline = YesNoToBoolean(mattr.getdefault("istwoline", "No"))
 	bisoptions = YesNoToBoolean(mattr.getdefault("isoptions", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	swidth = mattr.getdefault("width", "")
 	sDatasource = mattr.getdefault("datasource", "")
 	sKeyfld = mattr.getdefault("keyfld", "")
@@ -9357,10 +11215,10 @@ End Sub
 Sub Design_List
 	Dim lst As VMList = ui.CreateList($"lst${sname}"$, Me)
 	lst.setstatic(True)
-	lst.SetColorintensity(scolor, sColorintensity)
+	lst.SetColorintensity(sColor, sColorintensity)
 	lst.SetDark(bisdark)
 	lst.SetDense(bisdense)
-	lst.SetDisabled(bisdisabled)
+	lst.SetDisabled(bisDisabled)
 	lst.SetElevation(selevation)
 	lst.SetExpand(bisExpand)
 	lst.SetFlat(bisflat)
@@ -9377,8 +11235,31 @@ Sub Design_List
 	lst.SetThreeline(bisThreeline)
 	lst.SetTile(bistile)
 	lst.SetTwoline(bisTwoline)
-	lst.SetVisible(bisvisible)
+	lst.SetVisible(bisVisible)
 	lst.SetWidth(swidth)
+	If smargintop <> "" Then lst.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then lst.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then lst.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then lst.AddClass("mr-" & smarginright)
+	If smargins <> "" Then lst.AddClass("ms-" & smargins)
+	If smargine <> "" Then lst.AddClass("me-" & smargine)
+	If smarginx <> "" Then lst.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then lst.AddClass("my-" & smarginy)
+	If smargina <> "" Then lst.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then lst.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then lst.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then lst.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then lst.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then lst.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then lst.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then lst.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then lst.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then lst.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		lst.Addclass(sfloat)
+	End If
 	'
 	'link events
 	AddCode(sbEvents, $"Sub lst${sname}_click(e As BANanoEvent)"$)
@@ -9418,15 +11299,18 @@ Sub Design_List
 	AddNewLine(sb)
 	'
 	sb.append($"Dim lst${sname} As VMList = vm.CreateList("lst${sname}", Me)"$).Append(CRLF)
-	CodeLine2(sb, scolor, sColorintensity, "s", "lst", sname, "SetColorintensity")
+	CodeLine2(sb, sColor, sColorintensity, "s", "lst", sname, "SetColorintensity")
 	CodeLine(sb, bisdark, "b", "lst", sname, "SetDark")
 	CodeLine(sb, bisdense, "b", "lst", sname, "SetDense")
-	CodeLine(sb, bisdisabled, "b", "lst", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "lst", sname, "SetDisabled")
 	CodeLine(sb, selevation, "s", "lst", sname, "SetElevation")
 	CodeLine(sb, bisExpand, "b", "lst", sname, "SetExpand")
 	CodeLine(sb, bisflat, "b", "lst", sname, "SetFlat")
 	CodeLine(sb, sheight, "s", "lst", sname, "SetHeight")
 	CodeLine(sb, bislight, "b", "lst", sname, "SetLight")
+	If sfloat <> "" Then
+		AddCode(sb, $"lst${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, smaxheight, "s", "lst", sname, "SetMaxheight")
 	CodeLine(sb, smaxwidth, "s", "lst", sname, "SetMaxwidth")
 	CodeLine(sb, sminheight, "s", "lst", sname, "SetMinheight")
@@ -9438,8 +11322,28 @@ Sub Design_List
 	CodeLine(sb, bisThreeline, "b", "lst", sname, "SetThreeline")
 	CodeLine(sb, bistile, "b", "lst", sname, "SetTile")
 	CodeLine(sb, bisTwoline, "b", "lst", sname, "SetTwoline")
-	CodeLine(sb, bisvisible, "b", "lst", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "lst", sname, "SetVisible")
 	CodeLine(sb, swidth, "s", "lst", sname, "SetWidth")
+	'
+	Dim pres As String = "lst"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
 	If bisoptions Then
 		For Each m As Map In lcontents
@@ -9486,9 +11390,14 @@ Sub PropertyBag_Tabs
 	pbtabs.AddText2("d",CreateMap("height":"Height", "mobilebreakpoint":"MobileBreakPoint"))
 	pbtabs.AddText2("d",CreateMap("previcon":"PrevIcon", "nexticon":"NextIcon"))
 	pbtabs.AddText2("d",CreateMap("slidersize":"SliderSize","activeclass":"ActiveClass"))
+	pbtabs.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbtabs.AddHeading("a", "Items")
 	pbtabs.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title", "icon":"Icon"))
+	'
+	pbtabs.AddHeading("m","Margins & Padding")
+	pbtabs.AddMarginsPaddings("m")
 	
 	pbtabs.AddHeading("e","Settings")
 	pbtabs.AddSwitches("e", CreateMap("isitemdiv": "ItemDiv", "isitemnogutter": "ItemNoGutter"))
@@ -9513,7 +11422,7 @@ Sub Read_Tabs
 	sBackgroundcolorintensity = mattr.getdefault("backgroundcolorintensity", "")
 	bisCenteractive = YesNoToBoolean(mattr.getdefault("iscenteractive", "No"))
 	bisCentered = YesNoToBoolean(mattr.getdefault("iscentered", "No"))
-	scolor = mattr.getdefault("color", "")
+	sColor = mattr.getdefault("color", "")
 	sColorintensity = mattr.getdefault("colorintensity", "")
 	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisFixedtabs = YesNoToBoolean(mattr.getdefault("isfixedtabs", "No"))
@@ -9532,7 +11441,7 @@ Sub Read_Tabs
 	sSlidercolorintensity = mattr.getdefault("slidercolorintensity", "")
 	sSlidersize = mattr.getdefault("slidersize", "")
 	bisvertical = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	bisiconposright = YesNoToBoolean(mattr.getdefault("isiconposright","No"))
 	bistabslider = YesNoToBoolean(mattr.getdefault("istabslider","No"))
 End Sub
@@ -9547,7 +11456,30 @@ Sub Design_Stepper
 	stp.SetStepactive(sStepactive)
 	stp.SetTabindex(stabindex)
 	stp.SetVertical(bisvertical)
-	stp.SetVisible(bisvisible)
+	stp.SetVisible(bisVisible)
+	If smargintop <> "" Then stp.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then stp.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then stp.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then stp.AddClass("mr-" & smarginright)
+	If smargins <> "" Then stp.AddClass("ms-" & smargins)
+	If smargine <> "" Then stp.AddClass("me-" & smargine)
+	If smarginx <> "" Then stp.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then stp.AddClass("my-" & smarginy)
+	If smargina <> "" Then stp.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then stp.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then stp.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then stp.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then stp.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then stp.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then stp.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then stp.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then stp.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then stp.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		stp.Addclass(sfloat)
+	End If
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim sstitle As String = m.getdefault("title", "")
@@ -9586,7 +11518,30 @@ Sub Design_Stepper
 	CodeLine(sb, bisNonlinear, "b", "stp", sname, "SetNonlinear")
 	CodeLine(sb, sStepactive, "s", "stp", sname, "SetStepactive")
 	CodeLine(sb, bisvertical, "b", "stp", sname, "SetVertical")
-	CodeLine(sb, bisvisible, "b", "stp", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "stp", sname, "SetVisible")
+	'
+	Dim pres As String = "stp"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	If sfloat <> "" Then
+		AddCode(sb, $"stp${sname}.AddClass("${sfloat}")"$)
+	End If
 	AddCode(sb, $"stp${sname}.SetOnChange(Me, "stp${sname}_change")"$)
 	'
 	For Each m As Map In lcontents
@@ -9615,7 +11570,7 @@ Sub Design_Tabs
 	tabs.SetBackgroundcolorintensity(sBackgroundcolor, sBackgroundcolorintensity)
 	tabs.SetCenteractive(bisCenteractive)
 	tabs.SetCentered(bisCentered)
-	tabs.SetColorintensity(scolor, sColorintensity)
+	tabs.SetColorintensity(sColor, sColorintensity)
 	tabs.SetDark(bisdark)
 	tabs.SetFixedtabs(bisFixedtabs)
 	tabs.SetGrow(bisGrow)
@@ -9632,8 +11587,31 @@ Sub Design_Tabs
 	tabs.SetSlidercolorintensity(sSlidercolor, sSlidercolorintensity)
 	tabs.SetSlidersize(sSlidersize)
 	tabs.SetVertical(bisvertical)
-	tabs.SetVisible(bisvisible)
+	tabs.SetVisible(bisVisible)
 	tabs.SetIconPosRight(bisiconposright)
+	If smargintop <> "" Then tabs.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then tabs.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then tabs.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then tabs.AddClass("mr-" & smarginright)
+	If smargins <> "" Then tabs.AddClass("ms-" & smargins)
+	If smargine <> "" Then tabs.AddClass("me-" & smargine)
+	If smarginx <> "" Then tabs.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then tabs.AddClass("my-" & smarginy)
+	If smargina <> "" Then tabs.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then tabs.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then tabs.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then tabs.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then tabs.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then tabs.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then tabs.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then tabs.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then tabs.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then tabs.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		tabs.Addclass(sfloat)
+	End If
 	'
 	'source code
 	For Each m As Map In lcontents
@@ -9673,11 +11651,14 @@ Sub Design_Tabs
 	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", "tbs", sname, "SetBackgroundcolorintensity")
 	CodeLine(sb, bisCenteractive, "b", "tbs", sname, "SetCenteractive")
 	CodeLine(sb, bisCentered, "b", "tbs", sname, "SetCentered")
-	CodeLine2(sb, scolor, sColorintensity, "s", "tbs", sname, "SetColorintensity")
+	CodeLine2(sb, sColor, sColorintensity, "s", "tbs", sname, "SetColorintensity")
 	CodeLine(sb, bisdark, "b", "tbs", sname, "SetDark")
 	CodeLine(sb, bisFixedtabs, "b", "tbs", sname, "SetFixedtabs")
 	CodeLine(sb, bisGrow, "b", "tbs", sname, "SetGrow")
 	CodeLine(sb, sheight, "s", "tbs", sname, "SetHeight")
+	If sfloat <> "" Then
+		AddCode(sb, $"tbs${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bisHideslider, "b", "tbs", sname, "SetHideslider")
 	CodeLine(sb, bisiconposright, "b", "tbs", sname, "SetIconposright")
 	CodeLine(sb, bisIconsandtext, "b", "tbs", sname, "SetIconsandtext")
@@ -9691,7 +11672,27 @@ Sub Design_Tabs
 	CodeLine2(sb, sSlidercolor, sSlidercolorintensity, "s", "tbs", sname, "SetSlidercolorintensity")
 	CodeLine(sb, sSlidersize, "s", "tbs", sname, "SetSlidersize")
 	CodeLine(sb, bisvertical, "b", "tbs", sname, "SetVertical")
-	CodeLine(sb, bisvisible, "b", "tbs", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "tbs", sname, "SetVisible")
+	'
+	Dim pres As String = "tbs"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	AddCode(sb, $"tbs${sname}.SetOnChange(me, "tbs${sname}_change")"$)
 	'
 	AddCode(sbEvents, $"Public Sub tbs${sname}_change(value As Object)"$)
@@ -9724,10 +11725,15 @@ Sub PropertyBag_Stepper
 	pbstepper.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbstepper.AddText("d","vmodel","VModel","","")
 	pbstepper.AddText("d","stepactive","StepActive","","")
+	pbstepper.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbstepper.AddHeading("a", "Items")
 	pbstepper.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title", "subtitle":"Description"))
 	'
+	pbstepper.AddHeading("m","Margins & Padding")
+	pbstepper.AddMarginsPaddings("m")
+	
 	pbstepper.AddHeading("e","Settings")
 	pbstepper.AddSwitches("e", CreateMap("isitemdiv": "ItemDiv", "isitemnogutter": "ItemNoGutter"))
 	pbstepper.AddSwitches("e", CreateMap("isaltlabels": "AltLabels", "isdark": "Dark"))
@@ -9748,7 +11754,7 @@ Sub Read_Stepper
 	bisNonlinear = YesNoToBoolean(mattr.getdefault("isnonlinear", "No"))
 	sStepactive = mattr.getdefault("stepactive", "")
 	bisvertical = YesNoToBoolean(mattr.getdefault("isvertical", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 #Region ExpansionPanels
@@ -9764,10 +11770,15 @@ Sub PropertyBag_ExpansionPanels
 	pbexpansionpanels.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbexpansionpanels.AddText("d","vmodel","VModel","","")
 	pbexpansionpanels.AddText("d","activepanel","Active","","1")
+	pbexpansionpanels.AddSelect("d","float", "Float", vm.Floats)
+	
 	'
 	pbexpansionpanels.AddHeading("a", "Items")
 	pbexpansionpanels.AddCrudList("a", CreateMap("key":"Item Key", "title":"Title"))
 	'
+	pbexpansionpanels.AddHeading("m","Margins & Padding")
+	pbexpansionpanels.AddMarginsPaddings("m")
+	
 	pbexpansionpanels.AddHeading("e","Settings")
 	pbexpansionpanels.AddSwitches("e", CreateMap("isitemdiv": "ItemDiv", "isitemnogutter": "ItemNoGutter"))
 	pbexpansionpanels.AddSwitches("e", CreateMap("isaccordion": "Accordion", "isdark": "Dark"))
@@ -9787,7 +11798,7 @@ Sub Read_ExpansionPanels
 	bisAccordion = YesNoToBoolean(mattr.getdefault("isaccordion", "No"))
 	sActivepanel = mattr.getdefault("activepanel", "")
 	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisflat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
 	bisFocusable = YesNoToBoolean(mattr.getdefault("isfocusable", "No"))
 	bisHover = YesNoToBoolean(mattr.getdefault("ishover", "No"))
@@ -9797,7 +11808,7 @@ Sub Read_ExpansionPanels
 	bismultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
 	bisPopout = YesNoToBoolean(mattr.getdefault("ispopout", "No"))
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
-	bisvisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
 Sub Design_ExpansionPanels
@@ -9806,7 +11817,7 @@ Sub Design_ExpansionPanels
 	expnl.SetAccordion(bisAccordion)
 	expnl.SetActivePanel(sActivepanel)
 	expnl.SetDark(bisdark)
-	expnl.SetDisabled(bisdisabled)
+	expnl.SetDisabled(bisDisabled)
 	expnl.SetFlat(bisflat)
 	expnl.SetFocusable(bisFocusable)
 	expnl.SetHover(bisHover)
@@ -9817,7 +11828,30 @@ Sub Design_ExpansionPanels
 	expnl.SetPopout(bisPopout)
 	expnl.SetReadonly(bisreadonly)
 	expnl.SetTile(bistile)
-	expnl.SetVisible(bisvisible)
+	expnl.SetVisible(bisVisible)
+	If smargintop <> "" Then expnl.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then expnl.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then expnl.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then expnl.AddClass("mr-" & smarginright)
+	If smargins <> "" Then expnl.AddClass("ms-" & smargins)
+	If smargine <> "" Then expnl.AddClass("me-" & smargine)
+	If smarginx <> "" Then expnl.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then expnl.AddClass("my-" & smarginy)
+	If smargina <> "" Then expnl.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then expnl.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then expnl.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then expnl.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then expnl.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then expnl.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then expnl.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then expnl.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then expnl.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then expnl.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		expnl.Addclass(sfloat)
+	End If
 	'
 	'source code
 	For Each m As Map In lcontents
@@ -9853,18 +11887,41 @@ Sub Design_ExpansionPanels
 	CodeLine(sb, bisAccordion, "b", "exp", sname, "SetAccordion")
 	CodeLine(sb, sActivepanel, "s", "exp", sname, "SetActivepanel")
 	CodeLine(sb, bisdark, "b", "exp", sname, "SetDark")
-	CodeLine(sb, bisdisabled, "b", "exp", sname, "SetDisabled")
+	CodeLine(sb, bisDisabled, "b", "exp", sname, "SetDisabled")
 	CodeLine(sb, bisflat, "b", "exp", sname, "SetFlat")
 	CodeLine(sb, bisFocusable, "b", "exp", sname, "SetFocusable")
 	CodeLine(sb, bisHover, "b", "exp", sname, "SetHover")
 	CodeLine(sb, bisinset, "b", "exp", sname, "SetInset")
 	CodeLine(sb, bislight, "b", "exp", sname, "SetLight")
+	If sfloat <> "" Then
+		AddCode(sb, $"exp${sname}.AddClass("${sfloat}")"$)
+	End If
 	CodeLine(sb, bismandatory, "b", "exp", sname, "SetMandatory")
 	CodeLine(sb, bismultiple, "b", "exp", sname, "SetMultiple")
 	CodeLine(sb, bisPopout, "b", "exp", sname, "SetPopout")
 	CodeLine(sb, bisreadonly, "b", "exp", sname, "SetReadonly")
 	CodeLine(sb, bistile, "b", "exp", sname, "SetTile")
-	CodeLine(sb, bisvisible, "b", "exp", sname, "SetVisible")
+	CodeLine(sb, bisVisible, "b", "exp", sname, "SetVisible")
+	'
+	Dim pres As String = "exp"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
@@ -9977,7 +12034,6 @@ Sub Design_Page
 	'draw a fake drawer
 	Dim drawer As VMNavigationDrawer = ui.CreateDrawer("drawerx", Me)
 	Dim tbl As VMToolBar = ui.CreateToolbar("tblx", Me)
-	
 	'
 	AddInstruction(sbi, "pgIndex", "AddPages" , "")
 	AddComment(sbi, $"code to add the ${svmodel} template code to the master HTML template"$)
@@ -10170,4 +12226,484 @@ Sub Design_Page
 	If bisNavbarvisible Then
 		ui.AddControl(tbl.ToolBar, tbl.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	End If
+End Sub
+
+#Region Quill
+Sub PropertyBag_Quill
+	vm.setdata("pbquill", False)
+	lstBags.add("pbquill")
+	pbquill = vm.CreateProperty("ppbquill", Me)
+	pbquill.SetChangeEvent("SavePropertyBag")
+	pbquill.SetVShow("pbquill")
+	pbquill.AddHeading("d","Details")
+	pbquill.AddText("d","id","ID","","")
+	pbquill.AddText("d", "controltype", "Type", "","quill")
+	pbquill.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbquill.AddText("d","vmodel","VModel","","")
+	pbquill.AddText2("d",CreateMap("height":"Height", "width":"Width"))
+	pbquill.AddText("d","errortext","Error Text","","")
+	pbquill.AddText("d","tabindex","TabIndex","","")
+	pbquill.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbquill.AddHeading("m","Margins & Padding")
+	pbquill.AddMarginsPaddings("m")
+	
+	pbquill.AddHeading("e","Settings")
+	pbquill.AddSwitches("e", CreateMap("isrequired": "Required", "isvisible": "Visible"))
+	'
+	pbquill.AddHeading("f","Matrix")
+	pbquill.AddMatrix("f")
+	'
+	vm.container.AddComponent(1, 3, pbquill.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Quill
+	sheight = mattr.getdefault("height", "")
+	bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+	stabindex = mattr.getdefault("tabindex", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	swidth = mattr.getdefault("width", "")
+	serrortext = mattr.getdefault("errortext", "")
+End Sub
+
+Sub Design_Quill
+	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
+	'
+	Dim Q As VMQuill
+	Q.Initialize(vue, $"q${sname}"$, Me)
+	Q.SetStatic(True)
+	Q.SetDesignMode(True) 
+	Q.SetHeight(sheight)
+	Q.SetWidth(swidth)
+	Q.SetRequired(bisrequired)
+	Q.SetTabindex(stabindex)
+	Q.SetVisible(bisVisible)
+	If smargintop <> "" Then Q.AddClass("mt-" & smargintop)
+If smarginbottom <> "" Then Q.AddClass("mb-" & smarginbottom)
+If smarginleft <> "" Then Q.AddClass("ml-" & smarginleft)
+If smarginright <> "" Then Q.AddClass("mr-" & smarginright)
+If smargins <> "" Then Q.AddClass("ms-" & smargins)
+If smargine <> "" Then Q.AddClass("me-" & smargine)
+If smarginx <> "" Then Q.AddClass("mx-" & smarginx)
+If smarginy <> "" Then Q.AddClass("my-" & smarginy)
+If smargina <> "" Then Q.AddClass("ma-" & smargina)
+If spaddingtop <> "" Then Q.AddClass("pt-" & spaddingtop)
+If spaddingbottom <> "" Then Q.AddClass("pb-" & spaddingbottom)
+If spaddingleft <> "" Then Q.AddClass("pl-" & spaddingleft)
+If spaddingright <> "" Then Q.AddClass("pr-" & spaddingright)
+If spaddings <> "" Then Q.AddClass("ps-" & spaddings)
+If spaddinge <> "" Then Q.AddClass("pe-" & spaddinge)
+If spaddingx <> "" Then Q.AddClass("px-" & spaddingx)
+If spaddingy <> "" Then Q.AddClass("py-" & spaddingy)
+If spaddinga <> "" Then Q.AddClass("pa-" & spaddinga)
+
+
+	If sfloat <> "" Then
+		q.Addclass(sfloat)
+	End If
+	ui.AddControl(Q.Quill, Q.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+	AddCode(sb, $"Dim q${sname} As VMQuill"$)
+	AddCode(sb, $"q${sname}.Initialize(vue, "q${sname}", Me)"$)
+	CodeLine(sb, sheight, "s", "q", sname, "SetHeight")
+	CodeLine(sb, bisrequired, "b", "q", sname, "SetRequired")
+	CodeLine(sb, stabindex, "s", "q", sname, "SetTabindex")
+	CodeLine(sb, bisVisible, "b", "q", sname, "SetVisible")
+	CodeLine(sb, swidth, "s", "q", sname, "SetWidth")
+	CodeLine(sb, sname, "s", "q", sname, "SetVModel")
+	'
+	Dim pres As String = "q"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	If sfloat <> "" Then
+		AddCode(sb, $"q${sname}.AddClass("${sfloat}")"$)
+	End If
+	'
+	AddCode(sb, $"q${sname}.SetOnFocus("q${sname}_focus")"$)
+	AddCode(sb, $"q${sname}.SetOnTextChange("q${sname}_textchange")"$)
+	AddCode(sb, $"q${sname}.SetOnBlur("q${sname}_blur")"$)
+	AddCode(sb, $"q${sname}.SetOnSelectionChange("q${sname}_selectionchange")"$)
+	'	
+	sb.append($"${sparent}.AddControl(q${sname}.Quill, q${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub q${sname}_focus()"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	'
+	AddCode(sbEvents, $"Private Sub q${sname}_textchange()"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+'
+	AddCode(sbEvents, $"Private Sub q${sname}_blur()"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	'
+	AddCode(sbEvents, $"Private Sub q${sname}_selectionchange()"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+End Sub
+
+#Region InfoBox
+Sub PropertyBag_InfoBox
+	vm.setdata("pbinfobox", False)
+	lstBags.add("pbinfobox")
+	pbinfobox = vm.CreateProperty("ppbinfobox", Me)
+	pbinfobox.SetChangeEvent("SavePropertyBag")
+	pbinfobox.SetVShow("pbinfobox")
+	pbinfobox.AddHeading("d","Details")
+	pbinfobox.AddText("d","id","ID","","")
+	pbinfobox.AddText("d", "controltype", "Type", "","infobox")
+	pbinfobox.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbinfobox.AddText("d","vmodel","ID","","")
+	pbinfobox.AddText("d","icon","Icon","","")
+	pbinfobox.AddText("d","text","Text","","")
+	pbinfobox.AddText2("d",CreateMap("decimal":"Decimal", "decimals":"Decimals"))
+	pbinfobox.AddText2("d",CreateMap("prefix":"Prefix", "suffix":"Suffix"))
+	pbinfobox.AddText2("d",CreateMap("from":"From", "to":"To"))
+	pbinfobox.AddText2("d",CreateMap("duration":"Duration","separator":"Separator"))
+	pbinfobox.AddSelect2("d","iconcolor","IconColor", vm.ColorOptions, "iconbackgroundcolor","IconBackgroundColor", vm.ColorOptions)
+	pbinfobox.AddSelect2("d","color","Color", vm.ColorOptions, "backgroundcolor","BackgroundColor", vm.ColorOptions)
+	pbinfobox.AddRadioGroupH("d", "infotype", "Type", CreateMap("stylenone":"1","style2":"2","style3":"3","style4":"4"))
+	pbinfobox.AddSelect("d","float", "Float", vm.Floats)
+	
+	'
+	pbinfobox.AddHeading("m","Margins & Padding")
+	pbinfobox.AddMarginsPaddings("m")
+	
+	pbinfobox.AddHeading("e","Settings")
+	pbinfobox.AddSwitches("e", CreateMap("isautoplay": "Autoplay"))
+	pbinfobox.AddSwitches("e", CreateMap("ishoverexpandeffect": "HoverExpandEffect"))
+	pbinfobox.AddSwitches("e", CreateMap("ishoverzoomeffect": "HoverZoomEffect"))
+	pbinfobox.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
+	'
+	pbinfobox.AddHeading("f","Matrix")
+	pbinfobox.AddMatrix("f")
+	'
+	vm.container.AddComponent(1, 3, pbinfobox.tostring)
+End Sub
+#End Region
+
+Sub Read_InfoBox
+	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
+	sColor = mattr.getdefault("color", "")
+	sinfotype = mattr.getdefault("infotype", "")
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	sDuration = mattr.getdefault("duration", "")
+	sFrom = mattr.getdefault("from", "")
+	bisHoverexpandeffect = YesNoToBoolean(mattr.getdefault("ishoverexpandeffect", "No"))
+	bisHoverzoomeffect = YesNoToBoolean(mattr.getdefault("ishoverzoomeffect", "No"))
+	sIcon = mattr.getdefault("icon", "")
+	sIconbackgroundcolor = mattr.getdefault("iconbackgroundcolor", "")
+	sIconcolor = mattr.getdefault("iconcolor", "")
+	sText = mattr.getdefault("text", "")
+	sTo = mattr.getdefault("to", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	bisautoplay = YesNoToBoolean(mattr.getdefault("isautoplay", "No"))
+	sDecimal = mattr.getdefault("decimal", "")
+	sDecimals = mattr.getdefault("decimals", "")
+	sPrefix = mattr.getdefault("prefix", "")
+	sSeparator = mattr.getdefault("separator", "")
+	sSuffix = mattr.getdefault("suffix", "")
+End Sub
+
+Sub Design_InfoBox
+	Dim ib As VMInfoBox
+	ib.Initialize(vue, "ib" & sname, Me)
+	ib.SetStatic(True)
+	ib.SetDesignMode(True)
+	ib.SetDecimal(sDecimal)
+	ib.SetDecimals(sDecimals)
+	ib.SetAutoplay(bisautoplay)
+	ib.SetPrefix(sPrefix)
+	ib.SetSeparator(sSeparator)
+	ib.SetSuffix(sSuffix)
+	ib.SetBackgroundcolor(sBackgroundcolor)
+	ib.SetColor(sColor)
+	ib.SetDisabled(bisDisabled)
+	ib.SetDuration(sDuration)
+	ib.SetFrom(sFrom)
+	ib.SetHoverexpandeffect(bisHoverexpandeffect)
+	ib.SetHoverzoomeffect(bisHoverzoomeffect)
+	ib.SetIcon(sIcon)
+	ib.SetIconbackgroundcolor(sIconbackgroundcolor)
+	ib.SetIconcolor(sIconcolor)
+	If smargintop <> "" Then ib.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then ib.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then ib.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then ib.AddClass("mr-" & smarginright)
+	If smargins <> "" Then ib.AddClass("ms-" & smargins)
+	If smargine <> "" Then ib.AddClass("me-" & smargine)
+	If smarginx <> "" Then ib.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then ib.AddClass("my-" & smarginy)
+	If smargina <> "" Then ib.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then ib.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then ib.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then ib.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then ib.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then ib.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then ib.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then ib.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then ib.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then ib.AddClass("pa-" & spaddinga)
+
+
+	Select Case sinfotype
+	Case ""	
+	Case "style2"
+		ib.SetStyle2(True)
+	Case "style3"
+		ib.SetStyle3(True)
+	Case "style4"
+		ib.SetStyle4(True)
+	End Select
+	'
+	ib.SetText(sText)
+	ib.SetTo(sTo)
+	ib.SetVisible(bisVisible)
+	If sfloat <> "" Then
+		ib.Addclass(sfloat)
+	End If
+	ui.AddControl(ib.InfoBox, ib.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddCode(sb, $"Dim ib${sname} As VMInfoBox"$)
+	AddCode(sb, $"ib${sname}.Initialize(vue, "ib${sname}", Me)"$)
+	CodeLine(sb, bisautoplay, "b", "ib", sname, "SetAutoplay")
+	CodeLine(sb, sDecimal, "s", "ib", sname, "SetDecimal")
+	CodeLine(sb, sDecimals, "s", "ib", sname, "SetDecimals")
+	CodeLine(sb, sPrefix, "s", "ib", sname, "SetPrefix")
+	CodeLine(sb, sSeparator, "s", "ib", sname, "SetSeparator")
+	CodeLine(sb, sSuffix, "s", "ib", sname, "SetSuffix")
+	If sfloat <> "" Then
+		AddCode(sb, $"ib${sname}.AddClass("${sfloat}")"$)
+	End If
+	CodeLine(sb, sBackgroundcolor, "s", "ib", sname, "SetBackgroundcolor")
+	CodeLine(sb, sColor, "s", "ib", sname, "SetColor")
+	CodeLine(sb, bisDisabled, "b", "ib", sname, "SetDisabled")
+	CodeLine(sb, sDuration, "s", "ib", sname, "SetDuration")
+	CodeLine(sb, sFrom, "s", "ib", sname, "SetFrom")
+	CodeLine(sb, bisHoverexpandeffect, "b", "ib", sname, "SetHoverexpandeffect")
+	CodeLine(sb, bisHoverzoomeffect, "b", "ib", sname, "SetHoverzoomeffect")
+	CodeLine(sb, sIcon, "s", "ib", sname, "SetIcon")
+	CodeLine(sb, sIconbackgroundcolor, "s", "ib", sname, "SetIconbackgroundcolor")
+	CodeLine(sb, sIconcolor, "s", "ib", sname, "SetIconcolor")
+	Select Case sinfotype
+	Case ""
+	Case "style2"
+		CodeLine(sb, True, "b", "ib", sname, "SetStyle2")
+	Case "style3"
+		CodeLine(sb, True, "b", "ib", sname, "SetStyle3")
+	Case "style4"
+		CodeLine(sb, True, "b", "ib", sname, "SetStyle4")
+	End Select
+	CodeLine(sb, sText, "s", "ib", sname, "SetText")
+	CodeLine(sb, sTo, "s", "ib", sname, "SetTo")
+	CodeLine(sb, bisVisible, "b", "ib", sname, "SetVisible")
+	'
+	Dim pres As String = "ib"
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	'
+	sb.append($"${sparent}.AddControl(ib${sname}.InfoBox, ib${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	AddCode(sbEvents, $"Private Sub ib${sname}_click(e As BANanoEvent)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+End Sub
+
+#Region FileSelect
+Sub PropertyBag_FileSelect
+	vm.setdata("pbfileselect", False)
+	lstBags.add("pbfileselect")
+	pbfileselect = vm.CreateProperty("ppbfileselect", Me)
+	pbfileselect.SetChangeEvent("SavePropertyBag")
+	pbfileselect.SetVShow("pbfileselect")
+	pbfileselect.AddHeading("d","Details")
+	pbfileselect.AddText("d","id","ID","","")
+	pbfileselect.AddText("d", "controltype", "Type", "","fileselect")
+	pbfileselect.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbfileselect.AddText("d","vmodel","ID","","")
+	pbfileselect.AddText("g","filenamevmodel","File Name VModel","","")
+	pbfileselect.AddText("g","filedatevmodel","File Date VModel","","")
+	pbfileselect.AddText("g","filesizevmodel","File Size VModel","","")
+	pbfileselect.AddText("g","filetypevmodel","File Type VModel","","")
+		
+	pbfileselect.AddRadioGroup("d", "action", "Action", CreateMap("upload": "Upload","readExcel":"readExcel", "readAsText":"readAsText","readAsBinaryString":"readAsBinaryString","readAsDataURL":"readAsDataURL","readAsArrayBuffer":"readAsArrayBuffer"))
+	vm.container.AddComponent(1, 3, pbfileselect.tostring)
+End Sub
+#End Region
+
+
+Sub Read_FileSelect
+	sAction = mattr.getdefault("action", "")
+End Sub
+
+Sub Design_FileSelect
+	If sfilenamevmodel <> "" Then
+		AddCode(sbRead, $"Dim sFileName As String = vue.GetData("${sfilenamevmodel}")"$)
+		AddCode(sbRead, $"Record.put("${sfilenamevmodel}", sFileName)"$)
+	End If
+	'
+	If sfiledatevmodel <> "" Then
+		AddCode(sbRead, $"Dim sFileDate As String = vue.GetData("${sfiledatevmodel}")"$)
+		AddCode(sbRead, $"Record.put("${sfiledatevmodel}", sFileDate)"$)
+	End If
+	'
+	If sfilesizevmodel <> "" Then
+		AddCode(sbRead, $"Dim sFileSize As String = vue.GetData("${sfilesizevmodel}")"$)
+		AddCode(sbRead, $"Record.put("${sfilesizevmodel}", sFileSize)"$)
+	End If
+	'
+	If sfiletypevmodel <> "" Then
+		AddCode(sbRead, $"Dim sFileType As String = vue.GetData("${sfiletypevmodel}")"$)
+		AddCode(sbRead, $"Record.put("${sfiletypevmodel}", sFileType)"$)
+	End If
+	'
+	' add an invisible file selector
+	AddNewLine(sb)
+	AddInstruction(sb, "<Your Module>", "Code","")
+	AddComment(sb, "Add an invisible file selector")
+	AddCode(sb, $"vm.AddFileSelect(${sparent}, "fs${sname}")"$)
+	AddNewLine(sb)
+	Dim bDone As Boolean = False
+	'
+	AddCode(sbEvents, $"Sub fs${sname}_change(e As BANanoEvent)"$)
+	If sfilenamevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
+	If sfiledatevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", "")"$)
+	If sfilesizevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", "")"$)
+	If sfiletypevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", "")"$)
+	'
+	AddComment(sbEvents, "get selected file(s)")
+	AddCode(sbEvents, $"Dim fileList As List = vm.GetFileListFromTarget(e)"$)
+	AddComment(sbEvents, "there is no selected file(s)")
+	AddCode(sbEvents, "If fileList.size = 0 Then Return")
+	AddComment(sbEvents, "get the first file selected")
+	AddCode(sbEvents, $"Dim fileO As String = fileList.get(0)"$)
+	'	
+	AddComment(sbEvents, "get file details")
+	AddCode(sbEvents, $"Dim fo As FileObject = vue.GetFileDetails(fileO)"$)
+	If sfilenamevmodel <> "" Then
+		AddCode(sbEvents, $"Dim sFileName As String = fo.FileName"$)
+		AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
+	End If
+	If sfiledatevmodel <> "" Then
+		AddCode(sbEvents, $"Dim sFileDate As String = fo.FileDate"$)
+		AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", sFileDate)"$)
+	End If
+	If sfilesizevmodel <> "" Then
+		AddCode(sbEvents, $"Dim sFileSize As String = fo.FileSize"$)
+		AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", sFileSize)"$)
+	End If
+	If sfiletypevmodel <> "" Then
+		AddCode(sbEvents, $"Dim sFileType As String = fo.FileType"$)
+		AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", sFileType)"$)
+	End If
+	
+	'updatevmodel
+	Select Case sAction
+	Case "upload"
+		AddComment(sbEvents, "start uploading the file")
+		AddCode(sbEvents, $"Dim fd As BANanoObject"$)
+		AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
+		AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
+		AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
+		AddComment(sbEvents, "get the result of the upload")
+		AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
+		AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
+		AddCode(sbEvents, $"Select Case sResult"$)
+		AddCode(sbEvents, $"Case "success""$)
+		If sfilenamevmodel <> "" Then 
+			AddCode(sbEvents, $"sFileName = "./assets/" & sFileName"$)
+			AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
+		End If
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess(sFileName & " was uploaded successfully.")"$)
+		AddCode(sbEvents, $"Case "error""$)
+		If sfilenamevmodel <> "" Then
+			AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
+		End If
+		AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced uploading " & sFileName)"$)
+		AddCode(sbEvents, $"End Select"$)
+	Case "readAsText", "readAsBinaryString", "readAsDataURL", "readAsArrayBuffer", "readExcel"
+		Select Case sAction
+		Case "readExcel"
+			AddComment(sbEvents, $"Read the file contents using 'readAsBinaryString'"$)
+			AddCode(sbEvents, $"Dim Result As Map"$)
+			AddCode(sbEvents, $"Dim promise As BANanoPromise = vm.readAsBinaryString(fileO)"$)
+			AddCode(sbEvents, $"promise.Then(Result)"$)
+			AddComment(sbEvents, "we have received the file contents, lets assign to a string")
+			AddCode(sbEvents, $"Dim strReadAsBinaryString As String = Result.get("result")"$)
+			AddComment(sbEvents, "process the file contents here, read the first worksheet from first row")
+			AddCode(sbEvents, $"Dim be As BANanoOXML"$)
+			AddCode(sbEvents, $"be.Initialize("")"$)
+			AddCode(sbEvents, $"Dim xlsRows As List = be.ReadFile(strReadAsBinaryString)"$)
+			AddComment(sbEvents, "process the excel rows")
+			AddNewLine(sbEvents)
+		Case Else
+			AddComment(sbEvents, $"Read the file contents using '${sAction}'"$)
+			AddCode(sbEvents, $"Dim Result As Map"$)
+			AddCode(sbEvents, $"Dim promise As BANanoPromise = vm.${sAction}(fileO)"$)
+			AddCode(sbEvents, $"promise.Then(Result)"$)
+			AddComment(sbEvents, "we have received the file contents, lets assign to a string")
+			AddCode(sbEvents, $"Dim str${sAction} As String = Result.get("result")"$)
+			AddComment(sbEvents, "process the file contents here...")
+			AddNewLine(sbEvents)
+		End Select
+		AddCode(sbEvents, $"promise.Else(Result)"$)
+		AddComment(sbEvents, "there has been an error")
+		AddCode(sbEvents, $"Dim fileError As String = Result.get("result")"$)
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess(fileError)"$)
+		AddCode(sbEvents, $"promise.End"$)
+	End Select
+	'
+	AddComment(sbEvents, "nullify the selector - enable to process the same file!")
+	AddCode(sbEvents, $"vm.NullifyFileSelect("fs${sname}")"$)	'
+	AddCode(sbEvents, $"End Sub"$)
+	AddNewLine(sbEvents)
+End Sub
+
+Sub logo_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("You have clicked the logo!")
+End Sub
+
+Sub title_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("You have clicked the title!")
 End Sub

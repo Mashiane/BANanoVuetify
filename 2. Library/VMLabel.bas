@@ -26,6 +26,12 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Return Me
 End Sub
 
+
+Sub SetVOnce(t As Boolean) As VMLabel
+	Label.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMLabel
 	bStatic = b
 	Label.SetStatic(b)

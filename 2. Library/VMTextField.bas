@@ -14,10 +14,6 @@ Sub Class_Globals
 	Private Module As Object
 	Private password As String
 	Private bStatic As Boolean
-	Private targetVModel As String
-	Private numFiles As Int
-	Private totFiles As Int
-	Private fd As List
 	Private bMultiple As Boolean
 	Private vmodel As String
 	Public ErrorText As String
@@ -47,44 +43,11 @@ Sub SetSlotActivator(b As Boolean) As VMTextField    'ignore
 End Sub
 
 Sub SetFileInput(bUpload As Boolean) As VMTextField
-	numFiles = 0
-	totFiles = 0
 	TextField.SetTag("v-file-input")
 	TextField.typeOf = "string"
-	If bUpload Then
-		SetOnFile(Me, "filechange")
-	Else
-		SetOnFile(Module, $"${ID}_change"$)
-	End If
+	TextField.InputType = "file"
+	SetOnFile(Module, $"${ID}_change"$)
 	Return Me
-End Sub
-
-'the list of files have changed
-Sub filechange(fileList As List)
-	numFiles = 0
-	fd.Initialize
-	Select Case bMultiple
-		Case True
-			totFiles = fileList.Size
-			'upload the files to the server
-			For Each fileObj As Object In fileList
-				vue.HTTPUpload(fileObj, Me, "filedone")
-			Next
-		Case Else
-			totFiles = 1
-			vue.HTTPUpload(fileList, Me, "filedone")
-	End Select
-End Sub
-
-Sub filedone(fileObj As Map, json As String)
-	numFiles = numFiles + 1
-	Dim fde As FileObject = vue.GetFileDetails(fileObj)
-	fd.Add(fde)
-	If numFiles = totFiles Then
-		vue.SetData(vmodel, fd)
-		If SubExists(Module, $"${ID}_change"$) = False Then Return
-		BANano.CallSub(Module, $"${ID}_change"$, Array(fd))
-	End If
 End Sub
 
 'set accept

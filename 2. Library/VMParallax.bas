@@ -29,6 +29,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+Sub SetVOnce(t As Boolean) As VMParallax
+	Parallax.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMParallax
 	bStatic = b
 	Parallax.SetStatic(b)

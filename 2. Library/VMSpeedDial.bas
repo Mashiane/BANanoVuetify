@@ -42,6 +42,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetVOnce(t As Boolean) As VMSpeedDial
+	SpeedDial.setvonce(t)
+	Return Me
+End Sub
+
 '
 Sub SetOnClick(methodName As String) As VMSpeedDial
 	Button.SetOnClick(methodName)

@@ -31,6 +31,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetVOnce(t As Boolean) As VMIcon
+	Icon.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetBadge(scontent As String) As VMIcon
 	Badge.SetContent(scontent)
 	Return Me

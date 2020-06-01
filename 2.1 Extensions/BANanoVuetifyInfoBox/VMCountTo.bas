@@ -5,6 +5,7 @@ Type=Class
 Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
+'https://openbase.io/js/vue-count-to
 Sub Class_Globals
 Public CountTo As VMElement
 Public ID As String
@@ -12,16 +13,28 @@ Private vue As BANanoVue
 Private BANano As BANano  'ignore
 Private DesignMode As Boolean
 Private Module As Object
+Private Static As Boolean
 End Sub
 
 'initialize the CountTo
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMCountTo
-ID = sid.tolowercase
+	BANano.DependsOnAsset("info-box.min.css")
+	BANano.DependsOnAsset("vue-count-to.min.js")
+	BANano.DependsOnAsset("helpers.min.css")
+	'
+	ID = sid.tolowercase
 	CountTo.Initialize(v, ID)
 	CountTo.SetTag("count-to")
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Static = False
+	Return Me
+End Sub
+
+Sub SetStatic(b As Boolean) As VMCountTo
+	Static = b
+	CountTo.setstatic(b)
 	Return Me
 End Sub
 
@@ -96,92 +109,134 @@ End Sub
 'set startVal
 Sub SetStartval(varStartval As String) As VMCountTo
 	varStartval = BANano.parseFloat(varStartval)
-Dim pp As String = $"${ID}Startval"$
-vue.SetStateSingle(pp, varStartval)
-CountTo.Bind(":start-val", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("start-val", varStartval)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Startval"$
+	vue.SetStateSingle(pp, varStartval)
+	CountTo.Bind(":start-val", pp)
+	Return Me
 End Sub
 
 'set endVal
 Sub SetEndval(varEndval As String) As VMCountTo
 	varEndval = BANano.parseFloat(varEndval)
-Dim pp As String = $"${ID}Endval"$
-vue.SetStateSingle(pp, varEndval)
-CountTo.Bind(":end-val", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("end-val", varEndval)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Endval"$
+	vue.SetStateSingle(pp, varEndval)
+	CountTo.Bind(":end-val", pp)
+	Return Me
 End Sub
 
 'set duration
 Sub SetDuration(varDuration As String) As VMCountTo
-		varDuration = BANano.parseFloat(varDuration)
-Dim pp As String = $"${ID}Duration"$
-vue.SetStateSingle(pp, varDuration)
-CountTo.Bind(":duration", pp)
-Return Me
+	varDuration = BANano.parseFloat(varDuration)
+	If Static Then
+		SetAttrSingle("duration", varDuration)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Duration"$
+	vue.SetStateSingle(pp, varDuration)
+	CountTo.Bind(":duration", pp)
+	Return Me
 End Sub
 
 'set autoplay
 Sub SetAutoplay(varAutoplay As Boolean) As VMCountTo
-Dim pp As String = $"${ID}Autoplay"$
-vue.SetStateSingle(pp, varAutoplay)
-CountTo.Bind(":autoplay", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("autoplay", varAutoplay)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Autoplay"$
+	vue.SetStateSingle(pp, varAutoplay)
+	CountTo.Bind(":autoplay", pp)
+	Return Me
 End Sub
 
 'set decimals
 Sub SetDecimals(varDecimals As String) As VMCountTo
-Dim pp As String = $"${ID}Decimals"$
-vue.SetStateSingle(pp, varDecimals)
-CountTo.Bind(":decimals", pp)
-Return Me
+	varDecimals = BANano.parseint(varDecimals)
+	If Static Then
+		SetAttrSingle("decimals", varDecimals)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Decimals"$
+	vue.SetStateSingle(pp, varDecimals)
+	CountTo.Bind(":decimals", pp)
+	Return Me
 End Sub
 
 'set decimal
 Sub SetDecimal(varDecimal As String) As VMCountTo
-Dim pp As String = $"${ID}Decimal"$
-vue.SetStateSingle(pp, varDecimal)
-CountTo.Bind(":decimal", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("decimal", varDecimal)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Decimal"$
+	vue.SetStateSingle(pp, varDecimal)
+	CountTo.Bind(":decimal", pp)
+	Return Me
 End Sub
 
 'set separator
 Sub SetSeparator(varSeparator As String) As VMCountTo
-Dim pp As String = $"${ID}Separator"$
-vue.SetStateSingle(pp, varSeparator)
-CountTo.Bind(":separator", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("separator", varSeparator)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Separator"$
+	vue.SetStateSingle(pp, varSeparator)
+	CountTo.Bind(":separator", pp)
+	Return Me
 End Sub
 
 'set prefix
 Sub SetPrefix(varPrefix As String) As VMCountTo
-Dim pp As String = $"${ID}Prefix"$
-vue.SetStateSingle(pp, varPrefix)
-CountTo.Bind(":prefix", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("prefix", varPrefix)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Prefix"$
+	vue.SetStateSingle(pp, varPrefix)
+	CountTo.Bind(":prefix", pp)
+	Return Me
 End Sub
 
 'set suffix
 Sub SetSuffix(varSuffix As String) As VMCountTo
-Dim pp As String = $"${ID}Suffix"$
-vue.SetStateSingle(pp, varSuffix)
-CountTo.Bind(":suffix", pp)
-Return Me
+	If Static Then
+		SetAttrSingle("suffix", varSuffix)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Suffix"$
+	vue.SetStateSingle(pp, varSuffix)
+	CountTo.Bind(":suffix", pp)
+	Return Me
 End Sub
 
 'set useEasing
 Sub SetUseEasing(varUseeasing As Boolean) As VMCountTo
-Dim pp As String = $"${ID}Useeasing"$
-vue.SetStateSingle(pp, varUseeasing)
-CountTo.Bind(":use-easing", pp)
-Return Me
+	If varUseeasing = False Then Return Me
+	If Static Then
+		SetAttrSingle("use-easing", varUseeasing)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Useeasing"$
+	vue.SetStateSingle(pp, varUseeasing)
+	CountTo.Bind(":use-easing", pp)
+	Return Me
 End Sub
 
 'set easingFn
-Sub SetEasingFn(varEasingfn As BANanoObject) As VMCountTo
-Dim pp As String = $"${ID}Easingfn"$
-vue.SetStateSingle(pp, varEasingfn)
-CountTo.Bind(":easing-fn", pp)
-Return Me
+Sub SetEasingFn(varEasingfn As String) As VMCountTo
+	Dim pp As String = $"${ID}Easingfn"$
+	vue.SetStateSingle(pp, varEasingfn)
+	CountTo.Bind(":easing-fn", pp)
+	Return Me
 End Sub
 
 
@@ -390,19 +445,3 @@ CountTo.SetVisible(b)
 Return Me
 End Sub
 
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMCountTo
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCountTo
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
-End Sub

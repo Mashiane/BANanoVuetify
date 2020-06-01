@@ -73,3 +73,13 @@ End Sub
 Sub confirm_cancel(e As BANanoEvent)
 
 End Sub
+
+'fired when the logo is clicked
+Sub logo_click(e As BANanoEvent)
+	'you could show the home page
+End Sub
+
+'fired when the title is clicked
+Sub title_click(e As BANanoEvent)
+	'you could show the home page
+End Sub

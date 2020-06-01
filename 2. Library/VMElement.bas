@@ -17,26 +17,6 @@ Sub Class_Globals
 	Private errKey As String
 	Private styleKey As String
 	Public DesignMode As Boolean
-	Private opt As Map
-	Private data As Map
-	Private refs As Map
-	Private methods As Map
-	Private computed As Map
-	Private watches As Map
-	Private created As BANanoObject
-	Private mounted As BANanoObject
-	Private beforeCreate As BANanoObject
-	Private destroyed As BANanoObject
-	Private beforeMount As BANanoObject
-	Private updated As BANanoObject
-	Private beforeDestroy As BANanoObject
-	Private activated As BANanoObject
-	Private deactivated As BANanoObject
-	Private beforeUpdate As BANanoObject
-	Public URL As String
-	Public name As String
-	Private props As List
-	Private propFrom As String
 	Private disKey As String
 	Private bUsesStyles As Boolean
 	Private bUsesRequired As Boolean
@@ -133,25 +113,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	End If
 	'	
 	DesignMode = False
-	opt.Initialize 
-	data.Initialize
-	refs.Initialize 
-	props.Initialize
-	methods.Initialize
-	computed.Initialize
-	watches.Initialize
-	beforeMount = Null
-	beforeUpdate = Null
-	created = Null
-	mounted = Null
-	destroyed = Null
-	updated = Null
-	beforeCreate = Null
-	activated = Null
-	deactivated = Null
-	beforeDestroy = Null
-	
-	URL = $"/${ID}"$
 	SetRC(1,1)
 	SetDeviceOffsets(0,0,0,0)
 	SetDeviceSizes(12,12,12,12)
@@ -159,7 +120,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	typeOf = "text"
 	fieldType = "string"
 	InputType = "text"
-	name = ID
+	
 	IsVisible = True
 	IsDisabled = False
 	IsRequired = False
@@ -341,26 +302,6 @@ Sub SetElevation(elNum As String) As VMElement
 	Return Me
 End Sub
 
-
-Sub SetFunctional(b As Boolean) As VMElement
-	opt.Put("functional", b)
-	Return Me
-End Sub
-
-Sub TemplateFromProperty(propName As String) As VMElement
-	propName = propName.ToLowerCase
-	propFrom = propName
-	Dim cb As BANanoObject = BANano.CallBack(Me, "RenderIt", Null)
-	opt.Put("render", cb)
-	Return Me
-End Sub
-
-
-Sub RenderIt As BANanoObject
-	Dim option As Map = CreateMap("template" : $"{{ ${propFrom} }}"$)
-	Dim bo As BANanoObject = BANano.RunJavascriptMethod("createElement",Array(option))
-	Return bo
-End Sub
 
 'set onchange event
 Sub SetOnChange(eventHandler As Object, source As String) As VMElement
@@ -700,11 +641,11 @@ Sub SetVBindIs(t As String) As VMElement
 	Return Me
 End Sub
 
-Sub SetVOnce(t As Object) As VMElement
-	SetAttr(CreateMap("v-once": t))
+Sub SetVOnce(t As Boolean) As VMElement
+	If t = False Then Return Me
+	SetAttrLoose("v-once")
 	Return Me
 End Sub
-
 
 'set for
 Sub SetVFor(item As String, dataSource As String) As VMElement
@@ -866,12 +807,50 @@ Sub Pop1(p As VMElement)
 	p.AddChild(Me)
 End Sub
 
+
 'set color
-Sub SetColor(color As Object) As VMElement
-	SetStyle(CreateMap("color": color))
+Sub SetColor(varColor As String) As VMElement
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, varColor)
+	Bind(":color", pp)
 	Return Me
 End Sub
-'
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMElement
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	Bind(":color", pp)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMElement
+	Dim sColor As String = $"${varColor}--text"$
+	AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMElement
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	AddClass(mcolor)
+	Return Me
+End Sub
+
 Sub SetStyle(m As Map) As VMElement
 	Element.SetStyles(m)
 	Return Me
@@ -1025,19 +1004,6 @@ Sub Bind(prop As String, stateprop As String) As VMElement
 End Sub
 
 
-'add a property
-Sub AddProp(propName As String) As VMElement
-	props.Add(propName)
-	Return Me
-End Sub
-
-Sub AddProps(propsList As List) As VMElement
-	For Each k As String In propsList
-		AddProp(k)
-	Next
-	Return Me
-End Sub
-
 Sub SetVModel(k As String) As VMElement
 	k = k.tolowercase
 	vmodel = k
@@ -1048,41 +1014,6 @@ Sub SetVModel(k As String) As VMElement
 	Return Me
 End Sub
 
-
-'set state object
-Sub SetStateMap(mapKey As String, mapValues As Map) As VMElement
-	Dim opt As Map = CreateMap()
-	opt.Put(mapKey, mapValues)
-	SetState(opt)
-	Return Me
-End Sub
-
-'set state list
-Sub SetStateList(mapKey As String, mapValues As List) As VMElement
-	Dim opt As Map = CreateMap()
-	opt.Put(mapKey, mapValues)
-	SetState(opt)
-	Return Me
-End Sub
-
-Sub SetStateListValues(mapValues As List) As VMElement
-	For Each lstValue As String In mapValues
-		Dim opt As Map = CreateMap()
-		opt.Put(lstValue, "")
-		SetState(opt)
-	Next
-	Return Me
-End Sub
-
-Sub GetStates(lst As List) As Map
-	Dim smm As Map = CreateMap()
-	For Each lstrec As String In lst
-		lstrec = lstrec.tolowercase
-		Dim state As Object = GetState(lstrec, Null)
-		smm.Put(lstrec, state)
-	Next
-	Return smm
-End Sub
 
 Sub SetChecked(b As Boolean) As VMElement
 	SetAttr(CreateMap(":checked":b))
@@ -1154,31 +1085,6 @@ Sub RemoveAttributes(attrs As List) As VMElement
 		RemoveAttr(s)
 	Next
 	Return Me
-End Sub
-
-Sub Component() As Map
-	RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
-	Dim tmp As String = Element.tostring
-	If data.Size > 0 Then 
-		Dim cb As BANanoObject = BANano.CallBack(Me, "returnData", Null)
-		opt.Put("data", cb)
-	End If
-	If methods.Size > 0 Then opt.Put("methods", methods)
-	If computed.Size > 0 Then opt.Put("computed", computed)
-	If watches.Size > 0 Then opt.Put("watch", watches)
-	If props.Size <> 0 Then opt.Put("props", props)
-	If updated <> Null Then opt.Put("updated", updated)
-	If destroyed <> Null Then opt.Put("destroyed", destroyed)
-	If mounted <> Null Then	opt.Put("mounted", mounted)
-	If beforeCreate <> Null Then opt.Put("beforeCreate", beforeCreate)
-	If created <> Null Then opt.Put("created", created)
-	If beforeMount <> Null Then opt.Put("beforeMount", beforeMount)
-	If beforeUpdate <> Null Then opt.Put("beforeUpdate", beforeUpdate)
-	If activated <> Null Then opt.Put("activated", activated)
-	If deactivated <> Null Then opt.Put("deactivated", deactivated)
-	If beforeDestroy <> Null Then opt.Put("beforeDestroy", beforeDestroy)
-	opt.Put("template", tmp)
-	Return opt
 End Sub
 
 'add to app template
@@ -1350,269 +1256,11 @@ Sub SetPadding(sPT As String, sPB As String, sPL As String, sPR As String) As VM
 	Return Me
 End Sub
 
-'generate another vue instance
-Sub RenderTo(elID As String)
-	elID = elID.tolowercase
-	BANano.GetElement($"#${elID}"$).empty
-	'
-	Dim boVUE As BANanoObject
-	opt.Put("el", $"#${elID}"$)
-	Component
-	boVUE.Initialize2("Vue", opt)
-	'get the state
-	Dim dKey As String = "$data"
-	data = boVUE.GetField(dKey).Result
-	'get the refs
-	Dim rKey As String = "$refs"
-	refs = boVUE.GetField(rKey).result
-End Sub
-
-
-Sub SetStateTrue(k As String) As VMElement
-	SetStateSingle(k,True)
-	Return Me
-End Sub
-
-Sub SetStateFalse(k As String) As VMElement
-	SetStateSingle(k,False)
-	Return Me
-End Sub
-
-Sub SetStateIncrement(k As String) As VMElement
-	Dim oldV As String = GetState(k, "0")
-	oldV = BANano.parseInt(oldV) + 1
-	SetStateSingle(k, oldV)
-	Return Me
-End Sub
-
-Sub SetStateDecrement(k As String) As VMElement
-	Dim oldV As String = GetState(k, "0")
-	oldV = BANano.parseInt(oldV) - 1
-	SetStateSingle(k, oldV)
-	Return Me
-End Sub
-
-
-'a single state change
-Sub SetStateSingle(k As String, v As Object) As VMElement
-	k = k.tolowercase
-	Dim optx As Map = CreateMap()
-	optx.Put(k, v)
-	SetState(optx)
-	Return Me
-End Sub
-
-Sub ToggleState(stateName As String) As VMElement
-	Dim bcurrent As Boolean = GetState(stateName,"")
-	bcurrent = Not(bcurrent)
-	Dim optx As Map = CreateMap()
-	optx.Put(stateName, bcurrent)
-	SetState(optx)
-	Return Me
-End Sub
-
-'return if state exists
-Sub HasState(k As String) As Boolean
-	Return data.ContainsKey(k)
-End Sub
-
-'get the state
-Sub GetState(k As String, v As Object) As Object
-	k = k.tolowercase
-	If data.ContainsKey(k) Then
-		Dim out As Object = data.GetDefault(k,v)
-		Return out
-	Else
-		Log("GetState: First set the v-model for " & k)
-		Return ""
-	End If
-End Sub
-
-'check if we have state
-Sub StateExists(stateName As String) As Boolean
-	stateName = stateName.tolowercase
-	Return data.ContainsKey(stateName)
-End Sub
-
-'set the state
-Sub SetState(m As Map) As VMElement
-	For Each k As String In m.Keys
-		Dim v As Object = m.Get(k)
-		k = k.tolowercase
-		data.Put(k, v)
-	Next
-	Return Me
-End Sub
-
-'set a call back
-Sub SetCallBack(methodName As String, cb As BANanoObject)
-	methodName = methodName.ToLowerCase
-	methods.Put(methodName, cb)
-End Sub
-
-
-'set onselected event
-Sub SetOnSelected(module As Object, methodName As String) As VMElement
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) Then
-		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-		SetAttr(CreateMap("v-on:selected": methodName))
-		'add to methods
-		methods.Put(methodName, cb)
-	End If
-	Return Me
-End Sub
-
-
-private Sub ReturnData As Map
-	Return data
-End Sub
-
-'set computed
-Sub SetComputed(module As Object, k As String, methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) Then
-		k = k.tolowercase
-		If data.ContainsKey(k) Then
-			SetStateSingle(k, Null)
-		End If
-		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-		computed.Put(k, cb)
-	End If
-	Return Me
-End Sub
-
-'set watches 
-Sub SetWatch(module As Object, k As String, bImmediate As Boolean, bDeep As Boolean, methodName As String) As VMElement
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) Then
-		k = k.tolowercase
-		If data.ContainsKey(k) Then
-			SetStateSingle(k, Null)
-		End If
-		Dim newVal As Object
-		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(newVal))
-		Dim deepit As Map = CreateMap()
-		deepit.Put("handler", methodName)
-		deepit.Put("deep", bDeep)
-		deepit.Put("immediate", bImmediate)
-		watches.Put(k, deepit)
-		methods.Put(methodName, cb)
-	End If
-	Return Me
-End Sub
-
-
-'set before created
-Sub SetBeforeCreate(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	beforeCreate = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set created
-Sub SetCreated(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	created = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-'set direct method
-Sub SetMethod(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) Then
-		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-		methods.Put(methodName, cb)
-	End If
-	Return Me
-End Sub
-
-'set before destroy
-Sub SetBeforeDestroy(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	beforeDestroy = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-'set activated
-Sub SetActivated(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	activated = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set deactivated
-Sub SetDeActivated(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	deactivated = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set updated
-Sub SetUpdated(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	updated = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-'set beforemount
-Sub SetBeforeMount(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	beforeMount = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-'set beforeupdate
-Sub SetBeforeUpdate(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	beforeMount = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set mounted
-Sub SetMounted(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	mounted = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set destroyed
-Sub SetDestroyed(module As Object,methodName As String) As VMElement
-	methodName = methodName.ToLowerCase
-	destroyed = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMElement
 	Element.BuildModel(mprops, mstyles, lclasses, loose)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMElement
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMElement
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
 	Return Me
 End Sub

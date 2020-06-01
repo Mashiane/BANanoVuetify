@@ -106,6 +106,23 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetFillHeight(b As Boolean) As VMContainer
+	If b = False Then Return Me
+	AddClass("fill-height")
+	Return Me
+End Sub
+
+Sub SetVOnce(t As Boolean) As VMContainer
+	Container.setvonce(t)
+	Return Me
+End Sub
+
+'set single style
+Sub BindStyleSingle(prop As String, value As String) As VMContainer
+	Container.BindStyleSingle(prop, value)
+	Return Me
+End Sub
+
 Sub CreateList(sid As String, eventHandler As Object) As VMList
 	Dim el As VMList
 	el.Initialize(vue, sid, eventHandler)
@@ -768,6 +785,7 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean,bUpload As Boolean, s
 	el.SetTabIndex(iTabIndex)
 	el.SetPlaceHolder(splaceholder)
 	el.SetVModel(vmodel)
+	el.SetClearable(False)
 	el.Setlabel(slabel)
 	el.SetRequired(bRequired)
 	vue.SetData(vmodel, Null)
@@ -1352,6 +1370,16 @@ End Sub
 'align row content
 Sub SetAlignContentRC(rowPos As Int, colPos As Int, align As String) As VMContainer
 	SetAttrRC(rowPos, colPos, "align-content", align)
+	Return Me
+End Sub
+
+Sub SetJustifyCenterRow(rowPos As Int) As VMContainer
+	SetJustifyRC(rowPos, 0, "center")
+	Return Me
+End Sub
+
+Sub SetAlignCenterRow(rowPos As Int) As VMContainer
+	SetAlignRC(rowPos, 0, "center")
 	Return Me
 End Sub
 

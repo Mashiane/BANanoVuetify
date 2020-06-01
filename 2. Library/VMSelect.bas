@@ -32,6 +32,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+Sub SetVOnce(t As Boolean) As VMSelect
+	Combo.setvonce(t)
+	Return Me
+End Sub
+
 Sub SetFieldType(ft As String) As VMSelect
 	Combo.fieldType = ft
 	Return Me
