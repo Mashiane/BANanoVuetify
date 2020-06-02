@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object    'ignore
 End Sub
 
 'initialize the TabsSlider
@@ -53,12 +53,12 @@ Sub SetVModel(k As String) As VMTabsSlider
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMTabsSlider
+Sub SetVIf(vif As String) As VMTabsSlider
 	TabsSlider.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMTabsSlider
+Sub SetVShow(vif As String) As VMTabsSlider
 	TabsSlider.SetVShow(vif)
 	Return Me
 End Sub

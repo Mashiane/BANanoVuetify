@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Public Container As VMContainer
 	Public HasContent As Boolean
@@ -106,12 +106,12 @@ Sub SetVModel(k As String) As VMFooter
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMFooter
+Sub SetVIf(vif As String) As VMFooter
 	Footer.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMFooter
+Sub SetVShow(vif As String) As VMFooter
 	Footer.SetVShow(vif)
 	Return Me
 End Sub

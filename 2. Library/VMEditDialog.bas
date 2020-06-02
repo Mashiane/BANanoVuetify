@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMEditDialog
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMEditDialog
+Sub SetVIf(vif As String) As VMEditDialog
 	EditDialog.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMEditDialog
+Sub SetVShow(vif As String) As VMEditDialog
 	EditDialog.SetVShow(vif)
 	Return Me
 End Sub
@@ -177,7 +177,7 @@ Sub SetOnCancel(methodName As String) As VMEditDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:cancel": methodName))
+	SetAttr(CreateMap("@cancel": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -189,7 +189,7 @@ Sub SetOnClose(methodName As String) As VMEditDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:close": methodName))
+	SetAttr(CreateMap("@close": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -201,7 +201,7 @@ Sub SetOnOpen(methodName As String) As VMEditDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:open": methodName))
+	SetAttr(CreateMap("@open": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -213,7 +213,7 @@ Sub SetOnSave(methodName As String) As VMEditDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:save": methodName))
+	SetAttr(CreateMap("@save": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

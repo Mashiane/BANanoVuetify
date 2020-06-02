@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean  'ignore
 	Private Module As Object
 	Private bStatic As Boolean
 	Private vmodel As String
@@ -85,12 +85,12 @@ Sub SetVModel(k As String) As VMSimpleCheckBox
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSimpleCheckBox
+Sub SetVIf(vif As String) As VMSimpleCheckBox
 	SimpleCheckBox.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSimpleCheckBox
+Sub SetVShow(vif As String) As VMSimpleCheckBox
 	SimpleCheckBox.SetVShow(vif)
 	Return Me
 End Sub
@@ -253,7 +253,7 @@ Sub SetOnClick(methodName As String) As VMSimpleCheckBox
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

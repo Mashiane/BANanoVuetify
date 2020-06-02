@@ -31,6 +31,8 @@ Sub Process_Globals
 	Private spaddingx As String
 	Private spaddingy As String
 	Private spaddinga As String
+	Private sfontfamily As String
+	Private sfontsize As String
 	
 	Private bisupload As Boolean
 	Private sAction As String
@@ -719,6 +721,7 @@ Sub Init
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
 	'
+	'
 	'add a hamburger
 	vm.NavBar.AddHamburger
 	vm.NavBar.Hamburger.SetVisible(True)
@@ -906,6 +909,59 @@ Sub Init
 	vm.NavBar.UpdateTitle($"${Main.AppTitle} [${sprojectname}]"$)
 	vm.setdata("project", prjRec)
 	vm.setstate(prjRec)
+End Sub
+
+''the state of the document is changing
+Sub ReadyChange
+	Log(vm.DateTimeNow & " ReadyChange")
+	Dim rs As String = vue.GetReadyState
+	Log(rs)
+	Select Case rs
+		Case "complete"
+		'	vue.HidePreloader
+		Case Else
+			vue.ShowPreloader
+	End Select
+End Sub
+
+
+Sub Destroyed
+	Log(vm.DateTimeNow & " App Destroyed")
+End Sub
+
+
+Sub BeforeDestroy
+	Log(vm.DateTimeNow & " App BeforeDestroy")
+End Sub
+
+Sub Updated
+	Log(vm.DateTimeNow & " App Updated")
+End Sub
+
+
+Sub BeforeUpdate
+	Log(vm.DateTimeNow & " App BeforeUpdate")
+End Sub
+
+Sub BeforeMount
+	Log(vm.DateTimeNow & " App BeforeMount")
+End Sub
+
+
+Sub BeforeCreate
+	Log(vm.DateTimeNow & " App BeforeCreate")
+	vue.ShowPreloader
+End Sub
+
+'when the #el is mounted
+Sub Mounted
+	Log(vm.DateTimeNow & " App Mounted!")
+End Sub
+
+
+'when the instance is created
+Sub Created
+	Log(vm.datetimenow & " App Created!")
 End Sub
 
 'create dialog
@@ -1538,7 +1594,7 @@ Sub Read_Chip
 	stag = mattr.getdefault("tag", "")
 	starget = mattr.getdefault("target", "")
 	stextcolor = mattr.getdefault("textcolor", "")
-	sTextintensity = mattr.getdefault("textintensity", "")
+	stextintensity = mattr.getdefault("textintensity", "")
 	sTo = mattr.getdefault("to", "")
 	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 	bisXlarge = YesNoToBoolean(mattr.getdefault("isxlarge", "No"))
@@ -1744,6 +1800,8 @@ Sub CreateUX
 		imaxlen = BANano.parseint(imaxlen)
 		bautogrow = YesNoToBoolean(mattr.getdefault("isautogrow", "No"))
 		svalue = mattr.getdefault("value", "")
+		sfontfamily = mattr.getdefault("fontfamily", "")
+		sfontsize = mattr.GetDefault("fontsize", "")
 		bisdivider = YesNoToBoolean(mattr.getdefault("isdivider", "No"))
 		bisPrimary = YesNoToBoolean(mattr.getdefault("isprimary", "No"))
 		bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
@@ -2026,6 +2084,8 @@ Sub CreateUX
 	'myiphone.SetStatic(html)
 	
 	'
+	vue.HidePreloader
+		
 	vm.pageresume
 End Sub
 
@@ -3581,6 +3641,9 @@ Sub Design_Label
 	lbl.AddClass(sdisplay)
 	lbl.AddClass(salign)
 	lbl.AddClass(sfontweight)
+	If sfontfamily <> "" Then lbl.SetStyleSingle("font-family", sfontfamily)
+	If sfontsize <> "" Then lbl.SetStyleSingle("font-size", sfontsize)
+
 	lbl.SetItalic(bisitalic)
 	lbl.SetTextColorIntensity(stextcolor, stextintensity)
 	lbl.Setcaption(biscaption)
@@ -3615,11 +3678,18 @@ Sub Design_Label
 	If spaddingx <> "" Then lbl.AddClass("px-" & spaddingx)
 	If spaddingy <> "" Then lbl.AddClass("py-" & spaddingy)
 	If spaddinga <> "" Then lbl.AddClass("pa-" & spaddinga)
-
-
 	If sfloat <> "" Then
 		lbl.Addclass(sfloat)
 	End If
+	'
+	'apply styles
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		If sskey = "" Then Continue
+		lbl.SetStyleSingle(sskey, sstitle)
+	Next
+	
 	ui.AddControl(lbl.Label, lbl.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	AddNewLine(sb)
@@ -3631,6 +3701,12 @@ Sub Design_Label
 	CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, sfontweight, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, bisitalic, "b", "lbl", sname, "SetItalic")
+	If sfontfamily <> "" Then 
+		AddCode(sb, $"lbl${sname}.SetStyleSingle("font-family", "${sfontfamily}")"$)
+	End If
+	If sfontsize <> "" Then
+		AddCode(sb, $"lbl${sname}.SetStyleSingle("font-size", "${sfontsize}")"$)
+	End If
 	If sfloat <> "" Then
 		AddCode(sb, $"lbl${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -9286,11 +9362,16 @@ Sub PropertyBag_Label
 	pblabel.AddText("d", "controltype", "Type", "","label")
 	pblabel.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pblabel.AddText("d","vmodel","ID","","")
-	pblabel.AddSelect2("d", "labelsize", "Size", mlabelsize,"fontweight", "Font Weight", vm.FontWeightOptions)
+	pblabel.AddSelect2("d", "labelsize", "Type", mlabelsize,"fontweight", "Font Weight", vm.FontWeightOptions)
+	pblabel.AddText("d", "fontfamily", "Font Family", "", "")
+	pblabel.AddText("d", "fontsize", "Font Size", "", "")
 	pblabel.AddTextArea("d","value","Text","","")
 	pblabel.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
 	pblabel.AddSelect2("d", "display", "Display", vm.DisplayOptions, "align", "Text Align", vm.TextAlignmentOptions)
 	pblabel.AddSelect("d","float", "Float", vm.Floats)
+	
+	pblabel.AddHeading("s","Style")
+	pblabel.AddCrudList("s", CreateMap("key":"Style Property","title":"Style Value"))
 	
 	'
 	pblabel.AddHeading("m","Margins & Padding")

@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 End Sub
 
 'initialize the SubHeader
@@ -32,12 +32,12 @@ Sub SetVModel(k As String) As VMSubHeader
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSubHeader
+Sub SetVIf(vif As String) As VMSubHeader
 	SubHeader.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSubHeader
+Sub SetVShow(vif As String) As VMSubHeader
 	SubHeader.SetVShow(vif)
 	Return Me
 End Sub

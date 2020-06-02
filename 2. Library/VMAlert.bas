@@ -36,12 +36,12 @@ Sub SetVModel(k As String) As VMAlert
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMAlert
+Sub SetVIf(vif As String) As VMAlert
 	Alert.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMAlert
+Sub SetVShow(vif As String) As VMAlert
 	Alert.SetVShow(vif)
 	Return Me
 End Sub
@@ -318,7 +318,7 @@ methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
 		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-SetAttr(CreateMap("v-on:input": methodName))
+SetAttr(CreateMap("@input": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
 		Return Me

@@ -127,12 +127,12 @@ Sub SetVModel(k As String) As VMChip
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMChip
+Sub SetVIf(vif As String) As VMChip
 	Chip.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMChip
+Sub SetVShow(vif As String) As VMChip
 	Chip.SetVShow(vif)
 	Return Me
 End Sub
@@ -629,7 +629,7 @@ Sub SetOnClick(methodName As String) As VMChip
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -641,7 +641,7 @@ Sub SetOnClickClose(methodName As String) As VMChip
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:close": methodName))
+	SetAttr(CreateMap("@click:close": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -653,7 +653,7 @@ Sub SetOnInput(methodName As String) As VMChip
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -665,7 +665,7 @@ Sub SetOnUpdateActive(methodName As String) As VMChip
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:update:active": methodName))
+	SetAttr(CreateMap("@update:active": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

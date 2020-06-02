@@ -224,12 +224,12 @@ Sub SetVModel(k As String) As VMStepper
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMStepper
+Sub SetVIf(vif As String) As VMStepper
 	Stepper.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMStepper
+Sub SetVShow(vif As String) As VMStepper
 	Stepper.SetVShow(vif)
 	Return Me
 End Sub
@@ -362,7 +362,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMStepper
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim num As Int  'ignore
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(num))
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

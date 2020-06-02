@@ -10,9 +10,9 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Public vmodel As String
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean    'ignore
 	Private bStatic As Boolean
-	Private BANano As BANano
+	Private BANano As BANano     'ignore
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
@@ -26,6 +26,12 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Return Me
 End Sub
 
+
+'set single style
+Sub SetStyleSingle(prop As String, value As String) As VMLabel
+	Label.SetStyleSingle(prop, value)
+	Return Me
+End Sub
 
 Sub SetVOnce(t As Boolean) As VMLabel
 	Label.setvonce(t)

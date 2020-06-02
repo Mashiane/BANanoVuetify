@@ -7,7 +7,7 @@ Version=8.1
 #IgnoreWarnings:12, 9
 Sub Class_Globals
 	Public Modules As Map
-	Private BANano As BANano
+	Private BANano As BANano   'ignore
 	Public vue As BANanoVue
 	Private Pages As List
 	Public VApp As VMElement
@@ -162,12 +162,13 @@ Sub Class_Globals
 	Private drawers As List
 	Private placeHolder As Int
 	Public Floats As Map
+	Public FontSizes As Map
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
 Public Sub Initialize(eventHandler As Object, appName As String)
 	'initialize vue
-	vue.Initialize
+	vue.Initialize(eventHandler)
 	Modules.Initialize 
 	Modules = vue.modules
 	placeHolder = 0
@@ -177,7 +178,8 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Dark = False
 	Module = eventHandler
 	lang = "en"
-	Floats .Initialize
+	Floats.Initialize
+	FontSizes.Initialize 
 	
 	'initialize the pages
 	Pages.initialize
@@ -185,9 +187,11 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	VApp.Initialize(vue, appName).SetTag("v-app")
 	VContent.Initialize(vue, $"${appName}content"$).SetTag("v-content")
 	Container.Initialize(vue, $"${appName}container"$, eventHandler).SetFluid(True)
+	'
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	Drawer.SetApp(True)
 	Drawer.SetVModel("drawer")
+	'
 	NavBar.Initialize(vue, "appbar", eventHandler)
 	NavBar.SetAppBar(True)
 	NavBar.Show
@@ -234,26 +238,34 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	
 	'
 	InitColors
+	
 	'
 	If SubExists(Module, "confirm_ok") = False Then
-		Log("Initialize.confirm_ok - please add this event to trap confirm dialog!")
+		Log("Initialize.confirm_ok - please consider adding this optional event to trap confirm dialog!")
 	End If
 	'
 	If SubExists(Module, "confirm_cancel") = False Then
-		Log("Initialize.confirm_cancel - please add this event to trap confirm dialog!")
+		Log("Initialize.confirm_cancel - please consider adding this optional event to trap confirm dialog!")
 	End If
 	'
 	If SubExists(Module, "alert_ok") = False Then
-		Log("Initialize.alert_ok - please add this event to trap alert dialog!")
+		Log("Initialize.alert_ok - please consider adding this optional event to trap alert dialog!")
 	End If
 	'
 	If SubExists(Module, "logo_click") = False Then
-		Log("Initialize.logo_click - please add this event to trap logo click event if needed!")
+		Log("Initialize.logo_click - please consider adding this optional event to trap logo click event if needed!")
 	End If
 	'
 	If SubExists(Module, "title_click") = False Then
-		Log("Initialize.title_click - please add this event to trap title click event if needed!")
+		Log("Initialize.title_click - please consider adding this optional event to trap title click event if needed!")
 	End If
+End Sub
+
+Sub CreateHamburger(v As BANanoVue, eid As String, eventHandler As Object) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(v, eid)
+	elx.SetTag("v-app-bar-nav-icon")
+	Return elx
 End Sub
 
 Sub AddModule(tagName As String) As BANanoVM
@@ -522,19 +534,19 @@ End Sub
 Sub btnalertOk_click(e As BANanoEvent)
 	Alert.hide
 	Dim e As BANanoEvent
-	BANano.CallSub(Module, "alert_ok", Array(e))
+	BANano.CallSub(Module, "alert_ok", Array(e))   'ignore
 End Sub
 
 Sub btnConfirmCancel_click(e As BANanoEvent)
 	Confirm.hide
 	Dim e As BANanoEvent
-	BANano.CallSub(Module, "confirm_cancel", Array(e))
+	BANano.CallSub(Module, "confirm_cancel", Array(e))   'ignore
 End Sub
 
 Sub btnConfirmOk_click(e As BANanoEvent)
 	Confirm.hide
 	Dim e As BANanoEvent
-	BANano.CallSub(Module, "confirm_ok", Array(e))
+	BANano.CallSub(Module, "confirm_ok", Array(e))  'ignore
 End Sub
 
 'convert json to a list
@@ -603,12 +615,7 @@ Sub CreateTextArea(eID As String, eventHandler As Object) As VMTextField
 	el.SetTextArea
 	Return el
 End Sub
-'
-'Sub CreateSelectSides(eID As String, eventHandler As Object) As VMSelectSides
-'	Dim el As VMSelectSides
-'	el.Initialize(vue, eID, eventHandler)
-'	Return el
-'End Sub
+
 
 Sub CreateProperty(eID As String, eventHandler As Object) As VMProperty
 	Dim el As VMProperty
@@ -980,12 +987,6 @@ Sub JSONPretty(m As Object) As String
 	Return vue.JSONPretty(m)
 End Sub
 
-'Sub CreatePrism(sid As String, lang As String) As VMPrism
-'	Dim el As VMPrism
-'	el.Initialize(Vue, sid, lang)
-'	Return el
-'End Sub
-
 Sub CreateImage(img As String, eventHandler As Object) As VMImage
 	Dim el As VMImage
 	el.Initialize(vue, img, eventHandler)
@@ -1206,6 +1207,11 @@ private Sub InitColors
 	"float-md-left", "float-md-right", "float-md-none", "float-lg-left", "float-lg-right", "float-lg-none", "float-xl-left", _
 	"float-xl-right", "float-xl-none"))
 	Floats = vue.List2MapSimple(fList, True)
+	Floats.Put("","None")
+	'
+	Dim xList As List = vue.NewList
+	xList.AddAll(Array("medium","xx-small","x-small","small","large","x-large","xx-large","smaller","larger","initial","inherit"))
+	
 End Sub
 
 
@@ -1715,8 +1721,13 @@ Sub SetActivated(moduleObj As Object, methodName As String) As BANanoVM
 	Return Me
 End Sub
 
-Sub SetComputed(k As String, moduleObj As Object, methodName As String) As BANanoVM
-	vue.SetComputed(k, moduleObj, methodName)
+Sub SetComputed1(k As String, moduleObj As Object, methodName As String) As BANanoVM
+	vue.SetComputed1(k, moduleObj, methodName)
+	Return Me
+End Sub
+
+Sub SetComputed(moduleObj As Object, methodName As String) As BANanoVM
+	vue.SetComputed(moduleObj, methodName)
 	Return Me
 End Sub
 
@@ -2682,12 +2693,4 @@ private Sub OnError(event As Map) As String 'ignore
 	' FileReader.RunMethod("abort", Null)
 	
 	BANano.ReturnElse(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.GetField("error"), "abort": Abort))
-End Sub
-
-'upload a file
-Sub UploadFile(EventHandler As Object, MethodName As String, fName As String, data As Object)
-	Dim formData As BANanoObject
-	formData.Initialize2("FormData",Null)
-	formData.RunMethod("append", Array("upload", data, fName))
-	BANano.CallSub(EventHandler, MethodName, formData)
 End Sub

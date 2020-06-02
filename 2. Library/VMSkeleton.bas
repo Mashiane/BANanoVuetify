@@ -9,8 +9,8 @@ Sub Class_Globals
 	Public Skeleton As VMElement
 	Public ID As String
 	Private vue As BANanoVue
-	Private module As Object
-	Private DesignMode As Boolean
+	Private module As Object   'ignore
+	Private DesignMode As Boolean    'ignore
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMSkeleton
@@ -118,12 +118,12 @@ Sub SetDisabled(b As Boolean) As VMSkeleton
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSkeleton
+Sub SetVIf(vif As String) As VMSkeleton
 	Skeleton.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSkeleton
+Sub SetVShow(vif As String) As VMSkeleton
 	Skeleton.SetVShow(vif)
 	Return Me
 End Sub

@@ -69,12 +69,12 @@ Sub SetVModel(k As String) As VMListItemActionText
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMListItemActionText
+Sub SetVIf(vif As String) As VMListItemActionText
 	ListItemActionText.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMListItemActionText
+Sub SetVShow(vif As String) As VMListItemActionText
 	ListItemActionText.SetVShow(vif)
 	Return Me
 End Sub

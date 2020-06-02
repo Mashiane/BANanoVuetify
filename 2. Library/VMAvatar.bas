@@ -265,12 +265,12 @@ Sub SetVModel(k As String) As VMAvatar
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMAvatar
+Sub SetVIf(vif As String) As VMAvatar
 	Avatar.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMAvatar
+Sub SetVShow(vif As String) As VMAvatar
 	Avatar.SetVShow(vif)
 	Return Me
 End Sub

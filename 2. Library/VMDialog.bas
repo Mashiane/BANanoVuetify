@@ -216,12 +216,12 @@ Sub SetVModel(k As String) As VMDialog
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMDialog
+Sub SetVIf(vif As String) As VMDialog
 	Dialog.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMDialog
+Sub SetVShow(vif As String) As VMDialog
 	Dialog.SetVShow(vif)
 	Return Me
 End Sub
@@ -572,7 +572,7 @@ Sub SetOnClickOutside(methodName As String) As VMDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:outside": methodName))
+	SetAttr(CreateMap("@click:outside": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -584,7 +584,7 @@ Sub SetOnInput(methodName As String) As VMDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -596,7 +596,7 @@ Sub SetOnKeydown(methodName As String) As VMDialog
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:keydown": methodName))
+	SetAttr(CreateMap("@keydown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

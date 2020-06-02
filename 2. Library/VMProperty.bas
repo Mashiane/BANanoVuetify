@@ -1738,7 +1738,7 @@ Sub ToString As String
 					Dim tw As VMTextField
 					tw.Initialize(vue, vmodel, module).SetStatic(True).Setlabel(v)
 					tw.SetVModel(vmodel).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True)
-					tw.SetHideDetails(True).AddClass("my-1").RemoveAttr("v-show")
+					tw.SetHideDetails(True).AddClass("my-2").RemoveAttr("v-show")
 					tcont.AddControlS(tw.TextField, tw.ToString, rowPos, colPos, 6, 6, 6, 6)
 					itemtypes.put(k,"String")
 				Next

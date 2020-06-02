@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Private bStatic As Boolean
 	Public Badge As VMBadge
@@ -141,7 +141,7 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMIcon
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMIcon
+Sub SetVIf(vif As String) As VMIcon
 	Icon.SetVIf(vif)
 	Return Me
 End Sub
@@ -151,7 +151,7 @@ Sub SetVElse(vif As Object) As VMIcon
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMIcon
+Sub SetVShow(vif As String) As VMIcon
 	Icon.SetVShow(vif)
 	Return Me
 End Sub

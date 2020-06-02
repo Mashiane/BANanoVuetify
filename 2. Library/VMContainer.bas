@@ -1813,12 +1813,12 @@ Sub HowManyRows() As Int
 	Return LastRow
 End Sub
 
-Sub SetVIf(vif As Object) As VMContainer
+Sub SetVIf(vif As String) As VMContainer
 	Container.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMContainer
+Sub SetVShow(vif As String) As VMContainer
 	Container.SetVShow(vif)
 	Return Me
 End Sub
@@ -2152,7 +2152,7 @@ Sub SetOnClickRC(rowpos As Int, colpos As Int, methodName As String) As VMContai
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:click",methodName)
+	rowc.Put("@click",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -2175,7 +2175,7 @@ Sub SetOnTouchStartRC(rowpos As Int, colpos As Int, methodName As String) As VMC
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:touchstart",methodName)
+	rowc.Put("@touchstart",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -2209,7 +2209,7 @@ Sub SetOnDragOverRC(rowPos As Int, colPos As Int, methodName As String) As VMCon
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:dragover",methodName)
+	rowc.Put("@dragover",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -2233,7 +2233,7 @@ Sub SetOnDragStartRC(rowPos As Int, colPos As Int, methodName As String) As VMCo
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:dragstart",methodName)
+	rowc.Put("@dragstart",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -2257,7 +2257,7 @@ Sub SetOnDragEndRC(rowPos As Int, colPos As Int, methodName As String) As VMCont
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:dragend",methodName)
+	rowc.Put("@dragend",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -2281,7 +2281,7 @@ Sub SetOnDragEnterRC(rowPos As Int, colPos As Int, methodName As String) As VMCo
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:dragenter",methodName)
+	rowc.Put("@dragenter",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub
@@ -2305,7 +2305,7 @@ Sub SetOnDropRC(rowPos As Int, colPos As Int, methodName As String) As VMContain
 		rowc.Initialize
 		rowc.clear
 	End If
-	rowc.Put("v-on:drop",methodName)
+	rowc.Put("@drop",methodName)
 	attributes.Put(rowKey,rowc)
 	Return Me
 End Sub

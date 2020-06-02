@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Private bStatic As Boolean
 End Sub
@@ -100,12 +100,12 @@ private Sub SetVModel(k As String) As VMForm
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMForm
+Sub SetVIf(vif As String) As VMForm
 	Container.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMForm
+Sub SetVShow(vif As String) As VMForm
 	Container.SetVShow(vif)
 	Return Me
 End Sub
@@ -182,7 +182,7 @@ Sub SetOnInput(methodName As String) As VMForm
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -194,7 +194,7 @@ Sub SetOnSubmit(methodName As String) As VMForm
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:submit": methodName))
+	SetAttr(CreateMap("@submit": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

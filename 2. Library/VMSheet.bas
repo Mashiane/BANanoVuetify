@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Public Container As VMContainer
 End Sub
@@ -72,12 +72,12 @@ Sub SetVModel(k As String) As VMSheet
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSheet
+Sub SetVIf(vif As String) As VMSheet
 	Sheet.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSheet
+Sub SetVShow(vif As String) As VMSheet
 	Sheet.SetVShow(vif)
 	Return Me
 End Sub

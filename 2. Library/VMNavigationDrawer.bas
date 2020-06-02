@@ -187,12 +187,12 @@ Sub SetVModel(k As String) As VMNavigationDrawer
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMNavigationDrawer
+Sub SetVIf(vif As String) As VMNavigationDrawer
 	NavigationDrawer.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMNavigationDrawer
+Sub SetVShow(vif As String) As VMNavigationDrawer
 	NavigationDrawer.SetVShow(vif)
 	Return Me
 End Sub
@@ -613,7 +613,7 @@ Sub SetOnInput(methodName As String) As VMNavigationDrawer
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -625,7 +625,7 @@ Sub SetOnTransitionEnd(methodName As String) As VMNavigationDrawer
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:transitionend": methodName))
+	SetAttr(CreateMap("@transitionend": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -637,7 +637,7 @@ Sub SetOnUpdateMiniVariant(methodName As String) As VMNavigationDrawer
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:update:mini-variant": methodName))
+	SetAttr(CreateMap("@update:mini-variant": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

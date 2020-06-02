@@ -97,12 +97,12 @@ Sub SetVModel(k As String) As VMCardText
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCardText
+Sub SetVIf(vif As String) As VMCardText
 	CardText.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCardText
+Sub SetVShow(vif As String) As VMCardText
 	CardText.SetVShow(vif)
 	Return Me
 End Sub

@@ -7,7 +7,7 @@ Version=8.1
 #IgnoreWarnings:12
 Sub Class_Globals
 	Private Instance As BANanoObject
-	Private vue As BANanoVue
+	Private vue As BANanoVue   'ignore
 	Public Element As BANanoObject
 	Public ID As String
 	Public props As Map
@@ -19,7 +19,7 @@ Sub Class_Globals
 	Public domProps As Map
 	Public on As Map
 	Public nativeOn As Map
-	Private BANano As BANano
+	Private BANano As BANano    'ignore
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, stag As String) As VueElement

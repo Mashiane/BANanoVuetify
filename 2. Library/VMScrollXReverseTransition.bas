@@ -10,8 +10,8 @@ Public ScrollXReverseTransition As VMElement
 Public ID As String
 Private vue As BANanoVue
 Private BANano As BANano  'ignore
-Private DesignMode As Boolean
-Private Module As Object
+	Private DesignMode As Boolean     'ignore
+	Private Module As Object    'ignore
 End Sub
 
 'initialize the ScrollXReverseTransition
@@ -35,12 +35,12 @@ ScrollXReverseTransition.SetVModel(k)
 Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMScrollXReverseTransition
+Sub SetVIf(vif As String) As VMScrollXReverseTransition
 ScrollXReverseTransition.SetVIf(vif)
 Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMScrollXReverseTransition
+Sub SetVShow(vif As String) As VMScrollXReverseTransition
 ScrollXReverseTransition.SetVShow(vif)
 Return Me
 End Sub

@@ -199,12 +199,12 @@ Sub SetVModel(k As String) As VMSpeedDial
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSpeedDial
+Sub SetVIf(vif As String) As VMSpeedDial
 	SpeedDial.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSpeedDial
+Sub SetVShow(vif As String) As VMSpeedDial
 	SpeedDial.SetVShow(vif)
 	Return Me
 End Sub

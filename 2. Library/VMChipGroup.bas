@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
 End Sub
 
 'initialize the ChipGroup
@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMChipGroup
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMChipGroup
+Sub SetVIf(vif As String) As VMChipGroup
 	ChipGroup.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMChipGroup
+Sub SetVShow(vif As String) As VMChipGroup
 	ChipGroup.SetVShow(vif)
 	Return Me
 End Sub
@@ -209,7 +209,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMChipGroup
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

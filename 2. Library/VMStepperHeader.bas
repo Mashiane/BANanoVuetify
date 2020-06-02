@@ -10,9 +10,9 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
-	Private bStatic As Boolean
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object    'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the StepperHeader
@@ -65,12 +65,12 @@ Sub SetVModel(k As String) As VMStepperHeader
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMStepperHeader
+Sub SetVIf(vif As String) As VMStepperHeader
 	StepperHeader.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMStepperHeader
+Sub SetVShow(vif As String) As VMStepperHeader
 	StepperHeader.SetVShow(vif)
 	Return Me
 End Sub

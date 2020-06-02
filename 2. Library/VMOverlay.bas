@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object     'ignore
 End Sub
 
 'initialize the Overlay
@@ -68,12 +68,12 @@ Sub SetVModel(k As String) As VMOverlay
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMOverlay
+Sub SetVIf(vif As String) As VMOverlay
 	Overlay.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMOverlay
+Sub SetVShow(vif As String) As VMOverlay
 	Overlay.SetVShow(vif)
 	Return Me
 End Sub

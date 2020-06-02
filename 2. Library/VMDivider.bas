@@ -73,12 +73,12 @@ Sub SetVModel(k As String) As VMDivider
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMDivider
+Sub SetVIf(vif As String) As VMDivider
 	Divider.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMDivider
+Sub SetVShow(vif As String) As VMDivider
 	Divider.SetVShow(vif)
 	Return Me
 End Sub

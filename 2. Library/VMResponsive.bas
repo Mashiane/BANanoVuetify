@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object         'ignore
 End Sub
 
 'initialize the Responsive
@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMResponsive
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMResponsive
+Sub SetVIf(vif As String) As VMResponsive
 	Responsive.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMResponsive
+Sub SetVShow(vif As String) As VMResponsive
 	Responsive.SetVShow(vif)
 	Return Me
 End Sub

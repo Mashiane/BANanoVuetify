@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object      'ignore
 End Sub
 
 'initialize the SimpleTable
@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMSimpleTable
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSimpleTable
+Sub SetVIf(vif As String) As VMSimpleTable
 	SimpleTable.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSimpleTable
+Sub SetVShow(vif As String) As VMSimpleTable
 	SimpleTable.SetVShow(vif)
 	Return Me
 End Sub

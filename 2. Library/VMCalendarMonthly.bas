@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMCalendarMonthly
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCalendarMonthly
+Sub SetVIf(vif As String) As VMCalendarMonthly
 	CalendarMonthly.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCalendarMonthly
+Sub SetVShow(vif As String) As VMCalendarMonthly
 	CalendarMonthly.SetVShow(vif)
 	Return Me
 End Sub

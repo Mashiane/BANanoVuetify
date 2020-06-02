@@ -72,12 +72,12 @@ Sub SetVModel(k As String) As VMExpandTransition
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMExpandTransition
+Sub SetVIf(vif As String) As VMExpandTransition
 	ExpandTransition.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMExpandTransition
+Sub SetVShow(vif As String) As VMExpandTransition
 	ExpandTransition.SetVShow(vif)
 	Return Me
 End Sub

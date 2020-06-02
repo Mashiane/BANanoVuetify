@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Private imgLink As String
 	Private hasTooltip As Boolean
@@ -49,7 +49,7 @@ Sub SetOnClick(EventHandler As Object, methodName As String) As VMImage
 	If SubExists(EventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -589,7 +589,7 @@ Sub SetOnError(methodName As String) As VMImage
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:error": methodName))
+	SetAttr(CreateMap("@error": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -601,7 +601,7 @@ Sub SetOnLoad(methodName As String) As VMImage
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:load": methodName))
+	SetAttr(CreateMap("@load": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

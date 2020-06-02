@@ -43,12 +43,12 @@ Sub SetVModel(k As String) As VMCarouselItem
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCarouselItem
+Sub SetVIf(vif As String) As VMCarouselItem
 CarouselItem.SetVIf(vif)
 Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCarouselItem
+Sub SetVShow(vif As String) As VMCarouselItem
 CarouselItem.SetVShow(vif)
 Return Me
 End Sub

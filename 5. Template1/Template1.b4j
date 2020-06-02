@@ -36,6 +36,7 @@ Version=8.3
 	#LibraryAuthor: Anele Mashy Mbanga
 #End Region
 
+#IgnoreWarnings:12, 15
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "template"
@@ -46,7 +47,6 @@ Sub Process_Globals
 	Public ActualIP As String = "www.mywebsite.com"
 	'debug web address
 	Public DebugIP As String = "localhost"
-	Private db As BANanoSQL
 	'
 	Public Version As String = "1.00"
 	Public Port As String = "8080"

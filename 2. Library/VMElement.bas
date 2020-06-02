@@ -17,7 +17,6 @@ Sub Class_Globals
 	Private errKey As String
 	Private styleKey As String
 	Public DesignMode As Boolean
-	Private disKey As String
 	Private bUsesStyles As Boolean
 	Private bUsesRequired As Boolean
 	Private bUsedDisabled As Boolean
@@ -287,18 +286,18 @@ End Sub
 
 
 Sub SetFluid As VMElement
-	Element.SetAttrSingle("fluid", True)
+	Element.SetAttr("fluid", True)
 	Return Me
 End Sub
 
 Sub SetDense As VMElement
-	Element.SetAttrSingle("dense", True)
+	Element.SetAttr("dense", True)
 	Return Me
 End Sub
 
 Sub SetElevation(elNum As String) As VMElement
 	AddClass($"elevation-${elNum}"$)
-	Element.SetAttrSingle("elevation", BANano.parseInt(elNum))
+	Element.SetAttr("elevation", BANano.parseInt(elNum))
 	Return Me
 End Sub
 
@@ -310,7 +309,7 @@ Sub SetOnChange(eventHandler As Object, source As String) As VMElement
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim sval As String
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(sval))
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -367,12 +366,14 @@ Sub SetDesignMode(b As Boolean) As VMElement
 	Return Me
 End Sub
 
+
 Sub SetStyleSingle(prop As String, vals As Object) As VMElement
 	Dim attr As Map = CreateMap()
 	attr.Put(prop, vals)
 	SetStyle(attr)
 	Return Me
 End Sub
+
 
 Sub SetAttrSingle(prop As String, vals As String) As VMElement
 	Dim attr As Map = CreateMap()
@@ -459,7 +460,7 @@ Sub MakePx(sValue As String) As String
 End Sub
 
 Sub SetFor(f As String) As VMElement
-	Element.SetAttr("for", f)
+	Element.SetAttrSingle("for", f)
 	Return Me
 End Sub
 
@@ -543,17 +544,17 @@ Sub Clear As VMElement
 End Sub
 
 Sub SetSlot(sltValue As String) As VMElement
-	Element.SetAttr("slot", sltValue)
+	Element.SetAttrSingle("slot", sltValue)
 	Return Me
 End Sub
 
 Sub SetSlotScope(sltValue As String) As VMElement
-	Element.SetAttr("slot-scope", sltValue)
+	Element.SetAttrSingle("slot-scope", sltValue)
 	Return Me
 End Sub
 
 Sub SetType(stypeOf As String) As VMElement
-	Element.SetAttr("type", stypeOf)
+	Element.SetAttrSingle("type", stypeOf)
 	Return Me
 End Sub
 
@@ -566,7 +567,7 @@ End Sub
 Sub SetOnMouseOut(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
 	If SubExists(module, methodName) = False Then Return Me
-	SetAttr(CreateMap("v-on:mouseout": methodName))
+	SetAttr(CreateMap("@mouseout": methodName))
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	vue.SetCallBack(methodName, cb)
@@ -576,7 +577,7 @@ End Sub
 Sub SetOnMouseOver(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
 	If SubExists(module, methodName) = False Then Return Me
-	SetAttr(CreateMap("v-on:mouseover": methodName))
+	SetAttr(CreateMap("@mouseover": methodName))
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	vue.SetCallBack(methodName, cb)
@@ -587,10 +588,10 @@ Sub SetKey(k As Object, bBind As Boolean) As VMElement
 	If bBind Then
 		If vue.StateExists(k) = False Then vue.SetStateSingle(k, DateTime.now)
 		RemoveAttr("key")
-		Element.SetAttr(":key", k)
+		Element.SetAttrSingle(":key", k)
 	Else
 		RemoveAttr(":key")
-		Element.SetAttr("key", k)
+		Element.SetAttrSingle("key", k)
 	End If
 	Return Me
 End Sub
@@ -683,7 +684,7 @@ Sub SetVHtml(h As String) As VMElement
 	If h = "" Then Return Me
 	h = h.tolowercase
 	If vue.StateExists(h) = False Then vue.SetStateSingle(h, Null)
-	Element.SetAttr("v-html", h)
+	Element.SetAttrSingle("v-html", h)
 	Return Me
 End Sub
 
@@ -897,7 +898,7 @@ Sub SetMaxHeight(mw As String) As VMElement
 End Sub
 
 Sub SetTo(t As Object) As VMElement
-	Element.SetAttr("to", t)
+	Element.SetAttrSingle("to", t)
 	Return Me
 End Sub
 
@@ -911,7 +912,7 @@ Sub SetDisabled(b As Boolean) As VMElement
 	bUsedDisabled = b
 	IsDisabled = b
 	vue.SetStatesingle(disKey, b)
-	Element.SetAttr(":disabled", disKey)
+	Element.SetAttrSingle(":disabled", disKey)
 	Return Me
 End Sub
 
@@ -919,7 +920,7 @@ Sub SetRequired(b As Boolean) As VMElement
 	IsRequired = b
 	bUsesRequired = True
 	If bStatic Then
-		Element.SetAttr("required", b)
+		Element.SetAttrSingle("required", b)
 		Return Me
 	End If
 	If ID = "" Then Return Me
@@ -1010,7 +1011,7 @@ Sub SetVModel(k As String) As VMElement
 	If vue.HasState(k) = False Then
 		vue.SetData(k, Null)
 	End If
-	Element.SetAttr("v-model", k)
+	Element.SetAttrSingle("v-model", k)
 	Return Me
 End Sub
 
@@ -1098,7 +1099,7 @@ Sub SetOnInput(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1110,7 +1111,7 @@ Sub SetOnFocus(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:focus": methodName))
+	SetAttr(CreateMap("@focus": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1121,7 +1122,7 @@ Sub SetOnClear(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:md-clear": methodName))
+	SetAttr(CreateMap("@md-clear": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1133,7 +1134,7 @@ Sub SetOnBlur(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:blur": methodName))
+	SetAttr(CreateMap("@blur": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1149,7 +1150,7 @@ End Sub
 Sub SetOnClick(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
 	If SubExists(module, methodName) = False Then Return Me
-	SetAttrSingle("v-on:click", methodName)
+	SetAttrSingle("@click", methodName)
 	vue.SetMethod(module, methodName)
 	Return Me
 End Sub
@@ -1158,7 +1159,7 @@ End Sub
 Sub SetOnClickStop(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
 	If SubExists(module, methodName) = False Then Return Me
-	SetAttrSingle("v-on:click.stop", methodName)
+	SetAttrSingle("@click.stop", methodName)
 	vue.SetMethod(module, methodName)
 	Return Me
 End Sub
@@ -1169,7 +1170,7 @@ Sub SetOnTouchStart(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:touchstart": methodName))
+	SetAttr(CreateMap("@touchstart": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1180,7 +1181,7 @@ Sub SetOnDragOver(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:dragover": methodName))
+	SetAttr(CreateMap("@dragover": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1192,7 +1193,7 @@ Sub SetOnDragStart(module As Object, methodName As String) As VMElement
 	SetDraggable(True)
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:dragstart": methodName))
+	SetAttr(CreateMap("@dragstart": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1203,7 +1204,7 @@ Sub SetOnDragEnd(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:dragend": methodName))
+	SetAttr(CreateMap("@dragend": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1214,7 +1215,7 @@ Sub SetOnDragEnter(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:dragenter": methodName))
+	SetAttr(CreateMap("@dragenter": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1225,7 +1226,7 @@ Sub SetOnDrop(module As Object, methodName As String) As VMElement
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:drop": methodName))
+	SetAttr(CreateMap("@drop": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

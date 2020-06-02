@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object     'ignore
 	Public HasContent As Boolean
 	Private bStatic As Boolean
 End Sub
@@ -144,12 +144,12 @@ Sub SetVModel(k As String) As VMTemplate
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMTemplate
+Sub SetVIf(vif As String) As VMTemplate
 	Template.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMTemplate
+Sub SetVShow(vif As String) As VMTemplate
 	Template.SetVShow(vif)
 	Return Me
 End Sub

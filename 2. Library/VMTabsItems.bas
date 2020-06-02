@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Private bStatic As Boolean
 End Sub
@@ -62,12 +62,12 @@ Sub SetVModel(k As String) As VMTabsItems
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMTabsItems
+Sub SetVIf(vif As String) As VMTabsItems
 	TabsItems.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMTabsItems
+Sub SetVShow(vif As String) As VMTabsItems
 	TabsItems.SetVShow(vif)
 	Return Me
 End Sub
@@ -322,7 +322,7 @@ Sub SetOnChange(methodName As String) As VMTabsItems
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

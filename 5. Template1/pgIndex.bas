@@ -5,10 +5,11 @@ Type=StaticCode
 Version=8.1
 @EndOfDesignText@
 'Static code module
+#IgnoreWarnings:12, 15
 Sub Process_Globals
 	Private BANano As BANano  'ignore
 	Public vm As BANanoVM
-	Private vue As BANanoVue
+	Private vue As BANanoVue   'ignore
 End Sub
 
 Sub Init
@@ -19,7 +20,49 @@ Sub Init
 	BuildNavDrawer
 	AddPages
 	AddContent
+	'
 	vm.ux
+End Sub
+
+
+
+Sub Destroyed
+	Log(vm.DateTimeNow & " App Destroyed")
+End Sub
+
+
+Sub BeforeDestroy
+	Log(vm.DateTimeNow & " App BeforeDestroy")
+End Sub
+
+Sub Updated
+	Log(vm.DateTimeNow & " App Updated")
+End Sub
+
+
+Sub BeforeUpdate
+	Log(vm.DateTimeNow & " App BeforeUpdate")
+End Sub
+
+Sub BeforeMount
+	Log(vm.DateTimeNow & " App BeforeMount")
+	vm.PagePause
+End Sub
+
+
+Sub BeforeCreate
+	Log(vm.DateTimeNow & " App BeforeCreate")
+End Sub
+
+'when the #el is mounted
+Sub Mounted
+	Log(vm.DateTimeNow & " App Mounted!")
+End Sub
+
+
+'when the instance is created
+Sub Created
+	Log(vm.datetimenow & " App Created!")
 End Sub
 
 'build the navigation bar

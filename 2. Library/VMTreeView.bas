@@ -10,12 +10,12 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean  'ignore
 	Private Module As Object
 	Private items As List
 	Public Active As String
 	Private selEvent As String
-	Private loaded As Boolean
+	Private loaded As Boolean   'ignore
 	Private selected As String
 End Sub
 
@@ -43,8 +43,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetHoverable(True)
 	SetAttrSingle(":active.sync", Active)
 	SetExpandIcon("mdi-chevron-down")
-	vue.SetComputed(selected, Me, "findselected")
-	vue.SetWatch(selected, True, True, Me, "nodechanged")
+	'vue.SetComputed(selected, Me, "findselected")
+	'vue.SetWatch(selected, True, True, Me, "nodechanged")
 	loaded = False
 	Return Me
 End Sub
@@ -149,12 +149,12 @@ Sub SetVModel(k As String) As VMTreeView
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMTreeView
+Sub SetVIf(vif As String) As VMTreeView
 	TreeView.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMTreeView
+Sub SetVShow(vif As String) As VMTreeView
 	TreeView.SetVShow(vif)
 	Return Me
 End Sub
@@ -493,7 +493,7 @@ Sub SetOnInput(methodName As String) As VMTreeView
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -505,7 +505,7 @@ Sub SetOnUpdateActive(methodName As String) As VMTreeView
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:update:active": methodName))
+	SetAttr(CreateMap("@update:active": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -517,7 +517,7 @@ Sub SetOnUpdateOpen(methodName As String) As VMTreeView
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:update:open": methodName))
+	SetAttr(CreateMap("@update:open": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

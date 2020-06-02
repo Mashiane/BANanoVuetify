@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object     'ignore
 	Private bStatic As Boolean
 End Sub
 
@@ -55,12 +55,12 @@ Sub SetVModel(k As String) As VMListItemAvatar
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMListItemAvatar
+Sub SetVIf(vif As String) As VMListItemAvatar
 	ListItemAvatar.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMListItemAvatar
+Sub SetVShow(vif As String) As VMListItemAvatar
 	ListItemAvatar.SetVShow(vif)
 	Return Me
 End Sub

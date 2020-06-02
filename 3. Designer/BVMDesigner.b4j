@@ -167,10 +167,10 @@ Sub Process_Globals
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
-	Private db As BANanoSQL
-	Private alaSQL As BANanoAlaSQLE
 	Public Version As String = "4.11"
 	Public Port As String = "8080"
+	Private db As BANanoSQL
+	Private alaSQL As BANanoAlaSQLE
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -252,6 +252,6 @@ Sub BANano_Ready
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON
-	'
+
 	pgIndex.init
 End Sub

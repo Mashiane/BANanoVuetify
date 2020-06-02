@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean     'ignore
 	Private Module As Object
 	Public Container As VMContainer
 	Private bStatic As Boolean
@@ -84,12 +84,12 @@ Sub SetVModel(k As String) As VMParallax
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMParallax
+Sub SetVIf(vif As String) As VMParallax
 	Parallax.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMParallax
+Sub SetVShow(vif As String) As VMParallax
 	Parallax.SetVShow(vif)
 	Return Me
 End Sub

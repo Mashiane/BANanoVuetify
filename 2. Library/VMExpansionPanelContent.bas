@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean   'ignore
 	Private Module As Object
 	Public Container As VMContainer
 	Private bStatic As Boolean
@@ -50,12 +50,12 @@ Sub SetVModel(k As String) As VMExpansionPanelContent
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMExpansionPanelContent
+Sub SetVIf(vif As String) As VMExpansionPanelContent
 	ExpansionPanelContent.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMExpansionPanelContent
+Sub SetVShow(vif As String) As VMExpansionPanelContent
 	ExpansionPanelContent.SetVShow(vif)
 	Return Me
 End Sub

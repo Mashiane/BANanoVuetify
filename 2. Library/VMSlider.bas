@@ -142,12 +142,12 @@ Sub SetVModel(k As String) As VMSlider
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSlider
+Sub SetVIf(vif As String) As VMSlider
 	Slider.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSlider
+Sub SetVShow(vif As String) As VMSlider
 	Slider.SetVShow(vif)
 	Return Me
 End Sub
@@ -759,7 +759,7 @@ Sub SetOnClick(methodName As String) As VMSlider
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -795,7 +795,7 @@ Sub SetOnEnd(methodName As String) As VMSlider
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:end": methodName))
+	SetAttr(CreateMap("@end": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -807,7 +807,7 @@ Sub SetOnMousedown(methodName As String) As VMSlider
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:mousedown": methodName))
+	SetAttr(CreateMap("@mousedown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -819,7 +819,7 @@ Sub SetOnMouseup(methodName As String) As VMSlider
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:mouseup": methodName))
+	SetAttr(CreateMap("@mouseup": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -831,7 +831,7 @@ Sub SetOnStart(methodName As String) As VMSlider
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:start": methodName))
+	SetAttr(CreateMap("@start": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -843,7 +843,7 @@ Sub SetOnUpdateError(methodName As String) As VMSlider
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-	SetAttr(CreateMap("v-on:update:error": methodName))
+	SetAttr(CreateMap("@update:error": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

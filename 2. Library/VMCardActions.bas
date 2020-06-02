@@ -76,12 +76,12 @@ Sub SetVModel(k As String) As VMCardActions
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCardActions
+Sub SetVIf(vif As String) As VMCardActions
 	CardActions.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCardActions
+Sub SetVShow(vif As String) As VMCardActions
 	CardActions.SetVShow(vif)
 	Return Me
 End Sub

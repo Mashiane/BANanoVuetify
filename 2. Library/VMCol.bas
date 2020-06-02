@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object    'ignore
 End Sub
 
 'initialize the Col
@@ -48,7 +48,7 @@ Sub SetVModel(k As String) As VMCol
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCol
+Sub SetVIf(vif As String) As VMCol
 	Col.SetVIf(vif)
 	Return Me
 End Sub
@@ -58,7 +58,7 @@ Sub AddContentList(lst As List) As VMCol
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCol
+Sub SetVShow(vif As String) As VMCol
 	Col.SetVShow(vif)
 	Return Me
 End Sub

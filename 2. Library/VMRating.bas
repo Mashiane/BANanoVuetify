@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
 	Private bStatic As Boolean
 	Private vmodel As String
 End Sub
@@ -37,7 +37,7 @@ Sub SetOnInput(eventHandler As Object,methodName As String) As VMRating
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim value As Object
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(value))
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

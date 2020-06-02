@@ -74,12 +74,12 @@ Sub SetVModel(k As String) As VMCardSubTitle
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCardSubTitle
+Sub SetVIf(vif As String) As VMCardSubTitle
 	CardSubTitle.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCardSubTitle
+Sub SetVShow(vif As String) As VMCardSubTitle
 	CardSubTitle.SetVShow(vif)
 	Return Me
 End Sub

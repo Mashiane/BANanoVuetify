@@ -10,9 +10,9 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
-	Private bStatic As Boolean
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object    'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the ListItemTitle
@@ -65,12 +65,12 @@ Sub SetVhtml(vhtml As String) As VMListItemTitle
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMListItemTitle
+Sub SetVIf(vif As String) As VMListItemTitle
 	ListItemTitle.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMListItemTitle
+Sub SetVShow(vif As String) As VMListItemTitle
 	ListItemTitle.SetVShow(vif)
 	Return Me
 End Sub

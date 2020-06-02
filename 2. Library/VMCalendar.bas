@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMCalendar
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCalendar
+Sub SetVIf(vif As String) As VMCalendar
 	Calendar.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCalendar
+Sub SetVShow(vif As String) As VMCalendar
 	Calendar.SetVShow(vif)
 	Return Me
 End Sub
@@ -467,7 +467,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMCalendar
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -479,7 +479,7 @@ Sub SetOnClickDate(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:date": methodName))
+	SetAttr(CreateMap("@click:date": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -491,7 +491,7 @@ Sub SetOnClickDay(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:day": methodName))
+	SetAttr(CreateMap("@click:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -503,7 +503,7 @@ Sub SetOnClickInterval(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:interval": methodName))
+	SetAttr(CreateMap("@click:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -515,7 +515,7 @@ Sub SetOnClickMore(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click:more": methodName))
+	SetAttr(CreateMap("@click:more": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -527,7 +527,7 @@ Sub SetOnClickTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:click:time": methodName))
+	SetAttr(CreateMap("@click:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -539,7 +539,7 @@ Sub SetOnContextmenuDate(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:contextmenu:date": methodName))
+	SetAttr(CreateMap("@contextmenu:date": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -551,7 +551,7 @@ Sub SetOnContextmenuDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:contextmenu:day": methodName))
+	SetAttr(CreateMap("@contextmenu:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -563,7 +563,7 @@ Sub SetOnContextmenuInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:contextmenu:interval": methodName))
+	SetAttr(CreateMap("@contextmenu:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -575,7 +575,7 @@ Sub SetOnContextmenuTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:contextmenu:time": methodName))
+	SetAttr(CreateMap("@contextmenu:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -587,7 +587,7 @@ Sub SetOnInput(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -599,7 +599,7 @@ Sub SetOnMousedownDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mousedown:day": methodName))
+	SetAttr(CreateMap("@mousedown:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -611,7 +611,7 @@ Sub SetOnMousedownInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mousedown:interval": methodName))
+	SetAttr(CreateMap("@mousedown:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -623,7 +623,7 @@ Sub SetOnMousedownTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mousedown:time": methodName))
+	SetAttr(CreateMap("@mousedown:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -635,7 +635,7 @@ Sub SetOnMouseenterDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseenter:day": methodName))
+	SetAttr(CreateMap("@mouseenter:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -647,7 +647,7 @@ Sub SetOnMouseenterInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseenter:interval": methodName))
+	SetAttr(CreateMap("@mouseenter:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -659,7 +659,7 @@ Sub SetOnMouseenterTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseenter:time": methodName))
+	SetAttr(CreateMap("@mouseenter:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -671,7 +671,7 @@ Sub SetOnMouseleaveDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseleave:day": methodName))
+	SetAttr(CreateMap("@mouseleave:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -683,7 +683,7 @@ Sub SetOnMouseleaveInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseleave:interval": methodName))
+	SetAttr(CreateMap("@mouseleave:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -695,7 +695,7 @@ Sub SetOnMouseleaveTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseleave:time": methodName))
+	SetAttr(CreateMap("@mouseleave:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -707,7 +707,7 @@ Sub SetOnMousemoveDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mousemove:day": methodName))
+	SetAttr(CreateMap("@mousemove:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -719,7 +719,7 @@ Sub SetOnMousemoveInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:mousemove:interval": methodName))
+	SetAttr(CreateMap("@mousemove:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -731,7 +731,7 @@ Sub SetOnMousemoveTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mousemove:time": methodName))
+	SetAttr(CreateMap("@mousemove:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -743,7 +743,7 @@ Sub SetOnMouseupDay(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseup:day": methodName))
+	SetAttr(CreateMap("@mouseup:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -755,7 +755,7 @@ Sub SetOnMouseupInterval(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseup:interval": methodName))
+	SetAttr(CreateMap("@mouseup:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -767,7 +767,7 @@ Sub SetOnMouseupTime(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseup:time": methodName))
+	SetAttr(CreateMap("@mouseup:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -779,7 +779,7 @@ Sub SetOnMoved(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:moved": methodName))
+	SetAttr(CreateMap("@moved": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -791,7 +791,7 @@ Sub SetOnTouchendDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:touchend:day": methodName))
+	SetAttr(CreateMap("@touchend:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -803,7 +803,7 @@ Sub SetOnTouchendInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:touchend:interval": methodName))
+	SetAttr(CreateMap("@touchend:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -815,7 +815,7 @@ Sub SetOnTouchendTime(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:touchend:time": methodName))
+	SetAttr(CreateMap("@touchend:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -827,7 +827,7 @@ Sub SetOnTouchmoveDay(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("v-on:touchmove:day": methodName))
+	SetAttr(CreateMap("@touchmove:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -839,7 +839,7 @@ Sub SetOnTouchmoveInterval(methodName As String) As VMCalendar
 	If SubExists(module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:touchmove:interval": methodName))
+	SetAttr(CreateMap("@touchmove:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -851,7 +851,7 @@ Sub SetOnTouchmoveTime(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:touchmove:time": methodName))
+	SetAttr(CreateMap("@touchmove:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -863,7 +863,7 @@ Sub SetOnTouchstartDay(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:touchstart:day": methodName))
+	SetAttr(CreateMap("@touchstart:day": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -875,7 +875,7 @@ Sub SetOnTouchstartInterval(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:touchstart:interval": methodName))
+	SetAttr(CreateMap("@touchstart:interval": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -887,7 +887,7 @@ Sub SetOnTouchstartTime(methodName As String) As VMCalendar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:touchstart:time": methodName))
+	SetAttr(CreateMap("@touchstart:time": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

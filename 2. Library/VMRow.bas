@@ -10,8 +10,8 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean    'ignore
+	Private Module As Object         'ignore
 End Sub
 
 'initialize the Row
@@ -50,12 +50,12 @@ Sub SetVModel(k As String) As VMRow
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMRow
+Sub SetVIf(vif As String) As VMRow
 	Row.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMRow
+Sub SetVShow(vif As String) As VMRow
 	Row.SetVShow(vif)
 	Return Me
 End Sub

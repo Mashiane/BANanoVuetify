@@ -35,12 +35,12 @@ Sub SetVModel(k As String) As VMBreadCrumbs
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMBreadCrumbs
+Sub SetVIf(vif As String) As VMBreadCrumbs
 	BreadCrumbs.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMBreadCrumbs
+Sub SetVShow(vif As String) As VMBreadCrumbs
 	BreadCrumbs.SetVShow(vif)
 	Return Me
 End Sub

@@ -88,12 +88,12 @@ Sub SetVModel(k As String) As VMBanner
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMBanner
+Sub SetVIf(vif As String) As VMBanner
 	Banner.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMBanner
+Sub SetVShow(vif As String) As VMBanner
 	Banner.SetVShow(vif)
 	Return Me
 End Sub

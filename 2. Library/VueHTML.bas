@@ -27,24 +27,552 @@ Sub Class_Globals
 	Private ds As String
 	Private hasContent As Boolean
 	Private DesignMode As Boolean
+	Private vmodel As String
+	Public showKey As String
+	Public disKey As String
+	Public reqKey As String
+	Public errKey As String
+	Private styleKey As String
+	Private classList As List
+	Private classKey As String
+	Public bStatic As Boolean
+	Public value As String
+	Public ErrorMessage As String
+	Public fieldType As String
+	Public typeOf As String
+	Public InputType As String
+	Public styleList As Map
+End Sub
+
+
+'Initializes the html builder
+Public Sub Initialize(elID As String, stag As String) As VueHTML
+	ds = ""
+	classList.Initialize 
+	styleList.Initialize 
+	vmodel = ""
+	hasContent = False
+	ParentID = ""
+	ID = elID.tolowercase
+	If IsValidID(ID) = False Then
+		Log($"Your component ID '${ID}' should contain alphanumeric ONLY!"$)
+	End If
+	
+	typeOf = "text"
+	fieldType = "string"
+	InputType = "text"
+	bStatic = False
+	value = Null
+	IsImportant = False
+	SBBefore.Initialize
+	SBAfter.Initialize
+	properties.Initialize
+	properties.clear
+	Contents.Initialize
+	Contents.clear
+	Styles.Initialize
+	Styles.clear
+	Classes.Initialize
+	Classes.clear
+	LooseAttributes.Initialize
+	LooseAttributes.clear
+	DontBreak.Initialize
+	DontBreak.clear
+	DontBreak.Add("li")
+	DontBreak.Add("a")
+	DontBreak.Add("i")
+	DontBreak.Add("span")
+	DontBreak.Add("img")
+	Tag = stag.tolowercase
+	Prefix = ""
+	DoAProperClose = True
+	CSSRule.Initialize
+	CSSRule.clear
+	SingleQuote.Initialize
+	SingleQuote.clear
+	DesignMode = False
+	ErrorMessage = ""
+	'
+	showKey = $"${ID}show"$
+	disKey = $"${ID}disabled"$
+	reqKey = $"${ID}required"$
+	errKey = $"${ID}error"$
+	styleKey = $"${ID}style"$
+	classKey = $"${ID}class"$
+	DesignMode = False
+	Return Me
+End Sub
+
+
+'set all around margins
+Sub SetMargins(sMT As String, sMB As String, sML As String, sMR As String) As VueHTML
+	SetStyle("margin-top", sMT)
+	SetStyle("margin-bottom", sMB)
+	SetStyle("margin-left", sML)
+	SetStyle("margin-right", sMR)
+	Return Me
+End Sub
+'
+Sub SetPadding(sPT As String, sPB As String, sPL As String, sPR As String) As VueHTML
+	SetStyle("padding-top", sPT)
+	SetStyle("padding-bottom", sPB)
+	SetStyle("padding-left", sPL)
+	SetStyle("padding-right", sPR)
+	Return Me
+End Sub
+
+Sub SetAttrs(attr As Map) As VueHTML
+	For Each k As String In attr.Keys
+		Dim v As String = attr.Get(k)
+		AddAttribute(k, v)
+	Next
+	Return Me
+End Sub
+
+Sub SetAttrMulti(attr As Map) As VueHTML
+	For Each k As String In attr.Keys
+		Dim v As String = attr.Get(k)
+		AddAttribute(k, v)
+	Next
+	Return Me
+End Sub
+
+'remove mutliple attributes
+Sub RemoveAttributes(attrs As List) As VueHTML
+	For Each s As String In attrs
+		RemoveAttr(s)
+	Next
+	Return Me
+End Sub
+
+
+Sub SetVerticalAlignMiddle As VueHTML
+	SetStyles(CreateMap("vertical-align": "middle"))
+	Return Me
+End Sub
+
+Sub SetLineHeight(lh As Object) As VueHTML
+	SetStyles(CreateMap("line-height": lh))
+	Return Me
+End Sub
+
+Sub SetTagSpan(b As Boolean) As VueHTML
+	SetTag("span")
+	Return Me
+End Sub
+
+'bind a property to state
+Sub Bind(prop As String, stateprop As String) As VueHTML
+	prop = prop.tolowercase
+	stateprop = stateprop.ToLowerCase
+	SetAttr(prop, stateprop)
+	Return Me
+End Sub
+
+
+Sub SetVModel(k As String) As VueHTML
+	k = k.tolowercase
+	vmodel = k
+	AddAttribute("v-model", k)
+	Return Me
+End Sub
+
+
+Sub SetChecked(b As Boolean) As VueHTML
+	SetAttrs(CreateMap(":checked":b))
+	Return Me
+End Sub
+
+Sub SetSRC(s As String, bbind As Boolean) As VueHTML
+	If bbind Then
+		SetAttrs(CreateMap(":src":s))
+	Else
+		SetAttrs(CreateMap("src":s))
+	End If
+	Return Me
+End Sub
+
+
+'set padding
+Sub SetBackgroundColor(p As Object) As VueHTML
+	SetStyles(CreateMap("background-color":p))
+	Return Me
+End Sub
+
+Sub SetMarginAll(p As Object) As VueHTML
+	SetStyles(CreateMap("margin":p))
+	Return Me
+End Sub
+
+Sub SetPaddingAll(p As Object) As VueHTML
+	SetStyles(CreateMap("padding":p))
+	Return Me
+End Sub
+
+Sub SetMaxWidth(mw As String) As VueHTML
+	SetStyle("max-width", mw)
+	Return Me
+End Sub
+
+Sub SetMaxHeight(mw As String) As VueHTML
+	SetStyle("max-height",mw)
+	Return Me
+End Sub
+
+Sub SetTo(t As Object) As VueHTML
+	SetAttr("to", t)
+	Return Me
+End Sub
+
+Sub SetHREF(h As String) As VueHTML
+	SetAttrHREF(h)
+	Return Me
+End Sub
+
+
+Sub SetBackgroundImage(sURL As String) As VueHTML
+	SetStyle("background-image", $"url('${sURL}')"$)
+	SetStyle("background-size", "100% 100%")
+	
+'	background: URL(images/bg.jpg) no-repeat center center fixed;
+'	-webkit-background-size: cover;
+'	-moz-background-size: cover;
+'	-o-background-size: cover;
+'	background-size: cover;
+	Return Me
+End Sub
+
+
+'add a class
+Sub AddDynamicClass(className As String) As VueHTML
+	Dim cpos As Int = classList.IndexOf(className)
+	cpos = BANano.parseInt(cpos)
+	If cpos = -1 Then classList.Add(className)
+	Return Me
+End Sub
+
+Sub RemoveDynamicClass(className As String) As VueHTML
+	Dim cpos As Int = classList.IndexOf(className)
+	cpos = BANano.parseInt(cpos)
+	If cpos <> -1 Then classList.RemoveAt(cpos)
+	Return Me
+End Sub
+
+Sub SetKey(k As Object, bBind As Boolean) As VueHTML
+	If bBind Then
+		SetAttr(":key", k)
+	Else
+		SetAttr("key", k)
+	End If
+	Return Me
+End Sub
+
+Sub SetIs(t As String) As VueHTML
+	t = t.tolowercase
+	SetAttrs(CreateMap(":is": t))
+	Return Me
+End Sub
+
+
+Sub SetRef(varRef As String) As VueHTML
+	If varRef <> "" Then
+		SetAttrs(CreateMap("ref": varRef))
+	End If
+	Return Me
+End Sub
+
+Sub SetVText(t As Object) As VueHTML
+	SetAttrs(CreateMap("v-text": t))
+	Return Me
+End Sub
+
+Sub SetVElse(t As Object) As VueHTML
+	SetAttrs(CreateMap("v-else": t))
+	Return Me
+End Sub
+
+Sub SetVElseIf(t As Object) As VueHTML
+	SetAttrs(CreateMap("v-else-if": t))
+	Return Me
+End Sub
+
+Sub SetVOn(t As Object) As VueHTML
+	SetAttrs(CreateMap("v-on": t))
+	Return Me
+End Sub
+
+Sub SetVBind(t As String) As VueHTML
+	t = t.tolowercase
+	SetAttrs(CreateMap("v-bind": t))
+	Return Me
+End Sub
+
+Sub SetVBindIs(t As String) As VueHTML
+	t = t.tolowercase
+	SetAttrs(CreateMap("v-bind:is": t))
+	Return Me
+End Sub
+
+Sub SetVOnce(t As Boolean) As VueHTML
+	If t = False Then Return Me
+	SetAttrLoose("v-once")
+	Return Me
+End Sub
+
+'set for
+Sub SetVFor(item As String, dataSource As String) As VueHTML
+	dataSource = dataSource.tolowercase
+	item = item.tolowercase
+	Dim sline As String = $"${item} in ${dataSource}"$
+	SetAttrs(CreateMap("v-for": sline))
+	RemoveAttr("ref")
+	Return Me
+End Sub
+
+
+Sub SetContainer(b As Boolean) As VueHTML
+	If b = False Then Return Me
+	AddClass("container")
+	Return Me
+End Sub
+
+Sub SetVHtml(h As String) As VueHTML
+	If h = "" Then Return Me
+	h = h.tolowercase
+	SetAttr("v-html", h)
+	Return Me
+End Sub
+
+Sub SetAutoComplete(auto As String) As VueHTML
+	SetAttrs(CreateMap("autocomplete": auto))
+	Return Me
+End Sub
+
+Sub SetName(n As String, bBind As Boolean) As VueHTML
+	If bBind Then
+		RemoveAttr("name")
+		SetAttrs(CreateMap(":name": n))
+	Else
+		RemoveAttr(":name")
+		SetAttrs(CreateMap("name": n))
+	End If
+	Return Me
+End Sub
+
+
+Sub BindStyle(optm As Map) As VueHTML
+	If ID = "" Then Return Me
+	For Each k As String In optm.Keys
+		Dim v As Object = optm.Get(k)
+		styleList.Put(k, v)
+	Next
+	Return Me
+End Sub
+
+Sub BindStyleSingle(prop As String, optm As String) As VueHTML
+	If ID = "" Then Return Me
+	Dim nm As Map = CreateMap()
+	nm.Put(prop, optm)
+	BindStyle(nm)
+	Return Me
+End Sub
+
+
+'set value
+Sub SetValue(valueName As String, bbind As Boolean) As VueHTML
+	If bbind Then
+		RemoveAttr("value")
+		valueName = valueName.tolowercase
+		SetAttrs(CreateMap(":value":valueName))
+	Else
+		value = valueName
+		RemoveAttr(":value")
+		SetAttrs(CreateMap("value":valueName))
+	End If
+	Return Me
+End Sub
+
+Sub SetSlot(sltValue As String) As VueHTML
+	SetAttr("slot", sltValue)
+	Return Me
+End Sub
+
+Sub SetSlotScope(sltValue As String) As VueHTML
+	SetAttr("slot-scope", sltValue)
+	Return Me
+End Sub
+
+Sub SetType(stypeOf As String) As VueHTML
+	SetAttr("type", stypeOf)
+	Return Me
+End Sub
+
+'set the border of the element
+Sub SetBorder(width As String, color As String, bstyle As String) As VueHTML
+	Dim b As Map = CreateMap()
+	b.Put("border-style", bstyle)
+	b.Put("border-width", width)
+	b.Put("border-color", color)
+	SetStyles(b)
+	Return Me
+End Sub
+
+'set cursor move
+Sub SetCursorMove As VueHTML
+	SetStyles(CreateMap("cursor": "move"))
+	Return Me
+End Sub
+
+Sub SetCursorPointer As VueHTML
+	SetStyles(CreateMap("cursor": "pointer"))
+	Return Me
+End Sub
+
+Sub SetTextAlignCenter As VueHTML
+	SetStyles(CreateMap("text-align": "center"))
+	Return Me
+End Sub
+
+Sub SetMethodPost As VueHTML
+	SetAttrs(CreateMap("method":"POST"))
+	Return Me
+End Sub
+
+Sub SetDraggable(b As Boolean) As VueHTML
+	If bStatic Then
+		SetAttr("draggable", b)
+		Return Me
+	End If
+	SetAttrs(CreateMap(":draggable":b))
+	Return Me
+End Sub
+
+Sub SetDroppable(b As Boolean) As VueHTML
+	If bStatic Then
+		SetAttrs(CreateMap("droppable":b))
+		Return Me
+	End If
+	SetAttrs(CreateMap(":droppable":b))
+	Return Me
+End Sub
+
+
+Sub SetStyleSingle(prop As String, vals As String) As VueHTML
+	Dim attr As Map = CreateMap()
+	attr.Put(prop, vals)
+	SetStyles(attr)
+	Return Me
+End Sub
+
+
+Sub SetStyle(prop As String, vals As String) As VueHTML
+	Dim attr As Map = CreateMap()
+	attr.Put(prop, vals)
+	SetStyles(attr)
+	Return Me
+End Sub
+
+Sub SetAttrSingle(prop As String, vals As String) As VueHTML
+	Dim attr As Map = CreateMap()
+	attr.Put(prop, vals)
+	SetAttrs(attr)
+	Return Me
+End Sub
+
+
+Sub SetAttr(prop As String, vals As String) As VueHTML
+	Dim attr As Map = CreateMap()
+	attr.Put(prop, vals)
+	SetAttrs(attr)
+	Return Me
+End Sub
+
+
+Sub SetFor(f As String) As VueHTML
+	SetAttr("for", f)
+	Return Me
+End Sub
+
+Sub SetTextCenter As VueHTML
+	AddClass("text-center")
+	Return Me
+End Sub
+
+Sub SetAttributes(attrs As List) As VueHTML
+	For Each stra As String In attrs
+		SetAttrLoose(stra)
+	Next
+	Return Me
+End Sub
+
+Sub SetAttrLoose(loose As String) As VueHTML
+	AddLooseAttribute(loose)
+	Return Me
+End Sub
+
+
+Sub SetDouble As VueHTML
+	fieldType = "dbl"
+	Return Me
+End Sub
+
+
+Sub SetNumber As VueHTML
+	typeOf = "number"
+	Return Me
+End Sub
+
+Sub SetBool As VueHTML
+	fieldType = "bool"
+	Return Me
+End Sub
+
+Sub SetInt As VueHTML
+	fieldType = "int"
+	Return Me
+End Sub
+
+Sub SetDate As VueHTML
+	fieldType = "date"
+	Return Me
+End Sub
+
+Sub SetButton As VueHTML
+	typeOf = "button"
+	Return Me
+End Sub
+
+Sub SetErrorText(eTxt As String) As VueHTML
+	ErrorMessage = eTxt
+	Return Me
+End Sub
+
+Sub IsValidID(idName As String) As Boolean
+	If idName = "" Then Return True
+	Dim slen As Int = idName.Length
+	Dim i As Int = 0
+	For i = 0 To slen - 1
+		Dim mout As String = idName.CharAt(i)
+		If "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".IndexOf(mout) = -1 Then
+			Return False
+		End If
+	Next
+	Return True
+End Sub
+
+
+Sub SetStatic(b As Boolean) As VueHTML
+	bStatic = b
+	Return Me
 End Sub
 
 'set onchange event
 Sub SetOnChange(eventHandler As Object, methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:change", methodName)
+	SetAttr("@change", methodName)
 	Return Me
 End Sub
 
-Sub SetStyleSingle(prop As String, vals As Object) As VueHTML
-	SetStyle(prop, vals)
-	Return Me
-End Sub
-
-Sub SetAttrSingle(prop As String, vals As Object) As VueHTML
-	SetAttr(prop, vals)
-	Return Me
-End Sub
 
 Sub GetCssStyle(styleName As String) As String
 	Return CSSRule.Get(styleName)
@@ -148,13 +676,13 @@ End Sub
 
 Sub SetOnMouseOut(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:mouseout", methodName)
+	SetAttr("@mouseout", methodName)
 	Return Me
 End Sub
 
 Sub SetOnMouseOver(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:mouseover", methodName)
+	SetAttr("@mouseover", methodName)
 	Return Me
 End Sub
 
@@ -183,26 +711,14 @@ Sub CenterText(b As Boolean) As VueHTML
 End Sub
 
 'set url
-Sub SetURL(u As Object) As VueHTML
+Sub SetURL(u As String) As VueHTML
 	SetAttr("url", u)
 	Return Me
 End Sub
 
-'set to
-Sub SetTo(t As Object) As VueHTML
-	SetAttr("to", t)
-	Return Me
-End Sub
-
 'set color
-Sub SetColor(c As Object) As VueHTML
+Sub SetColor(c As String) As VueHTML
 	SetAttr("color", c)
-	Return Me
-End Sub
-
-'set padding
-Sub SetPadding(p As Object) As VueHTML
-	SetStyleMulti(CreateMap("padding":p))
 	Return Me
 End Sub
 
@@ -216,22 +732,10 @@ Sub SetStyleRound(size As String) As VueHTML
 	Return Me
 End Sub
 
-'set padding
-Sub SetBackgroundColor(p As Object) As VueHTML
-	SetStyleMulti(CreateMap("background-color":p))
-	Return Me
-End Sub
-
 'set template
 Sub SetTemplate(tmp As Object) As VueHTML
 	Clear
 	SetText(tmp)
-	Return Me
-End Sub
-
-'set src bind
-Sub SetSrc(bind As String) As VueHTML
-	SetAttr(":src", bind)
 	Return Me
 End Sub
 
@@ -240,41 +744,13 @@ Sub SetAlt(a As String) As VueHTML
 	Return Me
 End Sub
 
-'set ref
-Sub SetRef(r As String) As VueHTML
-	If r = "" Then Return Me
-	SetAttr("ref", r)
-	Return Me
-End Sub
 
 'set the data source for the list
 Sub SetData(dsx As Object) As VueHTML
 	ds = dsx
 	SetVFor("row", dsx)
-	SetKey("id")
-	SetValue("value")
-	Return Me
-End Sub
-
-'set value
-private Sub SetValue(l As Object) As VueHTML
-	If ds = "" Then
-		Log("VueHTML.SetValue, you need to run VueHTML.SetData first before you set value!")
-	End If
-	Dim valueName As String = $"row.${l}"$
-	Dim txt As String = $"{{ ${valueName} }}"$
-	SetText(txt)
-	SetAttr("v-bind:name", valueName)
-	Return Me
-End Sub
-
-Sub SetDraggable(b As Boolean) As VueHTML
-	SetAttr(":draggable",b)
-	Return Me
-End Sub
-
-Sub SetDroppable(b As Boolean) As VueHTML
-	SetAttr(":droppable",b)
+	SetKey("id",False)
+	SetValue("value",False)
 	Return Me
 End Sub
 
@@ -284,22 +760,6 @@ Sub SetExact(b As Boolean) As VueHTML
 	Return Me
 End Sub
 
-'set for
-Sub SetVFor(item As String, dataSource As String) As VueHTML
-	dataSource = dataSource.tolowercase
-	item = item.tolowercase
-	If ds = "" Then
-		Log("VueHTML.SetValue, you need to run VueHTML.SetData first before you set for!")
-	End If
-	Dim sline As String = $"${item} in ${dataSource}"$
-	SetAttr("v-for", sline)
-	Return Me
-End Sub
-
-Sub SetKey(k As String) As VueHTML
-	SetAttr(":key", k)
-	Return Me
-End Sub
 
 'add break
 Sub AddBR
@@ -312,7 +772,7 @@ Sub AddHR
 End Sub
 
 
-Sub SetVIf(vif As Object) As VueHTML
+Sub SetVIf(vif As String) As VueHTML
 	SetAttr("v-if", vif)
 	Return Me
 End Sub
@@ -322,25 +782,15 @@ Sub SetVShow(vif As String) As VueHTML
 	Return Me
 End Sub
 
-Sub SetDisabled(vdis As String) As VueHTML
-	SetAttr(":disabled", vdis)
-	Return Me
-End Sub
 
 Sub SetStyleHeight(h As Object) As VueHTML
-	SetStyleMulti(CreateMap("height":h))
+	SetStyles(CreateMap("height":h))
 	Return Me
 End Sub
 
-Sub SetVHtml(h As String) As VueHTML
-	If h = "" Then Return Me
-	h = h.tolowercase
-	SetAttr("v-html", h)
-	Return Me
-End Sub
 
 Sub SetStyleWidth(h As Object) As VueHTML
-	SetStyleMulti(CreateMap("width":h))
+	SetStyles(CreateMap("width":h))
 	Return Me
 End Sub
 
@@ -405,7 +855,7 @@ Sub ShuffleList(pl As List) As List
 End Sub
 
 Sub SetInline(b As Boolean) As VueHTML
-	SetStyleMulti(CreateMap("display":"inline-flex","margin-right":"10px"))
+	SetStyles(CreateMap("display":"inline-flex","margin-right":"10px"))
 	Return Me
 End Sub
 
@@ -425,20 +875,11 @@ Sub AddClasses(clsList As List) As VueHTML
 	Return Me
 End Sub
 
-'set attributes from a map
-Sub SetAttributes(m As Map) As VueHTML
-	For Each k As String In m.Keys
-		Dim v As String = m.Get(k)
-		SetAttr(k,v)
-	Next
-	Return Me
-End Sub
-
 'set styles from a map
 Sub SetStyles(m As Map) As VueHTML
 	For Each k As String In m.Keys
 		Dim v As String = m.Get(k)
-		SetStyle(k,v)
+		AddStyle(k, v)
 	Next
 	Return Me
 End Sub
@@ -451,15 +892,8 @@ Sub SetSpan(sText As String) As VueHTML
 	Return Me
 End Sub
 
-
-'set slot
-Sub SetSlot(s As Object) As VueHTML
-	SetAttr("slot", s)
-	Return Me
-End Sub
-
 Sub SetStateOnClick(ns As Object) As VueHTML
-	SetAttr("v-on:click", ns)
+	SetAttr("@click", ns)
 	Return Me
 End Sub
 
@@ -492,12 +926,6 @@ End Sub
 'set row
 Sub SetClassRow(b As Boolean) As VueHTML   'ignore
 	AddClass("row")
-	Return Me
-End Sub
-
-'set an attribute
-Sub SetAttr(attr As String, vals As String) As VueHTML
-	AddAttribute(attr,vals)
 	Return Me
 End Sub
 
@@ -832,47 +1260,6 @@ Sub SetStyleImportant(b As Boolean) As VueHTML
 	Return Me
 End Sub
 
-
-'set style
-Sub SetStyleMulti(m As Map) As VueHTML
-	For Each k As String In m.Keys
-		Dim v As Object = m.Get(k)
-		SetStyle(k,v)
-	Next
-	Return Me
-End Sub
-
-Sub SetCursorPointer As VueHTML
-	SetStyle("cursor", "pointer")
-	Return Me
-End Sub
-
-'set the border of the element
-Sub SetBorder(width As String, color As String, bstyle As String) As VueHTML
-	SetStyle("border-style", bstyle)
-	SetStyle("border-width", width)
-	SetStyle("border-color", color)
-	Return Me
-End Sub
-
-'set cursor move
-Sub SetCursorMove As VueHTML
-	SetStyle("cursor", "move")
-	Return Me
-End Sub
-
-
-Sub SetTextAlignCenter As VueHTML
-	SetStyle("text-align", "center")
-	Return Me
-End Sub
-
-'set style
-Sub SetStyle(prop As String, vals As String) As VueHTML
-	AddStyleAttribute(prop,vals)
-	Return Me
-End Sub
-
 'set width
 Sub SetAttrWidth(w As Object) As VueHTML
 	AddAttribute("width", w)
@@ -994,9 +1381,9 @@ Sub UseTheme(sPrefix As String, themeName As String) As VueHTML
 End Sub
 
 'set attribute
-Sub AddAttributeIfSet(prop As String, value As String) As VueHTML
-	If value <> "" Then
-		AddAttribute(prop,value)
+Sub AddAttributeIfSet(prop As String, svalue As String) As VueHTML
+	If svalue <> "" Then
+		AddAttribute(prop,svalue)
 	End If
 	Return Me
 End Sub
@@ -1047,9 +1434,9 @@ Sub Clear As VueHTML
 End Sub
 
 'set attr on condition
-Sub AddPropertyOnCondition(bCondition As Boolean, attr As String, value As String) As VueHTML
+Sub AddPropertyOnCondition(bCondition As Boolean, attr As String, svalue As String) As VueHTML
 	If bCondition Then
-		AddAttribute(attr,value)
+		AddAttribute(attr,svalue)
 	End If
 	Return Me
 End Sub
@@ -1122,11 +1509,11 @@ Sub GetStyleAttr(attr As String) As String
 End Sub
 
 'add content to the element
-public Sub SetContents(value As String) As VueHTML
+public Sub SetContents(svalue As String) As VueHTML
 	Contents.Initialize
 	Contents.clear
-	If value.Length > 0 Then
-		AddContent(value)
+	If svalue.Length > 0 Then
+		AddContent(svalue)
 	End If
 	Return Me
 End Sub
@@ -1151,10 +1538,10 @@ Sub SetAttrMETHOD(sValue As String) As VueHTML
 End Sub
 
 'add content to the element
-public Sub AddContentLine(value As String) As VueHTML
-	If value <> "" Then
-		value = value.Replace(CRLF,"")
-		AddContent(value)
+public Sub AddContentLine(svalue As String) As VueHTML
+	If svalue <> "" Then
+		svalue = svalue.Replace(CRLF,"")
+		AddContent(svalue)
 	End If
 	Return Me
 End Sub
@@ -1231,9 +1618,9 @@ Sub AddMark(sContent As String, sclass As String) As VueHTML
 End Sub
 
 'add a class to the element
-Sub AddLooseAttributeOnFalseCondition(bStatus As Boolean, value As String) As VueHTML
+Sub AddLooseAttributeOnFalseCondition(bStatus As Boolean, svalue As String) As VueHTML
 	If bStatus = False Then
-		AddLooseAttribute(value)
+		AddLooseAttribute(svalue)
 	End If
 	Return Me
 End Sub
@@ -1259,12 +1646,6 @@ Sub AddContentListReverse(lst As List) As VueHTML
 		Dim strContent As String = lst.Get(lCnt)
 		AddContent(strContent)
 	Next
-	Return Me
-End Sub
-
-
-Sub SetMethodPost As VueHTML
-	AddAttribute("method","POST")
 	Return Me
 End Sub
 
@@ -1338,16 +1719,16 @@ Sub UpdateAttribute(name As String, propValue As Object) As VueHTML
 End Sub
 
 'add a class to the element
-Sub AddLooseAttributeOnCondition(bStatus As Boolean, value As String) As VueHTML
+Sub AddLooseAttributeOnCondition(bStatus As Boolean, svalue As String) As VueHTML
 	If bStatus = True Then
-		AddLooseAttribute(value)
+		AddLooseAttribute(svalue)
 	End If
 	Return Me
 End Sub
 
 'add a class to the element
-Sub AddLooseAttribute(value As String) As VueHTML
-	LooseAttributes.Put(value,value)
+Sub AddLooseAttribute(svalue As String) As VueHTML
+	LooseAttributes.Put(svalue,svalue)
 	Return Me
 End Sub
 
@@ -1396,29 +1777,29 @@ Sub MakePx(sValue As String) As String
 End Sub
 
 
-Sub AddDataAttribute(attribute As String, value As String) As VueHTML
+Sub AddDataAttribute(attribute As String, svalue As String) As VueHTML
 	Dim sw As Boolean = attribute.StartsWith("data-")
 	If sw Then
-		AddAttribute(attribute,value)
+		AddAttribute(attribute,svalue)
 	Else
-		AddAttribute("data-" & attribute,value)
+		AddAttribute("data-" & attribute,svalue)
 	End If
 	Return Me
 End Sub
 
-Sub AddDataAttributeOnCondition(bCondition As Boolean,attribute As String, value As String) As VueHTML
+Sub AddDataAttributeOnCondition(bCondition As Boolean,attribute As String, svalue As String) As VueHTML
 	If bCondition = False Then 
 		Return Me
 	End If
-	AddDataAttribute(attribute,value)
+	AddDataAttribute(attribute,svalue)
 	Return Me
 End Sub
 
-Sub AddStyleOnCondition(bCondition As Boolean,attribute As String, value As String) As VueHTML
+Sub AddStyleOnCondition(bCondition As Boolean,attribute As String, svalue As String) As VueHTML
 	If bCondition = False Then 
 		Return Me
 	End If
-	AddStyle(attribute,value)
+	AddStyle(attribute,svalue)
 	Return Me
 End Sub
 
@@ -1440,16 +1821,16 @@ Sub SetAttrALT(sValue As String) As VueHTML
 	Return Me
 End Sub
 
-Sub AddStyleAttributeOnCondition(bCondition As Boolean, attr As String, value As String) As VueHTML
+Sub AddStyleAttributeOnCondition(bCondition As Boolean, attr As String, svalue As String) As VueHTML
 	If bCondition = True Then
-		SetStyle(attr,value)
+		SetStyle(attr,svalue)
 	End If
 	Return Me
 End Sub
 
-Sub AddAttributeOnCondition(bCondition As Boolean, attr As String, value As String) As VueHTML
+Sub AddAttributeOnCondition(bCondition As Boolean, attr As String, svalue As String) As VueHTML
 	If bCondition = True Then
-		AddAttribute(attr,value)
+		AddAttribute(attr,svalue)
 	End If
 	Return Me
 End Sub
@@ -1464,10 +1845,10 @@ Sub GetAttr(attr As String) As Object
 End Sub
 
 
-Sub ClassExists(value As String) As Boolean
-	value = value.trim
-	If value.Length > 0 Then
-		Return Classes.ContainsKey(value)
+Sub ClassExists(svalue As String) As Boolean
+	svalue = svalue.trim
+	If svalue.Length > 0 Then
+		Return Classes.ContainsKey(svalue)
 	End If
 	Return False
 End Sub
@@ -1489,8 +1870,8 @@ Sub AddCursor As VueHTML
 	Return Me
 End Sub
 
-Sub SetAttrHREF(value As String) As VueHTML
-	AddAttribute("href",value)
+Sub SetAttrHREF(svalue As String) As VueHTML
+	AddAttribute("href",svalue)
 	Return Me
 End Sub
 
@@ -1539,10 +1920,6 @@ Sub AddContentList(lst As List) As VueHTML
 	Return Me
 End Sub
 
-Sub SetType(t As String) As VueHTML
-	SetAttr("type", t)
-	Return Me
-End Sub
 
 'set the text of the element, in most cases you will use AddContent
 Sub SetText(sText As String) As VueHTML
@@ -1620,46 +1997,9 @@ Sub SetAttrMaxHeight(m As Object) As VueHTML
 	Return Me
 End Sub
 
-'Initializes the html builder
-Public Sub Initialize(elID As String, stag As String) As VueHTML
-	ds = ""
-	hasContent = False
-	ParentID = ""
-	ID = elID.tolowercase
-	IsImportant = False
-	SBBefore.Initialize 
-	SBAfter.Initialize 
-	properties.Initialize
-	properties.clear
-	Contents.Initialize
-	Contents.clear
-	Styles.Initialize
-	Styles.clear
-	Classes.Initialize
-	Classes.clear
-	LooseAttributes.Initialize
-	LooseAttributes.clear
-	DontBreak.Initialize
-	DontBreak.clear
-	DontBreak.Add("li")
-	DontBreak.Add("a")
-	DontBreak.Add("i")
-	DontBreak.Add("span")
-	DontBreak.Add("img")
-	Tag = stag.tolowercase
-	Prefix = ""
-	DoAProperClose = True
-	CSSRule.Initialize
-	CSSRule.clear
-	SingleQuote.Initialize
-	SingleQuote.clear
-	DesignMode = False
-	Return Me
-End Sub
-
 'add as a child element
 Sub Pop(pElement As VueHTML)
-	If hasContent Then pElement.SetText(ToString)
+	If hasContent Then SetText(ToString)
 End Sub
 
 'remove a data attribute
@@ -1711,11 +2051,6 @@ public Sub RemoveStyle(styleName As String) As VueHTML
 	Return Me
 End Sub
 
-'set a loose attribute
-Sub SetAttrLoose(value As String) As VueHTML
-	AddLooseAttribute(value)
-	Return Me
-End Sub
 
 'generate component builder code
 private Sub GetComponentBuilder() As String
@@ -1760,12 +2095,12 @@ private Sub ToProperty(sName As String, svalue As Object) As String
 End Sub
 
 'set a data attribute
-Sub SetAttrData(prop As String, value As String) As VueHTML
+Sub SetAttrData(prop As String, svalue As String) As VueHTML
 	Dim sw As Boolean = prop.StartsWith("data-")
 	If sw Then
-		AddAttribute(prop,value)
+		AddAttribute(prop,svalue)
 	Else
-		AddAttribute("data-" & prop,value)
+		AddAttribute("data-" & prop,svalue)
 	End If
 	Return Me
 End Sub
@@ -1777,30 +2112,30 @@ End Sub
 
 
 'add content to the element 
-public Sub AddContent(value As String) As VueHTML
-	value = CStr(value)
-	If value.Length > 0 Then
-		Contents.Add(value)
+public Sub AddContent(svalue As String) As VueHTML
+	svalue = CStr(svalue)
+	If svalue.Length > 0 Then
+		Contents.Add(svalue)
 		hasContent = True
 	End If
 	Return Me
 End Sub
 
 'add content to the element after closure 
-public Sub AddContentAfter(value As String) As VueHTML
-	value = CStr(value)
-	If value.Length > 0 Then
-		SBAfter.Append(value)
+public Sub AddContentAfter(svalue As String) As VueHTML
+	svalue = CStr(svalue)
+	If svalue.Length > 0 Then
+		SBAfter.Append(svalue)
 		hasContent = True
 	End If
 	Return Me
 End Sub
 
 'add content to the element before open 
-public Sub AddContentBefore(value As String) As VueHTML
-	value = CStr(value)
-	If value.Length > 0 Then
-		SBBefore.Append(value)
+public Sub AddContentBefore(svalue As String) As VueHTML
+	svalue = CStr(svalue)
+	If svalue.Length > 0 Then
+		SBBefore.Append(svalue)
 		hasContent = True
 	End If
 	Return Me
@@ -1886,13 +2221,13 @@ Sub BuildStyle() As String
 End Sub
 
 'convert such to property
-private Sub ToStyle(sName As String, value As String) As String
-	If sName.Length > 0 And value.Length > 0 Then
+private Sub ToStyle(sName As String, svalue As String) As String
+	If sName.Length > 0 And svalue.Length > 0 Then
 		Dim ew As Boolean = sName.EndsWith(":")
 		If ew Then
 			sName = MvField(sName,1,":")
 		End If
-		Dim sout As String = $"${sName}:${value};"$
+		Dim sout As String = $"${sName}:${svalue};"$
 		If sout = ":;" Then sout = ""
 		Return sout
 	Else
@@ -1924,88 +2259,45 @@ public Sub MvFieldFrom(sValue As String, iPosition As Int, Delimiter As String) 
 	Return sb.tostring
 End Sub
 
-Sub SetVModel(varVModel As String) As VueHTML
-	varVModel = varVModel.tolowercase
-	SetAttr("v-model", varVModel)
-	Return Me
-End Sub
-
 Sub SetOnDblClick(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:dblclick", methodName)
-	Return Me
-End Sub
-
-Sub SetVOn(t As Object) As VueHTML
-	SetAttr("v-on", t)
-	Return Me
-End Sub
-
-Sub SetVBind(t As String) As VueHTML
-	t = t.tolowercase
-	SetAttr("v-bind", t)
-	Return Me
-End Sub
-
-Sub SetVBindIs(t As String) As VueHTML
-	SetAttr("v-bind:is", t)
-	Return Me
-End Sub
-
-Sub SetVOnce(t As Object) As VueHTML
-	SetAttr("v-once", t)
-	Return Me
-End Sub
-
-
-Sub SetVText(t As Object) As VueHTML
-	SetAttr("v-text", t)
-	Return Me
-End Sub
-
-Sub SetVElse(t As Object) As VueHTML
-	SetAttr("v-else", t)
-	Return Me
-End Sub
-
-Sub SetVElseIf(t As Object) As VueHTML
-	SetAttr("v-else-if", t)
+	SetAttr("@dblclick", methodName)
 	Return Me
 End Sub
 
 Sub SetOnSubmit(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:submit", methodName)
+	SetAttr("@submit", methodName)
 	Return Me
 End Sub
 
 Sub SetOnKeyDown(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:keydown", methodName)
+	SetAttr("@keydown", methodName)
 	Return Me
 End Sub
 
 Sub SetOnKeyUp(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:keyup", methodName)
+	SetAttr("@keyup", methodName)
 	Return Me
 End Sub
 
 Sub SetOnInput(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:input", methodName)
+	SetAttr("@input", methodName)
 	Return Me
 End Sub
 
 Sub SetOnFocus(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:focus", methodName)
+	SetAttr("@focus", methodName)
 	Return Me
 End Sub
 
 Sub SetOnBlur(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:blur", methodName)
+	SetAttr("@blur", methodName)
 	Return Me
 End Sub
 
@@ -2013,13 +2305,13 @@ End Sub
 'set onclick event
 Sub SetOnClick(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:click", methodName)
+	SetAttr("@click", methodName)
 	Return Me
 End Sub
 
 Sub SetOnTouchStart(methodName As String) As VueHTML
 	methodName = methodName.tolowercase
-	SetAttr("v-on:touchstart", methodName)
+	SetAttr("@touchstart", methodName)
 	Return Me
 End Sub
 
@@ -2227,8 +2519,8 @@ private Sub RemDelim(sValue As String, Delim As String) As String
 End Sub
 
 'set the style attribute
-Sub AddStyle(prop As String, value As Object) As VueHTML
-	AddStyleAttribute(prop,value)
+Sub AddStyle(prop As String, svalue As Object) As VueHTML
+	AddStyleAttribute(prop,svalue)
 	Return Me
 End Sub
 
@@ -2261,10 +2553,12 @@ End Sub
 
 
 'add a class to the element
-Sub AddClass(value As String) As VueHTML
+Sub AddClass(svalue As String) As VueHTML
+	svalue = svalue.Trim
+	If svalue = "" Then Return Me
 	'add classes delimited by space
-	value = value.Replace(" ",";")
-	Dim spClasses As List = StrParse(";",value)
+	svalue = svalue.Replace(" ",";")
+	Dim spClasses As List = StrParse(";",svalue)
 	For Each strClass As String In spClasses
 		strClass = strClass.Trim
 		If strClass.Length > 0 Then 
@@ -2353,14 +2647,6 @@ Sub SetDesignMode(b As Boolean) As VueHTML
 	Return Me
 End Sub
 
-'remove mutliple attributes
-Sub RemoveAttributes(attrs As List) As VueHTML
-	For Each s As String In attrs
-		RemoveAttr(s)
-	Next
-	Return Me
-End Sub
-
 'turn the element into html
 public Sub ToString As String
 	If DesignMode Then
@@ -2424,111 +2710,111 @@ End Sub
 
 
 'add a bold text
-Sub AddBold(value As String) As VueHTML
+Sub AddBold(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("{B}").Append(value).Append("{/B}")
+	sb.Append("{B}").Append(svalue).Append("{/B}")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
 'add italic text
-Sub AddItalic(value As String) As VueHTML
+Sub AddItalic(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("{I}").Append(value).Append("{/I}")
+	sb.Append("{I}").Append(svalue).Append("{/I}")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
 'add underlined text
-Sub AddUnderline(value As String) As VueHTML
+Sub AddUnderline(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("{U}").Append(value).Append("{/U}")
+	sb.Append("{U}").Append(svalue).Append("{/U}")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
 'add subscript text
-Sub AddSubScript(value As String) As VueHTML
+Sub AddSubScript(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("{SUB}").Append(value).Append("{/SUB}")
+	sb.Append("{SUB}").Append(svalue).Append("{/SUB}")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
 'add superscript text
-Sub AddSuperScript(value As String) As VueHTML
+Sub AddSuperScript(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("{SUP}").Append(value).Append("{/SUP}")
+	sb.Append("{SUP}").Append(svalue).Append("{/SUP}")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
-Sub AddSub(value As String) As VueHTML
+Sub AddSub(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("<sub>").Append(value).Append("</sub>")
+	sb.Append("<sub>").Append(svalue).Append("</sub>")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
-Sub AddKBD(value As String) As VueHTML
+Sub AddKBD(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("<kbd>").Append(value).Append("</kbd>")
-	AddContent(sb.ToString)
-	Return Me
-End Sub
-
-
-Sub AddCode(value As String) As VueHTML
-	Dim sb As StringBuilder
-	sb.Initialize
-	sb.Append("<code>").Append(value).Append("</code>")
-	AddContent(sb.ToString)
-	Return Me
-End Sub
-
-Sub AddPre(value As String) As VueHTML
-	Dim sb As StringBuilder
-	sb.Initialize
-	sb.Append("<pre>").Append(value).Append("</pre>")
+	sb.Append("<kbd>").Append(svalue).Append("</kbd>")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
 
-Sub AddSup(value As String) As VueHTML
+Sub AddCode(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("<sup>").Append(value).Append("</sup>")
+	sb.Append("<code>").Append(svalue).Append("</code>")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
-Sub AddCite(value As String) As VueHTML
+Sub AddPre(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("<cite>").Append(value).Append("</cite>")
+	sb.Append("<pre>").Append(svalue).Append("</pre>")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
-Sub AddEM(value As String) As VueHTML
+
+Sub AddSup(svalue As String) As VueHTML
 	Dim sb As StringBuilder
 	sb.Initialize
-	sb.Append("<em>").Append(value).Append("</em>")
+	sb.Append("<sup>").Append(svalue).Append("</sup>")
 	AddContent(sb.ToString)
 	Return Me
 End Sub
 
-Sub AddStrong(value As String) As VueHTML
+Sub AddCite(svalue As String) As VueHTML
+	Dim sb As StringBuilder
+	sb.Initialize
+	sb.Append("<cite>").Append(svalue).Append("</cite>")
+	AddContent(sb.ToString)
+	Return Me
+End Sub
+
+Sub AddEM(svalue As String) As VueHTML
+	Dim sb As StringBuilder
+	sb.Initialize
+	sb.Append("<em>").Append(svalue).Append("</em>")
+	AddContent(sb.ToString)
+	Return Me
+End Sub
+
+Sub AddStrong(svalue As String) As VueHTML
 	Dim s As VueHTML
-	s = CreateStrong("").SetText(value)
+	s = CreateStrong("").SetText(svalue)
 	AddElement(s)
 	Return Me
 End Sub
@@ -3217,7 +3503,7 @@ Sub BuildModel(props As Map, styleProps As Map, classNames As List, loose As Lis
 	If props <> Null Then
 		For Each k As String In props.Keys
 			Dim v As String = props.Get(k)
-		 	SetAttrSingle(k, v)
+		 	SetAttr(k, v)
 		Next
 	End If
 	If styleProps <> Null Then

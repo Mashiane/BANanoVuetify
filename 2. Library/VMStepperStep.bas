@@ -75,12 +75,12 @@ Sub SetVModel(k As String) As VMStepperStep
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMStepperStep
+Sub SetVIf(vif As String) As VMStepperStep
 	StepperStep.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMStepperStep
+Sub SetVShow(vif As String) As VMStepperStep
 	StepperStep.SetVShow(vif)
 	Return Me
 End Sub
@@ -234,7 +234,7 @@ Sub SetOnClick(methodName As String) As VMStepperStep
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

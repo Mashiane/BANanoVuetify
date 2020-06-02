@@ -161,12 +161,12 @@ Sub SetVModel(k As String) As VMMenu
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMMenu
+Sub SetVIf(vif As String) As VMMenu
 	Menu.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMMenu
+Sub SetVShow(vif As String) As VMMenu
 	Menu.SetVShow(vif)
 	Return Me
 End Sub

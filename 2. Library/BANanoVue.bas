@@ -12,21 +12,12 @@ Sub Class_Globals
 	Public methods As Map
 	Public data As Map
 	'Public store As Map
+	Public el As BANanoObject
 	Public refs As BANanoObject
 	Public body As BANanoElement
 	Public Template As VueHTML
 	Public computed As Map
 	Public watches As Map
-	Private created As BANanoObject
-	Private mounted As BANanoObject
-	Private beforeCreate As BANanoObject
-	Private destroyed As BANanoObject
-	Private beforeMount As BANanoObject
-	Private updated As BANanoObject
-	Private beforeDestroy As BANanoObject
-	Private activated As BANanoObject
-	Private deactivated As BANanoObject
-	Private beforeUpdate As BANanoObject
 	'Private TypeOfString As BANanoObject   'ignore
 	'Private TypeOfNumber As BANanoObject   'ignore
 	'Private TypeOfBoolean As BANanoObject  'ignore
@@ -75,6 +66,7 @@ Sub Class_Globals
 	Public const BORDER_OUTSET As String = "outset"
 	Public const BORDER_RIDGE As String = "ridge"
 	Public const BORDER_SOLID As String = "solid"
+	
 	'
 	Public const COLOR_AMBER As String = "amber"
 	Public const COLOR_BLACK As String = "black"
@@ -143,39 +135,38 @@ Sub Class_Globals
 	Public HashType As Map
 	Public Algorithm As Map
 	Public Errors As Map
+	Public preloader As BANanoElement
 End Sub
 
 'initialize view
-Public Sub Initialize()
-	Errors.Initialize
-	SourceCode.Initialize
-	Themes.Initialize 
-	Modules.Initialize 
-	BOVue.Initialize("Vue")
-	'store = BOVue.RunMethod("observable", Null).Result
+Public Sub Initialize(Module As Object)
 	'empty the body of the page
 	body = BANAno.GetElement("#body")
 	body.empty
 	'add an empty div
+	Dim elx As VMElement = CreatePreloader("preloader")
+	body.Append(elx.tostring)
+	preloader = body.Get("#preloader")
+	'
+	SetOnReadyChange(Module)
+	ShowPreloader
+		
 	body.Append($"<div id="app"></div>"$)
 	Template.Initialize("app","div")
-	'Template.SetVCloak
+	'
+	Errors.Initialize
+	SourceCode.Initialize
+	Themes.Initialize
+	Modules.Initialize
+	BOVue.Initialize("Vue")
+	'store = BOVue.RunMethod("observable", Null).Result
+	
+	Template.SetVCloak
 	methods.Initialize
 	data.Initialize
 	computed.Initialize  
 	watches.Initialize
 	routes.Initialize 
-	beforeMount = Null
-	beforeUpdate = Null
-	created = Null
-	mounted = Null
-	destroyed = Null
-	updated = Null
-	beforeCreate = Null
-	activated = Null
-	deactivated = Null
-	beforeDestroy = Null
-	'
 	'TypeOfString = BOVue.GetField("String")
 	'TypeOfNumber = BOVue.GetField("Number")
 	'TypeOfBoolean = BOVue.GetField("Boolean")
@@ -549,7 +540,246 @@ Public Sub Initialize()
 	ControlTypes.put("speeddial", "Speed Dial")
 	ControlTypes.Put("quill", "Quill Editor")
 	ControlTypes.Put("None", "None")
+	'
+	SetBeforeCreate(Module, "BeforeCreate")
+	SetCreated(Module, "Created")
+	SetBeforeMount(Module, "BeforeMount")
+	SetMounted(Module, "Mounted")
+	SetBeforeUpdate(Module, "BeforeUpdate")
+	SetUpdated(Module, "Updated")
+	SetBeforeDestroy(Module, "BeforeDestroy")
+	SetDestroyed(Module, "Destroyed")
+	'
+	If SubExists(Module, "ReadyChange") = False Then
+		Log("Initialize.ReadyChange - please consider adding this optional callback!")
+	End If
+	
+	If SubExists(Module, "BeforeCreate") = False Then
+		Log("Initialize.BeforeCreate - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "Created") = False Then
+		Log("Initialize.Created - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "BeforeMount") = False Then
+		Log("Initialize.BeforeMount - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "Mounted") = False Then
+		Log("Initialize.Mounted - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "BeforeUpdate") = False Then
+		Log("Initialize.BeforeUpdate - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "Updated") = False Then
+		Log("Initialize.Updated - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "BeforeDestroy") = False Then
+		Log("Initialize.BeforeDestroy - please consider adding this optional callback!")
+	End If
+	'
+	If SubExists(Module, "Destroyed") = False Then
+		Log("Initialize.Destroyed - please consider adding this optional callback!")
+	End If
 End Sub
+
+#if css
+.preloadcontainer {
+    height: 100vh;
+    width: 100vw;
+    font-family: Helvetica
+}
+
+.loader {
+    height: 20px;
+    width: 250px;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    margin: auto
+}
+
+.loader--dot {
+    animation-name: loader;
+    animation-timing-function: ease-in-out;
+    animation-duration: 3s;
+    animation-iteration-count: infinite;
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    background-color: #000;
+    position: absolute;
+    border: 2px solid #fff
+}
+
+.loader--dot:first-child {
+    background-color: #8cc759;
+    animation-delay: .5s
+}
+
+.loader--dot:nth-child(2) {
+    background-color: #8c6daf;
+    animation-delay: .4s
+}
+
+.loader--dot:nth-child(3) {
+    background-color: #ef5d74;
+    animation-delay: .3s
+}
+
+.loader--dot:nth-child(4) {
+    background-color: #f9a74b;
+    animation-delay: .2s
+}
+
+.loader--dot:nth-child(5) {
+    background-color: #60beeb;
+    animation-delay: .1s
+}
+
+.loader--dot:nth-child(6) {
+    background-color: #fbef5a;
+    animation-delay: 0s
+}
+
+.loader--text {
+    position: absolute;
+    top: 200%;
+    left: 0;
+    right: 0;
+    width: 4rem;
+    margin: auto
+}
+
+.loader--text:after {
+    content: "Loading";
+    font-weight: 700;
+    animation-name: loading-text;
+    animation-duration: 3s;
+    animation-iteration-count: infinite
+}
+
+@keyframes loader {
+    15% {
+        transform: translateX(0)
+    }
+
+    45% {
+        transform: translateX(230px)
+    }
+
+    65% {
+        transform: translateX(230px)
+    }
+
+    95% {
+        transform: translateX(0)
+    }
+}
+
+@keyframes loading-text {
+    0% {
+        content: "Loading"
+    }
+
+    25% {
+        content: "Loading."
+    }
+
+    50% {
+        content: "Loading.."
+    }
+
+    75% {
+        content: "Loading..."
+    }
+}
+#End If
+'
+'#if javascript
+'	document.onreadystatechange = function() { 
+'            if (document.readyState !== "complete") { 
+'                document.querySelector("body").style.visibility = "hidden"; 
+'                document.querySelector("#preloader").style.visibility = "visible"; 
+'            } else { 
+'                document.querySelector("#preloader").style.display = "none"; 
+'                document.querySelector("body").style.visibility = "visible"; 
+'            } 
+'        }; 
+'#End If
+
+'get document ready state
+Sub GetReadyState As String
+	Dim rs As String = BANAno.Window.GetField("document").GetField("readyState").Result
+	Return rs
+End Sub
+
+'set ready change event
+Sub SetOnReadyChange(EventHandler As Object) As BANanoVue
+	If SubExists(EventHandler, "ReadyChange") = False Then Return Me
+	Dim cb As BANanoObject = BANAno.callback(EventHandler, "ReadyChange", Null)
+	BANAno.Window.GetField("document").AddEventListener("readystatechange", cb, True)
+	Return Me
+End Sub
+
+private Sub HideBody As BANanoVue
+	Dim stylem As Map = CreateMap("visibility":"hidden")
+	body.SetStyle(BANAno.ToJson(stylem))
+	Return Me
+End Sub
+
+
+private Sub ShowBody As BANanoVue
+	Dim stylem As Map = CreateMap("visibility":"visible")
+	body.SetStyle(BANAno.ToJson(stylem))
+	Return Me
+End Sub
+
+
+Sub ShowPreloader As BANanoVue
+	Dim stylem As Map = CreateMap("visibility":"visible")
+	preloader.SetStyle(BANAno.ToJson(stylem))
+	HideBody
+	Return Me
+End Sub
+
+
+Sub HidePreloader As BANanoVue
+	Dim stylem As Map = CreateMap("display":"none")
+	preloader.SetStyle(BANAno.ToJson(stylem))
+	ShowBody
+	Return Me
+End Sub
+
+Sub RemovePreloader
+	BANAno.GetElement("#preloader").Remove
+End Sub
+
+Sub CreatePreloader(pid As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(Me, pid).SetTag("div").AddClass("preloadcontainer")
+	'
+	Dim ldr As VMElement
+	ldr.Initialize(Me, "").SetTag("div").AddClass("loader")
+	'
+	ldr.AddChildDiv("", "loader--dot")
+	ldr.AddChildDiv("", "loader--dot")
+	ldr.AddChildDiv("", "loader--dot")
+	ldr.AddChildDiv("", "loader--dot")
+	ldr.AddChildDiv("", "loader--dot")
+	ldr.AddChildDiv("", "loader--dot")
+	ldr.AddChildDiv("", "loader--text")
+	'
+	elx.AddComponent(ldr.ToString)
+	Return elx 
+End Sub
+
 
 'add an error to the collection
 Sub AddError(vmodel As String, vError As String)
@@ -1834,17 +2064,17 @@ End Sub
 
 'create an OPTION element
 Sub CreateOPTION(sid As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,sid).SetTag("option")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,sid).SetTag("option")
+	Return elx
 End Sub
 
 
 'create a 'select' element
 Sub CreateSELECT(sid As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,sid).SetTag("select")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,sid).SetTag("select")
+	Return elx
 End Sub
 
 
@@ -1967,33 +2197,33 @@ Sub MakePx(sValue As String) As String
 End Sub
 
 Sub CreateFORM(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("form")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("form")
+	Return elx
 End Sub
 
 Sub CreateLABEL(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("label")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("label")
+	Return elx
 End Sub
 
 Sub CreateINPUT(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("input")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("input")
+	Return elx
 End Sub
 
 Sub CreateTEXTAREA(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("textarea")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("textarea")
+	Return elx
 End Sub
 
 Sub CreateBUTTON1(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("button")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("button")
+	Return elx
 End Sub
 
 'add a style to be applied after rendering
@@ -2088,15 +2318,15 @@ Sub AddRoute(path As String, comp As VMComponent)
 End Sub
 
 Sub CreateRouterLink(Text As String) As VueHTML
-	Dim el As VueHTML
-	el.Initialize("","router-link").SetText(Text)
-	Return el
+	Dim elx As VueHTML
+	elx.Initialize("","router-link").SetText(Text)
+	Return elx
 End Sub
 
 Sub CreateRouterView As VueHTML
-	Dim el As VueHTML
-	el.Initialize("","router-view")
-	Return el
+	Dim elx As VueHTML
+	elx.Initialize("","router-view")
+	Return elx
 End Sub
 
 Sub AuditTrail(oldM As Map, newM As Map) As Map
@@ -2706,16 +2936,6 @@ Sub UX()
 	If computed.Size > 0 Then Options.Put("computed", computed)
 	If watches.Size > 0 Then Options.Put("watch", watches)
 	If components.Size > 0 Then Options.Put("components", components)
-	If updated <> Null Then Options.Put("updated", updated)
-	If destroyed <> Null Then Options.Put("destroyed", destroyed)
-	If mounted <> Null Then	Options.Put("mounted", mounted)
-	If beforeCreate <> Null Then Options.Put("beforeCreate", beforeCreate)
-	If created <> Null Then Options.Put("created", created)
-	If beforeMount <> Null Then Options.Put("beforeMount", beforeMount)
-	If beforeUpdate <> Null Then Options.Put("beforeUpdate", beforeUpdate)
-	If activated <> Null Then Options.Put("activated", activated)
-	If deactivated <> Null Then Options.Put("deactivated", deactivated)
-	If beforeDestroy <> Null Then Options.Put("beforeDestroy", beforeDestroy)
 	Options.Put("template", tmp)
 	BOVue.Initialize2("Vue", Options)
 	'get the state
@@ -2724,6 +2944,8 @@ Sub UX()
 	'get the refs
 	Dim rKey As String = "$refs"
 	refs = BOVue.GetField(rKey)
+	Dim elKey As String = "$el"
+	el = BOVue.GetField(elKey)
 	'enable data to be available globally
 	'BOVue.GetField("prototype").SetField("$store", store)
 End Sub
@@ -2742,7 +2964,10 @@ End Sub
 'set mounted
 Sub SetMounted(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	mounted = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim mounted As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("mounted", mounted)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2750,7 +2975,10 @@ End Sub
 'set destroyed
 Sub SetDestroyed(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	destroyed = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim destroyed As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("destroyed", destroyed)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2758,7 +2986,10 @@ End Sub
 'set activated
 Sub SetActivated(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	activated = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim activated As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("activated", activated)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2766,7 +2997,10 @@ End Sub
 'set deactivated
 Sub SetDeActivated(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	deactivated = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim deactivated As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("deactivated", deactivated)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2774,28 +3008,40 @@ End Sub
 'set updated
 Sub SetUpdated(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	updated = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim updated As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("updated", updated)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
 'set beforemount
 Sub SetBeforeMount(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	beforeMount = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeMount As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("beforeMount", beforeMount)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
 'set beforeupdate
 Sub SetBeforeUpdate(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	beforeMount = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeUpdate As Boolean = BANAno.CallBack(module, methodName, Null)
+	Options.Put("beforeUpdate", beforeUpdate)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
 'set before destroy
 Sub SetBeforeDestroy(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	beforeDestroy = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeDestroy As Boolean = BANAno.CallBack(module, methodName, Null)
+	Options.Put("beforeDestroy", beforeDestroy)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2803,7 +3049,10 @@ End Sub
 'set before created
 Sub SetBeforeCreate(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	beforeCreate = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeCreate As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("beforeCreate", beforeCreate)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2811,7 +3060,10 @@ End Sub
 'set created
 Sub SetCreated(module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	created = BANAno.CallBack(module, methodName, Null)
+	If SubExists(module, methodName) = False Then Return Me
+	Dim created As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Options.Put("created", created)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 
@@ -2842,7 +3094,7 @@ Sub RemoveMethod(methodName As String) As BANanoVue
 End Sub
 
 'set computed
-Sub SetComputed(k As String, module As Object, methodName As String) As BANanoVue
+Sub SetComputed1(k As String, module As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) Then
 		k = k.tolowercase
@@ -2852,6 +3104,17 @@ Sub SetComputed(k As String, module As Object, methodName As String) As BANanoVu
 		Dim e As BANanoEvent
 		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(e))
 		computed.Put(k, cb)
+	End If
+	Return Me
+End Sub
+
+'set computed
+Sub SetComputed(module As Object, methodName As String) As BANanoVue
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) Then
+		Dim e As BANanoEvent
+		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(e))
+		computed.Put(methodName, cb)
 	End If
 	Return Me
 End Sub
@@ -2952,102 +3215,102 @@ Sub GetState(k As String, v As Object) As Object
 End Sub
 
 Sub CreateTag(id As String, tag As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,id).SetTag(tag)
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,id).SetTag(tag)
+	Return elx
 End Sub
 
 Sub CreateDiv(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,id).SetTag("div")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,id).SetTag("div")
+	Return elx
 End Sub
 
 Sub CreateSPAN(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,id).SetTag("span")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,id).SetTag("span")
+	Return elx
 End Sub
 
 Sub CreateUL(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,id).SetTag("ul")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,id).SetTag("ul")
+	Return elx
 End Sub
 
 Sub CreateLI(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,id).SetTag("li")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,id).SetTag("li")
+	Return elx
 End Sub
 
 
 Sub CreateOL(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,id).SetTag("ol")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,id).SetTag("ol")
+	Return elx
 End Sub
 
 
 Sub CreateP(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("p")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("p")
+	Return elx
 End Sub
 
 Sub CreateKeepAlive(sid As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me,sid).SetTag("keep-alive")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me,sid).SetTag("keep-alive")
+	Return elx
 End Sub
 
 'create an element with a 'component' tag
 Sub CreateComponent(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("component")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("component")
+	Return elx
 End Sub
 
 Sub CreateIMG(img As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, img).SetTag("img")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, img).SetTag("img")
+	Return elx
 End Sub
 
 Sub CreateH1(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("h1")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("h1")
+	Return elx
 End Sub
 
 Sub CreateH2(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("h2")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("h2")
+	Return elx
 End Sub
 
 Sub CreateH3(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("h3")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("h3")
+	Return elx
 End Sub
 
 Sub CreateH4(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("h4")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("h4")
+	Return elx
 End Sub
 
 Sub CreateH5(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("h5")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("h5")
+	Return elx
 End Sub
 
 Sub CreateH6(id As String) As VMElement
-	Dim el As VMElement
-	el.Initialize(Me, id).SetTag("h6")
-	Return el
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("h6")
+	Return elx
 End Sub
 
 
@@ -3419,3 +3682,78 @@ private Sub OnError(event As Map) As String 'ignore
 	
 	BANAno.ReturnElse(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.GetField("error"), "abort": Abort))
 End Sub
+
+'
+'join list to multi value string with a quote
+Sub JoinItems(delimiter As String, sQuote As String, lst As List) As String
+	If lst.Size = 0 Then Return ""
+	Dim i As Int
+	Dim sb As StringBuilder
+	Dim fld As String
+	sb.Initialize
+	fld = lst.Get(0)
+	Dim xfld As String = $"${fld}"$
+	xfld = sQuote & xfld & sQuote
+	sb.Append(xfld)
+	For i = 1 To lst.size - 1
+		Dim fld As String = lst.Get(i)
+		Dim xfld As String = $"${fld}"$
+		xfld = sQuote & xfld & sQuote
+		sb.Append(delimiter).Append(xfld)
+	Next
+	Return sb.ToString
+End Sub
+
+
+'focus on a ref
+Sub SetFocus(refID As String)
+	refID = refID.tolowercase
+	refs.GetField(refID).RunMethod("focus", Null)
+End Sub
+
+
+'nullify the file select
+Sub NullifyFileSelect(refID As String)
+	RefNull(refID)
+End Sub
+
+Sub RefNull(refID As String)
+	refID = refID.tolowercase
+	refs.GetField(refID).SetField("value", Null)
+End Sub
+
+
+'click a reference
+Sub RefClick(refID As String)
+	refID = refID.tolowercase
+	refs.GetField(refID).RunMethod("click", Null)
+End Sub
+
+Sub ShowFileSelect(fsName As String)
+	RefClick(fsName)
+End Sub
+
+
+Sub RefreshKey(keyName As String) As BANanoVue
+	keyName = keyName.ToLowerCase
+	SetData(keyName, DateTime.now)
+	Return Me
+End Sub
+
+
+Sub Increment(elID As String, valueOf As Int) As BANanoVue
+	elID = elID.tolowercase
+	Dim oldv As Int = GetState(elID,0)
+	oldv = BANAno.parseInt(oldv) + valueOf
+	SetStateSingle(elID, oldv)
+	Return Me
+End Sub
+
+Sub Decrement(elID As String, valueOf As Int) As BANanoVue
+	elID = elID.tolowercase
+	Dim oldv As Int = GetState(elID,0)
+	oldv = BANAno.parseInt(oldv) - valueOf
+	SetStateSingle(elID, oldv)
+	Return Me
+End Sub
+

@@ -1,15 +1,17 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
 File1=fonts.zip
-File2=materialdesignicons.min.css
-File3=materialfont.min.css
-File4=roboto.min.css
-File5=upload.php
-File6=vue.min.js
-File7=vue-router.min.js
-File8=vuetify.min.css
-File9=vuetify.min.js
+File10=vuetify.min.js
+File2=market.min.css
+File3=materialdesignicons.min.css
+File4=materialfont.min.css
+File5=roboto.min.css
+File6=upload.php
+File7=vue.min.js
+File8=vue-router.min.js
+File9=vuetify.min.css
 FileGroup1=Default Group
+FileGroup10=Default Group
 FileGroup2=Default Group
 FileGroup3=Default Group
 FileGroup4=Default Group
@@ -142,7 +144,7 @@ Module96=VMSnackBar
 Module97=VMSparkLine
 Module98=VMSpeedDial
 Module99=VMStepper
-NumberOfFiles=9
+NumberOfFiles=10
 NumberOfLibraries=3
 NumberOfModules=120
 Version=8.3
@@ -183,9 +185,11 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'3. uncomment lines from below
 	
 	BANano.Header.AddCSSFile("roboto.min.css")
+	BANano.Header.AddCSSFile("market.min.css")
 	BANano.Header.AddCSSFile("materialfont.min.css")
 	BANano.header.AddCSSFile("materialdesignicons.min.css")
 	BANano.Header.AddCSSFile("vuetify.min.css")
+	'BANano.Header.AddCSSFile("preload.min.css")
 	
 	BANano.Header.AddJavascriptFile("vue.min.js")
 	BANano.Header.AddJavascriptFile("vuetify.min.js")

@@ -1082,12 +1082,12 @@ Sub AddItem(key As String, iconName As String, color As String, text As String, 
 End Sub
 
 
-Sub SetVIf(vif As Object) As VMToolBar
+Sub SetVIf(vif As String) As VMToolBar
 	ToolBar.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMToolBar
+Sub SetVShow(vif As String) As VMToolBar
 	ToolBar.SetVShow(vif)
 	Return Me
 End Sub

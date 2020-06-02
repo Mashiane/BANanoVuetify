@@ -71,12 +71,12 @@ Sub SetVModel(k As String) As VMCarousel
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMCarousel
+Sub SetVIf(vif As String) As VMCarousel
 	Carousel.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMCarousel
+Sub SetVShow(vif As String) As VMCarousel
 	Carousel.SetVShow(vif)
 	Return Me
 End Sub
@@ -462,7 +462,7 @@ Sub SetOnInput(methodName As String) As VMCarousel
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

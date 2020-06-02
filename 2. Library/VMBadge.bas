@@ -21,7 +21,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	HasContent = False
 	vue = v
 	ID = sid.tolowercase
-	Badge.Initialize(v, ID).SetVModel(ID)
+	Badge.Initialize(v, ID)
 	Badge.SetTag("v-badge")
 	DesignMode = False
 	Module = eventHandler
@@ -89,11 +89,6 @@ Sub UseTheme(themeName As String) As VMBadge
 		Dim sclass As String = themes.Get(themeName)
 		AddClass(sclass)
 	End If
-	Return Me
-End Sub
-
-Sub SetVModel(k As String) As VMBadge
-	Badge.SetVModel(k)
 	Return Me
 End Sub
 
@@ -402,13 +397,8 @@ Sub SetTransition(varTransition As String) As VMBadge
 	Return Me
 End Sub
 
-Sub SetVisible(b As Boolean) As VMBadge
-	SetValue(b)
-	Return Me
-End Sub
-
 'set value / whether its visible . not
-Sub SetValue(varValue As Boolean) As VMBadge
+Sub SetVisible(varValue As Boolean) As VMBadge
 	If varValue = "" Then Return Me
 	If bStatic Then
 		Badge.SetValue(varValue,False)
@@ -421,12 +411,12 @@ Sub SetValue(varValue As Boolean) As VMBadge
 End Sub
 
 Sub Hide As VMBadge
-	Badge.SetVisible(False)
+	vue.SetData(ID, False)
 	Return Me
 End Sub
 
 Sub Show As VMBadge
-	Badge.SetVisible(True)
+	vue.SetData(ID, True)
 	Return Me
 End Sub
 

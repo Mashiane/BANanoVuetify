@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean  'ignore
 	Private Module As Object
 	Public childList As VMList
 	Private bStatic As Boolean
@@ -70,12 +70,12 @@ Sub SetVModel(k As String) As VMListItem
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMListItem
+Sub SetVIf(vif As String) As VMListItem
 	ListItem.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMListItem
+Sub SetVShow(vif As String) As VMListItem
 	ListItem.SetVShow(vif)
 	Return Me
 End Sub
@@ -406,7 +406,7 @@ Sub SetOnClick(methodName As String) As VMListItem
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -417,7 +417,7 @@ Sub SetOnKeydown(methodName As String) As VMListItem
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:keydown": methodName))
+	SetAttr(CreateMap("@keydown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

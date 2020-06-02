@@ -221,12 +221,12 @@ Sub SetVModel(k As String) As VMTextField
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMTextField
+Sub SetVIf(vif As String) As VMTextField
 	TextField.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMTextField
+Sub SetVShow(vif As String) As VMTextField
 	TextField.SetVShow(vif)
 	Return Me
 End Sub
@@ -917,7 +917,7 @@ Sub SetOnBlur(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:blur": methodName))
+	SetAttr(CreateMap("@blur": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -929,7 +929,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -940,7 +940,7 @@ Sub SetOnFile(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim fileList As Object
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(fileList))
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -952,7 +952,7 @@ Sub SetOnClick(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click": methodName))
+	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -964,7 +964,7 @@ Sub SetOnClickAppend(eventHandler As Object, methodName As String) As VMTextFiel
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click:append": methodName))
+	SetAttr(CreateMap("@click:append": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -976,7 +976,7 @@ Sub SetOnClickAppendOuter(eventHandler As Object, methodName As String) As VMTex
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click:append-outer": methodName))
+	SetAttr(CreateMap("@click:append-outer": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -988,7 +988,7 @@ Sub SetOnClickClear(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click:clear": methodName))
+	SetAttr(CreateMap("@click:clear": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1000,7 +1000,7 @@ Sub SetOnClickPrepend(eventHandler As Object, methodName As String) As VMTextFie
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click:prepend": methodName))
+	SetAttr(CreateMap("@click:prepend": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1012,7 +1012,7 @@ Sub SetOnClickPrependInner(eventHandler As Object, methodName As String) As VMTe
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:click:prepend-inner": methodName))
+	SetAttr(CreateMap("@click:prepend-inner": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1024,7 +1024,7 @@ Sub SetOnFocus(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:focus": methodName))
+	SetAttr(CreateMap("@focus": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1036,7 +1036,7 @@ Sub SetOnInput(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1048,7 +1048,7 @@ Sub SetOnKeydown(eventHandler As Object, methodName As String) As VMTextField
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:keydown": methodName))
+	SetAttr(CreateMap("@keydown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1060,7 +1060,7 @@ Sub SetOnMousedown(methodName As String) As VMTextField
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mousedown": methodName))
+	SetAttr(CreateMap("@mousedown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1072,7 +1072,7 @@ Sub SetOnMouseup(methodName As String) As VMTextField
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:mouseup": methodName))
+	SetAttr(CreateMap("@mouseup": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
@@ -1084,7 +1084,7 @@ Sub SetOnUpdateError(methodName As String) As VMTextField
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:update:error": methodName))
+	SetAttr(CreateMap("@update:error": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

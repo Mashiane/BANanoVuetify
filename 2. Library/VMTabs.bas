@@ -198,12 +198,12 @@ Sub SetVModel(k As String) As VMTabs
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMTabs
+Sub SetVIf(vif As String) As VMTabs
 	Tabs.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMTabs
+Sub SetVShow(vif As String) As VMTabs
 	Tabs.SetVShow(vif)
 	Return Me
 End Sub
@@ -591,7 +591,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMTabs
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("v-on:change": methodName))
+	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me

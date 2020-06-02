@@ -8,28 +8,18 @@ Version=8.3
 Sub Class_Globals
 	Public Template As VMElement
 	Public ID As String
-	Private DesignMode As Boolean
-	Private Static As Boolean
-	Private EventHandler As Object
-	Private vue As BANanoVue
+	Private DesignMode As Boolean   'ignore
+	Private Static As Boolean      'ignore
+	Private EventHandler As Object   'ignore
+	Private vue As BANanoVue    'ignore
 	Private methods As Map
 	Private computed As Map
 	Private watches As Map
-	Private created As BANanoObject
-	Private mounted As BANanoObject
-	Private beforeCreate As BANanoObject
-	Private destroyed As BANanoObject
-	Private beforeMount As BANanoObject
-	Private updated As BANanoObject
-	Private beforeDestroy As BANanoObject
-	Private activated As BANanoObject
-	Private deactivated As BANanoObject
-	Private beforeUpdate As BANanoObject
 	Private opt As Map
 	Private data As Map
 	Private refs As Map
 	Private props As List
-	Private BANano As BANano
+	Private BANano As BANano   'ignore
 	Public URL As String
 	Public name As String
 	Private propFrom As String
@@ -52,16 +42,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, Module As Object) As VMComp
 	methods.Initialize
 	computed.Initialize
 	watches.Initialize
-	beforeMount = Null
-	beforeUpdate = Null
-	created = Null
-	mounted = Null
-	destroyed = Null
-	updated = Null
-	beforeCreate = Null
-	activated = Null
-	deactivated = Null
-	beforeDestroy = Null
 	URL = $"/${ID}"$
 	name = ID
 	Return Me
@@ -155,16 +135,6 @@ Sub Component() As Map
 	If computed.Size > 0 Then opt.Put("computed", computed)
 	If watches.Size > 0 Then opt.Put("watch", watches)
 	If props.Size <> 0 Then opt.Put("props", props)
-	If updated <> Null Then opt.Put("updated", updated)
-	If destroyed <> Null Then opt.Put("destroyed", destroyed)
-	If mounted <> Null Then	opt.Put("mounted", mounted)
-	If beforeCreate <> Null Then opt.Put("beforeCreate", beforeCreate)
-	If created <> Null Then opt.Put("created", created)
-	If beforeMount <> Null Then opt.Put("beforeMount", beforeMount)
-	If beforeUpdate <> Null Then opt.Put("beforeUpdate", beforeUpdate)
-	If activated <> Null Then opt.Put("activated", activated)
-	If deactivated <> Null Then opt.Put("deactivated", deactivated)
-	If beforeDestroy <> Null Then opt.Put("beforeDestroy", beforeDestroy)
 	opt.Put("template", tmp)
 	Return opt
 End Sub
@@ -211,13 +181,6 @@ End Sub
 
 
 
-'set created
-Sub SetCreated(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	created = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
 'set direct method
 Sub SetMethod(Module As Object,methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
@@ -226,75 +189,6 @@ Sub SetMethod(Module As Object,methodName As String) As VMComponent
 		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 		methods.Put(methodName, cb)
 	End If
-	Return Me
-End Sub
-
-'set before destroy
-Sub SetBeforeDestroy(module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	beforeDestroy = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-'set activated
-Sub SetActivated(module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	activated = BANano.CallBack(module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set deactivated
-Sub SetDeActivated(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	deactivated = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set updated
-Sub SetUpdated(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	updated = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
-'set beforemount
-Sub SetBeforeMount(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	beforeMount = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
-'set beforeupdate
-Sub SetBeforeUpdate(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	beforeMount = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set mounted
-Sub SetMounted(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	mounted = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
-
-'set destroyed
-Sub SetDestroyed(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	destroyed = BANano.CallBack(Module, methodName, Null)
-	Return Me
-End Sub
-
-
-
-'set before created
-Sub SetBeforeCreate(Module As Object,methodName As String) As VMComponent
-	methodName = methodName.ToLowerCase
-	beforeCreate = BANano.CallBack(Module, methodName, Null)
 	Return Me
 End Sub
 

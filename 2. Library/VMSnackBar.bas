@@ -10,7 +10,7 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
+	Private DesignMode As Boolean  'ignore
 	Private Module As Object
 	Public Button As VMButton
 	Private mKey As String
@@ -170,12 +170,12 @@ Sub SetVModel(k As String) As VMSnackBar
 	Return Me
 End Sub
 
-Sub SetVIf(vif As Object) As VMSnackBar
+Sub SetVIf(vif As String) As VMSnackBar
 	SnackBar.SetVIf(vif)
 	Return Me
 End Sub
 
-Sub SetVShow(vif As Object) As VMSnackBar
+Sub SetVShow(vif As String) As VMSnackBar
 	SnackBar.SetVShow(vif)
 	Return Me
 End Sub
@@ -312,7 +312,7 @@ Sub SetOnInput(methodName As String) As VMSnackBar
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("v-on:input": methodName))
+	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
 	Return Me
