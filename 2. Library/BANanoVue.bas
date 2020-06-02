@@ -135,7 +135,6 @@ Sub Class_Globals
 	Public HashType As Map
 	Public Algorithm As Map
 	Public Errors As Map
-	Public preloader As BANanoElement
 End Sub
 
 'initialize view
@@ -143,14 +142,6 @@ Public Sub Initialize(Module As Object)
 	'empty the body of the page
 	body = BANAno.GetElement("#body")
 	body.empty
-	'add an empty div
-	Dim elx As VMElement = CreatePreloader("preloader")
-	body.Append(elx.tostring)
-	preloader = body.Get("#preloader")
-	'
-	SetOnReadyChange(Module)
-	ShowPreloader
-		
 	body.Append($"<div id="app"></div>"$)
 	Template.Initialize("app","div")
 	'
@@ -550,9 +541,9 @@ Public Sub Initialize(Module As Object)
 	SetBeforeDestroy(Module, "BeforeDestroy")
 	SetDestroyed(Module, "Destroyed")
 	'
-	If SubExists(Module, "ReadyChange") = False Then
-		Log("Initialize.ReadyChange - please consider adding this optional callback!")
-	End If
+	'If SubExists(Module, "ReadyChange") = False Then
+	'	Log("Initialize.ReadyChange - please consider adding this optional callback!")
+	'End If
 	
 	If SubExists(Module, "BeforeCreate") = False Then
 		Log("Initialize.BeforeCreate - please consider adding this optional callback!")
@@ -701,18 +692,37 @@ End Sub
     }
 }
 #End If
-'
-'#if javascript
-'	document.onreadystatechange = function() { 
-'            if (document.readyState !== "complete") { 
-'                document.querySelector("body").style.visibility = "hidden"; 
-'                document.querySelector("#preloader").style.visibility = "visible"; 
-'            } else { 
-'                document.querySelector("#preloader").style.display = "none"; 
-'                document.querySelector("body").style.visibility = "visible"; 
-'            } 
-'        }; 
-'#End If
+
+#if javascript
+	var pl = document.createElement("div");
+	pl.id = "preloader";
+	pl.className = "preloadcontainer";
+	var ldr = document.createElement("div");
+	ldr.className = "loader";
+	var dot = document.createElement("div");
+	dot.className = "loader--dot";
+	var lot = document.createElement("div");
+	lot.className = "loader--text";
+	ldr.appendChild(dot.cloneNode(true));
+	ldr.appendChild(dot.cloneNode(true));
+	ldr.appendChild(dot.cloneNode(true));
+	ldr.appendChild(dot.cloneNode(true));
+	ldr.appendChild(dot.cloneNode(true));
+	ldr.appendChild(dot.cloneNode(true));
+	ldr.appendChild(lot);
+	pl.appendChild(ldr);
+	document.body.appendChild(pl);
+	 
+	document.onreadystatechange = function() { 
+            if (document.readyState !== "complete") { 
+                document.querySelector("body").style.visibility = "hidden"; 
+                document.querySelector("#preloader").style.visibility = "visible"; 
+            } else { 
+                // document.querySelector("#preloader").style.display = "none"; 
+                // document.querySelector("body").style.visibility = "visible"; 
+            } 
+        }; 
+#End If
 
 'get document ready state
 Sub GetReadyState As String
@@ -727,7 +737,7 @@ Sub SetOnReadyChange(EventHandler As Object) As BANanoVue
 	BANAno.Window.GetField("document").AddEventListener("readystatechange", cb, True)
 	Return Me
 End Sub
-
+'
 private Sub HideBody As BANanoVue
 	Dim stylem As Map = CreateMap("visibility":"hidden")
 	body.SetStyle(BANAno.ToJson(stylem))
@@ -744,7 +754,7 @@ End Sub
 
 Sub ShowPreloader As BANanoVue
 	Dim stylem As Map = CreateMap("visibility":"visible")
-	preloader.SetStyle(BANAno.ToJson(stylem))
+	BANAno.GetElement("#preloader").SetStyle(BANAno.ToJson(stylem))
 	HideBody
 	Return Me
 End Sub
@@ -752,7 +762,7 @@ End Sub
 
 Sub HidePreloader As BANanoVue
 	Dim stylem As Map = CreateMap("display":"none")
-	preloader.SetStyle(BANAno.ToJson(stylem))
+	BANAno.GetElement("#preloader").SetStyle(BANAno.ToJson(stylem))
 	ShowBody
 	Return Me
 End Sub
@@ -760,26 +770,6 @@ End Sub
 Sub RemovePreloader
 	BANAno.GetElement("#preloader").Remove
 End Sub
-
-Sub CreatePreloader(pid As String) As VMElement
-	Dim elx As VMElement
-	elx.Initialize(Me, pid).SetTag("div").AddClass("preloadcontainer")
-	'
-	Dim ldr As VMElement
-	ldr.Initialize(Me, "").SetTag("div").AddClass("loader")
-	'
-	ldr.AddChildDiv("", "loader--dot")
-	ldr.AddChildDiv("", "loader--dot")
-	ldr.AddChildDiv("", "loader--dot")
-	ldr.AddChildDiv("", "loader--dot")
-	ldr.AddChildDiv("", "loader--dot")
-	ldr.AddChildDiv("", "loader--dot")
-	ldr.AddChildDiv("", "loader--text")
-	'
-	elx.AddComponent(ldr.ToString)
-	Return elx 
-End Sub
-
 
 'add an error to the collection
 Sub AddError(vmodel As String, vError As String)

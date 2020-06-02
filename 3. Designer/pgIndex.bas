@@ -910,19 +910,19 @@ Sub Init
 	vm.setdata("project", prjRec)
 	vm.setstate(prjRec)
 End Sub
-
-''the state of the document is changing
-Sub ReadyChange
-	Log(vm.DateTimeNow & " ReadyChange")
-	Dim rs As String = vue.GetReadyState
-	Log(rs)
-	Select Case rs
-		Case "complete"
-		'	vue.HidePreloader
-		Case Else
-			vue.ShowPreloader
-	End Select
-End Sub
+'
+'''the state of the document is changing
+'Sub ReadyChange
+'	Log(vm.DateTimeNow & " ReadyChange")
+'	Dim rs As String = vue.GetReadyState
+'	Log(rs)
+'	Select Case rs
+'		Case "complete"
+'		'	vue.HidePreloader
+'		Case Else
+'			vue.ShowPreloader
+'	End Select
+'End Sub
 
 
 Sub Destroyed
@@ -950,7 +950,6 @@ End Sub
 
 Sub BeforeCreate
 	Log(vm.DateTimeNow & " App BeforeCreate")
-	vue.ShowPreloader
 End Sub
 
 'when the #el is mounted
@@ -2083,9 +2082,6 @@ Sub CreateUX
 	'myipad.SetStatic(html)
 	'myiphone.SetStatic(html)
 	
-	'
-	vue.HidePreloader
-		
 	vm.pageresume
 End Sub
 

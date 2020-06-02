@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=pgIndex,Init,898,0,pgIndex,BeforeDestroy,929,0,pgIndex,BeforeMount,940,0,pgIndex,CreateDialog_Multifields,982,0,pgIndex,Created,956,0,pgIndex,Updated,931,0,pgIndex,Mounted,950,0,pgIndex,BeforeCreate,948,0,pgIndex,BeforeUpdate,935,0,pgIndex,ReadyChange,920,0
+NavigationStack=pgIndex,Created,956,0,pgIndex,Updated,931,0,pgIndex,Mounted,950,0,pgIndex,BeforeUpdate,935,0,Main,AppStart,23,0,Main,Process_Globals,8,0,Main,BANano_Ready,102,0,pgIndex,Init,916,0,pgIndex,BeforeCreate,946,0,pgIndex,CreateUX,2075,0,pgIndex,Process_Globals,14,0
 SelectedBuild=0
 VisibleModules=1
