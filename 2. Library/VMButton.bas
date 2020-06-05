@@ -57,6 +57,13 @@ End Sub
 'set the badge value
 Sub SetBadge(bvalue As String) As VMButton
 	Badge.SetContent(bvalue)
+	Badge.SetBordered(True)
+	Badge.SetOverlap(True)
+	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
+	Badge.SetAvatar(True)
+	Badge.SetIcon("")
+	Badge.SetDark(True)
+	Badge.SetDot(False)
 	Return Me
 End Sub
 

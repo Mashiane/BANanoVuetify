@@ -106,6 +106,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetSlotOpposite As VMContainer
+	Container.SetAttrLoose("v-slot:opposite")
+	Return Me
+End Sub
+
 Sub SetFillHeight(b As Boolean) As VMContainer
 	If b = False Then Return Me
 	AddClass("fill-height")
@@ -1114,6 +1120,8 @@ Sub SetTextCenter As VMContainer
 	Return Me
 End Sub
 
+
+
 Sub SetAttrLoose(loose As String) As VMContainer
 	Container.SetAttrLoose(loose)
 	Return Me
@@ -1832,14 +1840,20 @@ End Sub
 Sub AddChild(child As VMElement) As VMContainer
 	Dim childHTML As String = child.ToString
 	Container.SetText(childHTML)
-	hascontent = True
+	HasContent = True
 	Return Me
 End Sub
 
 'set text
 Sub SetText(t As String) As VMContainer
 	Container.SetText(t)
-	hascontent = True
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddHTML(htmlContent As String) As VMContainer
+	Container.SetText(htmlContent)
+	HasContent = True
 	Return Me
 End Sub
 

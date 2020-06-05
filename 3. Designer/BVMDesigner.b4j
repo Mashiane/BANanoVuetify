@@ -61,11 +61,14 @@ File61=telephone.png
 File62=text.png
 File63=textarea.png
 File64=time.png
-File65=toolbar.png
-File66=upload.php
-File67=uploader.png
-File68=vbanner.jpg
+File65=timeline.png
+File66=timelineitem.png
+File67=toolbar.png
+File68=treeview.png
+File69=upload.php
 File7=android-chrome-192x192.png
+File70=uploader.png
+File71=vbanner.jpg
 File8=android-chrome-512x512.png
 File9=apple-touch-icon.png
 FileGroup1=Default Group
@@ -133,7 +136,10 @@ FileGroup65=Default Group
 FileGroup66=Default Group
 FileGroup67=Default Group
 FileGroup68=Default Group
+FileGroup69=Default Group
 FileGroup7=Default Group
+FileGroup70=Default Group
+FileGroup71=Default Group
 FileGroup8=Default Group
 FileGroup9=Default Group
 Group=Default Group
@@ -148,7 +154,7 @@ Library7=bananovuetifyprism
 Library8=bananovuetifydevice
 Library9=bananovuetifyquill
 Module1=pgIndex
-NumberOfFiles=68
+NumberOfFiles=71
 NumberOfLibraries=10
 NumberOfModules=1
 Version=8.3
@@ -167,10 +173,11 @@ Sub Process_Globals
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.11"
+	Public Version As String = "4.12"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
+	Public TotComponents As String = "44"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -242,6 +249,7 @@ Sub BANano_Ready
 	alaSQL.Initialize("project", "id")
 	alaSQL.SchemaAddInt(Array("id"))
 	alaSQL.SchemaAddStrings(Array("projectname","dbtype","databasename","components","senderemail","sendtoemail","ccemail"))
+	alaSQL.SchemaAddStrings(Array("dbusername", "dbpassword", "dbhost"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON

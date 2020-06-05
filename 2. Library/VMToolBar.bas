@@ -24,6 +24,7 @@ Sub Class_Globals
 	Private tTitle As String
 	Public RightHamburger As VMElement
 	Private spanCnt As Int
+	Public TitleVModel As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMToolBar
@@ -44,7 +45,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Tabs.OnToolBar = True
 	'
 	tTitle = $"${ID}title"$
-	Title.Initialize(vue, "appbartitle").SetTag("v-toolbar-title")
+	TitleVModel = tTitle
+	Title.Initialize(vue, $"${ID}title"$).SetTag("v-toolbar-title")
 	Title.SetCursorPointer
 	'
 	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").AddClass("my-1").BindStyleSingle("opacity", "1")
@@ -390,14 +392,14 @@ Sub AddTitle(tt As String, ttClass As String) As VMToolBar
 		Dim page_title As String = $"{{ ${tTitle} }}"$
 		Title.SetText(page_title)
 	End If
+	Title.SetVisible(True)
 	Title.Pop(ToolBar)
 	HasContent = True
 	Return Me
 End Sub
 
 Sub UpdateTitle(tt As String) As VMToolBar
-	Dim pp As String = $"${ID}title"$
-	vue.SetStateSingle(pp, tt)
+	vue.SetStateSingle(tTitle, tt)
 	HasContent = True
 	Return Me
 End Sub

@@ -26,6 +26,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	SetVisible(True)
 	Return Me
 End Sub
 
@@ -243,7 +244,6 @@ End Sub
 
 'set icon
 Sub SetIcon(varIcon As String) As VMBadge
-	If varIcon = "" Then Return Me
 	If bStatic Then 
 		SetAttrSingle("icon", varIcon)
 		Return Me

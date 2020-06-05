@@ -39,7 +39,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	vue = v
 	module = eventHandler
-	expnl.Initialize(v, ID, eventHandler).SetAccordion(True)
+	expnl.Initialize(v, ID, eventHandler).SetAccordion(True).SetFocusable(True).SetFlat(True)
 	DesignMode = False
 	controls.initialize
 	fields.initialize
@@ -1315,7 +1315,21 @@ Sub ToString As String
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
-					'
+				'
+				'add combo to select and process keys
+				Dim cbo As VMSelect
+				cbo.Initialize(vue, "cboKeySelect", Me)
+				cbo.Setlabel("Item Selector")
+				cbo.SetVModel("keyselector")
+				cbo.SetDataSource("tableitems", "key", "key", False)
+				cbo.RemoveAttr("ref")
+				cbo.SetDense(True)
+				cbo.SetOutlined(True)
+				cbo.SetHideDetails(True)
+				cbo.AddClass("my-1")
+				cbo.SetOnChange(Me, "cboKeySelect")
+				bcont.AddComponent(1,1, cbo.ToString)
+				'
 				'add input controls
 				Dim tcont As VMContainer
 				tcont.Initialize(vue, "tbl" & nc.vmodel, module).SetTag("div").SetStatic(True)
@@ -1398,6 +1412,19 @@ Sub ToString As String
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
+				'
+				Dim cbo As VMSelect
+				cbo.Initialize(vue, "cboKeySelect", Me)
+				cbo.Setlabel("Item Selector")
+				cbo.SetVModel("keyselector")
+				cbo.SetDataSource("tableitems", "key", "key", False)
+				cbo.RemoveAttr("ref")
+				cbo.SetDense(True)
+				cbo.SetOutlined(True)
+				cbo.SetHideDetails(True)
+				cbo.AddClass("my-1")
+				cbo.SetOnChange(Me, "cboKeySelect")
+				bcont.AddComponent(1,1, cbo.ToString)
 				'
 				'add input controls
 				Dim tcont As VMContainer
@@ -1649,6 +1676,20 @@ Sub ToString As String
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
+				'
+				Dim cbo As VMSelect
+				cbo.Initialize(vue, "cboKeySelect", Me)
+				cbo.Setlabel("Item Selector")
+				cbo.SetVModel("keyselector")
+				cbo.SetDataSource("tableitems", "key", "key", False)
+				cbo.RemoveAttr("ref")
+				cbo.SetDense(True)
+				cbo.SetOutlined(True)
+				cbo.SetHideDetails(True)
+				cbo.AddClass("my-1")
+				cbo.SetOnChange(Me, "cboKeySelect")
+				bcont.AddComponent(1,1, cbo.ToString)
+					
 				'add input controls
 				Dim tcont As VMContainer
 				tcont.Initialize(vue, "tbl" & nc.vmodel, module).SetTag("div").SetStatic(True)
@@ -1716,6 +1757,20 @@ Sub ToString As String
 				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
+				'
+				Dim cbo As VMSelect
+				cbo.Initialize(vue, "cboKeySelect", Me)
+				cbo.Setlabel("Item Selector")
+				cbo.SetVModel("keyselector")
+				cbo.SetDataSource("tableitems", "key", "key", False)
+				cbo.RemoveAttr("ref")
+				cbo.SetDense(True)
+				cbo.SetOutlined(True)
+				cbo.SetHideDetails(True)
+				cbo.AddClass("my-1")
+				cbo.SetOnChange(Me, "cboKeySelect")
+				bcont.AddComponent(1,1, cbo.ToString)
+					
 				'add input controls
 				Dim tcont As VMContainer
 				tcont.Initialize(vue, "tbl" & nc.vmodel, module).SetTag("div").SetStatic(True)
@@ -2386,4 +2441,10 @@ Sub AddSwitches(parent As String, options As Map)
 		Strings.Add(k)
 		vue.SetData(k, "No")
 	Next
+End Sub
+
+'edit the item
+Sub cboKeySelect(value As String)
+	If value = "" Then Return
+	EditItem(value)
 End Sub

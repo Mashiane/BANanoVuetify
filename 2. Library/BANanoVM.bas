@@ -718,6 +718,10 @@ Sub CreateProgressLinear(sid As String, eventHandler As Object) As VMProgressLin
 End Sub
 
 Sub ShowSnackBarError(Message As String)
+	Message = CStr(Message)
+	Message = Message.Replace("null", "")
+	Message = Message.Trim
+	If Message = "" Then Return
 	SetStateSingle("snackmessage", Message)
 	SnackBar.SetTop(True)
 	SnackBar.SetColor("red")
@@ -726,6 +730,10 @@ Sub ShowSnackBarError(Message As String)
 End Sub
 
 Sub ShowSnackBarSuccess(Message As String)
+	Message = CStr(Message)
+	Message = Message.Replace("null", "")
+	Message = Message.Trim
+	If Message = "" Then Return
 	SetStateSingle("snackmessage", Message)
 	SnackBar.SetColor("green")
 	SnackBar.SetTop(True)
@@ -734,6 +742,10 @@ Sub ShowSnackBarSuccess(Message As String)
 End Sub
 
 Sub ShowSnackBar(Message As String)
+	Message = CStr(Message)
+	Message = Message.Replace("null", "")
+	Message = Message.Trim
+	If Message = "" Then Return
 	SetStateSingle("snackmessage", Message)
 	SnackBar.Button.Hide
 	SnackBar.show
@@ -892,7 +904,7 @@ End Sub
 'show a specific drawer and hide all others
 Sub ShowDrawer(dID As String)
 	dID = dID.tolowercase
-	HideDrawers
+	HideOtherDrawers(dID)
 	SetStateTrue(dID)
 End Sub
 
@@ -904,6 +916,15 @@ Sub HideDrawers
 	Next
 	SetState(nm)
 End Sub
+
+Sub HideOtherDrawers(sexcept As String)
+	Dim nm As Map = CreateMap()
+	For Each k As String In drawers
+		If k.EqualsIgnoreCase(sexcept) = False Then nm.Put(k, False)
+	Next
+	SetState(nm)
+End Sub
+
 
 Sub HideDialog(dID As String)
 	dID = dID.tolowercase
@@ -1252,23 +1273,54 @@ Sub AddRoute(path As String, comp As VMComponent) As BANanoVM
 	Return Me
 End Sub
 
-Sub UpdateBadge(elID As String, counted As String) As BANanoVM
+Sub SetBadgeAvatar(elID As String, b As Boolean) As BANanoVM
 	elID = elID.tolowercase
-	Dim badValue As String = $"${elID}value"$
-	vue.SetStateSingle(badValue, counted)
+	Dim badValue As String = $"${elID}badgeavatar"$
+	vue.SetStateSingle(badValue, b)
 	Return Me
 End Sub
 
-Sub UpdateItemBadge(elID As String, counted As String) As BANanoVM
+Sub SetBadgeOverlap(elID As String, b As Boolean) As BANanoVM
 	elID = elID.tolowercase
-	Dim badValue As String = $"${elID}badgevalue"$
+	Dim badValue As String = $"${elID}badgeoverlap"$
+	vue.SetStateSingle(badValue, b)
+	Return Me
+End Sub
+
+
+Sub SetBadgeBordered(elID As String, bordered As Boolean) As BANanoVM
+	elID = elID.tolowercase
+	Dim badValue As String = $"${elID}badgebordered"$
+	vue.SetStateSingle(badValue, bordered)
+	Return Me
+End Sub
+
+Sub SetBadgeColor(elID As String, color As String, intensity As String) As BANanoVM
+	elID = elID.tolowercase
+	Dim scolor As String = $"${color} ${intensity}"$
+	Dim badValue As String = $"${elID}badgecolor"$
+	vue.SetStateSingle(badValue, scolor)
+	Return Me
+End Sub
+
+Sub SetBadgeIcon(elID As String, sicon As String) As BANanoVM
+	elID = elID.tolowercase
+	Dim badValue As String = $"${elID}badgeicon"$
+	vue.SetStateSingle(badValue, sicon)
+	Return Me
+End Sub
+
+Sub SetBadgeContent(elID As String, counted As String) As BANanoVM
+	elID = elID.tolowercase
+	counted = BANano.parseInt(counted)
+	Dim badValue As String = $"${elID}badgecontent"$
 	vue.SetStateSingle(badValue, counted)
 	Return Me
 End Sub
 
 Sub IncrementBadge(elID As String, counted As Int) As BANanoVM
 	elID = elID.tolowercase
-	Dim badValue As String = $"${elID}badgevalue"$
+	Dim badValue As String = $"${elID}badgecontent"$
 	Dim lastValue As String = vue.GetState(badValue, "0")
 	Dim intLast As Int = BANano.parseInt(lastValue)
 	intLast = intLast + counted
@@ -1278,7 +1330,7 @@ End Sub
 
 Sub DecrementBadge(elID As String, counted As Int) As BANanoVM
 	elID = elID.tolowercase
-	Dim badValue As String = $"${elID}badgevalue"$
+	Dim badValue As String = $"${elID}badgecontent"$
 	Dim lastValue As String = vue.GetState(badValue, "0")
 	Dim intLast As Int = BANano.parseInt(lastValue)
 	intLast = intLast - counted
@@ -2124,6 +2176,7 @@ Sub ScrollTo(elID As String, duration As Int, offset As Int, easing As String)
 		elID = elID.tolowercase
 		Dim el As BANanoObject = vue.refs.GetField(elID)
 		If duration = Null Then duration = 300
+		If offset = Null Then offset = 0
 		If easing = "" Then easing = "easeInOutCubic"
 		Dim opt As Map = CreateMap()
 		opt.Put("duration", duration)
@@ -2693,4 +2746,47 @@ private Sub OnError(event As Map) As String 'ignore
 	' FileReader.RunMethod("abort", Null)
 	
 	BANano.ReturnElse(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.GetField("error"), "abort": Abort))
+End Sub
+
+'generate a treeitem
+Sub TreeItem(parentID As String, key As String, text As String, mhref As String, mIcon As String, mDisabled As Boolean) As Map
+	parentID = parentID.tolowercase
+	key = key.tolowercase
+	Dim mitem As Map = CreateMap()
+	mitem.Put("id", key)
+	mitem.Put("name", text)
+	mitem.Put("href", mhref)
+	mitem.Put("icon", mIcon)
+	mitem.Put("disabled", mDisabled)
+	mitem.Put("parentid", parentID)
+	Return mitem
+End Sub
+
+'return the icon for the file
+Sub FileIcon(ext As String) As String
+	Dim extm As Map = CreateMap()
+	extm.Put("html", "mdi-language-html5")
+	extm.Put("js", "mdi-nodejs")
+	extm.Put("json", "mdi-code-json")
+	extm.Put("md", "mdi-markdown")
+	extm.Put("pdf", "mdi-file-pdf")
+	extm.Put("png", "mdi-file-image")
+	extm.Put("txt", "mdi-file-document-outline")
+	extm.Put("xls", "mdi-file-excel")
+	extm.Put("csv", "mdi-file-delimited-outline")
+	extm.Put("pre", "mdi-file-code-outline")
+	extm.Put("code", "mdi-file-code-outline")
+	extm.Put("doc", "mdi-file-word-box-outline")
+	extm.Put("mp3", "mdi-file-music-outline")
+	extm.Put("folder", "mdi-folder")
+	extm.Put("woff", "marketweb-webfont.woff")
+	extm.Put("css", "mdi-language-css3")
+	'
+	ext = ext.ToLowerCase
+	If extm.ContainsKey(ext) Then
+		Dim res As String = extm.Get(ext)
+		Return res
+	Else
+		Return "mdi-file-document-outline"
+	End If
 End Sub

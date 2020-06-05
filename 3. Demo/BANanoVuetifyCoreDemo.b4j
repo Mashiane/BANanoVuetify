@@ -104,7 +104,7 @@ Module9=modCarousel
 NumberOfFiles=26
 NumberOfLibraries=6
 NumberOfModules=42
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -121,7 +121,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.06"
+	Public Version As String = "4.11"
 	Public Port As String = "8080"
 End Sub
 

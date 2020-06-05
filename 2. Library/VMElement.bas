@@ -131,6 +131,26 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Return Me
 End Sub
 
+
+Sub CreateMETA() As VMElement
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("meta")
+	Return el
+End Sub
+
+
+Sub MoveUp(sTop As String) As VMElement
+	SetAttrSingle("margin-top", sTop)
+	SetStyleSingle("z-index","9999")
+	Return Me
+End Sub
+
+
+Sub AddSpace() As VMElement
+	SetText("{NBSP}")
+	Return Me
+End Sub
+
 Sub SetErrorText(eTxt As String) As VMElement
 	ErrorMessage = eTxt
 	Return Me
@@ -799,8 +819,8 @@ End Sub
 
 
 'render the element to parent element
-Sub Render1(parent As String)
-	BANano.GetElement(parent).Append(ToString)
+Sub Render1(Parent As String)
+	BANano.GetElement(Parent).Append(ToString)
 End Sub
 
 'add to parent

@@ -62,6 +62,7 @@ Sub DeleteAll_ExpenseCategories
 	rsExpenseCategories.DeleteAll
 	rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 	rsExpenseCategories.FromJSON
+	If rsExpenseCategories.ok = False Then vm.ShowSnackBarError(rsExpenseCategories.error)
 	'execute code to refresh listing for Expense Categories
 	vm.CallMethod("SelectAll_ExpenseCategories")
 End Sub
@@ -77,6 +78,8 @@ Sub DeleteRecord_ExpenseCategories(RecordID As String)
 	rsExpenseCategories.Delete(RecordID)
 	rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 	rsExpenseCategories.FromJSON
+	If rsExpenseCategories.ok = False Then vm.ShowSnackBarError(rsExpenseCategories.error)
+	
 	'execute code to refresh listing for Expense Categories
 	vm.CallMethod("SelectAll_ExpenseCategories")
 End Sub
@@ -90,6 +93,8 @@ Sub SelectAll_ExpenseCategories
 	rsExpenseCategories.SelectAll(Array("*"), Array("catname"))
 	rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 	rsExpenseCategories.FromJSON
+	If rsExpenseCategories.ok = False Then vm.ShowSnackBarError(rsExpenseCategories.error)
+	
 	'save records to state
 	vm.SetData("expensecategories", rsExpenseCategories.Result)
 	'update the data table records
@@ -113,6 +118,8 @@ Sub dtexpensecategories_edit(item As Map)
 	rsExpenseCategories.Read(RecID)
 	rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 	rsExpenseCategories.FromJSON
+	If rsExpenseCategories.ok = False Then vm.ShowSnackBarError(rsExpenseCategories.error)
+	
 	'was the read successful?
 	If rsExpenseCategories.Result.Size = 0 Then Return
 	'the record as found!
@@ -209,6 +216,8 @@ Sub btnOkExpenseCategories_click(e As BANanoEvent)
 			'generate & run command to insert record
 			rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 			rsExpenseCategories.FromJSON
+			If rsExpenseCategories.ok = False Then vm.ShowSnackBarError(rsExpenseCategories.error)
+	
 		Case "E"
 			'read record id
 			Dim RecID As String = Record.Get("catid")
@@ -220,6 +229,8 @@ Sub btnOkExpenseCategories_click(e As BANanoEvent)
 			'generate & run command to update record
 			rsExpenseCategories.JSON = BANano.CallInlinePHPWait(rsExpenseCategories.MethodName, rsExpenseCategories.Build)
 			rsExpenseCategories.FromJSON
+			If rsExpenseCategories.ok = False Then vm.ShowSnackBarError(rsExpenseCategories.error)
+	
 	End Select
 	'hide the modal
 	dlgExpenseCategories.Hide

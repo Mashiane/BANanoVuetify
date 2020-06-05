@@ -52,11 +52,10 @@ Sub Class_Globals
 End Sub
 
 'set database connection settings
-Sub SetConnection(shost As String, susername As String, spassword As String, sdbname As String) As BANanoMySQLE
+Sub SetConnection(shost As String, susername As String, spassword As String) As BANanoMySQLE
 	host = shost
 	username = susername
 	password = spassword
-	DBase = sdbname
 	Return Me
 End Sub
 
@@ -127,7 +126,6 @@ Sub SelectWhere1(tblfields As List, tblWhere As Map, operators As List, AndOr As
 	Return Me
 End Sub
 
-
 Sub NewList As List
 	Dim lst As List
 	lst.Initialize
@@ -137,13 +135,20 @@ End Sub
 'convert the json
 Sub FromJSON As BANanoMySQLE
 	OK = False
-	Dim m As Map = BANano.FromJson(json)
-	response = m.Get("response")
-	error = m.Get("error")
-	result = m.Get("result")
-	affectedRows = m.Get("affectedRows")
-	If response = "Success" Then
-		OK = True
+	If json.StartsWith("{") Or json.Startswith("[") Then
+		Dim m As Map = BANano.FromJson(json)
+		response = m.Get("response")
+		error = m.Get("error")
+		result = m.Get("result")
+		affectedRows = m.Get("affectedRows")
+		If response = "Success" Then
+			OK = True
+		End If
+	Else
+		response = json
+		error = json
+		result = NewList
+		affectedRows = -1
 	End If
 	Return Me
 End Sub
@@ -156,33 +161,37 @@ End Sub
 
 'return a sql to delete record of table where one exists
 Sub GetMax As BANanoMySQLE
-	Dim sb As String = $"SELECT MAX(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
-	query = sb
+	query = $"SELECT MAX(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
 	command = "getmax"
 	Return Me
 End Sub
 
 'return a sql to delete record of table where one exists
 Sub GetMin As BANanoMySQLE
-	Dim sb As String = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
-	query = sb
+	query = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
 	command = "getmin"
 	Return Me
 End Sub
 
 
 'get table names
+Sub GetDatabases As BANanoMySQLE
+	query = $"SHOW DATABASES"$
+	command = "databases"
+	Return Me
+End Sub
+
+
+'get table names
 Sub GetTableNames As BANanoMySQLE
-	Dim sb As String = $"select table_name from information_schema.tables where table_schema = '${DBase}'"$
-	query = sb
+	query = $"select table_name from information_schema.tables where table_schema = '${DBase}'"$
 	command = "select"
 	Return Me
 End Sub
 
 'get table structure
 Sub GetTableStructure As BANanoMySQLE
-	Dim sb As String = $"describe ${EscapeField(TableName)}"$
-	query = sb
+	query = $"SHOW COLUMNS FROM ${EscapeField(TableName)}"$
 	command = "select"
 	Return Me
 End Sub
@@ -356,16 +365,14 @@ End Sub
 
 ' return string to create database
 Sub CreateDatabase As BANanoMySQLE
-	Dim sSQL As String = $"CREATE DATABASE IF NOT EXISTS ${EscapeField(DBase)}"$
-	query = sSQL
+	query = $"CREATE DATABASE IF NOT EXISTS ${EscapeField(DBase)}"$
 	command = "createdb"
 	Return Me
 End Sub
 
 'drop the database
 Sub DropDataBase As BANanoMySQLE
-	Dim sSQL As String = $"DROP DATABASE ${EscapeField(DBase)}"$
-	query = sSQL
+	query = $"DROP DATABASE ${EscapeField(DBase)}"$
 	command = "dropdb"
 	Return Me
 End Sub
@@ -738,8 +745,7 @@ End Sub
 
 'return a sql to delete record of table where one exists
 Sub DeleteAll As BANanoMySQLE
-	Dim sb As String = $"DELETE FROM ${EscapeField(TableName)}"$
-	query = sb
+	query = $"DELETE FROM ${EscapeField(TableName)}"$
 	command = "delete"
 	Return Me
 End Sub
@@ -1099,7 +1105,7 @@ function BANanoMySQLDynamic($command, $query, $args, $types, $host, $username, $
 	header('Access-Control-Allow-Origin: *');
 	header('content-type: application/json; charset=utf-8');
 	//connect To MySQL
-    $conn = new mysqli($host, $username, $password, $dbname);
+    $conn = new mysqli($host, $username, $password);
     //we cannot connect Return an error
     if ($conn->connect_error) {
         $response = $conn->connect_error;
@@ -1109,13 +1115,96 @@ function BANanoMySQLDynamic($command, $query, $args, $types, $host, $username, $
 		$output = json_encode($resp);
         die($output);
     }
-    mysqli_set_charset($conn, 'utf8');
-    $commands = array('delete', 'update', 'replace', 'insert', 'connection', 'createdb', 'dropdb', 'createtable', 'droptable');
+	//select the database
+	mysqli_set_charset($conn, 'utf8');
+    $commands = array('delete', 'update', 'replace', 'insert', 'createtable', 'droptable');
     if (in_array($command, $commands)) {
         $command = 'changes';
     }
     switch ($command) {
-    case "changes":
+    case "connection":
+		$resp['response'] = "Success";
+		$resp['error'] = '';
+		$resp['result'] = array();
+		$resp['affectedRows'] = 0;
+		$output = json_encode($resp);
+		die($output);
+	case "createdb":
+		$stmt = prepareMySQL($conn, $query, $types, $args);
+        if (! $stmt -> execute()) {
+			$response = $stmt->error;
+        	$resp['response'] = "Error";
+			$resp['error'] = $response;
+			$resp['result'] = array();
+			$output = json_encode($resp);
+	        die($output);
+		}
+	
+		$resp['response'] = "Success";
+		$resp['error'] = '';
+		$resp['result'] = array();
+		$resp['affectedRows'] = 0;
+		$output = json_encode($resp);
+        break;
+	case "dropdb":
+		$stmt = prepareMySQL($conn, $query, $types, $args);
+        if (! $stmt -> execute()) {
+			$response = $stmt->error;
+        	$resp['response'] = "Error";
+			$resp['error'] = $response;
+			$resp['result'] = array();
+			$output = json_encode($resp);
+	        die($output);
+		}
+	
+		$resp['response'] = "Success";
+		$resp['error'] = '';
+		$resp['result'] = array();
+		$resp['affectedRows'] = 0;
+		$output = json_encode($resp);
+        break;
+	case "databases":
+		$stmt = prepareMySQL($conn, $query, $types, $args);
+        if (!($result = $stmt->execute())) {
+			$response = $stmt->error;
+        	$resp['response'] = "Error";
+			$resp['error'] = $response;
+			$resp['result'] = array();
+			$output = json_encode($resp);
+	        die($output);
+		}
+		
+		if (!($result = $stmt->get_result())) {
+			$response = $stmt->error;
+        	$resp['response'] = "Error";
+			$resp['error'] = $response;
+			$resp['result'] = array();
+			$output = json_encode($resp);
+	        die($output);
+		}
+		
+		$affRows = $conn->affected_rows;
+    	$rows = array();
+        while ($row = $result->fetch_assoc()) {
+            $rows[] = $row;
+        }
+    	$resp['response'] = "Success";
+		$resp['error'] = '';
+		$resp['result'] = $rows;
+		$resp['affectedRows'] = $affRows;
+		$output = json_encode($resp);
+        break;
+	case "changes":
+		//select the db before processing
+		$selected = mysqli_select_db($conn, $dbname);
+		if (!$selected) {
+			$response = $conn->connect_error;
+        	$resp['response'] = "Error";
+			$resp['error'] = $response;
+			$resp['result'] = array();
+			$output = json_encode($resp);
+        	die($output);
+		}
         $stmt = prepareMySQL($conn, $query, $types, $args);
         if (! $stmt -> execute()) {
 			$response = $stmt->error;
@@ -1134,6 +1223,17 @@ function BANanoMySQLDynamic($command, $query, $args, $types, $host, $username, $
 		$output = json_encode($resp);
         break;
     default:
+		//select the db before processing
+		$dbname = mysqli_real_escape_string($conn, $dbname);
+		$selected = mysqli_select_db($conn, $dbname);
+		if (!$selected) {
+			$response = $conn->connect_error;
+        	$resp['response'] = "Error";
+			$resp['error'] = $response;
+			$resp['result'] = array();
+			$output = json_encode($resp);
+        	die($output);
+		}
         $stmt = prepareMySQL($conn, $query, $types, $args);
         //$result = $stmt->execute();
 		//$result = $stmt->get_result();

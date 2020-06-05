@@ -18,7 +18,7 @@ Module4=pgIndex
 NumberOfFiles=2
 NumberOfLibraries=6
 NumberOfModules=4
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 #Region Project Attributes 
 	#MergeLibraries: True

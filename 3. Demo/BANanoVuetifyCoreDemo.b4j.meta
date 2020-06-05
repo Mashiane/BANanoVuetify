@@ -127,6 +127,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=Main,BANano_Ready,75,0,Main,Application_Error,54,0,pgIndex,BuildDrawer,122,0,pgIndex,confirm_cancel,159,0,modMessageBoard,Code,20,0,pgIndex,Init,12,0,modForm,Code,18,0,modAutoComplete,Card_3,80,3,Main,Process_Globals,16,0,Main,AppStart,30,4
+NavigationStack=pgIndex,Init,12,0,modForm,Code,18,0,modAutoComplete,Card_3,80,3,Main,Process_Globals,17,0,Main,AppStart,24,4,modTreeView,tv1_oninput,52,0,modTreeView,Code,41,2,modBadges,btnim_click,42,2,modBadges,Code,9,0,modTabs,Code,26,2
 SelectedBuild=0
 VisibleModules=

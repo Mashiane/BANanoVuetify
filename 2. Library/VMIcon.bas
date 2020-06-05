@@ -38,6 +38,13 @@ End Sub
 
 Sub SetBadge(scontent As String) As VMIcon
 	Badge.SetContent(scontent)
+	Badge.SetBordered(True)
+	Badge.SetOverlap(True)
+	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
+	Badge.SetAvatar(True)
+	Badge.SetIcon("")
+	Badge.SetDark(True)
+	Badge.SetDot(False)
 	Return Me
 End Sub
 

@@ -16,6 +16,6 @@ ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
-NavigationStack=BANanoMSSQLE,SelectWhere1,106,0,BANanoMySQLE,RecordFromMap,63,0,BANanoMySQLE,SelectWhere1,128,0,BANanoMySQLE,NewList,128,0,BANanoSQLiteE,AndOrOperators,77,0,BANanoSQLiteE,NewList,140,0,BANanoSQLiteE,SelectWhere1,113,0,BANanoPHP,Process_Globals,10,0,Main,Process_Globals,10,0,Main,AppStart,13,0
+NavigationStack=BANanoSQLiteE,UpdateAll,922,0,BANanoMSSQLE,FromJSON,124,0,BANanoAlaSQLE,FromJSON,129,0,BANanoMySQLE,FromJSON,133,0,BANanoMySQLE,UpdateAll,1192,0,BANanoMySQLE,Class_Globals,9,0,BANanoMySQLE,NewList,126,0,BANanoMySQLE,SelectWhere1,121,0,Main,BANano_Ready,33,0,Main,AppStart,24,0
 SelectedBuild=0
 VisibleModules=

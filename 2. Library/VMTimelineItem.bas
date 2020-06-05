@@ -10,8 +10,14 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean   'ignore
-	Private Module As Object    'ignore
+	Private DesignMode As Boolean  'ignore
+	Private Module As Object
+	Private bStatic As Boolean
+	Public Container As VMContainer
+	Public Avatar As VMAvatar
+	Private hasAvatar As Boolean
+	Public Opposite As VMContainer
+	Public OppositeText As VMLabel
 End Sub
 
 'initialize the TimeLineItem
@@ -19,14 +25,43 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	TimeLineItem.Initialize(v, ID)
 	TimeLineItem.SetTag("v-timeline-item")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
+	Container.Initialize(vue, $"${ID}cont"$, eventHandler) 
+	Avatar.Initialize(vue, $"${ID}avt"$, eventHandler)
+	Opposite.Initialize(vue, $"${ID}opp"$, eventHandler).SetTag("template").SetSlotOpposite
+	OppositeText.Initialize(vue, $"${ID}span"$)
+	OppositeText.SetSpan
+	OppositeText.SetAttrSingle("slot","opposite")
+	hasAvatar = False
+	Return Me
+End Sub
+
+Sub SetAvatar(url As String) As VMTimelineItem
+	Avatar.SetImage(url, "", Null, Null, Null)
+	hasAvatar = True
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	'add avatar that shows in the middle
+	If hasAvatar Then
+		Dim tmp As VMTemplate
+		tmp.Initialize(vue, "", Module).SetSlotIcon
+		tmp.AddComponent(Avatar.ToString)
+		AddComponent(tmp.ToString) 
+	End If
+	AddComponent(OppositeText.ToString)
+	If Opposite.HasContent Then
+		AddComponent(Opposite.ToString)
+	End If
+	'add a container if available
+	If Container.HasContent Then 
+		AddComponent(Container.ToString)
+	End If
 	Return TimeLineItem.ToString
 End Sub
 
@@ -57,8 +92,8 @@ Sub AddChild(child As VMElement) As VMTimelineItem
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMTimelineItem
+'set text - built-in
+Sub SetText(t As String) As VMTimelineItem
 	TimeLineItem.SetText(t)
 	Return Me
 End Sub
@@ -93,16 +128,13 @@ Sub AddChildren(children As List)
 	Next
 End Sub
 
-'set color
-Sub SetColor(varColor As Object) As VMTimelineItem
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, varColor)
-	TimeLineItem.Bind(":color", pp)
-	Return Me
-End Sub
-
 'set dark
-Sub SetDark(varDark As Object) As VMTimelineItem
+Sub SetDark(varDark As Boolean) As VMTimelineItem
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	TimeLineItem.Bind(":dark", pp)
@@ -110,7 +142,12 @@ Sub SetDark(varDark As Object) As VMTimelineItem
 End Sub
 
 'set fill-dot
-Sub SetFillDot(varFillDot As Object) As VMTimelineItem
+Sub SetFillDot(varFillDot As Boolean) As VMTimelineItem
+	If varFillDot = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fill-dot", varFillDot)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}FillDot"$
 	vue.SetStateSingle(pp, varFillDot)
 	TimeLineItem.Bind(":fill-dot", pp)
@@ -118,31 +155,25 @@ Sub SetFillDot(varFillDot As Object) As VMTimelineItem
 End Sub
 
 'set hide-dot
-Sub SetHideDot(varHideDot As Object) As VMTimelineItem
+Sub SetHideDot(varHideDot As Boolean) As VMTimelineItem
+	If varHideDot = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-dot", varHideDot)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideDot"$
 	vue.SetStateSingle(pp, varHideDot)
 	TimeLineItem.Bind(":hide-dot", pp)
 	Return Me
 End Sub
 
-'set icon
-Sub SetIcon(varIcon As Object) As VMTimelineItem
-	Dim pp As String = $"${ID}Icon"$
-	vue.SetStateSingle(pp, varIcon)
-	TimeLineItem.Bind(":icon", pp)
-	Return Me
-End Sub
-
-'set icon-color
-Sub SetIconColor(varIconColor As Object) As VMTimelineItem
-	Dim pp As String = $"${ID}IconColor"$
-	vue.SetStateSingle(pp, varIconColor)
-	TimeLineItem.Bind(":icon-color", pp)
-	Return Me
-End Sub
-
 'set large
-Sub SetLarge(varLarge As Object) As VMTimelineItem
+Sub SetLarge(varLarge As Boolean) As VMTimelineItem
+	If varLarge = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("large", varLarge)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Large"$
 	vue.SetStateSingle(pp, varLarge)
 	TimeLineItem.Bind(":large", pp)
@@ -150,7 +181,12 @@ Sub SetLarge(varLarge As Object) As VMTimelineItem
 End Sub
 
 'set left
-Sub SetLeft(varLeft As Object) As VMTimelineItem
+Sub SetLeft(varLeft As Boolean) As VMTimelineItem
+	If varLeft = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("left", varLeft)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Left"$
 	vue.SetStateSingle(pp, varLeft)
 	TimeLineItem.Bind(":left", pp)
@@ -158,7 +194,12 @@ Sub SetLeft(varLeft As Object) As VMTimelineItem
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMTimelineItem
+Sub SetLight(varLight As Boolean) As VMTimelineItem
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	TimeLineItem.Bind(":light", pp)
@@ -166,7 +207,12 @@ Sub SetLight(varLight As Object) As VMTimelineItem
 End Sub
 
 'set right
-Sub SetRight(varRight As Object) As VMTimelineItem
+Sub SetRight(varRight As Boolean) As VMTimelineItem
+	If varRight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", varRight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Right"$
 	vue.SetStateSingle(pp, varRight)
 	TimeLineItem.Bind(":right", pp)
@@ -174,10 +220,69 @@ Sub SetRight(varRight As Object) As VMTimelineItem
 End Sub
 
 'set small
-Sub SetSmall(varSmall As Object) As VMTimelineItem
+Sub SetSmall(varSmall As Boolean) As VMTimelineItem
+	If varSmall = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("small", varSmall)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Small"$
 	vue.SetStateSingle(pp, varSmall)
 	TimeLineItem.Bind(":small", pp)
+	Return Me
+End Sub
+
+'set color
+Sub SetColor(varColor As String) As VMTimelineItem
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, varColor)
+	TimeLineItem.Bind(":color", pp)
+	Return Me
+End Sub
+
+'set icon
+Sub SetIcon(varIcon As String) As VMTimelineItem
+	If varIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("icon", varIcon)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Icon"$
+	vue.SetStateSingle(pp, varIcon)
+	TimeLineItem.Bind(":icon", pp)
+	Return Me
+End Sub
+
+'set icon-color
+Sub SetIconColor(varIconColor As String) As VMTimelineItem
+	If varIconColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("icon-color", varIconColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}IconColor"$
+	vue.SetStateSingle(pp, varIconColor)
+	TimeLineItem.Bind(":icon-color", pp)
+	Return Me
+End Sub
+
+
+'set color intensity
+Sub SetIconColorIntensity(color As String, intensity As String) As VMTimelineItem
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("icon-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	TimeLineItem.Bind(":icon-color", pp)
 	Return Me
 End Sub
 
@@ -233,9 +338,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTimelineItem
+Sub SetColorIntensity(color As String, intensity As String) As VMTimelineItem
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	TimeLineItem.Bind(":color", pp)
 	Return Me
@@ -262,7 +372,22 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMTimelineItem
 	TimeLineItem.SetDesignMode(b)
+	Container.SetDesignMode(b)
+	Avatar.SetDesignMode(b)
+	Opposite.SetDesignMode(b)
+	OppositeText.SetDesignMode(b)
 	DesignMode = b
+	Return Me
+End Sub
+
+'set static
+Sub SetStatic(b As Boolean) As VMTimelineItem
+	TimeLineItem.SetStatic(b)
+	Container.SetStatic(b)
+	Avatar.SetStatic(b)
+	Opposite.SetStatic(b)
+	OppositeText.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
@@ -273,7 +398,7 @@ Sub SetTabIndex(ti As String) As VMTimelineItem
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMTimelineItem
+Sub SetName(varName As String, bbind As Boolean) As VMTimelineItem
 	TimeLineItem.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -296,6 +421,10 @@ Sub BindStyleSingle(prop As String, value As String) As VMTimelineItem
 	Return Me
 End Sub
 
+Sub SetVElse(vif As String) As VMTimelineItem
+	TimeLineItem.SetVElse(vif)
+	Return Me
+End Sub
 
 Sub SetVText(vhtml As String) As VMTimelineItem
 	TimeLineItem.SetVText(vhtml)
@@ -329,27 +458,51 @@ Sub SetKey(k As String) As VMTimelineItem
 	Return Me
 End Sub
 
+'set the row and column position
+Sub SetRC(sRow As String, sCol As String) As VMTimelineItem
+	TimeLineItem.SetRC(sRow, sCol)
+	Return Me
+End Sub
+
+'set the offsets for this item
+Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMTimelineItem
+	TimeLineItem.SetDeviceOffsets(OS, OM, OL, OX)
+	Return Me
+End Sub
+
+
+'set the position: row and column and sizes
+Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMTimelineItem
+	SetRC(srow, scell)
+	SetDeviceSizes(small,medium, large, xlarge)
+	Return Me
+End Sub
+
+'set the sizes for this item
+Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMTimelineItem
+	TimeLineItem.SetDeviceSizes(SS, SM, SL, SX)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMTimelineItem
+	TimeLineItem.SetText(comp)
+	Return Me
+End Sub
+
+Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
+	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTimelineItem
-TimeLineItem.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	TimeLineItem.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
+
 Sub SetVisible(b As Boolean) As VMTimelineItem
-TimeLineItem.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMTimelineItem
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+	TimeLineItem.SetVisible(b)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMTimelineItem
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
-End Sub

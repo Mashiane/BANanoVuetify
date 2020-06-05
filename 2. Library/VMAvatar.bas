@@ -54,6 +54,13 @@ End Sub
 
 Sub SetBadge(scontent As String) As VMAvatar
 	Badge.SetContent(scontent)
+	Badge.SetBordered(True)
+	Badge.SetOverlap(True)
+	Badge.SetDark(True)
+	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
+	Badge.SetAvatar(True)
+	Badge.SetIcon("")
+	Badge.SetDot(False)
 	Return Me
 End Sub
 

@@ -24,11 +24,13 @@ Sub Code
 	Dim b As VMTabs = vm.CreateTabs("b", Me).SetGrow(True).SetIconsAndText(True).SetDark(True).SetCentered(True)
 	'
 	b.AddTab("b1", "Item 1", "mdi-phone", Null)
-	b.AddTab("b2", "Item 2", "mdi-heart", Null)
+	b.AddTabBadge("b2", "Item 2", "mdi-heart", Null, "10")
 	b.AddTab("b3", "Item 3", "mdi-account-box", Null)
 	b.AddTab("b4", "Item 4", "", Null)
 	b.AddTab("b5", "Item 5", "", Null)
 	b.AddToContainer(cont, 1, 1)
+	vm.SetBadgeAvatar("b2", False)
+	vm.SetBadgeOverlap("b2", False)
 	'
 '	Dim tblBar As VMToolBar = vm.CreateToolbar("tbl1", Me).SetColor(vm.COLOR_CYAN).SetDark(True).SetFlat(True)
 '	tblBar.AddHamburger

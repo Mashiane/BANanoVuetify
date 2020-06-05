@@ -24,6 +24,7 @@ Sub Code
 	cont.AddRows(5).AddColumns2X6
 	'
 	Dim tv As VMTreeView = vm.CreateTreeView("tv1", Me)
+	tv.SetSelectable(True)
 	tv.AddItem("", "1", "Applications", "", "", False)
 	tv.AddItem("1", "2", "Calendar : app", "", "", False)
 	tv.AddItem("1", "3", "Chrome : app", "", "", False)
@@ -41,13 +42,13 @@ Sub Code
 	'
 	tv.AddToContainer(cont, 1, 1)
 	'
-	cont.AddLabel(1, 2, "lblx2","p", $"{{ ${tv.active} }}"$)
+	cont.AddLabel(1, 2, "lblx2","p", $"{{ ${tv.GetActive} }}"$)
 	
 	'add container to page
 	vm.AddContainer(cont)
 End Sub
 
-Sub tv1_click(items As List)
+Sub tv1_oninput(items As List)
 	If items = Null Then Return 
 	Dim thisNode As Map = items.Get(0)
 	If thisNode = Null Then Return

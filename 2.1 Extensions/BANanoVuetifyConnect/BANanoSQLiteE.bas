@@ -931,13 +931,21 @@ End Sub
 'convert the json
 Sub FromJSON As BANanoSQLiteE
 	OK = False
-	Dim m As Map = BANano.FromJson(json)
-	response = m.Get("response")
-	error = m.Get("error")
-	result = m.Get("result")
-	affectedRows = m.Get("affectedRows")
-	If response = "Success" Then
-		OK = True
+	If json.StartsWith("{") Or json.Startswith("[") Then
+		Dim m As Map = BANano.FromJson(json)
+		response = m.Get("response")
+		error = m.Get("error")
+		result = m.Get("result")
+		affectedRows = m.Get("affectedRows")
+		If response = "Success" Then
+			OK = True
+		End If
+	Else
+		response = json
+		error = json
+		result = NewList
+		affectedRows = -1
+		OK = False
 	End If
 	Return Me
 End Sub

@@ -73,6 +73,12 @@ Sub AddComponent(scomp As String) As VMTemplate
 	Return Me
 End Sub
 
+'set a prepend slot value
+Sub SetSlotPrepend(pValue As String) As VMTemplate
+	SetAttrSingle("v-slot:prepend", pValue)
+	Return Me
+End Sub
+
 Sub SetSlotAppend As VMTemplate
 	Template.SetAttrLoose("v-slot:append")
 	Return Me
@@ -82,6 +88,17 @@ Sub SetSlotProgress As VMTemplate
 	Template.SetAttrLoose("v-slot:progress")
 	Return Me
 End Sub
+
+Sub SetSlotIcon As VMTemplate
+	Template.SetAttrLoose("v-slot:icon")
+	Return Me
+End Sub
+
+Sub SetSlotOpposite As VMTemplate
+	Template.SetAttrLoose("v-slot:opposite")
+	Return Me
+End Sub
+
 
 Sub SetSlotExtension As VMTemplate
 	Template.SetAttrLoose("v-slot:extension")

@@ -491,6 +491,12 @@ Sub SetOverlayOpacity(varOverlayOpacity As String) As VMNavigationDrawer
 	Return Me
 End Sub
 
+Sub SetOpenOnMediumLarge(b As Boolean) As VMNavigationDrawer
+	If b = False Then Return Me
+	NavigationDrawer.Bind(":permant", "$vuetify.breakpoint.mdAndUp")
+	Return Me
+End Sub
+
 'set permanent
 Sub SetPermanent(varPermanent As Boolean) As VMNavigationDrawer
 	If varPermanent = False Then Return Me

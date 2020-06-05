@@ -21,12 +21,10 @@ Sub Code
 	'
 	cont.AddRows(2).AddColumns(2, 12, 6, 6, 6)
 	'
-	vm.SetStateSingle("messages", "0")
-	
 	Dim im As VMButton = vm.CreateButton("btnim", Me).SetLabel("Send Message")
 	cont.AddComponent(1, 1, im.ToString)
 	
-	Dim b1 As VMBadge = vm.CreateBadge("b1", Me).SetColor("green").SetOverlap(True).SetValue("messages").SetContent("messages")
+	Dim b1 As VMBadge = vm.CreateBadge("b1", Me).SetColor("green").SetOverlap(True).SetContent("0")
 	Dim icon As VMIcon = vm.CreateIcon("icon1", Me).SetText("mdi-email").SetLarge(True)
 	b1.AddComponent(icon.ToString)
 	cont.AddComponent(1, 2, b1.ToString)
@@ -47,5 +45,5 @@ Sub Code
 End Sub
 
 Sub btnim_click(e As BANanoEvent)
-	vm.Increment("messages", 1)
+	vm.IncrementBadge("b1", 1)
 End Sub

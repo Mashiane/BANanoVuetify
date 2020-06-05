@@ -724,6 +724,61 @@ End Sub
         }; 
 #End If
 
+
+'format the text
+Sub FormatText(sText As String) As String
+	Dim RM As Map
+	RM.Initialize
+	RM.clear
+	RM.Put("{U}", "<ins>")
+	RM.Put("{/U}", "</ins>")
+	RM.Put("¢","&cent;")
+	RM.put("£","&pound;")
+	RM.Put("{SUP}", "<sup>")
+	RM.Put("{/SUP}", "</sup>")
+	RM.Put("¥","&yen;")
+	RM.Put("€","&euro;")
+	RM.put("©","&copy;")
+	RM.Put("®","&reg;")
+	RM.Put("{POUND}","&pound;")
+	RM.Put("{/B}", "</b>")
+	RM.Put("{I}", "<i>")
+	RM.Put("{YEN}","&yen;")
+	RM.Put("{EURO}","&euro;")
+	RM.Put("{CODE}","<code>")
+	RM.Put("{/CODE}","</code>")
+	RM.put("{COPYRIGHT}","&copy;")
+	RM.Put("{REGISTERED}","&reg;")
+	RM.Put("®", "&reg;")
+	RM.Put("{B}", "<b>")
+	RM.Put("{SMALL}", "<small>")
+	RM.Put("{/SMALL}", "</small>")
+	RM.Put("{EM}", "<em>")
+	RM.Put("{/EM}", "</em>")
+	RM.Put("{MARK}", "<mark>")
+	RM.Put("{/MARK}", "</mark>")
+	RM.Put("{/I}", "</i>")
+	RM.Put("{SUB}", "<sub>")
+	RM.Put("{/SUB}", "</sub>")
+	RM.Put("{BR}", "<br/>")
+	RM.Put("{WBR}","<wbr>")
+	RM.Put("{STRONG}", "<strong>")
+	RM.Put("{/STRONG}", "</strong>")
+	RM.Put("{NBSP}", "&nbsp;")
+	RM.Put("“","")
+	RM.Put("”","")
+	RM.Put("’","'")
+	Dim kTot As Int = RM.Size - 1
+	Dim kCnt As Int
+	For kCnt = 0 To kTot
+		Dim strValue As String = RM.GetKeyAt(kCnt)
+		Dim strRep As String = RM.Get(strValue)
+		sText = sText.Replace(strValue, strRep)
+	Next
+	sText = BANAno.SF(sText)
+	Return sText
+End Sub
+
 'get document ready state
 Sub GetReadyState As String
 	Dim rs As String = BANAno.Window.GetField("document").GetField("readyState").Result
@@ -2265,10 +2320,12 @@ End Sub
 Sub HideItem(elID As String)
 	elID = elID.tolowercase
 	SetStateSingle($"${elID}show"$, False)
+	SetStateSingle($"${elID}badgevalue"$, False)	
 End Sub
 
 Sub ShowItem(elID As String)
 	SetStateSingle($"${elID}show"$, True)
+	SetStateSingle($"${elID}badgevalue"$, True)
 End Sub
 
 

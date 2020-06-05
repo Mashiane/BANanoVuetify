@@ -104,6 +104,18 @@ Public Sub Initialize(elID As String, stag As String) As VueHTML
 End Sub
 
 
+Sub MoveUp(sTop As String) As VueHTML
+	SetAttrSingle("margin-top", sTop)
+	SetStyleSingle("z-index","9999")
+	Return Me
+End Sub
+
+
+Sub AddSpace() As VueHTML
+	SetText("{NBSP}")
+	Return Me
+End Sub
+
 'set all around margins
 Sub SetMargins(sMT As String, sMB As String, sML As String, sMR As String) As VueHTML
 	SetStyle("margin-top", sMT)

@@ -26,6 +26,23 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Return Me
 End Sub
 
+'set single attribute
+Sub SetAttrSingle(prop As String, value As String) As VMLabel
+	Label.SetAttrSingle(prop, value)
+	Return Me
+End Sub
+
+Sub SetFontFamily(ff As String) As VMLabel
+	If ff = "" Then Return Me
+	SetStyleSingle("font-family", ff)
+	Return Me
+End Sub
+
+Sub SetFontSize(fs As String) As VMLabel
+	If fs = "" Then Return Me
+	SetStyleSingle("font-size", fs)
+	Return Me
+End Sub
 
 'set single style
 Sub SetStyleSingle(prop As String, value As String) As VMLabel

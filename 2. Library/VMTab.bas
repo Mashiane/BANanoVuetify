@@ -14,6 +14,8 @@ Sub Class_Globals
 	Private Module As Object	
 	Private bStatic As Boolean
 	Private Icon As VMIcon
+	Public Badge As VMBadge
+	Private hasBadge As Boolean
 End Sub
 
 'initialize the TabItem
@@ -25,7 +27,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	bStatic = False
-	Icon.Initialize(vue, $"${ID}icon"$, Module) 
+	Icon.Initialize(vue, $"${ID}icon"$, Module)
+	Badge.Initialize(vue, $"${ID}badge"$, Module)
+	hasBadge = False
+	Return Me
+End Sub
+
+Sub SetBadge(scontent As String) As VMTab
+	Badge.SetContent(scontent)
+	Badge.SetBordered(True)
+	Badge.SetOverlap(True)
+	Badge.SetDark(True)
+	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
+	Badge.SetAvatar(True)
+	Badge.SetIcon("")
+	Badge.SetDot(False)
+	hasBadge = True
 	Return Me
 End Sub
 
@@ -33,6 +50,7 @@ Sub SetStatic(b As Boolean) As VMTab
 	bStatic = b
 	TabItem.SetStatic(b)
 	Icon.SetStatic(b)
+	Badge.SetStatic(b)
 	Return Me
 End Sub
 
@@ -55,6 +73,7 @@ End Sub
 
 'get component
 Sub ToString As String
+	If hasBadge Then AddComponent(Badge.ToString)
 	Return TabItem.ToString
 End Sub
 
@@ -401,6 +420,7 @@ End Sub
 Sub SetDesignMode(b As Boolean) As VMTab
 	TabItem.SetDesignMode(b)
 	Icon.SetDesignMode(b)
+	Badge.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
