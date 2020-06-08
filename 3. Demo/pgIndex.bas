@@ -128,12 +128,12 @@ Sub BuildDrawer
 	'vm.Drawer.AddItem("sheets", "", "Sheets")
 	vm.Drawer.AddItem("modLoadingSkeleton", "", "Skeleton Loaders")
 	vm.Drawer.AddItem("snackbars", "", "Snackbars")
-	'vm.Drawer.AddItem("sparklines", "", "Sparklines")
+	vm.Drawer.AddItem("sparklines", "", "Sparklines")
 	vm.Drawer.AddItem("steppers", "", "Steppers")
 	'vm.Drawer.AddItem("subheads", "", "Subheads")
 	vm.Drawer.AddItem("tables", "", "Tables")
 	vm.Drawer.AddItem("tabs", "", "Tabs")
-	'vm.Drawer.AddItem("timelines", "", "Timelines")
+	vm.Drawer.AddItem("timelines", "", "Timelines")
 	'vm.Drawer.AddItem("tooltips", "", "Tooltips")
 	vm.Drawer.AddItem("treeview", "", "TreeView")
 	vm.Drawer.AddItem("design", "", "Grid Design")
@@ -172,9 +172,41 @@ Sub alert_ok(e As BANanoEvent)
 	Case "alertuser"
 		vm.ShowSnackBar("Selected alert user!")
 	Case Else
-		vm.ShowSnackBar(sproc)
-	End Select		
+			vm.ShowSnackBar(sproc)
+	End Select
 End Sub
+
+
+Sub Destroyed
+End Sub
+
+
+Sub BeforeDestroy
+End Sub
+
+Sub Updated
+End Sub
+
+
+Sub BeforeUpdate
+End Sub
+
+Sub BeforeMount
+End Sub
+
+
+Sub BeforeCreate
+End Sub
+
+'when the #el is mounted
+Sub Mounted
+End Sub
+
+
+'when the instance is created
+Sub Created
+End Sub
+
 
 '*IMPORTANT
 Sub draweritems_click(e As BANanoEvent)
@@ -182,6 +214,12 @@ Sub draweritems_click(e As BANanoEvent)
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
 	Select Case elID
+	Case "sparklines"
+		vm.NavBar.UpdateTitle(modSparkLine.title)
+		vm.ShowPage(modSparkLine.name)
+	Case "timelines"
+		vm.NavBar.UpdateTitle(modTimeLine.title)
+		vm.ShowPage(modTimeLine.name)
 	Case "modloadingskeleton"
 		vm.NavBar.UpdateTitle(modLoadingSkeleton.title)
 		vm.ShowPage(modLoadingSkeleton.name)
@@ -388,4 +426,6 @@ Sub AddPages
 	vm.addpage(modColorPicker.name, modColorPicker)
 	vm.addpage(modRating.name, modRating)
 	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
+	vm.AddPage(modTimeLine.name, modTimeLine)
+	vm.AddPage(modSparkLine.name, modSparkLine)
 End Sub

@@ -37,16 +37,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
-Sub SetSlotActivator(b As Boolean) As VMTextField    'ignore
-	SetAttrSingle("slot", "activator")
+
+Sub SetErrorText(sError As String) As VMTextField    'ignore
+	ErrorText = sError
+	TextField.ErrorMessage = sError
 	Return Me
 End Sub
 
-Sub SetFileInput(bUpload As Boolean) As VMTextField
-	TextField.SetTag("v-file-input")
-	TextField.typeOf = "string"
-	TextField.InputType = "file"
-	SetOnFile(Module, $"${ID}_change"$)
+Sub SetSlotActivator(b As Boolean) As VMTextField    'ignore
+	SetAttrSingle("slot", "activator")
 	Return Me
 End Sub
 
@@ -536,18 +535,6 @@ Sub SetHint(varHint As String) As VMTextField
 	Dim pp As String = $"${ID}Hint"$
 	vue.SetStateSingle(pp, varHint)
 	TextField.Bind(":hint", pp)
-	End If
-	Return Me
-End Sub
-
-'set id
-Sub SetId(varId As Object) As VMTextField
-	If bStatic Then
-		SetAttrSingle("id", varId)
-	Else
-	Dim pp As String = $"${ID}Id"$
-	vue.SetStateSingle(pp, varId)
-	TextField.Bind(":id", pp)
 	End If
 	Return Me
 End Sub

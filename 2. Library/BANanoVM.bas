@@ -1941,10 +1941,9 @@ Sub CreateInput(sid As String, eventHandler As Object) As VMInput
 	Return el
 End Sub
 
-Sub CreateFileInput(sid As String, eventHandler As Object, bUpload As Boolean) As VMTextField
-	Dim el As VMTextField
+Sub CreateFileInput(sid As String, eventHandler As Object) As VMFileInput
+	Dim el As VMFileInput
 	el.Initialize(vue, sid, eventHandler)
-	el.SetFileInput(bUpload)
 	Return el
 End Sub
 
@@ -2441,12 +2440,12 @@ Sub NewPassword(eventHandler As Object,bStatic As Boolean,sname As String, vmode
 End Sub
 
 'backward compatibility
-Sub NewFile(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMTextField
+Sub NewFile(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelpertext As String, sErrorText As String, iTabIndex As Int) As VMFileInput
 	Return NewFileInput(eventHandler,bStatic,bUpload, sname, vmodel, slabel, splaceholder, bRequired, shelpertext, sErrorText, iTabIndex)
 End Sub
 '
-Sub NewFileInput(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMTextField
-	Dim el As VMTextField = CreateFileInput(sname, eventHandler, bUpload)
+Sub NewFileInput(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, sname As String, vmodel As String, slabel As String, splaceholder As String, bRequired As Boolean, shelperText As String, sErrorText As String, iTabIndex As Int) As VMFileInput
+	Dim el As VMFileInput = CreateFileInput(sname, eventHandler)
 	el.setstatic(bStatic)
 	el.SetHint(shelperText)
 	el.SetTabIndex(iTabIndex)
@@ -2456,10 +2455,10 @@ Sub NewFileInput(eventHandler As Object,bStatic As Boolean, bUpload As Boolean, 
 	el.SetClearable(False)
 	el.SetRequired(bRequired)
 	vue.SetData(vmodel, Null)
-	el.SetRules(True)
-	el.SetErrorMessages(True)
+	el.SetRules(vue.NewList)
+	el.SetErrorMessages(vue.NewList)
 	el.SetError(False)
-	el.TextField.ErrorMessage = sErrorText
+	el.SetErrorText(sErrorText)
 	Return el
 End Sub
 '

@@ -25,9 +25,10 @@ Library3=banano
 Library4=bananopostprocessor
 Library5=bananovuetifycore
 Library6=bananovuetifyconnect
+Library7=bananophp
 Module1=pgIndex
 NumberOfFiles=9
-NumberOfLibraries=6
+NumberOfLibraries=7
 NumberOfModules=1
 Version=8.3
 @EndOfDesignText@

@@ -6,19 +6,19 @@ Group=Default Group
 Library1=jcore
 Library2=jfx
 Library3=banano
-Library4=bananosqliter
+Library4=bananosqliter2
 NumberOfFiles=1
 NumberOfLibraries=4
 NumberOfModules=0
-Version=8.27
+Version=8.3
 @EndOfDesignText@
 #Region Project Attributes 
 #End Region
 
 Sub Process_Globals
 	Private BANano As BANano
-	Private SQLite As BANanoSQLiteR
-	Private AppName As String = "BANanoSQLiteDemoR"
+	Private SQLite As BANanoSQLiteR2
+	Private AppName As String = "BANanoSQLiteDemoR2"
 	Private Publish As String = "C:\laragon\www"
 End Sub
 

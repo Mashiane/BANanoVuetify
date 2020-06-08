@@ -7,7 +7,83 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private SQLite As BANanoSQLiteR2
+	Private svalue As String
+	Private sgradient As String
+	Private sstrokelinecap As String
+Private sAccept As String
+Private sAppendicon As String
+Private sAppendoutericon As String
+Private bisAutofocus As Boolean
+Private sBackgroundcolor As String
+Private sBackgroundcolorintensity As String
+Private bisChips As Boolean
+Private bisClearable As Boolean
+Private sColor As String
+Private sColorintensity As String
+Private sCounter As String
+Private bisDark As Boolean
+Private bisDense As Boolean
+Private bisDisabled As Boolean
+Private bisError As Boolean
+Private sErrorcount As String
+Private bisFilled As Boolean
+Private bisFlat As Boolean
+Private bisFullwidth As Boolean
+Private sHeight As String
+Private bisHidedetails As Boolean
+Private sLabel As String
+Private bisLight As Boolean
+Private sLoaderheight As String
+Private bisLoading As Boolean
+Private bisMultiple As Boolean
+Private bisOutlined As Boolean
+Private bisPersistenthint As Boolean
+Private sPlaceholder As String
+Private sPrefix As String
+Private sPrependicon As String
+Private sPrependinnericon As String
+Private bisRequired As Boolean
+Private bisReverse As Boolean
+Private bisRounded As Boolean
+Private bisShaped As Boolean
+Private bisShowsize As Boolean
+Private bisSingleline As Boolean
+Private bisSmallchips As Boolean
+Private bisSolo As Boolean
+Private bisSoloinverted As Boolean
+Private bisSuccess As Boolean
+Private sSuffix As String
+Private sTabindex As String
+Private sText As String
+Private sTruncatelength As String
+Private sType As String
+Private bisValidateonblur As Boolean
+Private bisVisible As Boolean
+
+Private pbfileinput As VMProperty
+Private bisAutodraw As Boolean
+Private sAutodrawduration As String
+Private sAutodraweasing As String
+Private bisAutolinewidth As Boolean
+Private sColor As String
+Private sColorintensity As String
+Private bisFill As Boolean
+Private sGradientdirection As String
+Private sHeight As String
+Private sLabelsize As String
+Private sLinewidth As String
+Private sPadding As String
+Private bisShowlabels As Boolean
+Private bisSmooth As Boolean
+Private sTabindex As String
+Private sText As String
+Private sType As String
+Private bisVisible As Boolean
+Private sWidth As String
+'
 	Private timelines As Map
+	Private pbsparkline As VMProperty
 	Private savatar As String
 	Private soppositetext As String
 	Private sColor As String
@@ -40,7 +116,7 @@ Sub Process_Globals
 	Private sdbpassword As String
 	Private sdbhost As String
 	Private controlbag As Map
-	Private saccept As String
+	Private sAccept As String
 	Private sfilenamevmodel As String
 	Private sfiledatevmodel As String
 	Private sfilesizevmodel As String
@@ -107,10 +183,12 @@ Sub Process_Globals
 	Private isDirty As Boolean
 	Private Mode As String
 	Private ep As VMExpansionPanels
+	'
 	Private vm As BANanoVM
 	Private vue As BANanoVue
 	Private ui As VMContainer
 	Private BANano As BANano  'ignore
+	'
 	Private bHasBorder As Boolean
 	Private bShowMatrix As Boolean
 	Private tblProp As VMToolBar
@@ -120,7 +198,7 @@ Sub Process_Globals
 	Private sdatabasename As String
 	Private sprojectname As String
 	Private sdbtype As String
-	Private bisautofocus As Boolean
+	Private bisAutofocus As Boolean
 	Private shashtype As String
 	Private salg As String
 	Private bisupdatable As Boolean
@@ -228,8 +306,8 @@ Sub Process_Globals
 	Private sl As String
 	Private sx As String
 	'
-	Private splaceholder As String
-	Private bisrequired As Boolean
+	Private sPlaceholder As String
+	Private bisRequired As Boolean
 	Private siconname As String
 	Private shelpertext As String
 	Private serrortext As String
@@ -242,25 +320,25 @@ Sub Process_Globals
 	Private bontable As Boolean
 	Private bisDark As Boolean
 	'
-	Private bissolo As Boolean
-	Private bisoutlined As Boolean
-	Private bisfilled As Boolean
+	Private bisSolo As Boolean
+	Private bisOutlined As Boolean
+	Private bisFilled As Boolean
 	Private bisDense As Boolean
-	Private bissingleline As Boolean
-	Private bispersistenthint As Boolean
+	Private bisSingleline As Boolean
+	Private bisPersistenthint As Boolean
 	Private bisShaped As Boolean
-	Private bisloading As Boolean
-	Private bisflat As Boolean
+	Private bisLoading As Boolean
+	Private bisFlat As Boolean
 	Private bisRounded As Boolean
 	Private bclearable As Boolean
-	Private bishidedetails As Boolean
+	Private bisHidedetails As Boolean
 	Private bToggle As Boolean
 	Private bcenteronparent As Boolean
 	'
 	Private struevalue As String
 	Private sfalsevalue As String
 	Private bisLight As Boolean
-	Private bismultiple As Boolean
+	Private bisMultiple As Boolean
 	Private bisinset As Boolean
 	Private bisindeterminate As Boolean
 	Private bisitalic As Boolean
@@ -275,8 +353,8 @@ Sub Process_Globals
 	Private ssize As String
 	Private sswitchloading As String
 	'
-	Private swidth As String
-	Private sheight As String
+	Private sWidth As String
+	Private sHeight As String
 	Private sminwidth As String
 	Private sminheight As String
 	Private smaxwidth As String
@@ -429,14 +507,14 @@ Sub Process_Globals
 	Private lcontents As List
 	Private bisspacer As Boolean
 	Private sColor As String
-	Private sheight As String
+	Private sHeight As String
 	Private sminivariantwidth As String
 	Private smobilebreakpoint As String
 	Private soverlaycolor As String
 	Private soverlayopacity As String
 	Private sTabindex As String
 	Private stag As String
-	Private swidth As String
+	Private sWidth As String
 	Private bisabsolute As Boolean
 	Private bisapp As Boolean
 	Private bisbottom As Boolean
@@ -500,14 +578,14 @@ Sub Process_Globals
 	'
 	Private sactivator As String
 	Private scontentclass As String
-	Private sheight As String
+	Private sHeight As String
 	Private smaxwidth As String
 	Private sorigin As String
 	Private soverlaycolor As String
 	Private soverlaycolorintensity As String
 	Private soverlayopacity As String
 	Private stransition As String
-	Private swidth As String
+	Private sWidth As String
 	Private bisattach As Boolean
 	Private bisbackdrop As Boolean
 	Private bisshowonopen As Boolean
@@ -581,13 +659,13 @@ Private bisDisablefiltering As Boolean
 Private bisDisablepagination As Boolean
 Private bisDisablesort As Boolean
 Private bisFixedheader As Boolean
-Private sheight As String
+Private sHeight As String
 Private bisHidedefaultfooter As Boolean
 Private bisHidedefaultheader As Boolean
 Private sItemkey As String
 Private sItemsperpage As String
 Private bisLight As Boolean
-Private bisloading As Boolean
+Private bisLoading As Boolean
 'Private sLoadingtext As String
 'Private sLocale As String
 Private smobilebreakpoint As String
@@ -711,7 +789,7 @@ Private sTabindex As String
 	Private bisDark As Boolean
 	Private bisFixedtabs As Boolean
 	Private bisGrow As Boolean
-	Private sheight As String
+	Private sHeight As String
 	Private bisHideslider As Boolean
 	Private bisIconsandtext As Boolean
 	Private bisLight As Boolean
@@ -804,7 +882,7 @@ Sub Init
 		vm.setdata("selectedpanel", 0)
 	End If
 	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider", _
-	"quill": "quill","infobox":"infobox","fileselect":"fileselect")
+	"quill": "quill","infobox":"infobox","fileselect":"fileselect","sparkline":"sparkline")
 	fieldtypes = CreateMap("string":"String", "int":"Integer", "bool":"Boolean", "date":"Date","dbl":"Float")
 	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
 	'
@@ -849,6 +927,9 @@ Sub Init
 	'
 	CreateDialog_Multifields
 	'
+	'Add an invisible file selector
+	vm.AddFileSelect(Me, "fssqlite")
+
 	vm.UX
 	'
 	CreateUX
@@ -865,13 +946,7 @@ Sub Init
 		vm.ShowSnackBArError("You need to create a new project first!")
 		Mode = "A"
 		vm.HideOtherDrawers(drwprojectdetails.id)
-		vm.HideItem("btnDbConnect")
-		vm.HideItem("btnDbCreate")
-		vm.HideItem("btnDbDelete")
-		vm.HideItem("txtdbusername")
-		vm.HideItem("txtdbpassword")
-		vm.HideItem("txtdbhost")
-		vm.HideItem("btnDbTables")
+		vm.setdata("dbtype", "mysql")
 		drwprojectdetails.Show
 		Return
 	End If
@@ -1343,13 +1418,7 @@ Sub NewProject
 	'show the drawer
 	drwprojectdetails.Container.SetDefaults
 	drwprojectdetails.Show
-	vm.HideItem("btnDbConnect")
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
-	vm.HideItem("txtdbusername")
-	vm.HideItem("txtdbpassword")
-	vm.HideItem("txtdbhost")
-	vm.HideItem("btnDbTables")
+	vm.setdata("dbtype","mysql")
 	vm.SetFocus("txtprojectname")
 End Sub
 
@@ -1464,10 +1533,6 @@ Sub btnProject_click(e As BANanoEvent)
 	dbtype_change(prj.Get("dbtype"))
 	'show the drawer
 	vm.HideOtherDrawers(drwprojectdetails.id)
-	vm.ShowItem("btnDbConnect")
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
-	vm.HideItem("btnDbTables")
 	drwprojectdetails.toggle
 	vm.drawer.hide
 End Sub
@@ -1537,7 +1602,9 @@ Sub CreatePropertyBagsDrawer
 	PropertyBag_FileSelect
 	PropertyBag_TreeView
 	PropertyBag_TimeLine
-	PropertyBag_TimeLineItem	
+	PropertyBag_TimeLineItem
+	PropertyBag_SparkLine
+	PropertyBag_FileInput
 	'
 	vm.AddDrawer(drwbags)
 End Sub
@@ -1574,32 +1641,65 @@ End Sub
 #End Region
 
 Sub dbtype_change(chosen As String)
+	vm.SetBadgeContent("btnDbConnect", "0")
+	vm.ShowItem("btnDbConnect")
+	vm.HideItem("btnDbCreate")
+	vm.HideItem("btnDbDelete")
+	vm.HideItem("btnDbImport")
 	Select Case chosen
 	Case "banano", "sqlite"
-		vm.HideItem("btnDbConnect")
-		vm.HideItem("btnDbCreate")
-		vm.HideItem("btnDbDelete")
 		vm.HideItem("txtdbusername")
 		vm.HideItem("txtdbpassword")
 		vm.HideItem("txtdbhost")
-		vm.ShowItem("btnDbTables")
 	Case "mysql", "mssql"
-		vm.ShowItem("btnDbConnect")
-		vm.ShowItem("btnDbCreate")
-		vm.ShowItem("btnDbDelete")
 		vm.ShowItem("txtdbusername")
 		vm.ShowItem("txtdbpassword")
 		vm.ShowItem("txtdbhost")
-		vm.HideItem("btnDbTables")
 	End Select
-	If chosen = "sqlite" Then vm.showitem("btnDbCreate")
+	If chosen = "sqlite" Then vm.ShowItem("btnDbImport")
+End Sub
+
+'import sqlite database
+Sub btnDbImport_click(e As BANanoEvent)
+	vm.ShowFileSelect("fssqlite")
+End Sub
+
+Sub fssqlite_change(e As BANanoEvent)
+	'get selected file(s)
+	Dim fileList As List = vm.GetFileListFromTarget(e)
+	vue.setdata("databasename", "")
+	'there is no selected file(s)
+	If fileList.size = 0 Then Return
+	'get the first file selected
+	Dim fileO As Map = fileList.get(0)
+	'get file details
+	Dim fo As FileObject = vue.GetFileDetails(fileO)
+	Dim sFileName As String = fo.FileName
+	'start uploading the file
+	Dim fd As BANanoObject
+	fd.Initialize2("FormData", Null)
+	fd.RunMethod("append", Array("upload", fileO))
+	Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
+	'get the result of the upload
+	Dim rsltMap As Map = BANano.FromJson(rsltJSON)
+	Dim sResult As String = rsltMap.get("status")
+	Select Case sResult
+		Case "success"
+			sFileName = $"./assets/${sFileName}"$
+			vue.setdata("databasename", sFileName)
+			vm.ShowSnackBarSuccess(sFileName & " was uploaded successfully.")
+		Case "error"
+			vm.ShowSnackBarError("An error was experienced uploading " & sFileName)
+	End Select
+	'nullify the selector - enable to process the same file!
+	vm.NullifyFileSelect("fssqlite")
 End Sub
 
 Sub btnDbConnect_click(e As BANanoEvent)
 	'clear the treeview
 	tvtables.clear
 	vue.setdata("selectedtable", "")
-	tbltoolbar2.UpdateTitle(vue.propercase(sdatabasename))
+	tbltoolbar2.UpdateTitle("Database")
 	vue.hideitem("tbltransfer")
 	contdbadmin.Show
 	tabs.Hide
@@ -1623,9 +1723,23 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	'
 	vm.HideItem("btnDbCreate")
 	vm.HideItem("btnDbDelete")
-	vm.HideItem("btnDbTables")
+	'
+	If sdatabasename.Contains("/") Then
+		Dim sSuffix As String = vue.mvfield(sdatabasename,-1,"/")
+		tbltoolbar2.UpdateTitle(vue.propercase(sSuffix))
+	End If
 	
 	Select Case sdbtype
+	Case "sqlite"
+		'check file existence
+		Dim bPHP As BANanoPHP
+		bPHP.Initialize
+		Dim fe As String = 	BANano.CallInlinePHPWait(bPHP.FILE_EXISTS, bPHP.BuildFileExists(sdatabasename))
+		If fe = "no" Then
+			vm.ShowSnackBarError($"The database file '${sdatabasename}' does not exist, you can upload one you need to work on."$)
+			Return
+		End If	
+		SQLite.OpenDatabase(Me, "sqlite_opened", sdatabasename)
 	Case "mysql"
 		'connect to the db dynamically
 		Dim rsMySQL As BANanoMySQLE
@@ -1676,15 +1790,14 @@ Sub btnDbConnect_click(e As BANanoEvent)
 				Return
 			Else
 				'we can process tables
-				vm.ShowItem("btnDbTables")
 				'update the table count badge
 				Dim tTables As Int = rsTables.Result.Size
 				tTables = BANano.parseint(tTables)
-				vm.SetBadgeContent("btnDbTables", tTables)
+				vm.SetBadgeContent("btnDbConnect", tTables)
 				If tTables = 0 Then
-					vm.SetBadgeColor("btnDbTables", vue.COLOR_RED, vue.INTENSITY_NORMAL)
+					vm.SetBadgeColor("btnDbConnect", vue.COLOR_RED, vue.INTENSITY_NORMAL)
 				Else
-					vm.SetBadgeColor("btnDbTables", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
+					vm.SetBadgeColor("btnDbConnect", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
 				End If
 				'
 				Dim lTables As Map = vue.newmap
@@ -1700,6 +1813,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 					rsFields.GetTableStructure
 					rsFields.JSON = BANano.CallInlinePHPWait(rsFields.MethodNameDynamic, rsFields.BuildDynamic)
 					rsFields.FromJSON
+					stable_name = stable_name.tolowercase
 					If rsFields.OK Then
 						lTables.put(stable_name, rsFields.ReSult)
 					Else
@@ -1712,11 +1826,11 @@ Sub btnDbConnect_click(e As BANanoEvent)
 				For Each k As String In lTables.keys
 					Dim flds As List = lTables.get(k)
 					'add the table
-					Dim tKey As String = $"${sdatabasename}.${k}"$
+					Dim tKey As String = $"${sdatabasename}~${k}"$
 					tvtables.AddItem(sdatabasename, tKey, K, "", "mdi-table", False)
 					For Each fld As Map In flds
 						Dim sfld As String = fld.get("Field")
-						Dim fldKey As String = $"${tKey}.${sfld}"$
+						Dim fldKey As String = $"${tKey}~${sfld}"$
 						tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
 					Next
 				Next	
@@ -1730,6 +1844,61 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		End If	
 	Case "mssql"
 	End Select
+End Sub
+
+'sqlite database is opened
+Sub sqlite_opened
+	Dim sSuffix As String = sdatabasename
+	If sdatabasename.Contains("/") Then
+		sSuffix = vue.mvfield(sdatabasename,-1,"/")
+	End If
+	'
+	vm.ShowSnackBarSuccess("SQLite DB connection was successful!")
+	'get the list of tables in the database
+	Dim rsTables As BANanoSQLiteRecordSet
+	rsTables = SQLite.Initialize("sqlite_master", "name")
+	SQLite.TableNames(rsTables)
+	
+	'we can process tables
+	'update the table count badge
+	Dim tTables As Int = rsTables.Result.Size
+	tTables = BANano.parseint(tTables)
+	vm.SetBadgeContent("btnDbConnect", tTables)
+	If tTables = 0 Then
+		vm.SetBadgeColor("btnDbConnect", vue.COLOR_RED, vue.INTENSITY_NORMAL)
+	Else
+		vm.SetBadgeColor("btnDbConnect", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
+	End If
+	'
+	Dim lTables As Map = vue.newmap
+
+	'get each tables
+	For Each Record As Map In rsTables.result
+		Dim stable_name As String = Record.get("name")
+		'
+		'we need to find all the fields for this table
+		Dim rsFields As BANanoSQLiteRecordSet
+		rsFields = SQLite.Initialize(stable_name, "name")
+		SQLite.ColumnNames(rsFields)
+		stable_name = stable_name.tolowercase
+		lTables.put(stable_name, rsFields.ReSult)
+	Next
+	'add to the tree
+	tvtables.AddItem("", sSuffix, sSuffix, "", "mdi-database", False)
+	For Each k As String In lTables.keys
+		Dim flds As List = lTables.get(k)
+		'add the table
+		Dim tKey As String = $"${sSuffix}~${k}"$
+		tvtables.AddItem(sSuffix, tKey, K, "", "mdi-table", False)
+		For Each fld As Map In flds
+			Dim sfld As String = fld.get("name")
+			Dim fldKey As String = $"${tKey}~${sfld}"$
+			tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
+		Next
+	Next
+	tvtables.Refresh
+	'	save list of tables
+	vm.setdata("currenttables", lTables)	
 End Sub
 
 Sub btnDbCreate_click(e As BANanoEvent)
@@ -1752,7 +1921,6 @@ Sub btnDbCreate_click(e As BANanoEvent)
 	'
 	vm.HideItem("btnDbCreate")
 	vm.HideItem("btnDbDelete")
-	vm.HideItem("btnDbTables")
 	'
 	Select Case sdbtype
 		Case "mysql"
@@ -1802,8 +1970,7 @@ End Sub
 Sub DeleteMySQL
 	vm.HideItem("btnDbCreate")
 	vm.HideItem("btnDbDelete")
-	vm.HideItem("btnDbTables")
-			
+				
 	'connect to the db dynamically
 	Dim rsMySQL As BANanoMySQLE
 	rsMySQL.Initialize(sdatabasename, "", "", "")
@@ -1823,14 +1990,6 @@ Sub btnDbCode_click(e As BANanoEvent)
 	
 End Sub
 
-Sub btnDbTables_click(e As BANanoEvent)
-	'show the dbadmin container
-	contdbadmin.Show
-	tabs.Hide
-	'load the tables to the database
-	
-	
-End Sub
 
 Sub CreateProjectDrawer
 	drwprojectdetails = vm.CreateDrawer("drwprojectdetails", Me)
@@ -1841,8 +2000,8 @@ Sub CreateProjectDrawer
 	Dim ptbl As VMToolBar = vm.CreateToolbar("ptbl", Me)
 	ptbl.SetDense(True).SetFlat(True)
 	ptbl.AddSpacer
-	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","")
-	ptbl.AddIcon1("btnDbTables", "mdi-folder-table", "","Database tables", "0")
+	ptbl.AddIcon1("btnDbImport", "mdi-plus", "", "Import SQLite Database","")
+	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","0")
 	ptbl.AddIcon1("btnDbCreate", "mdi-database-plus", "", "Create the database","")
 	ptbl.AddIcon1("btnDbDelete", "mdi-database-remove", "", "Delete the database","")
 	ptbl.AddIcon1("btnDbCode", "mdi-code-braces", "", "Connection Settings","")
@@ -2007,10 +2166,7 @@ Private Sub btnbtnSaveProject_click(e As BANanoEvent)
 	Case "banano", "sqlite"	
 		drwprojectdetails.hide
 	End Select
-	vm.ShowItem("btnDbConnect")
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
-	vm.HideItem("btnDbTables")
+	dbtype_change(Record.get("dbtype"))
 End Sub
 
 Sub Read_Badge
@@ -2025,7 +2181,7 @@ Sub Read_Badge
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisDot = YesNoToBoolean(mattr.getdefault("isdot", "No"))
 	bisInline = YesNoToBoolean(mattr.getdefault("isinline", "No"))
-	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
+	bisLeft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	sOffsetx = mattr.getdefault("offsetx", "")
 	sOffsety = mattr.getdefault("offsety", "")
@@ -2056,7 +2212,7 @@ Sub Read_Chip
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bisLink = YesNoToBoolean(mattr.getdefault("islink", "No"))
 	bisNuxt = YesNoToBoolean(mattr.getdefault("isnuxt", "No"))
-	bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
+	bisOutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
 	bisPill = YesNoToBoolean(mattr.getdefault("ispill", "No"))
 	bisReplace = YesNoToBoolean(mattr.getdefault("isreplace", "No"))
 	bisRipple = YesNoToBoolean(mattr.getdefault("isripple", "No"))
@@ -2267,7 +2423,6 @@ Sub CreateUX
 			timelines.Put(sparent, citems1)
 		End Select
 	Next
-	Log(timelines)
 	
 	For Each rec As Map In compSQL.result
 		controltype = rec.get("controltype")
@@ -2313,8 +2468,8 @@ Sub CreateUX
 		'
 		sfloat = mattr.getdefault("float", "")
 		sparent = mattr.getdefault("parent", "vm.Container")
-		splaceholder = mattr.getdefault("placeholder", "")
-		bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+		sPlaceholder = mattr.getdefault("placeholder", "")
+		bisRequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
 		siconname = mattr.GetDefault("iconname", "")
 		shelpertext = mattr.getdefault("helpertext", "")
 		serrortext = mattr.getdefault("errortext", "")
@@ -2346,8 +2501,9 @@ Sub CreateUX
 		bistimenow = YesNoToBoolean(mattr.getdefault("istimenow", "No"))
 		bisdatetimenow = YesNoToBoolean(mattr.getdefault("isdatetimenow", "No"))
 		bisreadonly = YesNoToBoolean(mattr.getdefault("isreadonly", "No"))
+		
 		bisupload = YesNoToBoolean(mattr.getdefault("isupload", "No"))
-		saccept = mattr.getdefault("accept", "")
+		sAccept = mattr.getdefault("accept", "")
 		sfilenamevmodel = mattr.getdefault("filenamevmodel", "")
 		sfiledatevmodel = mattr.getdefault("filedatevmodel", "")
 		sfilesizevmodel = mattr.getdefault("filesizevmodel", "")
@@ -2373,16 +2529,16 @@ Sub CreateUX
 		spaddingy = mattr.getdefault("paddingy", "")
 		spaddinga = mattr.getdefault("paddinga", "")
 		'
-		bisautofocus = YesNoToBoolean(mattr.getdefault("isautofocus", "No"))
-		bissolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
-		bisoutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
-		bisfilled = YesNoToBoolean(mattr.getdefault("isfilled", "No"))
+		bisAutofocus = YesNoToBoolean(mattr.getdefault("isautofocus", "No"))
+		bisSolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
+		bisOutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
+		bisFilled = YesNoToBoolean(mattr.getdefault("isfilled", "No"))
 		bisDense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
-		bissingleline = YesNoToBoolean(mattr.getdefault("issingleline", "No"))
-		bispersistenthint = YesNoToBoolean(mattr.getdefault("ispersistenthint", "No"))
+		bisSingleline = YesNoToBoolean(mattr.getdefault("issingleline", "No"))
+		bisPersistenthint = YesNoToBoolean(mattr.getdefault("ispersistenthint", "No"))
 		bisShaped = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
-		bisloading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
-		bisflat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
+		bisLoading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
+		bisFlat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
 		bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
 		bclearable = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
 		bishidedetails = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
@@ -2548,7 +2704,8 @@ Sub CreateUX
 			Case "date"
 				Design_Date
 			Case "file"
-				Design_File
+				Read_FileInput
+				Design_FileInput
 			Case "radio"
 				Design_Radio
 			Case "select","auto", "combo"
@@ -2581,7 +2738,10 @@ Sub CreateUX
 				Design_Quill
 			Case "fileselect"
 				Read_FileSelect
-				Design_FileSelect			
+				Design_FileSelect
+			Case "sparkline"
+				Read_SparkLine
+				Design_SparkLine			
 		End Select
 	Next
 	'
@@ -2919,24 +3079,24 @@ End Sub
 
 Sub Design_TextArea
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, sTabindex)
-	txta.SetSolo(bissolo)
+	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, sTabindex)
+	txta.SetSolo(bisSolo)
 	txta.SetValue(svalue)
-	txta.SetOutlined(bisoutlined)
-	txta.SetFilled(bisfilled)
+	txta.SetOutlined(bisOutlined)
+	txta.SetFilled(bisFilled)
 	txta.SetDense(bisDense)
-	txta.SetSingleLine(bissingleline)
-	txta.SetPersistentHint(bispersistenthint)
-	txta.SetShaped(bisshaped)
-	txta.SetLoading(bisloading)
-	txta.SetFlat(bisflat)
-	txta.SetRounded(bisrounded)
+	txta.SetSingleLine(bisSingleline)
+	txta.SetPersistentHint(bisPersistenthint)
+	txta.SetShaped(bisShaped)
+	txta.SetLoading(bisLoading)
+	txta.SetFlat(bisFlat)
+	txta.SetRounded(bisRounded)
 	txta.SetClearable(bclearable)
-	txta.SetHideDetails(bishidedetails)
+	txta.SetHideDetails(bisHidedetails)
 	txta.SetAutoGrow(bautogrow)
 	txta.SetFieldType(sfieldtype)
 	txta.SetVisible(bisVisible)
-	txta.SetAutoFocus(bisautofocus)
+	txta.SetAutoFocus(bisAutofocus)
 	txta.SetReadOnly(bisreadonly)
 	txta.SetDisabled(bisDisabled)
 	If smargintop <> "" Then txta.AddClass("mt-" & smargintop)
@@ -2970,7 +3130,7 @@ Sub Design_TextArea
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 
 	If sfloat <> "" Then
 		AddCode(sb, $"txta${sname}.AddClass("${sfloat}")"$)
@@ -2979,19 +3139,19 @@ Sub Design_TextArea
 	CodeLine(sb, bisreadonly, "b", "txta", sname, "SetReadonly")
 	CodeLine(sb, bisDisabled, "b", "txta", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "txta", sname, "SetValue")
-	CodeLine(sb, bissolo, "b", "txta", sname, "SetSolo")
-	CodeLine(sb, bisoutlined, "b", "txta", sname, "SetOutlined")
-	CodeLine(sb, bisfilled, "b", "txta", sname, "SetFilled")
-	CodeLine(sb, bisautofocus, "b", "txta", sname, "SetAutoFocus")
-	CodeLine(sb, bisdense, "b", "txta", sname, "SetDense")
-	CodeLine(sb, bissingleline, "b", "txta", sname, "SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "txta", sname, "SetPersistentHint")
-	CodeLine(sb, bisshaped, "b", "txta", sname, "SetShaped")
-	CodeLine(sb, bisloading, "b", "txta", sname, "SetLoading")
-	CodeLine(sb, bisflat, "b", "txta", sname, "SetFlat")
-	CodeLine(sb, bisrounded, "b", "txta", sname, "SetRounded")
+	CodeLine(sb, bisSolo, "b", "txta", sname, "SetSolo")
+	CodeLine(sb, bisOutlined, "b", "txta", sname, "SetOutlined")
+	CodeLine(sb, bisFilled, "b", "txta", sname, "SetFilled")
+	CodeLine(sb, bisAutofocus, "b", "txta", sname, "SetAutoFocus")
+	CodeLine(sb, bisDense, "b", "txta", sname, "SetDense")
+	CodeLine(sb, bisSingleline, "b", "txta", sname, "SetSingleLine")
+	CodeLine(sb, bisPersistenthint, "b", "txta", sname, "SetPersistentHint")
+	CodeLine(sb, bisShaped, "b", "txta", sname, "SetShaped")
+	CodeLine(sb, bisLoading, "b", "txta", sname, "SetLoading")
+	CodeLine(sb, bisFlat, "b", "txta", sname, "SetFlat")
+	CodeLine(sb, bisRounded, "b", "txta", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txta", sname, "SetClearable")
-	CodeLine(sb, bishidedetails, "b", "txta", sname, "SetHideDetails")
+	CodeLine(sb, bisHidedetails, "b", "txta", sname, "SetHideDetails")
 	CodeLine(sb, bisVisible, "b", "txta", sname, "SetVisible")
 	'
 	Dim pres As String = "txta"
@@ -3019,18 +3179,18 @@ End Sub
 
 Sub Design_Switch
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, sTabindex)
 	swt.SetColorIntensity(sColor, sintensity)
-	swt.SetRequired(bisrequired)
+	swt.SetRequired(bisRequired)
 	swt.SetDisabled(bisDisabled)
-	swt.SetDark(bisdark)
+	swt.SetDark(bisDark)
 	swt.SetValue(svalue)
-	swt.SetDense(bisdense)
-	swt.SetHideDetails(bishidedetails)
-	swt.SetLight(bislight)
+	swt.SetDense(bisDense)
+	swt.SetHideDetails(bisHidedetails)
+	swt.SetLight(bisLight)
 	swt.SetLoading(sswitchloading)
-	swt.SetMultiple(bismultiple)
-	swt.SetInset(bisinset).SetFlat(bisflat)
+	swt.SetMultiple(bisMultiple)
+	swt.SetInset(bisinset).SetFlat(bisFlat)
 	swt.SetFieldType(sfieldtype)
 	swt.SetVisible(bisVisible)
 	If smargintop <> "" Then swt.AddClass("mt-" & smargintop)
@@ -3062,22 +3222,22 @@ Sub Design_Switch
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bStatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${stabindex})"$).append(CRLF)
-	CodeLine(sb, bisrequired, "b", "swt", sname, "SetRequired")
+	sb.append($"Dim swt${sname} As VMCheckBox = vm.NewSwitch(Me, ${bStatic}, "swt${sname}", "${svmodel}", "${stitle}", "${svalue}", "${sfalsevalue}", ${bisPrimary}, ${sTabindex})"$).append(CRLF)
+	CodeLine(sb, bisRequired, "b", "swt", sname, "SetRequired")
 	CodeLine(sb, sfieldtype, "s", "swt", sname, "SetFieldType")
 	CodeLine(sb, svalue, "s", "swt", sname, "SetValue")
 	If sfloat <> "" Then
 		AddCode(sb, $"swt${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, bisDisabled, "b", "swt", sname, "SetDisabled")
-	CodeLine(sb, bisdark, "b", "swt", sname, "SetDark")
-	CodeLine(sb, bisdense, "b", "swt", sname, "SetDense")
-	CodeLine(sb, bishidedetails, "b", "swt", sname, "SetHideDetails")
+	CodeLine(sb, bisDark, "b", "swt", sname, "SetDark")
+	CodeLine(sb, bisDense, "b", "swt", sname, "SetDense")
+	CodeLine(sb, bisHidedetails, "b", "swt", sname, "SetHideDetails")
 	CodeLine(sb, bisinset, "b", "swt", sname, "SetInset")
-	CodeLine(sb, bislight, "b", "swt", sname, "SetLight")
+	CodeLine(sb, bisLight, "b", "swt", sname, "SetLight")
 	CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
-	CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
-	CodeLine(sb, bisflat, "b", "swt", sname, "SetFlat")
+	CodeLine(sb, bisMultiple, "b", "swt", sname, "SetMultiple")
+	CodeLine(sb, bisFlat, "b", "swt", sname, "SetFlat")
 	CodeLine(sb, bisVisible, "b", "swt", sname, "SetVisible")
 	'
 	Dim pres As String = "swt"
@@ -3113,16 +3273,16 @@ End Sub
 
 Sub Design_CheckBox
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, stabindex)
+	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, sTabindex)
 	chk.SetColorIntensity(sColor, sintensity)
-	chk.SetRequired(bisrequired)
+	chk.SetRequired(bisRequired)
 	chk.SetDisabled(bisDisabled)
-	chk.SetDark(bisdark)
-	chk.SetDense(bisdense)
-	chk.SetHideDetails(bishidedetails)
+	chk.SetDark(bisDark)
+	chk.SetDense(bisDense)
+	chk.SetHideDetails(bisHidedetails)
 	chk.SetIndeterminate(bisindeterminate)
-	chk.SetLight(bislight)
-	chk.SetMultiple(bismultiple)
+	chk.SetLight(bisLight)
+	chk.SetMultiple(bisMultiple)
 	chk.SetValue(svalue)
 	chk.SetFieldType(sfieldtype)
 	chk.SetVisible(bisVisible)
@@ -3156,7 +3316,7 @@ Sub Design_CheckBox
 	AddNewLine(sb)
 	'
 	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${sTabindex})"$).append(CRLF)
-	CodeLine(sb, bisrequired, "b", "chk", sname, "SetRequired")
+	CodeLine(sb, bisRequired, "b", "chk", sname, "SetRequired")
 	CodeLine(sb, svalue, "s", "chk", sname, "SetValue")
 	CodeLine(sb, bisDisabled, "b", "chk", sname, "SetDisabled")
 	CodeLine(sb, bisDark, "b", "chk", sname, "SetDark")
@@ -3164,10 +3324,10 @@ Sub Design_CheckBox
 		AddCode(sb, $"chk${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, bisDense, "b", "chk", sname, "SetDense")
-	CodeLine(sb, bishidedetails, "b", "chk", sname, "SetHideDetails")
+	CodeLine(sb, bisHidedetails, "b", "chk", sname, "SetHideDetails")
 	CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
 	CodeLine(sb, bisLight, "b", "chk", sname, "SetLight")
-	CodeLine(sb, bismultiple, "b", "chk", sname, "SetMultiple")
+	CodeLine(sb, bisMultiple, "b", "chk", sname, "SetMultiple")
 	CodeLine(sb, sfieldtype, "s", "chk", sname, "SetFieldType")
 	CodeLine(sb, bisVisible, "b", "chk", sname, "SetVisible")
 	'
@@ -3204,12 +3364,12 @@ End Sub
 
 Sub Design_Date
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, stabindex)
+	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, stitle, bisRequired, sPlaceholder, shelpertext, serrortext, sTabindex)
 	dp.SetVisible(bisVisible)
 	dp.SetDisabled(bisDisabled)
 	dp.SetRange(bisrange)
 	dp.SetShowWeek(bisshowweek)
-	dp.SetDark(bisdark)
+	dp.SetDark(bisDark)
 	dp.SetValue(svalue)
 	dp.SetIsNow(bisnow)
 	dp.SetFieldType(sfieldtype)
@@ -3217,21 +3377,21 @@ Sub Design_Date
 	'dp.SetColorIntensity(scolor, sintensity)
 	'dp.SetHeaderColorIntensity(sheadercolor, sheaderintensity)
 	dp.SetFirstDayOfWeek(sfirstdayofweek)
-	dp.SetMultiple(bismultiple)
+	dp.SetMultiple(bisMultiple)
 	dp.TextField.SetPrependIcon(siconname)
-	dp.TextField.SetSolo(bissolo)
-	dp.TextField.SetOutlined(bisoutlined)
-	dp.TextField.SetFilled(bisfilled)
+	dp.TextField.SetSolo(bisSolo)
+	dp.TextField.SetOutlined(bisOutlined)
+	dp.TextField.SetFilled(bisFilled)
 	dp.TextField.SetDense(bisDense)
-	dp.TextField.SetSingleLine(bissingleline)
-	dp.TextField.SetPersistentHint(bispersistenthint)
+	dp.TextField.SetSingleLine(bisSingleline)
+	dp.TextField.SetPersistentHint(bisPersistenthint)
 	dp.TextField.SetShaped(bisShaped)
-	dp.TextField.SetLoading(bisloading)
-	dp.TextField.SetFlat(bisflat)
+	dp.TextField.SetLoading(bisLoading)
+	dp.TextField.SetFlat(bisFlat)
 	dp.TextField.SetRounded(bisRounded)
 	dp.TextField.SetClearable(bclearable)
-	dp.TextField.SetHideDetails(bishidedetails)
-	dp.SetAutofocus(bisautofocus)
+	dp.TextField.SetHideDetails(bisHidedetails)
+	dp.SetAutofocus(bisAutofocus)
 	If smargintop <> "" Then dp.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then dp.AddClass("mb-" & smarginbottom)
 	If smarginleft <> "" Then dp.AddClass("ml-" & smarginleft)
@@ -3261,7 +3421,7 @@ Sub Design_Date
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	
-	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisRequired}, "${sPlaceholder}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 		
 	CodeLine(sb, sfieldtype, "s", "dp", sname, "SetFieldType")
 	CodeLine(sb, bisVisible, "b", "dp", sname, "SetVisible")
@@ -3271,10 +3431,10 @@ Sub Design_Date
 		AddCode(sb, $"dp${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, bisshowweek, "b", "dp", sname, "SetShowWeek")
-	CodeLine(sb, bisdark, "b", "dp", sname, "SetDark")
+	CodeLine(sb, bisDark, "b", "dp", sname, "SetDark")
 	CodeLine(sb, svalue, "s", "dp", sname, "SetValue")
 	CodeLine(sb, bisnow, "b", "dp", sname, "SetIsNow")
-	CodeLine(sb, bisautofocus, "b", "dp", sname, "SetAutoFocus")
+	CodeLine(sb, bisAutofocus, "b", "dp", sname, "SetAutoFocus")
 	'CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
 	CodeLine(sb, sfirstdayofweek, "s", "dp", sname, "SetFirstDayOfWeek")
 	CodeLine(sb, bismultiple, "b", "dp", sname, "SetMultiple")
@@ -3339,7 +3499,7 @@ Sub Design_Chip
 	chip.SetAppend(bisAppend)
 	chip.SetClose(bisClose)
 	chip.SetColorintensity(sColor, sColorintensity)
-	chip.SetDark(bisdark)
+	chip.SetDark(bisDark)
 	chip.SetDisabled(bisDisabled)
 	chip.SetDraggable(bisDraggable)
 	chip.SetExact(bisExact)
@@ -3347,10 +3507,10 @@ Sub Design_Chip
 	chip.SetHref(shref)
 	chip.SetLabel(bisLabel)
 	chip.SetLarge(bisLarge)
-	chip.SetLight(bislight)
+	chip.SetLight(bisLight)
 	chip.SetLink(bisLink)
 	chip.SetNuxt(bisNuxt)
-	chip.SetOutlined(bisoutlined)
+	chip.SetOutlined(bisOutlined)
 	chip.SetPill(bisPill)
 	chip.SetReplace(bisReplace)
 	chip.SetRipple(bisRipple)
@@ -3406,7 +3566,7 @@ Sub Design_Chip
 		AddCode(sb, $"chp${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine2(sb, sColor, sColorintensity, "s", "chp", sname, "SetColorintensity")
-	CodeLine(sb, bisdark, "b", "chp", sname, "SetDark")
+	CodeLine(sb, bisDark, "b", "chp", sname, "SetDark")
 	CodeLine(sb, bisDisabled, "b", "chp", sname, "SetDisabled")
 	CodeLine(sb, bisDraggable, "b", "chp", sname, "SetDraggable")
 	CodeLine(sb, bisExact, "b", "chp", sname, "SetExact")
@@ -3475,12 +3635,12 @@ Sub Design_Badge
 	Case "isicon"	
 		badge.SetIcon(siconname)
 	End Select
-	badge.SetDark(bisdark)
+	badge.SetDark(bisDark)
 	badge.SetDisabled(bisDisabled)
 	badge.SetDot(bisDot)
 	badge.SetInline(bisInline)
-	badge.SetLeft(bisleft)
-	badge.SetLight(bislight)
+	badge.SetLeft(bisLeft)
+	badge.SetLight(bisLight)
 	badge.SetOffsetx(sOffsetx)
 	badge.SetOffsety(sOffsety)
 	badge.SetOrigin(sorigin)
@@ -3536,7 +3696,7 @@ Sub Design_Badge
 	CodeLine(sb, bisDisabled, "b", "bdg", sname, "SetDisabled")
 	CodeLine(sb, bisDot, "b", "bdg", sname, "SetDot")
 	CodeLine(sb, bisInline, "b", "bdg", sname, "SetInline")
-	CodeLine(sb, bisleft, "b", "bdg", sname, "SetLeft")
+	CodeLine(sb, bisLeft, "b", "bdg", sname, "SetLeft")
 	CodeLine(sb, bisLight, "b", "bdg", sname, "SetLight")
 	CodeLine(sb, sOffsetx, "s", "bdg", sname, "SetOffsetx")
 	CodeLine(sb, sOffsety, "s", "bdg", sname, "SetOffsety")
@@ -3569,244 +3729,21 @@ Sub Design_Badge
 	sb.append($"${sparent}.AddControl(bdg${sname}.Badge, bdg${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
-Sub Design_File
-	'we are dealing with 1 file
-	If bismultiple = False Then
-		If sfilenamevmodel <> "" Then 
-			AddCode(sbRead, $"Dim sFileName As String = vue.GetData("${sfilenamevmodel}")"$)
-			AddCode(sbRead, $"Record.put("${sfilenamevmodel}", sFileName)"$)
-		End If
-		If sfiledatevmodel <> "" Then 
-			AddCode(sbRead, $"Dim sFileDate As String = vue.GetData("${sfiledatevmodel}")"$)
-			AddCode(sbRead, $"Record.put("${sfiledatevmodel}", sFileDate)"$)
-		End If
-		If sfilesizevmodel <> "" Then 
-			AddCode(sbRead, $"Dim sFileSize As String = vue.GetData("${sfilesizevmodel}")"$)
-			AddCode(sbRead, $"Record.put("${sfilesizevmodel}", sFileSize)"$)
-		End If
-		If sfiletypevmodel <> "" Then 
-			AddCode(sbRead, $"Dim sFileType As String = vue.GetData("${sfiletypevmodel}")"$)
-			AddCode(sbRead, $"Record.put("${sfiletypevmodel}", sFileType)"$)
-		End If
-	Else
-		AddNewLine(sbEvents)
-		AddInstruction(sbEvents, "<Your Module>", "Process_Globals", "")
-		AddCode(sbEvents, "Private numFiles As Int")
-		AddCode(sbEvents, "Private totFiles As Int")
-		AddCode(sbEvents, "Private fl As List")
-		AddNewLine(sbEvents)
-	End If
-	
-	'is not updatable
-	If bisupdatable = False Then
-		AddComment(sbRead, "Should not be updated...")
-		AddCode(sbRead, $"Record.Remove("fm${svmodel}")"$)
-	Else
-		AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("fm${svmodel}")"$)
-	End If
-	'
-	Dim fi As VMTextField = ui.NewFileInput(Me, True, False, sname, svmodel, stitle, splaceholder, bisrequired, shelpertext, serrortext, stabindex)
-	fi.SetSolo(bissolo)
-	fi.SetOutlined(bisoutlined)
-	fi.SetFilled(bisfilled)
-	fi.SetDense(bisDense)
-	fi.SetSingleLine(bissingleline)
-	fi.SetPersistentHint(bispersistenthint)
-	fi.SetShaped(bisShaped)
-	fi.SetLoading(bisloading)
-	fi.SetFlat(bisflat)
-	fi.SetRounded(bisRounded)
-	fi.SetClearable(bclearable)
-	fi.SetHideDetails(bishidedetails)
-	fi.SetFieldType(sfieldtype)
-	fi.SetVisible(bisVisible)
-	fi.SetAccept(saccept)
-	fi.SetMultiple(bismultiple)
-	'
-	If smargintop <> "" Then fi.AddClass("mt-" & smargintop)
-	If smarginbottom <> "" Then fi.AddClass("mb-" & smarginbottom)
-	If smarginleft <> "" Then fi.AddClass("ml-" & smarginleft)
-	If smarginright <> "" Then fi.AddClass("mr-" & smarginright)
-	If smargins <> "" Then fi.AddClass("ms-" & smargins)
-	If smargine <> "" Then fi.AddClass("me-" & smargine)
-	If smarginx <> "" Then fi.AddClass("mx-" & smarginx)
-	If smarginy <> "" Then fi.AddClass("my-" & smarginy)
-	If smargina <> "" Then fi.AddClass("ma-" & smargina)
-	If spaddingtop <> "" Then fi.AddClass("pt-" & spaddingtop)
-	If spaddingbottom <> "" Then fi.AddClass("pb-" & spaddingbottom)
-	If spaddingleft <> "" Then fi.AddClass("pl-" & spaddingleft)
-	If spaddingright <> "" Then fi.AddClass("pr-" & spaddingright)
-	If spaddings <> "" Then fi.AddClass("ps-" & spaddings)
-	If spaddinge <> "" Then fi.AddClass("pe-" & spaddinge)
-	If spaddingx <> "" Then fi.AddClass("px-" & spaddingx)
-	If spaddingy <> "" Then fi.AddClass("py-" & spaddingy)
-	If spaddinga <> "" Then fi.AddClass("pa-" & spaddinga)
-
-
-	If sfloat <> "" Then
-		fi.Addclass(sfloat)
-	End If
-	ui.AddControl(fi.TextField, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
-	'
-	AddNewLine(sb)
-	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
-	AddNewLine(sb)
-			
-	sb.append($"Dim fi${sname} As VMTextField = vm.NewFileInput(Me, ${bStatic}, ${bisupload}, "fi${sname}", "fm${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
-	CodeLine(sb, bissolo, "b", "fi", sname, "SetSolo")
-	CodeLine(sb, bismultiple, "b", "swt", sname, "SetMultiple")
-	CodeLine(sb, saccept, "s", "fi", sname, "SetAccept")
-	CodeLine(sb, bisoutlined, "b", "fi", sname, "SetOutlined")
-	CodeLine(sb, bisfilled, "b", "fi", sname, "SetFilled")
-	CodeLine(sb, bisdense, "b", "fi", sname, "SetDense")
-	If sfloat <> "" Then
-		AddCode(sb, $"fi${sname}.AddClass("${sfloat}")"$)
-	End If
-	CodeLine(sb, bissingleline, "b", "fi", sname, "SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "fi", sname, "SetPersistentHint")
-	CodeLine(sb, bisshaped, "b", "fi", sname, "SetShaped")
-	CodeLine(sb, bisloading, "b", "fi", sname, "SetLoading")
-	CodeLine(sb, bisflat, "b", "fi", sname, "SetFlat")
-	CodeLine(sb, bisrounded, "b", "fi", sname, "SetRounded")
-	CodeLine(sb, bclearable, "b", "fi", sname, "SetClearable")
-	CodeLine(sb, bishidedetails, "b", "fi", sname, "SetHideDetails")
-	CodeLine(sb, sfieldtype, "s", "fi", sname, "SetFieldType")
-	AddCode(sb, $"fi${sname}.SetOnFile(Me, "fi${sname}_change")"$)
-	CodeLine(sb, bisVisible, "b", "fi", sname, "SetVisible")
-	'
-	Dim pres As String = "fi"
-	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
-	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
-	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
-	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
-	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
-	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
-	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
-	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
-	
-	sb.append($"${sparent}.AddControl(fi${sname}.TextField, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
-	'
-	If bismultiple = False Then
-		AddNewLine(sbEvents)
-		AddCode(sbEvents, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
-		AddNewLine(sbEvents)
-		AddComment(sbEvents, "we are uploading a single file")
-		AddCode(sbEvents, $"Private Sub fi${sname}_change(fileO As Map)"$)
-		AddComment(sbEvents, "clear the relevant vmodels")
-		If sfilenamevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
-		If sfiledatevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", "")"$)
-		If sfilesizevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", "")"$)
-		If sfiletypevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", "")"$)
-		AddComment(sbEvents, "the file is blank")
-		AddCode(sbEvents, $"If fileO = Null Then Return"$)
-		AddComment(sbEvents, "get file details")
-		AddCode(sbEvents, $"Dim fo As FileObject = vue.GetFileDetails(fileO)"$)
-		If sfilenamevmodel <> "" Then 
-			AddCode(sbEvents, $"Dim sFileName As String = fo.FileName"$)
-			AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
-		End If
-		If sfiledatevmodel <> "" Then 
-			AddCode(sbEvents, $"Dim sFileDate As String = fo.FileDate"$)
-			AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", sFileDate)"$)
-		End If
-		If sfilesizevmodel <> "" Then 
-			AddCode(sbEvents, $"Dim sFileSize As String = fo.FileSize"$)
-			AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", sFileSize)"$)
-		End If
-		If sfiletypevmodel <> "" Then 
-			AddCode(sbEvents, $"Dim sFileType As String = fo.FileType"$)
-			AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", sFileType)"$)
-		End If
-		'
-		If bisupload Then
-			AddComment(sbEvents, "start uploading file")
-			AddCode(sbEvents, $"Dim fd As BANanoObject"$)
-			AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
-			AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
-			AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
-			AddComment(sbEvents, "get the result of the upload")
-			AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
-			AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
-			AddCode(sbEvents, $"Select Case sResult"$)
-			AddCode(sbEvents, $"Case "success""$)
-			If sfilenamevmodel <> "" Then
-				AddCode(sbEvents, $"sFileName = "./assets/" & sFileName"$)
-				AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
-			End If
-			AddCode(sbEvents, $"vm.ShowSnackBarSuccess(sFileName & " was uploaded successfully.")"$)
-			AddCode(sbEvents, $"Case "error""$)
-			If sfilenamevmodel <> "" Then
-				AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
-			End If
-			AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced uploading " & sFileName)"$)
-			AddCode(sbEvents, $"End Select"$)
-		End If
-	
-	Else
-		AddComment(sbEvents, "we are uploading multiple files")
-		AddCode(sbEvents, $"Private Sub fi${sname}_change(fileList As List)"$)
-		AddCode(sbEvents, $"If fileList = Null Then Return"$)
-		AddComment(sbEvents, "write code to process the files after select")
-		AddCode(sbEvents, "numFiles = 0")
-		AddComment(sbEvents, "store list of files uploaded")
-		AddCode(sbEvents, "fl.Initialize")
-		AddComment(sbEvents, "start uploading file, how many times we need")
-		AddCode(sbEvents, "totFiles = fileList.Size")
-		AddCode(sbEvents, "For Each fileO As Object In fileList")
-		AddComment(sbEvents, "get the file object and add it to list")
-		AddCode(sbEvents, "Dim fde As FileObject = vue.GetFileDetails(fileO)")
-		AddCode(sbEvents, "fl.Add(fde)")
-		AddComment(sbEvents, "upload each file")
-		AddCode(sbEvents, $"Dim fd As BANanoObject"$)
-		AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
-		AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
-		AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
-		AddComment(sbEvents, "get the result of the upload")
-		AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
-		AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
-		AddCode(sbEvents, $"Select Case sResult"$)
-		AddCode(sbEvents, $"Case "success""$)
-		AddComment(sbEvents, "count files uploaded")
-		AddCode(sbEvents, "numFiles = numFiles + 1")
-		AddCode(sbEvents, $"Case "error""$)
-		AddCode(sbEvents, "End Select")	
-		AddCode(sbEvents, "Next")
-		'determine uploaded and all files
-		AddComment(sbEvents, "detect uploaded files")
-		AddCode(sbEvents, "if totFiles = numFiles Then")
-		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("All " & totFiles & " were uploaded successfully.")"$)
-		AddCode(sbEvents, "else")
-		AddCode(sbEvents, $"vm.ShowSnackBarError(numFiles & " of " & totFiles & " were uploaded successfully. Please retry.")"$)
-		AddCode(sbEvents, "end if")
-	End If
-	AddCode(sbEvents, "End Sub")
-	AddNewLine(sbEvents)
-End Sub
 
 Sub Design_Radio
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
 	If buseoptions Then
 		Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, stabindex)
+		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, sTabindex)
 	Else
 		Dim rd As VMRadioGroup = ui.NewRadioGroupDataSource(Me, True, sname, svmodel, stitle, svalue, ssourcetable, _
-					ssourcefield, sdisplayfield, bshowlabel, blabelontop, stabindex)
+					ssourcefield, sdisplayfield, bshowlabel, blabelontop, sTabindex)
 	End If
 	rd.SetMandatory(bismandatory)
 	rd.SetDisabled(bisDisabled)
-	rd.SetDense(bisdense)
-	rd.SetMultiple(bismultiple)
-	rd.SetHideDetails(bishidedetails)
+	rd.SetDense(bisDense)
+	rd.SetMultiple(bisMultiple)
+	rd.SetHideDetails(bisHidedetails)
 	rd.SetFieldType(sfieldtype)
 	rd.SetVisible(bisVisible)
 	If smargintop <> "" Then rd.AddClass("mt-" & smargintop)
@@ -3852,9 +3789,9 @@ Sub Design_Radio
 		AddCode(sb, $"rd${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, bisDisabled, "b", "rd", sname, "SetDisabled")
-	CodeLine(sb, bisdense, "b", "rd", sname, "SetDense")
-	CodeLine(sb, bismultiple, "b", "rd", sname, "SetMultiple")
-	CodeLine(sb, bishidedetails, "b", "rd", sname, "SetHideDetails")
+	CodeLine(sb, bisDense, "b", "rd", sname, "SetDense")
+	CodeLine(sb, bisMultiple, "b", "rd", sname, "SetMultiple")
+	CodeLine(sb, bisHidedetails, "b", "rd", sname, "SetHideDetails")
 	CodeLine(sb, bisVisible, "b", "rd", sname, "SetVisible")
 	'
 	Dim pres As String = "rd"
@@ -3892,55 +3829,55 @@ Sub Design_Select
 		Case "select"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, optionsm, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+						sPlaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisreturnobject, shelpertext, serrortext, stabindex)
+				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+						sPlaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			End If
 		Case "combo"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewComboOptions(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
+				Dim sel As VMSelect = ui.NewComboOptions(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+						sPlaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
+				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+						sPlaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			End If
 		Case "auto"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
+				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+						sPlaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, sname, svmodel, stitle, bisrequired, bismultiple, _
-						splaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
+				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+						sPlaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			End If
 	End Select
 	'
-	sel.SetSolo(bissolo)
-	sel.SetOutlined(bisoutlined)
-	sel.SetFilled(bisfilled)
+	sel.SetSolo(bisSolo)
+	sel.SetOutlined(bisOutlined)
+	sel.SetFilled(bisFilled)
 	sel.SetDense(bisDense)
 	sel.SetPrependIcon(siconname)
-	sel.SetSingleLine(bissingleline)
-	sel.SetPersistentHint(bispersistenthint)
+	sel.SetSingleLine(bisSingleline)
+	sel.SetPersistentHint(bisPersistenthint)
 	sel.SetShaped(bisShaped)
-	sel.SetLoading(bisloading)
-	sel.SetFlat(bisflat)
+	sel.SetLoading(bisLoading)
+	sel.SetFlat(bisFlat)
 	sel.SetRounded(bisRounded)
 	sel.SetClearable(bclearable)
-	sel.SetHideDetails(bishidedetails)
-	sel.SetChips(bischips)
-	sel.SetSmallChips(bissmallchips)
+	sel.SetHideDetails(bisHidedetails)
+	sel.SetChips(bisChips)
+	sel.SetSmallChips(bisSmallchips)
 	sel.SetDeletableChips(bisdeletablechips)
 	sel.SetValue(svalue)
 	sel.SetFieldType(sfieldtype)
 	sel.SetVisible(bisVisible)
-	sel.SetAutoFocus(bisautofocus)
+	sel.SetAutoFocus(bisAutofocus)
 	If smargintop <> "" Then sel.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then sel.AddClass("mb-" & smarginbottom)
 	If smarginleft <> "" Then sel.AddClass("ml-" & smarginleft)
@@ -3978,9 +3915,9 @@ Sub Design_Select
 				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 				'
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			Else
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			End If
 		Case "combo"
 			If buseoptions Then
@@ -3988,7 +3925,7 @@ Sub Design_Select
 				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 				'
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			Else
 				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
 			End If
@@ -4063,18 +4000,18 @@ End Sub
 
 Sub Design_Slider
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, stabindex)
+	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, sTabindex)
 	sld.SetValue(sslidervalue)
 	sld.SetColorIntensity(sColor, sintensity)
-	sld.SetHideDetails(bishidedetails)
-	sld.SetDark(bisdark)
+	sld.SetHideDetails(bisHidedetails)
+	sld.SetDark(bisDark)
 	sld.SetValue(svalue)
 	sld.SetReadonly(bisreadonly)
 	sld.SetVertical(bisvertical)
 	sld.SetStep(sstepvalue)
-	sld.SetPrependIcon(sprependicon)
-	sld.SetAppendIcon(sappendicon)
-	sld.SetDense(bisdense)
+	sld.SetPrependIcon(sPrependicon)
+	sld.SetAppendIcon(sAppendicon)
+	sld.SetDense(bisDense)
 	sld.SetThumbSize(sthumbsize)
 	sld.SetThumbColorIntensity(sthumbcolor,sthumbintensity)
 	sld.SetTrackColorIntensity(strackcolor,strackintensity)
@@ -4111,21 +4048,21 @@ Sub Design_Slider
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bStatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${stabindex})"$).append(CRLF)
+	sb.append($"Dim sld${sname} As VMSlider = vm.NewSlider(Me, ${bStatic}, "sld${sname}", "${svmodel}", "${stitle}", ${sminvalue}, ${smaxvalue}, ${sTabindex})"$).append(CRLF)
 	CodeLine(sb, sslidervalue, "s", "sld", sname, "SetValue")
 	CodeLine2(sb, sColor, sintensity, "s", "sld", sname, "SetColorIntensity")
-	CodeLine(sb, bishidedetails, "b", "sld", sname, "SetHidedetails")
+	CodeLine(sb, bisHidedetails, "b", "sld", sname, "SetHidedetails")
 	CodeLine(sb, sfieldtype, "s", "sld", sname, "SetFieldType")
 	CodeLine(sb, svalue, "s", "sld", sname, "SetValue")
-	CodeLine(sb, bisdark, "b", "sld", sname, "SetDark")
+	CodeLine(sb, bisDark, "b", "sld", sname, "SetDark")
 	If sfloat <> "" Then
 		AddCode(sb, $"sld${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, bisreadonly, "b", "sld", sname, "SetReadonly")
 	CodeLine(sb, bisvertical, "b", "sld", sname, "SetVertical")
 	CodeLine(sb, sstepvalue, "s", "sld", sname, "SetStep")
-	CodeLine(sb, sprependicon, "s", "sld", sname, "SetPrependicon")
-	CodeLine(sb, sappendicon, "s", "sld", sname, "SetAppendIcon")
+	CodeLine(sb, sPrependicon, "s", "sld", sname, "SetPrependicon")
+	CodeLine(sb, sAppendicon, "s", "sld", sname, "SetAppendIcon")
 	CodeLine(sb, bisDense, "b", "sld", sname, "SetDense")
 	CodeLine(sb, sthumbsize, "s", "sld", sname, "SetThumbSize")
 	CodeLine(sb, bisVisible, "b", "sld", sname, "SetVisible")
@@ -4158,12 +4095,12 @@ Sub Design_Slider
 End Sub
 
 Sub Design_Label
-	Dim slabelsize As String = mattr.GetDefault("labelsize", "")
+	Dim sLabelsize As String = mattr.GetDefault("labelsize", "")
 	Dim sdisplay As String = mattr.getdefault("display", "")
 	Dim salign As String = mattr.getdefault("align", "")
 	Dim sfontweight As String = mattr.getdefault("fontweight", "")
 	'
-	Dim lbl As VMLabel = ui.NewLabel(True, sname, svmodel, slabelsize, svalue)
+	Dim lbl As VMLabel = ui.NewLabel(True, sname, svmodel, sLabelsize, svalue)
 	lbl.AddClass(sdisplay)
 	lbl.AddClass(salign)
 	lbl.AddClass(sfontweight)
@@ -4222,7 +4159,7 @@ Sub Design_Label
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bStatic}, "lbl${sname}", "${svmodel}", "${slabelsize}", "${svalue}")"$).append(CRLF)
+	sb.append($"Dim lbl${sname} As VMLabel =vm.NewLabel(${bStatic}, "lbl${sname}", "${svmodel}", "${sLabelsize}", "${svalue}")"$).append(CRLF)
 	CodeLine(sb, sdisplay, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, salign, "s", "lbl", sname, "AddClass")
 	CodeLine(sb, sfontweight, "s", "lbl", sname, "AddClass")
@@ -4279,21 +4216,21 @@ End Sub
 
 Sub Design_Email
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, sTabindex)
+	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, siconname, shelpertext, serrortext, sTabindex)
 	email.SetFieldType(sfieldtype)
-	email.SetSolo(bissolo)
+	email.SetSolo(bisSolo)
 	email.SetValue(svalue)
-	email.SetOutlined(bisoutlined)
-	email.SetFilled(bisfilled)
+	email.SetOutlined(bisOutlined)
+	email.SetFilled(bisFilled)
 	email.SetDense(bisDense)
-	email.SetSingleLine(bissingleline)
-	email.SetPersistentHint(bispersistenthint)
+	email.SetSingleLine(bisSingleline)
+	email.SetPersistentHint(bisPersistenthint)
 	email.SetShaped(bisShaped)
-	email.SetLoading(bisloading)
-	email.SetFlat(bisflat)
+	email.SetLoading(bisLoading)
+	email.SetFlat(bisFlat)
 	email.SetRounded(bisRounded)
 	email.SetClearable(bclearable)
-	email.SetHideDetails(bishidedetails)
+	email.SetHideDetails(bisHidedetails)
 	email.SetVisible(bisVisible)
 	email.SetReadOnly(bisreadonly)
 	email.SetDisabled(bisDisabled)
@@ -4326,7 +4263,7 @@ Sub Design_Email
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim txt${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).Append(CRLF)
+	sb.append($"Dim txt${sname} As VMTextField = vm.NewEmail(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).Append(CRLF)
 
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
 	CodeLine(sb, bisreadonly, "b", "txt", sname, "SetReadonly")
@@ -4335,11 +4272,11 @@ Sub Design_Email
 		AddCode(sb, $"txt${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
-	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
-	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
-	CodeLine(sb, bisfilled, "b", "txt", sname, "SetFilled")
-	CodeLine(sb, bisdense, "b", "txt", sname, "SetDense")
-	CodeLine(sb, bissingleline, "b", "txt", sname, "SetSingleLine")
+	CodeLine(sb, bisSolo, "b", "txt", sname, "SetSolo")
+	CodeLine(sb, bisOutlined, "b", "txt", sname, "SetOutlined")
+	CodeLine(sb, bisFilled, "b", "txt", sname, "SetFilled")
+	CodeLine(sb, bisDense, "b", "txt", sname, "SetDense")
+	CodeLine(sb, bisSingleline, "b", "txt", sname, "SetSingleLine")
 	CodeLine(sb, bispersistenthint, "b", "txt", sname, "SetPersistentHint")
 	CodeLine(sb, bisshaped, "b", "txt", sname, "SetShaped")
 	CodeLine(sb, bisloading, "b", "txt", sname, "SetLoading")
@@ -4419,20 +4356,20 @@ Sub Design_Password
 		AddCode(sbRead, $"Record.Remove("${svmodel}")"$)
 	End If
 		
-	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, bToggle, siconname, imaxlen, shelpertext, serrortext, stabindex)
+	Dim pwd As VMTextField = ui.NewPassword(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, bToggle, siconname, imaxlen, shelpertext, serrortext, sTabindex)
 	pwd.SetFieldType(sfieldtype)
-	pwd.SetSolo(bissolo)
-	pwd.SetOutlined(bisoutlined)
-	pwd.SetFilled(bisfilled)
-	pwd.SetDense(bisdense)
-	pwd.SetSingleLine(bissingleline)
-	pwd.SetPersistentHint(bispersistenthint)
-	pwd.SetShaped(bisshaped)
-	pwd.SetLoading(bisloading)
-	pwd.SetFlat(bisflat)
-	pwd.SetRounded(bisrounded)
+	pwd.SetSolo(bisSolo)
+	pwd.SetOutlined(bisOutlined)
+	pwd.SetFilled(bisFilled)
+	pwd.SetDense(bisDense)
+	pwd.SetSingleLine(bisSingleline)
+	pwd.SetPersistentHint(bisPersistenthint)
+	pwd.SetShaped(bisShaped)
+	pwd.SetLoading(bisLoading)
+	pwd.SetFlat(bisFlat)
+	pwd.SetRounded(bisRounded)
 	pwd.SetClearable(bclearable)
-	pwd.SetHideDetails(bishidedetails)
+	pwd.SetHideDetails(bisHidedetails)
 	pwd.SetValue(svalue)
 	pwd.SetVisible(bisVisible)
 	pwd.SetReadOnly(bisreadonly)
@@ -4466,12 +4403,12 @@ Sub Design_Password
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, ${bToggle}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim pwd${sname} As VMTextField = vm.NewPassword(Me, ${bStatic}, "pwd${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, ${bToggle}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 	'
 	CodeLine(sb, sfieldtype, "s", "pwd", sname, "SetFieldType")
 	CodeLine(sb, bisreadonly, "b", "pwd", sname, "SetReadonly")
 	CodeLine(sb, bisDisabled, "b", "pwd", sname, "SetDisabled")
-	CodeLine(sb, bissolo, "b", "pwd", sname, "SetSolo")
+	CodeLine(sb, bisSolo, "b", "pwd", sname, "SetSolo")
 	If sfloat <> "" Then
 		AddCode(sb, $"pwd${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -4516,21 +4453,21 @@ End Sub
 
 Sub Design_Tel
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, shelpertext, serrortext, stabindex)
+	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, siconname, shelpertext, serrortext, sTabindex)
 	tel.SetFieldType(sfieldtype)
-	tel.SetSolo(bissolo)
+	tel.SetSolo(bisSolo)
 	tel.SetValue(svalue)
-	tel.SetOutlined(bisoutlined)
-	tel.SetFilled(bisfilled)
-	tel.SetDense(bisdense)
-	tel.SetSingleLine(bissingleline)
-	tel.SetPersistentHint(bispersistenthint)
-	tel.SetShaped(bisshaped)
-	tel.SetLoading(bisloading)
-	tel.SetFlat(bisflat)
-	tel.SetRounded(bisrounded)
+	tel.SetOutlined(bisOutlined)
+	tel.SetFilled(bisFilled)
+	tel.SetDense(bisDense)
+	tel.SetSingleLine(bisSingleline)
+	tel.SetPersistentHint(bisPersistenthint)
+	tel.SetShaped(bisShaped)
+	tel.SetLoading(bisLoading)
+	tel.SetFlat(bisFlat)
+	tel.SetRounded(bisRounded)
 	tel.SetClearable(bclearable)
-	tel.SetHideDetails(bishidedetails)
+	tel.SetHideDetails(bisHidedetails)
 	tel.SetVisible(bisVisible)
 	tel.SetReadOnly(bisreadonly)
 	tel.SetDisabled(bisDisabled)
@@ -4563,25 +4500,25 @@ Sub Design_Tel
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 
 	CodeLine(sb, svalue, "s", "tel", sname, "SetValue")
 	CodeLine(sb, bisreadonly, "b", "tel", sname, "SetReadonly")
 	CodeLine(sb, bisDisabled, "b", "tel", sname, "SetDisabled")
 	CodeLine(sb, sfieldtype, "s", "tel", sname, "SetFieldType")
-	CodeLine(sb, bissolo, "b", "tel", sname, "SetSolo")
+	CodeLine(sb, bisSolo, "b", "tel", sname, "SetSolo")
 	If sfloat <> "" Then
 		AddCode(sb, $"tel${sname}.AddClass("${sfloat}")"$)
 	End If
-	CodeLine(sb, bisoutlined, "b", "tel", sname, "SetOutlined")
-	CodeLine(sb, bisfilled, "b", "tel", sname, "SetFilled")
-	CodeLine(sb, bisdense, "b", "tel", sname, "SetDense")
-	CodeLine(sb, bissingleline, "b", "tel", sname, "SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "tel", sname, "SetPersistentHint")
-	CodeLine(sb, bisshaped, "b", "tel", sname, "SetShaped")
-	CodeLine(sb, bisloading, "b", "tel", sname, "SetLoading")
-	CodeLine(sb, bisflat, "b", "tel", sname, "SetFlat")
-	CodeLine(sb, bisrounded, "b", "tel", sname, "SetRounded")
+	CodeLine(sb, bisOutlined, "b", "tel", sname, "SetOutlined")
+	CodeLine(sb, bisFilled, "b", "tel", sname, "SetFilled")
+	CodeLine(sb, bisDense, "b", "tel", sname, "SetDense")
+	CodeLine(sb, bisSingleline, "b", "tel", sname, "SetSingleLine")
+	CodeLine(sb, bisPersistenthint, "b", "tel", sname, "SetPersistentHint")
+	CodeLine(sb, bisShaped, "b", "tel", sname, "SetShaped")
+	CodeLine(sb, bisLoading, "b", "tel", sname, "SetLoading")
+	CodeLine(sb, bisFlat, "b", "tel", sname, "SetFlat")
+	CodeLine(sb, bisRounded, "b", "tel", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "tel", sname, "SetClearable")
 	CodeLine(sb, bishidedetails, "b", "tel", sname, "SetHideDetails")
 	CodeLine(sb, bisVisible, "b", "tel", sname, "SetVisible")
@@ -4613,7 +4550,7 @@ End Sub
 
 Sub Design_Time
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, stitle, bisrequired, splaceholder, shelpertext, serrortext, sTabindex)
+	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, stitle, bisRequired, sPlaceholder, shelpertext, serrortext, sTabindex)
 	tp.SetVisible(bisVisible)
 	tp.SetDisabled(bisDisabled)
 	tp.SetAmPmInTitle(bisampm)
@@ -4627,18 +4564,18 @@ Sub Design_Time
 	tp.SetFormat(stformat)
 	
 	tp.TextField.SetPrependIcon(siconname)		
-	tp.TextField.SetSolo(bissolo)
-	tp.TextField.SetOutlined(bisoutlined)
-	tp.TextField.SetFilled(bisfilled)
+	tp.TextField.SetSolo(bisSolo)
+	tp.TextField.SetOutlined(bisOutlined)
+	tp.TextField.SetFilled(bisFilled)
 	tp.TextField.SetDense(bisDense)
-	tp.TextField.SetSingleLine(bissingleline)
-	tp.TextField.SetPersistentHint(bispersistenthint)
+	tp.TextField.SetSingleLine(bisSingleline)
+	tp.TextField.SetPersistentHint(bisPersistenthint)
 	tp.TextField.SetShaped(bisShaped)
-	tp.TextField.SetLoading(bisloading)
-	tp.TextField.SetFlat(bisflat)
+	tp.TextField.SetLoading(bisLoading)
+	tp.TextField.SetFlat(bisFlat)
 	tp.TextField.SetRounded(bisRounded)
 	tp.TextField.SetClearable(bclearable)
-	tp.TextField.SetHideDetails(bishidedetails)
+	tp.TextField.SetHideDetails(bisHidedetails)
 	If smargintop <> "" Then tp.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then tp.AddClass("mb-" & smarginbottom)
 	If smarginleft <> "" Then tp.AddClass("ml-" & smarginleft)
@@ -4668,7 +4605,7 @@ Sub Design_Time
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim tp${sname} As VMDateTimePicker = vm.NewTimePicker(Me, ${bStatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisrequired}, "${splaceholder}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+	sb.append($"Dim tp${sname} As VMDateTimePicker = vm.NewTimePicker(Me, ${bStatic}, "tp${sname}", "${svmodel}", "${stitle}", ${bisRequired}, "${sPlaceholder}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 	'
 	CodeLine(sb, svalue, "s", "tp", sname, "SetValue")
 	CodeLine(sb, bisVisible, "b", "tp", sname, "SetVisible")
@@ -4767,15 +4704,15 @@ Sub Design_Icon
 	AddNewLine(sb)
 	'
 	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${sColor}", "${sintensity}")"$).append(CRLF)
-	CodeLine(sb, bisdark, "b", "icn", sname, "SetDark")
+	CodeLine(sb, bisDark, "b", "icn", sname, "SetDark")
 	If sfloat <> "" Then
 		AddCode(sb, $"icn${sname}.AddClass("${sfloat}")"$)
 	End If
-	CodeLine(sb, bisdense, "b", "icn", sname, "SetDense")
+	CodeLine(sb, bisDense, "b", "icn", sname, "SetDense")
 	CodeLine(sb, bisDisabled, "b", "icn", sname, "SetDisabled")
 	CodeLine(sb, bcenteronparent, "b", "icn", sname, "SetCenterOnParent")
-	CodeLine(sb, bisleft, "b", "icn", sname, "SetLeft")
-	CodeLine(sb, bisright, "b", "icn", sname, "SetRight")
+	CodeLine(sb, bisLeft, "b", "icn", sname, "SetLeft")
+	CodeLine(sb, bisRight, "b", "icn", sname, "SetRight")
 	CodeLine(sb, bisVisible, "b", "icn", sname, "SetVisible")
 	'
 	Dim pres As String = "icn"
@@ -4801,7 +4738,7 @@ Sub Design_Icon
 End Sub
 
 Sub Design_Parallax
-	Dim para As VMParallax = ui.NewParallax(Me, True, sname, sheight, ssrc, salt)
+	Dim para As VMParallax = ui.NewParallax(Me, True, sname, sHeight, ssrc, salt)
 	para.SetVisible(bisVisible)
 	If sfloat <> "" Then
 		para.Addclass(sfloat)
@@ -4832,7 +4769,7 @@ Sub Design_Parallax
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sheight}", "${ssrc}", "${salt}")"$).append(CRLF)
+	sb.append($"Dim prlx${sname} As VMParallax = vm.NewParallax(Me, ${bStatic}, "prlx${sname}", "${sHeight}", "${ssrc}", "${salt}")"$).append(CRLF)
 	CodeLine(sb, bisVisible, "b", "prlx", sname, "SetVisible")
 	'
 	Dim pres As String = "prlx"
@@ -4874,8 +4811,8 @@ Sub Design_Container
 	cont.SetBorderColor(sbordercolor)
 	cont.SetBorderStyle(sborderstyle)
 	cont.SetColorIntensity(sColor, sintensity)
-	cont.SetWidth(swidth)
-	cont.SetHeight(sheight)
+	cont.SetWidth(sWidth)
+	cont.SetHeight(sHeight)
 	cont.SetMinWidth(sminwidth)
 	cont.SetMaxWidth(smaxwidth)
 	cont.SetMinHeight(sminheight)
@@ -4924,8 +4861,8 @@ Sub Design_Container
 	CodeLine(sb, sborderwidth, "s", "cont", sname, "SetBorderWidth")
 	CodeLine(sb, sbordercolor, "s", "cont", sname, "SetBorderColor")
 	CodeLine(sb, sborderstyle, "s", "cont", sname, "SetBorderStyle")
-	CodeLine(sb, swidth, "s", "cont", sname, "SetWidth")
-	CodeLine(sb, sheight, "s", "cont", sname, "SetHeight")
+	CodeLine(sb, sWidth, "s", "cont", sname, "SetWidth")
+	CodeLine(sb, sHeight, "s", "cont", sname, "SetHeight")
 	CodeLine(sb, sminwidth, "s", "cont", sname, "SetMinWidth")
 	CodeLine(sb, smaxwidth, "s", "cont", sname, "SetMaxWidth")
 	CodeLine(sb, sminheight, "s", "cont", sname, "SetMinHeight")
@@ -4955,7 +4892,7 @@ Sub Design_Container
 End Sub
 
 Sub Design_Image
-	Dim img As VMImage = ui.NewImage(Me, True, sname, svmodel, ssrc, salt, swidth, sheight)
+	Dim img As VMImage = ui.NewImage(Me, True, sname, svmodel, ssrc, salt, sWidth, sHeight)
 	img.SetLazysrc(slazysrc)
 	img.SetBorderRadius(sborderradius)
 	img.SetBorderWidth(sborderwidth)
@@ -4998,7 +4935,7 @@ Sub Design_Image
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bStatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${swidth}", "${sheight}")"$).append(CRLF)
+	sb.append($"Dim img${sname} As VMImage = vm.NewImage(Me, ${bStatic}, "img${sname}", "${svmodel}", "${ssrc}", "${salt}", "${sWidth}", "${sHeight}")"$).append(CRLF)
 	CodeLine(sb, slazysrc, "s", "img", sname, "SetLazysrc")
 	If sfloat <> "" Then
 		AddCode(sb, $"img${sname}.AddClass("${sfloat}")"$)
@@ -5050,8 +4987,8 @@ Sub Design_Drawer
 	drw.Setoverlayopacity(soverlayopacity)
 	drw.Setsrc(ssrc)
 	drw.Settag(stag)
-	drw.Setheight(sheight)
-	drw.Setwidth(swidth)
+	drw.Setheight(sHeight)
+	drw.Setwidth(sWidth)
 	drw.Setabsolute(bisabsolute)
 	drw.Setapp(bisapp)
 	drw.Setbottom(bisbottom)
@@ -5066,7 +5003,7 @@ Sub Design_Drawer
 	drw.Setlight(bisLight)
 	drw.Setminivariant(bisminivariant)
 	drw.Setpermanent(bispermanent)
-	drw.Setright(bisright)
+	drw.Setright(bisRight)
 	drw.Setstateless(bisstateless)
 	drw.Settemporary(bistemporary)
 	drw.Settouchless(bistouchless)
@@ -5248,7 +5185,7 @@ Sub Design_SpeedDial
 	speeddial.SetStatic(True)
 	speeddial.SetAbsolute(bisabsolute)
 	speeddial.SetBottom(bisbottom)
-	speeddial.SetDark(bisdark)
+	speeddial.SetDark(bisDark)
 	speeddial.SetIcon(smastericon)
 	speeddial.SetDirection(sDirection)
 	speeddial.SetFinalicon(sFinalicon)
@@ -5256,11 +5193,11 @@ Sub Design_SpeedDial
 	speeddial.SetHref(shref)
 	speeddial.SetInitialicon(sInitialicon)
 	speeddial.SetLarge(bisLarge)
-	speeddial.SetLeft(bisleft)
+	speeddial.SetLeft(bisLeft)
 	speeddial.SetMode(sMode)
 	speeddial.SetOpenonhover(bisopenonhover)
 	speeddial.SetOrigin(sorigin)
-	speeddial.SetRight(bisright)
+	speeddial.SetRight(bisRight)
 	speeddial.SetSmall(bisSmall)
 	speeddial.SetTarget(starget)
 	speeddial.SetTo(sTo)
@@ -5315,7 +5252,7 @@ Sub Design_SpeedDial
 	sb.append($"Dim spd${sname} As VMSpeedDial = vm.CreateSpeedDial("spd${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, bisabsolute, "b", "spd", sname, "SetAbsolute")
 	CodeLine(sb, bisbottom, "b", "spd", sname, "SetBottom")
-	CodeLine(sb, bisdark, "b", "spd", sname, "SetDark")
+	CodeLine(sb, bisDark, "b", "spd", sname, "SetDark")
 	CodeLine(sb, sDirection, "s", "spd", sname, "SetDirection")
 	CodeLine(sb, sFinalicon, "s", "spd", sname, "SetFinalicon")
 	CodeLine(sb, bisfixed, "b", "spd", sname, "SetFixed")
@@ -5326,11 +5263,11 @@ Sub Design_SpeedDial
 	CodeLine(sb, smastericon, "s", "spd", sname, "SetIcon")
 	CodeLine(sb, sInitialicon, "s", "spd", sname, "SetInitialicon")
 	CodeLine(sb, bisLarge, "b", "spd", sname, "SetLarge")
-	CodeLine(sb, bisleft, "b", "spd", sname, "SetLeft")
+	CodeLine(sb, bisLeft, "b", "spd", sname, "SetLeft")
 	CodeLine(sb, sMode, "s", "spd", sname, "SetMode")
 	CodeLine(sb, bisopenonhover, "b", "spd", sname, "SetOpenonhover")
 	CodeLine(sb, sorigin, "s", "spd", sname, "SetOrigin")
-	CodeLine(sb, bisright, "b", "spd", sname, "SetRight")
+	CodeLine(sb, bisRight, "b", "spd", sname, "SetRight")
 	CodeLine(sb, bisSmall, "b", "spd", sname, "SetSmall")
 	CodeLine(sb, stabindex, "s", "spd", sname, "SetTabindex")
 	CodeLine(sb, starget, "s", "spd", sname, "SetTarget")
@@ -5390,11 +5327,11 @@ Sub Design_Dialog
 	dialog.SetCancel(sCancelid, sCancelcaption)
 	dialog.SetOK(sOkid, sOkcaption)
 	dialog.Settitleprimary(bistitleprimary)
-	dialog.Setdark(bisdark)
+	dialog.Setdark(bisDark)
 	dialog.Setdisabled(bisDisabled)
-	dialog.Setwidth(swidth)
+	dialog.Setwidth(sWidth)
 	dialog.Setmaxwidth(smaxwidth)
-	dialog.Setlight(bislight)
+	dialog.Setlight(bisLight)
 	If sfloat <> "" Then
 		dialog.Addclass(sfloat)
 	End If
@@ -5710,9 +5647,9 @@ Sub Design_Carousel
 	Dim carousel As VMCarousel = ui.CreateCarousel(sname, Me)
 	carousel.SetStatic(True)
 	'
-	carousel.Setactiveclass(sactiveclass)
+	carousel.Setactiveclass(sActiveclass)
 	carousel.Setdelimitericon(sdelimitericon)
-	carousel.Setheight(sheight)
+	carousel.Setheight(sHeight)
 	carousel.Setinterval(sinterval)
 	carousel.Setmax(smmax)
 	carousel.SetVerticalDelimiters(sverticaldelimiter)
@@ -5720,16 +5657,16 @@ Sub Design_Carousel
 	'
 	carousel.Setcontinuous(biscontinuous)
 	carousel.Setcycle(biscycle)
-	carousel.Setdark(bisdark)
+	carousel.Setdark(bisDark)
 	carousel.Sethidedelimiterbackground(bishidedelimiterbackground)
 	carousel.Sethidedelimiters(bishidedelimiters)
-	carousel.Setlight(bislight)
+	carousel.Setlight(bisLight)
 	carousel.Setmandatory(bismandatory)
 	'carousel.Setmultiple(bismultiple)
 	carousel.Setnexticon(bisnexticon)
 	carousel.Setprevicon(bisprevicon)
 	carousel.Setprogress(bisprogress)
-	carousel.Setreverse(bisreverse)
+	carousel.Setreverse(bisReverse)
 	carousel.Setshowarrows(bisshowarrows)
 	carousel.Setshowarrowsonhover(bisshowarrowsonhover)
 	carousel.Settouchless(bistouchless)
@@ -5773,9 +5710,9 @@ Sub Design_Carousel
 	AddNewLine(sb)
 	'create the source code
 	sb.append($"Dim car${sname} As VMCarousel = vm.CreateCarousel("car${sname}", Me)"$).append(CRLF)
-	CodeLine(sb, sactiveclass, "s", "car", sname, "Setactiveclass")
+	CodeLine(sb, sActiveclass, "s", "car", sname, "Setactiveclass")
 	CodeLine(sb, sdelimitericon, "s", "car", sname, "Setdelimitericon")
-	CodeLine(sb, sheight, "s", "car", sname, "Setheight")
+	CodeLine(sb, sHeight, "s", "car", sname, "Setheight")
 	CodeLine(sb, sinterval, "s", "car", sname, "Setinterval")
 	CodeLine(sb, smmax, "s", "car", sname, "Setmax")
 	CodeLine(sb, sverticaldelimiter, "s", "car", sname, "SetVerticalDelimiters")
@@ -5783,10 +5720,10 @@ Sub Design_Carousel
 	'
 	CodeLine(sb, biscontinuous, "b", "car", sname, "Setcontinuous")
 	CodeLine(sb, biscycle, "b", "car", sname, "Setcycle")
-	CodeLine(sb, bisdark, "b", "car", sname, "Setdark")
+	CodeLine(sb, bisDark, "b", "car", sname, "Setdark")
 	CodeLine(sb, bishidedelimiterbackground, "b", "car", sname, "Sethidedelimiterbackground")
 	CodeLine(sb, bishidedelimiters, "b", "car", sname, "Sethidedelimiters")
-	CodeLine(sb, bislight, "b", "car", sname, "Setlight")
+	CodeLine(sb, bisLight, "b", "car", sname, "Setlight")
 	CodeLine(sb, bismandatory, "b", "car", sname, "Setmandatory")
 	'CodeLine(sb, bismultiple, "b", "car", sname, "Setmultiple")
 	CodeLine(sb, bisnexticon, "b", "car", sname, "Setnexticon")
@@ -5864,20 +5801,20 @@ Sub Design_Menu
 	menu.Setbottom(bisbottom)
 	menu.Setcloseonclick(biscloseonclick)
 	menu.Setcloseoncontentclick(biscloseoncontentclick)
-	menu.Setdark(bisdark)
+	menu.Setdark(bisDark)
 	menu.Setdisablekeys(bisdisablekeys)
 	menu.Setdisabled(bisDisabled)
 	menu.Seteager(biseager)
 	menu.Setfixed(bisfixed)
 	menu.Setinternalactivator(bisinternalactivator)
-	menu.Setleft(bisleft)
-	menu.Setlight(bislight)
+	menu.Setleft(bisLeft)
+	menu.Setlight(bisLight)
 	menu.Setoffsetoverflow(bisoffsetoverflow)
 	menu.Setoffsetx(bisoffsetx)
 	menu.Setoffsety(bisoffsety)
-	menu.Setopenonclick(bisopenonclick)
+	menu.Setopenonclick(bisOpenonclick)
 	menu.Setopenonhover(bisopenonhover)
-	menu.Setright(bisright)
+	menu.Setright(bisRight)
 	menu.Setslotactivator(bisslotactivator)
 	menu.Settop(bistop)
 	menu.SetVisible(bisVisible)
@@ -6065,15 +6002,15 @@ Sub Design_ToolBar
 	tbl.SetTextColorIntensity(stextcolor, stextintensity)
 	'
 	tbl.SetMaxWidth(smaxwidth)
-	tbl.SetWidth(swidth)
+	tbl.SetWidth(sWidth)
 	tbl.SetMinWidth(sminwidth)
 	'
 	tbl.SetMinHeight(sminheight)
 	tbl.SetMaxHeight(smaxheight)
-	tbl.SetHeight(sheight)
+	tbl.SetHeight(sHeight)
 	'
 	tbl.Setdense(bisDense)
-	tbl.SetFLat(bisflat)
+	tbl.SetFLat(bisFlat)
 	tbl.Setdark(bisDark)
 	tbl.Setabsolute(bisabsolute)
 	tbl.Setclippedleft(bisclippedleft)
@@ -6408,7 +6345,7 @@ Sub Design_Button
 	btn.SetTooltip(stooltip)
 	btn.SetColorIntensity(sColor, sintensity)
 	btn.SetTextColorIntensity(stextcolor, stextintensity)
-	btn.SetDisabled(bisDisabled).Setoutlined(bisoutlined)
+	btn.SetDisabled(bisDisabled).Setoutlined(bisOutlined)
 	btn.SetRounded(bisRounded).SetTransparent(bistext)
 	'
 	Select Case sbuttontype
@@ -6425,8 +6362,8 @@ Sub Design_Button
 	btn.SetDepressed(bisdepressed)
 	btn.SetDark(bisDark)
 	btn.SetTile(bistile)
-	btn.SetWidth(swidth)
-	btn.SetHeight(sheight)
+	btn.SetWidth(sWidth)
+	btn.SetHeight(sHeight)
 	btn.SetMinWidth(sminwidth)
 	btn.SetMaxWidth(smaxwidth)
 	btn.SetMinHeight(sminheight)
@@ -6480,8 +6417,8 @@ Sub Design_Button
 	If sColor <> "" Then sb.append($"btn${sname}.SetColorIntensity("${sColor}", "${sintensity}")"$).append(CRLF)
 	If stextcolor <> "" Then sb.append($"btn${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
 	If bisDisabled Then sb.append($"btn${sname}.SetDisabled(${bisDisabled})"$).append(CRLF)
-	If bisoutlined Then sb.append($"btn${sname}.Setoutlined(${bisoutlined})"$).append(CRLF)
-	If bisrounded Then sb.append($"btn${sname}.SetRounded(${bisrounded})"$).append(CRLF)
+	If bisOutlined Then sb.append($"btn${sname}.Setoutlined(${bisOutlined})"$).append(CRLF)
+	If bisRounded Then sb.append($"btn${sname}.SetRounded(${bisRounded})"$).append(CRLF)
 	If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
 	If sfloat <> "" Then 
 		AddCode(sb, $"btn${sname}.AddClass("${sfloat}")"$)
@@ -6741,23 +6678,23 @@ Sub Design_TextField
 		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel})"$)
 	End If
 	
-	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, splaceholder, bisrequired, siconname, imaxlen, shelpertext, serrortext, sTabindex)
+	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, siconname, imaxlen, shelpertext, serrortext, sTabindex)
 	txt.SetFieldType(sfieldtype)
-	txt.SetSolo(bissolo)
+	txt.SetSolo(bisSolo)
 	txt.SetValue(svalue)
-	txt.SetOutlined(bisoutlined)
-	txt.SetFilled(bisfilled)
+	txt.SetOutlined(bisOutlined)
+	txt.SetFilled(bisFilled)
 	txt.SetDense(bisDense)
-	txt.SetSingleLine(bissingleline)
-	txt.SetPersistentHint(bispersistenthint)
+	txt.SetSingleLine(bisSingleline)
+	txt.SetPersistentHint(bisPersistenthint)
 	txt.SetShaped(bisShaped)
-	txt.SetLoading(bisloading)
-	txt.SetFlat(bisflat)
+	txt.SetLoading(bisLoading)
+	txt.SetFlat(bisFlat)
 	txt.SetRounded(bisRounded)
 	txt.SetClearable(bclearable)
-	txt.SetHideDetails(bishidedetails)
+	txt.SetHideDetails(bisHidedetails)
 	txt.SetVisible(bisVisible)
-	txt.SetAutoFocus(bisautofocus)
+	txt.SetAutoFocus(bisAutofocus)
 	txt.SetReadOnly(bisreadonly)
 	txt.SetDisabled(bisDisabled)
 	If smargintop <> "" Then txt.AddClass("mt-" & smargintop)
@@ -6789,26 +6726,26 @@ Sub Design_TextField
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${splaceholder}", ${bisrequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 	
 	'
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
 	CodeLine(sb, bisreadonly, "b", "txt", sname, "SetReadonly")
 	CodeLine(sb, bisDisabled, "b", "txt", sname, "SetDisabled")
 	CodeLine(sb, sfieldtype, "s", "txt", sname, "SetFieldType")
-	CodeLine(sb, bissolo, "b", "txt", sname, "SetSolo")
-	CodeLine(sb, bisoutlined, "b", "txt", sname, "SetOutlined")
-	CodeLine(sb, bisfilled, "b", "txt", sname, "SetFilled")
+	CodeLine(sb, bisSolo, "b", "txt", sname, "SetSolo")
+	CodeLine(sb, bisOutlined, "b", "txt", sname, "SetOutlined")
+	CodeLine(sb, bisFilled, "b", "txt", sname, "SetFilled")
 	CodeLine(sb, bisDense, "b", "txt", sname, "SetDense")
-	CodeLine(sb, bisautofocus, "b", "txt", sname, "SetAutoFocus")
-	CodeLine(sb, bissingleline, "b", "txt", sname, "SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "txt", sname, "SetPersistentHint")
+	CodeLine(sb, bisAutofocus, "b", "txt", sname, "SetAutoFocus")
+	CodeLine(sb, bisSingleline, "b", "txt", sname, "SetSingleLine")
+	CodeLine(sb, bisPersistenthint, "b", "txt", sname, "SetPersistentHint")
 	CodeLine(sb, bisShaped, "b", "txt", sname, "SetShaped")
-	CodeLine(sb, bisloading, "b", "txt", sname, "SetLoading")
-	CodeLine(sb, bisflat, "b", "txt", sname, "SetFlat")
+	CodeLine(sb, bisLoading, "b", "txt", sname, "SetLoading")
+	CodeLine(sb, bisFlat, "b", "txt", sname, "SetFlat")
 	CodeLine(sb, bisRounded, "b", "txt", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
-	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
+	CodeLine(sb, bisHidedetails, "b", "txt", sname, "SetHideDetails")
 	CodeLine(sb, bisVisible, "b", "txt", sname, "SetVisible")
 	'
 	Dim pres As String = "txt"
@@ -7279,9 +7216,11 @@ private Sub tbltransfer_click(e As BANanoEvent)
 	Dim selTables As Map = vue.getdata("tablestotransfer")
 	'get a list of all tables from the database
 	Dim allTables As List = vm.getdata("currenttables")
+	
 	'open the database
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	'
+	
 	For Each tbKey As String In selTables.keys
 		'get table structure from all tables, this is a list of all fields
 		Dim tbStructure As List = allTables.get(tbKey)
@@ -7299,22 +7238,46 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		Dim tblItems As List = vue.newlist
 		'
 		For Each fldm As Map In tbStructure
-			Dim sDefault As String = fldm.getdefault("Default","")
-			Dim sExtra As String = fldm.getdefault("Extra", "")
-			Dim sField As String = fldm.getdefault("Field", "")
-			Dim sKey As String = fldm.getdefault("Key", "")
-			Dim sNull As String = fldm.getdefault("Null", "")
-			Dim sType As String = fldm.getdefault("Type", "")
-			'we have found the auto increment
-			If sExtra.EqualsIgnoreCase("auto_increment") Then sAuto = sField
-			'we have found the primary key
-			If sKey.EqualsIgnoreCase("pri") Then sPri = sField
+			Dim sDefault As String = ""
+			Dim sExtra As String = ""
+			Dim sField As String = ""
+			Dim sKey As String = ""
+			Dim sNull As String = ""
+			Dim sType As String = ""
+			'
+			Select Case sdbtype
+			Case "mysql"	
+				sDefault = fldm.getdefault("Default","")
+				sExtra = fldm.getdefault("Extra", "")
+				sField = fldm.getdefault("Field", "")
+				sKey = fldm.getdefault("Key", "")
+				sNull = fldm.getdefault("Null", "")
+				sType = fldm.getdefault("Type", "")
+				'we have found the auto increment
+				If sExtra.EqualsIgnoreCase("auto_increment") Then sAuto = sField
+				'we have found the primary key
+				If sKey.EqualsIgnoreCase("pri") Then sPri = sField
+			Case "sqlite"
+				sDefault = fldm.getdefault("dflt_value","")
+				sField = fldm.getdefault("name","")
+				sNull = fldm.getdefault("notnull", "")
+				sKey = fldm.getdefault("pk","")
+				If sKey = "1" Then sPri = sField
+				sType = fldm.getdefault("type","")
+			End Select
 			'get the fld len
 			Dim fldLen As String = vue.val(sType)
 			'get the fld type
 			Dim fldType As String = vue.alpha(sType)
 			fldType = fldType.ToUpperCase
 			If fldType.EqualsIgnoreCase("varchar") Then fldType = "TEXT"
+			If fldType.EqualsIgnoreCase("ntext") Then fldType = "TEXT"
+			If fldType.EqualsIgnoreCase("integer") Then fldType = "INT"
+			If fldType.EqualsIgnoreCase("long") Then fldType = "INT"
+			If fldType.EqualsIgnoreCase("longtext") Then fldType = "TEXT"
+			If fldType.EqualsIgnoreCase("nvarchar") Then fldType = "TEXT"
+			If fldType.EqualsIgnoreCase("short") Then fldType = "INT"
+			
 			'start creating the items
 			Dim ifld As Map = CreateMap()
 			ifld.put("parent", "vm.Container")
@@ -7356,6 +7319,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			'add to fields collection
 			tblItems.add(ifld)
 		Next
+		'
 		Dim itemsJSON As String = BANano.ToJson(tblItems)
 		'
 		If sAuto = "" Then 
@@ -7445,6 +7409,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
 		contSQL.FromJSON
 	Next
+	'
 	tabs.show
 	contdbadmin.hide
 	vm.setdata("devspace", 0)
@@ -7465,7 +7430,7 @@ Private Sub tvtables_input(lst As List)
 	Dim selTables As Map = CreateMap()
 	For Each selItem As String In lst
 		'get the table name for unique list
-		Dim selTable As String = vue.MvField(selItem, 2, ".")
+		Dim selTable As String = vue.MvField(selItem, 2, "~")
 		selTables.put(selTable, selTable)
 	Next
 	'update the badge for this button
@@ -8706,6 +8671,12 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbfileselect.hideitem("id")
 			pbfileselect.Hideitem("controltype")
 		
+		Case "sparkline"
+			ShowBag("pbsparkline")
+			pbsparkline.SetDefaults
+			pbsparkline.hideitem("id")
+			pbsparkline.Hideitem("controltype")
+						
 		Case "infobox"
 			ShowBag("pbinfobox")
 			pbinfobox.SetDefaults
@@ -8725,10 +8696,10 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbdatepicker.Hideitem("controltype")
 			
 		Case "file"
-			ShowBag("pbtextfield")
-			pbtextfield.SetDefaults
-			pbtextfield.hideitem("id")
-			pbtextfield.Hideitem("controltype")
+			ShowBag("pbfileinput")
+			pbfileinput.SetDefaults
+			pbfileinput.hideitem("id")
+			pbfileinput.Hideitem("controltype")
 			
 		Case "radio"
 			ShowBag("pbradiogroup")
@@ -8915,7 +8886,7 @@ Sub ToolBoxDisplayPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("ep3grid", "ep1", Me)
 	grd.Header.SetText("Display")
 	grd.Container.SetTag("div")
-	grd.Container.AddRows(2).AddColumns4X3
+	grd.Container.AddRows(3).AddColumns4X3
 	'
 	Dim profile As VMImage = ToolboxImage("profile", "./assets/profilepic.png", "Profile Picture")
 	grd.Container.AddComponent(1,1,profile.tostring)
@@ -8940,6 +8911,9 @@ Sub ToolBoxDisplayPanel As VMExpansionPanel
 	'
 	Dim infobox As VMImage = ToolboxImage("infobox", "./assets/infobox.png", "Info Box")
 	grd.Container.AddComponent(2,4,infobox.tostring)
+	'
+	Dim sparkline As VMImage = ToolboxImage("sparkline", "./assets/sparkline.png", "Spark Line")
+	grd.Container.AddComponent(3,1,sparkline.tostring)
 	
 	'
 	Return grd
@@ -9285,7 +9259,7 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("isclearable", "No")
 						'
 					Select Case savedid
-						Case "avatar"
+					Case "avatar"
 							attr.put("src", "./assets/sponge.png")
 							attr.put("size", "48")
 							attr.put("avatartype", "isimage")
@@ -9340,6 +9314,25 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("parentid", "vm")
 							attr.put("action", "readAsText")
 							nrec.put("parentid", "vm")
+						
+						Case "sparkline"
+							BANano.SetLocalStorage("selectedpanel", 1)
+							attr.put("autodrawduration","2000")
+							attr.put("autodraweasing", "ease")
+							attr.put("color", "primary")
+							attr.put("gradientdirection", "top")
+							attr.put("height", "75")
+							attr.put("labelsize", "7")
+							attr.put("linewidth", "2")
+							attr.put("padding", "8")
+							attr.put("type", "trend")
+							attr.put("width", "300")
+							attr.put("strokelinecap", "round")				
+							attr.put("isautodraw", "Yes")
+							attr.put("issmooth", "Yes")
+							attr.put("isautolinewidth", "Yes")
+							attr.put("gradient", "#f72047,#ffd200,#1feaea")
+							attr.put("value", "0,2,5,9,5,10,3,5,0,0,1,8,2,9,0")
 						Case "infobox"
 							BANano.SetLocalStorage("selectedpanel", 1)
 							attr.put("icon", "shopping_cart")
@@ -10267,15 +10260,6 @@ Sub PropertyBag_TextField
 	pbtextfield.AddText2("d",CreateMap("tabindex":"Tab Index", "maxlength":"Max Length/Counter"))
 	pbtextfield.AddSelect("d","float", "Float", vm.Floats)
 	
-	'
-	pbtextfield.AddHeading("g","File")
-	pbtextfield.AddSwitches("g", CreateMap("isupload": "Upload File", "ismultiple": "Multiple"))
-	pbtextfield.AddText("g","accept","Accept","","")
-	pbtextfield.AddText("g","filenamevmodel","File Name VModel","","")
-	pbtextfield.AddText("g","filedatevmodel","File Date VModel","","")
-	pbtextfield.AddText("g","filesizevmodel","File Size VModel","","")
-	pbtextfield.AddText("g","filetypevmodel","File Type VModel","","")
-	'
 	pbtextfield.AddHeading("m","Margins & Padding")
 	pbtextfield.AddMarginsPaddings("m")
 	'
@@ -10458,17 +10442,28 @@ Sub SavePropertyBag
 	Dim spropbagtype As String = vm.getdata("propbagtype")
 	mattr = CreateMap()
 	Dim serrortext As String
-	Dim bisrequired As Boolean
-	Dim slabel As String
+	Dim bisRequired As Boolean
+	Dim sLabel As String
 	Select Case spropbagtype
-		Case "text", "textarea", "file", "email", "password", "tel", "number"
+		Case "text", "textarea", "email", "password", "tel", "number"
 			mattr = pbtextfield.properties
 			serrortext = mattr.getdefault("errortext", "")
-			bisrequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
-			slabel = mattr.getdefault("label", "")
-			slabel = slabel.tolowercase
-			If bisrequired And serrortext = "" Then
-				serrortext = $"The ${slabel} is required!"$
+			bisRequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			sLabel = mattr.getdefault("label", "")
+			sLabel = sLabel.tolowercase
+			If bisRequired And serrortext = "" Then
+				serrortext = $"The ${sLabel} is required!"$
+				mattr.Put("errortext", serrortext)
+				vm.SetState(mattr)
+			End If
+		Case "file"
+			mattr = pbfileinput.properties
+			serrortext = mattr.getdefault("errortext", "")
+			bisRequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			sLabel = mattr.getdefault("label", "")
+			sLabel = sLabel.tolowercase
+			If bisRequired And serrortext = "" Then
+				serrortext = $"The ${sLabel} is required!"$
 				mattr.Put("errortext", serrortext)
 				vm.SetState(mattr)
 			End If
@@ -10476,6 +10471,8 @@ Sub SavePropertyBag
 			mattr = pbquill.Properties
 		Case "fileselect"
 			mattr = pbfileselect.properties
+		Case "sparkline"
+			mattr = pbsparkline.properties
 		Case "infobox"
 			mattr = pbinfobox.properties	
 		Case "checkbox"
@@ -10483,11 +10480,11 @@ Sub SavePropertyBag
 		Case "date", "time"
 			mattr = pbdatepicker.Properties
 			serrortext = mattr.getdefault("errortext", "")
-			bisrequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
-			slabel = mattr.getdefault("label", "")
-			slabel = slabel.tolowercase
-			If bisrequired And serrortext = "" Then
-				serrortext = $"The ${slabel} is required!"$
+			bisRequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			sLabel = mattr.getdefault("label", "")
+			sLabel = sLabel.tolowercase
+			If bisRequired And serrortext = "" Then
+				serrortext = $"The ${sLabel} is required!"$
 				mattr.Put("errortext", serrortext)
 				vm.SetState(mattr)
 			End If
@@ -10496,7 +10493,7 @@ Sub SavePropertyBag
 		Case "select", "combo", "auto"
 			mattr = pbselectbox.Properties
 			serrortext = mattr.getdefault("errortext", "")
-			bisrequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
+			bisRequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
 			slabel = mattr.getdefault("label", "")
 			slabel = slabel.tolowercase
 			If bisrequired And serrortext = "" Then
@@ -11289,7 +11286,7 @@ Sub Design_Rating
 	rating.SetRipple(bisRipple)
 	rating.SetSize(ssize)
 	rating.SetSmall(bisSmall)
-	rating.SetTabindex(stabindex)
+	rating.SetTabindex(sTabindex)
 	rating.SetVisible(bisVisible)
 	rating.SetXlarge(bisXlarge)
 	rating.SetXsmall(bisXsmall)
@@ -11331,8 +11328,8 @@ If spaddinga <> "" Then rating.AddClass("pa-" & spaddinga)
 	CodeLine(sb, svalue, "s", "rat", sname, "SetValue")
 	CodeLine(sb, sfieldtype, "s", "rat", sname, "SetFieldType")
 	CodeLine(sb, sclosedelay, "s", "rat", sname, "SetClosedelay")
-	CodeLine(sb, bisdark, "b", "rat", sname, "SetDark")
-	CodeLine(sb, bisdense, "b", "rat", sname, "SetDense")
+	CodeLine(sb, bisDark, "b", "rat", sname, "SetDark")
+	CodeLine(sb, bisDense, "b", "rat", sname, "SetDense")
 	If sfloat <> "" Then
 		AddCode(sb, $"rat${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -11343,13 +11340,13 @@ If spaddinga <> "" Then rating.AddClass("pa-" & spaddinga)
 	CodeLine(sb, bisHover, "b", "rat", sname, "SetHover")
 	CodeLine(sb, bisLarge, "b", "rat", sname, "SetLarge")
 	CodeLine(sb, sLength, "s", "rat", sname, "SetLength")
-	CodeLine(sb, bislight, "b", "rat", sname, "SetLight")
+	CodeLine(sb, bisLight, "b", "rat", sname, "SetLight")
 	CodeLine(sb, sopendelay, "s", "rat", sname, "SetOpendelay")
 	CodeLine(sb, bisreadonly, "b", "rat", sname, "SetReadonly")
 	CodeLine(sb, bisRipple, "b", "rat", sname, "SetRipple")
 	CodeLine(sb, ssize, "s", "rat", sname, "SetSize")
 	CodeLine(sb, bisSmall, "b", "rat", sname, "SetSmall")
-	CodeLine(sb, stabindex, "s", "rat", sname, "SetTabindex")
+	CodeLine(sb, sTabindex, "s", "rat", sname, "SetTabindex")
 	CodeLine(sb, bisVisible, "b", "rat", sname, "SetVisible")
 	CodeLine(sb, bisXlarge, "b", "rat", sname, "SetXlarge")
 	CodeLine(sb, bisXsmall, "b", "rat", sname, "SetXsmall")
@@ -11565,9 +11562,9 @@ Sub Design_Table
 	datatable.SetSearchbox(bisSearchbox)
 	datatable.SetCaption(sCaption)
 	datatable.SetCalculatewidths(bisCalculatewidths)
-	datatable.SetDark(bisdark)
+	datatable.SetDark(bisDark)
 	'datatable.SetDatasourcename(sDatasourcename)
-	datatable.SetDense(bisdense)
+	datatable.SetDense(bisDense)
 	datatable.SetDisablefiltering(bisDisablefiltering)
 	datatable.SetDisablepagination(bisDisablepagination)
 	datatable.SetDisablesort(bisDisablesort)
@@ -11578,12 +11575,12 @@ Sub Design_Table
 	'datatable.SetGroupby(sGroupby)
 	'datatable.SetGroupdesc(sGroupdesc)
 	'datatable.SetHeaderslength(sHeaderslength)
-	datatable.SetHeight(sheight)
+	datatable.SetHeight(sHeight)
 	datatable.SetHidedefaultfooter(bisHidedefaultfooter)
 	datatable.SetHidedefaultheader(bisHidedefaultheader)
 	datatable.SetItemsperpage(sItemsperpage)
-	datatable.SetLight(bislight)
-	datatable.SetLoading(bisloading)
+	datatable.SetLight(bisLight)
+	datatable.SetLoading(bisLoading)
 	'datatable.SetLoadingtext(sLoadingtext)
 	'datatable.SetLocale(sLocale)
 	datatable.SetMobilebreakpoint(smobilebreakpoint)	
@@ -11602,7 +11599,7 @@ Sub Design_Table
 	datatable.SetSingleselect(bisSingleselect)
 	'datatable.SetSortby(sSortby)
 	'datatable.SetSortdesc(sSortdesc)
-	datatable.SetTabindex(stabindex)	
+	datatable.SetTabindex(sTabindex)	
 	datatable.SetVisible(bisVisible)
 	If smargintop <> "" Then datatable.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then datatable.AddClass("mb-" & smarginbottom)
@@ -11948,7 +11945,7 @@ Sub Read_Avatar
 	sColorintensity = mattr.getdefault("colorintensity", "")
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisHasbadge = YesNoToBoolean(mattr.getdefault("ishasbadge", "No"))
-	sheight = mattr.getdefault("height", "")
+	sHeight = mattr.getdefault("height", "")
 	bisLeft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
 	smaxheight = mattr.getdefault("maxheight", "")
 	smaxwidth = mattr.getdefault("maxwidth", "")
@@ -11970,13 +11967,13 @@ Sub Design_Avatar
 	avatar.SetColorintensity(sColor, sColorintensity)
 	avatar.SetDisabled(bisDisabled)
 	avatar.SetHasbadge(bisHasbadge)
-	avatar.SetHeight(sheight)
-	avatar.SetLeft(bisleft)
+	avatar.SetHeight(sHeight)
+	avatar.SetLeft(bisLeft)
 	avatar.SetMaxheight(smaxheight)
 	avatar.SetMaxwidth(smaxwidth)
 	avatar.SetMinheight(sminheight)
 	avatar.SetMinwidth(sminwidth)
-	avatar.SetRight(bisright)
+	avatar.SetRight(bisRight)
 	avatar.SetSize(ssize)
 	avatar.SetTextcolorintensity(stextcolor, stextintensity)
 	avatar.SetTile(bistile)	
@@ -12023,8 +12020,8 @@ Sub Design_Avatar
 	CodeLine2(sb, sColor, sColorintensity, "s", "avt", sname, "SetColorintensity")
 	CodeLine(sb, bisDisabled, "b", "avt", sname, "SetDisabled")
 	CodeLine(sb, bisHasbadge, "b", "avt", sname, "SetHasbadge")
-	CodeLine(sb, sheight, "s", "avt", sname, "SetHeight")
-	CodeLine(sb, bisleft, "b", "avt", sname, "SetLeft")
+	CodeLine(sb, sHeight, "s", "avt", sname, "SetHeight")
+	CodeLine(sb, bisLeft, "b", "avt", sname, "SetLeft")
 	If sfloat <> "" Then
 		AddCode(sb, $"avt${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -12032,7 +12029,7 @@ Sub Design_Avatar
 	CodeLine(sb, smaxwidth, "s", "avt", sname, "SetMaxwidth")
 	CodeLine(sb, sminheight, "s", "avt", sname, "SetMinheight")
 	CodeLine(sb, sminwidth, "s", "avt", sname, "SetMinwidth")
-	CodeLine(sb, bisright, "b", "avt", sname, "SetRight")
+	CodeLine(sb, bisRight, "b", "avt", sname, "SetRight")
 	CodeLine(sb, ssize, "s", "avt", sname, "SetSize")
 	CodeLine2(sb, stextcolor, stextintensity, "s", "avt", sname, "SetTextcolorintensity")
 	CodeLine(sb, bistile, "b", "avt", sname, "SetTile")
@@ -12132,15 +12129,15 @@ Sub Read_List
 	sminheight = mattr.getdefault("minheight", "")
 	sminwidth = mattr.getdefault("minwidth", "")
 	bisNav = YesNoToBoolean(mattr.getdefault("isnav", "No"))
-	bisrounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
-	bisshaped = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
+	bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
+	bisShaped = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
 	bisSubheader = YesNoToBoolean(mattr.getdefault("issubheader", "No"))
 	bisThreeline = YesNoToBoolean(mattr.getdefault("isthreeline", "No"))
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 	bisTwoline = YesNoToBoolean(mattr.getdefault("istwoline", "No"))
 	bisoptions = YesNoToBoolean(mattr.getdefault("isoptions", "No"))
 	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
-	swidth = mattr.getdefault("width", "")
+	sWidth = mattr.getdefault("width", "")
 	sDatasource = mattr.getdefault("datasource", "")
 	sKeyfld = mattr.getdefault("keyfld", "")
 	sAvatarfld = mattr.getdefault("avatarfld", "")
@@ -12158,27 +12155,27 @@ Sub Design_List
 	Dim lst As VMList = ui.CreateList($"lst${sname}"$, Me)
 	lst.setstatic(True)
 	lst.SetColorintensity(sColor, sColorintensity)
-	lst.SetDark(bisdark)
-	lst.SetDense(bisdense)
+	lst.SetDark(bisDark)
+	lst.SetDense(bisDense)
 	lst.SetDisabled(bisDisabled)
 	lst.SetElevation(selevation)
 	lst.SetExpand(bisExpand)
-	lst.SetFlat(bisflat)
-	lst.SetHeight(sheight)
-	lst.SetLight(bislight)
+	lst.SetFlat(bisFlat)
+	lst.SetHeight(sHeight)
+	lst.SetLight(bisLight)
 	lst.SetMaxheight(smaxheight)
 	lst.SetMaxwidth(smaxwidth)
 	lst.SetMinheight(sminheight)
 	lst.SetMinwidth(sminwidth)
 	lst.SetNav(bisNav)
-	lst.SetRounded(bisrounded)
-	lst.SetShaped(bisshaped)
+	lst.SetRounded(bisRounded)
+	lst.SetShaped(bisShaped)
 	lst.SetSubheader(bisSubheader)
 	lst.SetThreeline(bisThreeline)
 	lst.SetTile(bistile)
 	lst.SetTwoline(bisTwoline)
 	lst.SetVisible(bisVisible)
-	lst.SetWidth(swidth)
+	lst.SetWidth(sWidth)
 	If smargintop <> "" Then lst.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then lst.AddClass("mb-" & smarginbottom)
 	If smarginleft <> "" Then lst.AddClass("ml-" & smarginleft)
@@ -12242,14 +12239,14 @@ Sub Design_List
 	'
 	sb.append($"Dim lst${sname} As VMList = vm.CreateList("lst${sname}", Me)"$).Append(CRLF)
 	CodeLine2(sb, sColor, sColorintensity, "s", "lst", sname, "SetColorintensity")
-	CodeLine(sb, bisdark, "b", "lst", sname, "SetDark")
-	CodeLine(sb, bisdense, "b", "lst", sname, "SetDense")
+	CodeLine(sb, bisDark, "b", "lst", sname, "SetDark")
+	CodeLine(sb, bisDense, "b", "lst", sname, "SetDense")
 	CodeLine(sb, bisDisabled, "b", "lst", sname, "SetDisabled")
 	CodeLine(sb, selevation, "s", "lst", sname, "SetElevation")
 	CodeLine(sb, bisExpand, "b", "lst", sname, "SetExpand")
-	CodeLine(sb, bisflat, "b", "lst", sname, "SetFlat")
-	CodeLine(sb, sheight, "s", "lst", sname, "SetHeight")
-	CodeLine(sb, bislight, "b", "lst", sname, "SetLight")
+	CodeLine(sb, bisFlat, "b", "lst", sname, "SetFlat")
+	CodeLine(sb, sHeight, "s", "lst", sname, "SetHeight")
+	CodeLine(sb, bisLight, "b", "lst", sname, "SetLight")
 	If sfloat <> "" Then
 		AddCode(sb, $"lst${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -12258,8 +12255,8 @@ Sub Design_List
 	CodeLine(sb, sminheight, "s", "lst", sname, "SetMinheight")
 	CodeLine(sb, sminwidth, "s", "lst", sname, "SetMinwidth")
 	CodeLine(sb, bisNav, "b", "lst", sname, "SetNav")
-	CodeLine(sb, bisrounded, "b", "lst", sname, "SetRounded")
-	CodeLine(sb, bisshaped, "b", "lst", sname, "SetShaped")
+	CodeLine(sb, bisRounded, "b", "lst", sname, "SetRounded")
+	CodeLine(sb, bisShaped, "b", "lst", sname, "SetShaped")
 	CodeLine(sb, bisSubheader, "b", "lst", sname, "SetSubheader")
 	CodeLine(sb, bisThreeline, "b", "lst", sname, "SetThreeline")
 	CodeLine(sb, bistile, "b", "lst", sname, "SetTile")
@@ -12369,15 +12366,15 @@ Sub Read_Tabs
 	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisFixedtabs = YesNoToBoolean(mattr.getdefault("isfixedtabs", "No"))
 	bisGrow = YesNoToBoolean(mattr.getdefault("isgrow", "No"))
-	sheight = mattr.getdefault("height", "")
+	sHeight = mattr.getdefault("height", "")
 	bisHideslider = YesNoToBoolean(mattr.getdefault("ishideslider", "No"))
 	bisIconsandtext = YesNoToBoolean(mattr.getdefault("isiconsandtext", "No"))
-	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	smobilebreakpoint = mattr.getdefault("mobilebreakpoint", "")
 	sNexticon = mattr.getdefault("nexticon", "")
 	bisOptional = YesNoToBoolean(mattr.getdefault("isoptional", "No"))
 	sPrevicon = mattr.getdefault("previcon", "")
-	bisright = YesNoToBoolean(mattr.getdefault("isright", "No"))
+	bisRight = YesNoToBoolean(mattr.getdefault("isright", "No"))
 	bisshowarrows = YesNoToBoolean(mattr.getdefault("isshowarrows", "No"))
 	sSlidercolor = mattr.getdefault("slidercolor", "")
 	sSlidercolorintensity = mattr.getdefault("slidercolorintensity", "")
@@ -12455,8 +12452,8 @@ Sub Design_Stepper
 	'
 	AddCode(sb, $"Dim stp${sname} As VMStepper = vm.CreateStepper("stp${sname}", Me)"$)
 	CodeLine(sb, bisAltlabels, "b", "stp", sname, "SetAltlabels")
-	CodeLine(sb, bisdark, "b", "stp", sname, "SetDark")
-	CodeLine(sb, bislight, "b", "stp", sname, "SetLight")
+	CodeLine(sb, bisDark, "b", "stp", sname, "SetDark")
+	CodeLine(sb, bisLight, "b", "stp", sname, "SetLight")
 	CodeLine(sb, bisNonlinear, "b", "stp", sname, "SetNonlinear")
 	CodeLine(sb, sStepactive, "s", "stp", sname, "SetStepactive")
 	CodeLine(sb, bisvertical, "b", "stp", sname, "SetVertical")
@@ -12507,7 +12504,7 @@ Sub Design_Tabs
 	Dim tabs As VMTabs = ui.CreateTabs($"tbs${sname}"$, Me)
 	tabs.SetStatic(True)
 	tabs.SetTabSlider(bistabslider)
-	tabs.SetActiveclass(sactiveclass)
+	tabs.SetActiveclass(sActiveclass)
 	tabs.SetAlignwithtitle(bisAlignwithtitle)
 	tabs.SetBackgroundcolorintensity(sBackgroundcolor, sBackgroundcolorintensity)
 	tabs.SetCenteractive(bisCenteractive)
@@ -12516,7 +12513,7 @@ Sub Design_Tabs
 	tabs.SetDark(bisDark)
 	tabs.SetFixedtabs(bisFixedtabs)
 	tabs.SetGrow(bisGrow)
-	tabs.SetHeight(sheight)
+	tabs.SetHeight(sHeight)
 	tabs.SetHideslider(bisHideslider)
 	tabs.SetIconsandtext(bisIconsandtext)
 	tabs.SetLight(bisLight)
@@ -12597,7 +12594,7 @@ Sub Design_Tabs
 	CodeLine(sb, bisDark, "b", "tbs", sname, "SetDark")
 	CodeLine(sb, bisFixedtabs, "b", "tbs", sname, "SetFixedtabs")
 	CodeLine(sb, bisGrow, "b", "tbs", sname, "SetGrow")
-	CodeLine(sb, sheight, "s", "tbs", sname, "SetHeight")
+	CodeLine(sb, sHeight, "s", "tbs", sname, "SetHeight")
 	If sfloat <> "" Then
 		AddCode(sb, $"tbs${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -12739,15 +12736,15 @@ End Sub
 Sub Read_ExpansionPanels
 	bisAccordion = YesNoToBoolean(mattr.getdefault("isaccordion", "No"))
 	sActivepanel = mattr.getdefault("activepanel", "")
-	bisdark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
-	bisflat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
+	bisFlat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
 	bisFocusable = YesNoToBoolean(mattr.getdefault("isfocusable", "No"))
 	bisHover = YesNoToBoolean(mattr.getdefault("ishover", "No"))
 	bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bismandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
-	bismultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+	bisMultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
 	bisPopout = YesNoToBoolean(mattr.getdefault("ispopout", "No"))
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
@@ -12760,13 +12757,13 @@ Sub Design_ExpansionPanels
 	expnl.SetActivePanel(sActivepanel)
 	expnl.SetDark(bisDark)
 	expnl.SetDisabled(bisDisabled)
-	expnl.SetFlat(bisflat)
+	expnl.SetFlat(bisFlat)
 	expnl.SetFocusable(bisFocusable)
 	expnl.SetHover(bisHover)
 	expnl.SetInset(bisinset)
 	expnl.SetLight(bisLight)
 	expnl.SetMandatory(bismandatory)
-	expnl.SetMultiple(bismultiple)
+	expnl.SetMultiple(bisMultiple)
 	expnl.SetPopout(bisPopout)
 	expnl.SetReadonly(bisreadonly)
 	expnl.SetTile(bistile)
@@ -12828,13 +12825,13 @@ Sub Design_ExpansionPanels
 	AddCode(sb, $"Dim exp${sname} As VMExpansionPanels = vm.CreateExpansionPanels("exp${sname}", Me)"$)
 	CodeLine(sb, bisAccordion, "b", "exp", sname, "SetAccordion")
 	CodeLine(sb, sActivepanel, "s", "exp", sname, "SetActivepanel")
-	CodeLine(sb, bisdark, "b", "exp", sname, "SetDark")
+	CodeLine(sb, bisDark, "b", "exp", sname, "SetDark")
 	CodeLine(sb, bisDisabled, "b", "exp", sname, "SetDisabled")
-	CodeLine(sb, bisflat, "b", "exp", sname, "SetFlat")
+	CodeLine(sb, bisFlat, "b", "exp", sname, "SetFlat")
 	CodeLine(sb, bisFocusable, "b", "exp", sname, "SetFocusable")
 	CodeLine(sb, bisHover, "b", "exp", sname, "SetHover")
 	CodeLine(sb, bisinset, "b", "exp", sname, "SetInset")
-	CodeLine(sb, bislight, "b", "exp", sname, "SetLight")
+	CodeLine(sb, bisLight, "b", "exp", sname, "SetLight")
 	If sfloat <> "" Then
 		AddCode(sb, $"exp${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -13204,11 +13201,11 @@ End Sub
 
 
 Sub Read_Quill
-	sheight = mattr.getdefault("height", "")
-	bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
-	stabindex = mattr.getdefault("tabindex", "")
+	sHeight = mattr.getdefault("height", "")
+	bisRequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+	sTabindex = mattr.getdefault("tabindex", "")
 	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
-	swidth = mattr.getdefault("width", "")
+	sWidth = mattr.getdefault("width", "")
 	serrortext = mattr.getdefault("errortext", "")
 End Sub
 
@@ -13219,10 +13216,10 @@ Sub Design_Quill
 	Q.Initialize(vue, $"q${sname}"$, Me)
 	Q.SetStatic(True)
 	Q.SetDesignMode(True) 
-	Q.SetHeight(sheight)
-	Q.SetWidth(swidth)
-	Q.SetRequired(bisrequired)
-	Q.SetTabindex(stabindex)
+	Q.SetHeight(sHeight)
+	Q.SetWidth(sWidth)
+	Q.SetRequired(bisRequired)
+	Q.SetTabindex(sTabindex)
 	Q.SetVisible(bisVisible)
 	If smargintop <> "" Then Q.AddClass("mt-" & smargintop)
 If smarginbottom <> "" Then Q.AddClass("mb-" & smarginbottom)
@@ -13255,11 +13252,11 @@ If spaddinga <> "" Then Q.AddClass("pa-" & spaddinga)
 	
 	AddCode(sb, $"Dim q${sname} As VMQuill"$)
 	AddCode(sb, $"q${sname}.Initialize(vue, "q${sname}", Me)"$)
-	CodeLine(sb, sheight, "s", "q", sname, "SetHeight")
-	CodeLine(sb, bisrequired, "b", "q", sname, "SetRequired")
+	CodeLine(sb, sHeight, "s", "q", sname, "SetHeight")
+	CodeLine(sb, bisRequired, "b", "q", sname, "SetRequired")
 	CodeLine(sb, sTabindex, "s", "q", sname, "SetTabindex")
 	CodeLine(sb, bisVisible, "b", "q", sname, "SetVisible")
-	CodeLine(sb, swidth, "s", "q", sname, "SetWidth")
+	CodeLine(sb, sWidth, "s", "q", sname, "SetWidth")
 	CodeLine(sb, sname, "s", "q", sname, "SetVModel")
 	'
 	Dim pres As String = "q"
@@ -13432,6 +13429,10 @@ Sub Design_InfoBox
 	End If
 	ui.AddControl(ib.InfoBox, ib.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
 	AddCode(sb, $"Dim ib${sname} As VMInfoBox"$)
 	AddCode(sb, $"ib${sname}.Initialize(vue, "ib${sname}", Me)"$)
 	CodeLine(sb, bisautoplay, "b", "ib", sname, "SetAutoplay")
@@ -13505,15 +13506,77 @@ Sub PropertyBag_FileSelect
 	pbfileselect.AddText("d", "controltype", "Type", "","fileselect")
 	pbfileselect.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbfileselect.AddText("d","vmodel","ID","","")
-	pbfileselect.AddText("g","filenamevmodel","File Name VModel","","")
-	pbfileselect.AddText("g","filedatevmodel","File Date VModel","","")
-	pbfileselect.AddText("g","filesizevmodel","File Size VModel","","")
-	pbfileselect.AddText("g","filetypevmodel","File Type VModel","","")
+	pbfileselect.AddText("d","filenamevmodel","File Name VModel","","")
+	pbfileselect.AddText("d","filedatevmodel","File Date VModel","","")
+	pbfileselect.AddText("d","filesizevmodel","File Size VModel","","")
+	pbfileselect.AddText("d","filetypevmodel","File Type VModel","","")
 		
 	pbfileselect.AddRadioGroup("d", "action", "Action", CreateMap("upload": "Upload","readExcel":"readExcel", "readAsText":"readAsText","readAsBinaryString":"readAsBinaryString","readAsDataURL":"readAsDataURL","readAsArrayBuffer":"readAsArrayBuffer"))
 	drwbags.Container.AddHTML(pbfileselect.tostring)
 End Sub
 #End Region
+
+#Region FileInput
+Sub PropertyBag_FileInput
+	vm.setdata("pbfileinput", False)
+	lstBags.add("pbfileinput")
+	pbfileinput = vm.CreateProperty("ppbfileinput", Me)
+	pbfileinput.SetChangeEvent("SavePropertyBag")
+	pbfileinput.SetVShow("pbfileinput")
+	pbfileinput.AddHeading("d","Details")
+	pbfileinput.AddText("d","id","ID","","")
+	pbfileinput.AddText("d", "controltype", "Type", "","file")
+	pbfileinput.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbfileinput.AddText("d","vmodel","VModel","","")
+	pbfileinput.AddText("d","label","Label","","")
+	pbfileinput.AddText("d","placeholder","Placeholder","","")
+	pbfileinput.AddText("d","helpertext","Helper Text","","")
+	pbfileinput.AddText("d","errortext","Error Text","","")
+	pbfileinput.AddText2("d",CreateMap("prefix":"Prefix", "suffix":"Suffix"))
+	pbfileinput.AddText("d","accept","Accept","","")
+	pbfileinput.AddText("d","truncatelength","TruncateLength","","")
+	pbfileinput.AddText2("d",CreateMap("appendicon":"AppendIcon","appendoutericon":"AppendOuterIcon"))
+	pbfileinput.AddText2("d",CreateMap("prependicon":"PrependIcon", "prependinnericon":"PrependInnerIcon"))
+	pbfileinput.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbfileinput.AddSelect2("d","backgroundcolor","BackgroundColor", vm.ColorOptions, "backgroundcolorintensity","BackgroundColor Intensity", vm.IntensityOptions)
+	
+	pbfileinput.AddText2("d",CreateMap("counter":"Counter","errorcount":"ErrorCount"))
+	pbfileinput.AddText2("d",CreateMap("height":"Height", "loaderheight":"LoaderHeight"))
+	pbfileinput.AddText("d","filenamevmodel","File Name VModel","","")
+	pbfileinput.AddText("d","filedatevmodel","File Date VModel","","")
+	pbfileinput.AddText("d","filesizevmodel","File Size VModel","","")
+	pbfileinput.AddText("d","filetypevmodel","File Type VModel","","")
+		
+	pbfileinput.AddRadioGroup("d", "action", "Action", CreateMap("upload": "Upload","readExcel":"readExcel", "readAsText":"readAsText","readAsBinaryString":"readAsBinaryString","readAsDataURL":"readAsDataURL","readAsArrayBuffer":"readAsArrayBuffer"))
+	pbfileinput.AddText("d","tabindex","TabIndex","","")
+	pbfileinput.AddSelect("d","float", "Float", vm.Floats)
+	'
+	pbfileinput.AddHeading("m","Margins & Padding")
+	pbfileinput.AddMarginsPaddings("m")
+	'
+	pbfileinput.AddHeading("e","Settings")
+	pbfileinput.AddSwitches("e", CreateMap("isautofocus": "Autofocus", "ischips": "Chips"))
+	pbfileinput.AddSwitches("e", CreateMap("isclearable": "Clearable", "isdark": "Dark"))
+	pbfileinput.AddSwitches("e", CreateMap("isdense": "Dense", "isdisabled": "Disabled"))
+	pbfileinput.AddSwitches("e", CreateMap("iserror": "Error", "isfilled": "Filled"))
+	pbfileinput.AddSwitches("e", CreateMap("isflat": "Flat", "isfullwidth": "FullWidth"))
+	pbfileinput.AddSwitches("e", CreateMap("ishidedetails": "HideDetails", "islight": "Light"))
+	pbfileinput.AddSwitches("e", CreateMap("isloading": "Loading", "ismultiple": "Multiple"))
+	pbfileinput.AddSwitches("e", CreateMap("isoutlined": "Outlined", "ispersistenthint": "PersistentHint"))
+	pbfileinput.AddSwitches("e", CreateMap("isrequired": "Required", "isreverse": "Reverse"))
+	pbfileinput.AddSwitches("e", CreateMap("isrounded": "Rounded", "isshaped": "Shaped"))
+	pbfileinput.AddSwitches("e", CreateMap("isshowsize": "ShowSize", "issingleline": "SingleLine"))
+	pbfileinput.AddSwitches("e", CreateMap("issmallchips": "SmallChips", "issolo": "Solo"))
+	pbfileinput.AddSwitches("e", CreateMap("issoloinverted": "SoloInverted", "issuccess": "Success"))
+	pbfileinput.AddSwitches("e", CreateMap("isvalidateonblur": "ValidateOnBlur", "isvisible": "Visible"))
+	'
+	pbfileinput.AddHeading("f","Matrix")
+	pbfileinput.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbfileinput.tostring)
+End Sub
+#End Region
+
 
 
 Sub Read_FileSelect
@@ -13546,8 +13609,10 @@ Sub Design_FileSelect
 	' add an invisible file selector
 	AddNewLine(sb)
 	AddInstruction(sb, "<Your Module>", "Code","")
+	AddNewLine(sb)
+	
 	AddComment(sb, "Add an invisible file selector")
-	AddCode(sb, $"vm.AddFileSelect(${sparent}, "fs${sname}")"$)
+	AddCode(sb, $"vm.AddFileSelect(Me, "fs${sname}")"$)
 	AddNewLine(sb)
 	Dim bDone As Boolean = False
 	'
@@ -13562,24 +13627,25 @@ Sub Design_FileSelect
 	AddComment(sbEvents, "there is no selected file(s)")
 	AddCode(sbEvents, "If fileList.size = 0 Then Return")
 	AddComment(sbEvents, "get the first file selected")
-	AddCode(sbEvents, $"Dim fileO As String = fileList.get(0)"$)
+	AddCode(sbEvents, $"Dim fileO As Map = fileList.get(0)"$)
 	'	
 	AddComment(sbEvents, "get file details")
 	AddCode(sbEvents, $"Dim fo As FileObject = vue.GetFileDetails(fileO)"$)
+	AddCode(sbEvents, $"Dim sFileName As String = fo.FileName"$)
+	AddCode(sbEvents, $"Dim sFileDate As String = fo.FileDate"$)
+	AddCode(sbEvents, $"Dim sFileSize As String = fo.FileSize"$)
+	AddCode(sbEvents, $"Dim sFileType As String = fo.FileType"$)
+					
 	If sfilenamevmodel <> "" Then
-		AddCode(sbEvents, $"Dim sFileName As String = fo.FileName"$)
 		AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
 	End If
 	If sfiledatevmodel <> "" Then
-		AddCode(sbEvents, $"Dim sFileDate As String = fo.FileDate"$)
 		AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", sFileDate)"$)
 	End If
 	If sfilesizevmodel <> "" Then
-		AddCode(sbEvents, $"Dim sFileSize As String = fo.FileSize"$)
 		AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", sFileSize)"$)
 	End If
 	If sfiletypevmodel <> "" Then
-		AddCode(sbEvents, $"Dim sFileType As String = fo.FileType"$)
 		AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", sFileType)"$)
 	End If
 	
@@ -13596,8 +13662,8 @@ Sub Design_FileSelect
 		AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
 		AddCode(sbEvents, $"Select Case sResult"$)
 		AddCode(sbEvents, $"Case "success""$)
+		AddCode(sbEvents, $"sFileName = "./assets/" & sFileName"$)
 		If sfilenamevmodel <> "" Then 
-			AddCode(sbEvents, $"sFileName = "./assets/" & sFileName"$)
 			AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
 		End If
 		AddCode(sbEvents, $"vm.ShowSnackBarSuccess(sFileName & " was uploaded successfully.")"$)
@@ -13760,7 +13826,9 @@ End Sub
 Sub Design_TreeView
 	'
 	PlaceHolder("TreeView sits here...")
-	
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	Dim pres As String = "tv"
 	AddCode(sb, $"Dim tv${sname} As VMTreeView"$)
 	AddCode(sb, $"tv${sname}.Initialize(vue, "tv${sname}", Me)"$)
@@ -13989,6 +14057,9 @@ Sub Design_TimeLine
 	Dim stl As String = TimeLine.tostring
 	ui.AddControl(TimeLine.TimeLine, stl, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	
 	AddCode(sb, $"Dim tl${sname} As VMTimeline"$)
 	AddCode(sb, $"tl${sname}.Initialize(vue, "tl${sname}", Me)"$)
 	CodeLine(sb, bisAligntop, "b", "tl", sname, "SetAligntop")
@@ -14005,8 +14076,6 @@ Sub Design_TimeLine
 	sb.append($"${sparent}.AddControl(tl${sname}.TimeLine, tl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
 	AddNewLine(sb)
 	AddNewLine(sb)
-	'
-	Log(sb.tostring)
 End Sub
 
 #Region TimeLineItem
@@ -14036,3 +14105,529 @@ Sub PropertyBag_TimeLineItem
 	drwbags.Container.AddHTML(pbtimelineitem.tostring)
 End Sub
 #End Region
+
+#Region SparkLine
+Sub PropertyBag_SparkLine
+	vm.setdata("pbsparkline", False)
+	lstBags.add("pbsparkline")
+	pbsparkline = vm.CreateProperty("ppbsparkline", Me)
+	pbsparkline.SetChangeEvent("SavePropertyBag")
+	pbsparkline.SetVShow("pbsparkline")
+	pbsparkline.AddHeading("d","Details")
+	pbsparkline.AddText("d","id","ID","","")
+	pbsparkline.AddText("d", "controltype", "Type", "","sparkline")
+	pbsparkline.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbsparkline.AddText("d","vmodel","ID","","")
+	pbsparkline.AddText("d","value","Value","","")
+	pbsparkline.AddText("d","gradient","Gradient","","")
+	pbsparkline.AddSelect("d","type","Type",CreateMap("trend":"trend","bars":"bars"))
+	pbsparkline.AddText2("d",CreateMap("autodrawduration":"AutoDrawDuration","autodraweasing":"AutoDrawEasing"))
+	pbsparkline.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbsparkline.AddText("d","gradientdirection","GradientDirection","","")
+	pbsparkline.AddText2("d",CreateMap("height":"Height", "width":"Width"))
+	pbsparkline.AddText2("d",CreateMap("labelsize":"LabelSize", "linewidth":"LineWidth"))
+	pbsparkline.AddText("d","padding","Padding","","")
+	pbsparkline.addtext("d", "strokelinecap", "Stroke LineCap","","")
+	pbsparkline.AddText("d","tabindex","TabIndex","","")
+	'
+	pbsparkline.AddHeading("m","Margins & Padding")
+	pbsparkline.AddMarginsPaddings("m")
+	'
+	pbsparkline.AddHeading("e","Settings")
+	pbsparkline.AddSwitches("e", CreateMap("isautodraw": "AutoDraw", "isautolinewidth": "AutoLineWidth"))
+	pbsparkline.AddSwitches("e", CreateMap("isfill": "Fill", "isshowlabels": "ShowLabels"))
+	pbsparkline.AddSwitches("e", CreateMap("issmooth": "Smooth", "isvisible": "Visible"))
+	'
+	pbsparkline.AddHeading("f","Matrix")
+	pbsparkline.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbsparkline.tostring)
+End Sub
+#End Region
+
+Sub Read_SparkLine
+	svalue = mattr.getdefault("value", "")
+	sgradient = mattr.getdefault("gradient", "")
+	bisAutodraw = YesNoToBoolean(mattr.getdefault("isautodraw", "No"))
+	sAutodrawduration = mattr.getdefault("autodrawduration", "")
+	sAutodraweasing = mattr.getdefault("autodraweasing", "")
+	bisAutolinewidth = YesNoToBoolean(mattr.getdefault("isautolinewidth", "No"))
+	sColor = mattr.getdefault("color", "")
+	sstrokelinecap = mattr.getdefault("strokelinecap", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisFill = YesNoToBoolean(mattr.getdefault("isfill", "No"))
+	sGradientdirection = mattr.getdefault("gradientdirection", "")
+	sHeight = mattr.getdefault("height", "")
+	sLabelsize = mattr.getdefault("labelsize", "")
+	sLinewidth = mattr.getdefault("linewidth", "")
+	sPadding = mattr.getdefault("padding", "")
+	bisShowlabels = YesNoToBoolean(mattr.getdefault("isshowlabels", "No"))
+	bisSmooth = YesNoToBoolean(mattr.getdefault("issmooth", "No"))
+	sType = mattr.getdefault("type", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_SparkLine
+	PlaceHolder("SparkLine sits here...")
+	
+	'double quote each item
+	sgradient = vue.MVQuoteItems("," ,sgradient)
+	Dim SparkLine As VMSparkLine
+	SparkLine.Initialize(vue, "spark" & sname, Me)
+	SparkLine.SetStatic(True)
+	SparkLine.SetDesignMode(True)
+	SparkLine.SetValue(Array(svalue))
+	SparkLine.SetGradient(Array(sgradient))
+	SparkLine.SetAutodraw(bisAutodraw)
+	SparkLine.SetAutodrawduration(sAutodrawduration)
+	SparkLine.SetAutodraweasing(sAutodraweasing)
+	SparkLine.SetAutolinewidth(bisAutolinewidth)
+	SparkLine.SetColorintensity(sColor, sColorintensity)
+	SparkLine.SetFill(bisFill)
+	SparkLine.SetStrokeLineCap(sstrokelinecap)
+	SparkLine.SetGradientdirection(sGradientdirection)
+	SparkLine.SetHeight(sHeight)
+	SparkLine.SetLabelsize(sLabelsize)
+	SparkLine.SetLinewidth(sLinewidth)
+	SparkLine.SetPadding(sPadding)
+	SparkLine.SetShowlabels(bisShowlabels)
+	SparkLine.SetSmooth(bisSmooth)
+	SparkLine.SetType(sType)
+	SparkLine.SetVisible(bisVisible)
+	SparkLine.SetWidth(sWidth)
+	ui.AddControl(SparkLine.SparkLine, SparkLine.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	Dim pres As String = "spark"
+	AddCode(sb, $"Dim spark${sname} As VMSparkLine"$)
+	AddCode(sb, $"spark${sname}.Initialize(vue, "spark${sname}", Me)"$)
+	
+	AddCode(sb, $"spark${sname}.SetValue(Array(${svalue}))"$)
+	AddCode(sb, $"spark${sname}.SetGradient(Array(${sgradient}))"$)
+	CodeLine(sb, bisAutodraw, "b", pres, sname, "SetAutodraw")
+	CodeLine(sb, sAutodrawduration, "s", pres, sname, "SetAutodrawduration")
+	CodeLine(sb, sAutodraweasing, "s", pres, sname, "SetAutodraweasing")
+	CodeLine(sb, sstrokelinecap, "s", pres, sname, "SetStrokeLineCap")
+	CodeLine(sb, bisAutolinewidth, "b", pres, sname, "SetAutolinewidth")
+	CodeLine(sb, sColor, "s", pres, sname, "SetColor")
+	CodeLine(sb, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisFill, "b", pres, sname, "SetFill")
+	CodeLine(sb, sGradientdirection, "s", pres, sname, "SetGradientdirection")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, sLabelsize, "s", pres, sname, "SetLabelsize")
+	CodeLine(sb, sLinewidth, "s", pres, sname, "SetLinewidth")
+	CodeLine(sb, sPadding, "s", pres, sname, "SetPadding")
+	CodeLine(sb, bisShowlabels, "b", pres, sname, "SetShowlabels")
+	CodeLine(sb, bisSmooth, "b", pres, sname, "SetSmooth")
+	CodeLine(sb, sType, "s", pres, sname, "SetType")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+	'
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+
+	sb.append($"${sparent}.AddControl(spark${sname}.SparkLine, spark${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	AddNewLine(sb)
+	AddNewLine(sb)
+	
+End Sub
+
+Sub Read_FileInput
+	sfilenamevmodel = mattr.getdefault("filenamevmodel", "")
+	sfiledatevmodel = mattr.getdefault("filedatevmodel", "")
+	sfilesizevmodel = mattr.getdefault("filesizevmodel", "")
+	sfiletypevmodel = mattr.getdefault("filetypevmodel", "")
+	sAction = mattr.getdefault("action", "")
+	sAccept = mattr.getdefault("accept", "")
+	sAppendicon = mattr.getdefault("appendicon", "")
+	sAppendoutericon = mattr.getdefault("appendoutericon", "")
+	bisAutofocus = YesNoToBoolean(mattr.getdefault("isautofocus", "No"))
+	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
+	sBackgroundcolorintensity = mattr.getdefault("backgroundcolorintensity", "")
+	bisChips = YesNoToBoolean(mattr.getdefault("ischips", "No"))
+	bisClearable = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	sCounter = mattr.getdefault("counter", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisError = YesNoToBoolean(mattr.getdefault("iserror", "No"))
+	sErrorcount = mattr.getdefault("errorcount", "")
+	bisFilled = YesNoToBoolean(mattr.getdefault("isfilled", "No"))
+	bisFlat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
+	bisFullwidth = YesNoToBoolean(mattr.getdefault("isfullwidth", "No"))
+	sHeight = mattr.getdefault("height", "")
+	bisHidedetails = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
+	shelpertext = mattr.getdefault("helpertext", "")
+	serrortext = mattr.getdefault("errortext", "")
+	sLabel = mattr.getdefault("label", "")
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sLoaderheight = mattr.getdefault("loaderheight", "")
+	bisLoading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
+	bisMultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+	bisOutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
+	bisPersistenthint = YesNoToBoolean(mattr.getdefault("ispersistenthint", "No"))
+	sPlaceholder = mattr.getdefault("placeholder", "")
+	sPrefix = mattr.getdefault("prefix", "")
+	sPrependicon = mattr.getdefault("prependicon", "")
+	sPrependinnericon = mattr.getdefault("prependinnericon", "")
+	bisRequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+	bisReverse = YesNoToBoolean(mattr.getdefault("isreverse", "No"))
+	bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
+	bisShaped = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
+	bisShowsize = YesNoToBoolean(mattr.getdefault("isshowsize", "No"))
+	bisSingleline = YesNoToBoolean(mattr.getdefault("issingleline", "No"))
+	bisSmallchips = YesNoToBoolean(mattr.getdefault("issmallchips", "No"))
+	bisSolo = YesNoToBoolean(mattr.getdefault("issolo", "No"))
+	bisSoloinverted = YesNoToBoolean(mattr.getdefault("issoloinverted", "No"))
+	bisSuccess = YesNoToBoolean(mattr.getdefault("issuccess", "No"))
+	sSuffix = mattr.getdefault("suffix", "")
+	sTabindex = mattr.getdefault("tabindex", "")
+	sText = mattr.getdefault("text", "")
+	sTruncatelength = mattr.getdefault("truncatelength", "")
+	sType = mattr.getdefault("type", "")
+	bisValidateonblur = YesNoToBoolean(mattr.getdefault("isvalidateonblur", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+End Sub
+
+Sub Design_FileInput
+	Dim fi As VMFileInput
+	fi.Initialize(vue, "fi" & sname, Me)
+	fi.SetStatic(True)
+	fi.SetDesignMode(True)
+	fi.SetAccept(sAccept)
+	fi.SetAppendicon(sAppendicon)
+	fi.SetAppendoutericon(sAppendoutericon)
+	fi.SetAutofocus(bisAutofocus)
+	fi.SetBackgroundcolorintensity(sBackgroundcolor, sBackgroundcolorintensity)
+	fi.SetChips(bisChips)
+	fi.SetClearable(bisClearable)
+	fi.SetColorintensity(sColor, sColorintensity)
+	fi.SetCounter(sCounter)
+	fi.SetDark(bisDark)
+	fi.SetDense(bisDense)
+	fi.SetDisabled(bisDisabled)
+	fi.SetError(bisError)
+	fi.SetErrorcount(sErrorcount)
+	fi.SetFilled(bisFilled)
+	fi.SetFlat(bisFlat)
+	fi.SetFullwidth(bisFullwidth)
+	fi.SetHeight(sHeight)
+	fi.SetHidedetails(bisHidedetails)
+	fi.SetHint(shelpertext)
+	fi.SetErrorText(serrortext)
+	fi.SetLabel(sLabel)
+	fi.SetLight(bisLight)
+	fi.SetLoaderheight(sLoaderheight)
+	fi.SetLoading(bisLoading)
+	fi.SetMultiple(bisMultiple)
+	fi.SetOutlined(bisOutlined)
+	fi.SetPersistenthint(bisPersistenthint)
+	fi.SetPlaceholder(sPlaceholder)
+	fi.SetPrefix(sPrefix)
+	fi.SetPrependicon(sPrependicon)
+	fi.SetPrependinnericon(sPrependinnericon)
+	fi.SetRequired(bisRequired)
+	fi.SetReverse(bisReverse)
+	fi.SetRounded(bisRounded)
+	fi.SetShaped(bisShaped)
+	fi.SetShowsize(bisShowsize)
+	fi.SetSingleline(bisSingleline)
+	fi.SetSmallchips(bisSmallchips)
+	fi.SetSolo(bisSolo)
+	fi.SetSoloinverted(bisSoloinverted)
+	fi.SetSuccess(bisSuccess)
+	fi.SetSuffix(sSuffix)
+	fi.SetTabindex(sTabindex)
+	fi.SetTruncatelength(sTruncatelength)
+	fi.SetType(sType)
+	fi.SetValidateonblur(bisValidateonblur)
+	fi.SetVisible(bisVisible)
+	If sfloat <> "" Then fi.Addclass(sfloat)
+	If smargintop <> "" Then fi.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then fi.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then fi.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then fi.AddClass("mr-" & smarginright)
+	If smargins <> "" Then fi.AddClass("ms-" & smargins)
+	If smargine <> "" Then fi.AddClass("me-" & smargine)
+	If smarginx <> "" Then fi.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then fi.AddClass("my-" & smarginy)
+	If smargina <> "" Then fi.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then fi.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then fi.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then fi.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then fi.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then fi.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then fi.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then fi.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then fi.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then fi.AddClass("pa-" & spaddinga)
+	ui.AddControl(fi.FileInput, fi.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	Dim pres As String = "fi"
+	AddCode(sb, $"Dim fi${sname} As VMFileInput"$)
+	AddCode(sb, $"fi${sname}.Initialize(vue, "fi${sname}, Me)"$)
+	CodeLine(sb, sAccept, "s", pres, sname, "SetAccept")
+	CodeLine(sb, sAppendicon, "s", pres, sname, "SetAppendicon")
+	CodeLine(sb, sAppendoutericon, "s", pres, sname, "SetAppendoutericon")
+	CodeLine(sb, bisAutofocus, "b", pres, sname, "SetAutofocus")
+	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
+	CodeLine(sb, bisChips, "b", pres, sname, "SetChips")
+	CodeLine(sb, bisClearable, "b", pres, sname, "SetClearable")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, sCounter, "s", pres, sname, "SetCounter")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDense, "b", pres, sname, "SetDense")
+	CodeLine(sb, bisDisabled, "b", pres, sname, "SetDisabled")
+	CodeLine(sb, bisError, "b", pres, sname, "SetError")
+	CodeLine(sb, sErrorcount, "s", pres, sname, "SetErrorcount")
+	CodeLine(sb, bisFilled, "b", pres, sname, "SetFilled")
+	CodeLine(sb, bisFlat, "b", pres, sname, "SetFlat")
+	CodeLine(sb, bisFullwidth, "b", pres, sname, "SetFullwidth")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, bisHidedetails, "b", pres, sname, "SetHidedetails")
+	CodeLine(sb, shelpertext, "s", pres, sname, "SetHint")
+	CodeLine(sb, serrortext, "s", pres, sname, "SetErrorText")
+	CodeLine(sb, sLabel, "s", pres, sname, "SetLabel")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sLoaderheight, "s", pres, sname, "SetLoaderheight")
+	CodeLine(sb, bisLoading, "b", pres, sname, "SetLoading")
+	CodeLine(sb, bisMultiple, "b", pres, sname, "SetMultiple")
+	CodeLine(sb, bisOutlined, "b", pres, sname, "SetOutlined")
+	CodeLine(sb, bisPersistenthint, "b", pres, sname, "SetPersistenthint")
+	CodeLine(sb, sPlaceholder, "s", pres, sname, "SetPlaceholder")
+	CodeLine(sb, sPrefix, "s", pres, sname, "SetPrefix")
+	CodeLine(sb, sPrependicon, "s", pres, sname, "SetPrependicon")
+	CodeLine(sb, sPrependinnericon, "s", pres, sname, "SetPrependinnericon")
+	CodeLine(sb, bisRequired, "b", pres, sname, "SetRequired")
+	CodeLine(sb, bisReverse, "b", pres, sname, "SetReverse")
+	CodeLine(sb, bisRounded, "b", pres, sname, "SetRounded")
+	CodeLine(sb, bisShaped, "b", pres, sname, "SetShaped")
+	CodeLine(sb, bisShowsize, "b", pres, sname, "SetShowsize")
+	CodeLine(sb, bisSingleline, "b", pres, sname, "SetSingleline")
+	CodeLine(sb, bisSmallchips, "b", pres, sname, "SetSmallchips")
+	CodeLine(sb, bisSolo, "b", pres, sname, "SetSolo")
+	CodeLine(sb, bisSoloinverted, "b", pres, sname, "SetSoloinverted")
+	CodeLine(sb, bisSuccess, "b", pres, sname, "SetSuccess")
+	CodeLine(sb, sSuffix, "s", pres, sname, "SetSuffix")
+	CodeLine(sb, sTabindex, "s", pres, sname, "SetTabindex")
+	CodeLine(sb, sText, "s", pres, sname, "SetText")
+	CodeLine(sb, sTruncatelength, "s", pres, sname, "SetTruncatelength")
+	CodeLine(sb, sType, "s", pres, sname, "SetType")
+	CodeLine(sb, bisValidateonblur, "b", pres, sname, "SetValidateonblur")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	If sfloat <> "" Then
+		AddCode(sb, $"fi${sname}.AddClass("${sfloat}")"$)
+	End If
+	'
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+
+	sb.append($"${sparent}.AddControl(fi${sname}.FileInput, fi${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	AddNewLine(sb)
+	AddNewLine(sb)
+	
+	If bisMultiple = False Then
+		If sfilenamevmodel <> "" Then
+			AddCode(sbRead, $"Dim sFileName As String = vue.GetData("${sfilenamevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfilenamevmodel}", sFileName)"$)
+		End If
+		'
+		If sfiledatevmodel <> "" Then
+			AddCode(sbRead, $"Dim sFileDate As String = vue.GetData("${sfiledatevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfiledatevmodel}", sFileDate)"$)
+		End If
+		'
+		If sfilesizevmodel <> "" Then
+			AddCode(sbRead, $"Dim sFileSize As String = vue.GetData("${sfilesizevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfilesizevmodel}", sFileSize)"$)
+		End If
+		'
+		If sfiletypevmodel <> "" Then
+			AddCode(sbRead, $"Dim sFileType As String = vue.GetData("${sfiletypevmodel}")"$)
+			AddCode(sbRead, $"Record.put("${sfiletypevmodel}", sFileType)"$)
+		End If
+	
+	
+		AddComment(sbEvents, "fire the file change event..")
+		AddCode(sbEvents, $"Sub fi${sname}_change(e As BANanoEvent)"$)
+		If sfilenamevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
+		If sfiledatevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", "")"$)
+		If sfilesizevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", "")"$)
+		If sfiletypevmodel <> "" Then AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", "")"$)
+		'
+		AddComment(sbEvents, "get selected file(s)")
+		AddCode(sbEvents, $"Dim fileList As List = vm.GetFileListFromTarget(e)"$)
+		AddComment(sbEvents, "there is no selected file(s)")
+		AddCode(sbEvents, "If fileList.size = 0 Then Return")
+		AddComment(sbEvents, "get the first file selected")
+		AddCode(sbEvents, $"Dim fileO As Map = fileList.get(0)"$)
+		'
+		AddComment(sbEvents, "get file details")
+		AddCode(sbEvents, $"Dim fo As FileObject = vue.GetFileDetails(fileO)"$)
+		AddCode(sbEvents, $"Dim sFileName As String = fo.FileName"$)
+		AddCode(sbEvents, $"Dim sFileDate As String = fo.FileDate"$)
+		AddCode(sbEvents, $"Dim sFileSize As String = fo.FileSize"$)
+		AddCode(sbEvents, $"Dim sFileType As String = fo.FileType"$)
+						
+		If sfilenamevmodel <> "" Then
+			AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
+		End If
+		If sfiledatevmodel <> "" Then
+			AddCode(sbEvents, $"vue.SetData("${sfiledatevmodel}", sFileDate)"$)
+		End If
+		If sfilesizevmodel <> "" Then
+			AddCode(sbEvents, $"vue.SetData("${sfilesizevmodel}", sFileSize)"$)
+		End If
+		If sfiletypevmodel <> "" Then
+			AddCode(sbEvents, $"vue.SetData("${sfiletypevmodel}", sFileType)"$)
+		End If
+		
+		'updatevmodel
+		Select Case sAction
+			Case "upload"
+				AddComment(sbEvents, "start uploading the file")
+				AddCode(sbEvents, $"Dim fd As BANanoObject"$)
+				AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
+				AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
+				AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
+				AddComment(sbEvents, "get the result of the upload")
+				AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
+				AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
+				AddCode(sbEvents, $"Select Case sResult"$)
+				AddCode(sbEvents, $"Case "success""$)
+				AddCode(sbEvents, $"sFileName = "./assets/" & sFileName"$)
+				If sfilenamevmodel <> "" Then
+					AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", sFileName)"$)
+				End If
+				AddCode(sbEvents, $"vm.ShowSnackBarSuccess(sFileName & " was uploaded successfully.")"$)
+				AddCode(sbEvents, $"Case "error""$)
+				If sfilenamevmodel <> "" Then
+					AddCode(sbEvents, $"vue.SetData("${sfilenamevmodel}", "")"$)
+				End If
+				AddCode(sbEvents, $"vm.ShowSnackBarError("An error was experienced uploading " & sFileName)"$)
+				AddCode(sbEvents, $"End Select"$)
+			Case "readAsText", "readAsBinaryString", "readAsDataURL", "readAsArrayBuffer", "readExcel"
+				Select Case sAction
+					Case "readExcel"
+						AddComment(sbEvents, $"Read the file contents using 'readAsBinaryString'"$)
+						AddCode(sbEvents, $"Dim Result As Map"$)
+						AddCode(sbEvents, $"Dim promise As BANanoPromise = vm.readAsBinaryString(fileO)"$)
+						AddCode(sbEvents, $"promise.Then(Result)"$)
+						AddComment(sbEvents, "we have received the file contents, lets assign to a string")
+						AddCode(sbEvents, $"Dim strReadAsBinaryString As String = Result.get("result")"$)
+						AddComment(sbEvents, "process the file contents here, read the first worksheet from first row")
+						AddCode(sbEvents, $"Dim be As BANanoOXML"$)
+						AddCode(sbEvents, $"be.Initialize("")"$)
+						AddCode(sbEvents, $"Dim xlsRows As List = be.ReadFile(strReadAsBinaryString)"$)
+						AddComment(sbEvents, "process the excel rows")
+						AddNewLine(sbEvents)
+					Case Else
+						AddComment(sbEvents, $"Read the file contents using '${sAction}'"$)
+						AddCode(sbEvents, $"Dim Result As Map"$)
+						AddCode(sbEvents, $"Dim promise As BANanoPromise = vm.${sAction}(fileO)"$)
+						AddCode(sbEvents, $"promise.Then(Result)"$)
+						AddComment(sbEvents, "we have received the file contents, lets assign to a string")
+						AddCode(sbEvents, $"Dim str${sAction} As String = Result.get("result")"$)
+						AddComment(sbEvents, "process the file contents here...")
+						AddNewLine(sbEvents)
+				End Select
+				AddCode(sbEvents, $"promise.Else(Result)"$)
+				AddComment(sbEvents, "there has been an error")
+				AddCode(sbEvents, $"Dim fileError As String = Result.get("result")"$)
+				AddCode(sbEvents, $"vm.ShowSnackBarSuccess(fileError)"$)
+				AddCode(sbEvents, $"promise.End"$)
+		End Select
+		'
+		'AddComment(sbEvents, "nullify the selector - enable to process the same file!")
+		'AddCode(sbEvents, $"vm.NullifyFileSelect("fs${sname}")"$)	'
+		AddCode(sbEvents, $"End Sub"$)
+		AddNewLine(sbEvents)
+		Return
+	End If
+	'we are processing multiple files
+	AddNewLine(sbEvents)
+	AddInstruction(sbEvents, "<Your Module>", "Process_Globals", "")
+	AddCode(sbEvents, "Private numFiles As Int")
+	AddCode(sbEvents, "Private totFiles As Int")
+	AddCode(sbEvents, "Private fl As List")
+	AddNewLine(sbEvents)
+	'
+	AddComment(sbEvents, "we are uploading multiple files")
+		AddCode(sbEvents, $"Private Sub fi${sname}_change(fileList As List)"$)
+		AddCode(sbEvents, $"If fileList = Null Then Return"$)
+		AddComment(sbEvents, "write code to process the files after select")
+		AddCode(sbEvents, "numFiles = 0")
+		AddComment(sbEvents, "store list of files uploaded")
+		AddCode(sbEvents, "fl.Initialize")
+		AddComment(sbEvents, "start uploading file, how many times we need")
+		AddCode(sbEvents, "totFiles = fileList.Size")
+		AddCode(sbEvents, "For Each fileO As Object In fileList")
+		AddComment(sbEvents, "get the file object and add it to list")
+		AddCode(sbEvents, "Dim fde As FileObject = vue.GetFileDetails(fileO)")
+		AddCode(sbEvents, "fl.Add(fde)")
+		AddComment(sbEvents, "upload each file")
+		AddCode(sbEvents, $"Dim fd As BANanoObject"$)
+		AddCode(sbEvents, $"fd.Initialize2("FormData", Null)"$)
+		AddCode(sbEvents, $"fd.RunMethod("append", Array("upload", fileO))"$)
+		AddCode(sbEvents, $"Dim rsltJSON As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)"$)
+		AddComment(sbEvents, "get the result of the upload")
+		AddCode(sbEvents, $"Dim rsltMap As Map = BANano.FromJson(rsltJSON)"$)
+		AddCode(sbEvents, $"Dim sResult As String = rsltMap.get("status")"$)
+		AddCode(sbEvents, $"Select Case sResult"$)
+		AddCode(sbEvents, $"Case "success""$)
+		AddComment(sbEvents, "count files uploaded")
+		AddCode(sbEvents, "numFiles = numFiles + 1")
+		AddCode(sbEvents, $"Case "error""$)
+		AddCode(sbEvents, "End Select")	
+		AddCode(sbEvents, "Next")
+		'determine uploaded and all files
+		AddComment(sbEvents, "detect uploaded files")
+		AddCode(sbEvents, "if totFiles = numFiles Then")
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("All " & totFiles & " were uploaded successfully.")"$)
+		AddCode(sbEvents, "else")
+		AddCode(sbEvents, $"vm.ShowSnackBarError(numFiles & " of " & totFiles & " were uploaded successfully. Please retry.")"$)
+		AddCode(sbEvents, "end if")
+	
+	AddCode(sbEvents, "End Sub")	
+End Sub
+

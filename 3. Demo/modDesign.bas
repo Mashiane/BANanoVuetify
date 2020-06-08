@@ -66,8 +66,8 @@ Sub Code
 	Dim pwd As VMTextField = vm.NewPassword(Me, True, "pwd1", "pwd1", "Password", "Enter your password!", True, True, "mdi-lock", 10, "Password","", 0).SetDevicePositions(5, 1, 12, 6, 6, 6)
 	cont.AddControl1(pwd.TextFIeld, pwd.ToString)
 	'
-	Dim fi As VMTextField = vm.NewFileInput(Me, True, False, "fileinput", "fileinput", "Select your file!", "Enter a file", True, "This is a file!", "", 0).SetDevicePositions(5, 2, 12, 6, 6, 6)
-	cont.AddControl1(fi.TextField, fi.ToString)
+	Dim fi As VMFileInput = vm.NewFileInput(Me, True, False, "fileinput", "fileinput", "Select your file!", "Enter a file", True, "This is a file!", "", 0).SetDevicePositions(5, 2, 12, 6, 6, 6)
+	cont.AddControl1(fi.FileInput, fi.ToString)
 	'
 	Dim img As VMImage = vm.NewImage(Me, True, "image", "image", "./assets/sponge.png", "Sponge", "100", "100").SetDevicePositions(6, 1, 12, 6, 6, 6)
 	img.SetBorderRadius("10px")

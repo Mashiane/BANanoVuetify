@@ -232,7 +232,7 @@ End Sub
 
 'get the table names
 Sub TableNames(rs As BANanoSQLiteRecordSet) As BANanoSQLiteR2
-	rs.query = "SELECT * FROM sqlite_master WHERE type='table' ORDER BY name"
+	rs.query = "SELECT name FROM sqlite_master WHERE type='table' AND name Not LIKE 'sqlite_%' ORDER BY name"
 	Prepare(rs)
 	FromJSON(rs)
 	Return Me

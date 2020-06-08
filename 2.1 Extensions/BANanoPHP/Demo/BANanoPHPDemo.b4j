@@ -1,0 +1,64 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananophp
+NumberOfFiles=0
+NumberOfLibraries=4
+NumberOfModules=0
+Version=8.3
+@EndOfDesignText@
+#IgnoreWarnings: 12, 15
+#Region Project Attributes 
+	#MergeLibraries: True
+	#LibraryAuthor: Anele Mashy Mbanga
+	#LibraryName: BANanoPHPDemo
+#End Region
+
+Sub Process_Globals
+	Public BANano As BANano 'ignore
+	Public AppName As String = "BANanoPHPDemo"
+	Public AppTitle As String = "BANanoPHPDemo"
+	Private Publish As String = "C:\laragon\www"
+	Public ServerIP As String = "localhost"
+	Public Version As String = "1.00"
+	Public Port As String = "8080"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'initialize banano for first use
+	BANano.Initialize("BANano", AppName, DateTime.now)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppTitle
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	BANano.TranspilerOptions.MinifyOnline = False
+	
+	
+	'set php settings
+	BANano.PHP_NAME = $"${AppName}.php"$
+	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")	
+	'
+	BANano.Build(Publish)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+
+Sub BANano_Ready
+	Dim bPHP As BANanoPHP
+	bPHP.Initialize
+	'get directory listing
+	Dim assetsList As String = BANano.CallInlinePHPWait(bPHP.DIRECTORY_LIST, bPHP.BuildDirectoryList("./"))
+	Dim dl As BANAnoPHPDirList = bPHP.GetDirectoryList(assetsList)
+	BANano.GetElement("body").Append(assetsList)
+	Log(dl)
+End Sub

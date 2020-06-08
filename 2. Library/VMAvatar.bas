@@ -56,13 +56,25 @@ Sub SetBadge(scontent As String) As VMAvatar
 	Badge.SetContent(scontent)
 	Badge.SetBordered(True)
 	Badge.SetOverlap(True)
-	Badge.SetDark(True)
 	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
 	Badge.SetAvatar(True)
 	Badge.SetIcon("")
 	Badge.SetDot(False)
 	Return Me
 End Sub
+
+
+Sub SetOnClick(EventHandler As Object, methodName As String) As VMAvatar
+	methodName = methodName.tolowercase
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
 
 Sub SetHasBadge(b As Boolean) As VMAvatar
 	hasBadge = b

@@ -62,7 +62,6 @@ Sub SetBadge(bvalue As String) As VMButton
 	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
 	Badge.SetAvatar(True)
 	Badge.SetIcon("")
-	Badge.SetDark(True)
 	Badge.SetDot(False)
 	Return Me
 End Sub
@@ -81,6 +80,20 @@ Sub SetStatic(b As Boolean) As VMButton
 	tmpl.setstatic(b)
 	span.SetStatic(b)
 	Badge.SetStatic(b)
+	Return Me
+End Sub
+
+
+'set size
+Sub SetSize(varSize As String) As VMButton
+	If varSize = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("size", varSize)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Size"$
+	vue.SetStateSingle(pp, varSize)
+	Button.Bind(":size", pp)
 	Return Me
 End Sub
 

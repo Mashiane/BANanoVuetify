@@ -44,7 +44,6 @@ Sub AddSearch(key As String) As VMCardTitle
 	Return Me
 End Sub
 
-
 Sub SetAttrLoose(loose As String) As VMCardTitle
 	CardTitle.SetAttrLoose(loose)
 	Return Me
@@ -112,6 +111,20 @@ Sub AddButtonIcon(key As String, iconName As String, iconColor As String, toolTi
 	CardTitle.SetText(btn.tostring)
 	Return Me
 End Sub
+
+Sub AddIcon(key As String, iconName As String, iconColor As String, iconSize As String) As VMCardTitle
+	key = key.tolowercase
+	Dim btn As VMIcon
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetText(iconName)
+	btn.SetColor(iconColor)
+	btn.SetSize(iconSize)
+	CardTitle.SetText(btn.tostring)
+	Return Me
+End Sub
+
 
 Sub AddMenu(menu As VMMenu) As VMCardTitle
 	AddComponent(menu.ToString)

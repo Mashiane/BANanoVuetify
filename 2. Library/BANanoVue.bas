@@ -724,6 +724,36 @@ End Sub
         }; 
 #End If
 
+'double quote each item of the mv
+Sub MVQuoteItems(delim As String, mvstring As String) As String
+	Dim sbOut As StringBuilder
+	sbOut.Initialize 
+	Dim lItems As List = StrParse(delim, mvstring)
+	For Each k As String In lItems
+		k = CStr(k)
+		k = k.Trim
+		sbOut.Append($""${k}""$).Append(delim)
+	Next
+	Dim sout As String = sbOut.ToString
+	sout = RemDelim(sout, delim)
+	Return sout
+End Sub
+
+'double quote each item of the mv
+Sub MVSingleQuoteItems(delim As String, mvstring As String) As String
+	Dim sbOut As StringBuilder
+	sbOut.Initialize 
+	Dim lItems As List = StrParse(delim, mvstring)
+	For Each k As String In lItems
+		k = CStr(k)
+		k = k.Trim
+		sbOut.Append($"'${k}'"$).Append(delim)
+	Next
+	Dim sout As String = sbOut.ToString
+	sout = RemDelim(sout, delim)
+	Return sout
+End Sub
+
 
 'format the text
 Sub FormatText(sText As String) As String
@@ -3663,7 +3693,7 @@ Sub Unflatten(tdata As List, childname As String) As List
 	Return tree
 End Sub
 
-public Sub readAsText(fr As String) As BANanoPromise
+public Sub readAsText(fr As Map) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload
@@ -3671,7 +3701,7 @@ public Sub readAsText(fr As String) As BANanoPromise
 	Return promise
 End Sub
 
-Sub readAsBinaryString(fr As String) As BANanoPromise
+Sub readAsBinaryString(fr As Map) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload
@@ -3679,7 +3709,7 @@ Sub readAsBinaryString(fr As String) As BANanoPromise
 	Return promise
 End Sub
 
-Sub readAsDataURL(fr As String) As BANanoPromise
+Sub readAsDataURL(fr As Map) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload
@@ -3687,7 +3717,7 @@ Sub readAsDataURL(fr As String) As BANanoPromise
 	Return promise
 End Sub
 
-Sub readAsArrayBuffer(fr As String) As BANanoPromise
+Sub readAsArrayBuffer(fr As Map) As BANanoPromise
 	Dim promise As BANanoPromise 'ignore
 		
 	' calling a single upload

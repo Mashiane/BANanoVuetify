@@ -11,7 +11,8 @@ Sub Class_Globals
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
-	Private Module As Object   'ignore
+	Private Module As Object      'ignore
+	Private bStatic As Boolean
 End Sub
 
 'initialize the Sparkline
@@ -19,9 +20,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	Sparkline.Initialize(v, ID)
 	Sparkline.SetTag("v-sparkline")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
@@ -57,8 +59,8 @@ Sub AddChild(child As VMElement) As VMSparkLine
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMSparkLine
+'set text - built-in
+Sub SetText(t As String) As VMSparkLine
 	Sparkline.SetText(t)
 	Return Me
 End Sub
@@ -69,19 +71,19 @@ Sub Pop(p As VMElement)
 End Sub
 
 'add a class
-Sub AddClass(c As String) As VMSparkline
+Sub AddClass(c As String) As VMSparkLine
 	Sparkline.AddClass(c)
 	Return Me
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMSparkline
+Sub SetAttr(attr As Map) As VMSparkLine
 	Sparkline.SetAttr(attr)
 	Return Me
 End Sub
 
 'set style
-Sub SetStyle(sm As Map) As VMSparkline
+Sub SetStyle(sm As Map) As VMSparkLine
 	Sparkline.SetStyle(sm)
 	Return Me
 End Sub
@@ -93,112 +95,91 @@ Sub AddChildren(children As List)
 	Next
 End Sub
 
-'set auto-draw
-Sub SetAutoDraw(varAutoDraw As Object) As VMSparkline
-	Dim pp As String = $"${ID}AutoDraw"$
-	vue.SetStateSingle(pp, varAutoDraw)
-	Sparkline.Bind(":auto-draw", pp)
+'set value
+Sub SetValue(varValue As List) As VMSparkLine
+	If bStatic Then	Return Me
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	Sparkline.Bind(":value", pp)
 	Return Me
 End Sub
 
-'set auto-draw-duration
-Sub SetAutoDrawDuration(varAutoDrawDuration As Object) As VMSparkline
-	Dim pp As String = $"${ID}AutoDrawDuration"$
-	vue.SetStateSingle(pp, varAutoDrawDuration)
-	Sparkline.Bind(":auto-draw-duration", pp)
-	Return Me
-End Sub
-
-'set auto-draw-easing
-Sub SetAutoDrawEasing(varAutoDrawEasing As Object) As VMSparkLine
-	Dim pp As String = $"${ID}AutoDrawEasing"$
-	vue.SetStateSingle(pp, varAutoDrawEasing)
-	Sparkline.Bind(":auto-draw-easing", pp)
-	Return Me
-End Sub
-
-'set auto-line-width
-Sub SetAutoLineWidth(varAutoLineWidth As Object) As VMSparkLine
-	Dim pp As String = $"${ID}AutoLineWidth"$
-	vue.SetStateSingle(pp, varAutoLineWidth)
-	Sparkline.Bind(":auto-line-width", pp)
-	Return Me
-End Sub
-
-'set color
-Sub SetColor(varColor As Object) As VMSparkLine
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, varColor)
-	Sparkline.Bind(":color", pp)
-	Return Me
-End Sub
-
-'set fill
-Sub SetFill(varFill As Object) As VMSparkLine
-	Dim pp As String = $"${ID}Fill"$
-	vue.SetStateSingle(pp, varFill)
-	Sparkline.Bind(":fill", pp)
-	Return Me
-End Sub
-
-'set gradient
-Sub SetGradient(varGradient As Object) As VMSparkLine
-	Dim pp As String = $"${ID}Gradient"$
-	vue.SetStateSingle(pp, varGradient)
-	Sparkline.Bind(":gradient", pp)
-	Return Me
-End Sub
-
-'set gradient-direction
-Sub SetGradientDirection(varGradientDirection As Object) As VMSparkLine
-	Dim pp As String = $"${ID}GradientDirection"$
-	vue.SetStateSingle(pp, varGradientDirection)
-	Sparkline.Bind(":gradient-direction", pp)
-	Return Me
-End Sub
-
-'set height
-Sub SetHeight(varHeight As Object) As VMSparkLine
-	Dim pp As String = $"${ID}Height"$
-	vue.SetStateSingle(pp, varHeight)
-	Sparkline.Bind(":height", pp)
-	Return Me
-End Sub
-
-'set label-size
-Sub SetLabelSize(varLabelSize As Object) As VMSparkLine
-	Dim pp As String = $"${ID}LabelSize"$
-	vue.SetStateSingle(pp, varLabelSize)
-	Sparkline.Bind(":label-size", pp)
+'set stroke line cap
+Sub SetStrokeLineCap(varValue As String) As VMSparkLine
+	If varValue = "" Then Return Me
+	If bStatic Then	
+		SetAttrSingle("stroke-linecap", varValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}StrokeLineCap"$
+	vue.SetStateSingle(pp, varValue)
+	Sparkline.Bind(":stroke-linecap", pp)
 	Return Me
 End Sub
 
 'set labels
-Sub SetLabels(varLabels As Object) As VMSparkLine
+Sub SetLabels(varLabels As List) As VMSparkLine
+	If bStatic Then	Return Me
 	Dim pp As String = $"${ID}Labels"$
 	vue.SetStateSingle(pp, varLabels)
 	Sparkline.Bind(":labels", pp)
 	Return Me
 End Sub
 
-'set line-width
-Sub SetLineWidth(varLineWidth As Object) As VMSparkLine
-	Dim pp As String = $"${ID}LineWidth"$
-	vue.SetStateSingle(pp, varLineWidth)
-	Sparkline.Bind(":line-width", pp)
+'set gradient
+Sub SetGradient(varGradient As List) As VMSparkLine
+	If bStatic Then Return Me
+	Dim pp As String = $"${ID}Gradient"$
+	vue.SetStateSingle(pp, varGradient)
+	Sparkline.Bind(":gradient", pp)
 	Return Me
 End Sub
 
-'set padding
-Sub SetPadding(varPadding As Object) As VMSparkLine
-	Dim pp As String = $"${ID}Padding"$
-	vue.SetStateSingle(pp, varPadding)
-	Sparkline.Bind(":padding", pp)
+'set auto-draw
+Sub SetAutoDraw(varAutoDraw As Boolean) As VMSparkLine
+	If varAutoDraw = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("auto-draw", varAutoDraw)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}AutoDraw"$
+	vue.SetStateSingle(pp, varAutoDraw)
+	Sparkline.Bind(":auto-draw", pp)
+	Return Me
+End Sub
+
+'set auto-line-width
+Sub SetAutoLineWidth(varAutoLineWidth As Boolean) As VMSparkLine
+	If varAutoLineWidth = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("auto-line-width", varAutoLineWidth)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}AutoLineWidth"$
+	vue.SetStateSingle(pp, varAutoLineWidth)
+	Sparkline.Bind(":auto-line-width", pp)
+	Return Me
+End Sub
+
+'set fill
+Sub SetFill(varFill As Boolean) As VMSparkLine
+	If bStatic Then
+		SetAttrSingle("fill", varFill)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Fill"$
+	vue.SetStateSingle(pp, varFill)
+	Sparkline.Bind(":fill", pp)
 	Return Me
 End Sub
 
 'set show-labels
-Sub SetShowLabels(varShowLabels As Object) As VMSparkLine
+Sub SetShowLabels(varShowLabels As Boolean) As VMSparkLine
+	If varShowLabels = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-labels", varShowLabels)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ShowLabels"$
 	vue.SetStateSingle(pp, varShowLabels)
 	Sparkline.Bind(":show-labels", pp)
@@ -206,38 +187,155 @@ Sub SetShowLabels(varShowLabels As Object) As VMSparkLine
 End Sub
 
 'set smooth
-Sub SetSmooth(varSmooth As Object) As VMSparkLine
+Sub SetSmooth(varSmooth As Boolean) As VMSparkLine
+	If varSmooth = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("smooth", varSmooth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Smooth"$
 	vue.SetStateSingle(pp, varSmooth)
 	Sparkline.Bind(":smooth", pp)
 	Return Me
 End Sub
 
+'set auto-draw-duration
+Sub SetAutoDrawDuration(varAutoDrawDuration As String) As VMSparkLine
+	If varAutoDrawDuration = "" Then Return Me
+	If varAutoDrawDuration = "2000" Then Return Me
+	If bStatic Then
+		SetAttrSingle("auto-draw-duration", varAutoDrawDuration)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}AutoDrawDuration"$
+	vue.SetStateSingle(pp, varAutoDrawDuration)
+	Sparkline.Bind(":auto-draw-duration", pp)
+	Return Me
+End Sub
+
+'set auto-draw-easing
+Sub SetAutoDrawEasing(varAutoDrawEasing As String) As VMSparkLine
+	If varAutoDrawEasing = "" Then Return Me
+	If varAutoDrawEasing = "ease" Then Return Me
+	If bStatic Then
+		SetAttrSingle("auto-draw-easing", varAutoDrawEasing)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}AutoDrawEasing"$
+	vue.SetStateSingle(pp, varAutoDrawEasing)
+	Sparkline.Bind(":auto-draw-easing", pp)
+	Return Me
+End Sub
+
+'set color
+Sub SetColor(varColor As String) As VMSparkLine
+	If varColor = "" Then Return Me
+	If varColor = "primary" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, varColor)
+	Sparkline.Bind(":color", pp)
+	Return Me
+End Sub
+
+'set gradient-direction
+Sub SetGradientDirection(varGradientDirection As String) As VMSparkLine
+	If varGradientDirection = "" Then Return Me
+	If varGradientDirection = "top" Then Return Me
+	If bStatic Then
+		SetAttrSingle("gradient-direction", varGradientDirection)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}GradientDirection"$
+	vue.SetStateSingle(pp, varGradientDirection)
+	Sparkline.Bind(":gradient-direction", pp)
+	Return Me
+End Sub
+
+'set height
+Sub SetHeight(varHeight As String) As VMSparkLine
+	If varHeight = "" Then Return Me
+	If varHeight = "75" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Height"$
+	vue.SetStateSingle(pp, varHeight)
+	Sparkline.Bind(":height", pp)
+	Return Me
+End Sub
+
+'set label-size
+Sub SetLabelSize(varLabelSize As String) As VMSparkLine
+	If varLabelSize = "" Then Return Me
+	If varLabelSize = "7" Then Return Me
+	If bStatic Then
+		SetAttrSingle("label-size", varLabelSize)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LabelSize"$
+	vue.SetStateSingle(pp, varLabelSize)
+	Sparkline.Bind(":label-size", pp)
+	Return Me
+End Sub
+
+'set line-width
+Sub SetLineWidth(varLineWidth As String) As VMSparkLine
+	If varLineWidth = "" Then Return Me
+	If varLineWidth = "4" Then Return Me
+	If bStatic Then
+		SetAttrSingle("line-width", varLineWidth)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LineWidth"$
+	vue.SetStateSingle(pp, varLineWidth)
+	Sparkline.Bind(":line-width", pp)
+	Return Me
+End Sub
+
+'set padding
+Sub SetPadding(varPadding As String) As VMSparkLine
+	If varPadding = "" Then Return Me
+	If varPadding = "8" Then Return Me
+	If bStatic Then
+		SetAttrSingle("padding", varPadding)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Padding"$
+	vue.SetStateSingle(pp, varPadding)
+	Sparkline.Bind(":padding", pp)
+	Return Me
+End Sub
+
 'set type
-Sub SetType(varType As Object) As VMSparkLine
+Sub SetType(varType As String) As VMSparkLine
+	If varType = "" Then Return Me
+	If varType = "trend" Then Return Me
+	If bStatic Then
+		SetAttrSingle("type", varType)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Type"$
 	vue.SetStateSingle(pp, varType)
 	Sparkline.Bind(":type", pp)
 	Return Me
 End Sub
 
-'set value
-Sub SetValue(varValue As Object) As VMSparkLine
-	Sparkline.SetValue(varValue, False)
-	Return Me
-End Sub
-
 'set width
-Sub SetWidth(varWidth As Object) As VMSparkLine
+Sub SetWidth(varWidth As String) As VMSparkLine
+	If varWidth = "" Then Return Me
+	If varWidth = "300" Then Return Me
+	If bStatic Then
+		SetAttrSingle("width", varWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Width"$
 	vue.SetStateSingle(pp, varWidth)
 	Sparkline.Bind(":width", pp)
-	Return Me
-End Sub
-
-'
-Sub SetSlotLabel(b As Boolean) As VMSparkLine    'ignore
-	SetAttr(CreateMap("slot": "label"))
 	Return Me
 End Sub
 
@@ -250,19 +348,19 @@ End Sub
 
 'show the component
 Sub Show As VMSparkLine
-	SparkLine.SetVisible(True)
+	Sparkline.SetVisible(True)
 	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMSparkLine
-	SparkLine.Enable(True)
+	Sparkline.Enable(True)
 	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMSparkLine
-	SparkLine.Disable(True)
+	Sparkline.Disable(True)
 	Return Me
 End Sub
 
@@ -293,9 +391,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSparkLine
+Sub SetColorIntensity(color As String, intensity As String) As VMSparkLine
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Sparkline.Bind(":color", pp)
 	Return Me
@@ -326,6 +429,13 @@ Sub SetDesignMode(b As Boolean) As VMSparkLine
 	Return Me
 End Sub
 
+'set static
+Sub SetStatic(b As Boolean) As VMSparkLine
+	Sparkline.SetStatic(b)
+	bStatic = b
+	Return Me
+End Sub
+
 'set tab index
 Sub SetTabIndex(ti As String) As VMSparkLine
 	Sparkline.SetTabIndex(ti)
@@ -333,7 +443,7 @@ Sub SetTabIndex(ti As String) As VMSparkLine
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMSparkLine
+Sub SetName(varName As String, bbind As Boolean) As VMSparkLine
 	Sparkline.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -435,27 +545,14 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
-Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSparkLine
-SparkLine.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMSparkLine
-SparkLine.SetVisible(b)
-Return Me
-End Sub
 
-'set color intensity
-Sub SetTextColor(varColor As String) As VMSparkLine
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSparkLine
+	Sparkline.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSparkLine
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+
+Sub SetVisible(b As Boolean) As VMSparkLine
+	Sparkline.SetVisible(b)
 	Return Me
 End Sub

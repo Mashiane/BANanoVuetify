@@ -8,11 +8,10 @@ Library4=bananovuetifycore
 Module1=BANanoAlaSQLE
 Module2=BANanoMSSQLE
 Module3=BANanoMySQLE
-Module4=BANanoPHP
-Module5=BANanoSQLiteE
+Module4=BANanoSQLiteE
 NumberOfFiles=0
 NumberOfLibraries=4
-NumberOfModules=5
+NumberOfModules=4
 Version=8.3
 @EndOfDesignText@
 '
@@ -25,7 +24,7 @@ Version=8.3
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyConnect"
-	Public Version As String = "1.12"
+	Public Version As String = "1.13"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

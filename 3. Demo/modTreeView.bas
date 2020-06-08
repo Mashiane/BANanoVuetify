@@ -39,20 +39,19 @@ Sub Code
 	tv.AddItem("11", "12", "v-btn : ts", "", "", False)
 	tv.AddItem("11", "13", "v-card : ts", "", "", False)
 	tv.AddItem("11", "14", "v-window : ts", "", "", False)
+	tv.SetOnInput("tv1_oninput")
 	'
 	tv.AddToContainer(cont, 1, 1)
 	'
-	cont.AddLabel(1, 2, "lblx2","p", $"{{ ${tv.GetActive} }}"$)
+	cont.AddLabel(1, 2, "lblx2","p", $"{{ tv1selected }}"$)
 	
 	'add container to page
 	vm.AddContainer(cont)
+	vm.setdata("tv1selected", "")
 End Sub
 
 Sub tv1_oninput(items As List)
-	If items = Null Then Return 
-	Dim thisNode As Map = items.Get(0)
-	If thisNode = Null Then Return
-	
-	vm.ShowSnackBar("Selected: " & BANano.ToJson(thisNode))
+	Dim sCode As String = BANano.tojson(items)
+	vm.setdata("tv1selected", sCode)
 End Sub
 

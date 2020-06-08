@@ -31,6 +31,18 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetOnClick(EventHandler As Object, methodName As String) As VMIcon
+	methodName = methodName.tolowercase
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
 Sub SetVOnce(t As Boolean) As VMIcon
 	Icon.setvonce(t)
 	Return Me
@@ -43,7 +55,6 @@ Sub SetBadge(scontent As String) As VMIcon
 	Badge.SetColorIntensity(vue.COLOR_CYAN, vue.INTENSITY_NORMAL)
 	Badge.SetAvatar(True)
 	Badge.SetIcon("")
-	Badge.SetDark(True)
 	Badge.SetDot(False)
 	Return Me
 End Sub
@@ -64,17 +75,6 @@ End Sub
 Sub SetCenterOnParent(b As Boolean) As VMIcon
 	If b = False Then Return Me
 	Icon.CenterOnParent = True
-	Return Me
-End Sub
-
-Sub SetOnClick(methodName As String) As VMIcon
-	methodName = methodName
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttrSingle("@click", methodName)
-	'add to methods
-	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
 
@@ -172,6 +172,11 @@ End Sub
 Sub AddChild(child As VMElement) As VMIcon
 	Dim childHTML As String = child.ToString
 	Icon.SetText(childHTML)
+	Return Me
+End Sub
+
+Sub SetIcon(t As String) As VMIcon
+	SetText(t)
 	Return Me
 End Sub
 
