@@ -86,6 +86,7 @@ Sub SetStatic(b As Boolean) As VMToolBar
 	Hamburger.setstatic(b)
 	Extension.setstatic(b)
 	Tabs.SetStatic(b)
+	Title.SetStatic(b)
 	Logo.SetStatic(b)
 	Return Me
 End Sub
@@ -968,6 +969,7 @@ Sub SetDesignMode(b As Boolean) As VMToolBar
 	Extension.SetDesignMode(b)
 	Tabs.SetDesignMode(b)
 	Logo.SetDesignMode(b)
+	Title.SetDesignMode(b)
 	Return Me
 End Sub
 

@@ -184,7 +184,7 @@ End Sub
 
 'get table names
 Sub GetTableNames As BANanoMySQLE
-	query = $"select table_name from information_schema.tables where table_schema = '${DBase}'"$
+	query = $"select table_name from information_schema.tables where table_schema = '${DBase}' order by table_name"$
 	command = "select"
 	Return Me
 End Sub

@@ -13,6 +13,6 @@ ModuleClosedNodes1=
 ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
-NavigationStack=BANanoMySQLE,NewList,126,0,BANanoMySQLE,SelectWhere1,121,0,BANanoMySQLE,Class_Globals,25,0,BANanoMySQLE,UpdateAll,1253,0,Main,BANano_Ready,33,0,Main,Process_Globals,9,0,Main,AppStart,21,0
+NavigationStack=BANanoMSSQLE,Execute,517,0,BANanoMSSQLE,Class_Globals,1,0,BANanoMSSQLE,UpdateAll,1057,0,BANanoMSSQLE,GetTableStructure,123,0,BANanoMSSQLE,Initialize,414,0,BANanoSQLiteE,Initialize,176,0,BANanoSQLiteE,GetTableNames,62,0,BANanoMySQLE,Initialize,224,0,BANanoMSSQLE,GetTableNames,117,1,BANanoMSSQLE,SelectWhere1,108,0
 SelectedBuild=0
 VisibleModules=

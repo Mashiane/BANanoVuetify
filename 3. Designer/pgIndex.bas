@@ -7,6 +7,25 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private sActiveclass As String
+	Private sBackgroundcolor As String
+	Private sBackgroundcolorintensity As String
+	Private bisBorderless As Boolean
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private bisDense As Boolean
+	Private bisGroup As Boolean
+	Private bisLight As Boolean
+	Private bisMandatory As Boolean
+	Private sMax As String
+	Private bisMultiple As Boolean
+	Private bisRounded As Boolean
+	Private bisShaped As Boolean
+	Private sTabindex As String
+	Private bisTile As Boolean
+	Private bisVisible As Boolean
+Private pbbuttontoggle As VMProperty
 	Private SQLite As BANanoSQLiteR2
 	Private svalue As String
 	Private sgradient As String
@@ -429,7 +448,7 @@ Private sWidth As String
 	'
 	Private ssearchkey As String 
 	Private stoolbarsubtitle As String
-	Private bistitle As Boolean
+	Private bisTitle As Boolean
 	Private bissubtitle As Boolean
 	Private bissearch As Boolean
 	Private sextensionheight As String
@@ -443,7 +462,7 @@ Private sWidth As String
 	Private bishamburger As Boolean
 	Private bisHamburgervisible As Boolean
 	Private biscurrent As Boolean
-	Private bisflat As Boolean
+	Private bisFlat As Boolean
 	Private bisabsolute As Boolean
 	Private bisclippedleft As Boolean
 	Private bisclippedright As Boolean
@@ -568,7 +587,7 @@ Private sWidth As String
 	Private bisheadline As Boolean
 	Private bisitalic As Boolean
 	Private bisoverline As Boolean
-	Private bisrequired As Boolean
+	Private bisRequired As Boolean
 	Private bissubtitle1 As Boolean
 	Private bissubtitle2 As Boolean
 	Private bistextcapitalize As Boolean
@@ -1605,6 +1624,7 @@ Sub CreatePropertyBagsDrawer
 	PropertyBag_TimeLineItem
 	PropertyBag_SparkLine
 	PropertyBag_FileInput
+	PropertyBag_ButtonToggle
 	'
 	vm.AddDrawer(drwbags)
 End Sub
@@ -1643,8 +1663,8 @@ End Sub
 Sub dbtype_change(chosen As String)
 	vm.SetBadgeContent("btnDbConnect", "0")
 	vm.ShowItem("btnDbConnect")
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
+	'vm.HideItem("btnDbCreate")
+	'vm.HideItem("btnDbDelete")
 	vm.HideItem("btnDbImport")
 	Select Case chosen
 	Case "banano", "sqlite"
@@ -1701,6 +1721,8 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	vue.setdata("selectedtable", "")
 	tbltoolbar2.UpdateTitle("Database")
 	vue.hideitem("tbltransfer")
+	vm.setdata("currenttables", vue.newlist)
+	vue.setdata("tablestotransfer", vue.newmap)
 	contdbadmin.Show
 	tabs.Hide
 	
@@ -1721,8 +1743,8 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	sdbpassword = Record.get("dbpassword")
 	sdbhost = Record.get("dbhost")
 	'
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
+	'vm.HideItem("btnDbCreate")
+	'vm.HideItem("btnDbDelete")
 	'
 	If sdatabasename.Contains("/") Then
 		Dim sSuffix As String = vue.mvfield(sdatabasename,-1,"/")
@@ -1730,7 +1752,70 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	End If
 	
 	Select Case sdbtype
+	Case "mssql"
+		tvtables.clear
+		Dim rsMSSQL As BANanoMSSQLE
+		rsMSSQL.Initialize(sdatabasename, "", "", "")
+		rsMSSQL.SetConnection(sdbhost, sdbusername, sdbpassword)
+		rsMSSQL.GetTableNames
+		rsMSSQL.JSON = BANano.CallInlinePHPWait(rsMSSQL.MethodNameDynamic, rsMSSQL.BuildDynamic)
+		rsMSSQL.FromJSON
+		If rsMSSQL.OK = False Then
+			vm.ShowSnackBarError(rsMSSQL.Error)
+			Return
+		End If
+		vm.ShowSnackBarSuccess("Host connection was successful!")
+		'update the table count badge
+		Dim tTables As Int = rsMSSQL.Result.Size
+		tTables = BANano.parseint(tTables)
+		vm.SetBadgeContent("btnDbConnect", tTables)
+		If tTables = 0 Then
+			vm.SetBadgeColor("btnDbConnect", vue.COLOR_RED, vue.INTENSITY_NORMAL)
+		Else
+			vm.SetBadgeColor("btnDbConnect", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
+		End If
+			'
+		Dim lTables As Map = vue.newmap
+				
+		'get each tables
+		For Each Record As Map In rsMSSQL.result
+			Dim stable_name As String = Record.get("table_name")
+			'
+			'we need to find all the fields for this table
+			Dim rsFields1 As BANanoMSSQLE
+			rsFields1.Initialize(sdatabasename, stable_name, "", "")
+			rsFields1.SetConnection(sdbhost, sdbusername, sdbpassword)
+			rsFields1.GetTableStructure
+			rsFields1.JSON = BANano.CallInlinePHPWait(rsFields1.MethodNameDynamic, rsFields1.BuildDynamic)
+			rsFields1.FromJSON
+			
+			stable_name = stable_name.tolowercase
+			If rsFields1.OK Then
+				lTables.put(stable_name, rsFields1.ReSult)
+			Else
+				lTables.put(stable_name, vue.newlist)
+			End If
+		Next
+		'
+		'add to the tree
+		tvtables.AddItem("", sdatabasename, sdatabasename, "", "mdi-database", False)
+		For Each k As String In lTables.keys
+			Dim flds As List = lTables.get(k)
+			'add the table
+			Dim tKey As String = $"${sdatabasename}~${k}"$
+			tvtables.AddItem(sdatabasename, tKey, K, "", "mdi-table", False)
+			For Each fld As Map In flds
+				Dim sfld As String = fld.get("column_name")
+				Dim fldKey As String = $"${tKey}~${sfld}"$
+				tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
+			Next
+		Next
+		tvtables.Refresh
+		'save list of tables
+		vm.setdata("currenttables", lTables)
+		Return
 	Case "sqlite"
+		tvtables.clear
 		'check file existence
 		Dim bPHP As BANanoPHP
 		bPHP.Initialize
@@ -1741,6 +1826,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		End If	
 		SQLite.OpenDatabase(Me, "sqlite_opened", sdatabasename)
 	Case "mysql"
+		tvtables.clear
 		'connect to the db dynamically
 		Dim rsMySQL As BANanoMySQLE
 		rsMySQL.Initialize(sdatabasename, "", "", "")
@@ -1776,7 +1862,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		
 		If bFound = True Then
 			'it exists, we cannot create, we can delete
-			vm.ShowItem("btnDbDelete")
+			'vm.ShowItem("btnDbDelete")
 			
 			'			
 			Dim rsTables As BANanoMySQLE
@@ -1838,11 +1924,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 				'	save list of tables
 				vm.setdata("currenttables", lTables)
 			End If
-		Else
-			'does not exist, we can create
-			vm.ShowItem("btnDbCreate")
 		End If	
-	Case "mssql"
 	End Select
 End Sub
 
@@ -1919,8 +2001,8 @@ Sub btnDbCreate_click(e As BANanoEvent)
 	sdbpassword = Record.get("dbpassword")
 	sdbhost = Record.get("dbhost")
 	'
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
+	'vm.HideItem("btnDbCreate")
+	'vm.HideItem("btnDbDelete")
 	'
 	Select Case sdbtype
 		Case "mysql"
@@ -1968,8 +2050,8 @@ Sub btnDbDelete_click(e As BANanoEvent)
 End Sub
 
 Sub DeleteMySQL
-	vm.HideItem("btnDbCreate")
-	vm.HideItem("btnDbDelete")
+	'vm.HideItem("btnDbCreate")
+	'vm.HideItem("btnDbDelete")
 				
 	'connect to the db dynamically
 	Dim rsMySQL As BANanoMySQLE
@@ -2002,9 +2084,9 @@ Sub CreateProjectDrawer
 	ptbl.AddSpacer
 	ptbl.AddIcon1("btnDbImport", "mdi-plus", "", "Import SQLite Database","")
 	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","0")
-	ptbl.AddIcon1("btnDbCreate", "mdi-database-plus", "", "Create the database","")
-	ptbl.AddIcon1("btnDbDelete", "mdi-database-remove", "", "Delete the database","")
-	ptbl.AddIcon1("btnDbCode", "mdi-code-braces", "", "Connection Settings","")
+	'ptbl.AddIcon1("btnDbCreate", "mdi-database-plus", "", "Create the database","")
+	'ptbl.AddIcon1("btnDbDelete", "mdi-database-remove", "", "Delete the database","")
+	'ptbl.AddIcon1("btnDbCode", "mdi-code-braces", "", "Connection Settings","")
 	drwprojectdetails.Container.AddHtml(ptbl.tostring)
 	
 	'
@@ -2187,7 +2269,7 @@ Sub Read_Badge
 	sOffsety = mattr.getdefault("offsety", "")
 	sorigin = mattr.getdefault("origin", "")
 	bisOverlap = YesNoToBoolean(mattr.getdefault("isoverlap", "No"))
-	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 	stransition = mattr.getdefault("transition", "")
 End Sub
 
@@ -2632,6 +2714,9 @@ Sub CreateUX
 		bStatic = False
 		'
 		Select Case controltype
+			Case "buttontoggle"
+				Read_ButtonToggle
+				Design_ButtonToggle
 			Case "timeline"
 				Read_TimeLine
 				Design_TimeLine
@@ -2911,11 +2996,11 @@ Sub Read_Drawer
 	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
 	bisfloating = YesNoToBoolean(mattr.getdefault("isfloating", "No"))
 	bishideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
-	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bismini = YesNoToBoolean(mattr.getdefault("ismini", "No"))
 	bisminivariant = YesNoToBoolean(mattr.getdefault("isminivariant", "No"))
 	bispermanent = YesNoToBoolean(mattr.getdefault("ispermanent", "No"))
-	bisright = YesNoToBoolean(mattr.getdefault("isright", "No"))
+	bisRight = YesNoToBoolean(mattr.getdefault("isright", "No"))
 	bisslotappend = YesNoToBoolean(mattr.getdefault("isslotappend", "No"))
 	bisslotimg = YesNoToBoolean(mattr.getdefault("isslotimg", "No"))
 	bisstateless = YesNoToBoolean(mattr.getdefault("isstateless", "No"))
@@ -2945,18 +3030,18 @@ Sub Read_Menu
 	biscloseonclick = YesNoToBoolean(mattr.getdefault("iscloseonclick", "No"))
 	biscloseoncontentclick = YesNoToBoolean(mattr.getdefault("iscloseoncontentclick", "No"))
 	bisdisablekeys = YesNoToBoolean(mattr.getdefault("isdisablekeys", "No"))
-	bisdisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
 	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
 	bisinternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
-	bisleft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
-	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisLeft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bisoffsetoverflow = YesNoToBoolean(mattr.getdefault("isoffsetoverflow", "No"))
 	bisoffsetx = YesNoToBoolean(mattr.getdefault("isoffsetx", "No"))
 	bisoffsety = YesNoToBoolean(mattr.getdefault("isoffsety", "No"))
-	bisopenonclick = YesNoToBoolean(mattr.getdefault("isopenonclick", "No"))
+	bisOpenonclick = YesNoToBoolean(mattr.getdefault("isopenonclick", "No"))
 	bisopenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
-	bisright = YesNoToBoolean(mattr.getdefault("isright", "No"))
+	bisRight = YesNoToBoolean(mattr.getdefault("isright", "No"))
 	bisslotactivator = YesNoToBoolean(mattr.getdefault("isslotactivator", "No"))
 	bistop = YesNoToBoolean(mattr.getdefault("istop", "No"))
 	'
@@ -3936,33 +4021,33 @@ Sub Design_Select
 				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 				'
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			Else
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisrequired}, ${bismultiple}, "${splaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisreturnobject}, "${shelpertext}", "${serrortext}", ${stabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			End If
 	End Select
 	'
 	CodeLine(sb, svalue, "s", "sel", sname, "SetValue")
 	CodeLine(sb, siconname, "s", "sel", sname, "SetPrependIcon")
 	CodeLine(sb, sfieldtype, "s", "sel", sname, "SetFieldType")
-	CodeLine(sb, bissolo, "b", "sel", sname, "SetSolo")
-	CodeLine(sb, bisoutlined, "b", "sel", sname, "SetOutlined")
-	CodeLine(sb, bisfilled, "b", "sel", sname, "SetFilled")
-	CodeLine(sb, bisdense, "b", "sel", sname, "SetDense")
-	CodeLine(sb, bisautofocus, "b", "sel", sname, "SetAutoFocus")
-	CodeLine(sb, bissingleline, "b", "sel", sname, "SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "sel", sname, "SetPersistentHint")
-	CodeLine(sb, bisshaped, "b", "sel", sname, "SetShaped")
-	CodeLine(sb, bisloading, "b", "sel", sname, "SetLoading")
-	CodeLine(sb, bisflat, "b", "sel", sname, "SetFlat")
+	CodeLine(sb, bisSolo, "b", "sel", sname, "SetSolo")
+	CodeLine(sb, bisOutlined, "b", "sel", sname, "SetOutlined")
+	CodeLine(sb, bisFilled, "b", "sel", sname, "SetFilled")
+	CodeLine(sb, bisDense, "b", "sel", sname, "SetDense")
+	CodeLine(sb, bisAutofocus, "b", "sel", sname, "SetAutoFocus")
+	CodeLine(sb, bisSingleline, "b", "sel", sname, "SetSingleLine")
+	CodeLine(sb, bisPersistenthint, "b", "sel", sname, "SetPersistentHint")
+	CodeLine(sb, bisShaped, "b", "sel", sname, "SetShaped")
+	CodeLine(sb, bisLoading, "b", "sel", sname, "SetLoading")
+	CodeLine(sb, bisFlat, "b", "sel", sname, "SetFlat")
 	If sfloat <> "" Then
 		AddCode(sb, $"sel${sname}.AddClass("${sfloat}")"$)
 	End If
-	CodeLine(sb, bisrounded, "b", "sel", sname, "SetRounded")
+	CodeLine(sb, bisRounded, "b", "sel", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "sel", sname, "SetClearable")
-	CodeLine(sb, bishidedetails, "b", "sel", sname, "SetHideDetails")
-	CodeLine(sb, bischips, "b", "sel", sname, "SetChips")
-	CodeLine(sb, bissmallchips, "b", "sel", sname, "SetSmallChips")
+	CodeLine(sb, bisHidedetails, "b", "sel", sname, "SetHideDetails")
+	CodeLine(sb, bisChips, "b", "sel", sname, "SetChips")
+	CodeLine(sb, bisSmallchips, "b", "sel", sname, "SetSmallChips")
 	CodeLine(sb, bisdeletablechips, "b", "sel", sname, "SetDeletableChips")
 	CodeLine(sb, bisVisible, "b", "sel", sname, "SetVisible")
 	'
@@ -4277,13 +4362,13 @@ Sub Design_Email
 	CodeLine(sb, bisFilled, "b", "txt", sname, "SetFilled")
 	CodeLine(sb, bisDense, "b", "txt", sname, "SetDense")
 	CodeLine(sb, bisSingleline, "b", "txt", sname, "SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "txt", sname, "SetPersistentHint")
-	CodeLine(sb, bisshaped, "b", "txt", sname, "SetShaped")
-	CodeLine(sb, bisloading, "b", "txt", sname, "SetLoading")
-	CodeLine(sb, bisflat, "b", "txt", sname, "SetFlat")
-	CodeLine(sb, bisrounded, "b", "txt", sname, "SetRounded")
+	CodeLine(sb, bisPersistenthint, "b", "txt", sname, "SetPersistentHint")
+	CodeLine(sb, bisShaped, "b", "txt", sname, "SetShaped")
+	CodeLine(sb, bisLoading, "b", "txt", sname, "SetLoading")
+	CodeLine(sb, bisFlat, "b", "txt", sname, "SetFlat")
+	CodeLine(sb, bisRounded, "b", "txt", sname, "SetRounded")
 	CodeLine(sb, bclearable, "b", "txt", sname, "SetClearable")
-	CodeLine(sb, bishidedetails, "b", "txt", sname, "SetHideDetails")
+	CodeLine(sb, bisHidedetails, "b", "txt", sname, "SetHideDetails")
 	CodeLine(sb, bisVisible, "b", "txt", sname, "SetVisible")
 	'
 	Dim pres As String = "txt"
@@ -4633,7 +4718,7 @@ Sub Design_Time
 	CodeLine(sb, bisflat, "b", "tp", sname, "TextField.SetFlat")
 	CodeLine(sb, bisRounded, "b", "tp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "tp", sname, "TextField.SetClearable")
-	CodeLine(sb, bishidedetails, "b", "tp", sname, "TextField.SetHideDetails")
+	CodeLine(sb, bisHidedetails, "b", "tp", sname, "TextField.SetHideDetails")
 	
 	'
 	Dim pres As String = "tp"
@@ -5989,7 +6074,7 @@ Sub Design_ToolBar
 		tbl.AddLogo(slogourl)
 	End If
 	'
-	If bistitle Then tbl.AddTitle(stitle, stitleclass)
+	If bisTitle Then tbl.AddTitle(stitle, stitleclass)
 	If bissubtitle Then tbl.AddSubHeading1(stoolbarsubtitle)
 	If bissearch Then
 		tbl.AddSpacer
@@ -6147,7 +6232,7 @@ Sub Design_ToolBar
 	End If
 	'
 	If biscurrent = False Then
-		If bistitle Then 
+		If bisTitle Then 
 			AddCode(sb, $"tbl${sname}.Title.SetOnClick(Me, "title_click")"$)
 			CodeLine2(sb, stitle, stitleclass, "s", "tbl", sname, "AddTitle")
 		End If
@@ -6163,12 +6248,12 @@ Sub Design_ToolBar
 		CodeLine(sb, sscrollthreshold, "s", "tbl", sname, "SetScrollThreshold")
 		CodeLine(sb, ssrc, "s", "tbl", sname, "SetSrc")
 		CodeLine(sb, selevation, "s", "tbl", sname, "SetElevation")
-		CodeLine(sb, bisflat, "b", "tbl", sname, "SetFlat")
+		CodeLine(sb, bisFlat, "b", "tbl", sname, "SetFlat")
 		'
-		CodeLine(sb, swidth, "s", "tbl", sname, "SetWidth")
+		CodeLine(sb, sWidth, "s", "tbl", sname, "SetWidth")
 		CodeLine(sb, sminwidth, "s", "tbl", sname, "SetMinWidth")
 		CodeLine(sb, smaxwidth, "s", "tbl", sname, "SetMaxWidth")
-		CodeLine(sb, sheight, "s", "tbl", sname, "SetHeight")
+		CodeLine(sb, sHeight, "s", "tbl", sname, "SetHeight")
 		CodeLine(sb, sminheight, "s", "tbl", sname, "SetMinHeight")
 		CodeLine(sb, smaxheight, "s", "tbl", sname, "SetMaxHeight")
 		'
@@ -6216,7 +6301,7 @@ Sub Design_ToolBar
 		CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
 		CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	Else
-		If bistitle Then 
+		If bisTitle Then 
 			AddCode(sb, $"vm.NavBar.Title.SetOnClick(Me, "title_click")"$)
 			CodeLine2(sb, stitle, stitleclass, "s", "vm.NavBar", "", "AddTitle")
 		End If
@@ -6234,12 +6319,12 @@ Sub Design_ToolBar
 		CodeLine(sb, sscrollthreshold, "s", "vm.NavBar", "", "SetScrollThreshold")
 		CodeLine(sb, ssrc, "s", "vm.NavBar", "", "SetSrc")
 		CodeLine(sb, selevation, "s", "vm.NavBar", "", "SetElevation")
-		CodeLine(sb, bisflat, "b", "vm.NavBar", "", "SetFlat")
+		CodeLine(sb, bisFlat, "b", "vm.NavBar", "", "SetFlat")
 		'
-		CodeLine(sb, swidth, "s", "vm.NavBar", "", "SetWidth")
+		CodeLine(sb, sWidth, "s", "vm.NavBar", "", "SetWidth")
 		CodeLine(sb, sminwidth, "s", "vm.NavBar", "", "SetMinWidth")
 		CodeLine(sb, smaxwidth, "s", "vm.NavBar", "", "SetMaxWidth")
-		CodeLine(sb, sheight, "s", "vm.NavBar", "", "SetHeight")
+		CodeLine(sb, sHeight, "s", "vm.NavBar", "", "SetHeight")
 		CodeLine(sb, sminheight, "s", "vm.NavBar", "", "SetMinHeight")
 		CodeLine(sb, smaxheight, "s", "vm.NavBar", "", "SetMaxHeight")
 		'
@@ -7246,6 +7331,11 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			Dim sType As String = ""
 			'
 			Select Case sdbtype
+			Case "mssql"
+				Dim fldL As String= fldm.getdefault("character_maximum_length","0")
+				sField = fldm.getdefault("column_name", "")
+				sType = fldm.getdefault("data_type", "text")
+				sType = sType & fldL
 			Case "mysql"	
 				sDefault = fldm.getdefault("Default","")
 				sExtra = fldm.getdefault("Extra", "")
@@ -7270,14 +7360,24 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			'get the fld type
 			Dim fldType As String = vue.alpha(sType)
 			fldType = fldType.ToUpperCase
-			If fldType.EqualsIgnoreCase("varchar") Then fldType = "TEXT"
-			If fldType.EqualsIgnoreCase("ntext") Then fldType = "TEXT"
+			If fldType.EqualsIgnoreCase("double") Then fldType = "FLOAT"
 			If fldType.EqualsIgnoreCase("integer") Then fldType = "INT"
 			If fldType.EqualsIgnoreCase("long") Then fldType = "INT"
-			If fldType.EqualsIgnoreCase("longtext") Then fldType = "TEXT"
-			If fldType.EqualsIgnoreCase("nvarchar") Then fldType = "TEXT"
 			If fldType.EqualsIgnoreCase("short") Then fldType = "INT"
-			
+			If fldType.endswith("INT") Then fldType = "INT"
+			If fldType.endswith("CHAR") Then fldType = "TEXT"
+			If fldType.endswith("TEXT") Then fldType = "TEXT"
+			If fldType.endswith("REAL") Then fldType = "FLOAT"
+			If fldType.endswith("BIT") Then fldType = "INT"
+			'
+			Select Case fldType
+			Case "INT"
+			Case "FLOAT"
+			Case "TEXT"
+			Case Else
+				fldType = "TEXT"
+			End Select	
+			'	
 			'start creating the items
 			Dim ifld As Map = CreateMap()
 			ifld.put("parent", "vm.Container")
@@ -8522,6 +8622,13 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbtimelineitem.Hideitem("controltype")
 			pbtimelineitem.ClearContents
 		
+		Case "buttontoggle"
+			ShowBag("pbbuttontoggle")
+			pbbuttontoggle.SetDefaults
+			pbbuttontoggle.hideitem("id")
+			pbbuttontoggle.Hideitem("controltype")
+			pbbuttontoggle.ClearContents		
+		
 		Case "timeline"
 			ShowBag("pbtimeline")
 			pbtimeline.SetDefaults
@@ -8878,6 +8985,9 @@ Sub ToolboxLayoutPanel As VMExpansionPanel
 	'
 	Dim timelineitem As VMImage = ToolboxImage("timelineitem", "./assets/timelineitem.png", "Time Line Item")
 	grd.Container.AddComponent(3,3,timelineitem.tostring)
+	'
+	Dim buttontoggle As VMImage = ToolboxImage("buttontoggle", "./assets/buttontoggle.png", "Button Toggle")
+	grd.Container.AddComponent(3,4,buttontoggle.tostring)
 	
 	Return grd
 End Sub
@@ -9183,8 +9293,8 @@ Sub ItemDrop(e As BANanoEvent)
 					rowPos = rsSQL.GetNextID
 			
 					'
-					Dim slabel As String = savedid
-					slabel = slabel & vm.cstr(rowPos)
+					Dim sLabel As String = savedid
+					sLabel = sLabel & vm.cstr(rowPos)
 					'
 					Dim avatar As String = ""
 					If avatarMap.containskey(savedid) Then avatar = avatarMap.get(savedid)
@@ -9196,13 +9306,11 @@ Sub ItemDrop(e As BANanoEvent)
 					nrec.put("controltype", savedid)
 					nrec.put("row", rowPos)
 					nrec.put("col", 1)
-					nrec.put("name", slabel)
-					nrec.put("vmodel", slabel)
-					nrec.put("label", slabel)
+					nrec.put("name", sLabel)
+					nrec.put("vmodel", sLabel)
+					nrec.put("label", sLabel)
 					nrec.put("avatar", avatar)
-					nrec.put("parentid", "vm.Container")
-					
-					
+					nrec.put("parentid", "vm.Container")		
 					'
 					Dim attr As Map = CreateMap()
 					attr.put("isupdatable", "Yes")
@@ -9211,11 +9319,11 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("parentid", "vm.Container")
 					attr.put("fieldtype", "string")
 					attr.put("id", sid)
-					attr.put("vmodel", slabel)
+					attr.put("vmodel", sLabel)
 					attr.put("row", rowPos)
 					attr.put("stepactive", "1")
 					attr.put("col", 1)
-					attr.put("label", slabel)
+					attr.put("label", sLabel)
 					attr.put("offsetsmall",0)
 					attr.put("offsetmedium",0)
 					attr.put("offsetlarge",0)
@@ -9273,7 +9381,7 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("iconname", "access_time")
 						Case "label"
 							attr.put("labelsize", "p")
-							attr.put("value", slabel)
+							attr.put("value", sLabel)
 						Case "email"
 							attr.put("iconname", "mdi-email-outline")
 						Case "password"
@@ -9372,9 +9480,9 @@ Sub ItemDrop(e As BANanoEvent)
 							"islogovisible", "isshowondrawer", "isshowonnavbar"))
 					 		MakeYes(attr, Array("isupdatenavtitle","isdivider","isinsetdivider"))
 							
-							attr.put("pagetitle", slabel)
+							attr.put("pagetitle", sLabel)
 							attr.put("iconcolor", "blue")
-							attr.put("tooltip", "Tooltip for " & slabel)
+							attr.put("tooltip", "Tooltip for " & sLabel)
 						Case "builder"
 							BANano.SetLocalStorage("selectedpanel", 4)
 							nrec.put("items", vm.newlist)
@@ -9477,13 +9585,16 @@ Sub ItemDrop(e As BANanoEvent)
 							BANano.SetLocalStorage("selectedpanel", 4)
 						Case "timeline"
 							BANano.SetLocalStorage("selectedpanel", 4)
+						Case "buttontoggle"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							nrec.put("items", MenuItems)
 						Case "timelineitem"
 							nrec.put("row", 1)
 							nrec.put("col", 1)
 							attr.put("row", 1)
 							attr.put("col", 1)
 							attr.put("avatar", "./assets/sponge.png")
-							attr.put("oppositetext", slabel)
+							attr.put("oppositetext", sLabel)
 							BANano.SetLocalStorage("selectedpanel", 4)
 						Case "treeview"
 							attr.put("expandicon", "mdi-chevron-down")
@@ -10494,10 +10605,10 @@ Sub SavePropertyBag
 			mattr = pbselectbox.Properties
 			serrortext = mattr.getdefault("errortext", "")
 			bisRequired = YesNoToBoolean(mattr.GetDefault("isrequired","No"))
-			slabel = mattr.getdefault("label", "")
-			slabel = slabel.tolowercase
-			If bisrequired And serrortext = "" Then
-				serrortext = $"The ${slabel} is required!"$
+			sLabel = mattr.getdefault("label", "")
+			sLabel = sLabel.tolowercase
+			If bisRequired And serrortext = "" Then
+				serrortext = $"The ${sLabel} is required!"$
 				mattr.Put("errortext", serrortext)
 				vm.SetState(mattr)
 			End If
@@ -10546,6 +10657,8 @@ Sub SavePropertyBag
 			mattr = pblist.properties
 		Case "treeview"
 			mattr = pbtreeview.properties
+		Case "buttontoggle"
+			mattr = pbbuttontoggle.properties
 		Case "timeline"
 			mattr = pbtimeline.properties
 			mattr.put("label", sparent)
@@ -11521,14 +11634,14 @@ Sub Read_Table
 	'sGroupby = mattr.getdefault("groupby", "")
 	'sGroupdesc = mattr.getdefault("groupdesc", "")
 	'sHeaderslength = mattr.getdefault("headerslength", "")
-	sheight = mattr.getdefault("height", "")
+	sHeight = mattr.getdefault("height", "")
 	bisHidedefaultfooter = YesNoToBoolean(mattr.getdefault("ishidedefaultfooter", "No"))
 	bisHidedefaultheader = YesNoToBoolean(mattr.getdefault("ishidedefaultheader", "No"))
 	sItemkey = mattr.getdefault("itemkey", "")
 	sItemkey = sItemkey.tolowercase
 	sItemsperpage = mattr.getdefault("itemsperpage", "")
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-	bisloading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
+	bisLoading = YesNoToBoolean(mattr.getdefault("isloading", "No"))
 	'sLoadingtext = mattr.getdefault("loadingtext", "")
 	'sLocale = mattr.getdefault("locale", "")
 	smobilebreakpoint = mattr.getdefault("mobilebreakpoint", "")
@@ -14626,8 +14739,187 @@ Sub Design_FileInput
 		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("All " & totFiles & " were uploaded successfully.")"$)
 		AddCode(sbEvents, "else")
 		AddCode(sbEvents, $"vm.ShowSnackBarError(numFiles & " of " & totFiles & " were uploaded successfully. Please retry.")"$)
-		AddCode(sbEvents, "end if")
+	AddCode(sbEvents, "end if")
 	
-	AddCode(sbEvents, "End Sub")	
+	AddCode(sbEvents, "End Sub")
+End Sub
+
+#Region ButtonToggle
+Sub PropertyBag_ButtonToggle
+	vm.setdata("pbbuttontoggle", False)
+	lstBags.add("pbbuttontoggle")
+	pbbuttontoggle = vm.CreateProperty("ppbbuttontoggle", Me)
+	pbbuttontoggle.SetChangeEvent("SavePropertyBag")
+	pbbuttontoggle.SetVShow("pbbuttontoggle")
+	pbbuttontoggle.AddHeading("d","Details")
+	pbbuttontoggle.AddText("d","id","ID","","")
+	pbbuttontoggle.AddText("d", "controltype", "Type", "","buttontoggle")
+	pbbuttontoggle.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbbuttontoggle.AddText("d","vmodel","VModel","","")
+	pbbuttontoggle.AddText("d","activeclass","ActiveClass","","")	
+	pbbuttontoggle.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbbuttontoggle.AddSelect2("d","backgroundcolor","BackgroundColor", vm.ColorOptions, "backgroundcolorintensity","BackgroundColor Intensity", vm.IntensityOptions)
+	pbbuttontoggle.AddText("d","max","Max","","")
+	pbbuttontoggle.AddText("d","tabindex","TabIndex","","")
+	'
+	pbbuttontoggle.AddHeading("a", "Items")
+	pbbuttontoggle.AddToolbarItems("a")
+	'	
+	pbbuttontoggle.AddHeading("m","Margins & Padding")
+	pbbuttontoggle.AddMarginsPaddings("m")
+	'
+	pbbuttontoggle.AddHeading("e","Settings")
+	pbbuttontoggle.AddSwitches("e", CreateMap("isborderless": "Borderless", "isdark": "Dark"))
+	pbbuttontoggle.AddSwitches("e", CreateMap("isdense": "Dense", "isgroup": "Group"))
+	pbbuttontoggle.AddSwitches("e", CreateMap("islight": "Light", "ismandatory": "Mandatory"))
+	pbbuttontoggle.AddSwitches("e", CreateMap("ismultiple": "Multiple", "isrounded": "Rounded"))
+	pbbuttontoggle.AddSwitches("e", CreateMap("isshaped": "Shaped", "istitle": "Title"))
+	pbbuttontoggle.AddSwitches("e", CreateMap("isvisible": "Visible"))
+	'
+	pbbuttontoggle.AddHeading("f","Matrix")
+	pbbuttontoggle.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbbuttontoggle.tostring)
+End Sub
+#End Region
+
+Sub Read_ButtonToggle
+	svmodel = mattr.getdefault("vmodel", "")
+	sActiveclass = mattr.getdefault("activeclass", "")
+	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
+	sBackgroundcolorintensity = mattr.getdefault("backgroundcolorintensity", "")
+	bisBorderless = YesNoToBoolean(mattr.getdefault("isborderless", "No"))
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
+	bisGroup = YesNoToBoolean(mattr.getdefault("isgroup", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisMandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+	sMax = mattr.getdefault("max", "")
+	bisMultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+	bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
+	bisShaped = YesNoToBoolean(mattr.getdefault("isshaped", "No"))
+	sTabindex = mattr.getdefault("tabindex", "")
+	bisTitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+End Sub
+
+Sub Design_ButtonToggle
+	Dim ButtonToggle As VMButtonToggle
+	ButtonToggle.Initialize(vue, $"bt${sname}"$, Me)
+	ButtonToggle.SetStatic(True)
+	ButtonToggle.SetDesignMode(True)
+	ButtonToggle.SetVModel(svmodel)
+	ButtonToggle.SetActiveclass(sActiveclass)
+	ButtonToggle.SetBackgroundcolorintensity(sBackgroundcolor, sBackgroundcolorintensity)
+	ButtonToggle.SetBorderless(bisBorderless)
+	ButtonToggle.SetColorintensity(sColor,sColorintensity)
+	ButtonToggle.SetDark(bisDark)
+	ButtonToggle.SetDense(bisDense)
+	ButtonToggle.SetGroup(bisGroup)
+	ButtonToggle.SetLight(bisLight)
+	ButtonToggle.SetMandatory(bisMandatory)
+	ButtonToggle.SetMax(sMax)
+	ButtonToggle.SetMultiple(bisMultiple)
+	ButtonToggle.SetRounded(bisRounded)
+	ButtonToggle.SetShaped(bisShaped)
+	ButtonToggle.SetTabindex(sTabindex)
+	ButtonToggle.SetTile(bisTile)
+	ButtonToggle.SetVisible(bisVisible)
+	'
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim sitemtype As String = m.getdefault("itemtype", "icon")
+		Dim sBadge As String = m.getdefault("badge", "")
+		If sskey = "" Then Continue
+		Select Case sitemtype
+		Case "btn"
+			ButtonToggle.AddButton(sskey, sstitle, ssiconname, sIconcolor, sskey, sssubtitle)
+		Case "icon"
+			ButtonToggle.AddIcon(sskey, ssiconname, sIconcolor, sskey, sssubtitle)
+		End Select
+	Next
+	
+	ui.AddControl(ButtonToggle.ButtonToggle, ButtonToggle.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	Dim pres As String = "bt"
+	Dim ButtonTogglesname As VMButtonToggle
+	ButtonTogglesname.Initialize(vue, $"bt${sname}"$, Me)
+	AddCode(sb, $"Dim bt${sname} As VMButtonToggle"$)
+	AddCode(sb, $"bt${sname}.Initialize(vue, "bt${sname}", Me)"$)
+	CodeLine(sb, svmodel, "s", pres, sname, "SetVModel")
+	CodeLine(sb, sActiveclass, "s", pres, sname, "SetActiveclass")
+	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
+	CodeLine(sb, bisBorderless, "b", pres, sname, "SetBorderless")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDense, "b", pres, sname, "SetDense")
+	CodeLine(sb, bisGroup, "b", pres, sname, "SetGroup")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, bisMandatory, "b", pres, sname, "SetMandatory")
+	CodeLine(sb, sMax, "s", pres, sname, "SetMax")
+	CodeLine(sb, bisMultiple, "b", pres, sname, "SetMultiple")
+	CodeLine(sb, bisRounded, "b", pres, sname, "SetRounded")
+	CodeLine(sb, bisShaped, "b", pres, sname, "SetShaped")
+	CodeLine(sb, sTabindex, "s", pres, sname, "SetTabindex")
+	CodeLine(sb, bisTitle, "b", pres, sname, "SetTitle")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	'
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	'
+	AddNewLine(sb)
+	AddComment(sb, "add items")
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim sitemtype As String = m.getdefault("itemtype", "icon")
+		Dim sBadge As String = m.getdefault("badge", "")
+		If sskey = "" Then Continue
+		Select Case sitemtype
+		Case "btn"
+			AddCode(sb, $"bt${sname}.AddButton("${sskey}", "${sstitle}", "${ssiconname}", "${sIconcolor}", "${sskey}", "${sssubtitle}")"$)
+		Case "icon"
+			AddCode(sb, $"bt${sname}.AddIcon("${sskey}", "${ssiconname}", "${sIconcolor}", "${sskey}", "${sssubtitle}")"$)
+		End Select
+	Next
+	AddNewLine(sb)
+
+	sb.append($"${sparent}.AddControl(bt${sname}.ButtonToggle, bt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	AddNewLine(sb)
+	AddNewLine(sb)
+	'
+	'add events
+	AddCode(sbEvents, $"Private Sub bt${sname}_change(items As List)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	
 End Sub
 

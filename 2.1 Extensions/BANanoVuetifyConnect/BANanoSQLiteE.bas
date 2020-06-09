@@ -67,7 +67,7 @@ End Sub
 
 'get table names
 Sub GetTableNames As BANanoSQLiteE
-	Dim sb As String = $"select table_name from information_schema.tables where table_schema = '${DBase}'"$
+	Dim sb As String = $"select table_name from information_schema.tables where table_schema = '${DBase}' order by table_name"$
 	query = sb
 	command = "select"
 	Return Me

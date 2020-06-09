@@ -50,11 +50,10 @@ End Sub
 
 
 'set database connection settings
-Sub SetConnection(shost As String, susername As String, spassword As String, sdbname As String) As BANanoMSSQLE
+Sub SetConnection(shost As String, susername As String, spassword As String) As BANanoMSSQLE
 	host = shost
 	username = susername
 	password = spassword
-	DBase = sdbname
 	Return Me
 End Sub
 
@@ -114,6 +113,20 @@ Sub SelectWhere1(tblfields As List, tblWhere As Map, operators As List, AndOr As
 	result = NewList
 	json = ""
 	affectedRows = 0
+	Return Me
+End Sub
+
+'get table names
+Sub GetTableNames As BANanoMSSQLE
+	query = $"select table_name from ${DBase}.information_schema.tables where TABLE_TYPE = 'BASE TABLE' and table_name not in ('MSreplication_options','spt_fallback_db', 'spt_fallback_dev', 'spt_fallback_usg', 'spt_monitor') order by table_name"$
+	command = "select"
+	Return Me
+End Sub
+
+'get table structure
+Sub GetTableStructure As BANanoMSSQLE
+	query = $"select character_maximum_length, column_name, data_type from ${DBase}.information_schema.columns where table_name = '${TableName}'"$
+	command = "select"
 	Return Me
 End Sub
 
@@ -420,7 +433,6 @@ Sub Initialize(dbName As String, tblName As String, PK As String, AI As String) 
 	host = ""
 	username = ""
 	password = ""
-	DBase = ""
 	Auto = AI
 	Return Me
 End Sub
@@ -507,6 +519,7 @@ Sub Execute(strSQL As String) As BANanoMSSQLE
 	command = "execute"
 	Return Me
 End Sub
+
 
 'get the list of types
 private Sub GetMapTypes(sourceMap As Map) As List
@@ -896,7 +909,6 @@ Sub BuildDynamic As Map
 	Return b
 End Sub
 
-
 'return a sql to update records of table where one exists
 Sub UpdateWhere(tblName As String, tblfields As Map, tblWhere As Map, operators As List) As BANanoMSSQLE
 	If Schema.Size = 0 Then
@@ -1032,7 +1044,7 @@ function BANanoMSSQLDynamic($command, $query, $args, $types, $host, $username, $
 	$resp = array();
 	header('Access-Control-Allow-Origin: *');
 	header('content-type: application/json; charset=utf-8');
-	require_once './assets/config.php';
+	$conn=null;
 	try {
 		$conn = new PDO("sqlsrv:server=$host;database=$dbname", $username, $password);
  		$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false);

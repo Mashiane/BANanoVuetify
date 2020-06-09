@@ -270,6 +270,7 @@ Sub AddIcon(iconName As String, siconPos As String, iconTheme As String) As VMBu
 	bicon.SetStatic(bStatic)
 	bicon.SetDesignMode(DesignMode)
 	bicon.SetText(iconName)
+	bicon.SetHasBadge(False)
 	Select Case iconPos
 	Case "left"
 		bicon.SetLeft(True)
@@ -327,6 +328,7 @@ Sub ToString As String
 		Button.SetText(icon)
 	Case Else
 		Button.SetText(txt)
+		Button.SetText(icon)
 	End Select
 	If hasToolTip Then
 		Button.Pop(tmpl.Template)

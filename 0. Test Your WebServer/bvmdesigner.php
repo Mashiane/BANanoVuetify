@@ -190,7 +190,7 @@ function BANanoMSSQLDynamic($command, $query, $args, $types, $host, $username, $
 	$resp = array(); 
 	header('Access-Control-Allow-Origin: *'); 
 	header('content-type: application/json; charset=utf-8'); 
-	require_once './assets/config.php'; 
+	$conn=null; 
 	try { 
 		$conn = new PDO("sqlsrv:server=$host;database=$dbname", $username, $password); 
  		$conn->setAttribute(PDO::ATTR_EMULATE_PREPARES, false); 
