@@ -364,6 +364,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMButton,SetTooltip,312,0,VMButtonToggle,AddIcon,30,0,VMBottomNavigation,SetOnChange,406,0,VMBottomNavigation,SetWidth,404,0,VMButtonToggle,Initialize,21,5,VMButtonToggle,SetVModel,75,0,VMButtonToggle,SetOnChange,69,4,VMIcon,SetVShow,154,0,VMButton,ToString,324,0,VMButtonToggle,AddButton,52,0
+NavigationStack=VMCard,SetColorIntensity,848,0,VMCard,UpdateSubTitle,93,0,VMCard,UpdateTitle,87,0,VMCard,SetTitle,74,0,VMCard,Reset,56,0,VMCard,SetSubTitle,79,2,VMCardTitle,Clear,186,0,VMCardTitle,SetText,185,0,VMCardSubTitle,Initialize,20,0,VMCardSubTitle,Clear,28,0
 SelectedBuild=0
 VisibleModules=

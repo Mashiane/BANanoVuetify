@@ -294,12 +294,12 @@ Sub AddButton(btn As VMButton) As VMDataTable
 End Sub
 
 Sub AddButton1(key As String, iconName As String, text As String, toolTip As String) As VMDataTable
-	vcard.Title.AddButton1(key, iconName, text, toolTip, "")
+	vcard.Title.AddButton1(key, iconName, "", text, toolTip, "")
 	Return Me
 End Sub
 
 Sub AddButtonIcon(key As String, iconName As String, iconColor As String, toolTip As String) As VMDataTable
-	vcard.Title.AddButtonIcon(key, iconName, iconColor, toolTip)
+	vcard.Title.AddIcon(key, iconName, iconColor, "", toolTip, "")
 	Return Me
 End Sub
 

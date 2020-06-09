@@ -130,6 +130,18 @@ Sub SetButton(iconName As String, btnText As String) As VMMenu
 	Return Me
 End Sub
 
+Sub SetAvatar(url As String) As VMMenu
+	Dim c6a As VMAvatar
+	c6a.Initialize(vue, $"${ID}avatar"$, Module)
+	c6a.SetStatic(bStatic)
+	c6a.SetDesignMode(DesignMode)
+	c6a.SetImage(url, "", Null, Null, Null)
+	c6a.SetMenuTrigger(True)
+	c6a.Pop(act.Template)
+	Return Me
+End Sub
+
+
 'add an item to the menu content
 Sub AddItem(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String)
 	MenuContent.AddItem(key, avatar, iconName, title, subtitle, actionIcon)

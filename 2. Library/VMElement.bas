@@ -169,6 +169,17 @@ Sub IsValidID(idName As String) As Boolean
 	Return True
 End Sub
 
+Sub AddElement1(elTag As String, elID As String, elText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMElement
+	Dim d As VMElement
+	d.Initialize(vue, elID).SetTag(elTag)
+	d.SetStatic(bStatic)
+	d.SetDesignMode(DesignMode)
+	d.BuildModel(mprops, mstyles, lclasses, loose)
+	d.SetText(elText)
+	SetText(d.ToString)
+	Return Me
+End Sub
+
 
 Sub SetStatic(b As Boolean) As VMElement
 	bStatic = b
@@ -1283,5 +1294,75 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMElement
 	Element.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+
+'set position
+Sub SetPosition(sposition As String) As VMElement
+	If sposition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("position", sposition)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}position"$
+	vue.SetStateSingle(pp, sposition)
+	Bind(":position", pp)
+	Return Me
+End Sub
+
+
+'set top
+Sub SetTop(stop As String) As VMElement
+	If stop = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("top", stop)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}top"$
+	vue.SetStateSingle(pp, stop)
+	Bind(":top", pp)
+	Return Me
+End Sub
+
+
+'set bottom
+Sub SetBottom(sbottom As String) As VMElement
+	If sbottom = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("bottom", sbottom)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}bottom"$
+	vue.SetStateSingle(pp, sbottom)
+	Bind(":bottom", pp)
+	Return Me
+End Sub
+
+
+'set left
+Sub SetLeft(sleft As String) As VMElement
+	If sleft = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("left", sleft)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}left"$
+	vue.SetStateSingle(pp, sleft)
+	Bind(":left", pp)
+	Return Me
+End Sub
+
+
+'set right
+Sub SetRight(sright As String) As VMElement
+	If sright = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("right", sright)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}right"$
+	vue.SetStateSingle(pp, sright)
+	Bind(":right", pp)
 	Return Me
 End Sub

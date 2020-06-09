@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private methods As Map
 	Private computed As Map
 	Private watches As Map
+	Private filters As Map
 	Private opt As Map
 	Private data As Map
 	Private refs As Map
@@ -42,6 +43,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, Module As Object) As VMComp
 	methods.Initialize
 	computed.Initialize
 	watches.Initialize
+	filters.Initialize 
 	URL = $"/${ID}"$
 	name = ID
 	Return Me
@@ -135,10 +137,24 @@ Sub Component() As Map
 	If computed.Size > 0 Then opt.Put("computed", computed)
 	If watches.Size > 0 Then opt.Put("watch", watches)
 	If props.Size <> 0 Then opt.Put("props", props)
+	If filters.Size <> 0 Then opt.Put("filters", filters)
 	opt.Put("template", tmp)
 	Return opt
 End Sub
 
+
+'set direct method
+Sub SetFilter(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) Then
+		Dim value As Object
+		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(value))
+		filters.Put(methodName, cb)
+	Else
+		Log($"SetFilter.${methodName} could not be found!"$)
+	End If
+	Return Me
+End Sub
 
 private Sub ReturnData As Map
 	Return data

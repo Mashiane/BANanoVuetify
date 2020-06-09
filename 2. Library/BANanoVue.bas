@@ -10,6 +10,7 @@ Sub Class_Globals
 	Public BOVue As BANanoObject
 	Private BANAno As BANano  'ignore
 	Public methods As Map
+	Public filters As Map
 	Public data As Map
 	'Public store As Map
 	Public el As BANanoObject
@@ -135,6 +136,7 @@ Sub Class_Globals
 	Public HashType As Map
 	Public Algorithm As Map
 	Public Errors As Map
+	Public Position As Map
 End Sub
 
 'initialize view
@@ -154,10 +156,20 @@ Public Sub Initialize(Module As Object)
 	
 	Template.SetVCloak
 	methods.Initialize
+	filters.initialize
 	data.Initialize
 	computed.Initialize  
 	watches.Initialize
-	routes.Initialize 
+	routes.Initialize
+	
+	Position.initialize
+	Position.Put("static","static")
+	Position.Put("relative","relative")
+	Position.Put("fixed","fixe")
+	Position.Put("absolute","absolute")
+	Position.Put("sticky", "sticky")
+	Position.Put("", "none")
+	
 	'TypeOfString = BOVue.GetField("String")
 	'TypeOfNumber = BOVue.GetField("Number")
 	'TypeOfBoolean = BOVue.GetField("Boolean")
@@ -2368,6 +2380,13 @@ Sub SetOptionBO(optionName As String, optionObject As BANanoObject)
 	Options.Put(optionName, optionObject)
 End Sub
 
+Sub RegisterComponent(compName As String, compOptions As Map) As BANanoVue
+	compName = compName.tolowercase
+	BOVue.RunMethod("component", Array(compName, compOptions))
+	Return Me
+End Sub
+
+
 Sub AddComponent(comp As VMComponent) As BANanoVue
 	Dim sid As String = comp.id
 	If components.ContainsKey(sid) = True Then Return Me
@@ -3010,6 +3029,7 @@ Sub UX()
 	Options.Put("el", "#app")
 	If data.Size > 0 Then Options.put("data", data)
 	If methods.Size > 0 Then Options.Put("methods", methods)
+	If filters.Size > 0 Then Options.Put("filters", filters)
 	If computed.Size > 0 Then Options.Put("computed", computed)
 	If watches.Size > 0 Then Options.Put("watch", watches)
 	If components.Size > 0 Then Options.Put("components", components)
@@ -3153,6 +3173,19 @@ Sub SetMethod(module As Object, methodName As String) As BANanoVue
 		methods.Put(methodName, cb)
 	Else
 		Log($"SetMethod.${methodName} could not be found!"$)
+	End If
+	Return Me
+End Sub
+
+'set direct method
+Sub SetFilter(module As Object, methodName As String) As BANanoVue
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) Then
+		Dim value As Object
+		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(value))
+		filters.Put(methodName, cb)
+	Else
+		Log($"SetFilter.${methodName} could not be found!"$)
 	End If
 	Return Me
 End Sub

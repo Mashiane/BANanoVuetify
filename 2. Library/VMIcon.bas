@@ -28,6 +28,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	Badge.Initialize(vue, $"${ID}badge"$, Module)
 	hasBadge = False
+	SetOnClick(Module, $"${sid}_click"$)
 	Return Me
 End Sub
 

@@ -13,9 +13,11 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Public Title As VMCardTitle
+	Public SubTitle As VMCardSubTitle
 	Public Text As VMCardText
 	Public Actions As VMCardActions
 	Public IsDialog As Boolean
+	Public Image As VMImage
 	Public ToolBar As VMToolBar
 	Public Form As VMForm
 	Private lst As List
@@ -23,6 +25,7 @@ Sub Class_Globals
 	Public IsTable As Boolean
 	Private bStatic As Boolean
 	Private titleKey As String
+	Private subTitleKey As String
 	Public Container As VMContainer
 End Sub
 
@@ -37,16 +40,19 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'
 	IsDialog = False
 	Title.Initialize(vue, $"${ID}title"$, Module)
+	SubTitle.Initialize(vue, $"${ID}subtitle"$, Module) 
 	Text.Initialize(vue, $"${ID}text"$, Module)
 	Actions.Initialize(vue, $"${ID}actions"$, Module)
 	Form.Initialize(vue, $"${ID}form"$, Module)
 	ToolBar.Initialize(vue, $"${ID}bar"$, Module).SetToolBar(True)
+	Image.Initialize(vue, $"${ID}img"$, Module)
 	Container = Form.Container
 	lst.Initialize 
 	extra.Initialize 
 	IsTable = False
 	bStatic = False
 	titleKey = $"${ID}title"$
+	subTitleKey = $"${ID}subtitle"$
 	Return Me
 End Sub
 
@@ -64,6 +70,7 @@ End Sub
 
 'set the title of the dialog
 Sub SetTitle(sTitle As String) As VMCard
+	Title.Clear
 	If bStatic Then
 		Title.SetText(sTitle)
 		Return Me
@@ -73,9 +80,26 @@ Sub SetTitle(sTitle As String) As VMCard
 	Return Me
 End Sub
 
+Sub SetSubTitle(sSubTitle As String) As VMCard
+	If bStatic Then
+		SubTitle.Clear
+		SubTitle.SetText(sSubTitle)
+		Return Me
+	End If
+	vue.SetStateSingle(subTitleKey, sSubTitle)
+	SubTitle.SetText($"{{ ${subTitleKey} }}"$)
+	Return Me
+End Sub
+
 'update the title of the dialog
 Sub UpdateTitle(sTitle As String) As VMCard
 	vue.SetStateSingle(titleKey, sTitle)
+	Return Me
+End Sub
+
+'update the title of the dialog
+Sub UpdateSubTitle(sSubTitle As String) As VMCard
+	vue.SetStateSingle(subTitleKey, sSubTitle)
 	Return Me
 End Sub
 
@@ -83,11 +107,13 @@ Sub SetStatic(b As Boolean) As VMCard
 	bStatic = b
 	Card.SetStatic(b)
 	Title.setstatic(b)
+	SubTitle.setstatic(b)
 	Text.setstatic(b)
 	Actions.SetStatic(b)
 	ToolBar.SetStatic(b)
 	Form.SetStatic(b)
 	Container.SetStatic(b)
+	Image.SetStatic(b)
 	Return Me
 End Sub
 
@@ -157,22 +183,26 @@ Sub AddStuff(stuff As String) As VMCard
 	Return Me	
 End Sub
 
+Sub AddDivider As VMCard
+	IsDialog = True
+	Return Me
+End Sub
+
 Sub ToString As String
-	If ToolBar.hasContent Then 
-		ToolBar.Pop(Card)
-	Else
-		Title.Pop(Card)
-	End If
+	If ToolBar.hasContent Then ToolBar.Pop(Card)
+	If Image.HasContent Then Image.Pop(Card)
+	If Title.HasContent Then Title.Pop(Card)
+	If SubTitle.HasContent Then SubTitle.Pop(Card)
 	If IsTable = False Then 
-		Form.Pop(Text.CardText)
-		Text.Pop(Card)
+		If Form.hascontent Then Text.AddContent(Form.ToString)
+		If Text.HasContent Then Text.Pop(Card)
 	End If
 	For Each strItem As String In lst
 		Card.SetText(strItem)
 	Next
 	If IsDialog Then Card.AddDivider
 	If IsTable = False Then 
-		Actions.Pop(Card)
+		If Actions.HasContent Then Actions.Pop(Card)
 		For Each strItem As String In extra
 			Card.SetText(strItem)
 		Next	
@@ -195,11 +225,13 @@ End Sub
 
 private Sub AddOK(okID As String, okCaption As String) As VMCard
 	Dim btnOK As VMButton
-	btnOK.Initialize(vue, okID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	btnOK.Initialize(vue, okID, Module)
+	btnOK.SetStatic(bStatic)
+	btnOK.SetDesignMode(DesignMode)
 	btnOK.SetPrimary(True)
 	btnOK.SetLabel(okCaption)
 	btnOK.SetTransparent(True)
-	btnOK.Pop(Actions.CardActions)
+	Actions.SetText(btnOK.ToString)
 	Return Me
 End Sub
 
@@ -209,9 +241,16 @@ Sub SetCancel(cancelID As String, cancelCaption As String) As VMCard
 End Sub
 
 Sub AddButton(btn As VMButton) As VMCard
-	btn.pop(Actions.CardActions)
+	Actions.SetText(btn.ToString)
 	Return Me
 End Sub
+
+
+Sub AddMenu(menu As VMMenu) As VMCard
+	Actions.SetText(menu.ToString)
+	Return Me
+End Sub
+
 
 private Sub AddCANCEL(cancelID As String, cancelCaption As String) As VMCard
 	Dim btnCancel As VMButton
@@ -219,7 +258,7 @@ private Sub AddCANCEL(cancelID As String, cancelCaption As String) As VMCard
 	btnCancel.SetLabel(cancelCaption)
 	btnCancel.SetAccent(True)
 	btnCancel.SetTransparent(True)
-	btnCancel.Pop(Actions.CardActions)
+	Actions.SetText(btnCancel.ToString)
 	Return Me
 End Sub
 
@@ -760,6 +799,8 @@ Sub SetDesignMode(b As Boolean) As VMCard
 	Form.SetDesignMode(b)
 	ToolBar.SetDesignMode(b)
 	Container.SetDesignMode(b)
+	SubTitle.SetDesignMode(b)
+	Image.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -794,6 +835,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 Card.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMCard
 Card.SetVisible(b)
 Return Me

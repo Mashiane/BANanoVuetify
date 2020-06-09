@@ -30,6 +30,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub HasContent As Boolean
+	Return Container.hascontent
+End Sub
+
 Sub Validate
 	vue.refs.GetField(ID).RunMethod("validate", Null)
 End Sub

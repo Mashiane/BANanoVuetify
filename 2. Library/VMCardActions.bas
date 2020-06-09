@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Public HasContent As Boolean
 End Sub
 
 'initialize the CardActions
@@ -23,6 +24,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	HasContent = False
 	Return Me
 End Sub
 
@@ -57,11 +59,56 @@ End Sub
 
 Sub AddButton(btn As VMButton) As VMCardActions
 	btn.Pop(CardActions)
+	HasContent = True
+	Return Me
+End Sub
+
+
+Sub AddButton1(key As String, iconName As String, iconColor As String, text As String, toolTip As String, badge As String) As VMCardActions
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	btn.SetToolTip(toolTip)
+	If iconName <> "" Then btn.AddIcon(iconName,"left","")
+	btn.SetLabel(text)
+	btn.SetColor(iconColor)
+	btn.SetTransparent(True)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
+	CardActions.SetText(btn.tostring)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddIcon(key As String, iconName As String, iconColor As String, iconSize As String, toolTip As String, badge As String) As VMCardActions
+	key = key.tolowercase
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetIconButton(iconName).SetTooltip(toolTip)
+	btn.SetColor(iconColor)
+	btn.SetSize(iconSize)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
+	CardActions.SetText(btn.tostring)
+	HasContent = True
+	Return Me
+End Sub
+
+
+Sub AddMenu(menu As VMMenu) As VMCardActions
+	menu.Pop(CardActions)
+	HasContent = True
 	Return Me
 End Sub
 
 Sub AddSpacer As VMCardActions
 	CardActions.AddSpacer
+	HasContent = True
 	Return Me
 End Sub
 
@@ -95,12 +142,15 @@ End Sub
 Sub AddChild(child As VMElement) As VMCardActions
 	Dim childHTML As String = child.ToString
 	CardActions.SetText(childHTML)
+	HasContent = True
 	Return Me
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMCardActions
+Sub SetText(t As String) As VMCardActions
+	If t = "" Then Return Me
 	CardActions.SetText(t)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -212,6 +262,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 CardActions.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMCardActions
 CardActions.SetVisible(b)
 Return Me

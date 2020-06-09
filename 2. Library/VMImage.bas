@@ -18,6 +18,7 @@ Sub Class_Globals
 	Private tmpl As VMTemplate
 	Private span As VMLabel
 	Private bStatic As Boolean
+	Public HasContent As Boolean
 End Sub
 
 'initialize the Image
@@ -36,6 +37,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	span.Initialize(vue, "").SetSpan
 	bStatic = False
 	SetVisible(True)
+	HasContent = False
 	Return Me
 End Sub
 
@@ -277,6 +279,7 @@ End Sub
 
 Sub SetValue(url As String) As VMImage
 	SetVModel(imgLink, url)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -438,6 +441,7 @@ Sub SetLazySrc(varLazySrc As String) As VMImage
 	Dim pp As String = $"${ID}LazySrc"$
 	vue.SetStateSingle(pp, varLazySrc)
 	Image.Bind(":lazy-src", pp)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -535,6 +539,7 @@ private Sub SetSrc(varSrc As String) As VMImage
 		Return Me
 	End If
 	Image.Bind(":src", varSrc)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -548,6 +553,7 @@ Sub SetSrcSet(varSrcset As String) As VMImage
 	Dim pp As String = $"${ID}Srcset"$
 	vue.SetStateSingle(pp, varSrcset)
 	Image.Bind(":srcset", pp)
+	HasContent = True
 	Return Me
 End Sub
 

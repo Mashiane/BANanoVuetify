@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean
 	Private Module As Object
 	Private bStatic As Boolean
+	Public HasContent As Boolean
 End Sub
 
 'initialize the CardSubTitle
@@ -23,7 +24,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	HasContent = False
 	Return Me
+End Sub
+
+
+Sub Clear
+	CardSubTitle.Clear
 End Sub
 
 
@@ -60,12 +67,12 @@ End Sub
 
 Sub AddSpacer As VMCardSubTitle
 	CardSubTitle.AddSpacer
+	HasContent = True
 	Return Me
 End Sub
 
 'get component
-Sub ToString As String
-	
+Sub ToString As String	
 	Return CardSubTitle.ToString
 End Sub
 
@@ -93,12 +100,15 @@ End Sub
 Sub AddChild(child As VMElement) As VMCardSubTitle
 	Dim childHTML As String = child.ToString
 	CardSubTitle.SetText(childHTML)
+	HasContent = True
 	Return Me
 End Sub
 
 'set text
-Sub SetText(t As Object) As VMCardSubTitle
+Sub SetText(t As String) As VMCardSubTitle
+	If t = "" Then Return Me
 	CardSubTitle.SetText(t)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -210,6 +220,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 CardSubTitle.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMCardSubTitle
 CardSubTitle.SetVisible(b)
 Return Me

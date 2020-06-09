@@ -510,6 +510,13 @@ Sub SetMarginAll(p As String) As VMAvatar
 	Return Me
 End Sub
 
+
+Sub SetMenuTrigger(b As Boolean) As VMAvatar
+	If b = False Then Return Me
+	Avatar.SetAttrSingle("v-on","on")
+	Return Me
+End Sub
+
 Sub SetDesignMode(b As Boolean) As VMAvatar
 	Avatar.SetDesignMode(b)
 	DesignMode = b

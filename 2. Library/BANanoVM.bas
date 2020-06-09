@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private Pages As List
 	Public VApp As VMElement
 	Public VContent As VMElement
+	Public RouterView As VMElement
 	Public Container As VMContainer
 	Public BOVuetify As BANanoObject
 	Public Drawer As VMNavigationDrawer
@@ -163,6 +164,8 @@ Sub Class_Globals
 	Private placeHolder As Int
 	Public Floats As Map
 	Public FontSizes As Map
+	Private bUseRouter As Boolean
+	Public Position As Map
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -174,12 +177,22 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	placeHolder = 0
 	Options.Initialize
 	drawers.Initialize
+	Position.initialize
+	Position.Put("static","static")
+	Position.Put("relative","relative")
+	Position.Put("fixed","fixe")
+	Position.Put("absolute","absolute")
+	Position.Put("sticky", "sticky")
+	Position.Put("", "none")
 	RTL = False
 	Dark = False
 	Module = eventHandler
 	lang = "en"
 	Floats.Initialize
-	FontSizes.Initialize 
+	FontSizes.Initialize
+	bUseRouter = False 
+	'
+	RouterView.Initialize(vue, "").SetTag("router-view")
 	
 	'initialize the pages
 	Pages.initialize
@@ -201,14 +214,12 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	BottomNav.Initialize(vue, $"${appName}bn"$, eventHandler).SetApp(True)
 	
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
-	SnackBar.Pop(VContent)
 	'
 	'put loader on page
 	SetStateSingle("pageloader", False)
 	Overlay = CreateOverlay("pageloader", Module).SetValue("pageloader")
 	Dim vpc As VMProgressCircular = CreateProgressCircular("", Module).SetSize(200).SetIndeterminate(True).SetColor("blue")
 	vpc.Pop(Overlay.Overlay)
-	Overlay.Pop(VContent)
 	'
 	Drawer.Hide
 	Footer.hide
@@ -229,13 +240,6 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Alert.SetTitle("Title")
 	Alert.SetContent("Alert Message")
 	Alert.AddOK("btnalertOk", "Ok")
-	'
-	Dim sDialog As String = Confirm.tostring
-	AddContent(sDialog)
-	'
-	Dim sDialog As String = Alert.tostring
-	AddContent(sDialog)
-	
 	'
 	InitColors
 	
@@ -260,6 +264,12 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 		Log("Initialize.title_click - please consider adding this optional event to trap title click event if needed!")
 	End If
 End Sub
+
+Sub SetUseRouter(b As Boolean) As BANanoVM
+	bUseRouter = b
+	Return Me
+End Sub
+
 
 Sub CreateHamburger(v As BANanoVue, eid As String, eventHandler As Object) As VMElement
 	Dim elx As VMElement
@@ -2141,20 +2151,34 @@ Sub UX
 	Options.Put("rtl", RTL)
 	Options.Put("theme", theme)
 	Options.Put("lang", mlang)
+	'
+	Dim sDialog As String = Confirm.tostring
+	AddContent(sDialog)
+	'
+	Dim sDialog As String = Alert.tostring
+	AddContent(sDialog)
+	'
+	SnackBar.Pop(VContent)
+	Overlay.Pop(VContent)
+	
 	'add drawer first
 	Drawer.Pop(VApp)
 	'add navbar
 	NavBar.Pop(VApp)
 	
-	'add container to content
-	Container.Pop(VContent)
+	If bUseRouter Then
+		RouterView.Pop(VContent)
+	Else
+		Container.Pop(VContent)
+	End If
+	
 	'add content
 	VContent.Pop(VApp)
 	'add footer
 	If Footer.HasContent Then Footer.Pop(VApp)
 	'add bottom nan
 	If BottomNav.HasContent Then BottomNav.Pop(VApp)
-	
+
 	'template built from all pages
 	vue.SetTemplate(VApp.ToString)
 	'

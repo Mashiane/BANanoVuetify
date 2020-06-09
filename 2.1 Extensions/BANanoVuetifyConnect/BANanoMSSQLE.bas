@@ -118,14 +118,14 @@ End Sub
 
 'get table names
 Sub GetTableNames As BANanoMSSQLE
-	query = $"select table_name from ${DBase}.information_schema.tables where TABLE_TYPE = 'BASE TABLE' and table_name not in ('MSreplication_options','spt_fallback_db', 'spt_fallback_dev', 'spt_fallback_usg', 'spt_monitor') order by table_name"$
+	query = $"select table_name from information_schema.tables where TABLE_TYPE = 'BASE TABLE' and table_name not in ('MSreplication_options','spt_fallback_db', 'spt_fallback_dev', 'spt_fallback_usg', 'spt_monitor') order by table_name"$
 	command = "select"
 	Return Me
 End Sub
 
 'get table structure
 Sub GetTableStructure As BANanoMSSQLE
-	query = $"select character_maximum_length, column_name, data_type from ${DBase}.information_schema.columns where table_name = '${TableName}'"$
+	query = $"select character_maximum_length, column_name, data_type from information_schema.columns where table_name = '${TableName}'"$
 	command = "select"
 	Return Me
 End Sub
