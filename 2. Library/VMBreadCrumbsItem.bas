@@ -4,14 +4,15 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12, 9
+#IgnoreWarnings:12
 Sub Class_Globals
 	Public BreadCrumbsItem As VMElement
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the BreadCrumbsItem
@@ -19,9 +20,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	BreadCrumbsItem.Initialize(v, ID)
 	BreadCrumbsItem.SetTag("v-breadcrumbs-item")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
@@ -57,9 +59,15 @@ Sub AddChild(child As VMElement) As VMBreadCrumbsItem
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMBreadCrumbsItem
-	BreadCrumbsItem.SetText(t)
+Sub SetText(varText As String) As VMBreadCrumbsItem
+	If varText = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("text", varText)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Text"$
+	vue.SetStateSingle(pp, varText)
+	BreadCrumbsItem.Bind(":text", pp)
 	Return Me
 End Sub
 
@@ -75,7 +83,7 @@ Sub AddClass(c As String) As VMBreadCrumbsItem
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMBreadCrumbsItem
+Sub SetAttr(attr As Map) As VMBreadCrumbsItem
 	BreadCrumbsItem.SetAttr(attr)
 	Return Me
 End Sub
@@ -94,37 +102,26 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMBreadCrumbsItem
+Sub SetActiveClass(varActiveClass As String) As VMBreadCrumbsItem
+	If varActiveClass = "" Then Return Me
+	If varActiveClass = "v-breadcrumbs__item--disabled" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	BreadCrumbsItem.Bind(":active-class", pp)
 	Return Me
 End Sub
 
-'set append
-Sub SetAppend(varAppend As Object) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}Append"$
-	vue.SetStateSingle(pp, varAppend)
-	BreadCrumbsItem.Bind(":append", pp)
-	Return Me
-End Sub
-
-'set disabled
-Sub SetDisabled(varDisabled As boolean) As VMBreadCrumbsItem
-	BreadCrumbsItem.SetDisabled(varDisabled)
-	Return Me
-End Sub
-
-'set exact
-Sub SetExact(varExact As Object) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}Exact"$
-	vue.SetStateSingle(pp, varExact)
-	BreadCrumbsItem.Bind(":exact", pp)
-	Return Me
-End Sub
-
 'set exact-active-class
-Sub SetExactActiveClass(varExactActiveClass As Object) As VMBreadCrumbsItem
+Sub SetExactActiveClass(varExactActiveClass As String) As VMBreadCrumbsItem
+	If varExactActiveClass = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact-active-class", varExactActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ExactActiveClass"$
 	vue.SetStateSingle(pp, varExactActiveClass)
 	BreadCrumbsItem.Bind(":exact-active-class", pp)
@@ -132,15 +129,103 @@ Sub SetExactActiveClass(varExactActiveClass As Object) As VMBreadCrumbsItem
 End Sub
 
 'set href
-Sub SetHref(varHref As Object) As VMBreadCrumbsItem
+Sub SetHref(varHref As String) As VMBreadCrumbsItem
+	If varHref = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("href", varHref)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Href"$
 	vue.SetStateSingle(pp, varHref)
 	BreadCrumbsItem.Bind(":href", pp)
 	Return Me
 End Sub
 
+'set tag
+Sub SetTag(varTag As String) As VMBreadCrumbsItem
+	If varTag = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("tag", varTag)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Tag"$
+	vue.SetStateSingle(pp, varTag)
+	BreadCrumbsItem.Bind(":tag", pp)
+	Return Me
+End Sub
+
+'set target
+Sub SetTarget(varTarget As String) As VMBreadCrumbsItem
+	If varTarget = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("target", varTarget)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Target"$
+	vue.SetStateSingle(pp, varTarget)
+	BreadCrumbsItem.Bind(":target", pp)
+	Return Me
+End Sub
+
+'set to
+Sub SetTo(varTo As String) As VMBreadCrumbsItem
+	If varTo = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("to", varTo)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}To"$
+	vue.SetStateSingle(pp, varTo)
+	BreadCrumbsItem.Bind(":to", pp)
+	Return Me
+End Sub
+
+'set append
+Sub SetAppend(varAppend As Boolean) As VMBreadCrumbsItem
+	If varAppend = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("append", varAppend)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Append"$
+	vue.SetStateSingle(pp, varAppend)
+	BreadCrumbsItem.Bind(":append", pp)
+	Return Me
+End Sub
+
+'set disabled
+Sub SetDisabled(varDisabled As Boolean) As VMBreadCrumbsItem
+	If varDisabled = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("disabled", varDisabled)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Disabled"$
+	vue.SetStateSingle(pp, varDisabled)
+	BreadCrumbsItem.Bind(":disabled", pp)
+	Return Me
+End Sub
+
+'set exact
+Sub SetExact(varExact As Boolean) As VMBreadCrumbsItem
+	If varExact = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("exact", varExact)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Exact"$
+	vue.SetStateSingle(pp, varExact)
+	BreadCrumbsItem.Bind(":exact", pp)
+	Return Me
+End Sub
+
 'set link
-Sub SetLink(varLink As Object) As VMBreadCrumbsItem
+Sub SetLink(varLink As Boolean) As VMBreadCrumbsItem
+	If varLink = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("link", varLink)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Link"$
 	vue.SetStateSingle(pp, varLink)
 	BreadCrumbsItem.Bind(":link", pp)
@@ -148,7 +233,12 @@ Sub SetLink(varLink As Object) As VMBreadCrumbsItem
 End Sub
 
 'set nuxt
-Sub SetNuxt(varNuxt As Object) As VMBreadCrumbsItem
+Sub SetNuxt(varNuxt As Boolean) As VMBreadCrumbsItem
+	If varNuxt = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("nuxt", varNuxt)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Nuxt"$
 	vue.SetStateSingle(pp, varNuxt)
 	BreadCrumbsItem.Bind(":nuxt", pp)
@@ -156,7 +246,12 @@ Sub SetNuxt(varNuxt As Object) As VMBreadCrumbsItem
 End Sub
 
 'set replace
-Sub SetReplace(varReplace As Object) As VMBreadCrumbsItem
+Sub SetReplace(varReplace As Boolean) As VMBreadCrumbsItem
+	If varReplace = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("replace", varReplace)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Replace"$
 	vue.SetStateSingle(pp, varReplace)
 	BreadCrumbsItem.Bind(":replace", pp)
@@ -164,31 +259,15 @@ Sub SetReplace(varReplace As Object) As VMBreadCrumbsItem
 End Sub
 
 'set ripple
-Sub SetRipple(varRipple As Object) As VMBreadCrumbsItem
+Sub SetRipple(varRipple As Boolean) As VMBreadCrumbsItem
+	If varRipple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("ripple", varRipple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Ripple"$
 	vue.SetStateSingle(pp, varRipple)
 	BreadCrumbsItem.Bind(":ripple", pp)
-	Return Me
-End Sub
-
-'set tag
-Sub SetTag(varTag As String) As VMBreadCrumbsItem
-	If varTag = "" Then Return Me
-	BreadCrumbsItem.Bind("tag", varTag)
-	Return Me
-End Sub
-
-'set target
-Sub SetTarget(varTarget As String) As VMBreadCrumbsItem
-	If varTarget = "" Then Return Me
-	SetAttrSingle("target", varTarget)
-	Return Me
-End Sub
-
-'set to
-Sub SetTo(varTo As String) As VMBreadCrumbsItem
-	If varTo = "" Then Return Me
-	BreadCrumbsItem.Bind("to", varTo)
 	Return Me
 End Sub
 
@@ -242,16 +321,6 @@ Sub UseTheme(themeName As String) As VMBreadCrumbsItem
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMBreadCrumbsItem
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	BreadCrumbsItem.Bind(":color", pp)
-	Return Me
-End Sub
-
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMBreadCrumbsItem
 	BreadCrumbsItem.RemoveAttr(sName)
@@ -277,6 +346,13 @@ Sub SetDesignMode(b As Boolean) As VMBreadCrumbsItem
 	Return Me
 End Sub
 
+'set static
+Sub SetStatic(b As Boolean) As VMBreadCrumbsItem
+	BreadCrumbsItem.SetStatic(b)
+	bStatic = b
+	Return Me
+End Sub
+
 'set tab index
 Sub SetTabIndex(ti As String) As VMBreadCrumbsItem
 	BreadCrumbsItem.SetTabIndex(ti)
@@ -284,7 +360,7 @@ Sub SetTabIndex(ti As String) As VMBreadCrumbsItem
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMBreadCrumbsItem
+Sub SetName(varName As String, bbind As Boolean) As VMBreadCrumbsItem
 	BreadCrumbsItem.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -386,27 +462,15 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBreadCrumbsItem
-BreadCrumbsItem.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	BreadCrumbsItem.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
+
 Sub SetVisible(b As Boolean) As VMBreadCrumbsItem
-BreadCrumbsItem.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMBreadCrumbsItem
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+	BreadCrumbsItem.SetVisible(b)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMBreadCrumbsItem
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
-End Sub

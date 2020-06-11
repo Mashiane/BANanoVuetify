@@ -27,7 +27,33 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	BottomNavigation.typeOf = "nav"
 	HasContent = False
 	bStatic = False
+	SetOnChange(Module, $"${ID}_change"$)
+	SetOnUpdateInputValue($"${ID}_updateinputvalue"$)
+	SetVModel($"${ID}bn"$)
 	Return Me
+End Sub
+
+Sub SetActive(btnID As String) As VMBottomNavigation
+	vue.SetData($"${ID}bn"$, btnID)
+	Return Me
+End Sub
+
+Sub AddButton(btnID As String, btnText As String, btnIcon As String, btnColor As String, btnValue As String, btnToolTip As String, btnBadge As String)
+	Dim btn As VMButton
+	btn.Initialize(vue, btnID, Me)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetColor(btnColor)
+	btn.SetSpan(btnText)
+	btn.AddIcon(btnIcon, "", "")
+	btn.SetTooltip(btnToolTip)
+	btn.SetAttrSingle("value", btnValue)
+	If btnBadge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(btnBadge)
+	End If
+	HasContent = True
+	AddComponent(btn.ToString)
 End Sub
 
 Sub SetStatic(b As Boolean) As VMBottomNavigation
@@ -182,6 +208,34 @@ Sub SetColor(varColor As String) As VMBottomNavigation
 	Return Me
 End Sub
 
+'set color intensity
+Sub SetBackgroundColorIntensity(color As String, intensity As String) As VMBottomNavigation
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("background-color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}backgroundcolor"$
+	vue.SetStateSingle(pp, scolor)
+	Bind(":background-color", pp)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMBottomNavigation
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, scolor)
+	Bind(":color", pp)
+	Return Me
+End Sub
+
 'set dark
 Sub SetDark(varDark As Boolean) As VMBottomNavigation
 	If varDark = False Then Return Me
@@ -264,12 +318,12 @@ End Sub
 Sub SetInputValue(varInputValue As Boolean) As VMBottomNavigation
 	If varInputValue = True Then Return Me
 	If bStatic Then
-		SetAttrSingle("input-value", varInputValue)
+		SetAttrSingle("input-value.sync", varInputValue)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}InputValue"$
 	vue.SetStateSingle(pp, varInputValue)
-	BottomNavigation.Bind(":input-value", pp)
+	BottomNavigation.Bind(":input-value.sync", pp)
 	Return Me
 End Sub
 

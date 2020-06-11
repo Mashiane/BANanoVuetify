@@ -94,9 +94,12 @@ Sub AddDivider As VMList
 	Return Me
 End Sub
 
+'a for loop for list items
 Sub CreateListItem(datasource As String, key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMListItem
 	Dim vli As VMListItem
-	vli.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	vli.Initialize(vue, "", Module)
+	vli.SetStatic(bStatic)
+	vli.SetDesignMode(DesignMode)
 	If DesignMode Then Return vli
 	vli.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
 	If key = "" Then
@@ -110,7 +113,9 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
-		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetVIf($"item.${avatar}"$)
+		lia.Initialize(vue, "", Module)
+		lia.SetStatic(bStatic)
+		lia.SetVIf($"item.${avatar}"$)
 		Dim img As VMImage
 		img.Initialize(vue, "", Module).SetStatic(bStatic)
 		img.SetAttrSingle(":src", $"item.${avatar}"$)
@@ -120,9 +125,12 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	'
 	If iconName <> "" Then
 		Dim vlii As VMListItemIcon
-		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetVif($"item.${iconName}"$)
+		vlii.Initialize(vue, "", Module)
+		vlii.SetStatic(bStatic)
+		vlii.SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
-		icon.Initialize(vue,"", Module).SetStatic(bStatic)
+		icon.Initialize(vue,"", Module)
+		icon.SetStatic(bStatic)
 		icon.SetVText($"item.${iconName}"$)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
@@ -138,13 +146,19 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 		'
 		If title <> "" Then
 			Dim lit As VMListItemTitle
-			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetVText($"item.${title}"$)
+			lit.Initialize(vue, "", Module)
+			lit.SetStatic(bStatic)
+			lit.SetVif($"item.${title}"$)
+			lit.SetVText($"item.${title}"$)
 			lit.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle <> "" Then
 			Dim listt As VMListItemSubTitle
-			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetVText($"item.${subtitle}"$)
+			listt.Initialize(vue, "", Module)
+			listt.SetStatic(bStatic)
+			listt.SetVIf($"item.${subtitle}"$)
+			listt.SetVText($"item.${subtitle}"$)
 			listt.Pop(lic.ListItemContent)
 		End If
 		lic.Pop(vli.ListItem)
@@ -152,7 +166,10 @@ Sub CreateListItem(datasource As String, key As String, avatar As String, iconNa
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${actionIcon}"$)
+		la.Initialize(vue, "", Module)
+		la.SetStatic(bStatic)
+		la.SetDesignMode(DesignMode)
+		la.SetVIf($"item.${actionIcon}"$)
 		Dim btn As VMButton
 		btn.Initialize(vue, "", Module).SetAttrLoose("icon")
 		Dim icon As VMIcon
@@ -173,7 +190,9 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	If DesignMode Then Return Me
 	'
 	Dim tmp As VMTemplate
-	tmp.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tmp.Initialize(vue, $"${ID}tmpl"$, Module)
+	tmp.SetStatic(bStatic)
+	tmp.SetDesignMode(DesignMode)
 	tmp.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
 	'
 	Dim vli As VMListItem
@@ -185,18 +204,30 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
-		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${avatar}"$)
+		lia.Initialize(vue, "", Module)
+		lia.SetStatic(bStatic)
+		lia.SetDesignMode(DesignMode)
+		lia.SetVIf($"item.${avatar}"$)
 		Dim img As VMImage
-		img.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrSingle(":src", $"item.${avatar}"$)
+		img.Initialize(vue, "", Module)
+		img.SetStatic(bStatic)
+		img.SetDesignMode(DesignMode)
+		img.SetAttrSingle(":src", $"item.${avatar}"$)
 		img.Pop(lia.ListItemAvatar)
 		lia.Pop(vli.ListItem)
 	End If
 	'
 	If iconName <> "" Then
 		Dim vlii As VMListItemIcon
-		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVif($"item.${iconName}"$)
+		vlii.Initialize(vue, "", Module)
+		vlii.SetStatic(bStatic)
+		vlii.SetDesignMode(DesignMode)
+		vlii.SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
-		icon.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${iconName}"$)
+		icon.Initialize(vue,"", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		icon.SetVText($"item.${iconName}"$)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If
@@ -207,17 +238,27 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	
 	If iContent > 0 Then
 		Dim lic As VMListItemContent
-		lic.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		lic.Initialize(vue,"", Module)
+		lic.SetStatic(bStatic)
+		lic.SetDesignMode(DesignMode)
 		'
 		If title <> "" Then
 			Dim lit As VMListItemTitle
-			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${title}"$)
+			lit.Initialize(vue, "", Module)
+			lit.SetStatic(bStatic)
+			lit.SetDesignMode(DesignMode)
+			lit.SetVIf($"item.${title}"$)
+			lit.SetVText($"item.${title}"$)
 			lit.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle <> "" Then
 			Dim listt As VMListItemSubTitle
-			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${subtitle}"$)
+			listt.Initialize(vue, "", Module)
+			listt.SetStatic(bStatic)
+			listt.SetDesignMode(DesignMode)
+			listt.SetVIf($"item.${subtitle}"$)
+			listt.SetVText($"item.${subtitle}"$)
 			listt.Pop(lic.ListItemContent)
 		End If
 		lic.Pop(vli.ListItem)
@@ -225,7 +266,10 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${actionIcon}"$)
+		la.Initialize(vue, "", Module)
+		la.SetStatic(bStatic)
+		la.SetDesignMode(DesignMode)
+		la.SetVIf($"item.${actionIcon}"$)
 		Dim btn As VMButton
 		btn.Initialize(vue, "", Module).SetAttrLoose("icon")
 		Dim icon As VMIcon
@@ -257,7 +301,9 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	If DesignMode Then Return Me
 	'
 	Dim tmp As VMTemplate
-	tmp.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	tmp.Initialize(vue, $"${ID}tmpl"$, Module)
+	tmp.SetStatic(bStatic)
+	tmp.SetDesignMode(DesignMode)
 	tmp.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
 	'
 	Dim vli As VMListItem
@@ -269,18 +315,30 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
-		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${avatar}"$)
+		lia.Initialize(vue, "", Module)
+		lia.SetStatic(bStatic)
+		lia.SetDesignMode(DesignMode)
+		lia.SetVIf($"item.${avatar}"$)
 		Dim img As VMImage
-		img.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrSingle(":src", $"item.${avatar}"$)
+		img.Initialize(vue, "", Module)
+		img.SetStatic(bStatic)
+		img.SetDesignMode(DesignMode)
+		img.SetAttrSingle(":src", $"item.${avatar}"$)
 		img.Pop(lia.ListItemAvatar)
 		lia.Pop(vli.ListItem)
 	End If
 	'
 	If iconName <> "" Then
 		Dim vlii As VMListItemIcon
-		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVif($"item.${iconName}"$)
+		vlii.Initialize(vue, "", Module)
+		vlii.SetStatic(bStatic)
+		vlii.SetDesignMode(DesignMode)
+		vlii.SetVif($"item.${iconName}"$)
 		Dim icon As VMIcon
-		icon.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${iconName}"$)
+		icon.Initialize(vue,"", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		icon.SetVText($"item.${iconName}"$)
 		If iconColor <> "" Then icon.SetAttrSingle(":color", $"item.${iconColor}"$)
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
@@ -292,23 +350,37 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	
 	If iContent > 0 Then
 		Dim lic As VMListItemContent
-		lic.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		lic.Initialize(vue,"", Module)
+		lic.SetStatic(bStatic)
+		lic.SetDesignMode(DesignMode)
 		'
 		If title <> "" Then
 			Dim lit As VMListItemTitle
-			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${title}"$)
+			lit.Initialize(vue, "", Module)
+			lit.SetStatic(bStatic)
+			lit.SetDesignMode(DesignMode)
+			lit.SetVif($"item.${title}"$)
+			lit.SetVText($"item.${title}"$)
 			lit.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle <> "" Then
 			Dim listt As VMListItemSubTitle
-			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${subtitle}"$)
+			listt.Initialize(vue, "", Module)
+			listt.SetStatic(bStatic)
+			listt.SetDesignMode(DesignMode)
+			listt.SetVIf($"item.${subtitle}"$)
+			listt.SetVText($"item.${subtitle}"$)
 			listt.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle1 <> "" Then
 			Dim listt1 As VMListItemSubTitle
-			listt1.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVText($"item.${subtitle1}"$)
+			listt1.Initialize(vue, "", Module)
+			listt1.SetStatic(bStatic)
+			listt1.SetDesignMode(DesignMode)
+			listt1.SetVIf($"item.${subtitle1}"$)
+			listt1.SetVText($"item.${subtitle1}"$)
 			listt1.Pop(lic.ListItemContent)
 		End If
 		lic.Pop(vli.ListItem)
@@ -316,12 +388,22 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetVIf($"item.${actionIcon}"$)
+		la.Initialize(vue, "", Module)
+		la.SetStatic(bStatic)
+		la.SetDesignMode(DesignMode)
+		la.SetVIf($"item.${actionIcon}"$)
 		Dim btn As VMButton
-		btn.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrLoose("icon")
+		btn.Initialize(vue, "", Module)
+		btn.SetStatic(bStatic)
+		btn.SetDesignMode(DesignMode)
+		btn.SetAttrLoose("icon")
 		Dim icon As VMIcon
-		icon.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-		If actionIconColor <> "" Then icon.SetAttrSingle(":color", $"item.${actionIconColor}"$)
+		icon.Initialize(vue, "", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		If actionIconColor <> "" Then 
+			icon.SetAttrSingle(":color", $"item.${actionIconColor}"$)
+		End If
 		icon.SetVText($"item.${actionIcon}"$)
 		btn.AddComponent(icon.ToString)
 		la.AddComponent(btn.ToString)
@@ -331,11 +413,17 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	vli.Pop(tmp.Template)	
 	'add the divider
 	Dim dvd As VMDivider
-	dvd.Initialize(vue).SetVElseIf("item.divider").Bind(":key", "i").SetInset
+	dvd.Initialize(vue)
+	dvd.SetVElseIf("item.divider")
+	dvd.Bind(":key", "i").SetInset
 	dvd.Pop(tmp.Template)
 	'add sub heading
 	Dim sh As VMSubHeader
-	sh.Initialize(vue).SetVElseIf("item.header").Bind(":key", "item.header").SetVText("item.header").SetInset(True)
+	sh.Initialize(vue)
+	sh.SetVElseIf("item.header")
+	sh.Bind(":key", "item.header")
+	sh.SetVText("item.header")
+	sh.SetInset(True)
 	sh.Pop(tmp.Template)
 	tmp.Pop(List)
 	HasContent = True
@@ -479,25 +567,39 @@ End Sub
 '
 Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String) As VMList
 	Dim vli As VMListItem
-	vli.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	vli.Initialize(vue, key, Module)
+	vli.SetStatic(bStatic)
+	vli.SetDesignMode(DesignMode)
 	vli.SetAttrSingle("key", key)
 	vli.SetOnClick($"${ID}_click"$)
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
-		lia.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		lia.Initialize(vue, "", Module)
+		lia.SetStatic(bStatic)
+		lia.SetDesignMode(DesignMode)
 		Dim img As VMImage
-		img.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrSingle("src", avatar)
+		img.Initialize(vue, "", Module)
+		img.SetStatic(bStatic)
+		img.SetDesignMode(DesignMode)
+		img.SetAttrSingle("src", avatar)
 		img.Pop(lia.ListItemAvatar)
 		lia.Pop(vli.ListItem)
 	End If
 	'
 	If iconName <> "" Then
 		Dim vlii As VMListItemIcon
-		vlii.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		vlii.Initialize(vue, "", Module)
+		vlii.SetStatic(bStatic)
+		vlii.SetDesignMode(DesignMode)
 		Dim icon As VMIcon
-		icon.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(iconName)
-		If iconColor <> "" Then icon.SetAttrSingle("color", iconColor)
+		icon.Initialize(vue,"", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		icon.SetText(iconName)
+		If iconColor <> "" Then 
+			icon.SetAttrSingle("color", iconColor)
+		End If
 		icon.Pop(vlii.ListItemIcon)
 		vlii.Pop(vli.ListItem)
 	End If
@@ -508,23 +610,34 @@ Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As S
 	
 	If iContent > 0 Then
 		Dim lic As VMListItemContent
-		lic.Initialize(vue,"", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		lic.Initialize(vue,"", Module)
+		lic.SetStatic(bStatic)
+		lic.SetDesignMode(DesignMode)
 		'
 		If title <> "" Then
 			Dim lit As VMListItemTitle
-			lit.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(title)
+			lit.Initialize(vue, "", Module)
+			lit.SetStatic(bStatic)
+			lit.SetDesignMode(DesignMode)
+			lit.SetText(title)
 			lit.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle <> "" Then
 			Dim listt As VMListItemSubTitle
-			listt.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(subtitle)
+			listt.Initialize(vue, "", Module)
+			listt.SetStatic(bStatic)
+			listt.SetDesignMode(DesignMode)
+			listt.SetText(subtitle)
 			listt.Pop(lic.ListItemContent)
 		End If
 		'
 		If subtitle1 <> "" Then
 			Dim listt1 As VMListItemSubTitle
-			listt1.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(subtitle1)
+			listt1.Initialize(vue, "", Module)
+			listt1.SetStatic(bStatic)
+			listt1.SetDesignMode(DesignMode)
+			listt1.SetText(subtitle1)
 			listt1.Pop(lic.ListItemContent)
 		End If
 		lic.Pop(vli.ListItem)
@@ -532,12 +645,21 @@ Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As S
 	'
 	If actionIcon <> "" Then
 		Dim la As VMListItemAction
-		la.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		la.Initialize(vue, "", Module)
+		la.SetStatic(bStatic)
+		la.SetDesignMode(DesignMode)
 		Dim btn As VMButton
-		btn.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttrLoose("icon")
+		btn.Initialize(vue, "", Module)
+		btn.SetStatic(bStatic)
+		btn.SetDesignMode(DesignMode)
+		btn.SetAttrLoose("icon")
 		Dim icon As VMIcon
-		icon.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-		If actionIconColor <> "" Then icon.SetAttrSingle("color", actionIconColor)
+		icon.Initialize(vue, "", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		If actionIconColor <> "" Then 
+			icon.SetAttrSingle("color", actionIconColor)
+		End If
 		icon.SetText(actionIcon)
 		btn.AddComponent(icon.ToString)
 		la.AddComponent(btn.ToString)

@@ -10,8 +10,9 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean     'ignore
-	Private Module As Object           'ignore
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the ProgressLinear
@@ -19,47 +20,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	ProgressLinear.Initialize(v, ID)
 	ProgressLinear.SetTag("v-progress-linear")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
-	Return Me
-End Sub
-
-'set the row and column position
-Sub SetRC(sRow As String, sCol As String) As VMProgressLinear
-	ProgressLinear.SetRC(sRow, sCol)
-	Return Me
-End Sub
-
-'set the offsets for this item
-Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMProgressLinear
-	ProgressLinear.SetDeviceOffsets(OS, OM, OL, OX)
-	Return Me
-End Sub
-
-'set the sizes for this item
-Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMProgressLinear
-	ProgressLinear.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-'set the position: row and column and sizes
-Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMProgressLinear
-	SetRC(srow, scell)
-	SetDeviceSizes(small,medium, large, xlarge)
-	Return Me
-End Sub
-
-Sub SetAttributes(attrs As List) As VMProgressLinear
-	For Each stra As String In attrs
-		SetAttrLoose(stra)
-	Next
+	bStatic = False
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-	
 	Return ProgressLinear.ToString
 End Sub
 
@@ -90,12 +59,6 @@ Sub AddChild(child As VMElement) As VMProgressLinear
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMProgressLinear
-	ProgressLinear.SetText(t)
-	Return Me
-End Sub
-
 'add to parent
 Sub Pop(p As VMElement)
 	p.SetText(ToString)
@@ -108,7 +71,7 @@ Sub AddClass(c As String) As VMProgressLinear
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMProgressLinear
+Sub SetAttr(attr As Map) As VMProgressLinear
 	ProgressLinear.SetAttr(attr)
 	Return Me
 End Sub
@@ -127,7 +90,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set absolute
-Sub SetAbsolute(varAbsolute As Object) As VMProgressLinear
+Sub SetAbsolute(varAbsolute As Boolean) As VMProgressLinear
+	If varAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("absolute", varAbsolute)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Absolute"$
 	vue.SetStateSingle(pp, varAbsolute)
 	ProgressLinear.Bind(":absolute", pp)
@@ -135,55 +103,37 @@ Sub SetAbsolute(varAbsolute As Object) As VMProgressLinear
 End Sub
 
 'set active
-Sub SetActive(varActive As Object) As VMProgressLinear
+Sub SetActive(varActive As Boolean) As VMProgressLinear
+	If bStatic Then
+		SetAttrSingle(":active", varActive)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Active"$
 	vue.SetStateSingle(pp, varActive)
 	ProgressLinear.Bind(":active", pp)
 	Return Me
 End Sub
 
-'set background-color
-Sub SetBackgroundColor(varBackgroundColor As Object) As VMProgressLinear
-	Dim pp As String = $"${ID}BackgroundColor"$
-	vue.SetStateSingle(pp, varBackgroundColor)
-	ProgressLinear.Bind(":background-color", pp)
-	Return Me
-End Sub
-
-'set background-opacity
-Sub SetBackgroundOpacity(varBackgroundOpacity As Object) As VMProgressLinear
-	Dim pp As String = $"${ID}BackgroundOpacity"$
-	vue.SetStateSingle(pp, varBackgroundOpacity)
-	ProgressLinear.Bind(":background-opacity", pp)
-	Return Me
-End Sub
-
 'set bottom
-Sub SetBottom(varBottom As Object) As VMProgressLinear
+Sub SetBottom(varBottom As Boolean) As VMProgressLinear
+	If varBottom = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("bottom", varBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Bottom"$
 	vue.SetStateSingle(pp, varBottom)
 	ProgressLinear.Bind(":bottom", pp)
 	Return Me
 End Sub
 
-'set buffer-value
-Sub SetBufferValue(varBufferValue As Object) As VMProgressLinear
-	Dim pp As String = $"${ID}BufferValue"$
-	vue.SetStateSingle(pp, varBufferValue)
-	ProgressLinear.Bind(":buffer-value", pp)
-	Return Me
-End Sub
-
-'set color
-Sub SetColor(varColor As Object) As VMProgressLinear
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, varColor)
-	ProgressLinear.Bind(":color", pp)
-	Return Me
-End Sub
-
 'set dark
-Sub SetDark(varDark As Object) As VMProgressLinear
+Sub SetDark(varDark As Boolean) As VMProgressLinear
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	ProgressLinear.Bind(":dark", pp)
@@ -191,23 +141,24 @@ Sub SetDark(varDark As Object) As VMProgressLinear
 End Sub
 
 'set fixed
-Sub SetFixed(varFixed As Object) As VMProgressLinear
+Sub SetFixed(varFixed As Boolean) As VMProgressLinear
+	If varFixed = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fixed", varFixed)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Fixed"$
 	vue.SetStateSingle(pp, varFixed)
 	ProgressLinear.Bind(":fixed", pp)
 	Return Me
 End Sub
 
-'set height
-Sub SetHeight(varHeight As Object) As VMProgressLinear
-	Dim pp As String = $"${ID}Height"$
-	vue.SetStateSingle(pp, varHeight)
-	ProgressLinear.Bind(":height", pp)
-	Return Me
-End Sub
-
 'set indeterminate
-Sub SetIndeterminate(varIndeterminate As Object) As VMProgressLinear
+Sub SetIndeterminate(varIndeterminate As Boolean) As VMProgressLinear
+	If bStatic Then
+		SetAttrSingle(":indeterminate", varIndeterminate)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Indeterminate"$
 	vue.SetStateSingle(pp, varIndeterminate)
 	ProgressLinear.Bind(":indeterminate", pp)
@@ -215,7 +166,12 @@ Sub SetIndeterminate(varIndeterminate As Object) As VMProgressLinear
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMProgressLinear
+Sub SetLight(varLight As Boolean) As VMProgressLinear
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	ProgressLinear.Bind(":light", pp)
@@ -223,7 +179,12 @@ Sub SetLight(varLight As Object) As VMProgressLinear
 End Sub
 
 'set query
-Sub SetQuery(varQuery As Object) As VMProgressLinear
+Sub SetQuery(varQuery As Boolean) As VMProgressLinear
+	If varQuery = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("query", varQuery)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Query"$
 	vue.SetStateSingle(pp, varQuery)
 	ProgressLinear.Bind(":query", pp)
@@ -231,7 +192,12 @@ Sub SetQuery(varQuery As Object) As VMProgressLinear
 End Sub
 
 'set rounded
-Sub SetRounded(varRounded As Object) As VMProgressLinear
+Sub SetRounded(varRounded As Boolean) As VMProgressLinear
+	If varRounded = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("rounded", varRounded)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Rounded"$
 	vue.SetStateSingle(pp, varRounded)
 	ProgressLinear.Bind(":rounded", pp)
@@ -239,7 +205,12 @@ Sub SetRounded(varRounded As Object) As VMProgressLinear
 End Sub
 
 'set stream
-Sub SetStream(varStream As Object) As VMProgressLinear
+Sub SetStream(varStream As Boolean) As VMProgressLinear
+	If varStream = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("stream", varStream)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Stream"$
 	vue.SetStateSingle(pp, varStream)
 	ProgressLinear.Bind(":stream", pp)
@@ -247,7 +218,12 @@ Sub SetStream(varStream As Object) As VMProgressLinear
 End Sub
 
 'set striped
-Sub SetStriped(varStriped As Object) As VMProgressLinear
+Sub SetStriped(varStriped As Boolean) As VMProgressLinear
+	If varStriped = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("striped", varStriped)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Striped"$
 	vue.SetStateSingle(pp, varStriped)
 	ProgressLinear.Bind(":striped", pp)
@@ -255,16 +231,97 @@ Sub SetStriped(varStriped As Object) As VMProgressLinear
 End Sub
 
 'set top
-Sub SetTop(varTop As Object) As VMProgressLinear
+Sub SetTop(varTop As Boolean) As VMProgressLinear
+	If varTop = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("top", varTop)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Top"$
 	vue.SetStateSingle(pp, varTop)
 	ProgressLinear.Bind(":top", pp)
 	Return Me
 End Sub
 
+'set background-color
+Sub SetBackgroundColor(varBackgroundColor As String) As VMProgressLinear
+	If varBackgroundColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("background-color", varBackgroundColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}BackgroundColor"$
+	vue.SetStateSingle(pp, varBackgroundColor)
+	ProgressLinear.Bind(":background-color", pp)
+	Return Me
+End Sub
+
+'set background-opacity
+Sub SetBackgroundOpacity(varBackgroundOpacity As String) As VMProgressLinear
+	If varBackgroundOpacity = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("background-opacity", varBackgroundOpacity)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}BackgroundOpacity"$
+	vue.SetStateSingle(pp, varBackgroundOpacity)
+	ProgressLinear.Bind(":background-opacity", pp)
+	Return Me
+End Sub
+
+'set buffer-value
+Sub SetBufferValue(varBufferValue As String) As VMProgressLinear
+	If varBufferValue = "" Then Return Me
+	If varBufferValue = "100" Then Return Me
+	If bStatic Then
+		SetAttrSingle("buffer-value", varBufferValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}BufferValue"$
+	vue.SetStateSingle(pp, varBufferValue)
+	ProgressLinear.Bind(":buffer-value", pp)
+	Return Me
+End Sub
+
+'set color
+Sub SetColor(varColor As String) As VMProgressLinear
+	If varColor = "" Then Return Me
+	If varColor = "primary" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Color"$
+	vue.SetStateSingle(pp, varColor)
+	ProgressLinear.Bind(":color", pp)
+	Return Me
+End Sub
+
+'set height
+Sub SetHeight(varHeight As String) As VMProgressLinear
+	If varHeight = "" Then Return Me
+	If varHeight = "4" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Height"$
+	vue.SetStateSingle(pp, varHeight)
+	ProgressLinear.Bind(":height", pp)
+	Return Me
+End Sub
+
 'set value
-Sub SetValue(varValue As Object) As VMProgressLinear
-	ProgressLinear.SetValue(varValue, False)
+Sub SetValue(varValue As String) As VMProgressLinear
+	If varValue = "" Then Return Me
+	If varValue = "0" Then Return Me
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	ProgressLinear.Bind(":value", pp)
 	Return Me
 End Sub
 
@@ -320,9 +377,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMProgressLinear
+Sub SetColorIntensity(color As String, intensity As String) As VMProgressLinear
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	ProgressLinear.Bind(":color", pp)
 	Return Me
@@ -353,6 +415,13 @@ Sub SetDesignMode(b As Boolean) As VMProgressLinear
 	Return Me
 End Sub
 
+'set static
+Sub SetStatic(b As Boolean) As VMProgressLinear
+	ProgressLinear.SetStatic(b)
+	bStatic = b
+	Return Me
+End Sub
+
 'set tab index
 Sub SetTabIndex(ti As String) As VMProgressLinear
 	ProgressLinear.SetTabIndex(ti)
@@ -360,7 +429,7 @@ Sub SetTabIndex(ti As String) As VMProgressLinear
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMProgressLinear
+Sub SetName(varName As String, bbind As Boolean) As VMProgressLinear
 	ProgressLinear.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -383,27 +452,107 @@ Sub BindStyleSingle(prop As String, value As String) As VMProgressLinear
 	Return Me
 End Sub
 
-Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMProgressLinear
-ProgressLinear.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMProgressLinear
-ProgressLinear.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMProgressLinear
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+Sub SetVElse(vif As String) As VMProgressLinear
+	ProgressLinear.SetVElse(vif)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMProgressLinear
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+Sub SetVText(vhtml As String) As VMProgressLinear
+	ProgressLinear.SetVText(vhtml)
+	Return Me
+End Sub
+
+Sub SetVhtml(vhtml As String) As VMProgressLinear
+	ProgressLinear.SetVHtml(vhtml)
+	Return Me
+End Sub
+
+Sub SetAttributes(attrs As List) As VMProgressLinear
+	For Each stra As String In attrs
+		SetAttrLoose(stra)
+	Next
+	Return Me
+End Sub
+
+'set for
+Sub SetVFor(item As String, dataSource As String) As VMProgressLinear
+	dataSource = dataSource.tolowercase
+	item = item.tolowercase
+	Dim sline As String = $"${item} in ${dataSource}"$
+	SetAttrSingle("v-for", sline)
+	Return Me
+End Sub
+
+Sub SetKey(k As String) As VMProgressLinear
+	k = k.tolowercase
+	SetAttrSingle(":key", k)
+	Return Me
+End Sub
+
+'set the row and column position
+Sub SetRC(sRow As String, sCol As String) As VMProgressLinear
+	ProgressLinear.SetRC(sRow, sCol)
+	Return Me
+End Sub
+
+'set the offsets for this item
+Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMProgressLinear
+	ProgressLinear.SetDeviceOffsets(OS, OM, OL, OX)
+	Return Me
+End Sub
+
+
+'set the position: row and column and sizes
+Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMProgressLinear
+	SetRC(srow, scell)
+	SetDeviceSizes(small,medium, large, xlarge)
+	Return Me
+End Sub
+
+'set the sizes for this item
+Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMProgressLinear
+	ProgressLinear.SetDeviceSizes(SS, SM, SL, SX)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMProgressLinear
+	ProgressLinear.SetText(comp)
+	Return Me
+End Sub
+
+
+Sub SetTextCenter As VMProgressLinear
+	ProgressLinear.AddClass("text-center")
+	Return Me
+End Sub
+
+Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
+	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMProgressLinear
+	ProgressLinear.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+
+Sub SetVisible(b As Boolean) As VMProgressLinear
+	ProgressLinear.SetVisible(b)
+	Return Me
+End Sub
+
+'set background-color
+Sub SetBackgroundColorIntensity(varBackgroundColor As String, varBackgroundColorIntensity As String) As VMProgressLinear
+	If varBackgroundColor = "" Then Return Me
+	Dim mcolor As String = $"${varBackgroundColor} ${varBackgroundColorIntensity}"$
+	If bStatic Then
+		SetAttrSingle("background-color", mcolor)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}BackgroundColor"$
+	vue.SetStateSingle(pp, mcolor)
+	ProgressLinear.Bind(":background-color", pp)
 	Return Me
 End Sub

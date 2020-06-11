@@ -96,10 +96,10 @@ Sub BuildDrawer
 	vm.Drawer.AddItem("banners", "", "Banners")
 	vm.Drawer.AddItem("bottomnavigation", "", "Bottom Navigation")
 	vm.Drawer.AddItem("bottomsheets", "", "Bottom Sheets")
-	'vm.Drawer.AddItem("breadcrumbs", "", "Breadcrumbs")
+	vm.Drawer.AddItem("breadcrumbs", "", "Breadcrumbs")
 	vm.Drawer.AddItem("buttons", "", "Buttons")
 	'vm.Drawer.AddItem("calendars", "", "Calendars")
-	'vm.Drawer.AddItem("cards", "", "Cards")
+	vm.Drawer.AddItem("cards", "", "Cards")
 	vm.Drawer.AddItem("chips", "", "Chips")
 	vm.Drawer.AddItem("dialogs", "", "Dialogs")
 	vm.Drawer.AddItem("autocomplete", "", "Auto Complete")
@@ -213,7 +213,14 @@ Sub draweritems_click(e As BANanoEvent)
 	'get the id from the event
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.pageresume
+	vm.BottomNav.Hide
 	Select Case elID
+	Case "breadcrumbs"
+		vm.NavBar.UpdateTitle(modBreadCrumbs.title)
+		vm.ShowPage(modBreadCrumbs.name)
+	Case "cards"
+		vm.NavBar.UpdateTitle(modCard.title)
+		vm.ShowPage(modCard.name)
 	Case "sparklines"
 		vm.NavBar.UpdateTitle(modSparkLine.title)
 		vm.ShowPage(modSparkLine.name)
@@ -248,6 +255,7 @@ Sub draweritems_click(e As BANanoEvent)
 		vm.NavBar.UpdateTitle(modBottomSheet.title)
 		vm.ShowPage(modBottomSheet.name)
 	Case "bottomnavigation"
+		vm.BottomNav.Show
 		vm.NavBar.UpdateTitle(modBottomNavigation.title)
 		vm.ShowPage(modBottomNavigation.name)
 	Case "banners"
@@ -428,4 +436,10 @@ Sub AddPages
 	vm.AddPage(modLoadingSkeleton.name, modLoadingSkeleton)
 	vm.AddPage(modTimeLine.name, modTimeLine)
 	vm.AddPage(modSparkLine.name, modSparkLine)
+	vm.AddPage(modCard.name, modCard)
+	vm.AddPage(modBreadCrumbs.name, modBreadCrumbs)
+End Sub
+
+Private Sub bottomnav_change(value As Object)
+	vm.ShowSnackBarSuccess(value)
 End Sub

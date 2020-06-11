@@ -10,8 +10,11 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean    'ignore
-	Private Module As Object     'ignore
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
+	Private showKey As String
+	Public Container As VMContainer
 End Sub
 
 'initialize the Overlay
@@ -19,63 +22,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	Overlay.Initialize(v, ID)
 	Overlay.SetTag("v-overlay")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
-	Return Me
-End Sub
-
-'set the row and column position
-Sub SetRC(sRow As String, sCol As String) As VMOverlay
-	Overlay.SetRC(sRow, sCol)
-	Return Me
-End Sub
-
-'set the offsets for this item
-Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMOverlay
-	Overlay.SetDeviceOffsets(OS, OM, OL, OX)
-	Return Me
-End Sub
-
-'set the sizes for this item
-Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMOverlay
-	Overlay.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-'set the position: row and column and sizes
-Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMOverlay
-	SetRC(srow, scell)
-	SetDeviceSizes(small,medium, large, xlarge)
-	Return Me
-End Sub
-
-Sub SetAttributes(attrs As List) As VMOverlay
-	For Each stra As String In attrs
-		SetAttrLoose(stra)
-	Next
+	bStatic = False
+	showKey = $"${ID}show"$
+	Overlay.SetVisible(False)
+	SetValue(False)
+	Container.Initialize(vue, $"${ID}cont"$, Module)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-	
+	If Container.HasContent Then AddComponent(Container.ToString)
 	Return Overlay.ToString
-End Sub
-
-Sub SetVModel(k As String) As VMOverlay
-	Overlay.SetVModel(k)
-	Return Me
-End Sub
-
-Sub SetVIf(vif As String) As VMOverlay
-	Overlay.SetVIf(vif)
-	Return Me
-End Sub
-
-Sub SetVShow(vif As String) As VMOverlay
-	Overlay.SetVShow(vif)
-	Return Me
 End Sub
 
 'add to app template
@@ -87,12 +48,6 @@ End Sub
 Sub AddChild(child As VMElement) As VMOverlay
 	Dim childHTML As String = child.ToString
 	Overlay.SetText(childHTML)
-	Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMOverlay
-	Overlay.SetText(t)
 	Return Me
 End Sub
 
@@ -126,40 +81,28 @@ Sub AddChildren(children As List)
 	Next
 End Sub
 
-'set absolute
-Sub SetAbsolute(varAbsolute As Object) As VMOverlay
-	Dim pp As String = $"${ID}Absolute"$
-	vue.SetStateSingle(pp, varAbsolute)
-	Overlay.Bind(":absolute", pp)
-	Return Me
-End Sub
-
 'set color
-Sub SetColor(varColor As Object) As VMOverlay
+Sub SetColor(varColor As String) As VMOverlay
+	If varColor = "" Then Return Me
+	If varColor = "#212121" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Overlay.Bind(":color", pp)
 	Return Me
 End Sub
 
-'set dark
-Sub SetDark(varDark As Object) As VMOverlay
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	Overlay.Bind(":dark", pp)
-	Return Me
-End Sub
-
-'set light
-Sub SetLight(varLight As Object) As VMOverlay
-	Dim pp As String = $"${ID}Light"$
-	vue.SetStateSingle(pp, varLight)
-	Overlay.Bind(":light", pp)
-	Return Me
-End Sub
-
 'set opacity
-Sub SetOpacity(varOpacity As Object) As VMOverlay
+Sub SetOpacity(varOpacity As String) As VMOverlay
+	If varOpacity = "" Then Return Me
+	If varOpacity = "0.46" Then Return Me
+	If bStatic Then
+		SetAttrSingle("opacity", varOpacity)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Opacity"$
 	vue.SetStateSingle(pp, varOpacity)
 	Overlay.Bind(":opacity", pp)
@@ -167,29 +110,79 @@ Sub SetOpacity(varOpacity As Object) As VMOverlay
 End Sub
 
 'set value
-Sub SetValue(varValue As String) As VMOverlay
-	Overlay.SetAttrsingle(":value", varValue)
+Sub SetValue(varValue As Boolean) As VMOverlay
+	If bStatic Then 
+		SetAttrSingle(":value", varValue)	
+		Return Me
+	End If
+	vue.SetStateSingle(showKey, varValue)
+	Overlay.Bind(":value", showKey)
 	Return Me
 End Sub
 
 'set z-index
-Sub SetZIndex(varZIndex As Object) As VMOverlay
+Sub SetZIndex(varZIndex As String) As VMOverlay
+	If varZIndex = "" Then Return Me
+	If varZIndex = "5" Then Return Me
+	If bStatic Then
+		SetAttrSingle("z-index", varZIndex)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ZIndex"$
 	vue.SetStateSingle(pp, varZIndex)
 	Overlay.Bind(":z-index", pp)
 	Return Me
 End Sub
 
+'set absolute
+Sub SetAbsolute(varAbsolute As Boolean) As VMOverlay
+	If varAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("absolute", varAbsolute)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Absolute"$
+	vue.SetStateSingle(pp, varAbsolute)
+	Overlay.Bind(":absolute", pp)
+	Return Me
+End Sub
+
+'set dark
+Sub SetDark(varDark As Boolean) As VMOverlay
+	If varDark = True Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dark"$
+	vue.SetStateSingle(pp, varDark)
+	Overlay.Bind(":dark", pp)
+	Return Me
+End Sub
+
+'set light
+Sub SetLight(varLight As Boolean) As VMOverlay
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Light"$
+	vue.SetStateSingle(pp, varLight)
+	Overlay.Bind(":light", pp)
+	Return Me
+End Sub
+
 
 'hide the component
 Sub Hide As VMOverlay
-	Overlay.SetVisible(False)
+	vue.SetData(showKey, False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMOverlay
-	Overlay.SetVisible(True)
+	vue.SetData(showKey, True)
 	Return Me
 End Sub
 
@@ -232,9 +225,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMOverlay
+Sub SetColorIntensity(color As String, intensity As String) As VMOverlay
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Overlay.Bind(":color", pp)
 	Return Me
@@ -261,7 +259,16 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMOverlay
 	Overlay.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
+	Return Me
+End Sub
+
+'set static
+Sub SetStatic(b As Boolean) As VMOverlay
+	Overlay.SetStatic(b)
+	Container.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
@@ -272,7 +279,7 @@ Sub SetTabIndex(ti As String) As VMOverlay
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMOverlay
+Sub SetName(varName As String, bbind As Boolean) As VMOverlay
 	Overlay.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -295,27 +302,87 @@ Sub BindStyleSingle(prop As String, value As String) As VMOverlay
 	Return Me
 End Sub
 
-Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMOverlay
-Overlay.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMOverlay
-Overlay.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMOverlay
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+Sub SetVElse(vif As String) As VMOverlay
+	Overlay.SetVElse(vif)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMOverlay
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+Sub SetVText(vhtml As String) As VMOverlay
+	Overlay.SetVText(vhtml)
+	Return Me
+End Sub
+
+Sub SetVhtml(vhtml As String) As VMOverlay
+	Overlay.SetVHtml(vhtml)
+	Return Me
+End Sub
+
+Sub SetAttributes(attrs As List) As VMOverlay
+	For Each stra As String In attrs
+		SetAttrLoose(stra)
+	Next
+	Return Me
+End Sub
+
+'set for
+Sub SetVFor(item As String, dataSource As String) As VMOverlay
+	dataSource = dataSource.tolowercase
+	item = item.tolowercase
+	Dim sline As String = $"${item} in ${dataSource}"$
+	SetAttrSingle("v-for", sline)
+	Return Me
+End Sub
+
+Sub SetKey(k As String) As VMOverlay
+	k = k.tolowercase
+	SetAttrSingle(":key", k)
+	Return Me
+End Sub
+
+'set the row and column position
+Sub SetRC(sRow As String, sCol As String) As VMOverlay
+	Overlay.SetRC(sRow, sCol)
+	Return Me
+End Sub
+
+'set the offsets for this item
+Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMOverlay
+	Overlay.SetDeviceOffsets(OS, OM, OL, OX)
+	Return Me
+End Sub
+
+
+'set the position: row and column and sizes
+Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMOverlay
+	SetRC(srow, scell)
+	SetDeviceSizes(small,medium, large, xlarge)
+	Return Me
+End Sub
+
+'set the sizes for this item
+Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMOverlay
+	Overlay.SetDeviceSizes(SS, SM, SL, SX)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMOverlay
+	Overlay.SetText(comp)
+	Return Me
+End Sub
+
+
+Sub SetTextCenter As VMOverlay
+	Overlay.AddClass("text-center")
+	Return Me
+End Sub
+
+Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
+	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMOverlay
+	Overlay.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
 End Sub

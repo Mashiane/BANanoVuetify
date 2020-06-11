@@ -48,6 +48,8 @@ Sub AddButton(btnID As String, btnText As String, btnIcon As String, btnColor As
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
 	btn.SetColor(btnColor)
+	
+	
 	If btnText = "" Then
 		btn.SetLabel(btnText)
 		btn.AddIcon(btnIcon, "left", "")
@@ -171,7 +173,7 @@ Sub SetBackgroundColorIntensity(color As String, intensity As String) As VMButto
 		SetAttrSingle("background-color", scolor)
 		Return Me
 	End If
-	Dim pp As String = $"${ID}Color"$
+	Dim pp As String = $"${ID}backgroundcolor"$
 	vue.SetStateSingle(pp, scolor)
 	ButtonToggle.Bind(":background-color", pp)
 	Return Me

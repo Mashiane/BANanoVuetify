@@ -19,7 +19,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'create 2 columns each spanning 12 columns
-	cont.addrows(1).AddColumns2x6
+	cont.addrows(2).AddColumns3x4
 	'
 	Dim menu As VMMenu = vm.CreateMenu("menu1", Me).SetIcon("mdi-dots-vertical")
 	menu.AddItem("inbox", "", "", "Inbox", "","")
@@ -32,6 +32,12 @@ Sub Code
 	menu1.AddItem("drafs1", "", "mdi-image", "Drafts", "","")
 	menu1.AddItem("sent1", "", "mdi-help-box", "Sent", "","")
 	menu1.AddToContainer(cont, 1, 2)
+	'
+	Dim menu2 As VMMenu = vm.CreateMenu("menu3", Me).SetAvatar("./assets/sponge.png")
+	menu2.AddItem("inbox1", "", "mdi-view-dashboard", "Inbox", "","")
+	menu2.AddItem("drafs1", "", "mdi-image", "Drafts", "","")
+	menu2.AddItem("sent1", "", "mdi-help-box", "Sent", "","")
+	menu2.AddToContainer(cont, 2, 1)
 	
 	vm.AddContainer(cont)
 End Sub
@@ -44,6 +50,13 @@ Sub menu1items_click(e As BANanoEvent)
 End Sub
 
 Sub menu2items_click(e As BANanoEvent)
+	'get the id from the event
+	Dim elID As String = vm.GetIDFromEvent(e)
+	vm.ShowSnackBar(elID)
+End Sub
+
+
+Sub menu3items_click(e As BANanoEvent)
 	'get the id from the event
 	Dim elID As String = vm.GetIDFromEvent(e)
 	vm.ShowSnackBar(elID)

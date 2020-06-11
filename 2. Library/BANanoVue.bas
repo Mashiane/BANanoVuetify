@@ -67,7 +67,6 @@ Sub Class_Globals
 	Public const BORDER_OUTSET As String = "outset"
 	Public const BORDER_RIDGE As String = "ridge"
 	Public const BORDER_SOLID As String = "solid"
-	
 	'
 	Public const COLOR_AMBER As String = "amber"
 	Public const COLOR_BLACK As String = "black"
@@ -117,6 +116,16 @@ Sub Class_Globals
 	Public const SIZE_P As String = "p"
 	Public const SIZE_SPAN As String = "span"
 	Public const SIZE_BLOCKQUOTE As String = "blockquote"
+	Public const SIZE_DIV As String = "div"
+	'
+	Public const TEXT_LEFT As String = "text-left"
+	Public const TEXT_CENTER As String = "text-center"
+	Public const TEXT_RIGHT As String = "text-right"
+	Public const TEXT_NO_WRAP As String = "text-no-wrap"
+	Public const TEXT_TRUNCATE As String = "text-truncate"
+	Public const TEXT_LOWERCASE As String = "text-lowercase"
+	Public const TEXT_UPPERCASE As String = "text-uppercase"
+	Public const TEXT_CAPITALIZE As String = "text-capitalize"
 	'
 	Type ColorTypes(red As String, pink As String, purple As String, deepPurple As String, _
 	indigo As String, blue As String, lightBlue As String, cyan As String, teal As String, green As String, _
@@ -3016,8 +3025,7 @@ End Sub
 
 'render the ux
 Sub UX()
-	Dim tmp As String = Template.tostring
-	GetTemplate = tmp
+	GetTemplate = Template.tostring
 	If routes.Size > 0 Then
 		Dim ropt As Map = CreateMap()
 		ropt.Put("mode", "history") 
@@ -3033,7 +3041,7 @@ Sub UX()
 	If computed.Size > 0 Then Options.Put("computed", computed)
 	If watches.Size > 0 Then Options.Put("watch", watches)
 	If components.Size > 0 Then Options.Put("components", components)
-	Options.Put("template", tmp)
+	Options.Put("template", GetTemplate)
 	BOVue.Initialize2("Vue", Options)
 	'get the state
 	Dim dKey As String = "$data"

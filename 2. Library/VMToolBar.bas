@@ -25,6 +25,7 @@ Sub Class_Globals
 	Public RightHamburger As VMElement
 	Private spanCnt As Int
 	Public TitleVModel As String
+	Public Progress As VMProgressLinear
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMToolBar
@@ -54,7 +55,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'
 	compx = 0
 	bStatic = False
+	Progress.Initialize(vue, $"${ID}progress"$, Me)
+	Progress.SetActive(False)
+	Progress.SetBottom(True)
+	Progress.SetIndeterminate(False) 
+	Progress.SetAbsolute(True)
 	Return Me
+End Sub
+
+Sub SetLoading(b As Boolean)
+	Progress.SetActive(b)
+	Progress.SetIndeterminate(b)
 End Sub
 
 Sub AddSpan(spanText As String) As VMToolBar
@@ -418,6 +429,7 @@ Sub Pop(p As VMElement)
 End Sub
 
 Sub ToString As String
+	ToolBar.SetText(Progress.ToString)
 	If Tabs.hascontent Then AddTabs(Tabs)
 	If Extension.HasContent Then Extension.pop(ToolBar)
 	Return ToolBar.tostring

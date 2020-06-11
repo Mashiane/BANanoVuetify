@@ -869,6 +869,18 @@ private Sub SetText(varText As String) As VMButton
 	Return Me
 End Sub
 
+Sub SetSpan(varText As String) As VMButton
+	If DesignMode = True Or bStatic = True Then
+		txt = $"<span>${varText}</span>"$	
+	Else
+		Dim pp As String = $"${ID}label"$
+		pp = pp.tolowercase
+		vue.SetStateSingle(pp, varText)
+		txt = $"<span>{{ ${pp} }}</span>"$
+	End If
+	Return Me
+End Sub
+
 'set tile
 Sub SetTile(varTile As Boolean) As VMButton
 	If varTile = False Then Return Me

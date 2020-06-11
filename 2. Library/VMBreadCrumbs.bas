@@ -4,14 +4,17 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12, 9
+#IgnoreWarnings:12
 Sub Class_Globals
 	Public BreadCrumbs As VMElement
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
+	Private items As List
+	Private itemsKey As String
 End Sub
 
 'initialize the BreadCrumbs
@@ -19,10 +22,39 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	BreadCrumbs.Initialize(v, ID)
 	BreadCrumbs.SetTag("v-breadcrumbs")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
+	items.Initialize 
+	SetItems(vue.NewList)
 	Return Me
+End Sub
+
+Sub AddItem(sText As String, shref As String, sTo As String, bExact As Boolean, bDisabled As Boolean, bLink As Boolean)
+	Dim bci As Map = CreateMap()
+	bci.Put("disabled", bDisabled)
+	bci.Put("exact", bExact)
+	bci.Put("href", shref)
+	bci.Put("link", bLink)
+	bci.Put("text", sText)
+	bci.Put("to", sTo)
+	items.Add(bci)
+End Sub
+
+'clear the breadcrumbs
+Sub Clear
+	items.Clear
+	SetItems(items)
+End Sub
+
+'refresh the breadcrumbs
+Sub Refresh
+	SetItems(items)
+End Sub
+
+Sub AddBreadCrumbsItem(bci As VMBreadCrumbsItem)
+	AddComponent(bci.ToString)
 End Sub
 
 'get component
@@ -57,8 +89,8 @@ Sub AddChild(child As VMElement) As VMBreadCrumbs
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMBreadCrumbs
+'set text - built-in
+Sub SetText(t As String) As VMBreadCrumbs
 	BreadCrumbs.SetText(t)
 	Return Me
 End Sub
@@ -93,32 +125,40 @@ Sub AddChildren(children As List)
 	Next
 End Sub
 
-'set dark
-Sub SetDark(varDark As Object) As VMBreadCrumbs
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	BreadCrumbs.Bind(":dark", pp)
-	Return Me
-End Sub
-
 'set divider
-Sub SetDivider(varDivider As Object) As VMBreadCrumbs
+Sub SetDivider(varDivider As String) As VMBreadCrumbs
+	If varDivider = "" Then Return Me
+	If varDivider = "/" Then Return Me
+	If bStatic Then
+		SetAttrSingle("divider", varDivider)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Divider"$
 	vue.SetStateSingle(pp, varDivider)
 	BreadCrumbs.Bind(":divider", pp)
 	Return Me
 End Sub
 
-'set items
-Sub SetItems(varItems As Object) As VMBreadCrumbs
-	Dim pp As String = $"${ID}Items"$
-	vue.SetStateSingle(pp, varItems)
-	BreadCrumbs.Bind(":items", pp)
+'set dark
+Sub SetDark(varDark As Boolean) As VMBreadCrumbs
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dark"$
+	vue.SetStateSingle(pp, varDark)
+	BreadCrumbs.Bind(":dark", pp)
 	Return Me
 End Sub
 
 'set large
-Sub SetLarge(varLarge As Object) As VMBreadCrumbs
+Sub SetLarge(varLarge As Boolean) As VMBreadCrumbs
+	If varLarge = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("large", varLarge)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Large"$
 	vue.SetStateSingle(pp, varLarge)
 	BreadCrumbs.Bind(":large", pp)
@@ -126,22 +166,24 @@ Sub SetLarge(varLarge As Object) As VMBreadCrumbs
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMBreadCrumbs
+Sub SetLight(varLight As Boolean) As VMBreadCrumbs
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	BreadCrumbs.Bind(":light", pp)
 	Return Me
 End Sub
 
-'
-Sub SetSlotDivider(b As Boolean) As VMBreadCrumbs    'ignore
-	SetAttr(CreateMap("slot": "divider"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotItem(b As Boolean) As VMBreadCrumbs    'ignore
-	SetAttr(CreateMap("slot": "item"))
+'set items
+Sub SetItems(varItems As List) As VMBreadCrumbs
+	If bStatic Then Return Me
+	Dim pp As String = $"${ID}Items"$
+	vue.SetStateSingle(pp, varItems)
+	BreadCrumbs.Bind(":items", pp)
 	Return Me
 End Sub
 
@@ -195,16 +237,6 @@ Sub UseTheme(themeName As String) As VMBreadCrumbs
 	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMBreadCrumbs
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	BreadCrumbs.Bind(":color", pp)
-	Return Me
-End Sub
-
 'remove an attribute
 public Sub RemoveAttr(sName As String) As VMBreadCrumbs
 	BreadCrumbs.RemoveAttr(sName)
@@ -230,6 +262,13 @@ Sub SetDesignMode(b As Boolean) As VMBreadCrumbs
 	Return Me
 End Sub
 
+'set static
+Sub SetStatic(b As Boolean) As VMBreadCrumbs
+	BreadCrumbs.SetStatic(b)
+	bStatic = b
+	Return Me
+End Sub
+
 'set tab index
 Sub SetTabIndex(ti As String) As VMBreadCrumbs
 	BreadCrumbs.SetTabIndex(ti)
@@ -237,7 +276,7 @@ Sub SetTabIndex(ti As String) As VMBreadCrumbs
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMBreadCrumbs
+Sub SetName(varName As String, bbind As Boolean) As VMBreadCrumbs
 	BreadCrumbs.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -339,27 +378,15 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBreadCrumbs
-BreadCrumbs.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	BreadCrumbs.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
+
 Sub SetVisible(b As Boolean) As VMBreadCrumbs
-BreadCrumbs.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMBreadCrumbs
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+	BreadCrumbs.SetVisible(b)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMBreadCrumbs
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
-End Sub

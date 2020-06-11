@@ -493,7 +493,7 @@ End Sub
 
 Sub SetOpenOnMediumLarge(b As Boolean) As VMNavigationDrawer
 	If b = False Then Return Me
-	NavigationDrawer.Bind(":permant", "$vuetify.breakpoint.mdAndUp")
+	NavigationDrawer.Bind(":permanent", "$vuetify.breakpoint.mdAndUp")
 	Return Me
 End Sub
 

@@ -311,7 +311,7 @@ Sub SetBackgroundColorIntensity(varColor As String, varIntensity As String) As V
 		SetAttrSingle("background-color", scolor)
 		Return Me
 	End If
-	Dim pp As String = $"${ID}Color"$
+	Dim pp As String = $"${ID}backgroundcolor"$
 	vue.SetStateSingle(pp, scolor)
 	Tabs.Bind(":background-color", pp)
 	Return Me

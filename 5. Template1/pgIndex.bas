@@ -20,11 +20,16 @@ Sub Init
 	BuildNavDrawer
 	AddPages
 	AddContent
+	BuildBottomNav
 	'
 	vm.ux
 End Sub
 
-
+'build the bottom nav bar
+Sub BuildBottomNav
+	'*copy code after this line
+	
+End Sub
 
 Sub Destroyed
 	Log(vm.DateTimeNow & " App Destroyed")
@@ -125,4 +130,13 @@ End Sub
 'fired when the title is clicked
 Sub title_click(e As BANanoEvent)
 	'you could show the home page
+End Sub
+
+'fire when a button in the bottom nav is clicked
+Private Sub bottomnav_change(value As Object)
+	
+End Sub
+
+'toggle bottom bar visibility trap
+Private Sub bottomnav_updateinputvalue(value As Object)
 End Sub

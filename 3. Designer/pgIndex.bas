@@ -7,6 +7,131 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisIndeterminate As Boolean
+	Private sRotate As String
+	Private sSize As String
+	Private sTabindex As String
+	Private bisVisible As Boolean
+	Private sWidth As String
+	Private pbprogresscircular As VMProperty
+	Private bisAbsolute As Boolean
+	Private bisActive As Boolean
+	Private sBackgroundcolor As String
+	Private sBackgroundcolorintensity As String
+	Private sBackgroundopacity As String
+	Private bisBottom As Boolean
+	Private sBuffervalue As String
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private bisFixed As Boolean
+	Private sHeight As String
+	Private bisIndeterminate As Boolean
+	Private bisLight As Boolean
+	Private bisQuery As Boolean
+	Private bisRounded As Boolean
+	Private bisStream As Boolean
+	Private bisStriped As Boolean
+	Private sTabindex As String
+	Private bisTop As Boolean
+	Private bisVisible As Boolean
+	Private pbprogresslinear As VMProperty
+	Private bisAbsolute As Boolean
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private bisLight As Boolean
+	Private sOpacity As String
+	Private sTabindex As String
+	Private sText As String
+	Private bisVisible As Boolean
+	Private sZindex As String
+	Private pboverlay As VMProperty
+	Private pbbreadcrumbsitem As VMProperty
+	Private sActiveclass As String
+	Private bisAppend As Boolean
+	Private bisDisabled As Boolean
+	Private bisExact As Boolean
+	Private sExactactiveclass As String
+	Private sHref As String
+	Private bisLink As Boolean
+	Private bisNuxt As Boolean
+	Private bisReplace As Boolean
+	Private bisRipple As Boolean
+	Private sTabindex As String
+	Private sTag As String
+	Private sTarget As String
+	Private sText As String
+	Private sTo As String
+	Private bisVisible As Boolean
+
+	Private bisDark As Boolean
+	Private sDivider As String
+	Private bisLarge As Boolean
+	Private bisLight As Boolean
+	Private sTabindex As String
+	Private sText As String
+	Private bisVisible As Boolean
+Private pbbreadcrumbs As VMProperty
+	Private sActivator As String
+	Private sAttach As String
+	Private sContentclass As String
+	Private bisDark As Boolean
+	Private bisDisabled As Boolean
+	Private bisEager As Boolean
+	Private bisFullscreen As Boolean
+	Private bisHideoverlay As Boolean
+	Private bisInset As Boolean
+	Private bisInternalactivator As Boolean
+	Private bisLight As Boolean
+	Private sMaxwidth As String
+	Private bisNoclickanimation As Boolean
+	Private bisOpenonhover As Boolean
+	Private sOrigin As String
+	Private sOverlaycolor As String
+	Private sOverlaycolorintensity As String
+	Private sOverlayopacity As String
+	Private bisPersistent As Boolean
+	Private bisRetainfocus As Boolean
+	Private bisScrollable As Boolean
+	Private sTabindex As String
+	Private sText As String
+	Private sTransition As String
+	Private bisVisible As Boolean
+	Private sWidth As String
+	Private pbbottomsheet As VMProperty
+	Private savatar As String
+	Private TotComponents As Int
+	Private bisAbsolute As Boolean
+	Private sActiveclass As String
+	Private bisApp As Boolean
+	Private sBackgroundcolor As String
+	Private sBackgroundcolorintensity As String
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private bisDisabled As Boolean
+	Private bisFixed As Boolean
+	Private bisGrow As Boolean
+	Private sHeight As String
+	Private bisHideonscroll As Boolean
+	Private bisHorizontal As Boolean
+	Private bisInputvalue As Boolean
+	Private bisLight As Boolean
+	Private bisMandatory As Boolean
+	Private sMaxheight As String
+	Private sMaxwidth As String
+	Private sMinheight As String
+	Private sMinwidth As String
+	Private sScrolltarget As String
+	Private sScrollthreshold As String
+	Private bisShift As Boolean
+	Private sTabindex As String
+	Private bisVisible As Boolean
+	Private sWidth As String
+	Private pbbottomnavigation As VMProperty
 	Private scontent As String
 	Private simgheight As String
 	Private simgwidth As String
@@ -152,6 +277,7 @@ Private sType As String
 Private bisVisible As Boolean
 Private sWidth As String
 '
+	Private bcs As Map
 	Private timelines As Map
 	Private pbsparkline As VMProperty
 	Private savatar As String
@@ -409,8 +535,8 @@ Private sWidth As String
 	Private sfalsevalue As String
 	Private bisLight As Boolean
 	Private bisMultiple As Boolean
-	Private bisinset As Boolean
-	Private bisindeterminate As Boolean
+	Private bisInset As Boolean
+	Private bisIndeterminate As Boolean
 	Private bisitalic As Boolean
 	'
 	Private bfitwidth As Boolean
@@ -420,7 +546,7 @@ Private sWidth As String
 	Private bistext As Boolean
 	Private bisdepressed As Boolean
 	Private bisTile As Boolean
-	Private ssize As String
+	Private sSize As String
 	Private sswitchloading As String
 	'
 	Private sWidth As String
@@ -492,7 +618,7 @@ Private sWidth As String
 	Private dbCode As VMPrism
 	
 	Private sElevation As String
-	Private stransition As String
+	Private sTransition As String
 	Private bisfluid As Boolean
 	Private bisshowmatrix As Boolean
 	Private bisnogutters As Boolean
@@ -503,8 +629,8 @@ Private sWidth As String
 	Private bissubtitle As Boolean
 	Private bissearch As Boolean
 	Private sextensionheight As String
-	Private sscrolltarget As String
-	Private sscrollthreshold As String
+	Private sScrolltarget As String
+	Private sScrollthreshold As String
 	Private slogourl As String
 	Private stitleclass As String
 	Private sbartype As String
@@ -514,7 +640,7 @@ Private sWidth As String
 	Private bisHamburgervisible As Boolean
 	Private biscurrent As Boolean
 	Private bisFlat As Boolean
-	Private bisabsolute As Boolean
+	Private bisAbsolute As Boolean
 	Private bisclippedleft As Boolean
 	Private bisclippedright As Boolean
 	Private bisclippedleft As Boolean
@@ -523,9 +649,9 @@ Private sWidth As String
 	Private biselevateonscroll As Boolean
 	Private bisextended As Boolean
 	Private bisfadeimageonscroll As Boolean
-	Private bisfixed As Boolean
+	Private bisFixed As Boolean
 	Private bisfloating As Boolean
-	Private bishideonscroll As Boolean
+	Private bisHideonscroll As Boolean
 	Private bisinvertedscroll As Boolean
 	Private bisprominent As Boolean
 	Private bisscrolloffscreen As Boolean
@@ -552,7 +678,7 @@ Private sWidth As String
 	Private sTabindex As String
 	Private stransition As String
 	'
-	Private bisabsolute As Boolean
+	Private bisAbsolute As Boolean
 	Private bisallowoverflow As Boolean
 	Private bisauto As Boolean
 	Private bisbottom As Boolean
@@ -560,7 +686,7 @@ Private sWidth As String
 	Private biscloseoncontentclick As Boolean
 	Private bisdisablekeys As Boolean
 	Private biseager As Boolean
-	Private bisfixed As Boolean
+	Private bisFixed As Boolean
 	Private bisinternalactivator As Boolean
 	Private bisLeft As Boolean
 	Private bisLight As Boolean
@@ -583,16 +709,16 @@ Private sWidth As String
 	Private soverlaycolor As String
 	Private soverlayopacity As String
 	Private sTabindex As String
-	Private stag As String
+	Private sTag As String
 	Private sWidth As String
-	Private bisabsolute As Boolean
-	Private bisapp As Boolean
+	Private bisAbsolute As Boolean
+	Private bisApp As Boolean
 	Private bisbottom As Boolean
 	Private bisclipped As Boolean
 	Private bisdisableresizewatcher As Boolean
 	Private bisdisableroutewatcher As Boolean
 	Private bisexpandonhover As Boolean
-	Private bisfixed As Boolean
+	Private bisFixed As Boolean
 	Private bisfloating As Boolean
 	Private bishideoverlay As Boolean
 	Private bisLight As Boolean
@@ -609,7 +735,7 @@ Private sWidth As String
 	'
 	Private sActiveclass As String
 	Private sdelimitericon As String
-	Private sheight As String
+	Private sHeight As String
 	Private sinterval As String
 	Private sprogresscolor As String
 	Private sprogresscolorintensity As String
@@ -677,24 +803,24 @@ Private sWidth As String
 	Private sOkid As String
 	Private sOkcaption As String
 	'
-	Private bisabsolute As Boolean
+	Private bisAbsolute As Boolean
 	Private bisbottom As Boolean
 	Private sDirection As String
 	Private sFinalicon As String
-	Private bisfixed As Boolean
+	Private bisFixed As Boolean
 	Private sHref As String
 	Private sInitialicon As String
 	Private bisLarge As Boolean
 	Private bisLeft As Boolean
 	Private sMode As String
-	Private bisopenonhover As Boolean
-	Private sorigin As String
+	Private bisOpenonhover As Boolean
+	Private sOrigin As String
 	Private bisRight As Boolean
 	Private bisSmall As Boolean
 	Private sTarget As String
 	Private sTo As String
-	Private bistop As Boolean
-	Private stransition As String
+	Private bisTop As Boolean
+	Private sTransition As String
 	Private bisXlarge As Boolean
 	Private bisXsmall As Boolean
 	'rating
@@ -810,8 +936,8 @@ Private sTabindex As String
 	'
 	Private bisAvatar As Boolean
 	Private bisBordered As Boolean
-	Private bisbottom As Boolean
-	Private sContent As String
+	Private bisBottom As Boolean
+	Private scontent As String
 	Private bisDark As Boolean
 	Private bisDot As Boolean
 	Private bisInline As Boolean
@@ -819,14 +945,14 @@ Private sTabindex As String
 	Private bisLight As Boolean
 	Private sOffsetx As String
 	Private sOffsety As String
-	Private sorigin As String
+	Private sOrigin As String
 	Private bisOverlap As Boolean
 	'avatar
 	Private sBadge As String
 	Private bisHasbadge As Boolean
 	Private bisLeft As Boolean
 	Private bisRight As Boolean
-	Private ssize As String
+	Private sSize As String
 	Private savatartype As String
 	Private sbadgetype As String
 	'
@@ -940,6 +1066,7 @@ Sub Init
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
 	'
+	TotComponents = 0
 	'
 	BuildNavBar
 	BuildDrawer
@@ -999,9 +1126,13 @@ Sub Init
 	'
 	'Add an invisible file selector
 	vm.AddFileSelect(Me, "fssqlite")
-
+	
+	
 	vm.UX
 	'
+	
+	vm.SetBadgeContent("btnToolbox", TotComponents)
+	
 	CreateUX
 	
 	'
@@ -1058,17 +1189,18 @@ Sub BuildNavBar
 	vm.NavBar.SetVisible(True)
 	vm.NavBar.SetModeFixed(True)
 	vm.NavBar.SetClippedLeft(True)
-	vm.NavBar.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
+	vm.NavBar.SetColorIntensity(vm.COLOR_PURPLE, vm.INTENSITY_NORMAL)
 	vm.NavBar.SetDark(True)
 	'
 	vm.NavBar.AddHamburger
 	vm.NavBar.Hamburger.SetVisible(True)
+	vm.NavBar.Progress.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
-	vm.NavBar.AddIcon("btnToolbox", "mdi-toolbox","Toolbox", Main.TotComponents)
+	vm.NavBar.AddIcon("btnToolbox", "mdi-toolbox","Toolbox", "1")
 	vm.SetBadgeColor("btnToolbox", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
@@ -1521,7 +1653,7 @@ Sub LoadContainers
 	Dim prjSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	prjSQL.Initialize("components", "id")
-	prjSQL.Execute("select vmodel,controltype from components where controltype in ('page','dialog','panel','container','drawer','tabs','card','footer','form','parallax','timeline','table') order by vmodel")
+	prjSQL.Execute("select vmodel,controltype from components where controltype in ('page','dialog','panel','container','drawer','tabs','card','footer','form','parallax','timeline','table','bottomsheet','breadcrumbs') order by vmodel")
 	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
 	prjSQL.fromJSON
 	'prefix the items
@@ -1548,6 +1680,10 @@ Sub LoadContainers
 			itemName = $"tbs${xvmodel}.Container"$
 		Case "card"
 			itemName = $"car${xvmodel}.Container"$
+		Case "bottomsheet"
+			itemName = $"bs${xvmodel}.Container"$
+		Case "breadcrumbs"
+			itemName = xvmodel
 		Case "footer"
 		Case "form"
 		Case "timeline"
@@ -1677,7 +1813,13 @@ Sub CreatePropertyBagsDrawer
 	PropertyBag_FileInput
 	PropertyBag_ButtonToggle
 	PropertyBag_Card
-	'
+	PropertyBag_BottomNavigation
+	PropertyBag_BottomSheet
+	PropertyBag_BreadCrumbs
+	'PropertyBag_BreadCrumbsItem
+	PropertyBag_Overlay
+	PropertyBag_ProgressLinear
+	PropertyBag_ProgressCircular
 	vm.AddDrawer(drwbags)
 End Sub
 #End Region
@@ -1770,6 +1912,7 @@ End Sub
 Sub btnDbConnect_click(e As BANanoEvent)
 	'clear the treeview
 	tvtables.clear
+	tvtables.Refresh
 	vue.setdata("selectedtable", "")
 	tbltoolbar2.UpdateTitle("Database")
 	vue.hideitem("tbltransfer")
@@ -1805,7 +1948,6 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	
 	Select Case sdbtype
 	Case "mssql"
-		tvtables.clear
 		Dim rsMSSQL As BANanoMSSQLE
 		rsMSSQL.Initialize(sdatabasename, "", "", "")
 		rsMSSQL.SetConnection(sdbhost, sdbusername, sdbpassword)
@@ -1867,7 +2009,6 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		vm.setdata("currenttables", lTables)
 		Return
 	Case "sqlite"
-		tvtables.clear
 		'check file existence
 		Dim bPHP As BANanoPHP
 		bPHP.Initialize
@@ -1878,7 +2019,6 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		End If	
 		SQLite.OpenDatabase(Me, "sqlite_opened", sdatabasename)
 	Case "mysql"
-		tvtables.clear
 		'connect to the db dynamically
 		Dim rsMySQL As BANanoMySQLE
 		rsMySQL.Initialize(sdatabasename, "", "", "")
@@ -2310,7 +2450,7 @@ Sub Read_Badge
 	sColor = mattr.getdefault("color", "")
 	sbadgetype = mattr.getdefault("badgetype", "iscontent")
 	sColorintensity = mattr.getdefault("colorintensity", "")
-	sContent = mattr.getdefault("content", "")
+	scontent = mattr.getdefault("content", "")
 	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
 	bisDot = YesNoToBoolean(mattr.getdefault("isdot", "No"))
@@ -2319,10 +2459,10 @@ Sub Read_Badge
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	sOffsetx = mattr.getdefault("offsetx", "")
 	sOffsety = mattr.getdefault("offsety", "")
-	sorigin = mattr.getdefault("origin", "")
+	sOrigin = mattr.getdefault("origin", "")
 	bisOverlap = YesNoToBoolean(mattr.getdefault("isoverlap", "No"))
 	bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
-	stransition = mattr.getdefault("transition", "")
+	sTransition = mattr.getdefault("transition", "")
 End Sub
 
 
@@ -2428,7 +2568,9 @@ Sub YesNoToBoolean(xvalue As String) As Boolean
 End Sub
 
 Sub CreateUX
+	vm.NavBar.SetLoading(True)
 	timelines.initialize
+	bcs.Initialize
 	'
 	vm.CallMethod("LoadProjects")
 	vm.CallMethod("LoadContainers")
@@ -2555,6 +2697,25 @@ Sub CreateUX
 			End If
 			citems1.add(rec)
 			timelines.Put(sparent, citems1)
+		Case "breadcrumbs"
+			'build the items for the breadcrumbs
+			Dim bcitems As List
+			If bcs.containskey(sname) Then
+				bcitems = bcs.get(sname)
+			Else
+				bcitems.initialize
+			End If
+			bcs.put(sname, bcitems)
+		Case "breadcrumbsitem"
+			'build the bread crumb item
+			Dim bcitems1 As List
+			If bcs.ContainsKey(sparent) Then
+				bcitems1 = bcs.Get(sparent)
+			Else
+				bcitems1.initialize
+			End If
+			bcitems1.add(rec)
+			bcs.Put(sparent, bcitems1)
 		End Select
 	Next
 	
@@ -2564,6 +2725,10 @@ Sub CreateUX
 		sname = rec.get("name")
 		Select Case controltype
 		Case "timelineitem"
+			'ignore time line item
+			Continue
+		Case "breadcrumbsitem"
+			'ignore bread crumb item
 			Continue
 		End Select
 		srow = rec.getdefault("row","1")
@@ -2581,7 +2746,7 @@ Sub CreateUX
 		sstyles = rec.get("styles")
 		sclasses = rec.get("classes")
 		sloose = rec.get("loose")
-		stitle = rec.get("label")
+		sTitle = rec.get("label")
 		jcontents = rec.getdefault("items", "")
 		If jcontents = "" Then
 			lcontents.initialize
@@ -2680,7 +2845,7 @@ Sub CreateUX
 		bisFlat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
 		bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
 		bclearable = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
-		bishidedetails = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
+		bisHidedetails = YesNoToBoolean(mattr.getdefault("ishidedetails", "No"))
 		bToggle = YesNoToBoolean(mattr.getdefault("istoggle", "No"))
 		bcenteronparent = YesNoToBoolean(mattr.getdefault("centeronparent", "No"))
 		bisHamburgervisible = YesNoToBoolean(mattr.getdefault("ishamburgervisible", "No"))
@@ -2688,19 +2853,19 @@ Sub CreateUX
 		struevalue = mattr.getdefault("truevalue", "")
 		sfalsevalue = mattr.GetDefault("falsevalue", "")
 		bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-		bismultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
-		bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
-		bisindeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
+		bisMultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+		bisInset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+		bisIndeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
 		bisitalic = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
 		'
 		bfitwidth = YesNoToBoolean(mattr.getdefault("isfitwidth", "No"))
-		shref = mattr.getdefault("href","")
-		starget = mattr.getdefault("target","")
+		sHref = mattr.getdefault("href","")
+		sTarget = mattr.getdefault("target","")
 		sTo = mattr.getdefault("to","")
 		bistext = YesNoToBoolean(mattr.getdefault("istext", "No"))
 		bisdepressed = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
 		bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
-		ssize = mattr.GetDefault("size", "")
+		sSize = mattr.GetDefault("size", "")
 		sswitchloading = mattr.getdefault("switchloading","")
 		'
 		sWidth = mattr.getdefault("width", "")
@@ -2718,7 +2883,7 @@ Sub CreateUX
 		If sintensity = "undefined" Then sintensity = ""
 		If sintensity = "none" Then sintensity = ""
 		'
-		stextcolor = mattr.getdefault("textcolor", "")
+		sTextcolor = mattr.getdefault("textcolor", "")
 		stextintensity = mattr.getdefault("textintensity", "")
 		If sTextcolor = "undefined" Then sTextcolor = ""
 		If sTextcolor = "none" Then sTextcolor = ""
@@ -2742,13 +2907,13 @@ Sub CreateUX
 		svalues = mattr.getdefault("values", "")
 		bisReturnobject = YesNoToBoolean(mattr.getdefault("isreturnobject", "No"))
 		buseoptions = YesNoToBoolean(mattr.getdefault("useoptions", "No"))
-		bischips = YesNoToBoolean(mattr.getdefault("ischips", "No"))
-		bissmallchips = YesNoToBoolean(mattr.getdefault("issmallchips", "No"))
+		bisChips = YesNoToBoolean(mattr.getdefault("ischips", "No"))
+		bisSmallchips = YesNoToBoolean(mattr.getdefault("issmallchips", "No"))
 		bisdeletablechips = YesNoToBoolean(mattr.getdefault("isdeletablechips", "No"))
 		'
 		bshowlabel = YesNoToBoolean(mattr.getdefault("showlabel", "No"))
 		blabelontop = YesNoToBoolean(mattr.getdefault("labelontop", "No"))
-		bismandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+		bisMandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
 		'
 		bisrange = YesNoToBoolean(mattr.getdefault("isrange", "No"))
 		bisshowweek = YesNoToBoolean(mattr.getdefault("isshowweek", "No"))
@@ -2761,7 +2926,7 @@ Sub CreateUX
 		'sheadercolor = mattr.getdefault("headercolor", "")
 		'sheaderintensity = mattr.getdefault("headerintensity", "")
 		sElevation = mattr.getdefault("elevation", "")
-		stransition = mattr.getdefault("transition", "")
+		sTransition = mattr.getdefault("transition", "")
 		bisfluid = YesNoToBoolean(mattr.getdefault("isfluid", "No"))
 		bisshowmatrix = YesNoToBoolean(mattr.getdefault("isshowmatrix", "No"))
 		bisnogutters = YesNoToBoolean(mattr.getdefault("isnogutters", "No"))
@@ -2771,6 +2936,22 @@ Sub CreateUX
 		bStatic = False
 		'
 		Select Case controltype
+			Case "progresscircular"
+				Read_ProgressCircular
+				Design_ProgressCircular
+			
+			Case "progresslinear"
+				Read_ProgressLinear
+				Design_ProgressLinear
+			Case "breadcrumbs"
+				Read_BreadCrumbs
+				Design_BreadCrumbs
+			Case "bottomsheet"
+				Read_BottomSheet
+				Design_BottomSheet
+			Case "bottomnavigation"
+				Read_BottomNavigation
+				Design_BottomNavigation
 			Case "card"
 				Read_Card
 				Design_Card
@@ -2886,7 +3067,10 @@ Sub CreateUX
 				Design_FileSelect
 			Case "sparkline"
 				Read_SparkLine
-				Design_SparkLine			
+				Design_SparkLine		
+			Case "overlay"
+				Read_Overlay
+				Design_Overlay	
 		End Select
 	Next
 	'
@@ -2917,6 +3101,8 @@ Sub CreateUX
 	'mymac.SetStatic(html)
 	'myipad.SetStatic(html)
 	'myiphone.SetStatic(html)
+	vm.NavBar.SetLoading(False)
+	
 End Sub
 
 
@@ -2931,13 +3117,13 @@ Sub Read_Label
 	bisheadline = YesNoToBoolean(mattr.getdefault("isheadline", "No"))
 	bisitalic = YesNoToBoolean(mattr.getdefault("isitalic", "No"))
 	bisoverline = YesNoToBoolean(mattr.getdefault("isoverline", "No"))
-	bisrequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
+	bisRequired = YesNoToBoolean(mattr.getdefault("isrequired", "No"))
 	bissubtitle1 = YesNoToBoolean(mattr.getdefault("issubtitle1", "No"))
 	bissubtitle2 = YesNoToBoolean(mattr.getdefault("issubtitle2", "No"))
 	bistextcapitalize = YesNoToBoolean(mattr.getdefault("istextcapitalize", "No"))
 	bistextlowercase = YesNoToBoolean(mattr.getdefault("istextlowercase", "No"))
 	bistextuppercase = YesNoToBoolean(mattr.getdefault("istextuppercase", "No"))
-	bistitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
+	bisTitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
 End Sub
 
 Sub Read_Slider
@@ -2948,8 +3134,8 @@ Sub Read_Slider
 	sslidervalue = mattr.getdefault("slidervalue", "20")
 	sstepvalue = mattr.getdefault("stepvalue","1")
 	smaxvalue = mattr.getdefault("maxvalue", "100")
-	sprependicon = mattr.getdefault("prependicon", "")
-	sappendicon = mattr.getdefault("appendicon","")
+	sPrependicon = mattr.getdefault("prependicon", "")
+	sAppendicon = mattr.getdefault("appendicon","")
 	sthumbsize = mattr.getdefault("thumbsize","32")
 	sthumbcolor = mattr.getdefault("thumbcolor", "")
 	sthumbintensity = mattr.getdefault("thumbintensity", "")
@@ -2960,8 +3146,8 @@ End Sub
 
 Sub Read_Toolbar
 	sextensionheight = mattr.getdefault("extensionheight", "")
-	sscrolltarget = mattr.getdefault("scrolltarget", "")
-	sscrollthreshold = mattr.getdefault("scrollthreshold", "")
+	sScrolltarget = mattr.getdefault("scrolltarget", "")
+	sScrollthreshold = mattr.getdefault("scrollthreshold", "")
 	slogourl = mattr.getdefault("logourl", "")
 	stitleclass = mattr.getdefault("titleclass", "")
 	sbartype = mattr.getdefault("bartype","tool")
@@ -3040,9 +3226,9 @@ Sub Read_Drawer
 	soverlayopacity = mattr.getdefault("overlayopacity", "")
 	If soverlaycolor = "undefined" Then soverlaycolor = ""
 	If soverlaycolor = "none" Then soverlaycolor = ""
-	stabindex = mattr.getdefault("tabindex", "")
-	stag = mattr.getdefault("tag", "")
-	swidth = mattr.getdefault("width", "")
+	sTabindex = mattr.getdefault("tabindex", "")
+	sTag = mattr.getdefault("tag", "")
+	sWidth = mattr.getdefault("width", "")
 	smtitle = mattr.getdefault("mtitle", "")
 	smsubtitle = mattr.getdefault("msubtitle", "")
 	'
@@ -3124,7 +3310,7 @@ Sub Read_Menu
 	spositionx = mattr.getdefault("positionx", "")
 	spositiony = mattr.getdefault("positiony", "")
 	sreturnvalue = mattr.getdefault("returnvalue", "")
-	stransition = mattr.getdefault("transition", "")
+	sTransition = mattr.getdefault("transition", "")
 End Sub
 
 Sub Design_Grid(gridSQL As BANanoAlaSQLE)
@@ -3224,7 +3410,7 @@ End Sub
 
 Sub Design_TextArea
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, sTabindex)
+	Dim txta As VMTextField = ui.NewTextArea(Me, True, sname, svmodel, sTitle, sPlaceholder, bisRequired, bautogrow, siconname, imaxlen, shelpertext, serrortext, sTabindex)
 	txta.SetSolo(bisSolo)
 	txta.SetValue(svalue)
 	txta.SetOutlined(bisOutlined)
@@ -3275,7 +3461,7 @@ Sub Design_TextArea
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+	sb.append($"Dim txta${sname} As VMTextField = vm.NewTextArea(Me, ${bStatic}, "txta${sname}", "${svmodel}", "${sTitle}", "${sPlaceholder}", ${bisRequired}, ${bautogrow}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 
 	If sfloat <> "" Then
 		AddCode(sb, $"txta${sname}.AddClass("${sfloat}")"$)
@@ -3324,7 +3510,7 @@ End Sub
 
 Sub Design_Switch
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, sTabindex)
+	Dim swt As VMCheckBox = ui.NewSwitch(Me, True, sname, svmodel, sTitle, struevalue, sfalsevalue, bisPrimary, sTabindex)
 	swt.SetColorIntensity(sColor, sintensity)
 	swt.SetRequired(bisRequired)
 	swt.SetDisabled(bisDisabled)
@@ -3335,7 +3521,7 @@ Sub Design_Switch
 	swt.SetLight(bisLight)
 	swt.SetLoading(sswitchloading)
 	swt.SetMultiple(bisMultiple)
-	swt.SetInset(bisinset).SetFlat(bisFlat)
+	swt.SetInset(bisInset).SetFlat(bisFlat)
 	swt.SetFieldType(sfieldtype)
 	swt.SetVisible(bisVisible)
 	If smargintop <> "" Then swt.AddClass("mt-" & smargintop)
@@ -3881,7 +4067,7 @@ Sub Design_Radio
 		Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
 		Dim rd As VMRadioGroup = ui.NewRadioGroup(Me, True, sname, svmodel, stitle, svalue, optionsm, bshowlabel, blabelontop, sTabindex)
 	Else
-		Dim rd As VMRadioGroup = ui.NewRadioGroupDataSource(Me, True, sname, svmodel, stitle, svalue, ssourcetable, _
+		Dim rd As VMRadioGroup = ui.NewRadioGroupDataSource(Me, True, sname, svmodel, sTitle, svalue, ssourcetable, _
 					ssourcefield, sdisplayfield, bshowlabel, blabelontop, sTabindex)
 	End If
 	rd.SetMandatory(bisMandatory)
@@ -3924,7 +4110,7 @@ Sub Design_Radio
 		sb.append($"Dim ${svmodel}keys As String = "${skeys}""$).append(CRLF)
 		sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 		sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
-		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", ${svmodel}map, ${bshowlabel}, ${blabelontop}, ${sTabindex})"$).append(CRLF)
+		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${sTitle}", "${svalue}", ${svmodel}map, ${bshowlabel}, ${blabelontop}, ${sTabindex})"$).append(CRLF)
 	Else
 		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${sTabindex})"$).append(CRLF)
 	End If
@@ -4145,7 +4331,7 @@ End Sub
 
 Sub Design_Slider
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, stitle, sminvalue, smaxvalue, sTabindex)
+	Dim sld As VMSlider = ui.Newslider(Me, True, sname, svmodel, sTitle, sminvalue, smaxvalue, sTabindex)
 	sld.SetValue(sslidervalue)
 	sld.SetColorIntensity(sColor, sintensity)
 	sld.SetHideDetails(bisHidedetails)
@@ -5044,10 +5230,10 @@ Sub Design_Image
 	img.SetBorderColor(sbordercolor)
 	img.SetBorderStyle(sborderstyle)
 	img.SetAspectRatio(saspectratio)
-	img.SetMinWidth(sminwidth)
-	img.SetMaxWidth(smaxwidth)
-	img.SetMinHeight(sminheight)
-	img.SetMaxHeight(smaxheight)
+	img.SetMinWidth(sMinwidth)
+	img.SetMaxWidth(sMaxwidth)
+	img.SetMinHeight(sMinheight)
+	img.SetMaxHeight(sMaxheight)
 	img.SetVisible(bisVisible)
 	If smargintop <> "" Then img.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then img.AddClass("mb-" & smarginbottom)
@@ -5090,10 +5276,10 @@ Sub Design_Image
 	CodeLine(sb, sbordercolor, "s", "img", sname, "SetBorderColor")
 	CodeLine(sb, sborderstyle, "s", "img", sname, "SetBorderStyle")
 	CodeLine(sb, saspectratio, "s", "img", sname, "SetAspectRatio")
-	CodeLine(sb, sminwidth, "s", "img", sname, "SetMinWidth")
-	CodeLine(sb, smaxwidth, "s", "img", sname, "SetMaxWidth")
-	CodeLine(sb, sminheight, "s", "img", sname, "SetMinHeight")
-	CodeLine(sb, smaxheight, "s", "img", sname, "SetMaxHeight")
+	CodeLine(sb, sMinwidth, "s", "img", sname, "SetMinWidth")
+	CodeLine(sb, sMaxwidth, "s", "img", sname, "SetMaxWidth")
+	CodeLine(sb, sMinheight, "s", "img", sname, "SetMinHeight")
+	CodeLine(sb, sMaxheight, "s", "img", sname, "SetMaxHeight")
 	CodeLine(sb, bcenteronparent, "b", "img", sname, "SetCenterOnParent")
 	CodeLine(sb, bisVisible, "b", "img", sname, "SetVisible")
 	'
@@ -5201,7 +5387,7 @@ Sub Design_Drawer
 		Dim ssactionicon As String = m.getdefault("action", "")
 		If sskey = "" Then Continue
 		drw.AddItem1(sskey, ssavatar, ssiconname, sIconcolor, sstitle, sssubtitle, "", ssactionicon, "")
-		If bisdivider Then drw.AddDivider1(bisinset)
+		If bisdivider Then drw.AddDivider1(bisInset)
 		AddCode(sbEvents, $"Case "${sskey}""$)
 	Next
 	'
@@ -5262,28 +5448,28 @@ Sub Design_Drawer
 	If sfloat <> "" Then
 		AddCode(sb, $"${prefix}${suffix}.AddClass("${sfloat}")"$)
 	End If
-	CodeLine(sb, soverlayopacity, "s", prefix, suffix, "Setoverlayopacity")
+	CodeLine(sb, sOverlayopacity, "s", prefix, suffix, "Setoverlayopacity")
 	CodeLine(sb, ssrc, "s", prefix, suffix, "Setsrc")
-	CodeLine(sb, stag, "s", prefix, suffix, "Settag")
-	CodeLine(sb, swidth, "s", prefix, suffix, "Setwidth")
-	CodeLine(sb, sheight, "s", prefix, suffix, "Setheight")
+	CodeLine(sb, sTag, "s", prefix, suffix, "Settag")
+	CodeLine(sb, sWidth, "s", prefix, suffix, "Setwidth")
+	CodeLine(sb, sHeight, "s", prefix, suffix, "Setheight")
 	'
 	CodeLine(sb, bisopenonmedium, "b", prefix, suffix, "SetOpenOnMediumLarge")
-	CodeLine(sb, bisabsolute, "b", prefix, suffix, "Setabsolute")
-	CodeLine(sb, bisapp, "b", prefix, suffix, "Setapp")
-	CodeLine(sb, bisbottom, "b", prefix, suffix, "Setbottom")
+	CodeLine(sb, bisAbsolute, "b", prefix, suffix, "Setabsolute")
+	CodeLine(sb, bisApp, "b", prefix, suffix, "Setapp")
+	CodeLine(sb, bisBottom, "b", prefix, suffix, "Setbottom")
 	CodeLine(sb, bisclipped, "b", prefix, suffix, "Setclipped")
 	CodeLine(sb, bisDark, "b", prefix, suffix, "Setdark")
 	CodeLine(sb, bisdisableresizewatcher, "b", prefix, suffix, "Setdisableresizewatcher")
 	CodeLine(sb, bisdisableroutewatcher, "b", prefix, suffix, "Setdisableroutewatcher")
 	CodeLine(sb, bisexpandonhover, "b", prefix, suffix, "Setexpandonhover")
-	CodeLine(sb, bisfixed, "b", prefix, suffix, "Setfixed")
+	CodeLine(sb, bisFixed, "b", prefix, suffix, "Setfixed")
 	CodeLine(sb, bisfloating, "b", prefix, suffix, "Setfloating")
-	CodeLine(sb, bishideoverlay, "b", prefix, suffix, "Sethideoverlay")
+	CodeLine(sb, bisHideoverlay, "b", prefix, suffix, "Sethideoverlay")
 	CodeLine(sb, bisLight, "b", prefix, suffix, "Setlight")
 	CodeLine(sb, bisminivariant, "b", prefix, suffix, "Setminivariant")
 	CodeLine(sb, bispermanent, "b", prefix, suffix, "Setpermanent")
-	CodeLine(sb, bisright, "b", prefix, suffix, "Setright")
+	CodeLine(sb, bisRight, "b", prefix, suffix, "Setright")
 	CodeLine(sb, bisstateless, "b", prefix, suffix, "Setstateless")
 	CodeLine(sb, bistemporary, "b", prefix, suffix, "Settemporary")
 	CodeLine(sb, bistouchless, "b", prefix, suffix, "Settouchless")
@@ -5300,7 +5486,7 @@ Sub Design_Drawer
 			Dim ssactionicon As String = m.getdefault("action", "")
 			If sskey = "" Then Continue
 			sb.append($"${prefix}${suffix}.AddItem1("${sskey}", "${ssavatar}", "${ssiconname}", "${sIconcolor}", "${sstitle}", "${sssubtitle}", "", "${ssactionicon}", "")"$).append(CRLF)
-			If bisdivider Then AddCode(sb,$"${prefix}${suffix}.AddDivider1(${bisinset})"$)
+			If bisdivider Then AddCode(sb,$"${prefix}${suffix}.AddDivider1(${bisInset})"$)
 		Next
 	Else
 		'set data source
@@ -5328,7 +5514,7 @@ End Sub
 Sub Design_SpeedDial
 	Dim speeddial As VMSpeedDial = ui.CreateSpeedDial(sname, Me)
 	speeddial.SetStatic(True)
-	speeddial.SetAbsolute(bisabsolute)
+	speeddial.SetAbsolute(bisAbsolute)
 	speeddial.SetBottom(bisbottom)
 	speeddial.SetDark(bisDark)
 	speeddial.SetIcon(smastericon)
@@ -5385,6 +5571,7 @@ Sub Design_SpeedDial
 		speeddial.AddItem(sskey, ssiconname, sIconcolor)
 		'
 		AddCode(sbEvents, $"Private Sub ${sskey}_click(e As BANanoEvent)"$)
+		AddCode(sbEvents, $"vm.ShowSnackBarSuccess("${sskey}")"$)
 		AddCode(sbEvents, "End Sub")
 		AddNewLine(sbEvents)
 	Next
@@ -5395,13 +5582,13 @@ Sub Design_SpeedDial
 	AddNewLine(sb)
 	'
 	sb.append($"Dim spd${sname} As VMSpeedDial = vm.CreateSpeedDial("spd${sname}", Me)"$).append(CRLF)
-	CodeLine(sb, bisabsolute, "b", "spd", sname, "SetAbsolute")
+	CodeLine(sb, bisAbsolute, "b", "spd", sname, "SetAbsolute")
 	CodeLine(sb, bisbottom, "b", "spd", sname, "SetBottom")
 	CodeLine(sb, bisDark, "b", "spd", sname, "SetDark")
 	CodeLine(sb, sDirection, "s", "spd", sname, "SetDirection")
 	CodeLine(sb, sFinalicon, "s", "spd", sname, "SetFinalicon")
-	CodeLine(sb, bisfixed, "b", "spd", sname, "SetFixed")
-	CodeLine(sb, shref, "s", "spd", sname, "SetHref")
+	CodeLine(sb, bisFixed, "b", "spd", sname, "SetFixed")
+	CodeLine(sb, sHref, "s", "spd", sname, "SetHref")
 	If sfloat <> "" Then
 		AddCode(sb, $"spd${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -5414,8 +5601,8 @@ Sub Design_SpeedDial
 	CodeLine(sb, sorigin, "s", "spd", sname, "SetOrigin")
 	CodeLine(sb, bisRight, "b", "spd", sname, "SetRight")
 	CodeLine(sb, bisSmall, "b", "spd", sname, "SetSmall")
-	CodeLine(sb, stabindex, "s", "spd", sname, "SetTabindex")
-	CodeLine(sb, starget, "s", "spd", sname, "SetTarget")
+	CodeLine(sb, sTabindex, "s", "spd", sname, "SetTabindex")
+	CodeLine(sb, sTarget, "s", "spd", sname, "SetTarget")
 	CodeLine(sb, sTo, "s", "spd", sname, "SetTo")
 	CodeLine(sb, bistop, "b", "spd", sname, "SetTop")
 	CodeLine(sb, stransition, "s", "spd", sname, "SetTransition")
@@ -5445,7 +5632,7 @@ Sub Design_SpeedDial
 	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 
 	CodeLine2(sb, sColor, sintensity, "s", "spd", sname, "SetColorIntensity")
-	CodeLine2(sb, stextcolor, stextintensity, "s", "spd", sname, "SetTextColorIntensity")
+	CodeLine2(sb, sTextcolor, stextintensity, "s", "spd", sname, "SetTextColorIntensity")
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim ssiconname As String = m.getdefault("icon", "")
@@ -5467,7 +5654,7 @@ Sub Design_Dialog
 	Dim dialog As VMCard = ui.CreateCard(sname, Me)
     dialog.SetStatic(True)
 	dialog.IsDialog = True
-	dialog.SetTitle(stitle)
+	dialog.SetTitle(sTitle)
 	dialog.Actions.AddSpacer
 	dialog.SetCancel(sCancelid, sCancelcaption)
 	dialog.SetOK(sOkid, sOkcaption)
@@ -5540,7 +5727,7 @@ Sub Design_Dialog
 	sb.append($"Sub CreateDialog_${vm.propercase(sname)}"$).append(CRLF)
 	sb.append($"dlg${sname} = vm.CreateDialog("dlg${sname}", Me)"$).Append(CRLF)
 	'
-	CodeLine(sb, stitle, "s", "dlg", sname, "Settitle")
+	CodeLine(sb, sTitle, "s", "dlg", sname, "Settitle")
 	CodeLine2(sb, sCancelid, sCancelcaption, "s", "dlg", sname, "SetCancel")
 	CodeLine2(sb, sOkid, sOkcaption, "s", "dlg", sname, "SetOk")
 	CodeLine(sb, sactivator, "s", "dlg", sname, "Setactivator")
@@ -5550,8 +5737,8 @@ Sub Design_Dialog
 	CodeLine(sb, soverlaycolorintensity, "s", "dlg", sname, "Setoverlaycolorintensity")
 	CodeLine(sb, soverlayopacity, "s", "dlg", sname, "Setoverlayopacity")
 	CodeLine(sb, stransition, "s", "dlg", sname, "Settransition")
-	CodeLine(sb, swidth, "s", "dlg", sname, "Setwidth")
-	CodeLine(sb, smaxwidth, "s", "dlg", sname, "Setmaxwidth")
+	CodeLine(sb, sWidth, "s", "dlg", sname, "Setwidth")
+	CodeLine(sb, sMaxwidth, "s", "dlg", sname, "Setmaxwidth")
 	'
 	CodeLine(sb, bisattach, "b", "dlg", sname, "Setattach")
 	CodeLine(sb, bisbackdrop, "b", "dlg", sname, "Setbackdrop")
@@ -5561,14 +5748,14 @@ Sub Design_Dialog
 	CodeLine(sb, bisfullscreen, "b", "dlg", sname, "Setfullscreen")
 	CodeLine(sb, bishideoverlay, "b", "dlg", sname, "Sethideoverlay")
 	CodeLine(sb, bisinternalactivator, "b", "dlg", sname, "Setinternalactivator")
-	CodeLine(sb, bislight, "b", "dlg", sname, "Setlight")
+	CodeLine(sb, bisLight, "b", "dlg", sname, "Setlight")
 	CodeLine(sb, bisnoclickanimation, "b", "dlg", sname, "Setnoclickanimation")
 	CodeLine(sb, bisopenonhover, "b", "dlg", sname, "Setopenonhover")
 	CodeLine(sb, bispersistent, "b", "dlg", sname, "Setpersistent")
 	CodeLine(sb, bisretainfocus, "b", "dlg", sname, "Setretainfocus")
 	CodeLine(sb, bisscrollable, "b", "dlg", sname, "Setscrollable")
 	CodeLine(sb, bisslotactivator, "b", "dlg", sname, "Setslotactivator")
-	CodeLine(sb, bistitleprimary, "b", "dlg", sname, "SetTitlePrimary")
+	CodeLine(sb, bisTitleprimary, "b", "dlg", sname, "SetTitlePrimary")
 	sb.append($"vm.AddDialog(dlg${sname})"$).append(CRLF)
 	sb.append("End Sub").append(CRLF)
 	'
@@ -5914,6 +6101,7 @@ Sub Design_Carousel
 End Sub
 
 Sub Design_Menu
+	savatar = mattr.getdefault("avatar", "")
 	Dim menu As VMMenu = ui.CreateMenu(sname, Me)
 	menu.setstatic(True)
 	Select Case menutype
@@ -5921,6 +6109,8 @@ Sub Design_Menu
 		menu.SetIcon(siconname)
 	Case "btn"
 		menu.SetButton(siconname, sTitle)
+	Case "avatar"
+		menu.SetAvatar(savatar)
 	End Select
 	menu.Setactivator(sactivator)
 	menu.Setclosedelay(sclosedelay)
@@ -5940,7 +6130,7 @@ Sub Design_Menu
 	menu.Setreturnvalue(sreturnvalue)
 	menu.Settransition(stransition)
 	'
-	menu.Setabsolute(bisabsolute)
+	menu.Setabsolute(bisAbsolute)
 	menu.Setallowoverflow(bisallowoverflow)
 	menu.Setauto(bisauto)
 	menu.Setbottom(bisbottom)
@@ -5950,7 +6140,7 @@ Sub Design_Menu
 	menu.Setdisablekeys(bisdisablekeys)
 	menu.Setdisabled(bisDisabled)
 	menu.Seteager(biseager)
-	menu.Setfixed(bisfixed)
+	menu.Setfixed(bisFixed)
 	menu.Setinternalactivator(bisinternalactivator)
 	menu.Setleft(bisLeft)
 	menu.Setlight(bisLight)
@@ -6022,6 +6212,8 @@ Sub Design_Menu
 		CodeLine(sb, siconname, "s", "menu", sname, "SetIcon")
 	Case "btn"
 		CodeLine2a(sb, siconname, sTitle, "s", "menu", sname, "SetButton")
+	Case "avatar"
+		CodeLine(sb, savatar, "s", "menu", sname, "SetAvatar")
 	End Select
 	CodeLine(sb, bisVisible, "b", "menu", sname, "SetVisible")
 	CodeLine(sb, sactivator, "s", "menu", sname, "Setactivator")
@@ -6045,26 +6237,26 @@ Sub Design_Menu
 	CodeLine(sb, sreturnvalue, "s", "menu", sname, "Setreturnvalue")
 	CodeLine(sb, stransition, "s", "menu", sname, "Settransition")
 	'
-	CodeLine(sb, bisabsolute, "b", "menu", sname, "Setabsolute")
+	CodeLine(sb, bisAbsolute, "b", "menu", sname, "Setabsolute")
 	CodeLine(sb, bisallowoverflow, "b", "menu", sname, "Setallowoverflow")
 	CodeLine(sb, bisauto, "b", "menu", sname, "Setauto")
 	CodeLine(sb, bisbottom, "b", "menu", sname, "Setbottom")
 	CodeLine(sb, biscloseonclick, "b", "menu", sname, "Setcloseonclick")
 	CodeLine(sb, biscloseoncontentclick, "b", "menu", sname, "Setcloseoncontentclick")
-	CodeLine(sb, bisdark, "b", "menu", sname, "Setdark")
+	CodeLine(sb, bisDark, "b", "menu", sname, "Setdark")
 	CodeLine(sb, bisdisablekeys, "b", "menu", sname, "Setdisablekeys")
 	CodeLine(sb, bisDisabled, "b", "menu", sname, "Setdisabled")
 	CodeLine(sb, biseager, "b", "menu", sname, "Seteager")
-	CodeLine(sb, bisfixed, "b", "menu", sname, "Setfixed")
+	CodeLine(sb, bisFixed, "b", "menu", sname, "Setfixed")
 	CodeLine(sb, bisinternalactivator, "b", "menu", sname, "Setinternalactivator")
-	CodeLine(sb, bisleft, "b", "menu", sname, "Setleft")
-	CodeLine(sb, bislight, "b", "menu", sname, "Setlight")
+	CodeLine(sb, bisLeft, "b", "menu", sname, "Setleft")
+	CodeLine(sb, bisLight, "b", "menu", sname, "Setlight")
 	CodeLine(sb, bisoffsetoverflow, "b", "menu", sname, "Setoffsetoverflow")
 	CodeLine(sb, bisoffsetx, "b", "menu", sname, "Setoffsetx")
 	CodeLine(sb, bisoffsety, "b", "menu", sname, "Setoffsety")
-	CodeLine(sb, bisopenonclick, "b", "menu", sname, "Setopenonclick")
+	CodeLine(sb, bisOpenonclick, "b", "menu", sname, "Setopenonclick")
 	CodeLine(sb, bisopenonhover, "b", "menu", sname, "Setopenonhover")
-	CodeLine(sb, bisright, "b", "menu", sname, "Setright")
+	CodeLine(sb, bisRight, "b", "menu", sname, "Setright")
 	CodeLine(sb, bisslotactivator, "b", "menu", sname, "Setslotactivator")
 	CodeLine(sb, bistop, "b", "menu", sname, "Settop")
 	'
@@ -6823,7 +7015,7 @@ Sub Design_TextField
 		AddCode(sbRead, $"Record.put("${svmodel}", s${svmodel})"$)
 	End If
 	
-	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, siconname, imaxlen, shelpertext, serrortext, sTabindex)
+	Dim txt As VMTextField = ui.NewTextField(Me, True, sname, svmodel, sTitle, sPlaceholder, bisRequired, siconname, imaxlen, shelpertext, serrortext, sTabindex)
 	txt.SetFieldType(sfieldtype)
 	txt.SetSolo(bisSolo)
 	txt.SetValue(svalue)
@@ -8038,7 +8230,7 @@ Sub Design_DBSourceCode
 	'
 	
 	AddCode(sbl, $"${rsName}.FromJSON"$)
-	AddComment(sbl, $"execute code to refresh listing for ${stitle}"$)
+	AddComment(sbl, $"execute code to refresh listing for ${sTitle}"$)
 	AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
@@ -8682,6 +8874,48 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbtimelineitem.Hideitem("controltype")
 			pbtimelineitem.ClearContents
 		
+		Case "bottomnavigation"
+			ShowBag("pbbottomnavigation")
+			pbbottomnavigation.SetDefaults
+			pbbottomnavigation.hideitem("id")
+			pbbottomnavigation.Hideitem("controltype")
+			pbbottomnavigation.ClearContents
+		
+		Case "bottomsheet"
+			ShowBag("pbbottomsheet")
+			pbbottomsheet.SetDefaults
+			pbbottomsheet.hideitem("id")
+			pbbottomsheet.Hideitem("controltype")
+			pbbottomsheet.ClearContents
+		
+		Case "breadcrumbsitem"
+			ShowBag("pbbreadcrumbsitem")
+			pbbreadcrumbsitem.SetDefaults
+			pbbreadcrumbsitem.hideitem("id")
+			pbbreadcrumbsitem.Hideitem("controltype")
+			pbbreadcrumbsitem.ClearContents
+		
+		Case "breadcrumbs"
+			ShowBag("pbbreadcrumbs")
+			pbbreadcrumbs.SetDefaults
+			pbbreadcrumbs.hideitem("id")
+			pbbreadcrumbs.Hideitem("controltype")
+			pbbreadcrumbs.ClearContents
+		
+		Case "progresslinear"
+			ShowBag("pbprogresslinear")
+			pbprogresslinear.SetDefaults
+			pbprogresslinear.hideitem("id")
+			pbprogresslinear.Hideitem("controltype")
+			pbprogresslinear.ClearContents
+		
+		Case "progresscircular"
+			ShowBag("pbprogresscircular")
+			pbprogresscircular.SetDefaults
+			pbprogresscircular.hideitem("id")
+			pbprogresscircular.Hideitem("controltype")
+			pbprogresscircular.ClearContents
+		
 		Case "card"
 			ShowBag("pbcard")
 			pbcard.SetDefaults
@@ -8845,6 +9079,12 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbfileselect.hideitem("id")
 			pbfileselect.Hideitem("controltype")
 		
+		Case "overlay"
+			ShowBag("pboverlay")
+			pboverlay.SetDefaults
+			pboverlay.hideitem("id")
+			pboverlay.Hideitem("controltype")
+		
 		Case "sparkline"
 			ShowBag("pbsparkline")
 			pbsparkline.SetDefaults
@@ -8986,6 +9226,8 @@ Sub ToolBoxToolsPanel As VMExpansionPanel
 	Dim cls As VMImage = ToolboxImage("builder", "./assets/build.png", "Builder")
 	grd.Container.AddComponent(1,2,cls.tostring)
 	
+	'exclude the tools
+	TotComponents = BANano.parseint(TotComponents) - 2
 	Return grd
 End Sub
 
@@ -9059,6 +9301,19 @@ Sub ToolboxLayoutPanel As VMExpansionPanel
 	Dim card As VMImage = ToolboxImage("card", "./assets/card.png", "Card")
 	grd.Container.AddComponent(4,1,card.tostring)
 	'
+	Dim bottomnavigation As VMImage = ToolboxImage("bottomnavigation", "./assets/bottomnavigation.png", "Bottom Navigation")
+	grd.Container.AddComponent(4,2,bottomnavigation.tostring)
+	'
+	Dim bottomsheet As VMImage = ToolboxImage("bottomsheet", "./assets/bottomsheet.png", "Bottom Sheet")
+	grd.Container.AddComponent(4,3,bottomsheet.tostring)
+	'
+	Dim breadcrumbs As VMImage = ToolboxImage("breadcrumbs", "./assets/breadcrumbs.png", "Bread Crumbs")
+	grd.Container.AddComponent(4,4,breadcrumbs.tostring)
+	'
+	
+	'Dim breadcrumbsitem As VMImage = ToolboxImage("breadcrumbsitem", "./assets/breadcrumbsitem.png", "Bread Crumbs Item")
+	'grd.Container.AddComponent(5,1,breadcrumbsitem.tostring)
+	
 	Return grd
 End Sub
 
@@ -9094,12 +9349,21 @@ Sub ToolBoxDisplayPanel As VMExpansionPanel
 	'
 	Dim sparkline As VMImage = ToolboxImage("sparkline", "./assets/sparkline.png", "Spark Line")
 	grd.Container.AddComponent(3,1,sparkline.tostring)
-	
 	'
+	Dim overlay As VMImage = ToolboxImage("overlay", "./assets/overlay.png", "Overlay")
+	grd.Container.AddComponent(3,2,overlay.tostring)
+	'
+	Dim progresslinear As VMImage = ToolboxImage("progresslinear", "./assets/progresslinear.png", "Progress Linear")
+	grd.Container.AddComponent(3,3,progresslinear.tostring)
+	'
+	Dim progresscircular As VMImage = ToolboxImage("progresscircular", "./assets/progresscircular.png", "Progress Circular")
+	grd.Container.AddComponent(3,4,progresscircular.tostring)
+
 	Return grd
 End Sub
 
 Sub ToolboxImage(eid As String, url As String, tt As String) As VMImage
+	TotComponents = BANano.parseint(TotComponents) + 1
 	Dim img As VMImage = vm.CreateImage(eid, Me).SetStatic(True).SetValue(url).SetOnDragStart(Me, "ItemDragStart")
 	img.SetHeight("32px").SetWidth("32px").SetCursorMove.SetTooltip(tt).RemoveAttr("v-show")
 	avatarMap.put(eid, url)
@@ -9493,6 +9757,28 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("action", "readAsText")
 							nrec.put("parentid", "vm")
 						
+						Case "progresscircular"
+							BANano.SetLocalStorage("selectedpanel", 1)
+							attr.put("rotate", "0")
+							attr.put("size", "32")
+							attr.put("value", "0")
+							attr.put("width", "4")
+						
+						Case "progresslinear"
+							BANano.SetLocalStorage("selectedpanel", 1)
+							attr.put("buffervalue", "100")
+							attr.put("color", "primary")
+							attr.put("height", "4")
+							attr.put("value", "4")
+							attr.put("active", "Yes")
+							
+						Case "overlay"
+							BANano.SetLocalStorage("selectedpanel", 1)
+							attr.put("color", "#212121")
+							attr.put("dark", "True")
+							attr.put("opacity", "0.46")
+							attr.put("value", "True")
+							attr.put("z-index", "5")
 						Case "sparkline"
 							BANano.SetLocalStorage("selectedpanel", 1)
 							attr.put("autodrawduration","2000")
@@ -9618,6 +9904,7 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("menutype", "icon")
 							attr.put("isopenonhover", "Yes")
 							attr.put("isoffsety", "Yes")
+							attr.put("avatar", "./assets/sponge.png")
 							BANano.SetLocalStorage("selectedpanel", 4)
 							nrec.put("items", MenuItems)
 						Case "drawer"
@@ -9658,6 +9945,31 @@ Sub ItemDrop(e As BANanoEvent)
 						Case "buttontoggle"
 							BANano.SetLocalStorage("selectedpanel", 4)
 							nrec.put("items", MenuItems)
+						Case "bottomnavigation"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							attr.Put("height", "56")
+							attr.Put("inputvalue", "Yes")
+							nrec.put("items", MenuItems)
+							attr.put("isabsolute", "Yes")
+							attr.put("isgrow", "Yes")
+							attr.put("isshift", "Yes")
+						
+						Case "bottomsheet"
+							attr.put("width", "auto")
+							attr.put("transition", "bottom-sheet-transition")
+							attr.put("retainfocus", "Yes")
+							attr.put("origin", "center center")
+							attr.put("maxwith", "auto")
+							BANano.SetLocalStorage("selectedpanel", 4)
+						
+						Case "breadcrumbsitem"
+							attr.put("text", sLabel)
+							BANano.SetLocalStorage("selectedpanel", 4)
+				
+						Case "breadcrumbs"
+							BANano.SetLocalStorage("selectedpanel", 4)
+					nrec.put("items", MenuItems)
+						
 						Case "card"
 							attr.Put("img", "./assets/sky.jpg")
 							attr.put("maxwidth", "450")
@@ -10482,7 +10794,7 @@ Sub DeletePropertyBag
 	mattr = vm.getdata("propbag")
 	'get the id
 	Dim sid As String = mattr.get("id")
-	Dim slabel As String = mattr.get("label")
+	Dim sLabel As String = mattr.get("label")
 	If sid = "" Then Return
 	vm.setdata("deleteid", sid)
 	vm.ShowConfirm("deletepropbag", $"Confirm Delete: ${sLabel}"$, _
@@ -10667,6 +10979,12 @@ Sub SavePropertyBag
 			mattr = pbfileselect.properties
 		Case "sparkline"
 			mattr = pbsparkline.properties
+		Case "overlay"
+			mattr = pboverlay.properties
+		Case "progresslinear"
+			mattr = pbprogresslinear.properties
+		Case "progresscircular"
+			mattr = pbprogresscircular.properties
 		Case "infobox"
 			mattr = pbinfobox.properties	
 		Case "checkbox"
@@ -10742,6 +11060,14 @@ Sub SavePropertyBag
 			mattr = pbtreeview.properties
 		Case "buttontoggle"
 			mattr = pbbuttontoggle.properties
+		Case "bottomnavigation"
+			mattr = pbbottomnavigation.properties				
+		Case "bottomsheet"
+			mattr = pbbottomsheet.properties
+		Case "breadcrumbs"
+			mattr = pbbreadcrumbs.properties
+		Case "breadcrumbsitem"
+			mattr = pbbreadcrumbsitem.properties
 		Case "card"
 			mattr = pbcard.properties
 		Case "timeline"
@@ -10796,7 +11122,7 @@ Sub SavePropertyBag
 	Dim srow As String = mattr.get("row")
 	Dim scol As String = mattr.get("col")
 	Dim sTabindex As String = mattr.get("tabindex")
-	Dim stitle As String = mattr.get("label")
+	Dim sTitle As String = mattr.get("label")
 	Dim svmodel As String = mattr.get("vmodel")
 	Dim smanyrecords As String = mattr.get("manyrecords")
 	Dim sparent As String = mattr.get("parent")
@@ -10824,7 +11150,7 @@ Sub SavePropertyBag
 	nrec.put("tabindex", sTabindex)
 	nrec.put("attributes", attr)
 	nrec.put("vmodel", svmodel)
-	nrec.put("label", stitle)
+	nrec.put("label", sTitle)
 	nrec.put("name", svmodel)
 	nrec.Put("items", scontents)
 	nrec.put("parentid", sparent)
@@ -11083,10 +11409,11 @@ Sub PropertyBag_Menu
 	pbmenu.AddText("d", "controltype", "Type", "","menu")
 	pbmenu.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbmenu.AddText("d","vmodel","ID","","")
-	pbmenu.AddRadioGroupH("d", "menutype", "Type", CreateMap("icon":"Icon","btn":"Button"))
+	pbmenu.AddRadioGroupH("d", "menutype", "Type", CreateMap("icon":"Icon","btn":"Button","avatar":"Avatar"))
 	pbmenu.AddText2("d",CreateMap("activator":"Activator", "closedelay":"Close Delay"))
 	pbmenu.AddText("d","contentclass","Content Class","","")
 	pbmenu.AddText2("d",CreateMap("iconname":"Icon", "label":"Text"))
+	pbmenu.AddText2("d",CreateMap("avatar":"Avatar"))
 	pbmenu.AddText2("d", CreateMap("maxheight":"Max Height","maxwidth":"Max Width"))
 	pbmenu.AddText2("d", CreateMap("minwidth":"Min Width","nudgewidth":"Nudge Width"))
 	pbmenu.AddText2("d", CreateMap("nudgebottom":"Nudge Bottom","nudgetop":"Nudge Top"))
@@ -11365,7 +11692,7 @@ End Sub
 #End Region
 
 Sub Read_SpeedDial
-bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
 bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 sColor = mattr.getdefault("color", "")
 	smastericon = mattr.getdefault("mastericon","")
@@ -11756,7 +12083,7 @@ End Sub
 Sub Design_Table
 	Dim datatable As VMDataTable = ui.CreateDataTable(sname, sItemkey, Me)
 	datatable.SetStatic(True)
-	datatable.SetTitle(stitle)
+	datatable.SetTitle(sTitle)
 	datatable.SetSearchbox(bisSearchbox)
 	datatable.SetCaption(sCaption)
 	datatable.SetCalculatewidths(bisCalculatewidths)
@@ -11886,7 +12213,7 @@ Sub Design_Table
 	AddInstruction(sb, "<Your Module>", "", "")
 	AddCode(sb, $"Sub CreateDataTable_${sname}"$)
 	sb.append($"dt${sname} = vm.CreateDataTable("dt${sname}", "${sItemkey}", Me)"$).append(CRLF)
-	CodeLine(sb, stitle, "s", "dt", sname, "SetTitle")
+	CodeLine(sb, sTitle, "s", "dt", sname, "SetTitle")
 	CodeLine(sb, sCaption, "s", "dt", sname, "SetCaption")
 	CodeLine(sb, bisSearchbox, "b", "dt", sname, "SetSearchbox")
 	If bisaddnew Then
@@ -12118,8 +12445,7 @@ Sub PropertyBag_Avatar
 	pbavatar.AddRadioGroupH("d", "avatartype", "Type", CreateMap("islabel":"Label","isicon":"Icon", "isimage":"Image"))
 	pbavatar.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
 	pbavatar.AddSelect2("d","textcolor","TextColor", vm.ColorOptions, "textcolorintensity","TextColor Intensity", vm.IntensityOptions)
-	pbavatar.AddSelect("d","float", "Float", vm.Floats)
-	
+	pbavatar.AddSelect("d","float", "Float", vm.Floats)	
 	pbavatar.AddHeightWidths("d")
 	'
 	'
@@ -12145,16 +12471,16 @@ Sub Read_Avatar
 	bisHasbadge = YesNoToBoolean(mattr.getdefault("ishasbadge", "No"))
 	sHeight = mattr.getdefault("height", "")
 	bisLeft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
-	smaxheight = mattr.getdefault("maxheight", "")
-	smaxwidth = mattr.getdefault("maxwidth", "")
-	sminheight = mattr.getdefault("minheight", "")
-	sminwidth = mattr.getdefault("minwidth", "")
+	sMaxheight = mattr.getdefault("maxheight", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinheight = mattr.getdefault("minheight", "")
+	sMinwidth = mattr.getdefault("minwidth", "")
 	bisRight = YesNoToBoolean(mattr.getdefault("isright", "No"))
 	ssize = mattr.getdefault("size", "")
 	savatartype = mattr.GetDefault("avatartype","")
-	stextcolor = mattr.getdefault("textcolor", "")
+	sTextcolor = mattr.getdefault("textcolor", "")
 	stextintensity = mattr.getdefault("textintensity", "")
-	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
 End Sub
 
@@ -12167,14 +12493,14 @@ Sub Design_Avatar
 	avatar.SetHasbadge(bisHasbadge)
 	avatar.SetHeight(sHeight)
 	avatar.SetLeft(bisLeft)
-	avatar.SetMaxheight(smaxheight)
-	avatar.SetMaxwidth(smaxwidth)
-	avatar.SetMinheight(sminheight)
-	avatar.SetMinwidth(sminwidth)
+	avatar.SetMaxheight(sMaxheight)
+	avatar.SetMaxwidth(sMaxwidth)
+	avatar.SetMinheight(sMinheight)
+	avatar.SetMinwidth(sMinwidth)
 	avatar.SetRight(bisRight)
 	avatar.SetSize(ssize)
-	avatar.SetTextcolorintensity(stextcolor, stextintensity)
-	avatar.SetTile(bistile)	
+	avatar.SetTextcolorintensity(sTextcolor, stextintensity)
+	avatar.SetTile(bisTile)	
 	avatar.SetVisible(bisVisible)
 	If smargintop <> "" Then avatar.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then avatar.AddClass("mb-" & smarginbottom)
@@ -12287,7 +12613,6 @@ Sub PropertyBag_List
 	pblist.AddSelect("d","float", "Float", vm.Floats)
 	pblist.AddSelect("d", "position", "Position", vm.Position)
 	pblist.AddText2("d", CreateMap("top": "Top", "bottom":"Bottom", "left":"Left","right":"Right"))
-	
 	pblist.AddHeightWidths("d")
 	'
 	pblist.AddHeading("a", "Items")
@@ -12634,9 +12959,9 @@ Sub Design_Stepper
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim sstitle As String = m.getdefault("title", "")
-		Dim ssubtitle As String = m.getdefault("subtitle", "")
+		Dim sSubTitle As String = m.getdefault("subtitle", "")
 		If sskey = "" Then Continue
-		stp.AddStep1(sskey, sstitle, ssubtitle, "")
+		stp.AddStep1(sskey, sstitle, sSubTitle, "")
 		'
 		AddNewLine(sb)
 		AddComment(sb, $"Create the ${sstitle} step"$)
@@ -12813,12 +13138,12 @@ Sub Design_Tabs
 	CodeLine(sb, bisHideslider, "b", "tbs", sname, "SetHideslider")
 	CodeLine(sb, bisiconposright, "b", "tbs", sname, "SetIconposright")
 	CodeLine(sb, bisIconsandtext, "b", "tbs", sname, "SetIconsandtext")
-	CodeLine(sb, bislight, "b", "tbs", sname, "SetLight")
+	CodeLine(sb, bisLight, "b", "tbs", sname, "SetLight")
 	CodeLine(sb, smobilebreakpoint, "s", "tbs", sname, "SetMobilebreakpoint")
 	CodeLine(sb, sNexticon, "s", "tbs", sname, "SetNexticon")
 	CodeLine(sb, bisOptional, "b", "tbs", sname, "SetOptional")
 	CodeLine(sb, sPrevicon, "s", "tbs", sname, "SetPrevicon")
-	CodeLine(sb, bisright, "b", "tbs", sname, "SetRight")
+	CodeLine(sb, bisRight, "b", "tbs", sname, "SetRight")
 	CodeLine(sb, bisshowarrows, "b", "tbs", sname, "SetShowarrows")
 	CodeLine2(sb, sSlidercolor, sSlidercolorintensity, "s", "tbs", sname, "SetSlidercolorintensity")
 	CodeLine(sb, sSlidersize, "s", "tbs", sname, "SetSlidersize")
@@ -13229,7 +13554,7 @@ Sub Design_Page
 		'**** DRAWER CLICK TO SHOW PAGE
 		AddInstruction(sb, "pgIndex", "draweritems_click" , "inside the case statement")
 		AddCode(sb, $"Case "page${svmodel.tolowercase}""$)
-		AddComment(sb, $"show ${stitle}"$)
+		AddComment(sb, $"show ${sTitle}"$)
 		AddCode(sb, $"${mdlName}.Show"$)
 		AddCode(sb, CRLF)
 	End If
@@ -15045,6 +15370,7 @@ Sub PropertyBag_Card
 	pbcard.AddText("d","to","To","","")
 	pbcard.AddSelect("d","target","Target", vm.TargetOptions)
 	pbcard.AddText("d","loaderheight","LoaderHeight","","")
+	pbcard.AddHeightWidths("d")
 	'
 	pbcard.AddHeading("a","Title & Content")
 	pbcard.AddText("a","title","Title","","")
@@ -15052,9 +15378,6 @@ Sub PropertyBag_Card
 	pbcard.AddTextArea("a","content","Content","","")
 	pbcard.AddSelect2("a","textcolor","TitleTextColor", vm.ColorOptions, "textcolorintensity","TitleTextColorIntensity", vm.IntensityOptions)
 	pbcard.AddSelect2("a","titlecolor","TitleColor", vm.ColorOptions, "titlecolorintensity","TitleColorIntensity", vm.IntensityOptions)
-	'
-	pbcard.AddHeading("e","Measurements")
-	pbcard.AddHeightWidths("e")
 	'
 	pbcard.AddHeading("b", "Items")
 	pbcard.AddToolbarItems("b")
@@ -15286,7 +15609,7 @@ Sub Design_Card
 	AddNewLine(sb)
 	'	
 	
-	sb.append($"${sparent}.AddControl(car${sname}.Card, bt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	sb.append($"${sparent}.AddControl(car${sname}.Card, car${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
 	AddNewLine(sb)
 	AddNewLine(sb)
 	'
@@ -15297,3 +15620,920 @@ Sub Design_Card
 	AddNewLine(sbEvents)
 	
 End Sub
+
+#Region BottomNavigation
+Sub PropertyBag_BottomNavigation
+	vm.setdata("pbbottomnavigation", False)
+	lstBags.add("pbbottomnavigation")
+	pbbottomnavigation = vm.CreateProperty("ppbbottomnavigation", Me)
+	pbbottomnavigation.SetChangeEvent("SavePropertyBag")
+	pbbottomnavigation.SetVShow("pbbottomnavigation")
+	pbbottomnavigation.AddHeading("d","Details")
+	pbbottomnavigation.AddText("d","id","ID","","")
+	pbbottomnavigation.AddText("d", "controltype", "Type", "","bottomnavigation")
+	pbbottomnavigation.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbbottomnavigation.AddText("d","vmodel","ID","","")
+	pbbottomnavigation.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbbottomnavigation.AddSelect2("d","backgroundcolor","BackgroundColor", vm.ColorOptions, "backgroundcolorintensity","BackgroundColor Intensity", vm.IntensityOptions)
+	pbbottomnavigation.AddText("d","activeclass","ActiveClass","","")
+	pbbottomnavigation.AddSelect("d","scrolltarget","ScrollTarget", vm.TargetOptions)
+	pbbottomnavigation.AddText("d","scrollthreshold","ScrollThreshold","","")
+	pbbottomnavigation.AddHeightWidths("d")
+	'
+	pbbottomnavigation.AddHeading("a", "Items")
+	pbbottomnavigation.AddToolbarItems("a")
+	'	
+	pbbottomnavigation.AddHeading("e","Settings")
+	pbbottomnavigation.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isapp": "App"))
+	pbbottomnavigation.AddSwitches("e", CreateMap("isdark": "Dark", "isdisabled": "Disabled"))
+	pbbottomnavigation.AddSwitches("e", CreateMap("isfixed": "Fixed", "isgrow": "Grow"))
+	pbbottomnavigation.AddSwitches("e", CreateMap("ishideonscroll": "HideOnScroll", "ishorizontal": "Horizontal"))
+	pbbottomnavigation.AddSwitches("e", CreateMap("isinputvalue": "InputValue", "islight": "Light"))
+	pbbottomnavigation.AddSwitches("e", CreateMap("ismandatory": "Mandatory", "isshift": "Shift"))
+	pbbottomnavigation.AddSwitches("e", CreateMap("isvisible": "Visible"))
+	'
+	pbbottomnavigation.AddHeading("m","Margins & Padding")
+	pbbottomnavigation.AddMarginsPaddings("m")
+	'
+	pbbottomnavigation.AddHeading("f","Matrix")
+	pbbottomnavigation.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbbottomnavigation.tostring)
+End Sub
+#End Region
+
+Sub Read_BottomNavigation
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	sActiveclass = mattr.getdefault("activeclass", "")
+	bisApp = YesNoToBoolean(mattr.getdefault("isapp", "No"))
+	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
+	sBackgroundcolorintensity = mattr.getdefault("backgroundcolorintensity", "")
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	bisGrow = YesNoToBoolean(mattr.getdefault("isgrow", "No"))
+	sHeight = mattr.getdefault("height", "")
+	bisHideonscroll = YesNoToBoolean(mattr.getdefault("ishideonscroll", "No"))
+	bisHorizontal = YesNoToBoolean(mattr.getdefault("ishorizontal", "No"))
+	bisInputvalue = YesNoToBoolean(mattr.getdefault("isinputvalue", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisMandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+	sMaxheight = mattr.getdefault("maxheight", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinheight = mattr.getdefault("minheight", "")
+	sMinwidth = mattr.getdefault("minwidth", "")
+	sScrolltarget = mattr.getdefault("scrolltarget", "")
+	sScrollthreshold = mattr.getdefault("scrollthreshold", "")
+	bisShift = YesNoToBoolean(mattr.getdefault("isshift", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_BottomNavigation
+	'update the existing bottom navigation
+	Dim BottomNavigation As VMBottomNavigation
+	BottomNavigation.Initialize(vue, $"bn${sname}"$, Me)
+	BottomNavigation.SetStatic(True)
+	BottomNavigation.SetDesignMode(True)
+	BottomNavigation.SetAbsolute(bisAbsolute)
+	BottomNavigation.SetActiveclass(sActiveclass)
+	BottomNavigation.SetApp(bisApp)
+	BottomNavigation.SetBackgroundcolorintensity(sBackgroundcolor, sBackgroundcolorintensity)
+	BottomNavigation.SetColorintensity(sColor, sColorintensity)
+	BottomNavigation.SetDark(bisDark)
+	BottomNavigation.SetDisabled(bisDisabled)
+	BottomNavigation.SetFixed(bisFixed)
+	BottomNavigation.SetGrow(bisGrow)
+	BottomNavigation.SetHeight(sHeight)
+	BottomNavigation.SetHideonscroll(bisHideonscroll)
+	BottomNavigation.SetHorizontal(bisHorizontal)
+	BottomNavigation.SetInputvalue(bisInputvalue)
+	BottomNavigation.SetLight(bisLight)
+	BottomNavigation.SetMandatory(bisMandatory)
+	BottomNavigation.SetMaxheight(sMaxheight)
+	BottomNavigation.SetMaxwidth(sMaxwidth)
+	BottomNavigation.SetMinheight(sMinheight)
+	BottomNavigation.SetMinwidth(sMinwidth)
+	BottomNavigation.SetScrolltarget(sScrolltarget)
+	BottomNavigation.SetScrollthreshold(sScrollthreshold)
+	BottomNavigation.SetShift(bisShift)
+	BottomNavigation.SetVisible(bisVisible)
+	BottomNavigation.SetWidth(sWidth)
+	
+	'add buttons
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim sitemtype As String = m.getdefault("itemtype", "icon")
+		Dim sBadge As String = m.getdefault("badge", "")
+		If sskey = "" Then Continue
+		BottomNavigation.AddButton(sskey, sstitle, ssiconname, sIconcolor, sskey, sssubtitle, "")
+		'
+	Next
+	ui.AddControl(BottomNavigation.BottomNavigation, BottomNavigation.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddNewLine(sb)
+	AddInstruction(sb, "pgIndex", "BuildBottomNav", "")
+	AddNewLine(sb)
+		
+	Dim pres As String = "vm.BottomNav"
+	sname = ""
+	AddCode(sb, "vm.BottomNav.Show")
+	CodeLine(sb, bisAbsolute, "b", pres, sname, "SetAbsolute")
+	CodeLine(sb, sActiveclass, "s", pres, sname, "SetActiveclass")
+	CodeLine(sb, bisApp, "b", pres, sname, "SetApp")
+	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDisabled, "b", pres, sname, "SetDisabled")
+	CodeLine(sb, bisFixed, "b", pres, sname, "SetFixed")
+	CodeLine(sb, bisGrow, "b", pres, sname, "SetGrow")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, bisHideonscroll, "b", pres, sname, "SetHideonscroll")
+	CodeLine(sb, bisHorizontal, "b", pres, sname, "SetHorizontal")
+	CodeLine(sb, bisInputvalue, "b", pres, sname, "SetInputvalue")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, bisMandatory, "b", pres, sname, "SetMandatory")
+	CodeLine(sb, sMaxheight, "s", pres, sname, "SetMaxheight")
+	CodeLine(sb, sMaxwidth, "s", pres, sname, "SetMaxwidth")
+	CodeLine(sb, sMinheight, "s", pres, sname, "SetMinheight")
+	CodeLine(sb, sMinwidth, "s", pres, sname, "SetMinwidth")
+	CodeLine(sb, sScrolltarget, "s", pres, sname, "SetScrolltarget")
+	CodeLine(sb, sScrollthreshold, "s", pres, sname, "SetScrollthreshold")
+	CodeLine(sb, bisShift, "b", pres, sname, "SetShift")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+	'
+	AddComment(sb, "add items")
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim ssiconname As String = m.getdefault("icon", "")
+		Dim sIconcolor As String = m.getdefault("iconcolor", "")
+		Dim sstitle As String = m.getdefault("title", "")
+		Dim sssubtitle As String = m.GetDefault("subtitle", "")
+		Dim sitemtype As String = m.getdefault("itemtype", "icon")
+		Dim sBadge As String = m.getdefault("badge", "")
+		If sskey = "" Then Continue
+		AddCode(sb, $"vm.BottomNav.AddButton("${sskey}", "${sstitle}", "${ssiconname}", "${sIconcolor}", "${sskey}", "${sssubtitle}", "")"$)
+	Next
+	AddNewLine(sb)
+	AddNewLine(sb)
+End Sub
+
+#Region BottomSheet
+Sub PropertyBag_BottomSheet
+	vm.setdata("pbbottomsheet", False)
+	lstBags.add("pbbottomsheet")
+	pbbottomsheet = vm.CreateProperty("ppbbottomsheet", Me)
+	pbbottomsheet.SetChangeEvent("SavePropertyBag")
+	pbbottomsheet.SetVShow("pbbottomsheet")
+	pbbottomsheet.AddHeading("d","Details")
+	pbbottomsheet.AddText("d","id","ID","","")
+	pbbottomsheet.AddText("d", "controltype", "Type", "","bottomsheet")
+	pbbottomsheet.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbbottomsheet.AddText("d","vmodel","VModel","","")
+	pbbottomsheet.AddText2("d",CreateMap("activator":"Activator", "attach":"Attach"))
+	pbbottomsheet.AddText("d","contentclass","ContentClass","","")
+	pbbottomsheet.AddText2("d",CreateMap("width":"Width", "maxwidth":"MaxWidth"))
+	pbbottomsheet.AddText("d","origin","Origin","","")
+	pbbottomsheet.AddSelect2("d","overlaycolor","OverlayColor", vm.ColorOptions, "overlaycolorintensity","OverlayColor Intensity", vm.IntensityOptions)
+	pbbottomsheet.AddText("d","overlayopacity","OverlayOpacity","","")
+	pbbottomsheet.AddSelect("d","transition","Transition",vm.Transition)
+	'
+	pbbottomsheet.AddHeading("e","Settings")
+	pbbottomsheet.AddSwitches("e", CreateMap("isdark": "Dark", "isdisabled": "Disabled"))
+	pbbottomsheet.AddSwitches("e", CreateMap("iseager": "Eager", "isfullscreen": "Fullscreen"))
+	pbbottomsheet.AddSwitches("e", CreateMap("ishideoverlay": "HideOverlay", "isinset": "Inset"))
+	pbbottomsheet.AddSwitches("e", CreateMap("isinternalactivator": "InternalActivator", "islight": "Light"))
+	pbbottomsheet.AddSwitches("e", CreateMap("isnoclickanimation": "NoClickAnimation", "isopenonhover": "OpenOnHover"))
+	pbbottomsheet.AddSwitches("e", CreateMap("ispersistent": "Persistent", "isretainfocus": "RetainFocus"))
+	pbbottomsheet.AddSwitches("e", CreateMap("isscrollable": "Scrollable", "isvisible": "Visible"))
+	'
+	pbbottomsheet.AddHeading("m","Margins & Padding")
+	pbbottomsheet.AddMarginsPaddings("m")
+	'
+	pbbottomsheet.AddHeading("f","Matrix")
+	pbbottomsheet.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbbottomsheet.tostring)
+End Sub
+#End Region
+
+
+Sub Read_BottomSheet
+	sActivator = mattr.getdefault("activator", "")
+	sAttach = mattr.getdefault("attach", "")
+	sContentclass = mattr.getdefault("contentclass", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	bisEager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
+	bisFullscreen = YesNoToBoolean(mattr.getdefault("isfullscreen", "No"))
+	bisHideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
+	bisInset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+	bisInternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	bisNoclickanimation = YesNoToBoolean(mattr.getdefault("isnoclickanimation", "No"))
+	bisOpenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
+	sOrigin = mattr.getdefault("origin", "")
+	sOverlaycolor = mattr.getdefault("overlaycolor", "")
+	sOverlaycolorintensity = mattr.getdefault("overlaycolorintensity", "")
+	sOverlayopacity = mattr.getdefault("overlayopacity", "")
+	bisPersistent = YesNoToBoolean(mattr.getdefault("ispersistent", "No"))
+	bisRetainfocus = YesNoToBoolean(mattr.getdefault("isretainfocus", "No"))
+	bisScrollable = YesNoToBoolean(mattr.getdefault("isscrollable", "No"))
+	sTransition = mattr.getdefault("transition", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_BottomSheet
+	PlaceHolder("BottomSheet sits here (invisible)...")
+	
+	AddNewLine(sb)
+	AddInstruction(sb, "<Your Module>", "Process_Globals", "")
+	AddNewLine(sb)
+	AddCode(sb, $"Private bs${sname} As VMBottomSheet"$)
+	
+	AddNewLine(sb)
+	AddInstruction(sb, "<Your Module>", "Code", "")
+	AddNewLine(sb)
+	
+	AddComment(sb, "show the bottom sheet")
+	AddCode(sb, $"bs${sname}.Initialize(vue, "bs${sname}, Me)"$)
+	Dim pres As String = "bs"
+	CodeLine(sb, sActivator, "s", pres, sname, "SetActivator")
+	CodeLine(sb, sAttach, "s", pres, sname, "SetAttach")
+	CodeLine(sb, sContentclass, "s", pres, sname, "SetContentclass")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDisabled, "b", pres, sname, "SetDisabled")
+	CodeLine(sb, bisEager, "b", pres, sname, "SetEager")
+	CodeLine(sb, bisFullscreen, "b", pres, sname, "SetFullscreen")
+	CodeLine(sb, bisHideoverlay, "b", pres, sname, "SetHideoverlay")
+	CodeLine(sb, bisInset, "b", pres, sname, "SetInset")
+	CodeLine(sb, bisInternalactivator, "b", pres, sname, "SetInternalactivator")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sMaxwidth, "s", pres, sname, "SetMaxwidth")
+	CodeLine(sb, bisNoclickanimation, "b", pres, sname, "SetNoclickanimation")
+	CodeLine(sb, bisOpenonhover, "b", pres, sname, "SetOpenonhover")
+	CodeLine(sb, sOrigin, "s", pres, sname, "SetOrigin")
+	CodeLine(sb, sOverlaycolor, "s", pres, sname, "SetOverlaycolor")
+	CodeLine(sb, sOverlaycolorintensity, "s", pres, sname, "SetOverlaycolorintensity")
+	CodeLine(sb, sOverlayopacity, "s", pres, sname, "SetOverlayopacity")
+	CodeLine(sb, bisPersistent, "b", pres, sname, "SetPersistent")
+	CodeLine(sb, bisRetainfocus, "b", pres, sname, "SetRetainfocus")
+	CodeLine(sb, bisScrollable, "b", pres, sname, "SetScrollable")
+	CodeLine(sb, sTransition, "s", pres, sname, "SetTransition")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+	AddComment(sb, "hide the bottom sheet")
+	AddCode(sb, $"bs${sname}.Hide"$)
+	AddCode(sb, $"vm.AddBottomSheet(bs${sname})"$)
+End Sub
+
+#Region BreadCrumbs
+Sub PropertyBag_BreadCrumbs
+	vm.setdata("pbbreadcrumbs", False)
+	lstBags.add("pbbreadcrumbs")
+	pbbreadcrumbs = vm.CreateProperty("ppbbreadcrumbs", Me)
+	pbbreadcrumbs.SetChangeEvent("SavePropertyBag")
+	pbbreadcrumbs.SetVShow("pbbreadcrumbs")
+	pbbreadcrumbs.AddHeading("d","Details")
+	pbbreadcrumbs.AddText("d","id","ID","","")
+	pbbreadcrumbs.AddText("d", "controltype", "Type", "","breadcrumbs")
+	pbbreadcrumbs.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbbreadcrumbs.AddText("d","vmodel","ID","","")
+	pbbreadcrumbs.AddText("d","divider","Divider","","")
+	'	
+	pbbreadcrumbs.AddHeading("a", "Items")
+	pbbreadcrumbs.AddCrudList("a", CreateMap("key":"ID", "title":"Text","subtitle":"Href", "to":"To", _
+	"disabled":"Disabled","exact":"Exact","link":"Link"))
+	pbbreadcrumbs.SetItemsSwitch(Array("disabled","exact","link"))
+	
+	pbbreadcrumbs.AddHeading("e","Settings")
+	pbbreadcrumbs.AddSwitches("e", CreateMap("isdark": "Dark", "islarge": "Large"))
+	pbbreadcrumbs.AddSwitches("e", CreateMap("islight": "Light", "isvisible": "Visible"))
+	'
+	pbbreadcrumbs.AddHeading("m","Margins & Padding")
+	pbbreadcrumbs.AddMarginsPaddings("m")
+	'
+	pbbreadcrumbs.AddHeading("f","Matrix")
+	pbbreadcrumbs.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbbreadcrumbs.tostring)
+End Sub
+#End Region
+
+
+Sub Read_BreadCrumbs
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	sDivider = mattr.getdefault("divider", "")
+	bisLarge = YesNoToBoolean(mattr.getdefault("islarge", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+End Sub
+
+Sub Design_BreadCrumbs
+	PlaceHolder("BreadCrumbs sits here...")
+	
+'	Dim BreadCrumbs As VMBreadCrumbs
+'	BreadCrumbs.Initialize(vue, $"bc${sname}"$, Me)
+'	BreadCrumbs.SetStatic(True)
+'	BreadCrumbs.SetDesignMode(True)	
+'	BreadCrumbs.SetDark(bisDark)
+'	BreadCrumbs.SetDivider(sDivider)
+'	BreadCrumbs.SetLarge(bisLarge)
+'	BreadCrumbs.SetLight(bisLight)
+'	BreadCrumbs.SetVisible(bisVisible)
+'	If smargintop <> "" Then BreadCrumbs.AddClass("mt-" & smargintop)
+'	If smarginbottom <> "" Then BreadCrumbs.AddClass("mb-" & smarginbottom)
+'	If smarginleft <> "" Then BreadCrumbs.AddClass("ml-" & smarginleft)
+'	If smarginright <> "" Then BreadCrumbs.AddClass("mr-" & smarginright)
+'	If smargins <> "" Then BreadCrumbs.AddClass("ms-" & smargins)
+'	If smargine <> "" Then BreadCrumbs.AddClass("me-" & smargine)
+'	If smarginx <> "" Then BreadCrumbs.AddClass("mx-" & smarginx)
+'	If smarginy <> "" Then BreadCrumbs.AddClass("my-" & smarginy)
+'	If smargina <> "" Then BreadCrumbs.AddClass("ma-" & smargina)
+'	If spaddingtop <> "" Then BreadCrumbs.AddClass("pt-" & spaddingtop)
+'	If spaddingbottom <> "" Then BreadCrumbs.AddClass("pb-" & spaddingbottom)
+'	If spaddingleft <> "" Then BreadCrumbs.AddClass("pl-" & spaddingleft)
+'	If spaddingright <> "" Then BreadCrumbs.AddClass("pr-" & spaddingright)
+'	If spaddings <> "" Then BreadCrumbs.AddClass("ps-" & spaddings)
+'	If spaddinge <> "" Then BreadCrumbs.AddClass("pe-" & spaddinge)
+'	If spaddingx <> "" Then BreadCrumbs.AddClass("px-" & spaddingx)
+'	If spaddingy <> "" Then BreadCrumbs.AddClass("py-" & spaddingy)
+'	If spaddinga <> "" Then BreadCrumbs.AddClass("pa-" & spaddinga)
+'	'
+'	BreadCrumbs.clear
+'	
+'	For Each m As Map In lcontents
+'		Dim sskey As String = m.getdefault("key", "")
+'		Dim sText As String = m.getdefault("title", "")
+'		Dim sHref As String = m.getdefault("subtitle", "")
+'		Dim sTo As String = m.getdefault("to", "")
+'		If sskey = "" Then Continue
+'		
+'		Dim bdisabled As Boolean = YesNoToBoolean(m.getdefault("disabled", "No"))
+'		Dim bexact As Boolean = YesNoToBoolean(m.getdefault("exact", "No"))
+'		Dim blink As Boolean = YesNoToBoolean(m.getdefault("link", "No"))
+'		'
+'		BreadCrumbs.AddItem(sText, sHref, sTo, bexact, bdisabled, blink)
+'	Next
+'	BreadCrumbs.Refresh
+'	
+'	Dim sbE As StringBuilder
+'	sbE.initialize
+'	'
+'	'get the saved items
+'	Dim bcitems As List
+'	If bcs.ContainsKey(sname) Then
+'		bcitems = bcs.Get(sname)
+'	Else
+'		bcitems.initialize
+'	End If
+'	'
+'	'process each child
+'	For Each crec As Map In bcitems
+'		Dim cname As String = crec.get("name")
+'		Dim cvmodel As String = crec.get("vmodel")
+'		Dim cattributes As String = crec.get("attributes")
+'		Dim cstyles As String = crec.get("styles")
+'		Dim cclasses As String = crec.get("classes")
+'		Dim cloose As String = crec.get("loose")
+'		Dim ctitle As String = crec.get("label")
+'		Dim cparent As String = crec.getdefault("parent", "vm.Container")
+'		' get the attributes
+'		Dim cmattr As Map = BANano.FromJson(cattributes)
+'		' read the attributes
+'		Dim csActiveclass As String = cmattr.getdefault("activeclass", "")
+'		Dim cbisAppend As Boolean = YesNoToBoolean(cmattr.getdefault("isappend", "No"))
+'		Dim cbisDisabled As Boolean = YesNoToBoolean(cmattr.getdefault("isdisabled", "No"))
+'		Dim cbisExact As Boolean = YesNoToBoolean(cmattr.getdefault("isexact", "No"))
+'		Dim csExactactiveclass As String = cmattr.getdefault("exactactiveclass", "")
+'		Dim csHref As String = mattr.getdefault("href", "")
+'		Dim cbisLink As Boolean = YesNoToBoolean(cmattr.getdefault("islink", "No"))
+'		Dim cbisNuxt As Boolean = YesNoToBoolean(cmattr.getdefault("isnuxt", "No"))
+'		Dim cbisReplace As Boolean = YesNoToBoolean(cmattr.getdefault("isreplace", "No"))
+'		Dim cbisRipple As Boolean = YesNoToBoolean(cmattr.getdefault("isripple", "No"))
+'		Dim csTag As String = cmattr.getdefault("tag", "")
+'		Dim csTarget As String = cmattr.getdefault("target", "")
+'		Dim csText As String = cmattr.getdefault("text", "")
+'		Dim csTo As String = cmattr.getdefault("to", "")
+'		Dim cbisVisible As Boolean = YesNoToBoolean(cmattr.getdefault("isvisible", "No"))
+'		'
+'		Dim BreadCrumbsItem As VMBreadCrumbsItem
+'		BreadCrumbsItem.Initialize(vue, $"bci${cname}"$, Me)
+'		BreadCrumbsItem.SetStatic(True)
+'		BreadCrumbsItem.SetDesignMode(True)
+'		BreadCrumbsItem.SetActiveclass(csActiveclass)
+'		BreadCrumbsItem.SetAppend(cbisAppend)
+'		BreadCrumbsItem.SetDisabled(cbisDisabled)
+'		BreadCrumbsItem.SetExact(cbisExact)
+'		BreadCrumbsItem.SetExactactiveclass(csExactactiveclass)
+'		BreadCrumbsItem.SetHref(csHref)
+'		BreadCrumbsItem.SetLink(cbisLink)
+'		BreadCrumbsItem.SetNuxt(cbisNuxt)
+'		BreadCrumbsItem.SetReplace(cbisReplace)
+'		BreadCrumbsItem.SetRipple(cbisRipple)
+'		BreadCrumbsItem.SetTag(csTag)
+'		BreadCrumbsItem.SetTarget(csTarget)
+'		BreadCrumbsItem.SetText(csText)
+'		BreadCrumbsItem.SetTo(csTo)
+'		'add to bc
+'		BreadCrumbs.AddBreadCrumbsItem(BreadCrumbsItem)
+'		'define the source code
+'		AddCode(sbE, $"Dim bci${cname} As VMBreadCrumbsItem"$)
+'		AddCode(sbE, $"bci${cname}.Initialize(vue, "bci${cname}", Me)"$)
+'		'
+'		Dim pres As String = "bci"
+'		CodeLine(sbE, csActiveclass, "s", pres, cname, "SetActiveclass")
+'		CodeLine(sbE, cbisAppend, "b", pres, cname, "SetAppend")
+'		CodeLine(sbE, cbisDisabled, "b", pres, cname, "SetDisabled")
+'		CodeLine(sbE, cbisExact, "b", pres, cname, "SetExact")
+'		CodeLine(sbE, csExactactiveclass, "s", pres, cname, "SetExactactiveclass")
+'		CodeLine(sbE, csHref, "s", pres, cname, "SetHref")
+'		CodeLine(sbE, cbisLink, "b", pres, cname, "SetLink")
+'		CodeLine(sbE, cbisNuxt, "b", pres, cname, "SetNuxt")
+'		CodeLine(sbE, cbisReplace, "b", pres, cname, "SetReplace")
+'		CodeLine(sbE, cbisRipple, "b", pres, cname, "SetRipple")
+'		CodeLine(sbE, csTag, "s", pres, cname, "SetTag")
+'		CodeLine(sbE, csTarget, "s", pres, cname, "SetTarget")
+'		CodeLine(sbE, csText, "s", pres, cname, "SetText")
+'		CodeLine(sbE, csTo, "s", pres, cname, "SetTo")
+'		sbE.Append($"${sname}.AddBreadCrumbsItem(bci${cname})"$)
+'		AddNewLine(sbE)
+'	Next
+	'
+	'ui.AddControl(BreadCrumbs.BreadCrumbs, BreadCrumbs.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+	AddCode(sb, $"Dim bc${sname} As VMBreadCrumbs"$)
+	AddCode(sb, $"bc${sname}.Initialize(vue, "bc${sname}", Me)"$)
+	'
+	Dim pres As String = "bc"
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, sDivider, "s", pres, sname, "SetDivider")
+	CodeLine(sb, bisLarge, "b", pres, sname, "SetLarge")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	
+	AddComment(sb, "add each item")
+	AddCode(sb, $"bc${sname}.clear"$)
+	
+	For Each m As Map In lcontents
+		Dim sskey As String = m.getdefault("key", "")
+		Dim sText As String = m.getdefault("title", "")
+		Dim sHref As String = m.getdefault("subtitle", "")
+		Dim sTo As String = m.getdefault("to", "")
+		If sskey = "" Then Continue
+		
+		Dim bdisabled As Boolean = YesNoToBoolean(m.getdefault("disabled", "No"))
+		Dim bexact As Boolean = YesNoToBoolean(m.getdefault("exact", "No"))
+		Dim blink As Boolean = YesNoToBoolean(m.getdefault("link", "No"))
+		'
+		AddCode(sb, $"bc${sname}.AddItem("${sText}", "${sHref}", "${sTo}", ${bexact}, ${bdisabled}, ${blink})"$)
+	Next
+	AddCode(sb, $"bc${sname}.Refresh"$)
+	AddNewLine(sb)
+
+	sb.append($"${sparent}.AddControl(bc${sname}.BreadCrumbs, bc${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	AddNewLine(sb)
+	AddNewLine(sb)
+End Sub
+
+'#Region BreadCrumbsItem
+'Sub PropertyBag_BreadCrumbsItem
+'	vm.setdata("pbbreadcrumbsitem", False)
+'	lstBags.add("pbbreadcrumbsitem")
+'	pbbreadcrumbsitem = vm.CreateProperty("ppbbreadcrumbsitem", Me)
+'	pbbreadcrumbsitem.SetChangeEvent("SavePropertyBag")
+'	pbbreadcrumbsitem.SetVShow("pbbreadcrumbsitem")
+'	pbbreadcrumbsitem.AddHeading("d","Details")
+'	pbbreadcrumbsitem.AddText("d","id","ID","","")
+'	pbbreadcrumbsitem.AddText("d", "controltype", "Type", "","breadcrumbsitem")
+'	pbbreadcrumbsitem.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+'	pbbreadcrumbsitem.AddText("d","vmodel","ID","","")
+'	pbbreadcrumbsitem.AddText("d","text","Text","","")
+'	pbbreadcrumbsitem.AddText("d","to","To","","")
+'	pbbreadcrumbsitem.AddText("d","href","Href","","")
+'	pbbreadcrumbsitem.AddSelect("d","target","Target", vm.TargetOptions)
+'	pbbreadcrumbsitem.AddText("d","activeclass","ActiveClass","","")
+'	pbbreadcrumbsitem.AddText("d","exactactiveclass","ExactActiveClass","","")
+'	pbbreadcrumbsitem.AddText("d","tag","Tag","","")
+''
+'	
+'	pbbreadcrumbsitem.AddHeading("e","Settings")
+'	pbbreadcrumbsitem.AddSwitches("e", CreateMap("isappend": "Append", "isdisabled": "Disabled"))
+'	pbbreadcrumbsitem.AddSwitches("e", CreateMap("isexact": "Exact", "islink": "Link"))
+'	pbbreadcrumbsitem.AddSwitches("e", CreateMap("isnuxt": "Nuxt", "isreplace": "Replace"))
+'	pbbreadcrumbsitem.AddSwitches("e", CreateMap("isripple": "Ripple"))
+'	'
+'	pbbreadcrumbsitem.AddHeading("f","Matrix")
+'	pbbreadcrumbsitem.AddMatrix("f")
+'	'
+'	drwbags.Container.AddHTML(pbbreadcrumbsitem.tostring)
+'End Sub
+'#End Region
+
+
+
+#Region Overlay
+Sub PropertyBag_Overlay
+	vm.setdata("pboverlay", False)
+	lstBags.add("pboverlay")
+	pboverlay = vm.CreateProperty("ppboverlay", Me)
+	pboverlay.SetChangeEvent("SavePropertyBag")
+	pboverlay.SetVShow("pboverlay")
+	pboverlay.AddHeading("d","Details")
+	pboverlay.AddText("d","id","ID","","")
+	pboverlay.AddText("d", "controltype", "Type", "","overlay")
+	pboverlay.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pboverlay.AddText("d","vmodel","VModel","","")
+	pboverlay.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pboverlay.AddText2("d",CreateMap("opacity":"Opacity", "zindex":"ZIndex"))
+	'
+	pboverlay.AddHeading("e","Settings")
+	pboverlay.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isdark": "Dark"))
+	pboverlay.AddSwitches("e", CreateMap("islight": "Light"))
+	'
+	pboverlay.AddHeading("m","Margins & Padding")
+	pboverlay.AddMarginsPaddings("m")
+	'
+	pboverlay.AddHeading("f","Matrix")
+	pboverlay.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pboverlay.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Overlay
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sOpacity = mattr.getdefault("opacity", "")
+	sTabindex = mattr.getdefault("tabindex", "")
+	sText = mattr.getdefault("text", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sZindex = mattr.getdefault("zindex", "")
+End Sub
+
+Sub Design_Overlay
+	PlaceHolder("Overlay sits here ...")
+
+'	Dim Overlay As VMOverlay
+'	Overlay.Initialize(vue, $"Overlay${sname}"$, Me)
+'	Overlay.SetStatic(True)
+'	Overlay.SetDesignMode(True)
+'	Overlay.SetAbsolute(bisAbsolute)
+'	Overlay.SetColorintensity(sColor, sColorintensity)
+'	Overlay.SetDark(bisDark)
+'	Overlay.SetLight(bisLight)
+'	Overlay.SetOpacity(sOpacity)
+'	Overlay.SetZindex(sZindex)
+'	Overlay.hide
+'	
+'	If smargintop <> "" Then Overlay.AddClass("mt-" & smargintop)
+'	If smarginbottom <> "" Then Overlay.AddClass("mb-" & smarginbottom)
+'	If smarginleft <> "" Then Overlay.AddClass("ml-" & smarginleft)
+'	If smarginright <> "" Then Overlay.AddClass("mr-" & smarginright)
+'	If smargins <> "" Then Overlay.AddClass("ms-" & smargins)
+'	If smargine <> "" Then Overlay.AddClass("me-" & smargine)
+'	If smarginx <> "" Then Overlay.AddClass("mx-" & smarginx)
+'	If smarginy <> "" Then Overlay.AddClass("my-" & smarginy)
+'	If smargina <> "" Then Overlay.AddClass("ma-" & smargina)
+'	If spaddingtop <> "" Then Overlay.AddClass("pt-" & spaddingtop)
+'	If spaddingbottom <> "" Then Overlay.AddClass("pb-" & spaddingbottom)
+'	If spaddingleft <> "" Then Overlay.AddClass("pl-" & spaddingleft)
+'	If spaddingright <> "" Then Overlay.AddClass("pr-" & spaddingright)
+'	If spaddings <> "" Then Overlay.AddClass("ps-" & spaddings)
+'	If spaddinge <> "" Then Overlay.AddClass("pe-" & spaddinge)
+'	If spaddingx <> "" Then Overlay.AddClass("px-" & spaddingx)
+'	If spaddingy <> "" Then Overlay.AddClass("py-" & spaddingy)
+'	If spaddinga <> "" Then Overlay.AddClass("pa-" & spaddinga)
+'	ui.AddControl(Overlay.Overlay, Overlay.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+
+	AddCode(sb, $"Dim ol${sname} As VMOverlay"$)
+	AddCode(sb, $"ol${sname}.Initialize(vue, "ol${sname}", Me)"$)
+	'
+	Dim pres As String = "ol"
+	CodeLine(sb, bisAbsolute, "b", pres, sname, "SetAbsolute")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sOpacity, "s", pres, sname, "SetOpacity")
+	CodeLine(sb, sZindex, "s", pres, sname, "SetZindex")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	AddCode(sb, $"ol${sname}.Hide"$)
+	sb.Append($"${sparent}.AddControl(ol${sname}.Overlay, ol${sname}.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)"$)
+	AddNewLine(sb)
+	
+End Sub
+
+#Region ProgressLinear
+Sub PropertyBag_ProgressLinear
+	vm.setdata("pbprogresslinear", False)
+	lstBags.add("pbprogresslinear")
+	pbprogresslinear = vm.CreateProperty("ppbprogresslinear", Me)
+	pbprogresslinear.SetChangeEvent("SavePropertyBag")
+	pbprogresslinear.SetVShow("pbprogresslinear")
+	pbprogresslinear.AddHeading("d","Details")
+	pbprogresslinear.AddText("d","id","ID","","")
+	pbprogresslinear.AddText("d", "controltype", "Type", "","progresslinear")
+	pbprogresslinear.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbprogresslinear.AddText("d","vmodel","ID","","")
+	pbprogresslinear.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbprogresslinear.AddSelect2("d","backgroundcolor","BackgroundColor", vm.ColorOptions, "backgroundcolorintensity","BackgroundColor Intensity", vm.IntensityOptions)
+	pbprogresslinear.AddText("d","backgroundopacity","BackgroundOpacity","","")
+	pbprogresslinear.AddText2("d",CreateMap("buffervalue":"BufferValue", "height":"Height"))
+	'
+	pbprogresslinear.AddHeading("e","Settings")
+	pbprogresslinear.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isactive": "Active"))
+	pbprogresslinear.AddSwitches("e", CreateMap("isbottom": "Bottom", "isdark": "Dark"))
+	pbprogresslinear.AddSwitches("e", CreateMap("isfixed": "Fixed", "isindeterminate": "Indeterminate"))
+	pbprogresslinear.AddSwitches("e", CreateMap("islight": "Light", "isquery": "Query"))
+	pbprogresslinear.AddSwitches("e", CreateMap("isrounded": "Rounded", "isstream": "Stream"))
+	pbprogresslinear.AddSwitches("e", CreateMap("isstriped": "Striped", "istop": "Top"))
+	pbprogresslinear.AddSwitches("e", CreateMap("isvisible": "Visible"))
+	'
+	pbprogresslinear.AddHeading("m","Margins & Padding")
+	pbprogresslinear.AddMarginsPaddings("m")
+	'
+	pbprogresslinear.AddHeading("f","Matrix")
+	pbprogresslinear.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbprogresslinear.tostring)
+End Sub
+#End Region
+
+
+Sub Read_ProgressLinear
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisActive = YesNoToBoolean(mattr.getdefault("isactive", "No"))
+	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
+	sBackgroundcolorintensity = mattr.getdefault("backgroundcolorintensity", "")
+	sBackgroundopacity = mattr.getdefault("backgroundopacity", "")
+	bisBottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+	sBuffervalue = mattr.getdefault("buffervalue", "")
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	sHeight = mattr.getdefault("height", "")
+	bisIndeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisQuery = YesNoToBoolean(mattr.getdefault("isquery", "No"))
+	bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
+	bisStream = YesNoToBoolean(mattr.getdefault("isstream", "No"))
+	bisStriped = YesNoToBoolean(mattr.getdefault("isstriped", "No"))
+	bisTop = YesNoToBoolean(mattr.getdefault("istop", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+End Sub
+
+Sub Design_ProgressLinear
+	Dim ProgressLinear As VMProgressLinear
+	ProgressLinear.Initialize(vue, $"pl${sname}"$, Me)
+	ProgressLinear.SetStatic(True)
+	ProgressLinear.SetDesignMode(True)
+	ProgressLinear.SetAbsolute(bisAbsolute)
+	ProgressLinear.SetActive(bisActive)
+	ProgressLinear.SetBackgroundcolorintensity(sBackgroundcolor,sBackgroundcolorintensity)
+	ProgressLinear.SetBackgroundopacity(sBackgroundopacity)
+	ProgressLinear.SetBottom(bisBottom)
+	ProgressLinear.SetBuffervalue(sBuffervalue)
+	ProgressLinear.SetColorintensity(sColor,sColorintensity)
+	ProgressLinear.SetDark(bisDark)
+	ProgressLinear.SetFixed(bisFixed)
+	ProgressLinear.SetHeight(sHeight)
+	ProgressLinear.SetIndeterminate(bisIndeterminate)
+	ProgressLinear.SetLight(bisLight)
+	ProgressLinear.SetQuery(bisQuery)
+	ProgressLinear.SetRounded(bisRounded)
+	ProgressLinear.SetStream(bisStream)
+	ProgressLinear.SetStriped(bisStriped)
+	ProgressLinear.SetTop(bisTop)
+	ProgressLinear.SetVisible(bisVisible)
+
+	If smargintop <> "" Then ProgressLinear.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then ProgressLinear.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then ProgressLinear.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then ProgressLinear.AddClass("mr-" & smarginright)
+	If smargins <> "" Then ProgressLinear.AddClass("ms-" & smargins)
+	If smargine <> "" Then ProgressLinear.AddClass("me-" & smargine)
+	If smarginx <> "" Then ProgressLinear.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then ProgressLinear.AddClass("my-" & smarginy)
+	If smargina <> "" Then ProgressLinear.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then ProgressLinear.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then ProgressLinear.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then ProgressLinear.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then ProgressLinear.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then ProgressLinear.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then ProgressLinear.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then ProgressLinear.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then ProgressLinear.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then ProgressLinear.AddClass("pa-" & spaddinga)
+	ui.AddControl(ProgressLinear.ProgressLinear, ProgressLinear.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	
+	AddCode(sb, $"Dim pl${sname} As VMProgressLinear"$)
+	AddCode(sb, $"pl${sname}.Initialize(vue, "pl${sname}", Me)"$)
+	Dim pres As String = "pl"
+	CodeLine(sb, bisAbsolute, "b", pres, sname, "SetAbsolute")
+	CodeLine(sb, bisActive, "b", pres, sname, "SetActive")
+	CodeLine(sb, sBackgroundcolor, "s", pres, sname, "SetBackgroundcolor")
+	CodeLine(sb, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
+	CodeLine(sb, sBackgroundopacity, "s", pres, sname, "SetBackgroundopacity")
+	CodeLine(sb, bisBottom, "b", pres, sname, "SetBottom")
+	CodeLine(sb, sBuffervalue, "s", pres, sname, "SetBuffervalue")
+	CodeLine(sb, sColor, "s", pres, sname, "SetColor")
+	CodeLine(sb, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisFixed, "b", pres, sname, "SetFixed")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, bisIndeterminate, "b", pres, sname, "SetIndeterminate")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, bisQuery, "b", pres, sname, "SetQuery")
+	CodeLine(sb, bisRounded, "b", pres, sname, "SetRounded")
+	CodeLine(sb, bisStream, "b", pres, sname, "SetStream")
+	CodeLine(sb, bisStriped, "b", pres, sname, "SetStriped")
+	CodeLine(sb, bisTop, "b", pres, sname, "SetTop")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	'
+	sb.Append($"${sparent}.AddControl(pl${sname}.ProgressLinear, pl${sname}.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)"$)
+End Sub
+
+#Region ProgressCircular
+Sub PropertyBag_ProgressCircular
+	vm.setdata("pbprogresscircular", False)
+	lstBags.add("pbprogresscircular")
+	pbprogresscircular = vm.CreateProperty("ppbprogresscircular", Me)
+	pbprogresscircular.SetChangeEvent("SavePropertyBag")
+	pbprogresscircular.SetVShow("pbprogresscircular")
+	pbprogresscircular.AddHeading("d","Details")
+	pbprogresscircular.AddText("d","id","ID","","")
+	pbprogresscircular.AddText("d", "controltype", "Type", "","progresscircular")
+	pbprogresscircular.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
+	pbprogresscircular.AddText("d","vmodel","ID","","")
+	pbprogresscircular.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbprogresscircular.AddText("d","rotate","Rotate","","")
+	pbprogresscircular.AddText2("d",CreateMap("size":"Size", "width":"Width"))
+	'
+	pbprogresscircular.AddHeading("e","Settings")
+	pbprogresscircular.AddSwitches("e", CreateMap("isindeterminate": "Indeterminate", "isvisible": "Visible"))
+	'
+	pbprogresscircular.AddHeading("m","Margins & Padding")
+	pbprogresscircular.AddMarginsPaddings("m")
+	'
+	pbprogresscircular.AddHeading("f","Matrix")
+	pbprogresscircular.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbprogresscircular.tostring)
+End Sub
+#End Region
+
+Sub Read_ProgressCircular
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisIndeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
+	sRotate = mattr.getdefault("rotate", "")
+	sSize = mattr.getdefault("size", "")
+	sTabindex = mattr.getdefault("tabindex", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_ProgressCircular
+	Dim ProgressCircular As VMProgressCircular
+	ProgressCircular.Initialize(vue, $"pc${sname}"$, Me)
+	ProgressCircular.SetStatic(True)
+	ProgressCircular.SetDesignMode(True)
+	ProgressCircular.SetColorintensity(sColor, sColorintensity)
+	ProgressCircular.SetIndeterminate(bisIndeterminate)
+	ProgressCircular.SetRotate(sRotate)
+	ProgressCircular.SetSize(sSize)
+	ProgressCircular.SetVisible(bisVisible)
+	ProgressCircular.SetWidth(sWidth)
+
+	If smargintop <> "" Then ProgressCircular.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then ProgressCircular.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then ProgressCircular.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then ProgressCircular.AddClass("mr-" & smarginright)
+	If smargins <> "" Then ProgressCircular.AddClass("ms-" & smargins)
+	If smargine <> "" Then ProgressCircular.AddClass("me-" & smargine)
+	If smarginx <> "" Then ProgressCircular.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then ProgressCircular.AddClass("my-" & smarginy)
+	If smargina <> "" Then ProgressCircular.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then ProgressCircular.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then ProgressCircular.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then ProgressCircular.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then ProgressCircular.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then ProgressCircular.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then ProgressCircular.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then ProgressCircular.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then ProgressCircular.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then ProgressCircular.AddClass("pa-" & spaddinga)
+	ui.AddControl(ProgressCircular.ProgressCircular, ProgressCircular.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	
+	AddCode(sb, $"Dim pc${sname} As VMProgressCircular"$)
+	AddCode(sb, $"pc${sname}.Initialize(vue, "pc${sname}", Me)"$)
+	Dim pres As String = "pc"
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisIndeterminate, "b", pres, sname, "SetIndeterminate")
+	CodeLine(sb, sRotate, "s", pres, sname, "SetRotate")
+	CodeLine(sb, sSize, "s", pres, sname, "SetSize")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	sb.Append($"${sparent}.AddControl(pc${sname}.ProgressCircular, pc${sname}.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)"$)
+End Sub
+
+

@@ -33,6 +33,8 @@ Sub Class_Globals
 	Public contentitems As List
 	Private itemtypes As Map
 	Public IsTable As Boolean
+	Private InternalItemType As Map
+	Private InternalItemTypeOptions As Map
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMProperty
@@ -56,6 +58,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	changeEvent = $"${ID}_change"$
 	bText.Initialize 
 	sText.Initialize 
+	InternalItemType.Initialize 
+	InternalItemTypeOptions.Initialize
 	contentitems.Initialize
 	contentitems.Add("key")
 	contentitems.Add("avatar")
@@ -122,6 +126,27 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'make items to use a switch
+Sub SetItemsSwitch(itemKeys As List) As VMProperty
+	For Each k As String In itemKeys
+		InternalItemType.Put(k,"switch")
+	Next
+	Return Me
+End Sub
+
+'set items select options
+Sub SetItemsSelect(itemKey As String, itemOptions As Map) As VMProperty
+	InternalItemType.Put(itemKey, "select")
+	InternalItemTypeOptions.Put(itemKey, itemOptions)
+	Return Me
+End Sub
+
+'set items raio options
+Sub SetItemsRadio(itemKey As String, itemOptions As Map) As VMProperty
+	InternalItemType.Put(itemKey, "radio")
+	InternalItemTypeOptions.Put(itemKey, itemOptions)
+	Return Me
+End Sub
 
 'set the active panel
 Sub OpenPanel(pnl As String) As VMProperty
@@ -1747,6 +1772,7 @@ Sub ToString As String
 				Dim bcont As VMContainer
 				bcont.Initialize(vue, "a" & nc.vmodel, module).SetStatic(True).SetTag("div").NoGutters = True
 				bcont.SetFluid(True)
+				bcont.AddClass("mx-0")
 				bcont.AddRows(2).AddColumns12
 				'add a toolbar
 				Dim tblx As VMToolBar = CreateToolbar("t" & nc.vmodel, Me).SetStatic(True)
@@ -1781,6 +1807,10 @@ Sub ToString As String
 				Dim rowPos As Int = 1
 				Dim colPos As Int = 0
 				For Each k As String In nc.options.Keys
+					'add item if it does not exist
+					If contentitems.IndexOf(k) = -1 Then
+						contentitems.add(k)
+					End If
 					Dim v As String = nc.options.Get(k)
 					'store for later retrieval
 					colPos = colPos + 1
@@ -1790,12 +1820,49 @@ Sub ToString As String
 					End If
 					'
 					Dim vmodel As String = $"${nc.vmodel}${k}"$
-					Dim tw As VMTextField
-					tw.Initialize(vue, vmodel, module).SetStatic(True).Setlabel(v)
-					tw.SetVModel(vmodel).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True)
-					tw.SetHideDetails(True).AddClass("my-2").RemoveAttr("v-show")
-					tcont.AddControlS(tw.TextField, tw.ToString, rowPos, colPos, 6, 6, 6, 6)
-					itemtypes.put(k,"String")
+							
+					'customize the items
+					If InternalItemType.ContainsKey(k) Then
+						Dim itype As String = InternalItemType.Get(k)
+						Select Case itype
+						Case "switch"
+							Dim sw As VMCheckBox
+							sw.Initialize(vue, "sw" & k, module).SetStatic(True).SetVModel(vmodel).SetSwitch
+							sw.Setlabel(v).SetTrueValue("Yes").SetFalseValue("No").SetHideDetails(True)
+							sw.SetFieldType("string")
+							sw.RemoveAttr("ref").SetDense(True).SetInset(True).AddClass("my-1")
+							sw.AddClass("mx-2")
+							tcont.AddControlS(sw.CheckBox, sw.ToString, rowPos, colPos, 6, 6, 6, 6)
+							vue.SetData(vmodel, "No")
+							itemtypes.put(k,"Boolean")
+						Case "select"
+							Dim opts As Map = InternalItemTypeOptions.Get(k)
+							Dim cbo As VMSelect
+							cbo.Initialize(vue, "cbo" & k, module).SetStatic(True).Setlabel(v).SetVModel(vmodel)
+							cbo.SetOptions($"${vmodel}1"$, opts, "id", "text", False).RemoveAttr("ref").SetDense(True)
+							cbo.SetOutlined(True).SetHideDetails(True).AddClass("my-1")
+							tcont.AddControlS(cbo.Combo, cbo.ToString, rowPos, colPos, 6, 6, 6, 6)
+							vue.SetData(vmodel, "No")
+							itemtypes.put(k,"String")
+						Case "radio"
+							Dim opts As Map = InternalItemTypeOptions.Get(k)
+							Dim rg As VMRadioGroup
+							rg.Initialize(vue, "rg" & k, module).SetStatic(True).SetVModel(vmodel).Setlabel(v)
+							rg.SetOptions(opts)
+							rg.AddClass("mx-2")
+							rg.SetFieldType("string")
+							rg.SetDense(True).RemoveAttr("ref").SetHideDetails(True).AddClass("my-1")
+							tcont.AddControlS(rg.RadioGroup, rg.ToString, rowPos, colPos, 6, 6, 6, 6)
+							itemtypes.put("itemtype","String")
+						End Select
+					Else
+						Dim tw As VMTextField
+						tw.Initialize(vue, vmodel, module).SetStatic(True).Setlabel(v)
+						tw.SetVModel(vmodel).SetType("text").RemoveAttr("ref").SetDense(True).SetOutlined(True)
+						tw.SetHideDetails(True).AddClass("my-2").RemoveAttr("v-show")
+						tcont.AddControlS(tw.TextField, tw.ToString, rowPos, colPos, 6, 6, 6, 6)
+						itemtypes.put(k,"String")
+					End If
 				Next
 				bcont.AddComponent(1, 1, tcont.tostring)
 				'add a list

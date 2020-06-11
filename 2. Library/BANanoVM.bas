@@ -198,8 +198,8 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Pages.initialize
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
-	VContent.Initialize(vue, $"${appName}content"$).SetTag("v-content")
-	Container.Initialize(vue, $"${appName}container"$, eventHandler).SetFluid(True)
+	VContent.Initialize(vue, "appcontent").SetTag("v-content")
+	Container.Initialize(vue, "appcontainer", eventHandler).SetFluid(True)
 	'
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	Drawer.SetApp(True)
@@ -209,20 +209,25 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.SetAppBar(True)
 	NavBar.Show
 	'
-	Footer.Initialize(vue, $"${appName}footer"$, eventHandler).SetApp(True)
+	Footer.Initialize(vue, "footer", eventHandler).SetApp(True)
 	'
-	BottomNav.Initialize(vue, $"${appName}bn"$, eventHandler).SetApp(True)
+	BottomNav.Initialize(vue, "bottomnav", eventHandler).SetApp(True)
+	BottomNav.Hide
 	
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
 	'
 	'put loader on page
-	SetStateSingle("pageloader", False)
-	Overlay = CreateOverlay("pageloader", Module).SetValue("pageloader")
-	Dim vpc As VMProgressCircular = CreateProgressCircular("", Module).SetSize(200).SetIndeterminate(True).SetColor("blue")
-	vpc.Pop(Overlay.Overlay)
+	Overlay.Initialize(vue, "pageloader", eventHandler)
+	Dim vpc As VMProgressCircular
+	vpc.Initialize(vue, "pageloaderprogress", eventHandler)
+	vpc.SetSize(200)
+	vpc.SetIndeterminate(True)
+	vpc.SetColor("blue")
+	Overlay.AddComponent(vpc.ToString)
 	'
 	Drawer.Hide
 	Footer.hide
+	Overlay.hide
 	'
 	vue.SetData("confirmtitle", "Confirm")
 	vue.SetData("btnconfirmcancellabel", "Cancel")
@@ -904,6 +909,26 @@ End Sub
 Sub ShowDialog(dID As String)
 	dID = dID.tolowercase
 	SetStateTrue(dID)
+End Sub
+
+Sub ShowBottomSheet(dID As String)
+	dID = dID.tolowercase
+	vue.SetData($"${dID}show"$, True)
+End Sub
+
+Sub HideBottomSheet(dID As String)
+	dID = dID.tolowercase
+	vue.SetData($"${dID}show"$, False)
+End Sub
+
+Sub ShowOverlay(dID As String)
+	dID = dID.tolowercase
+	vue.SetData($"${dID}show"$, True)
+End Sub
+
+Sub HideOverlay(dID As String)
+	dID = dID.tolowercase
+	vue.SetData($"${dID}show"$, False)
 End Sub
 
 Sub HideDrawer(dID As String)
@@ -2119,12 +2144,12 @@ End Sub
 
 'show hour glass
 Sub PagePause
-	vue.SetStateSingle("pageloader", True)
+	Overlay.show
 End Sub
 
 'hide hourglass
 Sub PageResume
-	vue.SetStateSingle("pageloader", False)
+	Overlay.hide
 End Sub
 
 Sub LeftString(Text As String, lLength As Long)As String
@@ -2237,6 +2262,13 @@ End Sub
 
 'add a container
 Sub AddContainer(cont As VMContainer)
+	Dim scont As String = cont.tostring
+	Container.SetText(scont)
+End Sub
+
+
+'add a bottom sheet
+Sub AddBottomSheet(cont As VMBottomSheet)
 	Dim scont As String = cont.tostring
 	Container.SetText(scont)
 End Sub
