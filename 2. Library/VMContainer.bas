@@ -107,6 +107,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+Sub SetVElse(vif As String) As VMContainer
+	Container.SetVElse(vif)
+	Return Me
+End Sub
+
+Sub SetVText(vhtml As String) As VMContainer
+	Container.SetVText(vhtml)
+	Return Me
+End Sub
+
+Sub SetVhtml(vhtml As String) As VMContainer
+	Container.SetVHtml(vhtml)
+	Return Me
+End Sub
+
+
 Sub SetSlotOpposite As VMContainer
 	Container.SetAttrLoose("v-slot:opposite")
 	Return Me

@@ -80,7 +80,7 @@ Sub Init
 	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
 	'
 	vm.UX
-	vm.showpage(modButtons.name)
+	vm.showpage(modProgress.name)
 End Sub
 
 Sub BuildDrawer
@@ -123,8 +123,8 @@ Sub BuildDrawer
 	vm.Drawer.AddItem("lists", "", "Lists")
 	vm.Drawer.AddItem("menus", "", "Menus")
 	vm.Drawer.AddItem("overlays", "", "Overlays")
-	'vm.Drawer.AddItem("pagination", "", "Paginations")
-	'vm.Drawer.AddItem("progress", "", "Progress")
+	vm.Drawer.AddItem("pagination", "", "Paginations")
+	vm.Drawer.AddItem("progress", "", "Progress")
 	'vm.Drawer.AddItem("sheets", "", "Sheets")
 	vm.Drawer.AddItem("modLoadingSkeleton", "", "Skeleton Loaders")
 	vm.Drawer.AddItem("snackbars", "", "Snackbars")
@@ -215,6 +215,12 @@ Sub draweritems_click(e As BANanoEvent)
 	vm.pageresume
 	vm.BottomNav.Hide
 	Select Case elID
+	Case "progress"
+		vm.NavBar.UpdateTitle(modProgress.title)
+		vm.ShowPage(modProgress.name)
+	Case "pagination"
+		vm.NavBar.UpdateTitle(modPagination.title)
+		vm.ShowPage(modPagination.name)
 	Case "breadcrumbs"
 		vm.NavBar.UpdateTitle(modBreadCrumbs.title)
 		vm.ShowPage(modBreadCrumbs.name)
@@ -344,7 +350,7 @@ Sub draweritems_click(e As BANanoEvent)
 			vm.NavBar.UpdateTitle(modMenus.title)
 		vm.ShowPage(modMenus.name)		
 	Case "autocomplete"
-			vm.NavBar.UpdateTitle(modAutoComplete.title)
+		vm.NavBar.UpdateTitle(modAutoComplete.title)
 		modAutoComplete.reset
 		vm.ShowPage(modAutoComplete.name)		
 	Case "lists"
@@ -438,6 +444,8 @@ Sub AddPages
 	vm.AddPage(modSparkLine.name, modSparkLine)
 	vm.AddPage(modCard.name, modCard)
 	vm.AddPage(modBreadCrumbs.name, modBreadCrumbs)
+	vm.AddPage(modPagination.name, modPagination)
+	vm.AddPage(modProgress.name, modProgress)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

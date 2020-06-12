@@ -21,8 +21,16 @@ Sub Init
 	AddPages
 	AddContent
 	BuildBottomNav
+	BuildFooter
 	'
 	vm.ux
+End Sub
+
+
+'build the footer of the page
+Sub BuildFooter
+	'*copy code after this line
+	
 End Sub
 
 'build the bottom nav bar

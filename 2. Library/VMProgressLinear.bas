@@ -13,6 +13,8 @@ Sub Class_Globals
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object   'ignore
 	Private bStatic As Boolean   'ignore
+	Private tmp As VMElement
+	Private hasLabel As Boolean
 End Sub
 
 'initialize the ProgressLinear
@@ -24,11 +26,51 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	tmp.Initialize(vue, $"${ID}tmp"$).SetTag("template")
+	hasLabel = False
+	Return Me
+End Sub
+
+Sub GetValue As String
+	Dim pp As String = $"${ID}Value"$
+	Dim svalue As String = vue.GetData(pp)
+	Return svalue
+End Sub
+
+Sub SetLabel(lblText As String) As VMProgressLinear
+	hasLabel = True
+	tmp.SetAttrSingle("v-slot", "{ value }")
+	tmp.SetText($"<strong>{{ Math.ceil(value) }}${lblText}</strong>"$)
+	Return Me
+End Sub
+
+Sub SetText(lblText As String) As VMProgressLinear
+	hasLabel = True
+	tmp.SetAttrSingle("v-slot", "{ value }")
+	tmp.SetText($"<strong>{{ Math.ceil(value) }}${lblText}</strong>"$)
+	Return Me
+End Sub
+
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMProgressLinear
+	Dim sColor As String = $"${varColor}--text"$
+	tmp.AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMProgressLinear
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	tmp.AddClass(mcolor)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	If hasLabel Then AddComponent(tmp.ToString)
 	Return ProgressLinear.ToString
 End Sub
 
@@ -102,10 +144,23 @@ Sub SetAbsolute(varAbsolute As Boolean) As VMProgressLinear
 	Return Me
 End Sub
 
+'set reactive
+Sub SetReactive(varReactive As Boolean) As VMProgressLinear
+	If varReactive = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("reactive", varReactive)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Reactive"$
+	vue.SetStateSingle(pp, varReactive)
+	ProgressLinear.Bind(":reactive", pp)
+	Return Me
+End Sub
+
 'set active
 Sub SetActive(varActive As Boolean) As VMProgressLinear
 	If bStatic Then
-		SetAttrSingle(":active", varActive)
+		SetAttrSingle("active", varActive)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Active"$
@@ -156,7 +211,7 @@ End Sub
 'set indeterminate
 Sub SetIndeterminate(varIndeterminate As Boolean) As VMProgressLinear
 	If bStatic Then
-		SetAttrSingle(":indeterminate", varIndeterminate)
+		SetAttrSingle("indeterminate", varIndeterminate)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Indeterminate"$
@@ -271,8 +326,6 @@ End Sub
 
 'set buffer-value
 Sub SetBufferValue(varBufferValue As String) As VMProgressLinear
-	If varBufferValue = "" Then Return Me
-	If varBufferValue = "100" Then Return Me
 	If bStatic Then
 		SetAttrSingle("buffer-value", varBufferValue)
 		Return Me
@@ -313,8 +366,6 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMProgressLinear
-	If varValue = "" Then Return Me
-	If varValue = "0" Then Return Me
 	If bStatic Then
 		SetAttrSingle("value", varValue)
 		Return Me

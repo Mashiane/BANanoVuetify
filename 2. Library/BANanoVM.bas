@@ -774,6 +774,20 @@ Sub ShowSnackBarButton(Message As String, buttonText As String, OnClick As Strin
 	SnackBar.show
 End Sub
 
+'set the progress value
+Sub SetProgressValue(elID As String, elValue As String)
+	elID = elID.tolowercase
+	Dim elKey As String = $"${elID}value"$
+	vue.SetData(elKey, elValue)
+End Sub
+
+Sub GetProgressValue(elID As String) As String
+	elID = elID.tolowercase
+	Dim elKey As String = $"${elID}value"$
+	Dim svalue As String = vue.getData(elKey)
+	Return svalue
+End Sub
+
 
 Sub Increment(elID As String, valueOf As Int) As BANanoVM
 	elID = elID.tolowercase
@@ -875,13 +889,6 @@ End Sub
 'copy a state from one to another
 Sub State2Another(source As String, target As String, defaultValue As Object)
 	vue.State2Another(source, target, defaultValue)
-End Sub
-
-'update value of progress bar
-Sub SetProgressValue(pID As String, pVal As Int) As BANanoVM
-	pID = pID.ToLowerCase
-	SetStateSingle($"${pID}value"$, pVal)
-	Return Me
 End Sub
 
 'update buffer of progress bar

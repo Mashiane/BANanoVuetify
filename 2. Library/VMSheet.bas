@@ -6,64 +6,28 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-	Public Sheet As VMElement
+	Public Sheet As VMContainer
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
-	Private Module As Object
-	Public Container As VMContainer
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the Sheet
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMSheet
 	ID = sid.tolowercase
-	Sheet.Initialize(v, ID)
-	Sheet.SetTag("v-sheet")
+	Sheet.Initialize(v, ID, eventHandler).SetTag("v-sheet")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
-	Container.Initialize(vue, $"${ID}container"$, Module)
+	bStatic = False
 	Return Me
 End Sub
 
-'set the row and column position
-Sub SetRC(sRow As String, sCol As String) As VMSheet
-	Sheet.SetRC(sRow, sCol)
-	Return Me
-End Sub
-
-Sub SetTextCenter As VMSheet
-	Sheet.AddClass("text-center")
-	Return Me
-End Sub
-
-Sub AddComponent(comp As String) As VMSheet
-	Sheet.SetText(comp)
-	Return Me
-End Sub
-
-'set the offsets for this item
-Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMSheet
-	Sheet.SetDeviceOffsets(OS, OM, OL, OX)
-	Return Me
-End Sub
-
-'set the sizes for this item
-Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMSheet
-	Sheet.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-'set the position: row and column and sizes
-Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMSheet
-	SetRC(srow, scell)
-	SetDeviceSizes(small,medium, large, xlarge)
-	Return Me
-End Sub
 'get component
 Sub ToString As String
-	AddComponent(Container.ToString)
 	Return Sheet.ToString
 End Sub
 
@@ -91,12 +55,6 @@ End Sub
 Sub AddChild(child As VMElement) As VMSheet
 	Dim childHTML As String = child.ToString
 	Sheet.SetText(childHTML)
-	Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMSheet
-	Sheet.SetText(t)
 	Return Me
 End Sub
 
@@ -131,23 +89,25 @@ Sub AddChildren(children As List)
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMSheet
+Sub SetColor(varColor As String) As VMSheet
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Sheet.Bind(":color", pp)
 	Return Me
 End Sub
 
-'set dark
-Sub SetDark(varDark As Object) As VMSheet
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	Sheet.Bind(":dark", pp)
-	Return Me
-End Sub
-
 'set elevation
-Sub SetElevation(varElevation As Object) As VMSheet
+Sub SetElevation(varElevation As String) As VMSheet
+	If varElevation = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("elevation", varElevation)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Elevation"$
 	vue.SetStateSingle(pp, varElevation)
 	Sheet.Bind(":elevation", pp)
@@ -155,23 +115,25 @@ Sub SetElevation(varElevation As Object) As VMSheet
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMSheet
+Sub SetHeight(varHeight As String) As VMSheet
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Sheet.Bind(":height", pp)
 	Return Me
 End Sub
 
-'set light
-Sub SetLight(varLight As Object) As VMSheet
-	Dim pp As String = $"${ID}Light"$
-	vue.SetStateSingle(pp, varLight)
-	Sheet.Bind(":light", pp)
-	Return Me
-End Sub
-
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMSheet
+Sub SetMaxHeight(varMaxHeight As String) As VMSheet
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	Sheet.Bind(":max-height", pp)
@@ -179,7 +141,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMSheet
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMSheet
+Sub SetMaxWidth(varMaxWidth As String) As VMSheet
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	Sheet.Bind(":max-width", pp)
@@ -187,7 +154,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMSheet
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMSheet
+Sub SetMinHeight(varMinHeight As String) As VMSheet
+	If varMinHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinHeight"$
 	vue.SetStateSingle(pp, varMinHeight)
 	Sheet.Bind(":min-height", pp)
@@ -195,26 +167,80 @@ Sub SetMinHeight(varMinHeight As Object) As VMSheet
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMSheet
+Sub SetMinWidth(varMinWidth As String) As VMSheet
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	Sheet.Bind(":min-width", pp)
 	Return Me
 End Sub
 
-'set tile
-Sub SetTile(varTile As Object) As VMSheet
-	Dim pp As String = $"${ID}Tile"$
-	vue.SetStateSingle(pp, varTile)
-	Sheet.Bind(":tile", pp)
+'set tag
+Sub SetTag(varTag As String) As VMSheet
+	If varTag = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("tag", varTag)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Tag"$
+	vue.SetStateSingle(pp, varTag)
+	Sheet.Bind(":tag", pp)
 	Return Me
 End Sub
 
 'set width
-Sub SetWidth(varWidth As Object) As VMSheet
+Sub SetWidth(varWidth As String) As VMSheet
+	If varWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("width", varWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Width"$
 	vue.SetStateSingle(pp, varWidth)
 	Sheet.Bind(":width", pp)
+	Return Me
+End Sub
+
+'set dark
+Sub SetDark(varDark As Boolean) As VMSheet
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dark"$
+	vue.SetStateSingle(pp, varDark)
+	Sheet.Bind(":dark", pp)
+	Return Me
+End Sub
+
+'set light
+Sub SetLight(varLight As Boolean) As VMSheet
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Light"$
+	vue.SetStateSingle(pp, varLight)
+	Sheet.Bind(":light", pp)
+	Return Me
+End Sub
+
+'set tile
+Sub SetTile(varTile As Boolean) As VMSheet
+	If varTile = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("tile", varTile)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Tile"$
+	vue.SetStateSingle(pp, varTile)
+	Sheet.Bind(":tile", pp)
 	Return Me
 End Sub
 
@@ -230,19 +256,6 @@ Sub Show As VMSheet
 	Sheet.SetVisible(True)
 	Return Me
 End Sub
-
-'enable the component
-Sub Enable As VMSheet
-	Sheet.Enable(True)
-	Return Me
-End Sub
-
-'disable the component
-Sub Disable As VMSheet
-	Sheet.Disable(True)
-	Return Me
-End Sub
-
 
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMSheet
@@ -270,9 +283,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMSheet
+Sub SetColorIntensity(color As String, intensity As String) As VMSheet
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Sheet.Bind(":color", pp)
 	Return Me
@@ -303,14 +321,15 @@ Sub SetDesignMode(b As Boolean) As VMSheet
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMSheet
-	Sheet.SetTabIndex(ti)
+'set static
+Sub SetStatic(b As Boolean) As VMSheet
+	Sheet.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMSheet
+Sub SetName(varName As String, bbind As Boolean) As VMSheet
 	Sheet.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -370,26 +389,73 @@ Sub SetKey(k As String) As VMSheet
 	Return Me
 End Sub
 
-Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSheet
-Sheet.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMSheet
-Sheet.SetVisible(b)
-Return Me
+'set the row and column position
+Sub SetRC(sRow As String, sCol As String) As VMSheet
+	Sheet.SetRC(sRow, sCol)
+	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColor(varColor As String) As VMSheet
-	Dim sColor As String = $"${varColor}--text"$
+'set the offsets for this item
+Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMSheet
+	Sheet.SetDeviceOffsets(OS, OM, OL, OX)
+	Return Me
+End Sub
+
+
+'set the position: row and column and sizes
+Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMSheet
+	SetRC(srow, scell)
+	SetDeviceSizes(small,medium, large, xlarge)
+	Return Me
+End Sub
+
+'set the sizes for this item
+Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMSheet
+	Sheet.SetDeviceSizes(SS, SM, SL, SX)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMSheet
+	Sheet.SetText(comp)
+	Return Me
+End Sub
+
+
+Sub SetTextCenter As VMSheet
+	Sheet.AddClass("text-center")
+	Return Me
+End Sub
+
+Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
+	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMSheet
+	Sheet.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+
+Sub SetVisible(b As Boolean) As VMSheet
+	Sheet.SetVisible(b)
+	Return Me
+End Sub
+
+'set color intensity - built in
+Sub SetTextColor(textcolor As String) As VMSheet
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
 	AddClass(sColor)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSheet
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMSheet
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me

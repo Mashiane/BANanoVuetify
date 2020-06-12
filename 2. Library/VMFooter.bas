@@ -44,6 +44,10 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMFooter
 	If varColor = "" Then Return Me
 	Dim pp As String = $"${ID}Color"$
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	If bStatic Then
+		Footer.Bind("color", scolor)
+		Return Me
+	End If
 	vue.SetStateSingle(pp, scolor)
 	Footer.Bind(":color", pp)
 	Return Me
@@ -436,6 +440,6 @@ Return Me
 End Sub
 
 Sub SetVisible(b As Boolean) As VMFooter
-Footer.SetVisible(b)
-Return Me
+	vue.SetStateSingle(ID, b)
+	Return Me
 End Sub

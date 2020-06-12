@@ -29,26 +29,26 @@ Sub Code
 	bs1 = vm.CreateBottomSheet("bs1", Me).SetPersistent(True)
 	'
 	Dim s1 As VMSheet = vm.CreateSheet("s1", Me).SetTextCenter.SetHeight("200px")
-	s1.Container.AddRows(1).AddColumns12
+	s1.Sheet.AddRows(1).AddColumns12
 	'
 	Dim lbl As VMLabel = vm.CreateLabel("lblme").SetText("This is a bottom sheet using persistent prop!").SetParagraph
-	s1.Container.AddComponent(1, 1, lbl.ToString)
+	s1.Sheet.AddComponent(1, 1, lbl.ToString)
 	'
 	Dim btnClose As VMButton = vm.CreateButton("btnCloseSheet", Me).SetLabel("Close Sheet")
-	s1.Container.AddComponent(1, 1, btnClose.ToString)
+	s1.Sheet.AddComponent(1, 1, btnClose.ToString)
 	'
 	bs1.AddComponent(s1.ToString)
 	'
 	bs2 = vm.CreateBottomSheet("bs2", Me).SetInset(True)
 	Dim s As VMSheet = vm.CreateSheet("s2", Me).SetTextCenter.SetHeight("200px")
 	'
-	s.Container.AddRows(1).AddColumns12
+	s.Sheet.AddRows(1).AddColumns12
 	'
 	Dim lbl As VMLabel = vm.CreateLabel("lbl2").SetText("This is a bottom sheet using inset prop!").SetParagraph
-	s.Container.AddComponent(1, 1, lbl.ToString)
+	s.Sheet.AddComponent(1, 1, lbl.ToString)
 	'
 	Dim btnClose As VMButton = vm.CreateButton("btnCloseSheet2", Me).SetLabel("Close Sheet")
-	s.Container.AddComponent(1, 1, btnClose.ToString)
+	s.Sheet.AddComponent(1, 1, btnClose.ToString)
 	'
 	bs2.AddComponent(s.ToString)
 	

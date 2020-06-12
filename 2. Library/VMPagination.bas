@@ -10,8 +10,9 @@ Sub Class_Globals
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean      'ignore
-	Private Module As Object        'ignore
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the Pagination
@@ -19,34 +20,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	Pagination.Initialize(v, ID)
 	Pagination.SetTag("v-pagination")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
-	Return Me
-End Sub
-
-'set the row and column position
-Sub SetRC(sRow As String, sCol As String) As VMPagination
-	Pagination.SetRC(sRow, sCol)
-	Return Me
-End Sub
-
-'set the offsets for this item
-Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMPagination
-	Pagination.SetDeviceOffsets(OS, OM, OL, OX)
-	Return Me
-End Sub
-
-'set the sizes for this item
-Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMPagination
-	Pagination.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-'set the position: row and column and sizes
-Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMPagination
-	SetRC(srow, scell)
-	SetDeviceSizes(small,medium, large, xlarge)
+	bStatic = False
 	Return Me
 End Sub
 
@@ -82,11 +59,6 @@ Sub AddChild(child As VMElement) As VMPagination
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMPagination
-	Pagination.SetText(t)
-	Return Me
-End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
@@ -100,7 +72,7 @@ Sub AddClass(c As String) As VMPagination
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMPagination
+Sub SetAttr(attr As Map) As VMPagination
 	Pagination.SetAttr(attr)
 	Return Me
 End Sub
@@ -118,24 +90,108 @@ Sub AddChildren(children As List)
 	Next
 End Sub
 
-'set circle
-Sub SetCircle(varCircle As Object) As VMPagination
-	Dim pp As String = $"${ID}Circle"$
-	vue.SetStateSingle(pp, varCircle)
-	Pagination.Bind(":circle", pp)
-	Return Me
-End Sub
-
 'set color
-Sub SetColor(varColor As Object) As VMPagination
+Sub SetColor(varColor As String) As VMPagination
+	if varColor = "" Then Return Me
+	if bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Pagination.Bind(":color", pp)
 	Return Me
 End Sub
 
+'set length
+Sub SetLength(varLength As String) As VMPagination
+	if varLength = "" Then Return Me
+	If varLength = "0" Then Return Me
+	If bStatic Then
+		SetAttrSingle("length", varLength)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Length"$
+	vue.SetStateSingle(pp, varLength)
+	Pagination.Bind(":length", pp)
+	Return Me
+End Sub
+
+'set next-icon
+Sub SetNextIcon(varNextIcon As String) As VMPagination
+	If varNextIcon = "" Then Return Me
+	If varNextIcon = "$next" Then Return Me
+	If bStatic Then
+		SetAttrSingle("next-icon", varNextIcon)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}NextIcon"$
+	vue.SetStateSingle(pp, varNextIcon)
+	Pagination.Bind(":next-icon", pp)
+	Return Me
+End Sub
+
+'set prev-icon
+Sub SetPrevIcon(varPrevIcon As String) As VMPagination
+	If varPrevIcon = "" Then Return Me
+	If varPrevIcon = "$prev" Then Return Me
+	If bStatic Then
+		SetAttrSingle("prev-icon", varPrevIcon)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}PrevIcon"$
+	vue.SetStateSingle(pp, varPrevIcon)
+	Pagination.Bind(":prev-icon", pp)
+	Return Me
+End Sub
+
+'set total-visible
+Sub SetTotalVisible(varTotalVisible As String) As VMPagination
+	If varTotalVisible = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("total-visible", varTotalVisible)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}TotalVisible"$
+	vue.SetStateSingle(pp, varTotalVisible)
+	Pagination.Bind(":total-visible", pp)
+	Return Me
+End Sub
+
+'set value
+Sub SetValue(varValue As String) As VMPagination
+	if varValue = "" Then Return Me
+	if varValue = "0" Then Return Me
+	if bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	Pagination.Bind(":value", pp)
+	Return Me
+End Sub
+
+'set circle
+Sub SetCircle(varCircle As Boolean) As VMPagination
+	if varCircle = False Then Return Me
+	if bStatic Then
+		SetAttrSingle("circle", varCircle)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Circle"$
+	vue.SetStateSingle(pp, varCircle)
+	Pagination.Bind(":circle", pp)
+	Return Me
+End Sub
+
 'set dark
-Sub SetDark(varDark As Object) As VMPagination
+Sub SetDark(varDark As Boolean) As VMPagination
+	if varDark = False Then Return Me
+	if bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	Pagination.Bind(":dark", pp)
@@ -144,53 +200,27 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMPagination
-	Pagination.SetDisabled(varDisabled)
-	Return Me
-End Sub
-
-'set length
-Sub SetLength(varLength As Object) As VMPagination
-	Dim pp As String = $"${ID}Length"$
-	vue.SetStateSingle(pp, varLength)
-	Pagination.Bind(":length", pp)
+	if varDisabled = False Then Return Me
+	if bStatic Then
+		SetAttrSingle("disabled", varDisabled)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Disabled"$
+	vue.SetStateSingle(pp, varDisabled)
+	Pagination.Bind(":disabled", pp)
 	Return Me
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMPagination
+Sub SetLight(varLight As Boolean) As VMPagination
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	Pagination.Bind(":light", pp)
-	Return Me
-End Sub
-
-'set next-icon
-Sub SetNextIcon(varNextIcon As Object) As VMPagination
-	Dim pp As String = $"${ID}NextIcon"$
-	vue.SetStateSingle(pp, varNextIcon)
-	Pagination.Bind(":next-icon", pp)
-	Return Me
-End Sub
-
-'set prev-icon
-Sub SetPrevIcon(varPrevIcon As Object) As VMPagination
-	Dim pp As String = $"${ID}PrevIcon"$
-	vue.SetStateSingle(pp, varPrevIcon)
-	Pagination.Bind(":prev-icon", pp)
-	Return Me
-End Sub
-
-'set total-visible
-Sub SetTotalVisible(varTotalVisible As Object) As VMPagination
-	Dim pp As String = $"${ID}TotalVisible"$
-	vue.SetStateSingle(pp, varTotalVisible)
-	Pagination.Bind(":total-visible", pp)
-	Return Me
-End Sub
-
-'set value
-Sub SetValue(varValue As Object) As VMPagination
-	Pagination.SetValue(varValue, False)
 	Return Me
 End Sub
 
@@ -246,9 +276,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMPagination
+Sub SetColorIntensity(color As String, intensity As String) As VMPagination
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Pagination.Bind(":color", pp)
 	Return Me
@@ -279,14 +314,15 @@ Sub SetDesignMode(b As Boolean) As VMPagination
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMPagination
-	Pagination.SetTabIndex(ti)
+'set static
+Sub SetStatic(b As Boolean) As VMPagination
+	Pagination.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMPagination
+Sub SetName(varName As String, bbind As Boolean) As VMPagination
 	Pagination.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -346,27 +382,92 @@ Sub SetKey(k As String) As VMPagination
 	Return Me
 End Sub
 
-Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMPagination
-Pagination.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMPagination
-Pagination.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMPagination
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+'set the row and column position
+Sub SetRC(sRow As String, sCol As String) As VMPagination
+	Pagination.SetRC(sRow, sCol)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMPagination
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
+'set the offsets for this item
+Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMPagination
+	Pagination.SetDeviceOffsets(OS, OM, OL, OX)
+	Return Me
+End Sub
+
+
+'set the position: row and column and sizes
+Sub SetDevicePositions(srow As String, scell As String, small As String, medium As String, large As String, xlarge As String) As VMPagination
+	SetRC(srow, scell)
+	SetDeviceSizes(small,medium, large, xlarge)
+	Return Me
+End Sub
+
+'set the sizes for this item
+Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMPagination
+	Pagination.SetDeviceSizes(SS, SM, SL, SX)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMPagination
+	Pagination.SetText(comp)
+	Return Me
+End Sub
+
+
+Sub SetTextCenter As VMPagination
+	Pagination.AddClass("text-center")
+	Return Me
+End Sub
+
+Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
+	pCont.AddComponent(rowPos, colPos, ToString)
+End Sub
+
+
+Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMPagination
+	Pagination.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
+End Sub
+
+
+Sub SetVisible(b As Boolean) As VMPagination
+	Pagination.SetVisible(b)
+	Return Me
+End Sub
+
+
+Sub SetOnInput(methodName As String) As VMPagination
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim value As Object
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(value))
+	SetAttr(CreateMap("@input": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnNext(methodName As String) As VMPagination
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	SetAttr(CreateMap("@next": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnPrevious(methodName As String) As VMPagination
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	SetAttr(CreateMap("@previous": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub

@@ -14,7 +14,6 @@ Sub Class_Globals
 	Private Module As Object   'ignore
 	Private bStatic As Boolean   'ignore
 	Private items As List
-	Private itemsKey As String
 End Sub
 
 'initialize the BreadCrumbs

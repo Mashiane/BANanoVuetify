@@ -7,6 +7,94 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private sBorder As String
+	Private sCloselabel As String
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisColoredborder As Boolean
+	Private bisDark As Boolean
+	Private bisDense As Boolean
+	Private bisDismissible As Boolean
+	Private sElevation As String
+	Private sHeight As String
+	Private sIcon As String
+	Private bisLight As Boolean
+	Private sMaxheight As String
+	Private sMaxwidth As String
+	Private sMinheight As String
+	Private sMinwidth As String
+	Private sMode As String
+	Private sOrigin As String
+	Private bisOutlined As Boolean
+	Private bisProminent As Boolean
+	Private sTag As String
+	Private bisText As Boolean
+	Private sTextcolor As String
+	Private sTextcolorintensity As String
+	Private bisTile As Boolean
+	Private sTransition As String
+	Private sType As String
+	Private bisVisible As Boolean
+	Private sWidth As String
+
+	Private pbalert As VMProperty
+	Private bisCircle As Boolean
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private bisDisabled As Boolean
+	Private sLength As String
+	Private bisLight As Boolean
+	Private sNexticon As String
+	Private sPrevicon As String
+	Private sTotalvisible As String
+	Private bisVisible As Boolean
+	Private pbpagination As VMProperty
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private sElevation As String
+	Private sHeight As String
+	Private bisLight As Boolean
+	Private sMaxheight As String
+	Private sMaxwidth As String
+	Private sMinheight As String
+	Private sMinwidth As String
+	Private sTag As String
+	Private sTextcolor As String
+	Private sTextcolorintensity As String
+	Private bisTile As Boolean
+	Private bisVisible As Boolean
+	Private sWidth As String
+	Private pbsheet As VMProperty
+	Private sClosedelay As String
+	Private bisDisabled As Boolean
+	Private sOpendelay As String
+	Private bisVisible As Boolean
+	Private pbhover As VMProperty
+	Private bisAbsolute As Boolean
+	Private bisApp As Boolean
+	Private sColor As String
+	Private sColorintensity As String
+	Private bisDark As Boolean
+	Private bisDisabled As Boolean
+	Private sElevation As String
+	Private bisFixed As Boolean
+	Private sHeight As String
+	Private bisInset As Boolean
+	Private bisLight As Boolean
+	Private sMaxheight As String
+	Private sMaxwidth As String
+	Private sMinheight As String
+	Private bisPadless As Boolean
+	Private sTabindex As String
+	Private sTag As String
+	Private bisTile As Boolean
+	Private bisVisible As Boolean
+	Private sWidth As String
+	Private pbfooter As VMProperty
+	Private BANano As BANano  
+	Private bisreactive As Boolean
 	Private sColor As String
 	Private sColorintensity As String
 	Private bisIndeterminate As Boolean
@@ -23,33 +111,20 @@ Sub Process_Globals
 	Private sBackgroundopacity As String
 	Private bisBottom As Boolean
 	Private sBuffervalue As String
-	Private sColor As String
-	Private sColorintensity As String
 	Private bisDark As Boolean
 	Private bisFixed As Boolean
 	Private sHeight As String
-	Private bisIndeterminate As Boolean
 	Private bisLight As Boolean
 	Private bisQuery As Boolean
 	Private bisRounded As Boolean
 	Private bisStream As Boolean
 	Private bisStriped As Boolean
-	Private sTabindex As String
 	Private bisTop As Boolean
-	Private bisVisible As Boolean
 	Private pbprogresslinear As VMProperty
-	Private bisAbsolute As Boolean
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
-	Private bisLight As Boolean
 	Private sOpacity As String
-	Private sTabindex As String
 	Private sText As String
-	Private bisVisible As Boolean
 	Private sZindex As String
 	Private pboverlay As VMProperty
-	Private pbbreadcrumbsitem As VMProperty
 	Private sActiveclass As String
 	Private bisAppend As Boolean
 	Private bisDisabled As Boolean
@@ -60,32 +135,20 @@ Sub Process_Globals
 	Private bisNuxt As Boolean
 	Private bisReplace As Boolean
 	Private bisRipple As Boolean
-	Private sTabindex As String
 	Private sTag As String
 	Private sTarget As String
-	Private sText As String
 	Private sTo As String
-	Private bisVisible As Boolean
-
-	Private bisDark As Boolean
 	Private sDivider As String
 	Private bisLarge As Boolean
-	Private bisLight As Boolean
-	Private sTabindex As String
-	Private sText As String
-	Private bisVisible As Boolean
-Private pbbreadcrumbs As VMProperty
+	Private pbbreadcrumbs As VMProperty
 	Private sActivator As String
 	Private sAttach As String
 	Private sContentclass As String
-	Private bisDark As Boolean
-	Private bisDisabled As Boolean
 	Private bisEager As Boolean
 	Private bisFullscreen As Boolean
 	Private bisHideoverlay As Boolean
 	Private bisInset As Boolean
 	Private bisInternalactivator As Boolean
-	Private bisLight As Boolean
 	Private sMaxwidth As String
 	Private bisNoclickanimation As Boolean
 	Private bisOpenonhover As Boolean
@@ -96,41 +159,22 @@ Private pbbreadcrumbs As VMProperty
 	Private bisPersistent As Boolean
 	Private bisRetainfocus As Boolean
 	Private bisScrollable As Boolean
-	Private sTabindex As String
-	Private sText As String
 	Private sTransition As String
-	Private bisVisible As Boolean
-	Private sWidth As String
 	Private pbbottomsheet As VMProperty
 	Private savatar As String
 	Private TotComponents As Int
-	Private bisAbsolute As Boolean
-	Private sActiveclass As String
 	Private bisApp As Boolean
-	Private sBackgroundcolor As String
-	Private sBackgroundcolorintensity As String
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
-	Private bisDisabled As Boolean
-	Private bisFixed As Boolean
 	Private bisGrow As Boolean
-	Private sHeight As String
 	Private bisHideonscroll As Boolean
 	Private bisHorizontal As Boolean
 	Private bisInputvalue As Boolean
-	Private bisLight As Boolean
 	Private bisMandatory As Boolean
 	Private sMaxheight As String
-	Private sMaxwidth As String
 	Private sMinheight As String
 	Private sMinwidth As String
 	Private sScrolltarget As String
 	Private sScrollthreshold As String
 	Private bisShift As Boolean
-	Private sTabindex As String
-	Private bisVisible As Boolean
-	Private sWidth As String
 	Private pbbottomnavigation As VMProperty
 	Private scontent As String
 	Private simgheight As String
@@ -139,172 +183,88 @@ Private pbbreadcrumbs As VMProperty
 	Private stitleColor As String
 	Private stitleColorIntensity As String
 	Private pbcard As VMProperty
-	Private sActiveclass As String
-	Private bisAppend As Boolean
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
-	Private bisDisabled As Boolean
 	Private sElevation As String
-	Private bisExact As Boolean
-	Private sExactactiveclass As String
 	Private bisFlat As Boolean
-	Private sHeight As String
 	Private bisHover As Boolean
-	Private sHref As String
 	Private sImg As String
-	Private bisLight As Boolean
-	Private bisLink As Boolean
 	Private sLoaderheight As String
 	Private bisLoading As Boolean
-	Private sMaxheight As String
-	Private sMaxwidth As String
-	Private sMinheight As String
-	Private sMinwidth As String
-	Private bisNuxt As Boolean
 	Private bisOutlined As Boolean
 	Private bisRaised As Boolean
-	Private bisReplace As Boolean
-	Private bisRipple As Boolean
 	Private bisShaped As Boolean
-	Private sTabindex As String
-	Private sTag As String
-	Private sTarget As String
 	Private sTextcolor As String
 	Private sTextcolorintensity As String
 	Private bisTile As Boolean
 	Private sTitle As String
 	Private bisTitleprimary As Boolean
-	Private sTo As String
-	Private bisVisible As Boolean
-	Private sWidth As String
 	Private sposition As String
 	Private stop As String
 	Private sbottom As String
 	Private sleft As String
 	Private sright As String
-	Private sActiveclass As String
-	Private sBackgroundcolor As String
-	Private sBackgroundcolorintensity As String
 	Private bisBorderless As Boolean
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
 	Private bisDense As Boolean
 	Private bisGroup As Boolean
-	Private bisLight As Boolean
-	Private bisMandatory As Boolean
 	Private sMax As String
 	Private bisMultiple As Boolean
-	Private bisRounded As Boolean
-	Private bisShaped As Boolean
-	Private sTabindex As String
-	Private bisTile As Boolean
-	Private bisVisible As Boolean
-Private pbbuttontoggle As VMProperty
+	Private pbbuttontoggle As VMProperty
 	Private SQLite As BANanoSQLiteR2
 	Private svalue As String
 	Private sgradient As String
 	Private sstrokelinecap As String
-Private sAccept As String
-Private sAppendicon As String
-Private sAppendoutericon As String
-Private bisAutofocus As Boolean
-Private sBackgroundcolor As String
-Private sBackgroundcolorintensity As String
-Private bisChips As Boolean
-Private bisClearable As Boolean
-Private sColor As String
-Private sColorintensity As String
-Private sCounter As String
-Private bisDark As Boolean
-Private bisDense As Boolean
-Private bisDisabled As Boolean
-Private bisError As Boolean
-Private sErrorcount As String
-Private bisFilled As Boolean
-Private bisFlat As Boolean
-Private bisFullwidth As Boolean
-Private sHeight As String
-Private bisHidedetails As Boolean
-Private sLabel As String
-Private bisLight As Boolean
-Private sLoaderheight As String
-Private bisLoading As Boolean
-Private bisMultiple As Boolean
-Private bisOutlined As Boolean
-Private bisPersistenthint As Boolean
-Private sPlaceholder As String
-Private sPrefix As String
-Private sPrependicon As String
-Private sPrependinnericon As String
-Private bisRequired As Boolean
-Private bisReverse As Boolean
-Private bisRounded As Boolean
-Private bisShaped As Boolean
-Private bisShowsize As Boolean
-Private bisSingleline As Boolean
-Private bisSmallchips As Boolean
-Private bisSolo As Boolean
-Private bisSoloinverted As Boolean
-Private bisSuccess As Boolean
-Private sSuffix As String
-Private sTabindex As String
-Private sText As String
-Private sTruncatelength As String
-Private sType As String
-Private bisValidateonblur As Boolean
-Private bisVisible As Boolean
-
-Private pbfileinput As VMProperty
-Private bisAutodraw As Boolean
-Private sAutodrawduration As String
-Private sAutodraweasing As String
-Private bisAutolinewidth As Boolean
-Private sColor As String
-Private sColorintensity As String
-Private bisFill As Boolean
-Private sGradientdirection As String
-Private sHeight As String
-Private sLabelsize As String
-Private sLinewidth As String
-Private sPadding As String
-Private bisShowlabels As Boolean
-Private bisSmooth As Boolean
-Private sTabindex As String
-Private sText As String
-Private sType As String
-Private bisVisible As Boolean
-Private sWidth As String
-'
+	Private sAccept As String
+	Private sAppendicon As String
+	Private sAppendoutericon As String
+	Private bisAutofocus As Boolean
+	Private bisChips As Boolean
+	Private bisClearable As Boolean
+	Private sCounter As String
+	Private bisError As Boolean
+	Private sErrorcount As String
+	Private bisFilled As Boolean
+	Private bisFullwidth As Boolean
+	Private bisHidedetails As Boolean
+	Private sLabel As String
+	Private bisPersistenthint As Boolean
+	Private sPlaceholder As String
+	Private sPrefix As String
+	Private sPrependicon As String
+	Private sPrependinnericon As String
+	Private bisRequired As Boolean
+	Private bisReverse As Boolean
+	Private bisShowsize As Boolean
+	Private bisSingleline As Boolean
+	Private bisSmallchips As Boolean
+	Private bisSolo As Boolean
+	Private bisSoloinverted As Boolean
+	Private bisSuccess As Boolean
+	Private sSuffix As String
+	Private sTruncatelength As String
+	Private sType As String
+	Private bisValidateonblur As Boolean
+	Private pbfileinput As VMProperty
+	Private bisAutodraw As Boolean
+	Private sAutodrawduration As String
+	Private sAutodraweasing As String
+	Private bisAutolinewidth As Boolean
+	Private bisFill As Boolean
+	Private sGradientdirection As String
+	Private sLabelsize As String
+	Private sLinewidth As String
+	Private sPadding As String
+	Private bisShowlabels As Boolean
+	Private bisSmooth As Boolean
 	Private bcs As Map
 	Private timelines As Map
 	Private pbsparkline As VMProperty
-	Private savatar As String
-	Private soppositetext As String
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
-	Private bisFilldot As Boolean
-	Private bisHidedot As Boolean
 	Private sIcon As String
 	Private sIconcolor As String
 	Private sIconcolorintensity As String
-	Private bisLarge As Boolean
 	Private bisLeft As Boolean
-	Private bisLight As Boolean
 	Private bisRight As Boolean
 	Private bisSmall As Boolean
-	Private sTabindex As String
-	Private sText As String
-	Private bisVisible As Boolean
 	Private pbtimelineitem As VMProperty
 	Private bisAligntop As Boolean
-	Private bisDark As Boolean
-	Private bisDense As Boolean
-	Private bisLight As Boolean
-	Private bisReverse As Boolean
-	Private bisVisible As Boolean
 	Private pbtimeline As VMProperty
 	Private tvtables As VMTreeView
 	Private tbltoolbar2 As VMToolBar
@@ -312,7 +272,6 @@ Private sWidth As String
 	Private sdbpassword As String
 	Private sdbhost As String
 	Private controlbag As Map
-	Private sAccept As String
 	Private sfilenamevmodel As String
 	Private sfiledatevmodel As String
 	Private sfilesizevmodel As String
@@ -340,11 +299,6 @@ Private sWidth As String
 	Private sfontsize As String
 	Private bisopenonmedium As String
 	Private bisActivatable As Boolean
-	Private sActiveclass As String
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
-	Private bisDense As Boolean
 	Private sExpandicon As String
 	Private bisHoverable As Boolean
 	Private sIndeterminateicon As String
@@ -352,7 +306,6 @@ Private sWidth As String
 	Private sItemdisabled As String
 	Private sItemkey As String
 	Private sItemtext As String
-	Private bisLight As Boolean
 	Private sLoadingicon As String
 	Private bisMultipleactive As Boolean
 	Private sOfficon As String
@@ -360,17 +313,12 @@ Private sWidth As String
 	Private bisOpenall As Boolean
 	Private bisOpenonclick As Boolean
 	Private bisReturnobject As Boolean
-	Private bisRounded As Boolean
 	Private sSearch As String
 	Private bisSelectable As Boolean
 	Private sSelectedcolor As String
 	Private sSelectedcolorintensity As String
 	Private sSelectiontype As String
-	Private bisShaped As Boolean
-	Private sTabindex As String
 	Private bisTransition As Boolean
-	Private bisVisible As Boolean
-	
 	Private bisupload As Boolean
 	Private sAction As String
 	Private rsType As String
@@ -379,12 +327,9 @@ Private sWidth As String
 	Private isDirty As Boolean
 	Private Mode As String
 	Private ep As VMExpansionPanels
-	'
 	Private vm As BANanoVM
 	Private vue As BANanoVue
 	Private ui As VMContainer
-	Private BANano As BANano  'ignore
-	'
 	Private bHasBorder As Boolean
 	Private bShowMatrix As Boolean
 	Private tblProp As VMToolBar
@@ -394,7 +339,6 @@ Private sWidth As String
 	Private sdatabasename As String
 	Private sprojectname As String
 	Private sdbtype As String
-	Private bisAutofocus As Boolean
 	Private shashtype As String
 	Private salg As String
 	Private bisupdatable As Boolean
@@ -410,36 +354,23 @@ Private sWidth As String
 	Private bisautoplay As String
 	Private sDecimal As String
 	Private sDecimals As String
-	Private sPrefix As String
-	Private sSuffix As String
 	Private sSeparator As String
-
-	'
-	Private sBackgroundcolor As String
-	Private sColor As String
-	Private bisDisabled As Boolean
 	Private sDuration As String
 	Private sFrom As String
 	Private bisHoverexpandeffect As Boolean
 	Private bisHoverzoomeffect As Boolean
-	Private sIcon As String
 	Private sIconbackgroundcolor As String
-	Private sIconcolor As String
-	Private sText As String
-	Private sTo As String
-	Private bisVisible As Boolean
-	'
 	Private sbuttontype As String
-	Private pbtextfield As VMProperty   	
-	Private pbdatepicker As VMProperty  	
-	Private pbcheckbox As VMProperty    	
-	Private pbradiogroup As VMProperty  	
-	Private pbselectbox As VMProperty		
-	Private pbslider As VMProperty			
-	Private pbicon As VMProperty			
-	Private pbbutton As VMProperty			
-	Private pblabel As VMProperty			
-	Private pbimage As VMProperty			
+	Private pbtextfield As VMProperty
+	Private pbdatepicker As VMProperty
+	Private pbcheckbox As VMProperty
+	Private pbradiogroup As VMProperty
+	Private pbselectbox As VMProperty
+	Private pbslider As VMProperty
+	Private pbicon As VMProperty
+	Private pbbutton As VMProperty
+	Private pblabel As VMProperty
+	Private pbimage As VMProperty
 	Private pbparallax As VMProperty
 	Private pbcontainer As VMProperty
 	Private pbtoolbar As VMProperty
@@ -476,93 +407,45 @@ Private sWidth As String
 	Private pbquill As VMProperty
 	Private pbinfobox As VMProperty
 	Private pbfileselect As VMProperty
-	'
 	Private controltype As String
 	Private srow As String
 	Private scol As String
-	Private sTabindex As String
 	Private sname As String
 	Private svmodel As String
 	Private sattributes As String
 	Private sstyles As String
 	Private sclasses As String
 	Private sloose As String
-	Private sTitle As String
 	Private sfieldtype As String
-		
-	' get the attributes
 	Private mattr As Map
 	Private os As String
 	Private om As String
 	Private ol As String
 	Private ox As String
-	'
 	Private ss As String
 	Private sm As String
 	Private sl As String
 	Private sx As String
-	'
-	Private sPlaceholder As String
-	Private bisRequired As Boolean
 	Private siconname As String
 	Private shelpertext As String
 	Private serrortext As String
 	Private imaxlen As String
 	Private bautogrow As Boolean
-	Private svalue As String
 	Private bisPrimary As Boolean
-	Private bisVisible As Boolean
-	Private bisDisabled As Boolean
 	Private bontable As Boolean
-	Private bisDark As Boolean
-	'
-	Private bisSolo As Boolean
-	Private bisOutlined As Boolean
-	Private bisFilled As Boolean
-	Private bisDense As Boolean
-	Private bisSingleline As Boolean
-	Private bisPersistenthint As Boolean
-	Private bisShaped As Boolean
-	Private bisLoading As Boolean
-	Private bisFlat As Boolean
-	Private bisRounded As Boolean
 	Private bclearable As Boolean
-	Private bisHidedetails As Boolean
 	Private bToggle As Boolean
 	Private bcenteronparent As Boolean
-	'
 	Private struevalue As String
 	Private sfalsevalue As String
-	Private bisLight As Boolean
-	Private bisMultiple As Boolean
-	Private bisInset As Boolean
-	Private bisIndeterminate As Boolean
 	Private bisitalic As Boolean
-	'
 	Private bfitwidth As Boolean
-	Private sHref As String
-	Private sTarget As String
-	Private sTo As String
 	Private bistext As Boolean
 	Private bisdepressed As Boolean
-	Private bisTile As Boolean
-	Private sSize As String
 	Private sswitchloading As String
-	'
-	Private sWidth As String
-	Private sHeight As String
-	Private sMinwidth As String
-	Private sMinheight As String
-	Private sMaxwidth As String
-	Private sMaxheight As String
-	'
 	Private stooltip As String
-	Private sColor As String
 	Private sintensity As String
-	'
-	Private sTextcolor As String
 	Private stextintensity As String
-	'
 	Private ssrc As String
 	Private slazysrc As String
 	Private salt As String
@@ -571,7 +454,6 @@ Private sWidth As String
 	Private sbordercolor As String
 	Private sborderstyle As String
 	Private saspectratio As String
-	'
 	Private bisvertical As Boolean
 	Private bisthumbalways As Boolean
 	Private bisthumblabel As Boolean
@@ -579,58 +461,41 @@ Private sWidth As String
 	Private sslidervalue As String
 	Private sstepvalue As String
 	Private smaxvalue As String
-	Private sPrependicon As String
-	Private sAppendicon As String
 	Private sthumbsize As String
 	Private sthumbcolor As String
 	Private sthumbintensity As String
 	Private strackcolor As String
 	Private strackintensity As String
-	'
 	Private ssourcefield As String
 	Private ssourcetable As String
 	Private sdisplayfield As String
 	Private skeys As String
 	Private svalues As String
-	Private bisReturnobject As Boolean
 	Private buseoptions As Boolean
-	Private bisChips As Boolean
-	Private bisSmallchips As Boolean
 	Private bisdeletablechips As Boolean
-	'
 	Private bshowlabel As Boolean
 	Private blabelontop As Boolean
-	Private bisMandatory As Boolean
-	'
 	Private bisrange As Boolean
 	Private bisshowweek As Boolean
 	Private bisampm As Boolean
 	Private bisnotitle As Boolean
 	Private bisuseseconds As Boolean
-	'
 	Private sfirstdayofweek As String
 	Private stformat As String
 	Private bStatic As Boolean
 	Private sb As StringBuilder
-	'
 	Private pc As VMPrism
 	Private htm As VMPrism
 	Private dbCode As VMPrism
-	
-	Private sElevation As String
-	Private sTransition As String
 	Private bisfluid As Boolean
 	Private bisshowmatrix As Boolean
 	Private bisnogutters As Boolean
-	'
-	Private ssearchkey As String 
+	Private ssearchkey As String
 	Private stoolbarsubtitle As String
 	Private bisTitle As Boolean
 	Private bissubtitle As Boolean
 	Private bissearch As Boolean
 	Private sextensionheight As String
-	Private sScrolltarget As String
-	Private sScrollthreshold As String
 	Private slogourl As String
 	Private stitleclass As String
 	Private sbartype As String
@@ -639,246 +504,128 @@ Private sWidth As String
 	Private bishamburger As Boolean
 	Private bisHamburgervisible As Boolean
 	Private biscurrent As Boolean
-	Private bisFlat As Boolean
-	Private bisAbsolute As Boolean
 	Private bisclippedleft As Boolean
 	Private bisclippedright As Boolean
-	Private bisclippedleft As Boolean
 	Private biscollapse As Boolean
 	Private biscollapseonscroll As Boolean
 	Private biselevateonscroll As Boolean
 	Private bisextended As Boolean
 	Private bisfadeimageonscroll As Boolean
-	Private bisFixed As Boolean
 	Private bisfloating As Boolean
-	Private bisHideonscroll As Boolean
 	Private bisinvertedscroll As Boolean
 	Private bisprominent As Boolean
 	Private bisscrolloffscreen As Boolean
 	Private bisshort As Boolean
 	Private bisshrinkonscroll As Boolean
 	Private bislogovisible As Boolean
-	'menu
-	Private sactivator As String
-	Private sclosedelay As String
-	Private scontentclass As String
-	Private sMaxheight As String
-	Private sMaxwidth As String
-	Private sMinwidth As String
+	Private sClosedelay As String
 	Private snudgebottom As String
 	Private snudgeleft As String
 	Private snudgeright As String
 	Private snudgetop As String
 	Private snudgewidth As String
-	Private sopendelay As String
-	Private sorigin As String
+	Private sOpendelay As String
+	Private sOrigin As String
 	Private spositionx As String
 	Private spositiony As String
 	Private sreturnvalue As String
-	Private sTabindex As String
-	Private stransition As String
-	'
-	Private bisAbsolute As Boolean
+	Private sTransition As String
 	Private bisallowoverflow As Boolean
 	Private bisauto As Boolean
-	Private bisbottom As Boolean
 	Private biscloseonclick As Boolean
 	Private biscloseoncontentclick As Boolean
 	Private bisdisablekeys As Boolean
-	Private biseager As Boolean
-	Private bisFixed As Boolean
-	Private bisinternalactivator As Boolean
-	Private bisLeft As Boolean
-	Private bisLight As Boolean
 	Private bisoffsetoverflow As Boolean
 	Private bisoffsetx As Boolean
 	Private bisoffsety As Boolean
-	Private bisOpenonclick As Boolean
-	Private bisopenonhover As Boolean
-	Private bisRight As Boolean
 	Private bisslotactivator As Boolean
-	Private bistop As Boolean
 	Private menutype As String
 	Private jcontents As String
 	Private lcontents As List
 	Private bisspacer As Boolean
-	Private sColor As String
-	Private sHeight As String
 	Private sminivariantwidth As String
 	Private smobilebreakpoint As String
-	Private soverlaycolor As String
-	Private soverlayopacity As String
-	Private sTabindex As String
-	Private sTag As String
-	Private sWidth As String
-	Private bisAbsolute As Boolean
-	Private bisApp As Boolean
-	Private bisbottom As Boolean
 	Private bisclipped As Boolean
 	Private bisdisableresizewatcher As Boolean
 	Private bisdisableroutewatcher As Boolean
 	Private bisexpandonhover As Boolean
-	Private bisFixed As Boolean
-	Private bisfloating As Boolean
-	Private bishideoverlay As Boolean
-	Private bisLight As Boolean
 	Private bismini As Boolean
 	Private bisminivariant As Boolean
 	Private bispermanent As Boolean
-	Private bisRight As Boolean
 	Private bisslotappend As Boolean
 	Private bisslotimg As Boolean
 	Private bisstateless As Boolean
 	Private bistemporary As Boolean
 	Private smtitle As String
 	Private smsubtitle As String
-	'
-	Private sActiveclass As String
 	Private sdelimitericon As String
-	Private sHeight As String
 	Private sinterval As String
 	Private sprogresscolor As String
 	Private sprogresscolorintensity As String
 	Private smmax As String
-	'
 	Private biscontinuous As Boolean
 	Private biscycle As Boolean
 	Private bishidedelimiterbackground As Boolean
 	Private bishidedelimiters As Boolean
-	Private bisLight As Boolean
-	Private bisMandatory As Boolean
 	Private bisnexticon As Boolean
 	Private bisprevicon As Boolean
 	Private bisprogress As Boolean
-	Private bisReverse As Boolean
 	Private bisshowarrows As Boolean
 	Private bisshowarrowsonhover As Boolean
 	Private bistouchless As Boolean
 	Private sverticaldelimiter As String
-	'
 	Private biscaption As Boolean
 	Private bisdisplay1 As Boolean
 	Private bisdisplay2 As Boolean
 	Private bisdisplay3 As Boolean
 	Private bisdisplay4 As Boolean
 	Private bisheadline As Boolean
-	Private bisitalic As Boolean
 	Private bisoverline As Boolean
-	Private bisRequired As Boolean
 	Private bissubtitle1 As Boolean
 	Private bissubtitle2 As Boolean
 	Private bistextcapitalize As Boolean
 	Private bistextlowercase As Boolean
 	Private bistextuppercase As Boolean
-	Private bisTitle As Boolean
-	'
-	Private sactivator As String
-	Private scontentclass As String
-	Private sHeight As String
-	Private sMaxwidth As String
-	Private sorigin As String
-	Private soverlaycolor As String
-	Private soverlaycolorintensity As String
-	Private soverlayopacity As String
-	Private stransition As String
-	Private sWidth As String
 	Private bisattach As Boolean
 	Private bisbackdrop As Boolean
 	Private bisshowonopen As Boolean
-	Private biseager As Boolean
-	Private bisfullscreen As Boolean
-	Private bishideoverlay As Boolean
-	Private bisinternalactivator As Boolean
-	Private bisLight As Boolean
-	Private bisnoclickanimation As Boolean
-	Private bisopenonhover As Boolean
-	Private bispersistent As Boolean
-	Private bisretainfocus As Boolean
-	Private bisscrollable As Boolean
-	Private bisslotactivator As Boolean
-	Private bisTitleprimary As Boolean
-	'
+	Private bisEager As Boolean
 	Private sCancelid As String
 	Private sCancelcaption As String
 	Private sOkid As String
 	Private sOkcaption As String
-	'
-	Private bisAbsolute As Boolean
-	Private bisbottom As Boolean
 	Private sDirection As String
 	Private sFinalicon As String
-	Private bisFixed As Boolean
-	Private sHref As String
 	Private sInitialicon As String
-	Private bisLarge As Boolean
-	Private bisLeft As Boolean
 	Private sMode As String
-	Private bisOpenonhover As Boolean
-	Private sOrigin As String
-	Private bisRight As Boolean
-	Private bisSmall As Boolean
-	Private sTarget As String
-	Private sTo As String
-	Private bisTop As Boolean
-	Private sTransition As String
 	Private bisXlarge As Boolean
 	Private bisXsmall As Boolean
-	'rating
-	Private sBackgroundcolor As String
 	Private sBackgroundintensity As String
-	Private bisClearable As Boolean
-	Private sclosedelay As String
-	Private sColor As String
-	Private sintensity As String
-	Private bisDense As Boolean
 	Private sEmptyicon As String
 	Private sFullicon As String
 	Private sHalficon As String
 	Private bisHalfincrements As Boolean
-	Private bisHover As Boolean
-	Private bisLarge As Boolean
 	Private sLength As String
-	Private bisLight As Boolean
-	Private sopendelay As String
-	Private bisRipple As Boolean
-	Private bisSmall As Boolean
-	Private sTabindex As String
 	Private sDatasource As String
-	Private bisXlarge As Boolean
-	Private bisXsmall As Boolean
-	' table
 	Private bisCalculatewidths As Boolean
-Private sCaption As String
-Private sDatasourcename As String
-Private bisDense As Boolean
-Private bisDisablefiltering As Boolean
-Private bisDisablepagination As Boolean
-Private bisDisablesort As Boolean
-Private bisFixedheader As Boolean
-Private sHeight As String
-Private bisHidedefaultfooter As Boolean
-Private bisHidedefaultheader As Boolean
-Private sItemkey As String
-Private sItemsperpage As String
-Private bisLight As Boolean
-Private bisLoading As Boolean
-'Private sLoadingtext As String
-'Private sLocale As String
-Private smobilebreakpoint As String
-Private bisMultisort As Boolean
-Private bisMustsort As Boolean
-'Private sNodatatext As String
-'Private sNoresultstext As String
-Private sPage As String
-'Private sSearch As String
-Private bisShowexpand As Boolean
-Private bisShowgroupby As Boolean
-Private bisShowselect As Boolean
-Private bisSingleexpand As Boolean
-Private bisSingleselect As Boolean
-Private sTabindex As String
+	Private sCaption As String
+	Private sDatasourcename As String
+	Private bisDisablefiltering As Boolean
+	Private bisDisablepagination As Boolean
+	Private bisDisablesort As Boolean
+	Private bisFixedheader As Boolean
+	Private bisHidedefaultfooter As Boolean
+	Private bisHidedefaultheader As Boolean
+	Private sItemsperpage As String
+	Private bisMultisort As Boolean
+	Private bisMustsort As Boolean
+	Private sPage As String
+	Private bisShowexpand As Boolean
+	Private bisShowgroupby As Boolean
+	Private bisShowselect As Boolean
+	Private bisSingleexpand As Boolean
+	Private bisSingleselect As Boolean
 	Private smastericon As String
-	'
 	Private bisDelete As Boolean
 	Private bisClone As Boolean
 	Private bisDownload As Boolean
@@ -890,72 +637,37 @@ Private sTabindex As String
 	Private sSelectfields As String
 	Private sSelecttype As String
 	Private sSortfields As String
-	'
 	Private snewid As String
 	Private snewicon As String
 	Private snewtooltip As String
-	'
 	Private bisautoincrement As Boolean
 	Private bisaddnew As Boolean
 	Private sparent As String
 	Private bisnow As Boolean
-	
 	Private sdialogpage As String
 	Private sclickaction As String
 	Private sbEvents As StringBuilder
 	Private iconpos As Map
-	'
-	'chip
-	Private bisActive As Boolean
-	Private bisAppend As Boolean
 	Private bisClose As Boolean
 	Private sCloseicon As String
-	Private sColor As String
-	Private sColorintensity As String
 	Private bisDraggable As Boolean
-	Private bisExact As Boolean
 	Private bisFilter As Boolean
-	Private sHref As String
 	Private sInputvalue As String
 	Private bisLabel As Boolean
-	Private bisLarge As Boolean
-	Private bisLight As Boolean
-	Private bisLink As Boolean
-	Private bisNuxt As Boolean
-	Private bisOutlined As Boolean
 	Private bisPill As Boolean
-	Private bisReplace As Boolean
-	Private bisRipple As Boolean
-	Private bisSmall As Boolean
-	Private sTarget As String
-	Private sTo As String
-	Private bisXlarge As Boolean
-	Private bisXsmall As Boolean
 	Private siconpos As String
 	Private schiptype As String
-	'
 	Private bisAvatar As Boolean
 	Private bisBordered As Boolean
-	Private bisBottom As Boolean
-	Private scontent As String
-	Private bisDark As Boolean
 	Private bisDot As Boolean
 	Private bisInline As Boolean
-	Private bisLeft As Boolean
-	Private bisLight As Boolean
 	Private sOffsetx As String
 	Private sOffsety As String
-	Private sOrigin As String
 	Private bisOverlap As Boolean
-	'avatar
 	Private sBadge As String
 	Private bisHasbadge As Boolean
-	Private bisLeft As Boolean
-	Private bisRight As Boolean
-	Private sSize As String
 	Private savatartype As String
 	Private sbadgetype As String
-	'
 	Private bisExpand As Boolean
 	Private bisNav As Boolean
 	Private bisSubheader As Boolean
@@ -974,75 +686,37 @@ Private sTabindex As String
 	Private bisoptions As Boolean
 	Private bisdivider As Boolean
 	Private bismainclick As Boolean
-	Private sActiveclass As String
 	Private bisAlignwithtitle As Boolean
-	Private sBackgroundcolor As String
-	Private sBackgroundcolorintensity As String
 	Private bisCenteractive As Boolean
 	Private bisCentered As Boolean
-	Private sColor As String
-	Private sColorintensity As String
-	Private bisDark As Boolean
 	Private bisFixedtabs As Boolean
-	Private bisGrow As Boolean
-	Private sHeight As String
 	Private bisHideslider As Boolean
 	Private bisIconsandtext As Boolean
-	Private bisLight As Boolean
-	Private smobilebreakpoint As String
 	Private sNexticon As String
 	Private bisOptional As Boolean
 	Private sPrevicon As String
-	Private bisRight As Boolean
-	Private bisshowarrows As Boolean
 	Private sSlidercolor As String
 	Private sSlidercolorintensity As String
 	Private sSlidersize As String
-	Private sTabindex As String
-	Private bisVisible As Boolean
 	Private bisiconposright As Boolean
 	Private bistabslider As Boolean
-	'
 	Private bisAltlabels As Boolean
-	Private bisDark As Boolean
-	Private bisLight As Boolean
 	Private bisNonlinear As Boolean
 	Private sStepactive As String
-	Private sTabindex As String
-	Private bisvertical As Boolean
-	Private bisVisible As Boolean
-	'
 	Private bisAccordion As Boolean
 	Private sActivepanel As String
-	Private bisDark As Boolean
-	Private bisFlat As Boolean
 	Private bisFocusable As Boolean
-	Private bisHover As Boolean
-	Private bisLight As Boolean
-	Private bisMandatory As Boolean
 	Private bisPopout As Boolean
-	Private bisTile As Boolean
-	Private bisVisible As Boolean
-	'
 	Private sBuildertype As String
 	Private sDecription As String
-	Private sPrefix As String
-	Private sTag As String
-	'
 	Private sDescription As String
 	Private bisDrawervisible As Boolean
-	Private sIconcolor As String
-	Private sIconcolorintensity As String
-	Private siconname As String
 	Private sKeywords As String
-	Private bislogovisible As Boolean
 	Private bisNavbarvisible As Boolean
 	Private bisShowondrawer As Boolean
 	Private bisShowonnavbar As Boolean
 	Private spagetitle As String
 	Private bisUpdatenavtitle As Boolean
-	Private stooltip As String
-	Private bisdivider As Boolean
 	Private bisinsetdivider As Boolean
 	Private bisicon As Boolean
 	Private drwprojectdetails As VMNavigationDrawer
@@ -1052,10 +726,8 @@ Private sTabindex As String
 	Private ssenderemail As String
 	Private ssendtoemail As String
 	Private sccemail As String
-	'
 	Private bisitemdiv As Boolean
 	Private bisitemnogutter As Boolean
-	'
 	Private pbtreeview As VMProperty
 	Private contdbadmin As VMContainer
 	Private db As BANanoSQL
@@ -1070,6 +742,7 @@ Sub Init
 	'
 	BuildNavBar
 	BuildDrawer
+	BuildFooter
 	'
 	'get last selected panel
 	Dim sp As String = BANano.GetLocalStorage("selectedpanel")
@@ -1166,6 +839,15 @@ Sub Init
 	vm.setstate(prjRec)
 End Sub
 '
+Sub BuildFooter
+	vm.Footer.Show
+	vm.Footer.SetAbsolute(True)
+	vm.Footer.SetPadless(True)
+	vm.Footer.SetDark(True)
+	vm.Footer.SetFixed(True)
+	'
+	vm.Footer.AddCopyRight(vm.YearNow)
+End Sub
 
 Sub btnToolbox_click(e As BANanoEvent)
 	vm.ScrollTo(drwtoolbox.id, Null, Null, Null)
@@ -1189,8 +871,8 @@ Sub BuildNavBar
 	vm.NavBar.SetVisible(True)
 	vm.NavBar.SetModeFixed(True)
 	vm.NavBar.SetClippedLeft(True)
-	vm.NavBar.SetColorIntensity(vm.COLOR_PURPLE, vm.INTENSITY_NORMAL)
-	vm.NavBar.SetDark(True)
+	'vm.NavBar.SetColorIntensity(vm.COLOR_PURPLE, vm.INTENSITY_NORMAL)
+	'vm.NavBar.SetDark(True)
 	'
 	vm.NavBar.AddHamburger
 	vm.NavBar.Hamburger.SetVisible(True)
@@ -1653,7 +1335,7 @@ Sub LoadContainers
 	Dim prjSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	prjSQL.Initialize("components", "id")
-	prjSQL.Execute("select vmodel,controltype from components where controltype in ('page','dialog','panel','container','drawer','tabs','card','footer','form','parallax','timeline','table','bottomsheet','breadcrumbs') order by vmodel")
+	prjSQL.Execute("select vmodel,controltype from components where controltype in ('page','dialog','panel','container','drawer','tabs','card','footer','form','parallax','timeline','table','bottomsheet','breadcrumbs','footer','hover') order by vmodel")
 	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
 	prjSQL.fromJSON
 	'prefix the items
@@ -1685,6 +1367,13 @@ Sub LoadContainers
 		Case "breadcrumbs"
 			itemName = xvmodel
 		Case "footer"
+			itemName = $"ft${xvmodel}.Container"$
+		Case "hover"
+			itemName = $"hvr${xvmodel}.Container"$
+		Case "sheet"
+			itemName = $"sht${xvmodel}$
+		case "alert"
+			itemname = $"alt${xvmodel}.Container"$	
 		Case "form"
 		Case "timeline"
 			itemName = xvmodel
@@ -1820,6 +1509,11 @@ Sub CreatePropertyBagsDrawer
 	PropertyBag_Overlay
 	PropertyBag_ProgressLinear
 	PropertyBag_ProgressCircular
+	PropertyBag_Footer
+	PropertyBag_Hover
+	PropertyBag_Sheet
+	PropertyBag_Pagination
+	PropertyBag_Alert
 	vm.AddDrawer(drwbags)
 End Sub
 #End Region
@@ -2446,7 +2140,7 @@ End Sub
 Sub Read_Badge
 	bisAvatar = YesNoToBoolean(mattr.getdefault("isavatar", "No"))
 	bisBordered = YesNoToBoolean(mattr.getdefault("isbordered", "No"))
-	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+	bisBottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 	sColor = mattr.getdefault("color", "")
 	sbadgetype = mattr.getdefault("badgetype", "iscontent")
 	sColorintensity = mattr.getdefault("colorintensity", "")
@@ -3056,6 +2750,9 @@ Sub CreateUX
 				Design_Image
 			Case "button"
 				Design_Button
+			Case "pagination"
+				Read_Pagination
+				Design_Pagination
 			Case "infobox"
 				Read_InfoBox
 				Design_InfoBox
@@ -3071,6 +2768,18 @@ Sub CreateUX
 			Case "overlay"
 				Read_Overlay
 				Design_Overlay	
+			Case "footer"
+				Read_Footer
+				Design_Footer
+			Case "hover"
+				Read_Hover
+				Design_Hover		
+			Case "sheet"
+				Read_Sheet
+				Design_Sheet
+			Case "alert"
+				Read_Alert
+				Design_Alert		
 		End Select
 	Next
 	'
@@ -3167,7 +2876,7 @@ Sub Read_Toolbar
 	bisfadeimageonscroll = YesNoToBoolean(mattr.getdefault("isfadeimageonscroll", "No"))
 	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
 	bisfloating = YesNoToBoolean(mattr.getdefault("isfloating", "No"))
-	bishideonscroll = YesNoToBoolean(mattr.getdefault("ishideonscroll", "No"))
+	bisHideonscroll = YesNoToBoolean(mattr.getdefault("ishideonscroll", "No"))
 	bisinvertedscroll = YesNoToBoolean(mattr.getdefault("isinvertedscroll", "No"))
 	bisprominent = YesNoToBoolean(mattr.getdefault("isprominent", "No"))
 	bisscrolloffscreen = YesNoToBoolean(mattr.getdefault("isscrolloffscreen", "No"))
@@ -3177,15 +2886,15 @@ Sub Read_Toolbar
 	bisspacer = YesNoToBoolean(mattr.getdefault("isspacer", "No"))
 	ssearchkey = mattr.getdefault("searchkey", "")
 	stoolbarsubtitle = mattr.getdefault("toolbarsubtitle", "")
-	bistitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
+	bisTitle = YesNoToBoolean(mattr.getdefault("istitle", "No"))
 	bissubtitle = YesNoToBoolean(mattr.getdefault("issubtitle", "No"))
 	bissearch = YesNoToBoolean(mattr.getdefault("issearch", "No"))
 End Sub
 
 Sub Read_Carousel
-	sactiveclass = mattr.getdefault("activeclass", "")
+	sActiveclass = mattr.getdefault("activeclass", "")
 	sdelimitericon = mattr.getdefault("delimitericon", "")
-	sheight = mattr.getdefault("height", "")
+	sHeight = mattr.getdefault("height", "")
 	sinterval = mattr.getdefault("interval", "")
 	smmax = mattr.getdefault("mmax", "")
 	sprogresscolor = mattr.getdefault("progresscolor", "")
@@ -3200,13 +2909,13 @@ Sub Read_Carousel
 	biscycle = YesNoToBoolean(mattr.getdefault("iscycle", "No"))
 	bishidedelimiterbackground = YesNoToBoolean(mattr.getdefault("ishidedelimiterbackground", "No"))
 	bishidedelimiters = YesNoToBoolean(mattr.getdefault("ishidedelimiters", "No"))
-	bislight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-	bismandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
-	bismultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	bisMandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+	bisMultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
 	bisnexticon = YesNoToBoolean(mattr.getdefault("isnexticon", "No"))
 	bisprevicon = YesNoToBoolean(mattr.getdefault("isprevicon", "No"))
 	bisprogress = YesNoToBoolean(mattr.getdefault("isprogress", "No"))
-	bisreverse = YesNoToBoolean(mattr.getdefault("isreverse", "No"))
+	bisReverse = YesNoToBoolean(mattr.getdefault("isreverse", "No"))
 	bisshowarrows = YesNoToBoolean(mattr.getdefault("isshowarrows", "No"))
 	bisshowarrowsonhover = YesNoToBoolean(mattr.getdefault("isshowarrowsonhover", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
@@ -3269,35 +2978,35 @@ Sub Read_Drawer
 End Sub
 
 Sub Read_Menu
-	bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
 	bisallowoverflow = YesNoToBoolean(mattr.getdefault("isallowoverflow", "No"))
 	bisauto = YesNoToBoolean(mattr.getdefault("isauto", "No"))
-	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+	bisBottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 	biscloseonclick = YesNoToBoolean(mattr.getdefault("iscloseonclick", "No"))
 	biscloseoncontentclick = YesNoToBoolean(mattr.getdefault("iscloseoncontentclick", "No"))
 	bisdisablekeys = YesNoToBoolean(mattr.getdefault("isdisablekeys", "No"))
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
-	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
-	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
-	bisinternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
+	bisEager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
+	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	bisInternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
 	bisLeft = YesNoToBoolean(mattr.getdefault("isleft", "No"))
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bisoffsetoverflow = YesNoToBoolean(mattr.getdefault("isoffsetoverflow", "No"))
 	bisoffsetx = YesNoToBoolean(mattr.getdefault("isoffsetx", "No"))
 	bisoffsety = YesNoToBoolean(mattr.getdefault("isoffsety", "No"))
 	bisOpenonclick = YesNoToBoolean(mattr.getdefault("isopenonclick", "No"))
-	bisopenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
+	bisOpenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
 	bisRight = YesNoToBoolean(mattr.getdefault("isright", "No"))
 	bisslotactivator = YesNoToBoolean(mattr.getdefault("isslotactivator", "No"))
-	bistop = YesNoToBoolean(mattr.getdefault("istop", "No"))
+	bisTop = YesNoToBoolean(mattr.getdefault("istop", "No"))
 	'
 	'menu
 	menutype = mattr.getdefault("menutype","")
-	sactivator = mattr.getdefault("activator", "")
+	sActivator = mattr.getdefault("activator", "")
 	sclosedelay = mattr.getdefault("closedelay", "")
-	scontentclass = mattr.getdefault("contentclass", "")
+	sContentclass = mattr.getdefault("contentclass", "")
 	siconname = mattr.getdefault("iconname", "")
-	smaxheight = mattr.getdefault("maxheight", "")
+	sMaxheight = mattr.getdefault("maxheight", "")
 	smaxwidth = mattr.getdefault("maxwidth", "")
 	sminwidth = mattr.getdefault("minwidth", "")
 	snudgebottom = mattr.getdefault("nudgebottom", "")
@@ -3695,7 +3404,7 @@ End Sub
 
 Sub Design_Date
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, stitle, bisRequired, sPlaceholder, shelpertext, serrortext, sTabindex)
+	Dim dp As VMDateTimePicker = ui.NewDatePicker(Me, True, sname, svmodel, sTitle, bisRequired, sPlaceholder, shelpertext, serrortext, sTabindex)
 	dp.SetVisible(bisVisible)
 	dp.SetDisabled(bisDisabled)
 	dp.SetRange(bisrange)
@@ -3752,7 +3461,7 @@ Sub Design_Date
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	
-	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${stitle}", ${bisRequired}, "${sPlaceholder}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+	sb.append($"Dim dp${sname} As VMDateTimePicker = vm.NewDatePicker(Me, ${bStatic}, "dp${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, "${sPlaceholder}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 		
 	CodeLine(sb, sfieldtype, "s", "dp", sname, "SetFieldType")
 	CodeLine(sb, bisVisible, "b", "dp", sname, "SetVisible")
@@ -3768,23 +3477,23 @@ Sub Design_Date
 	CodeLine(sb, bisAutofocus, "b", "dp", sname, "SetAutoFocus")
 	'CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
 	CodeLine(sb, sfirstdayofweek, "s", "dp", sname, "SetFirstDayOfWeek")
-	CodeLine(sb, bismultiple, "b", "dp", sname, "SetMultiple")
+	CodeLine(sb, bisMultiple, "b", "dp", sname, "SetMultiple")
 	'If scolor <> "" Then sb.append($"dp${sname}.SetColorIntensity("${scolor}", "${sintensity}")"$).append(CRLF)
 	'If sheadercolor <> "" Then sb.append($"dp${sname}.SetHeaderColorIntensity("${sheadercolor}", "${sheaderintensity}")"$).append(CRLF)
 	'
 	CodeLine(sb, siconname, "s", "dp", sname, "TextField.SetPrependIcon")
-	CodeLine(sb, bissolo, "b", "dp", sname, "TextField.SetSolo")
-	CodeLine(sb, bisoutlined, "b", "dp", sname, "TextField.SetOutlined")
-	CodeLine(sb, bisfilled, "b", "dp", sname, "TextField.SetFilled")
-	CodeLine(sb, bisdense, "b", "dp", sname, "TextField.SetDense")
-	CodeLine(sb, bissingleline, "b", "dp", sname, "TextField.SetSingleLine")
-	CodeLine(sb, bispersistenthint, "b", "dp", sname, "TextField.SetPersistentHint")
-	CodeLine(sb, bisshaped, "b", "dp", sname, "TextField.SetShaped")
-	CodeLine(sb, bisloading, "b", "dp", sname, "TextField.SetLoading")
-	CodeLine(sb, bisflat, "b", "dp", sname, "TextField.SetFlat")
-	CodeLine(sb, bisrounded, "b", "dp", sname, "TextField.SetRounded")
+	CodeLine(sb, bisSolo, "b", "dp", sname, "TextField.SetSolo")
+	CodeLine(sb, bisOutlined, "b", "dp", sname, "TextField.SetOutlined")
+	CodeLine(sb, bisFilled, "b", "dp", sname, "TextField.SetFilled")
+	CodeLine(sb, bisDense, "b", "dp", sname, "TextField.SetDense")
+	CodeLine(sb, bisSingleline, "b", "dp", sname, "TextField.SetSingleLine")
+	CodeLine(sb, bisPersistenthint, "b", "dp", sname, "TextField.SetPersistentHint")
+	CodeLine(sb, bisShaped, "b", "dp", sname, "TextField.SetShaped")
+	CodeLine(sb, bisLoading, "b", "dp", sname, "TextField.SetLoading")
+	CodeLine(sb, bisFlat, "b", "dp", sname, "TextField.SetFlat")
+	CodeLine(sb, bisRounded, "b", "dp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "dp", sname, "TextField.SetClearable")
-	CodeLine(sb, bishidedetails, "b", "dp", sname, "TextField.SetHideDetails")
+	CodeLine(sb, bisHidedetails, "b", "dp", sname, "TextField.SetHideDetails")
 	'
 	Dim pres As String = "dp"
 	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
@@ -3908,13 +3617,13 @@ Sub Design_Chip
 	CodeLine(sb, bisLight, "b", "chp", sname, "SetLight")
 	CodeLine(sb, bisLink, "b", "chp", sname, "SetLink")
 	CodeLine(sb, bisNuxt, "b", "chp", sname, "SetNuxt")
-	CodeLine(sb, bisoutlined, "b", "chp", sname, "SetOutlined")
+	CodeLine(sb, bisOutlined, "b", "chp", sname, "SetOutlined")
 	CodeLine(sb, bisPill, "b", "chp", sname, "SetPill")
 	CodeLine(sb, bisReplace, "b", "chp", sname, "SetReplace")
 	CodeLine(sb, bisRipple, "b", "chp", sname, "SetRipple")
 	CodeLine(sb, bisSmall, "b", "chp", sname, "SetSmall")
-	CodeLine(sb, starget, "s", "chp", sname, "SetTarget")
-	CodeLine2(sb, stextcolor, stextintensity, "s", "chp", sname, "SetTextcolorintensity")
+	CodeLine(sb, sTarget, "s", "chp", sname, "SetTarget")
+	CodeLine2(sb, sTextcolor, stextintensity, "s", "chp", sname, "SetTextcolorintensity")
 	CodeLine(sb, sTo, "s", "chp", sname, "SetTo")
 	CodeLine(sb, bisVisible, "b", "chp", sname, "SetVisible")
 	CodeLine(sb, bisXlarge, "b", "chp", sname, "SetXlarge")
@@ -4112,9 +3821,9 @@ Sub Design_Radio
 		sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroup(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${sTitle}", "${svalue}", ${svmodel}map, ${bshowlabel}, ${blabelontop}, ${sTabindex})"$).append(CRLF)
 	Else
-		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${stitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${sTabindex})"$).append(CRLF)
+		sb.append($"Dim rd${sname} As VMRadioGroup = vm.NewRadioGroupDataSource(Me, ${bStatic}, "rd${sname}", "${svmodel}", "${sTitle}", "${svalue}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}" ${bshowlabel}, ${blabelontop}, ${sTabindex})"$).append(CRLF)
 	End If
-	CodeLine(sb, bismandatory, "b", "rd", sname, "SetMandatory")
+	CodeLine(sb, bisMandatory, "b", "rd", sname, "SetMandatory")
 	CodeLine(sb, sfieldtype, "s", "rd", sname, "SetFieldType")
 	If sfloat <> "" Then
 		AddCode(sb, $"rd${sname}.AddClass("${sfloat}")"$)
@@ -4246,9 +3955,9 @@ Sub Design_Select
 				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 				'
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			Else
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewSelectDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			End If
 		Case "combo"
 			If buseoptions Then
@@ -4256,9 +3965,9 @@ Sub Design_Select
 				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 				'
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			Else
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewComboDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			End If
 
 		Case "auto"
@@ -4267,9 +3976,9 @@ Sub Design_Select
 				sb.append($"Dim ${svmodel}values As String = "${svalues}""$).append(CRLF)
 				sb.append($"Dim ${svmodel}map As Map = vm.keyvalues2map(",", ${svmodel}keys, ${svmodel}values)"$).append(CRLF)
 				'
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteOptions(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", ${svmodel}map, "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			Else
-				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${stitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+				sb.append($"Dim sel${sname} As VMSelect = vm.NewAutoCompleteDataSource(Me, ${bStatic}, "sel${sname}", "${svmodel}", "${sTitle}", ${bisRequired}, ${bisMultiple}, "${sPlaceholder}", "${ssourcetable}", "${ssourcefield}", "${sdisplayfield}", ${bisReturnobject}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 			End If
 	End Select
 	'
@@ -4831,7 +4540,7 @@ Sub Design_Tel
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+	sb.append($"Dim tel${sname} As VMTextField = vm.NewTel(Me, ${bStatic}, "tel${sname}", "${svmodel}", "${sTitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 
 	CodeLine(sb, svalue, "s", "tel", sname, "SetValue")
 	CodeLine(sb, bisreadonly, "b", "tel", sname, "SetReadonly")
@@ -4997,7 +4706,7 @@ Sub Design_Time
 End Sub
 
 Sub Design_Icon
-	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, siconname, ssize, sColor, sintensity)
+	Dim icn As VMIcon = ui.NewIcon(Me, True, sname, siconname, sSize, sColor, sintensity)
 	icn.SetDark(bisDark)
 	icn.SetDense(bisDense)
 	icn.SetDisabled(bisDisabled)
@@ -5034,7 +4743,7 @@ Sub Design_Icon
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${ssize}", "${sColor}", "${sintensity}")"$).append(CRLF)
+	sb.append($"Dim icn${sname} As VMIcon = vm.NewIcon(Me, True, "${sname}", "${siconname}", "${sSize}", "${sColor}", "${sintensity}")"$).append(CRLF)
 	CodeLine(sb, bisDark, "b", "icn", sname, "SetDark")
 	If sfloat <> "" Then
 		AddCode(sb, $"icn${sname}.AddClass("${sfloat}")"$)
@@ -5658,11 +5367,11 @@ Sub Design_Dialog
 	dialog.Actions.AddSpacer
 	dialog.SetCancel(sCancelid, sCancelcaption)
 	dialog.SetOK(sOkid, sOkcaption)
-	dialog.Settitleprimary(bistitleprimary)
+	dialog.Settitleprimary(bisTitleprimary)
 	dialog.Setdark(bisDark)
 	dialog.Setdisabled(bisDisabled)
 	dialog.Setwidth(sWidth)
-	dialog.Setmaxwidth(smaxwidth)
+	dialog.Setmaxwidth(sMaxwidth)
 	dialog.Setlight(bisLight)
 	If sfloat <> "" Then
 		dialog.Addclass(sfloat)
@@ -6310,8 +6019,8 @@ Sub Design_ToolBar
 	End Select
 	'
 	tbl.SetExtensionHeight(sextensionheight)
-	tbl.SetScrollTarget(sscrolltarget)
-	tbl.SetScrollThreshold(sscrollthreshold)
+	tbl.SetScrollTarget(sScrolltarget)
+	tbl.SetScrollThreshold(sScrollthreshold)
 	tbl.SetSrc(ssrc)
 	tbl.SetElevation(sElevation)
 	'
@@ -6349,7 +6058,7 @@ Sub Design_ToolBar
 	tbl.Setdense(bisDense)
 	tbl.SetFLat(bisFlat)
 	tbl.Setdark(bisDark)
-	tbl.Setabsolute(bisabsolute)
+	tbl.Setabsolute(bisAbsolute)
 	tbl.Setclippedleft(bisclippedleft)
 	tbl.Setclippedright(bisclippedright)
 	tbl.Setclippedleft(bisclippedleft)
@@ -6567,8 +6276,8 @@ Sub Design_ToolBar
 		CodeLine2(sb, sColor, sintensity, "s", "vm.NavBar", "", "SetColorIntensity")
 		CodeLine2(sb, sTextcolor, stextintensity, "s", "vm.NavBar", "", "SetTextcolorintensity")
 		CodeLine(sb, sextensionheight, "s", "vm.NavBar", "", "SetExtensionHeight")
-		CodeLine(sb, sscrolltarget, "s", "vm.NavBar", "", "SetScrollTarget")
-		CodeLine(sb, sscrollthreshold, "s", "vm.NavBar", "", "SetScrollThreshold")
+		CodeLine(sb, sScrolltarget, "s", "vm.NavBar", "", "SetScrollTarget")
+		CodeLine(sb, sScrollthreshold, "s", "vm.NavBar", "", "SetScrollThreshold")
 		CodeLine(sb, ssrc, "s", "vm.NavBar", "", "SetSrc")
 		CodeLine(sb, sElevation, "s", "vm.NavBar", "", "SetElevation")
 		CodeLine(sb, bisFlat, "b", "vm.NavBar", "", "SetFlat")
@@ -6583,7 +6292,7 @@ Sub Design_ToolBar
 		
 		CodeLine(sb, bisDense, "b", "vm.NavBar", "", "SetDense")
 		CodeLine(sb, bisDark, "b", "vm.NavBar", "", "SetDark")
-		CodeLine(sb, bisabsolute, "b", "vm.NavBar", "", "SetAbsolute")
+		CodeLine(sb, bisAbsolute, "b", "vm.NavBar", "", "SetAbsolute")
 		CodeLine(sb, bisclippedleft, "b", "vm.NavBar", "", "SetClippedLeft")
 		CodeLine(sb, bisclippedright, "b", "vm.NavBar", "", "SetClippedRight")
 		CodeLine(sb, bisclippedleft, "b", "vm.NavBar", "", "SetClippedLeft")
@@ -6592,9 +6301,9 @@ Sub Design_ToolBar
 		CodeLine(sb, biselevateonscroll, "b", "vm.NavBar", "", "SetElevateOnScroll")
 		CodeLine(sb, bisextended, "b", "vm.NavBar", "", "SetExtended")
 		CodeLine(sb, bisfadeimageonscroll, "b", "vm.NavBar", "", "SetFadeImgOnScroll")
-		CodeLine(sb, bisfixed, "b", "vm.NavBar", "", "SetFixed")
+		CodeLine(sb, bisFixed, "b", "vm.NavBar", "", "SetFixed")
 		CodeLine(sb, bisfloating, "b", "vm.NavBar", "", "SetFloating")
-		CodeLine(sb, bishideonscroll, "b", "vm.NavBar", "", "SetHideOnScroll")
+		CodeLine(sb, bisHideonscroll, "b", "vm.NavBar", "", "SetHideOnScroll")
 		CodeLine(sb, bisinvertedscroll, "b", "vm.NavBar", "", "SetInvertedScroll")
 		CodeLine(sb, bisprominent, "b", "vm.NavBar", "", "SetProminent")
 		CodeLine(sb, bisscrolloffscreen, "b", "vm.NavBar", "", "SetScrollOffScreen")
@@ -6675,13 +6384,13 @@ Sub Design_ToolBar
 End Sub
 
 Sub Design_Button
-	Dim btn As VMButton = ui.NewButton(Me, True, sname, stitle, True, bisPrimary, False, bfitwidth)
-	btn.Sethref(shref)
-	btn.SetTarget(starget)
+	Dim btn As VMButton = ui.NewButton(Me, True, sname, sTitle, True, bisPrimary, False, bfitwidth)
+	btn.Sethref(sHref)
+	btn.SetTarget(sTarget)
 	btn.setto(sTo)
 	btn.SetTooltip(stooltip)
 	btn.SetColorIntensity(sColor, sintensity)
-	btn.SetTextColorIntensity(stextcolor, stextintensity)
+	btn.SetTextColorIntensity(sTextcolor, stextintensity)
 	btn.SetDisabled(bisDisabled).Setoutlined(bisOutlined)
 	btn.SetRounded(bisRounded).SetTransparent(bistext)
 	'
@@ -6698,13 +6407,13 @@ Sub Design_Button
 	'
 	btn.SetDepressed(bisdepressed)
 	btn.SetDark(bisDark)
-	btn.SetTile(bistile)
+	btn.SetTile(bisTile)
 	btn.SetWidth(sWidth)
 	btn.SetHeight(sHeight)
-	btn.SetMinWidth(sminwidth)
-	btn.SetMaxWidth(smaxwidth)
-	btn.SetMinHeight(sminheight)
-	btn.SetMaxHeight(smaxheight)
+	btn.SetMinWidth(sMinwidth)
+	btn.SetMaxWidth(sMaxwidth)
+	btn.SetMinHeight(sMinheight)
+	btn.SetMaxHeight(sMaxheight)
 	btn.SetVisible(bisVisible)
 	If smargintop <> "" Then btn.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then btn.AddClass("mb-" & smarginbottom)
@@ -6729,7 +6438,7 @@ Sub Design_Button
 	If sfloat <> "" Then 
 		btn.AddClass(sfloat)
 	End If
-	Select Case ssize
+	Select Case sSize
 		Case "small"
 			btn.setsmall(True)
 		Case "large"
@@ -6746,13 +6455,13 @@ Sub Design_Button
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, ${bStatic}, "btn${sname}", "${stitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
-	If shref <> "" Then sb.append($"btn${sname}.Sethref("${shref}")"$).append(CRLF)
-	If starget <> "" Then sb.append($"btn${sname}.SetTarget("${starget}")"$).append(CRLF)
+	sb.append($"Dim btn${sname} As VMButton = vm.NewButton(Me, ${bStatic}, "btn${sname}", "${sTitle}", True, ${bisPrimary}, False, ${bfitwidth})"$).append(CRLF)
+	If sHref <> "" Then sb.append($"btn${sname}.Sethref("${sHref}")"$).append(CRLF)
+	If sTarget <> "" Then sb.append($"btn${sname}.SetTarget("${sTarget}")"$).append(CRLF)
 	If sTo <> "" Then sb.append($"btn${sname}.setto("${sTo}")"$).append(CRLF)
 	If stooltip <> "" Then sb.append($"btn${sname}.SetTooltip("${stooltip}")"$).append(CRLF)
 	If sColor <> "" Then sb.append($"btn${sname}.SetColorIntensity("${sColor}", "${sintensity}")"$).append(CRLF)
-	If stextcolor <> "" Then sb.append($"btn${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
+	If sTextcolor <> "" Then sb.append($"btn${sname}.SetTextColorIntensity("${sTextcolor}", "${stextintensity}")"$).append(CRLF)
 	If bisDisabled Then sb.append($"btn${sname}.SetDisabled(${bisDisabled})"$).append(CRLF)
 	If bisOutlined Then sb.append($"btn${sname}.Setoutlined(${bisOutlined})"$).append(CRLF)
 	If bisRounded Then sb.append($"btn${sname}.SetRounded(${bisRounded})"$).append(CRLF)
@@ -6778,10 +6487,10 @@ Sub Design_Button
 	If bisTile Then sb.append($"btn${sname}.SetTile(${bisTile})"$).append(CRLF)
 	If sWidth <> "" Then sb.append($"btn${sname}.SetWidth("${sWidth}")"$).append(CRLF)
 	If sHeight <> "" Then sb.append($"btn${sname}.SetHeight("${sHeight}")"$).append(CRLF)
-	If sminwidth <> "" Then sb.append($"btn${sname}.SetMinWidth("${sminwidth}")"$).append(CRLF)
-	If smaxwidth <> "" Then sb.append($"btn${sname}.SetMaxWidth("${smaxwidth}")"$).append(CRLF)
-	If sminheight <> "" Then sb.append($"btn${sname}.SetMinHeight("${sminheight}")"$).append(CRLF)
-	If smaxheight <> "" Then sb.append($"btn${sname}.SetMaxHeight("${smaxheight}")"$).append(CRLF)
+	If sMinwidth <> "" Then sb.append($"btn${sname}.SetMinWidth("${sMinwidth}")"$).append(CRLF)
+	If sMaxwidth <> "" Then sb.append($"btn${sname}.SetMaxWidth("${sMaxwidth}")"$).append(CRLF)
+	If sMinheight <> "" Then sb.append($"btn${sname}.SetMinHeight("${sMinheight}")"$).append(CRLF)
+	If sMaxheight <> "" Then sb.append($"btn${sname}.SetMaxHeight("${sMaxheight}")"$).append(CRLF)
 	CodeLine(sb, bisVisible, "b", "btn", sname, "SetVisible")
 	'
 	Dim pres As String = "btn"
@@ -6804,7 +6513,7 @@ Sub Design_Button
 	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
 	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	'
-	Select Case ssize
+	Select Case sSize
 		Case "small"
 			CodeLine(sb, True, "b", "btn", sname, "SetSmall")
 		Case "large"
@@ -8189,7 +7898,7 @@ Sub Design_DBSourceCode
 	End If
 	'
 	If  bisShowonnavbar Then
-		AddComment(sbl, $"show ${stitle} on navbar"$)
+		AddComment(sbl, $"show ${sTitle} on navbar"$)
 		'AddCode(sbl, $"vm.ShowItem("btnAdd${dlg}")"$)
 		'AddCode(sbl, $"vm.ShowItem("btnRefresh${dlg}")"$)
 		AddCode(sbl, $"vm.ShowItem("nav${dlg}")"$)
@@ -8888,13 +8597,13 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbbottomsheet.Hideitem("controltype")
 			pbbottomsheet.ClearContents
 		
-		Case "breadcrumbsitem"
-			ShowBag("pbbreadcrumbsitem")
-			pbbreadcrumbsitem.SetDefaults
-			pbbreadcrumbsitem.hideitem("id")
-			pbbreadcrumbsitem.Hideitem("controltype")
-			pbbreadcrumbsitem.ClearContents
-		
+'		Case "breadcrumbsitem"
+'			ShowBag("pbbreadcrumbsitem")
+'			pbbreadcrumbsitem.SetDefaults
+'			pbbreadcrumbsitem.hideitem("id")
+'			pbbreadcrumbsitem.Hideitem("controltype")
+'			pbbreadcrumbsitem.ClearContents
+'		
 		Case "breadcrumbs"
 			ShowBag("pbbreadcrumbs")
 			pbbreadcrumbs.SetDefaults
@@ -9078,6 +8787,30 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbfileselect.SetDefaults
 			pbfileselect.hideitem("id")
 			pbfileselect.Hideitem("controltype")
+		'
+		Case "hover"
+			ShowBag("pbhover")
+			pbhover.SetDefaults
+			pbhover.hideitem("id")
+			pbhover.Hideitem("controltype")
+		
+		Case "sheet"
+			ShowBag("pbsheet")
+			pbsheet.SetDefaults
+			pbsheet.hideitem("id")
+			pbsheet.Hideitem("controltype")
+		
+		Case "alert"
+			ShowBag("pbalert")
+			pbalert.SetDefaults
+			pbalert.hideitem("id")
+			pbalert.Hideitem("controltype")
+						
+		Case "footer"
+			ShowBag("pbfooter")
+			pbfooter.SetDefaults
+			pbfooter.hideitem("id")
+			pbfooter.Hideitem("controltype")
 		
 		Case "overlay"
 			ShowBag("pboverlay")
@@ -9203,6 +8936,13 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbbutton.SetDefaults
 			pbbutton.hideitem("id")
 			pbbutton.Hideitem("controltype")
+			
+		Case "pagination"
+			ShowBag("pbpagination")
+			pbpagination.SetDefaults
+			pbpagination.hideitem("id")
+			pbpagination.Hideitem("controltype")
+			
 		Case "icon"
 			ShowBag("pbicon")
 			pbicon.SetDefaults
@@ -9253,6 +8993,9 @@ Sub ToolBoxNavigationPanel As VMExpansionPanel
 	Dim exppanel As VMImage = ToolboxImage("panel", "./assets/panel.png", "Expansion Panel")
 	grd.Container.AddComponent(2,1,exppanel.tostring)
 	'
+	Dim pagination As VMImage = ToolboxImage("pagination", "./assets/pagination.png", "Pagination")
+	grd.Container.AddComponent(2,2,pagination.tostring)
+	
 	Return grd
 End Sub
 
@@ -9260,7 +9003,7 @@ Sub ToolboxLayoutPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("laynav", "epx", Me)
 	grd.Header.SetText("Layouts")
 	grd.Container.SetTag("div")
-	grd.Container.AddRows(4).AddColumns4X3
+	grd.Container.AddRows(5).AddColumns4X3
 	'
 	Dim cont As VMImage = ToolboxImage("container", "./assets/container.png", "Container")
 	grd.Container.AddComponent(1,1,cont.tostring)
@@ -9310,6 +9053,17 @@ Sub ToolboxLayoutPanel As VMExpansionPanel
 	Dim breadcrumbs As VMImage = ToolboxImage("breadcrumbs", "./assets/breadcrumbs.png", "Bread Crumbs")
 	grd.Container.AddComponent(4,4,breadcrumbs.tostring)
 	'
+	Dim footer As VMImage = ToolboxImage("footer", "./assets/footer.png", "Footer")
+	grd.Container.AddComponent(5,1,footer.tostring)
+	'
+	Dim hover As VMImage = ToolboxImage("hover", "./assets/hover.png", "Hover")
+	grd.Container.AddComponent(5,2,hover.tostring)
+	'
+	Dim sheet As VMImage = ToolboxImage("sheet", "./assets/sheet.png", "Sheet")
+	grd.Container.AddComponent(5,3,sheet.tostring)
+	'
+	Dim alert As VMImage = ToolboxImage("alert", "./assets/alert.png", "Alert")
+	grd.Container.AddComponent(5,4,alert.tostring)
 	
 	'Dim breadcrumbsitem As VMImage = ToolboxImage("breadcrumbsitem", "./assets/breadcrumbsitem.png", "Bread Crumbs Item")
 	'grd.Container.AddComponent(5,1,breadcrumbsitem.tostring)
@@ -9358,7 +9112,7 @@ Sub ToolBoxDisplayPanel As VMExpansionPanel
 	'
 	Dim progresscircular As VMImage = ToolboxImage("progresscircular", "./assets/progresscircular.png", "Progress Circular")
 	grd.Container.AddComponent(3,4,progresscircular.tostring)
-
+	
 	Return grd
 End Sub
 
@@ -9824,6 +9578,13 @@ Sub ItemDrop(e As BANanoEvent)
 							BANano.SetLocalStorage("selectedpanel", 1)
 						Case "button"
 							BANano.SetLocalStorage("selectedpanel", 3)
+						Case "pagination"
+							BANano.setlocalstorage("selectedpanel", 3)
+							attr.put("length", "10")
+							attr.put("nexticon", "$next")
+							attr.put("previcon", "$prev")
+							attr.put("value", "0")
+							attr.put("totalvisible", "5")
 						Case "stepper"
 							BANano.SetLocalStorage("selectedpanel", 3)
 							nrec.put("items", StepperItems)
@@ -9966,9 +9727,27 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("text", sLabel)
 							BANano.SetLocalStorage("selectedpanel", 4)
 				
+						Case "footer"
+							BANano.SetLocalStorage("selectedpanel", 4)
+						
+						Case "sheet"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							attr.put("elevation", "3")
+							attr.put("width", "200")
+							attr.put("height", "200")
+						
+						Case "alert"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							attr.put("type", "success")
+							attr.put("border", "left")
+							
+						Case "hover"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							attr.put("closedelay","0")
+							attr.put("opendelay", "0")
 						Case "breadcrumbs"
 							BANano.SetLocalStorage("selectedpanel", 4)
-					nrec.put("items", MenuItems)
+							nrec.put("items", MenuItems)
 						
 						Case "card"
 							attr.Put("img", "./assets/sky.jpg")
@@ -11028,6 +10807,8 @@ Sub SavePropertyBag
 			mattr = pbimage.Properties
 		Case "button"
 			mattr = pbbutton.properties
+		Case "pagination"
+			mattr = pbpagination.properties
 		Case "icon"
 			mattr = pbicon.properties
 		Case "parallax"
@@ -11066,8 +10847,17 @@ Sub SavePropertyBag
 			mattr = pbbottomsheet.properties
 		Case "breadcrumbs"
 			mattr = pbbreadcrumbs.properties
-		Case "breadcrumbsitem"
-			mattr = pbbreadcrumbsitem.properties
+		Case "footer"
+			mattr = pbfooter.properties
+		Case "hover"
+			mattr = pbhover.properties
+		Case "sheet"
+			mattr = pbsheet.properties
+		Case "alert"
+			mattr = pbalert.properties
+		
+		'Case "breadcrumbsitem"
+		'	mattr = pbbreadcrumbsitem.properties
 		Case "card"
 			mattr = pbcard.properties
 		Case "timeline"
@@ -11358,7 +11148,6 @@ Sub SavePropertyBag
 	Else
 		vm.setdata("devspace", 0)
 	End If
-	vm.ShowSnackBarSuccess("Updates have been applied, will refresh!")
 	CreateUX
 End Sub
 
@@ -11767,7 +11556,7 @@ Sub Read_Rating
 	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
 	sBackgroundintensity = mattr.getdefault("backgroundintensity", "")
 	bisClearable = YesNoToBoolean(mattr.getdefault("isclearable", "No"))
-	sclosedelay = mattr.getdefault("closedelay", "")
+	sClosedelay = mattr.getdefault("closedelay", "")
 	sColor = mattr.getdefault("color", "")
 	sintensity = mattr.getdefault("intensity", "")
 	bisDense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
@@ -12476,7 +12265,7 @@ Sub Read_Avatar
 	sMinheight = mattr.getdefault("minheight", "")
 	sMinwidth = mattr.getdefault("minwidth", "")
 	bisRight = YesNoToBoolean(mattr.getdefault("isright", "No"))
-	ssize = mattr.getdefault("size", "")
+	sSize = mattr.getdefault("size", "")
 	savatartype = mattr.GetDefault("avatartype","")
 	sTextcolor = mattr.getdefault("textcolor", "")
 	stextintensity = mattr.getdefault("textintensity", "")
@@ -12683,15 +12472,15 @@ Sub Design_List
 	lst.SetDark(bisDark)
 	lst.SetDense(bisDense)
 	lst.SetDisabled(bisDisabled)
-	lst.SetElevation(selevation)
+	lst.SetElevation(sElevation)
 	lst.SetExpand(bisExpand)
 	lst.SetFlat(bisFlat)
 	lst.SetHeight(sHeight)
 	lst.SetLight(bisLight)
-	lst.SetMaxheight(smaxheight)
-	lst.SetMaxwidth(smaxwidth)
-	lst.SetMinheight(sminheight)
-	lst.SetMinwidth(sminwidth)
+	lst.SetMaxheight(sMaxheight)
+	lst.SetMaxwidth(sMaxwidth)
+	lst.SetMinheight(sMinheight)
+	lst.SetMinwidth(sMinwidth)
 	lst.SetNav(bisNav)
 	lst.SetRounded(bisRounded)
 	lst.SetShaped(bisShaped)
@@ -13278,9 +13067,9 @@ Sub Read_ExpansionPanels
 	bisFlat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
 	bisFocusable = YesNoToBoolean(mattr.getdefault("isfocusable", "No"))
 	bisHover = YesNoToBoolean(mattr.getdefault("ishover", "No"))
-	bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+	bisInset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-	bismandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
+	bisMandatory = YesNoToBoolean(mattr.getdefault("ismandatory", "No"))
 	bisMultiple = YesNoToBoolean(mattr.getdefault("ismultiple", "No"))
 	bisPopout = YesNoToBoolean(mattr.getdefault("ispopout", "No"))
 	bistile = YesNoToBoolean(mattr.getdefault("istile", "No"))
@@ -14749,8 +14538,7 @@ Sub Design_SparkLine
 	CodeLine(sb, sAutodraweasing, "s", pres, sname, "SetAutodraweasing")
 	CodeLine(sb, sstrokelinecap, "s", pres, sname, "SetStrokeLineCap")
 	CodeLine(sb, bisAutolinewidth, "b", pres, sname, "SetAutolinewidth")
-	CodeLine(sb, sColor, "s", pres, sname, "SetColor")
-	CodeLine(sb, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
 	CodeLine(sb, bisFill, "b", pres, sname, "SetFill")
 	CodeLine(sb, sGradientdirection, "s", pres, sname, "SetGradientdirection")
 	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
@@ -16276,7 +16064,9 @@ Sub Design_Overlay
 	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
 	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
 	AddCode(sb, $"ol${sname}.Hide"$)
-	sb.Append($"${sparent}.AddControl(ol${sname}.Overlay, ol${sname}.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)"$)
+	'
+	sb.append($"${sparent}.AddControl(ol${sname}.Overlay, ol${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	
 	AddNewLine(sb)
 	
 End Sub
@@ -16292,20 +16082,22 @@ Sub PropertyBag_ProgressLinear
 	pbprogresslinear.AddText("d","id","ID","","")
 	pbprogresslinear.AddText("d", "controltype", "Type", "","progresslinear")
 	pbprogresslinear.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
-	pbprogresslinear.AddText("d","vmodel","ID","","")
+	pbprogresslinear.AddText("d","vmodel","VModel","","")
+	pbprogresslinear.AddText2("d",CreateMap("value":"Value", "label":"Label"))
 	pbprogresslinear.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
 	pbprogresslinear.AddSelect2("d","backgroundcolor","BackgroundColor", vm.ColorOptions, "backgroundcolorintensity","BackgroundColor Intensity", vm.IntensityOptions)
+	pbprogresslinear.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
 	pbprogresslinear.AddText("d","backgroundopacity","BackgroundOpacity","","")
 	pbprogresslinear.AddText2("d",CreateMap("buffervalue":"BufferValue", "height":"Height"))
 	'
 	pbprogresslinear.AddHeading("e","Settings")
+	pbprogresslinear.AddSwitches("e", CreateMap("isreactive":"Reactive","isvisible": "Visible"))
 	pbprogresslinear.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isactive": "Active"))
 	pbprogresslinear.AddSwitches("e", CreateMap("isbottom": "Bottom", "isdark": "Dark"))
 	pbprogresslinear.AddSwitches("e", CreateMap("isfixed": "Fixed", "isindeterminate": "Indeterminate"))
 	pbprogresslinear.AddSwitches("e", CreateMap("islight": "Light", "isquery": "Query"))
 	pbprogresslinear.AddSwitches("e", CreateMap("isrounded": "Rounded", "isstream": "Stream"))
 	pbprogresslinear.AddSwitches("e", CreateMap("isstriped": "Striped", "istop": "Top"))
-	pbprogresslinear.AddSwitches("e", CreateMap("isvisible": "Visible"))
 	'
 	pbprogresslinear.AddHeading("m","Margins & Padding")
 	pbprogresslinear.AddMarginsPaddings("m")
@@ -16319,7 +16111,11 @@ End Sub
 
 
 Sub Read_ProgressLinear
+	sTextcolor = mattr.getdefault("textcolor", "")
+	stextintensity = mattr.getdefault("textintensity", "")
+	sLabel = mattr.getdefault("label", "")
 	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisreactive = YesNoToBoolean(mattr.getdefault("isreactive", "No"))
 	bisActive = YesNoToBoolean(mattr.getdefault("isactive", "No"))
 	sBackgroundcolor = mattr.getdefault("backgroundcolor", "")
 	sBackgroundcolorintensity = mattr.getdefault("backgroundcolorintensity", "")
@@ -16327,6 +16123,7 @@ Sub Read_ProgressLinear
 	bisBottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 	sBuffervalue = mattr.getdefault("buffervalue", "")
 	sColor = mattr.getdefault("color", "")
+	svalue = mattr.getdefault("value", "")
 	sColorintensity = mattr.getdefault("colorintensity", "")
 	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
@@ -16346,9 +16143,14 @@ Sub Design_ProgressLinear
 	ProgressLinear.Initialize(vue, $"pl${sname}"$, Me)
 	ProgressLinear.SetStatic(True)
 	ProgressLinear.SetDesignMode(True)
+	ProgressLinear.SetReactive(bisreactive)
+	ProgressLinear.SetVModel(svmodel)
+	ProgressLinear.SetLabel(sLabel)
+	ProgressLinear.SetValue(svalue)
 	ProgressLinear.SetAbsolute(bisAbsolute)
 	ProgressLinear.SetActive(bisActive)
 	ProgressLinear.SetBackgroundcolorintensity(sBackgroundcolor,sBackgroundcolorintensity)
+	ProgressLinear.SetTextcolorintensity(sTextcolor,stextintensity)
 	ProgressLinear.SetBackgroundopacity(sBackgroundopacity)
 	ProgressLinear.SetBottom(bisBottom)
 	ProgressLinear.SetBuffervalue(sBuffervalue)
@@ -16385,19 +16187,25 @@ Sub Design_ProgressLinear
 	If spaddinga <> "" Then ProgressLinear.AddClass("pa-" & spaddinga)
 	ui.AddControl(ProgressLinear.ProgressLinear, ProgressLinear.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	
 	AddCode(sb, $"Dim pl${sname} As VMProgressLinear"$)
 	AddCode(sb, $"pl${sname}.Initialize(vue, "pl${sname}", Me)"$)
 	Dim pres As String = "pl"
+	CodeLine(sb, bisreactive, "b", pres, sname, "SetReactive")
+	CodeLine(sb, svmodel, "s", pres, sname, "SetVModel")
+	CodeLine(sb, sLabel, "s", pres, sname, "SetLabel")
+	CodeLine(sb, svalue, "s", pres, sname, "SetValue")
 	CodeLine(sb, bisAbsolute, "b", pres, sname, "SetAbsolute")
 	CodeLine(sb, bisActive, "b", pres, sname, "SetActive")
-	CodeLine(sb, sBackgroundcolor, "s", pres, sname, "SetBackgroundcolor")
-	CodeLine(sb, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
+	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
+	CodeLine2(sb, sTextcolor, stextintensity, "s", pres, sname, "SetTextColorIntensity")
 	CodeLine(sb, sBackgroundopacity, "s", pres, sname, "SetBackgroundopacity")
 	CodeLine(sb, bisBottom, "b", pres, sname, "SetBottom")
 	CodeLine(sb, sBuffervalue, "s", pres, sname, "SetBuffervalue")
-	CodeLine(sb, sColor, "s", pres, sname, "SetColor")
-	CodeLine(sb, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
 	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
 	CodeLine(sb, bisFixed, "b", pres, sname, "SetFixed")
 	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
@@ -16408,8 +16216,8 @@ Sub Design_ProgressLinear
 	CodeLine(sb, bisStream, "b", pres, sname, "SetStream")
 	CodeLine(sb, bisStriped, "b", pres, sname, "SetStriped")
 	CodeLine(sb, bisTop, "b", pres, sname, "SetTop")
-	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
-
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")	
+	'
 	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
 	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
 	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
@@ -16428,8 +16236,10 @@ Sub Design_ProgressLinear
 	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
 	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
 	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
-	'
-	sb.Append($"${sparent}.AddControl(pl${sname}.ProgressLinear, pl${sname}.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)"$)
+	
+	sb.append($"${sparent}.AddControl(pl${sname}.ProgressLinear, pl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	AddNewLine(sb)
+	
 End Sub
 
 #Region ProgressCircular
@@ -16443,13 +16253,16 @@ Sub PropertyBag_ProgressCircular
 	pbprogresscircular.AddText("d","id","ID","","")
 	pbprogresscircular.AddText("d", "controltype", "Type", "","progresscircular")
 	pbprogresscircular.AddSelectDS("d", "parent", "Parent", "containers", "component", "component", "")
-	pbprogresscircular.AddText("d","vmodel","ID","","")
+	pbprogresscircular.AddText("d","vmodel","VModel","","")
+	pbprogresscircular.AddText2("d",CreateMap("value":"Value", "label":"Label"))
 	pbprogresscircular.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
-	pbprogresscircular.AddText("d","rotate","Rotate","","")
+	pbprogresscircular.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
+	pbprogresscircular.AddText2("d",CreateMap("rotate":"Rotate"))
 	pbprogresscircular.AddText2("d",CreateMap("size":"Size", "width":"Width"))
 	'
 	pbprogresscircular.AddHeading("e","Settings")
-	pbprogresscircular.AddSwitches("e", CreateMap("isindeterminate": "Indeterminate", "isvisible": "Visible"))
+	pbprogresscircular.AddSwitches("e", CreateMap("isreactive":"Reactive","isvisible": "Visible"))
+	pbprogresscircular.AddSwitches("e", CreateMap("isindeterminate": "Indeterminate"))
 	'
 	pbprogresscircular.AddHeading("m","Margins & Padding")
 	pbprogresscircular.AddMarginsPaddings("m")
@@ -16462,7 +16275,12 @@ End Sub
 #End Region
 
 Sub Read_ProgressCircular
+	sTextcolor = mattr.getdefault("textcolor", "")
+	stextintensity = mattr.getdefault("textintensity", "")
+	sLabel = mattr.getdefault("label", "")
+	bisreactive = YesNoToBoolean(mattr.getdefault("isreactive", "No"))
 	sColor = mattr.getdefault("color", "")
+	svalue = mattr.getdefault("value", "")
 	sColorintensity = mattr.getdefault("colorintensity", "")
 	bisIndeterminate = YesNoToBoolean(mattr.getdefault("isindeterminate", "No"))
 	sRotate = mattr.getdefault("rotate", "")
@@ -16477,7 +16295,12 @@ Sub Design_ProgressCircular
 	ProgressCircular.Initialize(vue, $"pc${sname}"$, Me)
 	ProgressCircular.SetStatic(True)
 	ProgressCircular.SetDesignMode(True)
+	ProgressCircular.SetValue(svalue)
+	ProgressCircular.SetVmodel(svmodel)
+	ProgressCircular.SetLabel(sLabel)
+	ProgressCircular.SetReactive(bisreactive)
 	ProgressCircular.SetColorintensity(sColor, sColorintensity)
+	ProgressCircular.SetTextcolorintensity(sTextcolor,stextintensity)
 	ProgressCircular.SetIndeterminate(bisIndeterminate)
 	ProgressCircular.SetRotate(sRotate)
 	ProgressCircular.SetSize(sSize)
@@ -16504,11 +16327,19 @@ Sub Design_ProgressCircular
 	If spaddinga <> "" Then ProgressCircular.AddClass("pa-" & spaddinga)
 	ui.AddControl(ProgressCircular.ProgressCircular, ProgressCircular.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
 	
 	AddCode(sb, $"Dim pc${sname} As VMProgressCircular"$)
 	AddCode(sb, $"pc${sname}.Initialize(vue, "pc${sname}", Me)"$)
 	Dim pres As String = "pc"
+	CodeLine(sb, bisreactive, "b", pres, sname, "SetReactive")
+	CodeLine(sb, svmodel, "s", pres, sname, "SetVModel")
+	CodeLine(sb, sLabel, "s", pres, sname, "SetLabel")
+	CodeLine(sb, svalue, "s", pres, sname, "SetValue")
 	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine2(sb, sTextcolor, stextintensity, "s", pres, sname, "SetTextColorIntensity")
 	CodeLine(sb, bisIndeterminate, "b", pres, sname, "SetIndeterminate")
 	CodeLine(sb, sRotate, "s", pres, sname, "SetRotate")
 	CodeLine(sb, sSize, "s", pres, sname, "SetSize")
@@ -16533,7 +16364,732 @@ Sub Design_ProgressCircular
 	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
 	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
 	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
-	sb.Append($"${sparent}.AddControl(pc${sname}.ProgressCircular, pc${sname}.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)"$)
+	
+	'
+	sb.append($"${sparent}.AddControl(pc${sname}.ProgressCircular, pc${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 End Sub
 
+#Region Footer
+Sub PropertyBag_Footer
+	vm.setdata("pbfooter", False)
+	lstBags.add("pbfooter")
+	pbfooter = vm.CreateProperty("ppbfooter", Me)
+	pbfooter.SetChangeEvent("SavePropertyBag")
+	pbfooter.SetVShow("pbfooter")
+	pbfooter.AddHeading("d","Details")
+	pbfooter.AddText("d","id","ID","","")
+	pbfooter.AddText("d", "controltype", "Type", "","footer")
+	pbfooter.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbfooter.AddText("d","vmodel","ID","","")
+	pbfooter.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbfooter.AddSelect("d","elevation","Elevation",vm.elevation)
+	pbfooter.AddHeightWidths("d")
+	pbfooter.AddText("d","tag","Tag","","")
+	'
+	pbfooter.AddHeading("e","Settings")
+	pbfooter.AddSwitches("e", CreateMap("isabsolute": "Absolute", "isapp": "App"))
+	pbfooter.AddSwitches("e", CreateMap("isdark": "Dark", "isdisabled": "Disabled"))
+	pbfooter.AddSwitches("e", CreateMap("isfixed": "Fixed", "isinset": "Inset"))
+	pbfooter.AddSwitches("e", CreateMap("islight": "Light", "ispadless": "Padless"))
+	pbfooter.AddSwitches("e", CreateMap("istile": "Tile", "isvisible": "Visible"))
+	'
+	pbfooter.AddHeading("m","Margins & Padding")
+	pbfooter.AddMarginsPaddings("m")
+	'
+	pbfooter.AddHeading("f","Matrix")
+	pbfooter.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbfooter.tostring)
+End Sub
+#End Region
+
+Sub Read_Footer
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisApp = YesNoToBoolean(mattr.getdefault("isapp", "No"))
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	sElevation = mattr.getdefault("elevation", "")
+	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	sHeight = mattr.getdefault("height", "")
+	bisInset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sMaxheight = mattr.getdefault("maxheight", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinheight = mattr.getdefault("minheight", "")
+	bisPadless = YesNoToBoolean(mattr.getdefault("ispadless", "No"))
+	sTabindex = mattr.getdefault("tabindex", "")
+	sTag = mattr.getdefault("tag", "")
+	bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_Footer
+	Dim Footer As VMFooter
+	Footer.Initialize(vue, $"ft${sname}"$, Me)
+	Footer.SetStatic(True)
+	Footer.SetDesignMode(True)
+	Footer.SetAbsolute(bisAbsolute)
+	Footer.SetColorintensity(sColor, sColorintensity)
+	Footer.SetDark(bisDark)
+	Footer.SetDisabled(bisDisabled)
+	Footer.SetElevation(sElevation)
+	Footer.SetFixed(bisFixed)
+	Footer.SetHeight(sHeight)
+	Footer.SetInset(bisInset)
+	Footer.SetLight(bisLight)
+	Footer.SetMaxheight(sMaxheight)
+	Footer.SetMaxwidth(sMaxwidth)
+	Footer.SetMinheight(sMinheight)
+	Footer.SetPadless(bisPadless)
+	Footer.SetTag(sTag)
+	Footer.SetTile(bisTile)
+	Footer.SetVisible(bisVisible)
+	Footer.SetWidth(sWidth)
+
+	If smargintop <> "" Then Footer.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then Footer.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then Footer.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then Footer.AddClass("mr-" & smarginright)
+	If smargins <> "" Then Footer.AddClass("ms-" & smargins)
+	If smargine <> "" Then Footer.AddClass("me-" & smargine)
+	If smarginx <> "" Then Footer.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then Footer.AddClass("my-" & smarginy)
+	If smargina <> "" Then Footer.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then Footer.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then Footer.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then Footer.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then Footer.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then Footer.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then Footer.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then Footer.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then Footer.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then Footer.AddClass("pa-" & spaddinga)
+	ui.AddControl(Footer.Footer, Footer.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddInstruction(sb, "pgIndex", "BuildFooter", "")
+	AddNewLine(sb)
+	'
+	Dim pres As String = "vm.Footer"
+	sname = ""
+	CodeLine(sb, bisAbsolute, "b", pres, sname, "SetAbsolute")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDisabled, "b", pres, sname, "SetDisabled")
+	CodeLine(sb, sElevation, "s", pres, sname, "SetElevation")
+	CodeLine(sb, bisFixed, "b", pres, sname, "SetFixed")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, bisInset, "b", pres, sname, "SetInset")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sMaxheight, "s", pres, sname, "SetMaxheight")
+	CodeLine(sb, sMaxwidth, "s", pres, sname, "SetMaxwidth")
+	CodeLine(sb, sMinheight, "s", pres, sname, "SetMinheight")
+	CodeLine(sb, bisPadless, "b", pres, sname, "SetPadless")
+	CodeLine(sb, sTag, "s", pres, sname, "SetTag")
+	CodeLine(sb, bisTile, "b", pres, sname, "SetTile")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+End Sub
+
+#Region Hover
+Sub PropertyBag_Hover
+	vm.setdata("pbhover", False)
+	lstBags.add("pbhover")
+	pbhover = vm.CreateProperty("ppbhover", Me)
+	pbhover.SetChangeEvent("SavePropertyBag")
+	pbhover.SetVShow("pbhover")
+	pbhover.AddHeading("d","Details")
+	pbhover.AddText("d","id","ID","","")
+	pbhover.AddText("d", "controltype", "Type", "","hover")
+	pbhover.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbhover.AddText("d","vmodel","VModel","","")
+	pbhover.AddText2("d",CreateMap("closedelay":"CloseDelay", "opendelay":"OpenDelay"))
+	'
+	pbhover.AddHeading("e","Settings")
+	pbhover.AddSwitches("e", CreateMap("isdisabled": "Disabled", "isvisible": "Visible"))
+	'
+	pbhover.AddHeading("m","Margins & Padding")
+	pbhover.AddMarginsPaddings("m")
+	'
+	pbhover.AddHeading("f","Matrix")
+	pbhover.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbhover.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Hover
+	sClosedelay = mattr.getdefault("closedelay", "")
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	sOpendelay = mattr.getdefault("opendelay", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+
+End Sub
+Sub Design_Hover
+	PlaceHolder("Hover sits here...")
+	
+'	Dim Hover As VMHover
+'	Hover.Initialize(vue, $"Hover${sname}"$, Me)
+'	Hover.SetStatic(True)
+'	Hover.SetDesignMode(True)
+'	Hover.SetClosedelay(sClosedelay)
+'	Hover.SetDisabled(bisDisabled)
+'	Hover.SetOpendelay(sOpendelay)
+'	Hover.SetVisible(bisVisible)
+'
+'	If smargintop <> "" Then Hover.AddClass("mt-" & smargintop)
+'	If smarginbottom <> "" Then Hover.AddClass("mb-" & smarginbottom)
+'	If smarginleft <> "" Then Hover.AddClass("ml-" & smarginleft)
+'	If smarginright <> "" Then Hover.AddClass("mr-" & smarginright)
+'	If smargins <> "" Then Hover.AddClass("ms-" & smargins)
+'	If smargine <> "" Then Hover.AddClass("me-" & smargine)
+'	If smarginx <> "" Then Hover.AddClass("mx-" & smarginx)
+'	If smarginy <> "" Then Hover.AddClass("my-" & smarginy)
+'	If smargina <> "" Then Hover.AddClass("ma-" & smargina)
+'	If spaddingtop <> "" Then Hover.AddClass("pt-" & spaddingtop)
+'	If spaddingbottom <> "" Then Hover.AddClass("pb-" & spaddingbottom)
+'	If spaddingleft <> "" Then Hover.AddClass("pl-" & spaddingleft)
+'	If spaddingright <> "" Then Hover.AddClass("pr-" & spaddingright)
+'	If spaddings <> "" Then Hover.AddClass("ps-" & spaddings)
+'	If spaddinge <> "" Then Hover.AddClass("pe-" & spaddinge)
+'	If spaddingx <> "" Then Hover.AddClass("px-" & spaddingx)
+'	If spaddingy <> "" Then Hover.AddClass("py-" & spaddingy)
+'	If spaddinga <> "" Then Hover.AddClass("pa-" & spaddinga)
+'	ui.AddControl(Hover.Hover, Hover.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+	AddCode(sb, $"Dim hvr${sname} As VMHover"$)
+	AddCode(sb, $"hvr${sname}.Initialize(vue, $"hvr${sname}, Me)"$)
+	Dim pres As String = "hvr"
+	CodeLine(sb, sClosedelay, "s", pres, sname, "SetClosedelay")
+	CodeLine(sb, bisDisabled, "b", pres, sname, "SetDisabled")
+	CodeLine(sb, sOpendelay, "s", pres, sname, "SetOpendelay")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	sb.append($"${sparent}.AddControl(hvr${sname}.Hover, hvr${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	'
+	
+End Sub
+
+#Region Sheet
+Sub PropertyBag_Sheet
+	vm.setdata("pbsheet", False)
+	lstBags.add("pbsheet")
+	pbsheet = vm.CreateProperty("ppbsheet", Me)
+	pbsheet.SetChangeEvent("SavePropertyBag")
+	pbsheet.SetVShow("pbsheet")
+	pbsheet.AddHeading("d","Details")
+	pbsheet.AddText("d","id","ID","","")
+	pbsheet.AddText("d", "controltype", "Type", "","sheet")
+	pbsheet.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbsheet.AddText("d","vmodel","ID","","")
+	pbsheet.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbsheet.AddSelect2("d","textcolor","TextColor", vm.ColorOptions, "textcolorintensity","TextColor Intensity", vm.IntensityOptions)
+	pbsheet.AddSelect("d","elevation","Elevation",vm.elevation)
+	pbsheet.AddHeightWidths("d")
+	pbsheet.AddText("d","tag","Tag","","")
+	'
+	pbsheet.AddHeading("e","Settings")
+	pbsheet.AddSwitches("e", CreateMap("isdark": "Dark", "islight": "Light"))
+	pbsheet.AddSwitches("e", CreateMap("istile": "Tile", "isvisible": "Visible"))
+	'
+	pbsheet.AddHeading("m","Margins & Padding")
+	pbsheet.AddMarginsPaddings("m")
+	'
+	pbsheet.AddHeading("f","Matrix")
+	pbsheet.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbsheet.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Sheet
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	sElevation = mattr.getdefault("elevation", "")
+	sHeight = mattr.getdefault("height", "")
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sMaxheight = mattr.getdefault("maxheight", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinheight = mattr.getdefault("minheight", "")
+	sMinwidth = mattr.getdefault("minwidth", "")
+	sTag = mattr.getdefault("tag", "")
+	sTextcolor = mattr.getdefault("textcolor", "")
+	sTextcolorintensity = mattr.getdefault("textcolorintensity", "")
+	bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_Sheet
+	Dim Sheet As VMSheet
+	Sheet.Initialize(vue, $"sht${sname}"$, Me)
+	Sheet.SetStatic(True)
+	Sheet.SetDesignMode(True)
+	Sheet.SetColorintensity(sColor, sColorintensity)
+	Sheet.SetDark(bisDark)
+	Sheet.SetElevation(sElevation)
+	Sheet.SetHeight(sHeight)
+	Sheet.SetLight(bisLight)
+	Sheet.SetMaxheight(sMaxheight)
+	Sheet.SetMaxwidth(sMaxwidth)
+	Sheet.SetMinheight(sMinheight)
+	Sheet.SetMinwidth(sMinwidth)
+	Sheet.SetTag(sTag)
+	Sheet.SetTextcolorintensity(sTextcolor, sTextcolorintensity)
+	Sheet.SetTile(bisTile)
+	Sheet.SetVisible(bisVisible)
+	Sheet.SetWidth(sWidth)
+
+	If smargintop <> "" Then Sheet.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then Sheet.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then Sheet.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then Sheet.AddClass("mr-" & smarginright)
+	If smargins <> "" Then Sheet.AddClass("ms-" & smargins)
+	If smargine <> "" Then Sheet.AddClass("me-" & smargine)
+	If smarginx <> "" Then Sheet.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then Sheet.AddClass("my-" & smarginy)
+	If smargina <> "" Then Sheet.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then Sheet.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then Sheet.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then Sheet.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then Sheet.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then Sheet.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then Sheet.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then Sheet.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then Sheet.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then Sheet.AddClass("pa-" & spaddinga)
+	ui.AddControl(Sheet.Sheet.Container, Sheet.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+	AddCode(sb, $"Dim sht${sname} As VMSheet"$)
+	AddCode(sb, $"sht${sname}.Initialize(vue, "sht${sname}", Me)"$)
+	Dim pres As String = "sht"
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, sElevation, "s", pres, sname, "SetElevation")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sMaxheight, "s", pres, sname, "SetMaxheight")
+	CodeLine(sb, sMaxwidth, "s", pres, sname, "SetMaxwidth")
+	CodeLine(sb, sMinheight, "s", pres, sname, "SetMinheight")
+	CodeLine(sb, sMinwidth, "s", pres, sname, "SetMinwidth")
+	CodeLine(sb, sTag, "s", pres, sname, "SetTag")
+	CodeLine2(sb, sTextcolor, sTextcolorintensity, "s", pres, sname, "SetTextcolorintensity")
+	CodeLine(sb, bisTile, "b", pres, sname, "SetTile")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	'
+	sb.append($"${sparent}.AddControl(sht${sname}.Sheet.Container, sht${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+End Sub
+
+#Region Pagination
+Sub PropertyBag_Pagination
+	vm.setdata("pbpagination", False)
+	lstBags.add("pbpagination")
+	pbpagination = vm.CreateProperty("ppbpagination", Me)
+	pbpagination.SetChangeEvent("SavePropertyBag")
+	pbpagination.SetVShow("pbpagination")
+	pbpagination.AddHeading("d","Details")
+	pbpagination.AddText("d","id","ID","","")
+	pbpagination.AddText("d", "controltype", "Type", "","pagination")
+	pbpagination.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbpagination.AddText("d","vmodel","ID","","")
+	pbpagination.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbpagination.AddText2("d",CreateMap("previcon":"PrevIcon", "nexticon":"NextIcon"))
+	pbpagination.AddText2("d",CreateMap("length":"Length","totalvisible":"TotalVisible"))
+	'
+	pbpagination.AddHeading("e","Settings")
+	pbpagination.AddSwitches("e", CreateMap("iscircle": "Circle", "isdark": "Dark"))
+	pbpagination.AddSwitches("e", CreateMap("isdisabled": "Disabled", "islight": "Light"))
+	pbpagination.AddSwitches("e", CreateMap("isvisible": "Visible"))
+	'
+	pbpagination.AddHeading("m","Margins & Padding")
+	pbpagination.AddMarginsPaddings("m")
+	'
+	pbpagination.AddHeading("f","Matrix")
+	pbpagination.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbpagination.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Pagination
+	bisCircle = YesNoToBoolean(mattr.getdefault("iscircle", "No"))
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
+	sLength = mattr.getdefault("length", "")
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sNexticon = mattr.getdefault("nexticon", "")
+	sPrevicon = mattr.getdefault("previcon", "")
+	sTotalvisible = mattr.getdefault("totalvisible", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+End Sub
+
+Sub Design_Pagination
+	Dim Pagination As VMPagination
+	Pagination.Initialize(vue, $"Pagination${sname}"$, Me)
+	Pagination.SetStatic(True)
+	Pagination.SetDesignMode(True)
+	Pagination.SetCircle(bisCircle)
+	Pagination.SetColorintensity(sColor,sColorintensity)
+	Pagination.SetDark(bisDark)
+	Pagination.SetDisabled(bisDisabled)
+	Pagination.SetLength(sLength)
+	Pagination.SetLight(bisLight)
+	Pagination.SetNexticon(sNexticon)
+	Pagination.SetPrevicon(sPrevicon)
+	Pagination.SetTotalvisible(sTotalvisible)
+	Pagination.SetVisible(bisVisible)
+
+	If smargintop <> "" Then Pagination.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then Pagination.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then Pagination.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then Pagination.AddClass("mr-" & smarginright)
+	If smargins <> "" Then Pagination.AddClass("ms-" & smargins)
+	If smargine <> "" Then Pagination.AddClass("me-" & smargine)
+	If smarginx <> "" Then Pagination.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then Pagination.AddClass("my-" & smarginy)
+	If smargina <> "" Then Pagination.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then Pagination.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then Pagination.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then Pagination.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then Pagination.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then Pagination.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then Pagination.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then Pagination.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then Pagination.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then Pagination.AddClass("pa-" & spaddinga)
+	ui.AddControl(Pagination.Pagination, Pagination.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+
+	AddCode(sb, $"Dim pgn${sname} As VMPagination"$)
+	AddCode(sb, $"pgn${sname}.Initialize(vue, "pgn${sname}", Me)"$)
+	Dim pres As String = "pgn"
+	CodeLine(sb, bisCircle, "b", pres, sname, "SetCircle")
+	CodeLine2(sb, sColor, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDisabled, "b", pres, sname, "SetDisabled")
+	CodeLine(sb, sLength, "s", pres, sname, "SetLength")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sNexticon, "s", pres, sname, "SetNexticon")
+	CodeLine(sb, sPrevicon, "s", pres, sname, "SetPrevicon")
+	CodeLine(sb, sTotalvisible, "s", pres, sname, "SetTotalvisible")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	AddCode(sb, $"pgn${sname}.SetOnInput("pgn${sname}_input")"$)
+	AddCode(sb, $"pgn${sname}.SetOnNext("pgn${sname}_next")"$)
+	AddCode(sb, $"pgn${sname}.SetOnPrevious("pgn${sname}_previous")"$)
+	
+	sb.append($"${sparent}.AddControl(pgn${sname}.Pagination, pgn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
+	
+	AddNewLine(sb)
+	AddNewLine(sb)
+	'
+	AddCode(sbEvents, $"Sub pgn${sname}_input(value As object)"$)
+	AddCode(sbEvents, $"vm.ShowSnackBarSuccess(value)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	'
+	AddCode(sbEvents, $"Sub pgn${sname}_next(e As BANanoEvent)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	'
+	AddCode(sbEvents, $"Sub pgn${sname}_previous(e As BANanoEvent)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+End Sub
+
+#Region Alert
+Sub PropertyBag_Alert
+	vm.setdata("pbalert", False)
+	lstBags.add("pbalert")
+	pbalert = vm.CreateProperty("ppbalert", Me)
+	pbalert.SetChangeEvent("SavePropertyBag")
+	pbalert.SetVShow("pbalert")
+	pbalert.AddHeading("d","Details")
+	pbalert.AddText("d","id","ID","","")
+	pbalert.AddText("d", "controltype", "Type", "","alert")
+	pbalert.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbalert.AddText("d","vmodel","ID","","")
+	pbalert.AddSelect("d","type","Type",CreateMap("success":"success", "info":"info", "warning":"warning" , "error":"error"))
+	pbalert.AddText("d","icon","Icon","","")
+	pbalert.AddSelect("d","border","Border",CreateMap("top":"top","right":"right","bottom":"bottom","left":"left"))
+	pbalert.AddTextArea("d","label","Label","","")
+	pbalert.AddText("d","closelabel","CloseLabel","","")
+	pbalert.AddSelect2("d","color","Color", vm.ColorOptions, "colorintensity","Color Intensity", vm.IntensityOptions)
+	pbalert.AddSelect2("d","textcolor","TextColor", vm.ColorOptions, "textcolorintensity","TextColor Intensity", vm.IntensityOptions)
+	pbalert.AddSelect("d","elevation","Elevation",vm.elevation)
+	pbalert.AddSelect("d","mode","Mode",CreateMap("out-in":"out-in","in-out":"in-out"))
+	pbalert.AddSelect("d","transition","Transition",vm.Transition)
+	pbalert.AddText("d","origin","Origin","","")
+	pbalert.AddText("d","tag","Tag","","")
+	pbalert.AddHeightWidths("d")
+	
+	'
+	pbalert.AddHeading("e","Settings")
+	pbalert.AddSwitches("e", CreateMap("iscoloredborder": "ColoredBorder", "isdark": "Dark"))
+	pbalert.AddSwitches("e", CreateMap("isdense": "Dense", "isdismissible": "Dismissible"))
+	pbalert.AddSwitches("e", CreateMap("islight": "Light", "isoutlined": "Outlined"))
+	pbalert.AddSwitches("e", CreateMap("isprominent": "Prominent", "istext": "Text"))
+	pbalert.AddSwitches("e", CreateMap("istile": "Tile", "isvisible": "Visible"))
+	'
+	pbalert.AddHeading("m","Margins & Padding")
+	pbalert.AddMarginsPaddings("m")
+	'
+	pbalert.AddHeading("f","Matrix")
+	pbalert.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbalert.tostring)
+End Sub
+#End Region
+
+
+Sub Read_Alert
+	sLabel = mattr.getdefault("label", "")
+	sBorder = mattr.getdefault("border", "")
+	sCloselabel = mattr.getdefault("closelabel", "")
+	sColor = mattr.getdefault("color", "")
+	sColorintensity = mattr.getdefault("colorintensity", "")
+	bisColoredborder = YesNoToBoolean(mattr.getdefault("iscoloredborder", "No"))
+	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
+	bisDense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
+	bisDismissible = YesNoToBoolean(mattr.getdefault("isdismissible", "No"))
+	sElevation = mattr.getdefault("elevation", "")
+	sHeight = mattr.getdefault("height", "")
+	sIcon = mattr.getdefault("icon", "")
+	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
+	sMaxheight = mattr.getdefault("maxheight", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinheight = mattr.getdefault("minheight", "")
+	sMinwidth = mattr.getdefault("minwidth", "")
+	sMode = mattr.getdefault("mode", "")
+	sOrigin = mattr.getdefault("origin", "")
+	bisOutlined = YesNoToBoolean(mattr.getdefault("isoutlined", "No"))
+	bisProminent = YesNoToBoolean(mattr.getdefault("isprominent", "No"))
+	sTag = mattr.getdefault("tag", "")
+	bisText = YesNoToBoolean(mattr.getdefault("istext", "No"))
+	sTextcolor = mattr.getdefault("textcolor", "")
+	sTextcolorintensity = mattr.getdefault("textcolorintensity", "")
+	bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
+	sTransition = mattr.getdefault("transition", "")
+	sType = mattr.getdefault("type", "")
+	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
+	sWidth = mattr.getdefault("width", "")
+End Sub
+
+Sub Design_Alert
+	Dim Alert As VMAlert
+	Alert.Initialize(vue, $"alt${sname}"$, Me)
+	Alert.SetStatic(True)
+	Alert.SetDesignMode(True)
+	Alert.SetContent(sLabel)
+	Alert.SetBorder(sBorder)
+	Alert.SetCloselabel(sCloselabel)
+	Alert.SetColorintensity(sColor, sColorintensity)
+	Alert.SetColoredborder(bisColoredborder)
+	Alert.SetDark(bisDark)
+	Alert.SetDense(bisDense)
+	Alert.SetDismissible(bisDismissible)
+	Alert.SetElevation(sElevation)
+	Alert.SetHeight(sHeight)
+	Alert.SetIcon(sIcon)
+	Alert.SetLight(bisLight)
+	Alert.SetMaxheight(sMaxheight)
+	Alert.SetMaxwidth(sMaxwidth)
+	Alert.SetMinheight(sMinheight)
+	Alert.SetMinwidth(sMinwidth)
+	Alert.SetMode(sMode)
+	Alert.SetOrigin(sOrigin)
+	Alert.SetOutlined(bisOutlined)
+	Alert.SetProminent(bisProminent)
+	Alert.SetTag(sTag)
+	Alert.SetText(bisText)
+	Alert.SetTextcolorintensity(sTextcolor,sTextcolorintensity)
+	Alert.SetTile(bisTile)
+	Alert.SetTransition(sTransition)
+	Alert.SetType(sType)
+	Alert.SetVisible(bisVisible)
+	Alert.SetWidth(sWidth)
+
+	If smargintop <> "" Then Alert.AddClass("mt-" & smargintop)
+	If smarginbottom <> "" Then Alert.AddClass("mb-" & smarginbottom)
+	If smarginleft <> "" Then Alert.AddClass("ml-" & smarginleft)
+	If smarginright <> "" Then Alert.AddClass("mr-" & smarginright)
+	If smargins <> "" Then Alert.AddClass("ms-" & smargins)
+	If smargine <> "" Then Alert.AddClass("me-" & smargine)
+	If smarginx <> "" Then Alert.AddClass("mx-" & smarginx)
+	If smarginy <> "" Then Alert.AddClass("my-" & smarginy)
+	If smargina <> "" Then Alert.AddClass("ma-" & smargina)
+	If spaddingtop <> "" Then Alert.AddClass("pt-" & spaddingtop)
+	If spaddingbottom <> "" Then Alert.AddClass("pb-" & spaddingbottom)
+	If spaddingleft <> "" Then Alert.AddClass("pl-" & spaddingleft)
+	If spaddingright <> "" Then Alert.AddClass("pr-" & spaddingright)
+	If spaddings <> "" Then Alert.AddClass("ps-" & spaddings)
+	If spaddinge <> "" Then Alert.AddClass("pe-" & spaddinge)
+	If spaddingx <> "" Then Alert.AddClass("px-" & spaddingx)
+	If spaddingy <> "" Then Alert.AddClass("py-" & spaddingy)
+	If spaddinga <> "" Then Alert.AddClass("pa-" & spaddinga)
+	ui.AddControl(Alert.Alert, Alert.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	'
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+	AddCode(sb, $"Dim alt${sname} As VMAlert"$)
+	AddCode(sb, $"alt${sname}.Initialize(vue, "alt${sname}", Me)"$)
+	Dim pres As String = "alt"
+	CodeLine(sb, sLabel, "s", pres, sname, "SetContent")
+	CodeLine(sb, sBorder, "s", pres, sname, "SetBorder")
+	CodeLine(sb, sCloselabel, "s", pres, sname, "SetCloselabel")
+	CodeLine(sb, sColor, "s", pres, sname, "SetColor")
+	CodeLine(sb, sColorintensity, "s", pres, sname, "SetColorintensity")
+	CodeLine(sb, bisColoredborder, "b", pres, sname, "SetColoredborder")
+	CodeLine(sb, bisDark, "b", pres, sname, "SetDark")
+	CodeLine(sb, bisDense, "b", pres, sname, "SetDense")
+	CodeLine(sb, bisDismissible, "b", pres, sname, "SetDismissible")
+	CodeLine(sb, sElevation, "s", pres, sname, "SetElevation")
+	CodeLine(sb, sHeight, "s", pres, sname, "SetHeight")
+	CodeLine(sb, sIcon, "s", pres, sname, "SetIcon")
+	CodeLine(sb, bisLight, "b", pres, sname, "SetLight")
+	CodeLine(sb, sMaxheight, "s", pres, sname, "SetMaxheight")
+	CodeLine(sb, sMaxwidth, "s", pres, sname, "SetMaxwidth")
+	CodeLine(sb, sMinheight, "s", pres, sname, "SetMinheight")
+	CodeLine(sb, sMinwidth, "s", pres, sname, "SetMinwidth")
+	CodeLine(sb, sMode, "s", pres, sname, "SetMode")
+	CodeLine(sb, sOrigin, "s", pres, sname, "SetOrigin")
+	CodeLine(sb, bisOutlined, "b", pres, sname, "SetOutlined")
+	CodeLine(sb, bisProminent, "b", pres, sname, "SetProminent")
+	CodeLine(sb, sTag, "s", pres, sname, "SetTag")
+	CodeLine(sb, bisText, "b", pres, sname, "SetText")
+	CodeLine(sb, sTextcolor, "s", pres, sname, "SetTextcolor")
+	CodeLine(sb, sTextcolorintensity, "s", pres, sname, "SetTextcolorintensity")
+	CodeLine(sb, bisTile, "b", pres, sname, "SetTile")
+	CodeLine(sb, sTransition, "s", pres, sname, "SetTransition")
+	CodeLine(sb, sType, "s", pres, sname, "SetType")
+	CodeLine(sb, bisVisible, "b", pres, sname, "SetVisible")
+	CodeLine(sb, sWidth, "s", pres, sname, "SetWidth")
+
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	AddCode(sb, $"alt${sname}.SetOnInput("alt${sname}_input")"$)
+	sb.Append($"${sparent}.AddControl(alt${sname}.Alert, alt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	AddNewLine(sb)
+	AddNewLine(sb)
+	'
+	AddCode(sbEvents, $"Sub alt${sname}_input(B as Boolean)"$)
+	AddCode(sbEvents, $"vm.ShowSnackBarSuccess(B)"$)
+	AddCode(sbEvents, "End Sub")
+	AddNewLine(sbEvents)
+	
+End Sub
 

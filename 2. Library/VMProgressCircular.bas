@@ -13,6 +13,10 @@ Sub Class_Globals
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object   'ignore
 	Private bStatic As Boolean   'ignore
+	Private hasLabel As Boolean
+	Public Text As VMElement
+	Private suffix As String
+	Private pValue As String
 End Sub
 
 'initialize the ProgressCircular
@@ -24,11 +28,67 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	hasLabel = False
+	Text.Initialize(vue, $"${ID}tmp"$).SetTag("span")
+	suffix = ""
+	pValue = ""
+	Return Me
+End Sub
+
+
+'set reactive
+Sub SetReactive(varReactive As Boolean) As VMProgressCircular
+	If varReactive = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("reactive", varReactive)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Reactive"$
+	vue.SetStateSingle(pp, varReactive)
+	ProgressCircular.Bind(":reactive", pp)
+	Return Me
+End Sub
+
+
+Sub SetLabel(lblText As String) As VMProgressCircular
+	hasLabel = True
+	suffix = lblText
+	Return Me
+End Sub
+
+Sub SetText(lblText As String) As VMProgressCircular
+	hasLabel = True
+	suffix = lblText
+	Return Me
+End Sub
+
+
+'set color intensity
+Sub SetTextColor(varColor As String) As VMProgressCircular
+	Dim sColor As String = $"${varColor}--text"$
+	Text.AddClass(sColor)
+	Return Me
+End Sub
+
+'set color intensity
+Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMProgressCircular
+	Dim sColor As String = $"${varColor}--text"$
+	Dim sIntensity As String = $"text--${varIntensity}"$
+	Dim mcolor As String = $"${sColor} ${sIntensity}"$
+	Text.AddClass(mcolor)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	If hasLabel Then
+		If bStatic = True Or DesignMode = True Then
+			Text.SetText($"${pValue}${suffix}"$)
+		Else	 
+			Text.SetText($"{{ ${ID}value }}${suffix}"$)
+		End If
+		AddComponent(Text.ToString)
+	End If
 	Return ProgressCircular.ToString
 End Sub
 
@@ -132,8 +192,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMProgressCircular
-	If varValue = "" Then Return Me
-	If varValue = "0" Then Return Me
+	pValue = varValue
 	If bStatic Then
 		SetAttrSingle("value", varValue)
 		Return Me
@@ -142,6 +201,12 @@ Sub SetValue(varValue As String) As VMProgressCircular
 	vue.SetStateSingle(pp, varValue)
 	ProgressCircular.Bind(":value", pp)
 	Return Me
+End Sub
+
+Sub GetValue As String
+	Dim pp As String = $"${ID}Value"$
+	Dim svalue As String = vue.GetData(pp)
+	Return svalue
 End Sub
 
 'set width
@@ -257,6 +322,7 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMProgressCircular
 	ProgressCircular.SetDesignMode(b)
+	Text.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -264,6 +330,7 @@ End Sub
 'set static
 Sub SetStatic(b As Boolean) As VMProgressCircular
 	ProgressCircular.SetStatic(b)
+	Text.SetStatic(b)
 	bStatic = b
 	Return Me
 End Sub

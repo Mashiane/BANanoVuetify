@@ -4,14 +4,16 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12, 9
+#IgnoreWarnings:12
 Sub Class_Globals
 	Public Alert As VMElement
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
+	Public Container As VMContainer
 End Sub
 
 'initialize the Alert
@@ -19,15 +21,28 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	Alert.Initialize(v, ID)
 	Alert.SetTag("v-alert")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
-	Alert.typeOf = "alert"
+	bStatic = False
+	Container.Initialize(vue, $"${ID}cont"$, Module)
+	Return Me
+End Sub
+
+Sub SetContent(sContent As String) As VMAlert
+	If bStatic Then
+		AddComponent(sContent)
+	Else
+		Dim contid As String = $"${ID}content"$
+		vue.SetData(contid, sContent)
+		AddComponent($"{{ ${contid} }}"$)	
+	End If
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	If Container.HasContent Then AddComponent(Container.ToString)
 	Return Alert.ToString
 End Sub
 
@@ -89,7 +104,12 @@ Sub AddChildren(children As List)
 End Sub
 
 'set border
-Sub SetBorder(varBorder As Object) As VMAlert
+Sub SetBorder(varBorder As String) As VMAlert
+	If varBorder = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("border", varBorder)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Border"$
 	vue.SetStateSingle(pp, varBorder)
 	Alert.Bind(":border", pp)
@@ -97,55 +117,39 @@ Sub SetBorder(varBorder As Object) As VMAlert
 End Sub
 
 'set close-label
-Sub SetCloseText(varCloseText As Object) As VMAlert
-	Dim pp As String = $"${ID}CloseText"$
-	vue.SetStateSingle(pp, varCloseText)
-	Alert.Bind(":close-text", pp)
+Sub SetCloseLabel(varCloseLabel As String) As VMAlert
+	If varCloseLabel = "" Then Return Me
+	If varCloseLabel = "$vuetify.close" Then Return Me
+	If bStatic Then
+		SetAttrSingle("close-label", varCloseLabel)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}CloseLabel"$
+	vue.SetStateSingle(pp, varCloseLabel)
+	Alert.Bind(":close-label", pp)
 	Return Me
 End Sub
 
 'set color
-Sub SetColor(varColor As Object) As VMAlert
+Sub SetColor(varColor As String) As VMAlert
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Alert.Bind(":color", pp)
 	Return Me
 End Sub
 
-'set colored-border
-Sub SetColoredBorder(varColoredBorder As Object) As VMAlert
-	Dim pp As String = $"${ID}ColoredBorder"$
-	vue.SetStateSingle(pp, varColoredBorder)
-	Alert.Bind(":colored-border", pp)
-	Return Me
-End Sub
-
-'set dark
-Sub SetDark(varDark As Object) As VMAlert
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	Alert.Bind(":dark", pp)
-	Return Me
-End Sub
-
-'set dense
-Sub SetDense(varDense As Object) As VMAlert
-	Dim pp As String = $"${ID}Dense"$
-	vue.SetStateSingle(pp, varDense)
-	Alert.Bind(":dense", pp)
-	Return Me
-End Sub
-
-'set dismissible
-Sub SetDismissible(varDismissible As Object) As VMAlert
-	Dim pp As String = $"${ID}Dismissible"$
-	vue.SetStateSingle(pp, varDismissible)
-	Alert.Bind(":dismissible", pp)
-	Return Me
-End Sub
-
 'set elevation
-Sub SetElevation(varElevation As Object) As VMAlert
+Sub SetElevation(varElevation As String) As VMAlert
+	If varElevation = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("elevation", varElevation)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Elevation"$
 	vue.SetStateSingle(pp, varElevation)
 	Alert.Bind(":elevation", pp)
@@ -153,7 +157,12 @@ Sub SetElevation(varElevation As Object) As VMAlert
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMAlert
+Sub SetHeight(varHeight As String) As VMAlert
+	If varHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("height", varHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	Alert.Bind(":height", pp)
@@ -161,23 +170,25 @@ Sub SetHeight(varHeight As Object) As VMAlert
 End Sub
 
 'set icon
-Sub SetIcon(varIcon As Object) As VMAlert
+Sub SetIcon(varIcon As String) As VMAlert
+	If varIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("icon", varIcon)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Icon"$
 	vue.SetStateSingle(pp, varIcon)
 	Alert.Bind(":icon", pp)
 	Return Me
 End Sub
 
-'set light
-Sub SetLight(varLight As Object) As VMAlert
-	Dim pp As String = $"${ID}Light"$
-	vue.SetStateSingle(pp, varLight)
-	Alert.Bind(":light", pp)
-	Return Me
-End Sub
-
 'set max-height
-Sub SetMaxHeight(varMaxHeight As Object) As VMAlert
+Sub SetMaxHeight(varMaxHeight As String) As VMAlert
+	If varMaxHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-height", varMaxHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxHeight"$
 	vue.SetStateSingle(pp, varMaxHeight)
 	Alert.Bind(":max-height", pp)
@@ -185,7 +196,12 @@ Sub SetMaxHeight(varMaxHeight As Object) As VMAlert
 End Sub
 
 'set max-width
-Sub SetMaxWidth(varMaxWidth As Object) As VMAlert
+Sub SetMaxWidth(varMaxWidth As String) As VMAlert
+	If varMaxWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-width", varMaxWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxWidth"$
 	vue.SetStateSingle(pp, varMaxWidth)
 	Alert.Bind(":max-width", pp)
@@ -193,7 +209,12 @@ Sub SetMaxWidth(varMaxWidth As Object) As VMAlert
 End Sub
 
 'set min-height
-Sub SetMinHeight(varMinHeight As Object) As VMAlert
+Sub SetMinHeight(varMinHeight As String) As VMAlert
+	If varMinHeight = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-height", varMinHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinHeight"$
 	vue.SetStateSingle(pp, varMinHeight)
 	Alert.Bind(":min-height", pp)
@@ -201,7 +222,12 @@ Sub SetMinHeight(varMinHeight As Object) As VMAlert
 End Sub
 
 'set min-width
-Sub SetMinWidth(varMinWidth As Object) As VMAlert
+Sub SetMinWidth(varMinWidth As String) As VMAlert
+	If varMinWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-width", varMinWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWidth"$
 	vue.SetStateSingle(pp, varMinWidth)
 	Alert.Bind(":min-width", pp)
@@ -209,7 +235,12 @@ Sub SetMinWidth(varMinWidth As Object) As VMAlert
 End Sub
 
 'set mode
-Sub SetMode(varMode As Object) As VMAlert
+Sub SetMode(varMode As String) As VMAlert
+	If varMode = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("mode", varMode)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Mode"$
 	vue.SetStateSingle(pp, varMode)
 	Alert.Bind(":mode", pp)
@@ -217,15 +248,142 @@ Sub SetMode(varMode As Object) As VMAlert
 End Sub
 
 'set origin
-Sub SetOrigin(varOrigin As Object) As VMAlert
+Sub SetOrigin(varOrigin As String) As VMAlert
+	If varOrigin = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("origin", varOrigin)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Origin"$
 	vue.SetStateSingle(pp, varOrigin)
 	Alert.Bind(":origin", pp)
 	Return Me
 End Sub
 
-'set outlined
-Sub SetOutlined(varOutlined As Object) As VMAlert
+'set tag
+Sub SetTag(varTag As String) As VMAlert
+	If varTag = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("tag", varTag)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Tag"$
+	vue.SetStateSingle(pp, varTag)
+	Alert.Bind(":tag", pp)
+	Return Me
+End Sub
+
+'set transition
+Sub SetTransition(varTransition As String) As VMAlert
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Transition"$
+	vue.SetStateSingle(pp, varTransition)
+	Alert.Bind(":transition", pp)
+	Return Me
+End Sub
+
+'set type
+Sub SetType(varType As String) As VMAlert
+	If varType = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("type", varType)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Type"$
+	vue.SetStateSingle(pp, varType)
+	Alert.Bind(":type", pp)
+	Return Me
+End Sub
+
+'set width
+Sub SetWidth(varWidth As String) As VMAlert
+	If varWidth = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("width", varWidth)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Width"$
+	vue.SetStateSingle(pp, varWidth)
+	Alert.Bind(":width", pp)
+	Return Me
+End Sub
+
+'set colored-border
+Sub SetColoredBorder(varColoredBorder As Boolean) As VMAlert
+	If varColoredBorder = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("colored-border", varColoredBorder)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ColoredBorder"$
+	vue.SetStateSingle(pp, varColoredBorder)
+	Alert.Bind(":colored-border", pp)
+	Return Me
+End Sub
+
+'set dark
+Sub SetDark(varDark As Boolean) As VMAlert
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dark"$
+	vue.SetStateSingle(pp, varDark)
+	Alert.Bind(":dark", pp)
+	Return Me
+End Sub
+
+'set dense
+Sub SetDense(varDense As Boolean) As VMAlert
+	If varDense = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dense", varDense)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dense"$
+	vue.SetStateSingle(pp, varDense)
+	Alert.Bind(":dense", pp)
+	Return Me
+End Sub
+
+'set dismissible
+Sub SetDismissible(varDismissible As Boolean) As VMAlert
+	If varDismissible = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dismissible", varDismissible)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dismissible"$
+	vue.SetStateSingle(pp, varDismissible)
+	Alert.Bind(":dismissible", pp)
+	Return Me
+End Sub
+
+'set light
+Sub SetLight(varLight As Boolean) As VMAlert
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Light"$
+	vue.SetStateSingle(pp, varLight)
+	Alert.Bind(":light", pp)
+	Return Me
+End Sub
+
+'set outline
+Sub SetOutlined(varOutlined As Boolean) As VMAlert
+	If varOutlined = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("outlined", varOutlined)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Outlined"$
 	vue.SetStateSingle(pp, varOutlined)
 	Alert.Bind(":outlined", pp)
@@ -233,23 +391,25 @@ Sub SetOutlined(varOutlined As Object) As VMAlert
 End Sub
 
 'set prominent
-Sub SetProminent(varProminent As Object) As VMAlert
+Sub SetProminent(varProminent As Boolean) As VMAlert
+	If varProminent = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("prominent", varProminent)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Prominent"$
 	vue.SetStateSingle(pp, varProminent)
 	Alert.Bind(":prominent", pp)
 	Return Me
 End Sub
 
-'set tag
-Sub SetTag(varTag As Object) As VMAlert
-	Dim pp As String = $"${ID}Tag"$
-	vue.SetStateSingle(pp, varTag)
-	Alert.Bind(":tag", pp)
-	Return Me
-End Sub
-
 'set text
-Sub SetText(varText As Object) As VMAlert
+Sub SetText(varText As Boolean) As VMAlert
+If varText = False Then Return Me
+If bStatic Then
+SetAttrSingle("text", varText)
+Return Me
+End If
 Dim pp As String = $"${ID}Text"$
 vue.SetStateSingle(pp, varText)
 Alert.Bind(":text", pp)
@@ -257,58 +417,28 @@ Return Me
 End Sub
 
 'set tile
-Sub SetTile(varTile As Object) As VMAlert
+Sub SetTile(varTile As Boolean) As VMAlert
+If varTile = False Then Return Me
+If bStatic Then
+SetAttrSingle("tile", varTile)
+Return Me
+End If
 Dim pp As String = $"${ID}Tile"$
 vue.SetStateSingle(pp, varTile)
 Alert.Bind(":tile", pp)
 Return Me
 End Sub
 
-'set transition
-Sub SetTransition(varTransition As Object) As VMAlert
-Dim pp As String = $"${ID}Transition"$
-vue.SetStateSingle(pp, varTransition)
-Alert.Bind(":transition", pp)
-Return Me
-End Sub
-
-'set type
-Sub SetType(varType As Object) As VMAlert
-Dim pp As String = $"${ID}Type"$
-vue.SetStateSingle(pp, varType)
-Alert.Bind(":type", pp)
-Return Me
-End Sub
-
 'set value
-Sub SetValue(varValue As Object) As VMAlert
-	Alert.SetValue(varValue,False)
+Sub SetValue(varValue As Boolean) As VMAlert
+If varValue = False Then Return Me
+If bStatic Then
+SetAttrSingle("value", varValue)
 Return Me
-End Sub
-
-'set width
-Sub SetWidth(varWidth As Object) As VMAlert
-Dim pp As String = $"${ID}Width"$
-vue.SetStateSingle(pp, varWidth)
-Alert.Bind(":width", pp)
-Return Me
-End Sub
-
-'
-Sub SetSlotAppend(b As Boolean) As VMAlert    'ignore
-SetAttr(CreateMap("slot": "append"))
-Return Me
-End Sub
-
-'
-Sub SetSlotClose(b As Boolean) As VMAlert    'ignore
-SetAttr(CreateMap("slot": "close"))
-Return Me
-End Sub
-
-'
-Sub SetSlotPrepend(b As Boolean) As VMAlert    'ignore
-SetAttr(CreateMap("slot": "prepend"))
+End If
+Dim pp As String = $"${ID}Value"$
+vue.SetStateSingle(pp, varValue)
+Alert.Bind(":value", pp)
 Return Me
 End Sub
 
@@ -317,7 +447,7 @@ Sub SetOnInput(methodName As String) As VMAlert
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@input": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -327,13 +457,13 @@ End Sub
 
 'hide the component
 Sub Hide As VMAlert
-	Alert.SetVisible(False)
+	vue.SetData(ID, False)
     Return Me
 End Sub
 
 'show the component
 Sub Show As VMAlert
-	Alert.SetVisible(True)
+	vue.SetData(ID, True)
     Return Me
 End Sub
 
@@ -376,9 +506,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMAlert
+Sub SetColorIntensity(color As String, intensity As String) As VMAlert
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Alert.Bind(":color", pp)
 	Return Me
@@ -405,18 +540,21 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMAlert
 	Alert.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMAlert
-	Alert.SetTabIndex(ti)
+'set static
+Sub SetStatic(b As Boolean) As VMAlert
+	Alert.SetStatic(b)
+	Container.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMAlert
+Sub SetName(varName As String, bbind As Boolean) As VMAlert
 	Alert.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -503,11 +641,6 @@ Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VM
 End Sub
 
 
-Sub SetContent(comp As String) As VMAlert
-	Alert.SetText(comp)
-	Return Me
-End Sub
-
 Sub AddComponent(comp As String) As VMAlert
 	Alert.SetText(comp)
 	Return Me
@@ -519,7 +652,6 @@ Sub SetTextCenter As VMAlert
 	Return Me
 End Sub
 
-
 Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
@@ -530,22 +662,26 @@ Alert.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
 
+
 Sub SetVisible(b As Boolean) As VMAlert
-Alert.SetVisible(b)
+vue.SetData(ID, b)
 Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColor(varColor As String) As VMAlert
-	Dim sColor As String = $"${varColor}--text"$
+
+'set color intensity - built in
+Sub SetTextColor(textcolor As String) As VMAlert
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
 	AddClass(sColor)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMAlert
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMAlert
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me

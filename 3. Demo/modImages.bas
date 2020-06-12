@@ -21,7 +21,7 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(10).AddColumns2x6
 	'
-	vm.CreateImage("img1", Me).SetVModel("img1", "https://picsum.photos/510/300?random").SetHeight("125").SetAspectRatio("1.7").AddToContainer(cont, 1, 1)
+	vm.CreateImage("img1", Me).SetVModel("img1", "https://picsum.photos/510/300?random").SetHover(True).SetHeight("125").SetAspectRatio("1.7").AddToContainer(cont, 1, 1)
 	'
 	vm.CreateImage("img2", Me).SetLazySrc("https://picsum.photos/id/11/100/60").SetMaxWidth("500").SetMaxHeight("300").SetVModel("img2", "https://picsum.photos/510/300?random").SetAspectRatio("2").AddToContainer(cont, 1, 2)
 	'

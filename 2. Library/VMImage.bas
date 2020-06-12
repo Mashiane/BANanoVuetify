@@ -19,6 +19,8 @@ Sub Class_Globals
 	Private span As VMLabel
 	Private bStatic As Boolean
 	Public HasContent As Boolean
+	Public Hover As VMHover
+	Private hasHover As Boolean
 End Sub
 
 'initialize the Image
@@ -38,6 +40,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	SetVisible(True)
 	HasContent = False
+	Hover.Initialize(vue, $"${ID}hover"$, Me)
+	hasHover = False 
+	Return Me
+End Sub
+
+Sub SetHover(b As Boolean) As VMImage
+	hasHover = b
 	Return Me
 End Sub
 
@@ -64,6 +73,7 @@ Sub SetStatic(b As Boolean) As VMImage
 	tooltip.SetStatic(b)
 	tmpl.SetStatic(b)
 	span.SetStatic(b)
+	Hover.SetStatic(b)
 	Return Me
 End Sub
 
@@ -267,13 +277,20 @@ End Sub
 
 'get component
 Sub ToString As String
+	Dim sout As String = ""
 	If hasTooltip Then
 		Image.Pop(tmpl.Template)
 		tmpl.Pop(tooltip.tooltip)
 		span.Pop(tooltip.ToolTip)
-		Return tooltip.ToString
+		sout = tooltip.ToString
 	Else	
-		Return Image.ToString
+		sout = Image.ToString
+	End If
+	If hasHover Then
+		Hover.AddComponent(sout)
+		Return Hover.tostring
+	Else
+		Return sout
 	End If
 End Sub
 
@@ -666,6 +683,7 @@ Sub SetDesignMode(b As Boolean) As VMImage
 	tooltip.SetDesignMode(b)
 	tmpl.SetDesignMode(b)
 	span.SetDesignMode(b)
+	Hover.SetDesignMode(b)
 	Return Me
 End Sub
 
