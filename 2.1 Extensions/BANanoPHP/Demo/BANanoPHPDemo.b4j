@@ -5,8 +5,9 @@ Library1=jcore
 Library2=jfx
 Library3=banano
 Library4=bananophp
+Library5=bananopostprocessor
 NumberOfFiles=0
-NumberOfLibraries=4
+NumberOfLibraries=5
 NumberOfModules=0
 Version=8.3
 @EndOfDesignText@
@@ -25,9 +26,13 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Public Version As String = "1.00"
 	Public Port As String = "8080"
+	Private BP As BANanoPostProcessor
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
+	BP.Initialize
+	BP.RedirectOutput(File.DirApp,"log.txt")
+	
 	'initialize banano for first use
 	BANano.Initialize("BANano", AppName, DateTime.now)
 	BANano.HTML_NAME = "index.html"
@@ -44,6 +49,15 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")	
 	'
 	BANano.Build(Publish)
+	BP.OpenLog(File.DirApp, "log.txt")
+	
+	BP.PublishPath = Publish
+	BP.ShortName = AppName
+	BP.AssetsPath = BANano.ASSETS_FOLDER
+	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
+	BP.StylesPath = BANano.STYLES_FOLDER
+	BP.ScriptFile = BANano.JAVASCRIPT_NAME
+	BP.OpenOnPort(True, Port)
 	ExitApplication
 End Sub
 
@@ -54,11 +68,104 @@ End Sub
 
 
 Sub BANano_Ready
+	'get the body of the page
+	Dim body As BANanoElement = BANano.GetElement("#body")
+	'declare our php class
 	Dim bPHP As BANanoPHP
 	bPHP.Initialize
-	'get directory listing
+	'
+	Dim logFile As String = "./phplog.txt"
+	
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Started BANanoPHP"))
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Created mashy.txt"))
+	'
+	'1. write to a file - overwrite
+	BANano.CallInlinePHPWait(bPHP.FILE_WRITE, bPHP.BuildWriteFile("./mashy.txt", "This is a test file..."))
+	
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Get file directory listing for root"))
+	
+	'2. get directory listing
 	Dim assetsList As String = BANano.CallInlinePHPWait(bPHP.DIRECTORY_LIST, bPHP.BuildDirectoryList("./"))
 	Dim dl As BANAnoPHPDirList = bPHP.GetDirectoryList(assetsList)
-	BANano.GetElement("body").Append(assetsList)
+	body.Append(assetsList)
+	body.Append("<br>")
 	Log(dl)
+	
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Check file existence for mashy.txt"))
+	
+	'3. check the existence of the file
+	Dim sfc As String = BANano.CallInlinePHPWait(bPHP.FILE_EXISTS, bPHP.BuildFileExists("./mashy.txt"))
+	body.Append(sfc)
+	body.Append("<br>")
+	
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Read file contents for mashy.txt"))
+	
+	'4. get the file contents
+	Dim strfc As String = BANano.CallInlinePHPWait(bPHP.GET_FILE, bPHP.BuildGetFile("./mashy.txt"))
+	body.Append(strfc)
+	body.Append("<br>")
+	'
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Append to file mashy.txt"))
+	BANano.CallInlinePHPWait(bPHP.FILE_APPEND, bPHP.BuildWriteFile("./mashy.txt", "Let's append some text!"))
+	
+	'copy a file
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Copy mashy.txt"))
+	BANano.CallInlinePHPWait(bPHP.FILE_COPY, bPHP.BuildFileCopy("./mashy.txt", "./assets/mashy1.txt"))
+	Dim sfc As String = BANano.CallInlinePHPWait(bPHP.FILE_EXISTS, bPHP.BuildFileExists("./assets/mashy1.txt"))
+	body.Append($"File Copy Exists: ${sfc}"$)
+	body.Append("<br>")
+	'
+	'rename a file
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Rename mashy1.txt"))
+	BANano.CallInlinePHPWait(bPHP.FILE_RENAME, bPHP.BuildFileRename("./assets/mashy1.txt", "./assets/mashy2.txt"))
+	Dim sfc As String = BANano.CallInlinePHPWait(bPHP.FILE_EXISTS, bPHP.BuildFileExists("./assets/mashy2.txt"))
+	body.Append($"File Rename Exists: ${sfc}"$)
+	body.Append("<br>")
+	'
+	'delete a file
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Delete mashy2.txt"))
+	BANano.CallInlinePHPWait(bPHP.FILE_DELETE, bPHP.BuildFileDelete("./assets/mashy2.txt"))
+	Dim sfc As String = BANano.CallInlinePHPWait(bPHP.FILE_EXISTS, bPHP.BuildFileExists("./assets/mashy2.txt"))
+	body.Append($"File Deleted Exists: ${sfc}"$)
+	body.Append("<br>")
+	
+	'create a directory
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Create recursive directories"))
+	BANano.CallInlinePHPWait(bPHP.DIRECTORY_MAKE, bPHP.BuildDirectoryMake("./assets/anele/mashy/mbanga/is/enjoying/BANanoPHP"))
+'	BANano.CallInlinePHPWait(bPHP.FILE_WRITE, bPHP.BuildWriteFile("./assets/anele/mashy/mbanga/is/enjoying/BANanoPHP/mashnew.txt", "Did we write?"))
+'	
+	'get html from URL
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Get html from url"))
+	Dim html As String = BANano.CallInlinePHPWait(bPHP.FILE_GETHTML, bPHP.BuildFileGetHTML("http://www.google.com"))
+	'Log(html)
+	'
+	'get json from URL
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Get json from url"))
+	Dim json As String = BANano.CallInlinePHPWait(bPHP.FILE_GETJSON, bPHP.BuildFileGetJSON("http://jsonip.com"))
+	body.Append($"URL JSON: ${json}"$)
+	'
+
+	'delete directory with everything
+	'BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Delete directory"))
+	'Dim json As String = BANano.CallInlinePHPWait(bPHP.DIRECTORY_DELETE, bPHP.BuildDirectoryDelele("./assets/anele"))
+	'
+	'recursive listing
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Recursive listing"))
+	Dim rl As String = BANano.CallInlinePHPWait(bPHP.DIRECTORY_LISTRECURSIVE, bPHP.BuildDirectoryListRecursive("."))
+	Dim lst As List = BANano.FromJson(rl)
+	Log(lst)
+
+	'directory zip
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Directory zip"))
+	BANano.CallInlinePHPWait(bPHP.DIRECTORY_ZIP, bPHP.BuildDirectoryZip("./scripts", "./scripts.zip"))
+	
+	'file unzip
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "File Unzip"))
+	BANano.CallInlinePHPWait(bPHP.FILE_UNZIP, bPHP.BuildFileUnzip("./scripts.zip", "./assets"))
+	
+	'copy a directory
+	BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(logFile, "Directory Copy"))
+	BANano.CallInlinePHPWait(bPHP.DIRECTORY_COPY, bPHP.BuildDirectoryCopy("./scripts", "./scripts backup"))
+	'
+			
 End Sub

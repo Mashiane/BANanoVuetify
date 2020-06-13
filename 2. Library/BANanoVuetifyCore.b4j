@@ -1,19 +1,77 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=fonts.zip
-File10=vuetify.min.js
-File2=market.min.css
-File3=materialdesignicons.min.css
-File4=materialfont.min.css
-File5=roboto.min.css
-File6=upload.php
-File7=vue.min.js
-File8=vue-router.min.js
-File9=vuetify.min.css
+File1=market.min.css
+File10=MaterialIcons-Regular.eot
+File11=MaterialIcons-Regular.ttf
+File12=MaterialIcons-Regular.woff
+File13=MaterialIcons-Regular.woff2
+File14=roboto.min.css
+File15=roboto-v20-latin-500.eot
+File16=roboto-v20-latin-500.svg
+File17=roboto-v20-latin-500.ttf
+File18=roboto-v20-latin-500.woff
+File19=roboto-v20-latin-500.woff2
+File2=marketweb-webfont.woff
+File20=roboto-v20-latin-700.eot
+File21=roboto-v20-latin-700.svg
+File22=roboto-v20-latin-700.ttf
+File23=roboto-v20-latin-700.woff
+File24=roboto-v20-latin-700.woff2
+File25=roboto-v20-latin-italic.eot
+File26=roboto-v20-latin-italic.svg
+File27=roboto-v20-latin-italic.ttf
+File28=roboto-v20-latin-italic.woff
+File29=roboto-v20-latin-italic.woff2
+File3=marketweb-webfont.woff2
+File30=roboto-v20-latin-regular.eot
+File31=roboto-v20-latin-regular.svg
+File32=roboto-v20-latin-regular.ttf
+File33=roboto-v20-latin-regular.woff
+File34=roboto-v20-latin-regular.woff2
+File35=upload.php
+File36=vue.min.js
+File37=vue-router.min.js
+File38=vuetify.min.css
+File39=vuetify.min.js
+File4=materialdesignicons.min.css
+File5=materialdesignicons-webfont.eot
+File6=materialdesignicons-webfont.ttf
+File7=materialdesignicons-webfont.woff
+File8=materialdesignicons-webfont.woff2
+File9=materialfont.min.css
 FileGroup1=Default Group
 FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
 FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
 FileGroup3=Default Group
+FileGroup30=Default Group
+FileGroup31=Default Group
+FileGroup32=Default Group
+FileGroup33=Default Group
+FileGroup34=Default Group
+FileGroup35=Default Group
+FileGroup36=Default Group
+FileGroup37=Default Group
+FileGroup38=Default Group
+FileGroup39=Default Group
 FileGroup4=Default Group
 FileGroup5=Default Group
 FileGroup6=Default Group
@@ -26,30 +84,32 @@ Library2=jfx
 Library3=banano
 Module1=BANanoVM
 Module10=VMBreadCrumbsItem
-Module100=VMStepper
-Module101=VMStepperContent
-Module102=VMStepperHeader
-Module103=VMStepperItems
-Module104=VMStepperStep
-Module105=VMSubHeader
-Module106=VMTab
-Module107=VMTabItem
-Module108=VMTabs
-Module109=VMTabsItems
+Module100=VMSpeedDial
+Module101=VMStepper
+Module102=VMStepperContent
+Module103=VMStepperHeader
+Module104=VMStepperItems
+Module105=VMStepperStep
+Module106=VMSubHeader
+Module107=VMTab
+Module108=VMTabItem
+Module109=VMTabs
 Module11=VMButton
-Module110=VMTabsSlider
-Module111=VMTemplate
-Module112=VMTextField
-Module113=VMTimeline
-Module114=VMTimelineItem
-Module115=VMToolBar
-Module116=VMToolTip
-Module117=VMTreeView
-Module118=VMWindow
-Module119=VMWindowItem
+Module110=VMTabsItems
+Module111=VMTabsSlider
+Module112=VMTemplate
+Module113=VMTextField
+Module114=VMTimeline
+Module115=VMTimelineItem
+Module116=VMToolBar
+Module117=VMToolTip
+Module118=VMTransition
+Module119=VMTreeView
 Module12=VMButtonToggle
-Module120=VueElement
-Module121=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
+Module120=VMWindow
+Module121=VMWindowItem
+Module122=VueElement
+Module123=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\VueHTML
 Module13=VMCalendar
 Module14=VMCalendarDaily
 Module15=VMCalendarMonthly
@@ -84,74 +144,74 @@ Module40=VMExpansionPanel
 Module41=VMExpansionPanelContent
 Module42=VMExpansionPanelHeader
 Module43=VMExpansionPanels
-Module44=VMFadeTransition
-Module45=VMFileInput
-Module46=VMFooter
-Module47=VMForm
-Module48=VMHover
-Module49=VMIcon
+Module44=VMFabTransition
+Module45=VMFadeTransition
+Module46=VMFileInput
+Module47=VMFooter
+Module48=VMForm
+Module49=VMHover
 Module5=VMBadge
-Module50=VMImage
-Module51=VMInput
-Module52=VMItem
-Module53=VMItemGroup
-Module54=VMLabel
-Module55=VMLazy
-Module56=VMList
-Module57=VMListGroup
-Module58=VMListItem
-Module59=VMListItemAction
+Module50=VMIcon
+Module51=VMImage
+Module52=VMInput
+Module53=VMItem
+Module54=VMItemGroup
+Module55=VMLabel
+Module56=VMLazy
+Module57=VMList
+Module58=VMListGroup
+Module59=VMListItem
 Module6=VMBanner
-Module60=VMListItemActionText
-Module61=VMListItemAvatar
-Module62=VMListItemContent
-Module63=VMListItemGroup
-Module64=VMListItemIcon
-Module65=VMListItemSubTitle
-Module66=VMListItemTitle
-Module67=VMMenu
-Module68=VMNavigationDrawer
-Module69=VMOverlay
+Module60=VMListItemAction
+Module61=VMListItemActionText
+Module62=VMListItemAvatar
+Module63=VMListItemContent
+Module64=VMListItemGroup
+Module65=VMListItemIcon
+Module66=VMListItemSubTitle
+Module67=VMListItemTitle
+Module68=VMMenu
+Module69=VMNavigationDrawer
 Module7=VMBottomNavigation
-Module70=VMPagination
-Module71=VMParallax
-Module72=VMProgressCircular
-Module73=VMProgressLinear
-Module74=VMProperty
-Module75=VMRadio
-Module76=VMRadioGroup
-Module77=VMRating
-Module78=VMResponsive
-Module79=VMRow
+Module70=VMOverlay
+Module71=VMPagination
+Module72=VMParallax
+Module73=VMProgressCircular
+Module74=VMProgressLinear
+Module75=VMProperty
+Module76=VMRadio
+Module77=VMRadioGroup
+Module78=VMRating
+Module79=VMResponsive
 Module8=VMBottomSheet
-Module80=VMScaleTransition
-Module81=VMScrollXReverseTransition
-Module82=VMScrollXTransition
-Module83=VMScrollYReverseTransition
-Module84=VMScrollYTransition
-Module85=VMSelect
-Module86=VMSheet
-Module87=VMSimpleCheckBox
-Module88=VMSimpleTable
-Module89=VMSkeleton
+Module80=VMRow
+Module81=VMScaleTransition
+Module82=VMScrollXReverseTransition
+Module83=VMScrollXTransition
+Module84=VMScrollYReverseTransition
+Module85=VMScrollYTransition
+Module86=VMSelect
+Module87=VMSheet
+Module88=VMSimpleCheckBox
+Module89=VMSimpleTable
 Module9=VMBreadCrumbs
-Module90=VMSkeletonLoader
-Module91=VMSlideGroup
-Module92=VMSlider
-Module93=VMSlideXReverseTransition
-Module94=VMSlideXTransition
-Module95=VMSlideYReverseTransition
-Module96=VMSlideYTransition
-Module97=VMSnackBar
-Module98=VMSparkLine
-Module99=VMSpeedDial
-NumberOfFiles=10
+Module90=VMSkeleton
+Module91=VMSkeletonLoader
+Module92=VMSlideGroup
+Module93=VMSlider
+Module94=VMSlideXReverseTransition
+Module95=VMSlideXTransition
+Module96=VMSlideYReverseTransition
+Module97=VMSlideYTransition
+Module98=VMSnackBar
+Module99=VMSparkLine
+NumberOfFiles=39
 NumberOfLibraries=3
-NumberOfModules=121
+NumberOfModules=123
 Version=8.3
 @EndOfDesignText@
 
-#IgnoreWarnings: 12, 15
+#IgnoreWarnings: 16, 10, 14, 15	
 #Region Project Attributes 
 	#MergeLibraries: True
 	#LibraryAuthor: Anele Mashy Mbanga
@@ -161,7 +221,7 @@ Version=8.3
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.13"
+	Public Version As String = "4.14"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -185,18 +245,23 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'2. remove links that point to interweb above
 	'3. uncomment lines from below
 	
+	'BANano.Header.AddCSSFile("fontawesome.min.css")
 	BANano.Header.AddCSSFile("roboto.min.css")
 	BANano.Header.AddCSSFile("market.min.css")
 	BANano.Header.AddCSSFile("materialfont.min.css")
 	BANano.header.AddCSSFile("materialdesignicons.min.css")
 	BANano.Header.AddCSSFile("vuetify.min.css")
-	'BANano.Header.AddCSSFile("preload.min.css")
 	
 	BANano.Header.AddJavascriptFile("vue.min.js")
 	BANano.Header.AddJavascriptFile("vuetify.min.js")
 	BANano.Header.AddJavascriptFile("vue-router.min.js")
 	
-	BANano.BuildAsB4XLib(Version)
+	' start the build
+	#if release
+		BANano.BuildAsB4Xlib(Version)
+	#else
+		BANano.Build(File.DirApp)
+	#end if
 	ExitApplication
 End Sub
 

@@ -11,7 +11,9 @@ Sub Class_Globals
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
-	Private Module As Object    'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
+	Public Container As VMContainer
 End Sub
 
 'initialize the ItemGroup
@@ -19,14 +21,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	ItemGroup.Initialize(v, ID)
 	ItemGroup.SetTag("v-item-group")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
+	Container.Initialize(vue, $"${ID}cont"$, Module) 
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	If Container.HasContent Then ItemGroup.AddComponent(Container.ToString)
 	Return ItemGroup.ToString
 End Sub
 
@@ -57,11 +62,6 @@ Sub AddChild(child As VMElement) As VMItemGroup
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMItemGroup
-	ItemGroup.SetText(t)
-	Return Me
-End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
@@ -94,15 +94,52 @@ Sub AddChildren(children As List)
 End Sub
 
 'set active-class
-Sub SetActiveClass(varActiveClass As Object) As VMItemGroup
+Sub SetActiveClass(varActiveClass As String) As VMItemGroup
+	If varActiveClass = "" Then Return Me
+	If varActiveClass = "v-item--active" Then Return Me
+	If bStatic Then
+		SetAttrSingle("active-class", varActiveClass)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ActiveClass"$
 	vue.SetStateSingle(pp, varActiveClass)
 	ItemGroup.Bind(":active-class", pp)
 	Return Me
 End Sub
 
+'set max
+Sub SetMax(varMax As String) As VMItemGroup
+	If varMax = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max", varMax)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Max"$
+	vue.SetStateSingle(pp, varMax)
+	ItemGroup.Bind(":max", pp)
+	Return Me
+End Sub
+
+'set value
+Sub SetValue(varValue As String) As VMItemGroup
+	If varValue = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	ItemGroup.Bind(":value", pp)
+	Return Me
+End Sub
+
 'set dark
-Sub SetDark(varDark As Object) As VMItemGroup
+Sub SetDark(varDark As Boolean) As VMItemGroup
+	If varDark = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	ItemGroup.Bind(":dark", pp)
@@ -110,7 +147,12 @@ Sub SetDark(varDark As Object) As VMItemGroup
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMItemGroup
+Sub SetLight(varLight As Boolean) As VMItemGroup
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	ItemGroup.Bind(":light", pp)
@@ -118,32 +160,28 @@ Sub SetLight(varLight As Object) As VMItemGroup
 End Sub
 
 'set mandatory
-Sub SetMandatory(varMandatory As Object) As VMItemGroup
+Sub SetMandatory(varMandatory As Boolean) As VMItemGroup
+	If varMandatory = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("mandatory", varMandatory)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Mandatory"$
 	vue.SetStateSingle(pp, varMandatory)
 	ItemGroup.Bind(":mandatory", pp)
 	Return Me
 End Sub
 
-'set max
-Sub SetMax(varMax As Object) As VMItemGroup
-	Dim pp As String = $"${ID}Max"$
-	vue.SetStateSingle(pp, varMax)
-	ItemGroup.Bind(":max", pp)
-	Return Me
-End Sub
-
 'set multiple
-Sub SetMultiple(varMultiple As Object) As VMItemGroup
+Sub SetMultiple(varMultiple As Boolean) As VMItemGroup
+	If varMultiple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("multiple", varMultiple)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Multiple"$
 	vue.SetStateSingle(pp, varMultiple)
 	ItemGroup.Bind(":multiple", pp)
-	Return Me
-End Sub
-
-'set value
-Sub SetValue(varValue As Object) As VMItemGroup
-	ItemGroup.SetValue(varValue, False)
 	Return Me
 End Sub
 
@@ -199,9 +237,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMItemGroup
+Sub SetColorIntensity(color As String, intensity As String) As VMItemGroup
+	If color = "" Then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	ItemGroup.Bind(":color", pp)
 	Return Me
@@ -228,18 +271,22 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMItemGroup
 	ItemGroup.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMItemGroup
-	ItemGroup.SetTabIndex(ti)
+'set static
+Sub SetStatic(b As Boolean) As VMItemGroup
+	ItemGroup.SetStatic(b)
+	Container.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
+
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMItemGroup
+Sub SetName(varName As String, bbind As Boolean) As VMItemGroup
 	ItemGroup.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -341,27 +388,15 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMItemGroup
-ItemGroup.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	ItemGroup.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
+
+
 Sub SetVisible(b As Boolean) As VMItemGroup
-ItemGroup.SetVisible(b)
-Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMItemGroup
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
+	ItemGroup.SetVisible(b)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMItemGroup
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
-End Sub

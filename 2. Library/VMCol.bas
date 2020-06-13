@@ -75,11 +75,6 @@ Sub AddChild(child As VMElement) As VMCol
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMCol
-	Col.SetText(t)
-	Return Me
-End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
@@ -269,8 +264,9 @@ Sub SetDesignMode(b As Boolean) As VMCol
 	Return Me
 End Sub
 
-Sub SetTabIndex(ti As String) As VMCol
-	Col.SetTabIndex(ti)
+
+Sub AddComponent(comp As String) As VMCol
+	Col.SetText(comp)
 	Return Me
 End Sub
 

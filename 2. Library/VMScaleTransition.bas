@@ -6,156 +6,164 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-Public ScaleTransition As VMElement
-Public ID As String
-Private vue As BANanoVue
-Private BANano As BANano  'ignore
-	Private DesignMode As Boolean    'ignore
-	Private Module As Object    'ignore
+	Public ScaleTransition As VMElement
+	Public ID As String
+	Private vue As BANanoVue
+	Private BANano As BANano  'ignore
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the ScaleTransition
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMScaleTransition
-ID = sid.tolowercase
+	ID = sid.tolowercase
 	ScaleTransition.Initialize(v, ID)
 	ScaleTransition.SetTag("v-scale-transition")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-Return ScaleTransition.ToString
+	Return ScaleTransition.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMScaleTransition
-ScaleTransition.SetVModel(k)
-Return Me
+	ScaleTransition.SetVModel(k)
+	Return Me
 End Sub
 
 Sub SetVIf(vif As String) As VMScaleTransition
-ScaleTransition.SetVIf(vif)
-Return Me
+	ScaleTransition.SetVIf(vif)
+	Return Me
 End Sub
 
 Sub SetVShow(vif As String) As VMScaleTransition
-ScaleTransition.SetVShow(vif)
-Return Me
+	ScaleTransition.SetVShow(vif)
+	Return Me
 End Sub
 
 'add to app template
 Sub Render
-vue.SetTemplate(ToString)
+	vue.SetTemplate(ToString)
 End Sub
 
 'add a child
 Sub AddChild(child As VMElement) As VMScaleTransition
-Dim childHTML As String = child.ToString
-ScaleTransition.SetText(childHTML)
-Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMScaleTransition
-ScaleTransition.SetText(t)
-Return Me
+	Dim childHTML As String = child.ToString
+	ScaleTransition.SetText(childHTML)
+	Return Me
 End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
-p.SetText(ToString)
+	p.SetText(ToString)
 End Sub
 
 'add a class
 Sub AddClass(c As String) As VMScaleTransition
-ScaleTransition.AddClass(c)
-Return Me
+	ScaleTransition.AddClass(c)
+	Return Me
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMScaleTransition
-ScaleTransition.SetAttr(attr)
-Return Me
+Sub SetAttr(attr As Map) As VMScaleTransition
+	ScaleTransition.SetAttr(attr)
+	Return Me
 End Sub
 
 'set style
 Sub SetStyle(sm As Map) As VMScaleTransition
-ScaleTransition.SetStyle(sm)
-Return Me
+	ScaleTransition.SetStyle(sm)
+	Return Me
 End Sub
 
 'add children
 Sub AddChildren(children As List)
-For Each childx As VMElement In children
-AddChild(childx)
-Next
-End Sub
-
-'set group
-Sub SetGroup(varGroup As Object) As VMScaleTransition
-Dim pp As String = $"${ID}Group"$
-vue.SetStateSingle(pp, varGroup)
-ScaleTransition.Bind(":group", pp)
-Return Me
-End Sub
-
-'set hide-on-leave
-Sub SetHideOnLeave(varHideOnLeave As Object) As VMScaleTransition
-Dim pp As String = $"${ID}HideOnLeave"$
-vue.SetStateSingle(pp, varHideOnLeave)
-ScaleTransition.Bind(":hide-on-leave", pp)
-Return Me
-End Sub
-
-'set leave-absolute
-Sub SetLeaveAbsolute(varLeaveAbsolute As Object) As VMScaleTransition
-Dim pp As String = $"${ID}LeaveAbsolute"$
-vue.SetStateSingle(pp, varLeaveAbsolute)
-ScaleTransition.Bind(":leave-absolute", pp)
-Return Me
+	For Each childx As VMElement In children
+		AddChild(childx)
+	Next
 End Sub
 
 'set mode
-Sub SetMode(varMode As Object) As VMScaleTransition
-Dim pp As String = $"${ID}Mode"$
-vue.SetStateSingle(pp, varMode)
-ScaleTransition.Bind(":mode", pp)
-Return Me
+Sub SetMode(varMode As String) As VMScaleTransition
+	If varMode = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("mode", varMode)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Mode"$
+	vue.SetStateSingle(pp, varMode)
+	ScaleTransition.Bind(":mode", pp)
+	Return Me
 End Sub
 
-'set origin
-Sub SetOrigin(varOrigin As Object) As VMScaleTransition
-Dim pp As String = $"${ID}Origin"$
-vue.SetStateSingle(pp, varOrigin)
-ScaleTransition.Bind(":origin", pp)
-Return Me
+'set group
+Sub SetGroup(varGroup As Boolean) As VMScaleTransition
+	If varGroup = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("group", varGroup)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Group"$
+	vue.SetStateSingle(pp, varGroup)
+	ScaleTransition.Bind(":group", pp)
+	Return Me
+End Sub
+
+'set hide-on-leave
+Sub SetHideOnLeave(varHideOnLeave As Boolean) As VMScaleTransition
+	If varHideOnLeave = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-on-leave", varHideOnLeave)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}HideOnLeave"$
+	vue.SetStateSingle(pp, varHideOnLeave)
+	ScaleTransition.Bind(":hide-on-leave", pp)
+	Return Me
+End Sub
+
+'set leave-absolute
+Sub SetLeaveAbsolute(varLeaveAbsolute As Boolean) As VMScaleTransition
+	If varLeaveAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("leave-absolute", varLeaveAbsolute)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LeaveAbsolute"$
+	vue.SetStateSingle(pp, varLeaveAbsolute)
+	ScaleTransition.Bind(":leave-absolute", pp)
+	Return Me
 End Sub
 
 
 'hide the component
 Sub Hide As VMScaleTransition
 	ScaleTransition.SetVisible(False)
-    Return Me
+	Return Me
 End Sub
 
 'show the component
 Sub Show As VMScaleTransition
 	ScaleTransition.SetVisible(True)
-    Return Me
+	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMScaleTransition
 	ScaleTransition.Enable(True)
-    Return Me
+	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMScaleTransition
-	ScaleTransition.Disable(true)
-    Return Me
+	ScaleTransition.Disable(True)
+	Return Me
 End Sub
 
 
@@ -180,16 +188,6 @@ Sub UseTheme(themeName As String) As VMScaleTransition
 		Dim sclass As String = themes.Get(themeName)
 		AddClass(sclass)
 	End If
-	Return Me
-End Sub
-
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMScaleTransition
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	ScaleTransition.Bind(":color", pp)
 	Return Me
 End Sub
 
@@ -218,14 +216,15 @@ Sub SetDesignMode(b As Boolean) As VMScaleTransition
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMScaleTransition
-	ScaleTransition.SetTabIndex(ti)
+'set static
+Sub SetStatic(b As Boolean) As VMScaleTransition
+	ScaleTransition.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMScaleTransition
+Sub SetName(varName As String, bbind As Boolean) As VMScaleTransition
 	ScaleTransition.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -329,28 +328,29 @@ End Sub
 
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMScaleTransition
-ScaleTransition.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	ScaleTransition.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 
 
 Sub SetVisible(b As Boolean) As VMScaleTransition
-ScaleTransition.SetVisible(b)
-Return Me
+	ScaleTransition.SetVisible(b)
+	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMScaleTransition
-	Dim sColor As String = $"${varColor}--text"$
+'set color intensity - built in
+Sub SetTextColor(textcolor As String) As VMScaleTransition
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
 	AddClass(sColor)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMScaleTransition
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMScaleTransition
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me

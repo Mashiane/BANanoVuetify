@@ -59,7 +59,6 @@ End Sub
 
 Sub BeforeMount
 	Log(vm.DateTimeNow & " App BeforeMount")
-	vm.PagePause
 End Sub
 
 

@@ -1,4 +1,149 @@
 <?php header("Access-Control-Allow-Origin: *");$rest_json = file_get_contents("php://input");$_POST = json_decode($rest_json, true);$request='';if(isset($_POST['request'])){$request = $_POST['request'];$params = $_POST['params'];}if (!function_exists($request)) die("invalid request: '" . $request . "'"); 
+ 
+/** 
+* FlxZipArchive, Extends ZipArchiv. 
+* Add Dirs with Files and Subdirs. 
+* 
+* <code> 
+*  $archive = new FlxZipArchive; 
+*  // ..... 
+*  $archive->addDir( 'test/blub', 'blub' ); 
+* </code> 
+*/ 
+class FlxZipArchive extends ZipArchive { 
+    /** 
+     * Add a Dir with Files and Subdirs to the archive 
+     * 
+     * @param string $location Real Location 
+     * @param string $name Name in Archive 
+     * @author Nicolas Heimann 
+     * @access private 
+     **/ 
+ 
+    public function addDir($location, $name) { 
+        $this->addEmptyDir($name); 
+ 
+        $this->addDirDo($location, $name); 
+     } // EO addDir; 
+ 
+    /** 
+     * Add Files & Dirs to archive. 
+     * 
+     * @param string $location Real Location 
+     * @param string $name Name in Archive 
+     * @author Nicolas Heimann 
+     * @access private 
+     **/ 
+ 
+    private function addDirDo($location, $name) { 
+        $name .= '/'; 
+        $location .= '/'; 
+ 
+        // Read all Files in Dir 
+        $dir = opendir ($location); 
+        while ($file = readdir($dir)) 
+        { 
+            if ($file == '.' || $file == '..') continue; 
+ 
+            // Rekursiv, If dir: FlxZipArchive::addDir(), else ::File(); 
+            $do = (filetype( $location . $file) == 'dir') ? 'addDir' : 'addFile'; 
+            $this->$do($location . $file, $name . $file); 
+        } 
+    } // EO addDirDo(); 
+} 
+ 
+function DirectoryCopy($src, $dst) {   
+    // open the source directory  
+    $dir = opendir($src);   
+    // Make the destination directory if not exist  
+    @mkdir($dst);   
+    // Loop through the files in source directory  
+    foreach (scandir($src) as $file) {   
+        if (( $file != '.' ) && ( $file != '..' )) {   
+            if ( is_dir($src . '/' . $file) )   
+            {   
+                // Recursively calling custom copy function  
+                // for sub directory   
+                DirectoryCopy($src . '/' . $file, $dst . '/' . $file);   
+            }   
+            else {   
+                copy($src . '/' . $file, $dst . '/' . $file);   
+            }   
+        }   
+    }   
+    closedir($dir);  
+}    
+ 
+function FileUnzip($zipfile, $extractTo) { 
+	// Create new zip class  
+	$zip = new ZipArchive;  
+	$zip->open($zipfile);  
+	// Extracts to current directory  
+	$zip->extractTo($extractTo);  
+	$zip->close();   
+} 
+ 
+ 
+function DirectoryListRecursive($path) { 
+	$iterator = new RecursiveDirectoryIterator($path); 
+    // skip dot files while iterating  
+    $iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS); 
+	$rii = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST); 
+ 
+    $files = array();  
+    foreach ($rii as $file) { 
+	   	$fname = $file->getPathname(); 
+		$fname = str_replace('\\', '/', $fname); 
+		$files[] = $fname; 
+	} 
+		 
+    $output = json_encode($files); 
+    echo($output); 
+} 
+ 
+function DirectoryDelete($dir) { 
+	$iter = new RecursiveDirectoryIterator($dir); 
+	foreach (new RecursiveIteratorIterator($iter, RecursiveIteratorIterator::CHILD_FIRST) as $f) { 
+		if ($f->isDir()) { 
+			rmdir($f->getPathname()); 
+		} else { 
+			unlink($f->getPathname()); 
+		} 
+	} 
+	rmdir($dir); 
+} 
+ 
+ 
+function DirectoryZip($path, $zipname) { 
+	$za = new FlxZipArchive; 
+	$res = $za->open($zipname, ZipArchive::CREATE); 
+	if($res === TRUE) { 
+    	$za->addDir($path, basename($path)); 
+    	$za->close(); 
+	} 
+} 
+ 
+function FileGetJSON($url) { 
+	$f = file_get_contents($url); 
+	echo $f; 
+} 
+ 
+ 
+function FileGetHTML($url) { 
+	$f = file_get_contents($url); 
+	echo $f; 
+} 
+ 
+function DirectoryMake($dirpath) { 
+	mkdir($dirpath, 0700, true); 
+} 
+ 
+function FileDelete($filex) { 
+	if (file_exists($filex)) { 
+		unlink($filex); 
+	} 
+} 
+ 
 function FileExists($path) { 
 	if (file_exists($path)) { 
     	echo "yes"; 
@@ -12,9 +157,30 @@ function RollingCopyright($message,$year)
   echo("$message &copy;$year-" . date("Y")); 
 } 
  
+function WriteFile($fileName, $fileContents) { 
+	file_put_contents($fileName, $fileContents); 
+} 
+ 
+function LogFile($fileName, $fileContents) { 
+	$msg = date("Y-m-d H:i:s ") . $fileContents . "\n"; 
+	file_put_contents($fileName, $msg, FILE_APPEND); 
+} 
+ 
+function FileAppend($fileName, $fileContents) { 
+	file_put_contents($fileName, $fileContents, FILE_APPEND); 
+} 
+ 
+function FileCopy($source, $target) { 
+	copy($source, $target); 
+} 
+ 
+function FileRename($source, $target) { 
+	rename($source, $target); 
+} 
  
 function GetFile($fileName) { 
-	echo file_get_contents($fileName); 
+	$f = file_get_contents($fileName); 
+	echo $f; 
 } 
  
 function SendEmail($from,$to,$cc,$subject,$msg) {  

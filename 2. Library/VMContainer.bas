@@ -1654,7 +1654,7 @@ private Sub BuildRow(row As GridRow) As String
 				'
 				If ShowMatrix Then
 					Dim matrix As String = $"R${LastRow}.C${LastColumn}"$
-					tColumn.SetText(matrix)
+					tColumn.AddComponent(matrix)
 				End If
 				'detect if we have styles for the rc
 				If rowStyles.ContainsKey(cellKey) Then
@@ -1686,7 +1686,7 @@ private Sub BuildRow(row As GridRow) As String
 					Dim lst As List = Components.Get(cellKey)
 					tColumn.AddContentList(lst)
 				End If
-				tRow.SetText(tColumn.ToString)
+				tRow.AddComponent(tColumn.ToString)
 			Next
 		Next
 		Dim strRow As String = tRow.tostring

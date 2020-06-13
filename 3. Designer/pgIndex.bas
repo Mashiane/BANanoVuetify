@@ -7,6 +7,15 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private bisGroup As Boolean
+	Private bisHideonleave As Boolean
+	Private bisLeaveabsolute As Boolean
+	Private sMode As String
+	Private sTextcolor As String
+	Private sTextcolorintensity As String
+	Private sType As String
+	Private bisVisible As Boolean
+	Private pbtransition As VMProperty
 	Private sBorder As String
 	Private sCloselabel As String
 	Private sColor As String
@@ -440,7 +449,7 @@ Sub Process_Globals
 	Private sfalsevalue As String
 	Private bisitalic As Boolean
 	Private bfitwidth As Boolean
-	Private bistext As Boolean
+	Private bisText As Boolean
 	Private bisdepressed As Boolean
 	Private sswitchloading As String
 	Private stooltip As String
@@ -513,7 +522,7 @@ Sub Process_Globals
 	Private bisfadeimageonscroll As Boolean
 	Private bisfloating As Boolean
 	Private bisinvertedscroll As Boolean
-	Private bisprominent As Boolean
+	Private bisProminent As Boolean
 	Private bisscrolloffscreen As Boolean
 	Private bisshort As Boolean
 	Private bisshrinkonscroll As Boolean
@@ -845,8 +854,13 @@ Sub BuildFooter
 	vm.Footer.SetPadless(True)
 	vm.Footer.SetDark(True)
 	vm.Footer.SetFixed(True)
+	vm.Footer.SetHeight("60px")
 	'
+	vm.Footer.AddSpacer
+	vm.Footer.AddSpan("Conceptualized and created by Anele 'Mashy' Mbanga - mbanga[dot]anele[at]gmail.com")
+	vm.footer.AddSpacer
 	vm.Footer.AddCopyRight(vm.YearNow)
+	vm.footer.AddSpacer
 End Sub
 
 Sub btnToolbox_click(e As BANanoEvent)
@@ -896,11 +910,13 @@ Sub BuildNavBar
 	vm.NavBar.AddIcon("btnSavePrj", "mdi-content-save", "Save stage to project","")
 	'
 	Dim gridmenu As VMMenu = vm.CreateMenu("gridMenu", Me).SetButton("", "Grid")
+	gridmenu.SetTransition(vm.TRANSITION_FAB)
 	gridmenu.AddItem("btnClearGrid", "", "delete", "Clear", "", "")
 	gridmenu.AddItem("btnRemoveLastGrid", "", "delete", "Remove Last", "", "")
 	vm.NavBar.AddMenu(gridmenu)
 	'
 	Dim compmenu As VMMenu = vm.CreateMenu("compMenu", Me).SetButton("", "Components")
+	compmenu.SetTransition(vm.TRANSITION_FAB)
 	compmenu.AddItem("btnclearcomp", "", "delete", "Clear", "", "")
 	compmenu.AddItem("btnremovelastcomp", "", "delete", "Remove Last", "", "")
 	compmenu.AddItem("btndownloadcomp", "", "mdi-cloud-download-outline", "Download", "", "")
@@ -1371,9 +1387,11 @@ Sub LoadContainers
 		Case "hover"
 			itemName = $"hvr${xvmodel}.Container"$
 		Case "sheet"
-			itemName = $"sht${xvmodel}$
-		case "alert"
-			itemname = $"alt${xvmodel}.Container"$	
+			itemName = $"sht${xvmodel}"$
+		Case "alert"
+			itemName = $"alt${xvmodel}.Container"$	
+		Case "transition"
+			itemName = $"trn${xvmodel}"$
 		Case "form"
 		Case "timeline"
 			itemName = xvmodel
@@ -1514,6 +1532,7 @@ Sub CreatePropertyBagsDrawer
 	PropertyBag_Sheet
 	PropertyBag_Pagination
 	PropertyBag_Alert
+	PropertyBag_Transition
 	vm.AddDrawer(drwbags)
 End Sub
 #End Region
@@ -2779,7 +2798,10 @@ Sub CreateUX
 				Design_Sheet
 			Case "alert"
 				Read_Alert
-				Design_Alert		
+				Design_Alert	
+			Case "transition"
+				Read_Transition
+				Design_Transition	
 		End Select
 	Next
 	'
@@ -3725,7 +3747,7 @@ Sub Design_Badge
 	CodeLine2(sb, sColor, sColorintensity, "s", "bdg", sname, "SetColorintensity")
 	Select Case sbadgetype
 	Case "iscontent"
-		CodeLine(sb, sContent, "s", "bdg", sname, "SetContent")
+		CodeLine(sb, scontent, "s", "bdg", sname, "SetContent")
 	Case "isicon"
 		CodeLine(sb, siconname, "s", "bdg", sname, "SetIcon")
 	End Select
@@ -3740,10 +3762,10 @@ Sub Design_Badge
 	CodeLine(sb, bisLight, "b", "bdg", sname, "SetLight")
 	CodeLine(sb, sOffsetx, "s", "bdg", sname, "SetOffsetx")
 	CodeLine(sb, sOffsety, "s", "bdg", sname, "SetOffsety")
-	CodeLine(sb, sorigin, "s", "bdg", sname, "SetOrigin")
+	CodeLine(sb, sOrigin, "s", "bdg", sname, "SetOrigin")
 	CodeLine(sb, bisOverlap, "b", "bdg", sname, "SetOverlap")
-	CodeLine(sb, bistile, "b", "bdg", sname, "SetTile")
-	CodeLine(sb, stransition, "s", "bdg", sname, "SetTransition")
+	CodeLine(sb, bisTile, "b", "bdg", sname, "SetTile")
+	CodeLine(sb, sTransition, "s", "bdg", sname, "SetTransition")
 	CodeLine(sb, bisVisible, "b", "bdg", sname, "SetVisible")
 	'
 	Dim pres As String = "bdg"
@@ -4225,7 +4247,7 @@ Sub Design_Label
 	CodeLine(sb, bistextcapitalize, "b", "lbl", sname, "Settextcapitalize")
 	CodeLine(sb, bistextlowercase, "b", "lbl", sname, "Settextlowercase")
 	CodeLine(sb, bistextuppercase, "b", "lbl", sname, "Settextuppercase")
-	CodeLine(sb, bistitle, "b", "lbl", sname, "Settitle")
+	CodeLine(sb, bisTitle, "b", "lbl", sname, "Settitle")
 	CodeLine(sb, bisVisible, "b", "lbl", sname, "Setvisible")
 	'
 	Dim pres As String = "lbl"
@@ -5224,30 +5246,30 @@ Sub Design_SpeedDial
 	Dim speeddial As VMSpeedDial = ui.CreateSpeedDial(sname, Me)
 	speeddial.SetStatic(True)
 	speeddial.SetAbsolute(bisAbsolute)
-	speeddial.SetBottom(bisbottom)
+	speeddial.SetBottom(bisBottom)
 	speeddial.SetDark(bisDark)
 	speeddial.SetIcon(smastericon)
 	speeddial.SetDirection(sDirection)
 	speeddial.SetFinalicon(sFinalicon)
-	speeddial.SetFixed(bisfixed)
+	speeddial.SetFixed(bisFixed)
 	speeddial.SetHref(sHref)
 	speeddial.SetInitialicon(sInitialicon)
 	speeddial.SetLarge(bisLarge)
 	speeddial.SetLeft(bisLeft)
 	speeddial.SetMode(sMode)
-	speeddial.SetOpenonhover(bisopenonhover)
-	speeddial.SetOrigin(sorigin)
+	speeddial.SetOpenonhover(bisOpenonhover)
+	speeddial.SetOrigin(sOrigin)
 	speeddial.SetRight(bisRight)
 	speeddial.SetSmall(bisSmall)
-	speeddial.SetTarget(starget)
+	speeddial.SetTarget(sTarget)
 	speeddial.SetTo(sTo)
-	speeddial.SetTop(bistop)
-	speeddial.SetTransition(stransition)
+	speeddial.SetTop(bisTop)
+	speeddial.SetTransition(sTransition)
 	speeddial.SetVisible(bisVisible)
 	speeddial.SetXlarge(bisXlarge)
 	speeddial.SetXsmall(bisXsmall)
 	speeddial.SetColorIntensity(sColor, sintensity)
-	speeddial.SetTextColorIntensity(stextcolor, stextintensity)
+	speeddial.SetTextColorIntensity(sTextcolor, stextintensity)
 	If smargintop <> "" Then speeddial.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then speeddial.AddClass("mb-" & smarginbottom)
 	If smarginleft <> "" Then speeddial.AddClass("ml-" & smarginleft)
@@ -6465,7 +6487,7 @@ Sub Design_Button
 	If bisDisabled Then sb.append($"btn${sname}.SetDisabled(${bisDisabled})"$).append(CRLF)
 	If bisOutlined Then sb.append($"btn${sname}.Setoutlined(${bisOutlined})"$).append(CRLF)
 	If bisRounded Then sb.append($"btn${sname}.SetRounded(${bisRounded})"$).append(CRLF)
-	If bistext Then sb.append($"btn${sname}.SetTransparent(${bistext})"$).append(CRLF)
+	If bisText Then sb.append($"btn${sname}.SetTransparent(${bisText})"$).append(CRLF)
 	If sfloat <> "" Then 
 		AddCode(sb, $"btn${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -6772,7 +6794,7 @@ Sub Design_TextField
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${stitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
+	sb.append($"Dim txt${sname} As VMTextField = vm.NewTextField(Me, ${bStatic}, "txt${sname}", "${svmodel}", "${sTitle}", "${sPlaceholder}", ${bisRequired}, "${siconname}", ${imaxlen}, "${shelpertext}", "${serrortext}", ${sTabindex})"$).append(CRLF)
 	
 	'
 	CodeLine(sb, svalue, "s", "txt", sname, "SetValue")
@@ -7106,6 +7128,7 @@ Sub DesignLayout
 	vm.container.AddComponent(1, 1, lblProject.tostring)
 	
 	tabs = vm.CreateTabs("tabsd", Me).SetGrow(True).SetIconsAndText(True).SetCentered(True).SetVModel("devspace")
+	tabs.SetTransition(vm.TRANSITION_SLIDE_X)
 	tabs.Show
 	tabs.OnToolBar = True
 	
@@ -7220,6 +7243,7 @@ Sub CreateDBAdmin
 	contdbadmin.SetFluid(True)
 	contdbadmin.SetVisible(False)
 	contdbadmin.SetElevation("1")
+	contdbadmin.SetTransition(vm.TRANSITION_SLIDE_X)
 	'
 	tbltoolbar2 = vm.CreateToolBar("tbltoolbar2", Me)
 	tbltoolbar2.SetToolBar(True)
@@ -7358,7 +7382,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			ifld.put("colforeigntable", "")
 			ifld.put("colforeignkey", "")
 			ifld.put("colforeignvalue", "")
-			ifld.put("colislookup", "Yes")
+			ifld.put("colislookup", "No")
 			ifld.put("colrow", "1")
 			ifld.put("colcolumn", "1")
 			ifld.put("coloffsetsmall", "0")
@@ -7974,7 +7998,7 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 	End Select
 	AddCode(sbl, $"${rsName}.FromJSON"$)
-	AddComment(sbl, $"execute code to refresh listing for ${stitle}"$)
+	AddComment(sbl, $"execute code to refresh listing for ${sTitle}"$)
 	AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
@@ -8245,7 +8269,7 @@ Sub Design_DBSourceCode
 		
 		sbl.append($"Sub CreateDialog_${dlg}"$).append(CRLF)
 		sbl.append($"${diagName} = vm.CreateDialog("${diagName}", Me)"$).Append(CRLF)
-		CodeLine(sbl, stitle, "s", "dlg", tbName, "SetTitle")
+		CodeLine(sbl, sTitle, "s", "dlg", tbName, "SetTitle")
 		CodeLine2(sbl, $"btnOk${dlg}"$, "Save", "s", "dlg", tbName, "SetOk")
 		CodeLine2(sbl, $"btnCancel${dlg}"$, "Cancel", "s", "dlg", tbName, "SetCancel")
 		CodeLine(sbl, "700px", "s", "dlg", tbName, "Setwidth")
@@ -8805,6 +8829,12 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbalert.SetDefaults
 			pbalert.hideitem("id")
 			pbalert.Hideitem("controltype")
+		
+		Case "transition"
+			ShowBag("pbtransition")
+			pbtransition.SetDefaults
+			pbtransition.hideitem("id")
+			pbtransition.Hideitem("controltype")
 						
 		Case "footer"
 			ShowBag("pbfooter")
@@ -9003,7 +9033,7 @@ Sub ToolboxLayoutPanel As VMExpansionPanel
 	Dim grd As VMExpansionPanel = vm.CreateExpansionPanel("laynav", "epx", Me)
 	grd.Header.SetText("Layouts")
 	grd.Container.SetTag("div")
-	grd.Container.AddRows(5).AddColumns4X3
+	grd.Container.AddRows(6).AddColumns4X3
 	'
 	Dim cont As VMImage = ToolboxImage("container", "./assets/container.png", "Container")
 	grd.Container.AddComponent(1,1,cont.tostring)
@@ -9064,6 +9094,9 @@ Sub ToolboxLayoutPanel As VMExpansionPanel
 	'
 	Dim alert As VMImage = ToolboxImage("alert", "./assets/alert.png", "Alert")
 	grd.Container.AddComponent(5,4,alert.tostring)
+	'
+	Dim transition As VMImage = ToolboxImage("transition", "./assets/transition.png", "Transition")
+	grd.Container.AddComponent(6,1,transition.tostring)
 	
 	'Dim breadcrumbsitem As VMImage = ToolboxImage("breadcrumbsitem", "./assets/breadcrumbsitem.png", "Bread Crumbs Item")
 	'grd.Container.AddComponent(5,1,breadcrumbsitem.tostring)
@@ -9740,6 +9773,10 @@ Sub ItemDrop(e As BANanoEvent)
 							BANano.SetLocalStorage("selectedpanel", 4)
 							attr.put("type", "success")
 							attr.put("border", "left")
+						
+						Case "transition"
+							BANano.SetLocalStorage("selectedpanel", 4)
+							attr.put("type", "v-scroll-x-transition")
 							
 						Case "hover"
 							BANano.SetLocalStorage("selectedpanel", 4)
@@ -10266,6 +10303,12 @@ End Sub
 
 'from property bag when adding columns to a table
 Sub colforeigntable_change(value As String)
+	'update the key and display fields
+	vm.SetData("colforeignkey", "")
+	vm.SetData("colforeignvalue", "")
+	vm.SetData("itemscolforeignkey", "")
+	vm.SetData("itemscolforeignvalue", "")
+	vm.SetData("itemscolislookup", "No")
 	If value = "" Then Return
 	'update tables, we will use this for lookups
 	Dim rsTables As BANanoAlaSQLE
@@ -10855,6 +10898,8 @@ Sub SavePropertyBag
 			mattr = pbsheet.properties
 		Case "alert"
 			mattr = pbalert.properties
+		Case "transition"
+			mattr = pbtransition.properties
 		
 		'Case "breadcrumbsitem"
 		'	mattr = pbbreadcrumbsitem.properties
@@ -12433,14 +12478,14 @@ Sub Read_List
 	bisDark = YesNoToBoolean(mattr.getdefault("isdark", "No"))
 	bisDense = YesNoToBoolean(mattr.getdefault("isdense", "No"))
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
-	selevation = mattr.getdefault("elevation", "")
+	sElevation = mattr.getdefault("elevation", "")
 	bisExpand = YesNoToBoolean(mattr.getdefault("isexpand", "No"))
-	bisflat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
-	sheight = mattr.getdefault("height", "")
+	bisFlat = YesNoToBoolean(mattr.getdefault("isflat", "No"))
+	sHeight = mattr.getdefault("height", "")
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-	smaxheight = mattr.getdefault("maxheight", "")
-	smaxwidth = mattr.getdefault("maxwidth", "")
-	sminheight = mattr.getdefault("minheight", "")
+	sMaxheight = mattr.getdefault("maxheight", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinheight = mattr.getdefault("minheight", "")
 	sminwidth = mattr.getdefault("minwidth", "")
 	bisNav = YesNoToBoolean(mattr.getdefault("isnav", "No"))
 	bisRounded = YesNoToBoolean(mattr.getdefault("isrounded", "No"))
@@ -17093,3 +17138,108 @@ Sub Design_Alert
 	
 End Sub
 
+#Region Transition
+Sub PropertyBag_Transition
+	vm.setdata("pbtransition", False)
+	lstBags.add("pbtransition")
+	pbtransition = vm.CreateProperty("ppbtransition", Me)
+	pbtransition.SetChangeEvent("SavePropertyBag")
+	pbtransition.SetVShow("pbtransition")
+	pbtransition.AddHeading("d","Details")
+	pbtransition.AddText("d","id","ID","","")
+	pbtransition.AddText("d", "controltype", "Type", "","transition")
+	pbtransition.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
+	pbtransition.AddText("d","vmodel","ID","","")
+	pbtransition.AddSelect("d","type","Type",vm.transitions)
+	pbtransition.AddText("d","mode","Mode","","")	
+	pbtransition.AddHeading("e","Settings")
+	pbtransition.AddSwitches("e", CreateMap("isgroup": "Group", "ishideonleave": "HideOnLeave"))
+	pbtransition.AddSwitches("e", CreateMap("isleaveabsolute": "LeaveAbsolute", "isvisible": "Visible"))
+	'
+	pbtransition.AddHeading("m","Margins & Padding")
+	pbtransition.AddMarginsPaddings("m")
+	'
+	pbtransition.AddHeading("f","Matrix")
+	pbtransition.AddMatrix("f")
+	'
+	drwbags.Container.AddHTML(pbtransition.tostring)
+End Sub
+#End Region
+
+Sub Read_Transition
+	bisGroup = YesNoToBoolean(mattr.getdefault("isgroup", "No"))
+	bisHideonleave = YesNoToBoolean(mattr.getdefault("ishideonleave", "No"))
+	bisLeaveabsolute = YesNoToBoolean(mattr.getdefault("isleaveabsolute", "No"))
+	sMode = mattr.getdefault("mode", "")
+	sType = mattr.getdefault("type", "")
+End Sub
+
+Sub Design_Transition
+	PlaceHolder("Transition sits here...")
+'	
+'	Dim Transition As VMTransition
+'	Transition.Initialize(vue, $"trn${sname}"$, Me)
+'	Transition.SetStatic(True)
+'	Transition.SetDesignMode(True)
+'	Transition.SetGroup(bisGroup)
+'	Transition.SetHideonleave(bisHideonleave)
+'	Transition.SetLeaveabsolute(bisLeaveabsolute)
+'	Transition.SetMode(sMode)
+'	Transition.SetType(sType)
+'	Transition.SetElevation(2)
+'	
+'	If smargintop <> "" Then Transition.AddClass("mt-" & smargintop)
+'	If smarginbottom <> "" Then Transition.AddClass("mb-" & smarginbottom)
+'	If smarginleft <> "" Then Transition.AddClass("ml-" & smarginleft)
+'	If smarginright <> "" Then Transition.AddClass("mr-" & smarginright)
+'	If smargins <> "" Then Transition.AddClass("ms-" & smargins)
+'	If smargine <> "" Then Transition.AddClass("me-" & smargine)
+'	If smarginx <> "" Then Transition.AddClass("mx-" & smarginx)
+'	If smarginy <> "" Then Transition.AddClass("my-" & smarginy)
+'	If smargina <> "" Then Transition.AddClass("ma-" & smargina)
+'	If spaddingtop <> "" Then Transition.AddClass("pt-" & spaddingtop)
+'	If spaddingbottom <> "" Then Transition.AddClass("pb-" & spaddingbottom)
+'	If spaddingleft <> "" Then Transition.AddClass("pl-" & spaddingleft)
+'	If spaddingright <> "" Then Transition.AddClass("pr-" & spaddingright)
+'	If spaddings <> "" Then Transition.AddClass("ps-" & spaddings)
+'	If spaddinge <> "" Then Transition.AddClass("pe-" & spaddinge)
+'	If spaddingx <> "" Then Transition.AddClass("px-" & spaddingx)
+'	If spaddingy <> "" Then Transition.AddClass("py-" & spaddingy)
+'	If spaddinga <> "" Then Transition.AddClass("pa-" & spaddinga)
+'	ui.AddControl(Transition.Transition, Transition.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
+	
+	AddNewLine(sb)
+	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
+	AddNewLine(sb)
+	
+	AddCode(sb, $"Dim trn${sname} As VMTransition"$)
+	AddCode(sb, $"trn${sname}.Initialize(vue, "trn${sname}", Me)"$)
+	Dim pres As String = "trn"
+	CodeLine(sb, bisGroup, "b", pres, sname, "SetGroup")
+	CodeLine(sb, bisHideonleave, "b", pres, sname, "SetHideonleave")
+	CodeLine(sb, bisLeaveabsolute, "b", pres, sname, "SetLeaveabsolute")
+	CodeLine(sb, sMode, "s", pres, sname, "SetMode")
+	CodeLine(sb, sType, "s", pres, sname, "SetType")
+	
+	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	sb.Append($"${sparent}.AddControl(trn${sname}.Transition, trn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
+	AddNewLine(sb)
+	AddNewLine(sb)
+End Sub

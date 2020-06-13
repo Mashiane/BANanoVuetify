@@ -4,14 +4,15 @@ ModulesStructureVersion=1
 Type=Class
 Version=8.1
 @EndOfDesignText@
-#IgnoreWarnings:12, 9
+#IgnoreWarnings:12
 Sub Class_Globals
 	Public Calendar As VMElement
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
-	Private DesignMode As Boolean
-	Private Module As Object
+	Private DesignMode As Boolean   'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the Calendar
@@ -19,9 +20,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ID = sid.tolowercase
 	Calendar.Initialize(v, ID)
 	Calendar.SetTag("v-calendar")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
@@ -57,8 +59,8 @@ Sub AddChild(child As VMElement) As VMCalendar
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMCalendar
+'set text - built-in
+Sub SetText(t As String) As VMCalendar
 	Calendar.SetText(t)
 	Return Me
 End Sub
@@ -93,40 +95,94 @@ Sub AddChildren(children As List)
 	Next
 End Sub
 
+'set categories
+Sub SetCategories(varCategories As String) As VMCalendar
+	If varCategories = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("categories", varCategories)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Categories"$
+	vue.SetStateSingle(pp, varCategories)
+	Calendar.Bind(":categories", pp)
+	Return Me
+End Sub
+
+'set category-days
+Sub SetCategoryDays(varCategoryDays As String) As VMCalendar
+	If varCategoryDays = "" Then Return Me
+	If varCategoryDays = "1" Then Return Me
+	If bStatic Then
+		SetAttrSingle("category-days", varCategoryDays)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}CategoryDays"$
+	vue.SetStateSingle(pp, varCategoryDays)
+	Calendar.Bind(":category-days", pp)
+	Return Me
+End Sub
+
+'set category-for-invalid
+Sub SetCategoryForInvalid(varCategoryForInvalid As String) As VMCalendar
+	If varCategoryForInvalid = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("category-for-invalid", varCategoryForInvalid)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}CategoryForInvalid"$
+	vue.SetStateSingle(pp, varCategoryForInvalid)
+	Calendar.Bind(":category-for-invalid", pp)
+	Return Me
+End Sub
+
 'set color
-Sub SetColor(varColor As Object) As VMCalendar
+Sub SetColor(varColor As String) As VMCalendar
+	If varColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("color", varColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
 	vue.SetStateSingle(pp, varColor)
 	Calendar.Bind(":color", pp)
 	Return Me
 End Sub
 
-'set dark
-Sub SetDark(varDark As Object) As VMCalendar
-	Dim pp As String = $"${ID}Dark"$
-	vue.SetStateSingle(pp, varDark)
-	Calendar.Bind(":dark", pp)
-	Return Me
-End Sub
-
-'set day-format
-Sub SetDayFormat(varDayFormat As Object) As VMCalendar
-	Dim pp As String = $"${ID}DayFormat"$
-	vue.SetStateSingle(pp, varDayFormat)
-	Calendar.Bind(":day-format", pp)
-	Return Me
-End Sub
-
 'set end
-Sub SetEnd(varEnd As Object) As VMCalendar
+Sub SetEnd(varEnd As String) As VMCalendar
+	If varEnd = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("end", varEnd)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}End"$
 	vue.SetStateSingle(pp, varEnd)
 	Calendar.Bind(":end", pp)
 	Return Me
 End Sub
 
+'set event-category
+Sub SetEventCategory(varEventCategory As String) As VMCalendar
+	If varEventCategory = "" Then Return Me
+	If varEventCategory = "category" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-category", varEventCategory)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}EventCategory"$
+	vue.SetStateSingle(pp, varEventCategory)
+	Calendar.Bind(":event-category", pp)
+	Return Me
+End Sub
+
 'set event-color
-Sub SetEventColor(varEventColor As Object) As VMCalendar
+Sub SetEventColor(varEventColor As String) As VMCalendar
+	If varEventColor = "" Then Return Me
+	If varEventColor = "primary" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-color", varEventColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventColor"$
 	vue.SetStateSingle(pp, varEventColor)
 	Calendar.Bind(":event-color", pp)
@@ -134,7 +190,13 @@ Sub SetEventColor(varEventColor As Object) As VMCalendar
 End Sub
 
 'set event-end
-Sub SetEventEnd(varEventEnd As Object) As VMCalendar
+Sub SetEventEnd(varEventEnd As String) As VMCalendar
+	If varEventEnd = "" Then Return Me
+	If varEventEnd = "end" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-end", varEventEnd)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventEnd"$
 	vue.SetStateSingle(pp, varEventEnd)
 	Calendar.Bind(":event-end", pp)
@@ -142,7 +204,13 @@ Sub SetEventEnd(varEventEnd As Object) As VMCalendar
 End Sub
 
 'set event-height
-Sub SetEventHeight(varEventHeight As Object) As VMCalendar
+Sub SetEventHeight(varEventHeight As String) As VMCalendar
+	If varEventHeight = "" Then Return Me
+	If varEventHeight = "20" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-height", varEventHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventHeight"$
 	vue.SetStateSingle(pp, varEventHeight)
 	Calendar.Bind(":event-height", pp)
@@ -150,23 +218,27 @@ Sub SetEventHeight(varEventHeight As Object) As VMCalendar
 End Sub
 
 'set event-margin-bottom
-Sub SetEventMarginBottom(varEventMarginBottom As Object) As VMCalendar
+Sub SetEventMarginBottom(varEventMarginBottom As String) As VMCalendar
+	If varEventMarginBottom = "" Then Return Me
+	If varEventMarginBottom = "1" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-margin-bottom", varEventMarginBottom)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventMarginBottom"$
 	vue.SetStateSingle(pp, varEventMarginBottom)
 	Calendar.Bind(":event-margin-bottom", pp)
 	Return Me
 End Sub
 
-'set event-more
-Sub SetEventMore(varEventMore As Object) As VMCalendar
-	Dim pp As String = $"${ID}EventMore"$
-	vue.SetStateSingle(pp, varEventMore)
-	Calendar.Bind(":event-more", pp)
-	Return Me
-End Sub
-
 'set event-more-text
-Sub SetEventMoreText(varEventMoreText As Object) As VMCalendar
+Sub SetEventMoreText(varEventMoreText As String) As VMCalendar
+	If varEventMoreText = "" Then Return Me
+	If varEventMoreText = "$vuetify.calendar.moreEvents" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-more-text", varEventMoreText)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventMoreText"$
 	vue.SetStateSingle(pp, varEventMoreText)
 	Calendar.Bind(":event-more-text", pp)
@@ -174,7 +246,13 @@ Sub SetEventMoreText(varEventMoreText As Object) As VMCalendar
 End Sub
 
 'set event-name
-Sub SetEventName(varEventName As Object) As VMCalendar
+Sub SetEventName(varEventName As String) As VMCalendar
+	If varEventName = "" Then Return Me
+	If varEventName = "name" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-name", varEventName)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventName"$
 	vue.SetStateSingle(pp, varEventName)
 	Calendar.Bind(":event-name", pp)
@@ -182,7 +260,13 @@ Sub SetEventName(varEventName As Object) As VMCalendar
 End Sub
 
 'set event-overlap-mode
-Sub SetEventOverlapMode(varEventOverlapMode As Object) As VMCalendar
+Sub SetEventOverlapMode(varEventOverlapMode As String) As VMCalendar
+	If varEventOverlapMode = "" Then Return Me
+	If varEventOverlapMode = "stack" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-overlap-mode", varEventOverlapMode)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventOverlapMode"$
 	vue.SetStateSingle(pp, varEventOverlapMode)
 	Calendar.Bind(":event-overlap-mode", pp)
@@ -190,23 +274,27 @@ Sub SetEventOverlapMode(varEventOverlapMode As Object) As VMCalendar
 End Sub
 
 'set event-overlap-threshold
-Sub SetEventOverlapThreshold(varEventOverlapThreshold As Object) As VMCalendar
+Sub SetEventOverlapThreshold(varEventOverlapThreshold As String) As VMCalendar
+	If varEventOverlapThreshold = "" Then Return Me
+	If varEventOverlapThreshold = "60" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-overlap-threshold", varEventOverlapThreshold)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventOverlapThreshold"$
 	vue.SetStateSingle(pp, varEventOverlapThreshold)
 	Calendar.Bind(":event-overlap-threshold", pp)
 	Return Me
 End Sub
 
-'set event-ripple
-Sub SetEventRipple(varEventRipple As Object) As VMCalendar
-	Dim pp As String = $"${ID}EventRipple"$
-	vue.SetStateSingle(pp, varEventRipple)
-	Calendar.Bind(":event-ripple", pp)
-	Return Me
-End Sub
-
 'set event-start
-Sub SetEventStart(varEventStart As Object) As VMCalendar
+Sub SetEventStart(varEventStart As String) As VMCalendar
+	If varEventStart = "" Then Return Me
+	If varEventStart = "start" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-start", varEventStart)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventStart"$
 	vue.SetStateSingle(pp, varEventStart)
 	Calendar.Bind(":event-start", pp)
@@ -214,39 +302,68 @@ Sub SetEventStart(varEventStart As Object) As VMCalendar
 End Sub
 
 'set event-text-color
-Sub SetEventTextColor(varEventTextColor As Object) As VMCalendar
+Sub SetEventTextColor(varEventTextColor As String) As VMCalendar
+	If varEventTextColor = "" Then Return Me
+	If varEventTextColor = "white" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-text-color", varEventTextColor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}EventTextColor"$
 	vue.SetStateSingle(pp, varEventTextColor)
 	Calendar.Bind(":event-text-color", pp)
 	Return Me
 End Sub
 
-'set events
-Sub SetEvents(varEvents As Object) As VMCalendar
-	Dim pp As String = $"${ID}Events"$
-	vue.SetStateSingle(pp, varEvents)
-	Calendar.Bind(":events", pp)
+'set event-timed
+Sub SetEventTimed(varEventTimed As String) As VMCalendar
+	If varEventTimed = "" Then Return Me
+	If varEventTimed = "timed" Then Return Me
+	If bStatic Then
+		SetAttrSingle("event-timed", varEventTimed)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}EventTimed"$
+	vue.SetStateSingle(pp, varEventTimed)
+	Calendar.Bind(":event-timed", pp)
 	Return Me
 End Sub
 
 'set first-interval
-Sub SetFirstInterval(varFirstInterval As Object) As VMCalendar
+Sub SetFirstInterval(varFirstInterval As String) As VMCalendar
+	If varFirstInterval = "" Then Return Me
+	If varFirstInterval = "0" Then Return Me
+	If bStatic Then
+		SetAttrSingle("first-interval", varFirstInterval)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}FirstInterval"$
 	vue.SetStateSingle(pp, varFirstInterval)
 	Calendar.Bind(":first-interval", pp)
 	Return Me
 End Sub
 
-'set hide-header
-Sub SetHideHeader(varHideHeader As Object) As VMCalendar
-	Dim pp As String = $"${ID}HideHeader"$
-	vue.SetStateSingle(pp, varHideHeader)
-	Calendar.Bind(":hide-header", pp)
+'set first-time
+Sub SetFirstTime(varFirstTime As String) As VMCalendar
+	If varFirstTime = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("first-time", varFirstTime)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}FirstTime"$
+	vue.SetStateSingle(pp, varFirstTime)
+	Calendar.Bind(":first-time", pp)
 	Return Me
 End Sub
 
 'set interval-count
-Sub SetIntervalCount(varIntervalCount As Object) As VMCalendar
+Sub SetIntervalCount(varIntervalCount As String) As VMCalendar
+	If varIntervalCount = "" Then Return Me
+	If varIntervalCount = "24" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval-count", varIntervalCount)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IntervalCount"$
 	vue.SetStateSingle(pp, varIntervalCount)
 	Calendar.Bind(":interval-count", pp)
@@ -254,7 +371,12 @@ Sub SetIntervalCount(varIntervalCount As Object) As VMCalendar
 End Sub
 
 'set interval-format
-Sub SetIntervalFormat(varIntervalFormat As Object) As VMCalendar
+Sub SetIntervalFormat(varIntervalFormat As String) As VMCalendar
+	If varIntervalFormat = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval-format", varIntervalFormat)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IntervalFormat"$
 	vue.SetStateSingle(pp, varIntervalFormat)
 	Calendar.Bind(":interval-format", pp)
@@ -262,7 +384,13 @@ Sub SetIntervalFormat(varIntervalFormat As Object) As VMCalendar
 End Sub
 
 'set interval-height
-Sub SetIntervalHeight(varIntervalHeight As Object) As VMCalendar
+Sub SetIntervalHeight(varIntervalHeight As String) As VMCalendar
+	If varIntervalHeight = "" Then Return Me
+	If varIntervalHeight = "48" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval-height", varIntervalHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IntervalHeight"$
 	vue.SetStateSingle(pp, varIntervalHeight)
 	Calendar.Bind(":interval-height", pp)
@@ -270,7 +398,13 @@ Sub SetIntervalHeight(varIntervalHeight As Object) As VMCalendar
 End Sub
 
 'set interval-minutes
-Sub SetIntervalMinutes(varIntervalMinutes As Object) As VMCalendar
+Sub SetIntervalMinutes(varIntervalMinutes As String) As VMCalendar
+	If varIntervalMinutes = "" Then Return Me
+	If varIntervalMinutes = "60" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval-minutes", varIntervalMinutes)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IntervalMinutes"$
 	vue.SetStateSingle(pp, varIntervalMinutes)
 	Calendar.Bind(":interval-minutes", pp)
@@ -278,7 +412,12 @@ Sub SetIntervalMinutes(varIntervalMinutes As Object) As VMCalendar
 End Sub
 
 'set interval-style
-Sub SetIntervalStyle(varIntervalStyle As Object) As VMCalendar
+Sub SetIntervalStyle(varIntervalStyle As String) As VMCalendar
+	If varIntervalStyle = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval-style", varIntervalStyle)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IntervalStyle"$
 	vue.SetStateSingle(pp, varIntervalStyle)
 	Calendar.Bind(":interval-style", pp)
@@ -286,31 +425,54 @@ Sub SetIntervalStyle(varIntervalStyle As Object) As VMCalendar
 End Sub
 
 'set interval-width
-Sub SetIntervalWidth(varIntervalWidth As Object) As VMCalendar
+Sub SetIntervalWidth(varIntervalWidth As String) As VMCalendar
+	If varIntervalWidth = "" Then Return Me
+	If varIntervalWidth = "60" Then Return Me
+	If bStatic Then
+		SetAttrSingle("interval-width", varIntervalWidth)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}IntervalWidth"$
 	vue.SetStateSingle(pp, varIntervalWidth)
 	Calendar.Bind(":interval-width", pp)
 	Return Me
 End Sub
 
-'set light
-Sub SetLight(varLight As Object) As VMCalendar
-	Dim pp As String = $"${ID}Light"$
-	vue.SetStateSingle(pp, varLight)
-	Calendar.Bind(":light", pp)
-	Return Me
-End Sub
-
 'set locale
-Sub SetLocale(varLocale As Object) As VMCalendar
+Sub SetLocale(varLocale As String) As VMCalendar
+	If varLocale = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("locale", varLocale)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Locale"$
 	vue.SetStateSingle(pp, varLocale)
 	Calendar.Bind(":locale", pp)
 	Return Me
 End Sub
 
+'set locale-first-day-of-year
+Sub SetLocaleFirstDayOfYear(varLocaleFirstDayOfYear As String) As VMCalendar
+	If varLocaleFirstDayOfYear = "" Then Return Me
+	If varLocaleFirstDayOfYear = "0" Then Return Me
+	If bStatic Then
+		SetAttrSingle("locale-first-day-of-year", varLocaleFirstDayOfYear)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LocaleFirstDayOfYear"$
+	vue.SetStateSingle(pp, varLocaleFirstDayOfYear)
+	Calendar.Bind(":locale-first-day-of-year", pp)
+	Return Me
+End Sub
+
 'set max-days
-Sub SetMaxDays(varMaxDays As Object) As VMCalendar
+Sub SetMaxDays(varMaxDays As String) As VMCalendar
+	If varMaxDays = "" Then Return Me
+	If varMaxDays = "7" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max-days", varMaxDays)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MaxDays"$
 	vue.SetStateSingle(pp, varMaxDays)
 	Calendar.Bind(":max-days", pp)
@@ -318,7 +480,13 @@ Sub SetMaxDays(varMaxDays As Object) As VMCalendar
 End Sub
 
 'set min-weeks
-Sub SetMinWeeks(varMinWeeks As Object) As VMCalendar
+Sub SetMinWeeks(varMinWeeks As String) As VMCalendar
+	If varMinWeeks = "" Then Return Me
+	If varMinWeeks = "1" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min-weeks", varMinWeeks)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MinWeeks"$
 	vue.SetStateSingle(pp, varMinWeeks)
 	Calendar.Bind(":min-weeks", pp)
@@ -326,7 +494,12 @@ Sub SetMinWeeks(varMinWeeks As Object) As VMCalendar
 End Sub
 
 'set month-format
-Sub SetMonthFormat(varMonthFormat As Object) As VMCalendar
+Sub SetMonthFormat(varMonthFormat As String) As VMCalendar
+	If varMonthFormat = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("month-format", varMonthFormat)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}MonthFormat"$
 	vue.SetStateSingle(pp, varMonthFormat)
 	Calendar.Bind(":month-format", pp)
@@ -334,55 +507,38 @@ Sub SetMonthFormat(varMonthFormat As Object) As VMCalendar
 End Sub
 
 'set now
-Sub SetNow(varNow As Object) As VMCalendar
+Sub SetNow(varNow As String) As VMCalendar
+	If varNow = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("now", varNow)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Now"$
 	vue.SetStateSingle(pp, varNow)
 	Calendar.Bind(":now", pp)
 	Return Me
 End Sub
 
-'set short-intervals
-Sub SetShortIntervals(varShortIntervals As Object) As VMCalendar
-	Dim pp As String = $"${ID}ShortIntervals"$
-	vue.SetStateSingle(pp, varShortIntervals)
-	Calendar.Bind(":short-intervals", pp)
-	Return Me
-End Sub
-
-'set short-months
-Sub SetShortMonths(varShortMonths As Object) As VMCalendar
-	Dim pp As String = $"${ID}ShortMonths"$
-	vue.SetStateSingle(pp, varShortMonths)
-	Calendar.Bind(":short-months", pp)
-	Return Me
-End Sub
-
-'set short-weekdays
-Sub SetShortWeekdays(varShortWeekdays As Object) As VMCalendar
-	Dim pp As String = $"${ID}ShortWeekdays"$
-	vue.SetStateSingle(pp, varShortWeekdays)
-	Calendar.Bind(":short-weekdays", pp)
-	Return Me
-End Sub
-
 'set show-interval-label
-Sub SetShowIntervalLabel(varShowIntervalLabel As Object) As VMCalendar
+Sub SetShowIntervalLabel(varShowIntervalLabel As String) As VMCalendar
+	If varShowIntervalLabel = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-interval-label", varShowIntervalLabel)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ShowIntervalLabel"$
 	vue.SetStateSingle(pp, varShowIntervalLabel)
 	Calendar.Bind(":show-interval-label", pp)
 	Return Me
 End Sub
 
-'set show-month-on-first
-Sub SetShowMonthOnFirst(varShowMonthOnFirst As Object) As VMCalendar
-	Dim pp As String = $"${ID}ShowMonthOnFirst"$
-	vue.SetStateSingle(pp, varShowMonthOnFirst)
-	Calendar.Bind(":show-month-on-first", pp)
-	Return Me
-End Sub
-
 'set start
-Sub SetStart(varStart As Object) As VMCalendar
+Sub SetStart(varStart As String) As VMCalendar
+	If varStart = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("start", varStart)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Start"$
 	vue.SetStateSingle(pp, varStart)
 	Calendar.Bind(":start", pp)
@@ -390,7 +546,12 @@ Sub SetStart(varStart As Object) As VMCalendar
 End Sub
 
 'set type
-Sub SetType(varType As Object) As VMCalendar
+Sub SetType(varType As String) As VMCalendar
+	if varType = "" Then Return Me
+	if bStatic Then
+		SetAttrSingle("type", varType)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Type"$
 	vue.SetStateSingle(pp, varType)
 	Calendar.Bind(":type", pp)
@@ -398,498 +559,211 @@ Sub SetType(varType As Object) As VMCalendar
 End Sub
 
 'set value
-Sub SetValue(varValue As Object) As VMCalendar
-	Calendar.SetValue(varValue, False)
+Sub SetValue(varValue As String) As VMCalendar
+	If varValue = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	Calendar.Bind(":value", pp)
 	Return Me
 End Sub
 
 'set weekday-format
-Sub SetWeekdayFormat(varWeekdayFormat As Object) As VMCalendar
+Sub SetWeekdayFormat(varWeekdayFormat As String) As VMCalendar
+	If varWeekdayFormat = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("weekday-format", varWeekdayFormat)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}WeekdayFormat"$
 	vue.SetStateSingle(pp, varWeekdayFormat)
 	Calendar.Bind(":weekday-format", pp)
 	Return Me
 End Sub
 
+'set category-hide-dynamic
+Sub SetCategoryHideDynamic(varCategoryHideDynamic As Boolean) As VMCalendar
+	If varCategoryHideDynamic = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("category-hide-dynamic", varCategoryHideDynamic)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}CategoryHideDynamic"$
+	vue.SetStateSingle(pp, varCategoryHideDynamic)
+	Calendar.Bind(":category-hide-dynamic", pp)
+	Return Me
+End Sub
+
+'set category-show-all
+Sub SetCategoryShowAll(varCategoryShowAll As Boolean) As VMCalendar
+	if varCategoryShowAll = False Then Return Me
+	if bStatic Then
+		SetAttrSingle("category-show-all", varCategoryShowAll)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}CategoryShowAll"$
+	vue.SetStateSingle(pp, varCategoryShowAll)
+	Calendar.Bind(":category-show-all", pp)
+	Return Me
+End Sub
+
+'set dark
+Sub SetDark(varDark As Boolean) As VMCalendar
+	if varDark = False Then Return Me
+	if bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Dark"$
+	vue.SetStateSingle(pp, varDark)
+	Calendar.Bind(":dark", pp)
+	Return Me
+End Sub
+
+'set event-more
+Sub SetEventMore(varEventMore As Boolean) As VMCalendar
+	if varEventMore = True Then Return Me
+	if bStatic Then
+		SetAttrSingle("event-more", varEventMore)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}EventMore"$
+	vue.SetStateSingle(pp, varEventMore)
+	Calendar.Bind(":event-more", pp)
+	Return Me
+End Sub
+
+'set event-ripple
+Sub SetEventRipple(varEventRipple As Boolean) As VMCalendar
+	if varEventRipple = False Then Return Me
+	if bStatic Then
+		SetAttrSingle("event-ripple", varEventRipple)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}EventRipple"$
+	vue.SetStateSingle(pp, varEventRipple)
+	Calendar.Bind(":event-ripple", pp)
+	Return Me
+End Sub
+
+'set hide-header
+Sub SetHideHeader(varHideHeader As Boolean) As VMCalendar
+	If varHideHeader = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-header", varHideHeader)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}HideHeader"$
+	vue.SetStateSingle(pp, varHideHeader)
+	Calendar.Bind(":hide-header", pp)
+	Return Me
+End Sub
+
+'set light
+Sub SetLight(varLight As Boolean) As VMCalendar
+	If varLight = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Light"$
+	vue.SetStateSingle(pp, varLight)
+	Calendar.Bind(":light", pp)
+	Return Me
+End Sub
+
+'set short-intervals
+Sub SetShortIntervals(varShortIntervals As Boolean) As VMCalendar
+	If varShortIntervals = True Then Return Me
+	If bStatic Then
+		SetAttrSingle("short-intervals", varShortIntervals)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ShortIntervals"$
+	vue.SetStateSingle(pp, varShortIntervals)
+	Calendar.Bind(":short-intervals", pp)
+	Return Me
+End Sub
+
+'set short-months
+Sub SetShortMonths(varShortMonths As Boolean) As VMCalendar
+	If varShortMonths = True Then Return Me
+	If bStatic Then
+		SetAttrSingle("short-months", varShortMonths)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ShortMonths"$
+	vue.SetStateSingle(pp, varShortMonths)
+	Calendar.Bind(":short-months", pp)
+	Return Me
+End Sub
+
+'set short-weekdays
+Sub SetShortWeekdays(varShortWeekdays As Boolean) As VMCalendar
+	If varShortWeekdays = True Then Return Me
+	If bStatic Then
+		SetAttrSingle("short-weekdays", varShortWeekdays)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ShortWeekdays"$
+	vue.SetStateSingle(pp, varShortWeekdays)
+	Calendar.Bind(":short-weekdays", pp)
+	Return Me
+End Sub
+
+'set show-month-on-first
+Sub SetShowMonthOnFirst(varShowMonthOnFirst As Boolean) As VMCalendar
+	If varShowMonthOnFirst = True Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-month-on-first", varShowMonthOnFirst)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ShowMonthOnFirst"$
+	vue.SetStateSingle(pp, varShowMonthOnFirst)
+	Calendar.Bind(":show-month-on-first", pp)
+	Return Me
+End Sub
+
+'set show-week
+Sub SetShowWeek(varShowWeek As Boolean) As VMCalendar
+	If varShowWeek = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("show-week", varShowWeek)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ShowWeek"$
+	vue.SetStateSingle(pp, varShowWeek)
+	Calendar.Bind(":show-week", pp)
+	Return Me
+End Sub
+
+'set day-format
+Sub SetDayFormat(varDayFormat As List) As VMCalendar
+	if bStatic Then Return Me
+	Dim pp As String = $"${ID}DayFormat"$
+	vue.SetStateSingle(pp, varDayFormat)
+	Calendar.Bind(":day-format", pp)
+	Return Me
+End Sub
+
+'set events
+Sub SetEvents(varEvents As List) As VMCalendar
+	If bStatic Then Return Me
+	Dim pp As String = $"${ID}Events"$
+	vue.SetStateSingle(pp, varEvents)
+	Calendar.Bind(":events", pp)
+	Return Me
+End Sub
+
 'set weekdays
-Sub SetWeekdays(varWeekdays As Object) As VMCalendar
+Sub SetWeekdays(varWeekdays As List) As VMCalendar
+	If bStatic Then Return Me
 	Dim pp As String = $"${ID}Weekdays"$
 	vue.SetStateSingle(pp, varWeekdays)
 	Calendar.Bind(":weekdays", pp)
-	Return Me
-End Sub
-
-'
-Sub SetSlotDay(b As Boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "day"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotDayBody(b As boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "day-body"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotDayHeader(b As boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "day-header"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotDayLabel(b As boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "day-label"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotDayMonth(b As Boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "day-month"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotEvent(b As Boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "event"))
-	Return Me
-End Sub
-
-'
-Sub SetSlotInterval(b As Boolean) As VMCalendar    'ignore
-	SetAttr(CreateMap("slot": "interval"))
-	Return Me
-End Sub
-
-'
-Sub SetOnChange(eventHandler As Object, methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(eventHandler, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
-	SetAttr(CreateMap("@change": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnClickDate(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@click:date": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnClickDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@click:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnClickInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@click:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnClickMore(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@click:more": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnClickTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@click:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnContextmenuDate(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@contextmenu:date": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnContextmenuDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@contextmenu:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnContextmenuInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@contextmenu:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnContextmenuTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@contextmenu:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnInput(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@input": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousedownDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mousedown:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousedownInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mousedown:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousedownTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mousedown:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseenterDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mouseenter:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseenterInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mouseenter:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseenterTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mouseenter:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseleaveDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mouseleave:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseleaveInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mouseleave:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseleaveTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mouseleave:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousemoveDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mousemove:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousemoveInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@mousemove:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMousemoveTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@mousemove:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseupDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@mouseup:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseupInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@mouseup:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMouseupTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@mouseup:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnMoved(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@moved": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchendDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@touchend:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchendInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@touchend:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchendTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@touchend:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchmoveDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(module, methodName, e)
-	SetAttr(CreateMap("@touchmove:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchmoveInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@touchmove:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchmoveTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@touchmove:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchstartDay(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@touchstart:day": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchstartInterval(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@touchstart:interval": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
-	Return Me
-End Sub
-
-'
-Sub SetOnTouchstartTime(methodName As String) As VMCalendar
-	methodName = methodName.tolowercase
-	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
-	SetAttr(CreateMap("@touchstart:time": methodName))
-	'add to methods
-	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
 
@@ -945,9 +819,14 @@ End Sub
 
 
 'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCalendar
+Sub SetColorIntensity(color As String, intensity As String) As VMCalendar
+	if color = "" then Return Me
+	Dim scolor As String = $"${color} ${intensity}"$
+	If bStatic Then
+		SetAttrSingle("color", scolor)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	vue.SetStateSingle(pp, scolor)
 	Calendar.Bind(":color", pp)
 	Return Me
@@ -978,6 +857,13 @@ Sub SetDesignMode(b As Boolean) As VMCalendar
 	Return Me
 End Sub
 
+'set static
+Sub SetStatic(b As Boolean) As VMCalendar
+	Calendar.SetStatic(b)
+	bStatic = b
+	Return Me
+End Sub
+
 'set tab index
 Sub SetTabIndex(ti As String) As VMCalendar
 	Calendar.SetTabIndex(ti)
@@ -985,7 +871,7 @@ Sub SetTabIndex(ti As String) As VMCalendar
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMCalendar
+Sub SetName(varName As String, bbind As Boolean) As VMCalendar
 	Calendar.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -1087,26 +973,32 @@ Sub AddToContainer(pCont As VMContainer, rowPos As Int, colPos As Int)
 	pCont.AddComponent(rowPos, colPos, ToString)
 End Sub
 
+
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMCalendar
-Calendar.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
-End Sub
-Sub SetVisible(b As Boolean) As VMCalendar
-Calendar.SetVisible(b)
-Return Me
+	Calendar.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColor(varColor As String) As VMCalendar
-	Dim sColor As String = $"${varColor}--text"$
+
+Sub SetVisible(b As Boolean) As VMCalendar
+	Calendar.SetVisible(b)
+	Return Me
+End Sub
+
+
+'set color intensity - built in
+Sub SetTextColor(textcolor As String) As VMCalendar
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
 	AddClass(sColor)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMCalendar
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMCalendar
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me

@@ -6,156 +6,164 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-Public ScrollYTransition As VMElement
-Public ID As String
-Private vue As BANanoVue
-Private BANano As BANano  'ignore
+	Public ScrollYTransition As VMElement
+	Public ID As String
+	Private vue As BANanoVue
+	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
-	Private Module As Object    'ignore
+	Private Module As Object   'ignore
+	Private bStatic As Boolean   'ignore
 End Sub
 
 'initialize the ScrollYTransition
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMScrollYTransition
-ID = sid.tolowercase
+	ID = sid.tolowercase
 	ScrollYTransition.Initialize(v, ID)
 	ScrollYTransition.SetTag("v-scroll-y-transition")
+	vue = v
 	DesignMode = False
 	Module = eventHandler
-	vue = v
+	bStatic = False
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-Return ScrollYTransition.ToString
+	Return ScrollYTransition.ToString
 End Sub
 
 Sub SetVModel(k As String) As VMScrollYTransition
-ScrollYTransition.SetVModel(k)
-Return Me
+	ScrollYTransition.SetVModel(k)
+	Return Me
 End Sub
 
 Sub SetVIf(vif As String) As VMScrollYTransition
-ScrollYTransition.SetVIf(vif)
-Return Me
+	ScrollYTransition.SetVIf(vif)
+	Return Me
 End Sub
 
 Sub SetVShow(vif As String) As VMScrollYTransition
-ScrollYTransition.SetVShow(vif)
-Return Me
+	ScrollYTransition.SetVShow(vif)
+	Return Me
 End Sub
 
 'add to app template
 Sub Render
-vue.SetTemplate(ToString)
+	vue.SetTemplate(ToString)
 End Sub
 
 'add a child
 Sub AddChild(child As VMElement) As VMScrollYTransition
-Dim childHTML As String = child.ToString
-ScrollYTransition.SetText(childHTML)
-Return Me
-End Sub
-
-'set text
-Sub SetText(t As Object) As VMScrollYTransition
-ScrollYTransition.SetText(t)
-Return Me
+	Dim childHTML As String = child.ToString
+	ScrollYTransition.SetText(childHTML)
+	Return Me
 End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
-p.SetText(ToString)
+	p.SetText(ToString)
 End Sub
 
 'add a class
 Sub AddClass(c As String) As VMScrollYTransition
-ScrollYTransition.AddClass(c)
-Return Me
+	ScrollYTransition.AddClass(c)
+	Return Me
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMScrollYTransition
-ScrollYTransition.SetAttr(attr)
-Return Me
+Sub SetAttr(attr As Map) As VMScrollYTransition
+	ScrollYTransition.SetAttr(attr)
+	Return Me
 End Sub
 
 'set style
 Sub SetStyle(sm As Map) As VMScrollYTransition
-ScrollYTransition.SetStyle(sm)
-Return Me
+	ScrollYTransition.SetStyle(sm)
+	Return Me
 End Sub
 
 'add children
 Sub AddChildren(children As List)
-For Each childx As VMElement In children
-AddChild(childx)
-Next
-End Sub
-
-'set group
-Sub SetGroup(varGroup As Object) As VMScrollYTransition
-Dim pp As String = $"${ID}Group"$
-vue.SetStateSingle(pp, varGroup)
-ScrollYTransition.Bind(":group", pp)
-Return Me
-End Sub
-
-'set hide-on-leave
-Sub SetHideOnLeave(varHideOnLeave As Object) As VMScrollYTransition
-Dim pp As String = $"${ID}HideOnLeave"$
-vue.SetStateSingle(pp, varHideOnLeave)
-ScrollYTransition.Bind(":hide-on-leave", pp)
-Return Me
-End Sub
-
-'set leave-absolute
-Sub SetLeaveAbsolute(varLeaveAbsolute As Object) As VMScrollYTransition
-Dim pp As String = $"${ID}LeaveAbsolute"$
-vue.SetStateSingle(pp, varLeaveAbsolute)
-ScrollYTransition.Bind(":leave-absolute", pp)
-Return Me
+	For Each childx As VMElement In children
+		AddChild(childx)
+	Next
 End Sub
 
 'set mode
-Sub SetMode(varMode As Object) As VMScrollYTransition
-Dim pp As String = $"${ID}Mode"$
-vue.SetStateSingle(pp, varMode)
-ScrollYTransition.Bind(":mode", pp)
-Return Me
+Sub SetMode(varMode As String) As VMScrollYTransition
+	If varMode = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("mode", varMode)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Mode"$
+	vue.SetStateSingle(pp, varMode)
+	ScrollYTransition.Bind(":mode", pp)
+	Return Me
 End Sub
 
-'set origin
-Sub SetOrigin(varOrigin As Object) As VMScrollYTransition
-Dim pp As String = $"${ID}Origin"$
-vue.SetStateSingle(pp, varOrigin)
-ScrollYTransition.Bind(":origin", pp)
-Return Me
+'set group
+Sub SetGroup(varGroup As Boolean) As VMScrollYTransition
+	If varGroup = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("group", varGroup)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Group"$
+	vue.SetStateSingle(pp, varGroup)
+	ScrollYTransition.Bind(":group", pp)
+	Return Me
+End Sub
+
+'set hide-on-leave
+Sub SetHideOnLeave(varHideOnLeave As Boolean) As VMScrollYTransition
+	If varHideOnLeave = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-on-leave", varHideOnLeave)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}HideOnLeave"$
+	vue.SetStateSingle(pp, varHideOnLeave)
+	ScrollYTransition.Bind(":hide-on-leave", pp)
+	Return Me
+End Sub
+
+'set leave-absolute
+Sub SetLeaveAbsolute(varLeaveAbsolute As Boolean) As VMScrollYTransition
+	If varLeaveAbsolute = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("leave-absolute", varLeaveAbsolute)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LeaveAbsolute"$
+	vue.SetStateSingle(pp, varLeaveAbsolute)
+	ScrollYTransition.Bind(":leave-absolute", pp)
+	Return Me
 End Sub
 
 
 'hide the component
 Sub Hide As VMScrollYTransition
 	ScrollYTransition.SetVisible(False)
-    Return Me
+	Return Me
 End Sub
 
 'show the component
 Sub Show As VMScrollYTransition
 	ScrollYTransition.SetVisible(True)
-    Return Me
+	Return Me
 End Sub
 
 'enable the component
 Sub Enable As VMScrollYTransition
 	ScrollYTransition.Enable(True)
-    Return Me
+	Return Me
 End Sub
 
 'disable the component
 Sub Disable As VMScrollYTransition
-	ScrollYTransition.Disable(true)
-    Return Me
+	ScrollYTransition.Disable(True)
+	Return Me
 End Sub
 
 
@@ -180,16 +188,6 @@ Sub UseTheme(themeName As String) As VMScrollYTransition
 		Dim sclass As String = themes.Get(themeName)
 		AddClass(sclass)
 	End If
-	Return Me
-End Sub
-
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMScrollYTransition
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	ScrollYTransition.Bind(":color", pp)
 	Return Me
 End Sub
 
@@ -218,14 +216,15 @@ Sub SetDesignMode(b As Boolean) As VMScrollYTransition
 	Return Me
 End Sub
 
-'set tab index
-Sub SetTabIndex(ti As String) As VMScrollYTransition
-	ScrollYTransition.SetTabIndex(ti)
+'set static
+Sub SetStatic(b As Boolean) As VMScrollYTransition
+	ScrollYTransition.SetStatic(b)
+	bStatic = b
 	Return Me
 End Sub
 
 'The Select name. Similar To HTML5 name attribute.
-Sub SetName(varName As Object, bbind As Boolean) As VMScrollYTransition
+Sub SetName(varName As String, bbind As Boolean) As VMScrollYTransition
 	ScrollYTransition.SetName(varName, bbind)
 	Return Me
 End Sub
@@ -329,28 +328,29 @@ End Sub
 
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMScrollYTransition
-ScrollYTransition.BuildModel(mprops, mstyles, lclasses, loose)
-Return Me
+	ScrollYTransition.BuildModel(mprops, mstyles, lclasses, loose)
+	Return Me
 End Sub
 
 
 Sub SetVisible(b As Boolean) As VMScrollYTransition
-ScrollYTransition.SetVisible(b)
-Return Me
+	ScrollYTransition.SetVisible(b)
+	Return Me
 End Sub
 
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMScrollYTransition
-	Dim sColor As String = $"${varColor}--text"$
+'set color intensity - built in
+Sub SetTextColor(textcolor As String) As VMScrollYTransition
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
 	AddClass(sColor)
 	Return Me
 End Sub
 
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMScrollYTransition
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
+'set color intensity - built in
+Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMScrollYTransition
+	If textcolor = "" Then Return Me
+	Dim sColor As String = $"${textcolor}--text"$
+	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me

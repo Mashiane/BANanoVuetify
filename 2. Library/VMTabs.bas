@@ -37,6 +37,19 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+'set transition
+Sub SetTransition(varTransition As String) As VMTabs
+	If varTransition = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("transition", varTransition)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Transition"$
+	vue.SetStateSingle(pp, varTransition)
+	Tabs.Bind(":transition", pp)
+	Return Me
+End Sub
+
 Sub SetVOnce(t As Boolean) As VMTabs
 	Tabs.setvonce(t)
 	Return Me

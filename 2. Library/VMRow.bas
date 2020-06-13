@@ -72,11 +72,6 @@ Sub AddChild(child As VMElement) As VMRow
 	Return Me
 End Sub
 
-'set text
-Sub SetText(t As Object) As VMRow
-	Row.SetText(t)
-	Return Me
-End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
@@ -268,10 +263,12 @@ Sub SetDesignMode(b As Boolean) As VMRow
 	Return Me
 End Sub
 
-Sub SetTabIndex(ti As String) As VMRow
-	Row.SetTabIndex(ti)
+
+Sub AddComponent(comp As String) As VMRow
+	Row.SetText(comp)
 	Return Me
 End Sub
+
 
 'The Select name. Similar To HTML5 name attribute.
 Sub SetName(varName As Object, bbind As Boolean) As VMRow

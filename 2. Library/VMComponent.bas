@@ -21,13 +21,14 @@ Sub Class_Globals
 	Private refs As Map
 	Private props As List
 	Private BANano As BANano   'ignore
-	Public URL As String
+	Public Path As String
 	Public name As String
 	Private propFrom As String
+	Public Query As Map
 End Sub
 
 'initialize component
-Public Sub Initialize(v As BANanoVue, sid As String, Module As Object) As VMComponent
+Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As Object) As VMComponent
 	ID = sid.tolowercase
 	vue = v
 	Template.Initialize(v, ID).SetTag("template")
@@ -44,8 +45,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, Module As Object) As VMComp
 	computed.Initialize
 	watches.Initialize
 	filters.Initialize 
-	URL = $"/${ID}"$
+	Path = sPath
 	name = ID
+	Query.Initialize 
+	Return Me
+End Sub
+
+'query string for router path
+Sub SetQueryString(k As String, v As String) As VMComponent
+	Query.Put(k, v)
 	Return Me
 End Sub
 
@@ -72,6 +80,11 @@ Sub AddComponent(comp As String) As VMComponent
 End Sub
 
 Sub SetText(t As String) As VMComponent
+	Template.SetText(t)
+	Return Me
+End Sub
+
+Sub SetTemplate(t As String) As VMComponent
 	Template.SetText(t)
 	Return Me
 End Sub
@@ -161,16 +174,12 @@ private Sub ReturnData As Map
 End Sub
 
 'set computed
-Sub SetComputed(Module As Object, k As String, methodName As String) As VMComponent
+Sub SetComputed(k As String, module As Object, methodName As String) As VMComponent
+	k = k.tolowercase
 	methodName = methodName.ToLowerCase
-	If SubExists(Module, methodName) Then
-		k = k.tolowercase
-		If data.ContainsKey(k) Then
-			SetStateSingle(k, Null)
-		End If
-		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
-		computed.Put(k, cb)
+	If SubExists(module, methodName) Then
+		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Null)
+		computed.Put(k, cb.Result)
 	End If
 	Return Me
 End Sub
@@ -178,11 +187,8 @@ End Sub
 'set watches 
 Sub SetWatch(Module As Object, k As String, bImmediate As Boolean, bDeep As Boolean, methodName As String) As VMComponent
 	methodName = methodName.tolowercase
+	k = k.tolowercase
 	If SubExists(Module, methodName) Then
-		k = k.tolowercase
-		If data.ContainsKey(k) Then
-			SetStateSingle(k, Null)
-		End If
 		Dim newVal As Object
 		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(newVal))
 		Dim deepit As Map = CreateMap()

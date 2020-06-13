@@ -15,6 +15,7 @@ Sub Class_Globals
 	'Public store As Map
 	Public el As BANanoObject
 	Public refs As BANanoObject
+	Public emit As BANanoObject
 	Public body As BANanoElement
 	Public Template As VueHTML
 	Public computed As Map
@@ -2409,28 +2410,28 @@ Sub AddComponentBO(compName As String, comp As BANanoObject) As BANanoVue
 	Return Me
 End Sub
 
-Sub AddRoute(path As String, comp As VMComponent)
+Sub AddRoute(comp As VMComponent)
 	If comp.name = "" Then
 		Log("AddRoute: Please specify the name of the Route!")
 	End If
 	'
 	Dim eachroute As Map = CreateMap()
-	eachroute.Put("path", path)
+	eachroute.Put("path", comp.path)
 	eachroute.Put("name", comp.name)
 	eachroute.Put("component", comp.component)
 	'
 	routes.Add(eachroute)
 End Sub
 
-Sub CreateRouterLink(Text As String) As VueHTML
+Sub CreateRouterLink(rID As String, rTo As String, Text As String) As VueHTML
 	Dim elx As VueHTML
-	elx.Initialize("","router-link").SetText(Text)
+	elx.Initialize(rID,"router-link").SetTo(rTo).SetText(Text)
 	Return elx
 End Sub
 
-Sub CreateRouterView As VueHTML
+Sub CreateRouterView(rID As String) As VueHTML
 	Dim elx As VueHTML
-	elx.Initialize("","router-view")
+	elx.Initialize(rID, "router-view")
 	Return elx
 End Sub
 
@@ -3051,6 +3052,8 @@ Sub UX()
 	refs = BOVue.GetField(rKey)
 	Dim elKey As String = "$el"
 	el = BOVue.GetField(elKey)
+	Dim emitKey As String = "$emit"
+	emit = BOVue.GetField(emitKey)
 	'enable data to be available globally
 	'BOVue.GetField("prototype").SetField("$store", store)
 End Sub
@@ -3186,12 +3189,13 @@ Sub SetMethod(module As Object, methodName As String) As BANanoVue
 End Sub
 
 'set direct method
-Sub SetFilter(module As Object, methodName As String) As BANanoVue
+Sub SetFilter(k As String, module As Object, methodName As String) As BANanoVue
+	k = k.tolowercase
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) Then
 		Dim value As Object
 		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(value))
-		filters.Put(methodName, cb)
+		filters.Put(k, cb.Result)
 	Else
 		Log($"SetFilter.${methodName} could not be found!"$)
 	End If
@@ -3212,27 +3216,12 @@ Sub RemoveMethod(methodName As String) As BANanoVue
 End Sub
 
 'set computed
-Sub SetComputed1(k As String, module As Object, methodName As String) As BANanoVue
+Sub SetComputed(k As String, module As Object, methodName As String) As BANanoVue
+	k = k.tolowercase
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) Then
-		k = k.tolowercase
-		If data.ContainsKey(k) Then
-			SetStateSingle(k, Null)
-		End If
-		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(e))
-		computed.Put(k, cb)
-	End If
-	Return Me
-End Sub
-
-'set computed
-Sub SetComputed(module As Object, methodName As String) As BANanoVue
-	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) Then
-		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(e))
-		computed.Put(methodName, cb)
+		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Null)
+		computed.Put(k, cb.Result)
 	End If
 	Return Me
 End Sub
@@ -3247,11 +3236,8 @@ End Sub
 'set watches 
 Sub SetWatch(k As String, bImmediate As Boolean, bDeep As Boolean, module As Object, methodName As String) As BANanoVue
 	methodName = methodName.tolowercase
+	k = k.tolowercase
 	If SubExists(module, methodName) Then
-		k = k.tolowercase
-		If data.ContainsKey(k) Then
-			SetStateSingle(k, Null)
-		End If
 		Dim newVal As Object
 		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(newVal))
 		Dim deepit As Map = CreateMap()
@@ -3386,6 +3372,21 @@ End Sub
 Sub CreateComponent(id As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(Me, id).SetTag("component")
+	Return elx
+End Sub
+
+
+Sub CreateDynamicComponent(id As String, viewID As String, compID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag("component")
+	elx.BindDynamicComponent(viewID, compID)
+	Return elx
+End Sub
+
+'create an element with a 'component' tag
+Sub CreateOwnComponent(id As String, compName As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(Me, id).SetTag(compName)
 	Return elx
 End Sub
 

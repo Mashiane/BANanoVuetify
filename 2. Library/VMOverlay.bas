@@ -26,8 +26,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
-	showKey = $"${ID}show"$
-	Overlay.SetVisible(False)
+	showKey = $"${ID}value"$
 	SetValue(False)
 	Container.Initialize(vue, $"${ID}cont"$, Module)
 	Return Me

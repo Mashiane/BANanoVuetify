@@ -131,6 +131,21 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Return Me
 End Sub
 
+'active class for router links
+Sub SetActiveClass(sClass As String) As VMElement
+	SetAttrSingle("active-class", sClass)
+	Return Me
+End Sub
+
+Sub SetHideOnLeave(b As Boolean) As VMElement
+	SetAttrSingle("hide-on-leave", b)
+	Return Me
+End Sub
+
+Sub SetMode(sMode As String) As VMElement
+	SetAttrSingle("mode", sMode)
+	Return Me
+End Sub
 
 Sub CreateMETA() As VMElement
 	Dim el As VMElement
@@ -594,6 +609,12 @@ Sub RemoveClass(className As String) As VMElement
 	Return Me
 End Sub
 
+Sub SetEvent(eventName As String, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	SetAttrSingle(eventName, methodName)
+	Return Me
+End Sub
+
 
 Sub SetOnMouseOut(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
@@ -676,6 +697,15 @@ End Sub
 Sub SetVOnce(t As Boolean) As VMElement
 	If t = False Then Return Me
 	SetAttrLoose("v-once")
+	Return Me
+End Sub
+
+'bind dynamic component
+Sub BindDynamicComponent(viewID As String, compID As String) As VMElement
+	viewID = viewID.ToLowerCase
+	compID = compID.tolowercase
+	SetVBindIs(viewID)
+	vue.SetData(viewID, compID)
 	Return Me
 End Sub
 
@@ -818,6 +848,28 @@ Sub AddDynamicClass(className As String) As VMElement
 	Return Me
 End Sub
 
+'add a class
+Sub AddClassDynamic(className As String) As VMElement
+	classList = vue.GetData(classKey)
+	Dim cpos As Int = classList.IndexOf(className)
+	cpos = BANano.parseInt(cpos)
+	If cpos = -1 Then classList.Add(className)
+	vue.SetData(classKey, classList)
+	hasContent = True
+	Return Me
+End Sub
+
+Sub RemoveClassDynamic(className As String) As VMElement
+	classList = vue.GetData(classKey)
+	Dim cpos As Int = classList.IndexOf(className)
+	cpos = BANano.parseInt(cpos)
+	If cpos <> -1 Then classList.RemoveAt(cpos)
+	vue.SetData(classKey, classList)
+	hasContent = True
+	Return Me
+End Sub
+
+
 Sub RemoveDynamicClass(className As String) As VMElement
 	classList = vue.GetData(classKey)
 	Dim cpos As Int = classList.IndexOf(className)
@@ -928,7 +980,7 @@ Sub SetMaxHeight(mw As String) As VMElement
 	Return Me
 End Sub
 
-Sub SetTo(t As Object) As VMElement
+Sub SetTo(t As String) As VMElement
 	Element.SetAttrSingle("to", t)
 	Return Me
 End Sub

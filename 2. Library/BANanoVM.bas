@@ -15,12 +15,14 @@ Sub Class_Globals
 	Public RouterView As VMElement
 	Public Container As VMContainer
 	Public BOVuetify As BANanoObject
+	Public Animate As VMTransition
 	Public Drawer As VMNavigationDrawer
 	Public NavBar As VMToolBar
 	Public Footer As VMFooter
 	Private Module As Object
 	Public Elevation As Map
 	Public Transition As Map
+	Public Transitions As Map
 	Public IntensityOptions As Map
 	Public ColorOptions As Map
 	Public BorderOptions As Map
@@ -70,7 +72,6 @@ Sub Class_Globals
 	Public const COLOR_SUCCESS As String = "success"
 	Public const COLOR_WARNING As String = "warning"
 	Public const COLOR_NONE As String = ""
-	
 	'
 	Public const INTENSITY_NORMAL As String = ""
 	Public const INTENSITY_LIGHTEN5 As String = "lighten-5"
@@ -129,7 +130,8 @@ Sub Class_Globals
 	Public const TRANSITION_SCROLL_Y As String = "scroll-y-transition"
 	Public const TRANSITION_SCROLL_Y_REVERSE As String = "scroll-y-reverse-transition"
 	Public const TRANSITION_SCALE As String = "scale-transition"
-	Public const TRANSITION_PADE As String = "fade-transition"
+	Public const TRANSITION_FADE As String = "fade-transition"
+	Public const TRANSITION_FAB As String = "fab-transition"
 	'
 	Public const JUSTIFY_CENTER As String = "center"
 	Public const JUSTIFY_START As String = "start"
@@ -218,6 +220,10 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'
 	'put loader on page
 	Overlay.Initialize(vue, "pageloader", eventHandler)
+	'
+	Animate.Initialize(vue, "appanimate", eventHandler).SetType(TRANSITION_FADE)
+	Animate.SetMode("in").SetHideOnLeave(True)
+	
 	Dim vpc As VMProgressCircular
 	vpc.Initialize(vue, "pageloaderprogress", eventHandler)
 	vpc.SetSize(200)
@@ -228,6 +234,8 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Drawer.Hide
 	Footer.hide
 	Overlay.hide
+	
+	
 	'
 	vue.SetData("confirmtitle", "Confirm")
 	vue.SetData("btnconfirmcancellabel", "Cancel")
@@ -1093,11 +1101,13 @@ private Sub InitColors
 	tran.Initialize
 	'
 	tran.AddAll(Array("slide-x-transition", "slide-x-reverse-transition", "slide-y-transition", "slide-y-reverse-transition", "scroll-x-transition"))
-	tran.AddAll(Array("scroll-x-reverse-transition", "scroll-y-transition", "scroll-y-reverse-transition", "scale-transition",  "fade-transition"))
+	tran.AddAll(Array("scroll-x-reverse-transition", "scroll-y-transition", "scroll-y-reverse-transition", "scale-transition",  "fade-transition", "fab-transition"))
 	'
 	Transition.Initialize
+	Transitions.Initialize
 	For Each sl As String In tran
 		Transition.Put(sl, sl)
+		Transitions.Put($"v-${sl}"$, sl)
 	Next
 	Transition.Put("", "None")
 	
@@ -1305,13 +1315,19 @@ End Sub
 'create an element with a 'component' tag
 Sub CreateComponent(id As String) As VMElement
 	Dim el As VMElement
-	el.Initialize(vue, id).SetTag("component")
-	
+	el.Initialize(vue, id).SetTag("component")	
 	Return el
 End Sub
 
-Sub AddRoute(path As String, comp As VMComponent) As BANanoVM
-	vue.AddRoute(path, comp)
+'create an element with a 'component' tag
+Sub CreateOwnComponent(id As String, compName As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, id).SetTag(compName)
+	Return elx
+End Sub
+
+Sub AddRoute(comp As VMComponent) As BANanoVM
+	vue.AddRoute(comp)
 	Return Me
 End Sub
 
@@ -1427,10 +1443,9 @@ Sub HR As String
 	Return "<hr>"
 End Sub
 
-Sub CreateRouterLink(rID As String, Text As String) As VMElement
+Sub CreateRouterLink(rID As String, rTo As String, Text As String) As VMElement
 	Dim el As VMElement
-	el.Initialize(vue,rID).SetTag("router-link").SetText(Text)
-	
+	el.Initialize(vue,rID).SetTag("router-link").SetTo(rTo).SetText(Text)
 	Return el
 End Sub
 
@@ -1815,13 +1830,8 @@ Sub SetActivated(moduleObj As Object, methodName As String) As BANanoVM
 	Return Me
 End Sub
 
-Sub SetComputed1(k As String, moduleObj As Object, methodName As String) As BANanoVM
-	vue.SetComputed1(k, moduleObj, methodName)
-	Return Me
-End Sub
-
-Sub SetComputed(moduleObj As Object, methodName As String) As BANanoVM
-	vue.SetComputed(moduleObj, methodName)
+Sub SetComputed(k As String, moduleObj As Object, methodName As String) As BANanoVM
+	vue.SetComputed(k, moduleObj, methodName)
 	Return Me
 End Sub
 
@@ -2199,7 +2209,8 @@ Sub UX
 	NavBar.Pop(VApp)
 	
 	If bUseRouter Then
-		RouterView.Pop(VContent)
+		Animate.AddComponent(RouterView.ToString)
+		VContent.AddComponent(Animate.ToString)
 	Else
 		Container.Pop(VContent)
 	End If

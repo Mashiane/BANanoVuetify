@@ -68,6 +68,7 @@ Sub BuildDrawer
 	vm.drawer.additem("arccounter", "", "Arc Counter")
 	vm.drawer.additem("files", "", "Read Text & Excel Files")
 	vm.drawer.additem("pdf", "", "PDF Object")
+	vm.drawer.additem("avatargroup", "", "Avatar Group")
 	'vm.drawer.additem("selectsides", "", "Select Sides")
 End Sub
 
@@ -112,6 +113,9 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "selectsides"
 		'vm.NavBar.UpdateTitle(modSelectSides.title)
 		'vm.ShowPage(modSelectSides.name)
+	Case "avatargroup"
+		vm.NavBar.UpdateTitle(modAvatarGroup.title)
+		vm.ShowPage(modAvatarGroup.name)
 	Case "arccounter"
 		vm.NavBar.UpdateTitle(modArcCounter.title)
 		vm.ShowPage(modArcCounter.name)
@@ -188,5 +192,6 @@ Sub AddPages
 	vm.AddPage(modArcCounter.name, modArcCounter)
 	vm.AddPage(modFiles.name, modFiles)
 	vm.AddPage(modPDF.name, modPDF)
+	vm.AddPage(modAvatarGroup.name, modAvatarGroup)
 	'vm.AddPage(modSelectSides.name, modSelectSides)
 End Sub

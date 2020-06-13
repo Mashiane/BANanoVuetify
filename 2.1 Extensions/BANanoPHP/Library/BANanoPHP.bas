@@ -13,6 +13,21 @@ Sub Class_Globals
 	Public const ROLLING_COPYRIGHT As String = "RollingCopyright"
 	Public const VALIDATE_CC As String = "ValidateCC"
 	Public const FILE_EXISTS As String = "FileExists"
+	Public const FILE_WRITE As String = "WriteFile"
+	Public const FILE_LOG As String = "LogFile"
+	Public const FILE_APPEND As String = "FileAppend"
+	Public const FILE_COPY As String = "FileCopy"
+	Public const FILE_RENAME As String = "FileRename"
+	Public const FILE_DELETE As String = "FileDelete"
+	Public const DIRECTORY_MAKE As String = "DirectoryMake"
+	Public const FILE_GETHTML As String = "FileGetHTML"
+	Public const FILE_GETJSON As String = "FileGetJSON"
+	Public const DIRECTORY_ZIP As String = "DirectoryZip"
+	Public const DIRECTORY_DELETE As String = "DirectoryDelete"
+	Public const DIRECTORY_LISTRECURSIVE As String = "DirectoryListRecursive"
+	Public const FILE_UNZIP As String = "FileUnzip"
+	Public const DIRECTORY_COPY As String = "DirectoryCopy"
+	Public const EXCEL_TEST As String = "ExcelTest"
 	Type BANAnoPHPDirList(dnum As Int, fnum As Int, dirs As List, files As List)
 End Sub
 
@@ -23,21 +38,21 @@ End Sub
 'get the directly structure from php call
 Sub GetDirectoryList(sout As String) As BANAnoPHPDirList
 	'initialize the structure
-	Dim dir As BANAnoPHPDirList
-	dir.initialize
-	dir.dirs.initialize
-	dir.dnum = 0
-	dir.fnum = 0
-	dir.files.Initialize
+	Dim DIR As BANAnoPHPDirList
+	DIR.initialize
+	DIR.dirs.initialize
+	DIR.dnum = 0
+	DIR.fnum = 0
+	DIR.files.Initialize
 	'
 	If sout.startswith("{") Then
 		Dim soutm As Map = BANano.fromjson(sout)
-		dir.dnum = soutm.get("dnum")
-		dir.fnum = soutm.get("fnum")
-		dir.files = soutm.get("files")
-		dir.dirs = soutm.get("dirs")	
+		DIR.dnum = soutm.get("dnum")
+		DIR.fnum = soutm.get("fnum")
+		DIR.files = soutm.get("files")
+		DIR.dirs = soutm.get("dirs")	
 	End If
-	Return dir
+	Return DIR
 End Sub
 
 'rolling copyright
@@ -81,6 +96,45 @@ Sub BuildGetFile(fileName As String) As Map
 	Return se
 End Sub
 
+'build the code to get the contents
+Sub BuildFileGetHTML(url As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("url", url)
+	Return se
+End Sub
+
+'build the code to get the contents
+Sub BuildFileGetJSON(url As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("url", url)
+	Return se
+End Sub
+
+
+'build the code to write contents to file, will overwite
+Sub BuildWriteFile(fileName As String, fileContents As String) As Map
+	Dim se As Map = CreateMap()
+	se.Put("fileName", fileName)
+	se.Put("fileContents", fileContents)
+	Return se
+End Sub
+
+'build code to copy the files
+Sub BuildFileCopy(source As String, target As String) As Map
+	Dim se As Map = CreateMap()
+	se.Put("source", source)
+	se.Put("target", target)
+	Return se
+End Sub
+
+'build code to rename the files
+Sub BuildFileRename(source As String, target As String) As Map
+	Dim se As Map = CreateMap()
+	se.Put("source", source)
+	se.Put("target", target)
+	Return se
+End Sub
+
 'build the directory listing
 Sub BuildDirectoryList(path As String) As Map
 	Dim se As Map = CreateMap()
@@ -88,7 +142,206 @@ Sub BuildDirectoryList(path As String) As Map
 	Return se
 End Sub
 
+'build the file unzip
+Sub BuildFileUnzip(zipfile As String, extractTo As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("zipfile", zipfile)
+	se.Put("extractTo", extractTo)
+	Return se
+End Sub
+
+
+'build the directory zip
+Sub BuildDirectoryZip(path As String, zipname As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("path", path)
+	se.Put("zipname", zipname)
+	Return se
+End Sub
+
+'build the file to delete
+Sub BuildFileDelete(filex As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("filex", filex)
+	Return se
+End Sub
+
+'build the directory make
+Sub BuildDirectoryMake(dirPath As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("dirpath", dirPath)
+	Return se
+End Sub
+
+'build the directory delete
+Sub BuildDirectoryDelele(dirPath As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("dir", dirPath)
+	Return se
+End Sub
+
+'build the directory recursive listing
+Sub BuildDirectoryListRecursive(dirPath As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("path", dirPath)
+	Return se
+End Sub
+
+'build directory copy
+Sub BuildDirectoryCopy(src As String, dst As String) As Map
+	Dim se As Map = CreateMap()
+	se.put("src", src)
+	se.put("dst", dst)
+	Return se
+End Sub
+
+
 #if PHP
+
+/**
+* FlxZipArchive, Extends ZipArchiv.
+* Add Dirs with Files and Subdirs.
+*
+* <code>
+*  $archive = new FlxZipArchive;
+*  // .....
+*  $archive->addDir( 'test/blub', 'blub' );
+* </code>
+*/
+class FlxZipArchive extends ZipArchive {
+    /**
+     * Add a Dir with Files and Subdirs to the archive
+     *
+     * @param string $location Real Location
+     * @param string $name Name in Archive
+     * @author Nicolas Heimann
+     * @access private
+     **/
+
+    public function addDir($location, $name) {
+        $this->addEmptyDir($name);
+
+        $this->addDirDo($location, $name);
+     } // EO addDir;
+
+    /**
+     * Add Files & Dirs to archive.
+     *
+     * @param string $location Real Location
+     * @param string $name Name in Archive
+     * @author Nicolas Heimann
+     * @access private
+     **/
+
+    private function addDirDo($location, $name) {
+        $name .= '/';
+        $location .= '/';
+
+        // Read all Files in Dir
+        $dir = opendir ($location);
+        while ($file = readdir($dir))
+        {
+            if ($file == '.' || $file == '..') continue;
+
+            // Rekursiv, If dir: FlxZipArchive::addDir(), else ::File();
+            $do = (filetype( $location . $file) == 'dir') ? 'addDir' : 'addFile';
+            $this->$do($location . $file, $name . $file);
+        }
+    } // EO addDirDo();
+}
+
+function DirectoryCopy($src, $dst) {  
+    // open the source directory 
+    $dir = opendir($src);  
+    // Make the destination directory if not exist 
+    @mkdir($dst);  
+    // Loop through the files in source directory 
+    foreach (scandir($src) as $file) {  
+        if (( $file != '.' ) && ( $file != '..' )) {  
+            if ( is_dir($src . '/' . $file) )  
+            {  
+                // Recursively calling custom copy function 
+                // for sub directory  
+                DirectoryCopy($src . '/' . $file, $dst . '/' . $file);  
+            }  
+            else {  
+                copy($src . '/' . $file, $dst . '/' . $file);  
+            }  
+        }  
+    }  
+    closedir($dir); 
+}   
+
+function FileUnzip($zipfile, $extractTo) {
+	// Create new zip class 
+	$zip = new ZipArchive; 
+	$zip->open($zipfile); 
+	// Extracts to current directory 
+	$zip->extractTo($extractTo); 
+	$zip->close();  
+}
+
+
+function DirectoryListRecursive($path) {
+	$iterator = new RecursiveDirectoryIterator($path);
+    // skip dot files while iterating 
+    $iterator->setFlags(RecursiveDirectoryIterator::SKIP_DOTS);
+	$rii = new RecursiveIteratorIterator($iterator, RecursiveIteratorIterator::SELF_FIRST);
+
+    $files = array(); 
+    foreach ($rii as $file) {
+	   	$fname = $file->getPathname();
+		$fname = str_replace('\\', '/', $fname);
+		$files[] = $fname;
+	}
+		
+    $output = json_encode($files);
+    echo($output);
+}
+
+function DirectoryDelete($dir) {
+	$iter = new RecursiveDirectoryIterator($dir);
+	foreach (new RecursiveIteratorIterator($iter, RecursiveIteratorIterator::CHILD_FIRST) as $f) {
+		if ($f->isDir()) {
+			rmdir($f->getPathname());
+		} else {
+			unlink($f->getPathname());
+		}
+	}
+	rmdir($dir);
+}
+
+
+function DirectoryZip($path, $zipname) {
+	$za = new FlxZipArchive;
+	$res = $za->open($zipname, ZipArchive::CREATE);
+	if($res === TRUE) {
+    	$za->addDir($path, basename($path));
+    	$za->close();
+	}
+}
+
+function FileGetJSON($url) {
+	$f = file_get_contents($url);
+	echo $f;
+}
+
+
+function FileGetHTML($url) {
+	$f = file_get_contents($url);
+	echo $f;
+}
+
+function DirectoryMake($dirpath) {
+	mkdir($dirpath, 0700, true);
+}
+
+function FileDelete($filex) {
+	if (file_exists($filex)) {
+		unlink($filex);
+	}
+}
+
 function FileExists($path) {
 	if (file_exists($path)) {
     	echo "yes";
@@ -102,9 +355,30 @@ function RollingCopyright($message,$year)
   echo("$message &copy;$year-" . date("Y"));
 }
 
+function WriteFile($fileName, $fileContents) {
+	file_put_contents($fileName, $fileContents);
+}
+
+function LogFile($fileName, $fileContents) {
+	$msg = date("Y-m-d H:i:s ") . $fileContents . "\n";
+	file_put_contents($fileName, $msg, FILE_APPEND);
+}
+
+function FileAppend($fileName, $fileContents) {
+	file_put_contents($fileName, $fileContents, FILE_APPEND);
+}
+
+function FileCopy($source, $target) {
+	copy($source, $target);
+}
+
+function FileRename($source, $target) {
+	rename($source, $target);
+}
 
 function GetFile($fileName) {
-	echo file_get_contents($fileName);
+	$f = file_get_contents($fileName);
+	echo $f;
 }
 
 function SendEmail($from,$to,$cc,$subject,$msg) { 

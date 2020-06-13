@@ -50,33 +50,44 @@ End Sub
 
 'return a sql to delete record of table where one exists
 Sub GetMax As BANanoSQLiteE
-	Dim sb As String = $"SELECT MAX(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
-	query = sb
+	query = $"SELECT MAX(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
 	command = "getmax"
 	Return Me
 End Sub
 
 'return a sql to delete record of table where one exists
 Sub GetMin As BANanoSQLiteE
-	Dim sb As String = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
-	query = sb
+	query = $"SELECT MIN(${PrimaryKey}) As ${PrimaryKey} FROM ${EscapeField(TableName)}"$
 	command = "getmin"
+	Return Me
+End Sub
+
+
+'get the column names
+Sub ColumnNames As BANanoSQLiteE
+	query = $"PRAGMA table_info('${TableName}')"$
+	command = "select"
+	Return Me
+End Sub
+
+'get the table names
+Sub TableNames As BANanoSQLiteE
+	query = "SELECT name FROM sqlite_master WHERE type='table' AND name Not LIKE 'sqlite_%' ORDER BY name"
+	command = "select"
 	Return Me
 End Sub
 
 
 'get table names
 Sub GetTableNames As BANanoSQLiteE
-	Dim sb As String = $"select table_name from information_schema.tables where table_schema = '${DBase}' order by table_name"$
-	query = sb
+	query = $"select table_name from information_schema.tables where table_schema = '${DBase}' order by table_name"$
 	command = "select"
 	Return Me
 End Sub
 
 'get table structure
 Sub GetTableStructure As BANanoSQLiteE
-	Dim sb As String = $"describe ${EscapeField(TableName)}"$
-	query = sb
+	query = $"describe ${EscapeField(TableName)}"$
 	command = "select"
 	Return Me
 End Sub
@@ -303,16 +314,14 @@ End Sub
 
 ' return string to create database
 Sub CreateDatabase As BANanoSQLiteE
-	Dim sSQL As String = $"CREATE DATABASE IF NOT EXISTS ${EscapeField(DBase)}"$
-	query = sSQL
+	query = $"CREATE DATABASE IF NOT EXISTS ${EscapeField(DBase)}"$
 	command = "createdb"
 	Return Me
 End Sub
 
 'drop the database
 Sub DropDataBase As BANanoSQLiteE
-	Dim sSQL As String = $"DROP DATABASE ${EscapeField(DBase)}"$
-	query = sSQL
+	query = $"DROP DATABASE ${EscapeField(DBase)}"$
 	command = "dropdb"
 	Return Me
 End Sub
@@ -469,7 +478,7 @@ End Sub
 'return a sql insert statement
 Sub Insert1(Rec As Map) As BANanoSQLiteE
 	If Schema.Size = 0 Then
-		Log($"BANanoMySQL.Insert: '${TableName}' schema is not set!"$)
+		Log($"BANanoSQLiteE.Insert1: '${TableName}' schema is not set!"$)
 	End If
 	Dim sb As StringBuilder
 	Dim columns As StringBuilder
@@ -599,7 +608,7 @@ End Sub
 'return a sql to select record of table where one exists
 Sub SelectWhere(tblName As String, tblfields As List, tblWhere As Map, operators As List, orderBy As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
-		Log($"BANanoMySQL.SelectWhere: '${tblName}' schema is not set!"$)
+		Log($"BANanoSQLiteE.SelectWhere: '${tblName}' schema is not set!"$)
 	End If
 	If operators = Null Then operators = EQOperators(tblWhere)
 	Dim listOfTypes As List = GetMapTypes(tblWhere)
@@ -644,7 +653,7 @@ End Sub
 'return a sql to select record of table where one exists
 Sub SelectDistinctWhere(tblName As String, tblfields As List, tblWhere As Map, operators As List, orderBy As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
-		Log($"BANanoMySQL.SelectWhere: '${tblName}' schema is not set!"$)
+		Log($"BANanoSQLiteE.SelectDistinctWhere: '${tblName}' schema is not set!"$)
 	End If
 	If operators = Null Then operators = EQOperators(tblWhere)
 	Dim listOfTypes As List = GetMapTypes(tblWhere)
@@ -688,8 +697,7 @@ End Sub
 
 'return a sql to delete record of table where one exists
 Sub DeleteAll As BANanoSQLiteE
-	Dim sb As String = $"DELETE FROM ${EscapeField(TableName)}"$
-	query = sb
+	query = $"DELETE FROM ${EscapeField(TableName)}"$
 	command = "delete"
 	Return Me
 End Sub
@@ -707,7 +715,7 @@ End Sub
 'return a sql to delete record of table where one exists
 Sub DeleteWhere(tblName As String, tblWhere As Map, operators As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
-		Log($"BANanoMySQL.DeleteWhere: '${tblName}' schema is not set!"$)
+		Log($"BANanoSQLiteE.DeleteWhere: '${tblName}' schema is not set!"$)
 	End If
 	If operators = Null Then operators = EQOperators(tblWhere)
 	Dim listOfTypes As List = GetMapTypes(tblWhere)
@@ -858,7 +866,7 @@ End Sub
 'return a sql to update records of table where one exists
 Sub UpdateWhere(tblName As String, tblfields As Map, tblWhere As Map, operators As List) As BANanoSQLiteE
 	If Schema.Size = 0 Then
-		Log($"BANanoMySQL.UpdateWhere: '${tblName}' schema is not set!"$)
+		Log($"BANanoSQLiteE.UpdateWhere: '${tblName}' schema is not set!"$)
 	End If
 	If operators = Null Then operators = EQOperators(tblWhere)
 	Dim listOfTypes As List = GetMapTypes(tblfields)
