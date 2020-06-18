@@ -283,6 +283,15 @@ Sub SetUseRouter(b As Boolean) As BANanoVM
 	Return Me
 End Sub
 
+'show loading on toolbar
+Sub ShowLoading
+	NavBar.SetLoading(True)
+End Sub
+
+'hide loading on toolbar
+Sub HideLoading
+	NavBar.SetLoading(False)
+End Sub
 
 Sub CreateHamburger(v As BANanoVue, eid As String, eventHandler As Object) As VMElement
 	Dim elx As VMElement
@@ -366,8 +375,7 @@ Sub JoinItems(delimiter As String, sQuote As String, lst As List) As String
 End Sub
 
 Sub NewMap As Map
-	Dim nm As Map
-	nm.Initialize
+	Dim nm As Map = CreateMap()
 	Return nm
 End Sub
 

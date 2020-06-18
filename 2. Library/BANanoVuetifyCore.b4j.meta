@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMTransition,Class_Globals,6,0,VMTransition,SetHideOnLeave,125,0,VMTransition,SetGroup,120,0,BANanoVM,Class_Globals,11,6,BANanoVM,Initialize,224,6,BANanoVM,UX,2214,6,VMAlert,SetDesignMode,540,0,VMAlert,SetStatic,542,0,Main,Process_Globals,13,0,Main,AppStart,35,6
+NavigationStack=BANanoVue,SetCoverImage,3011,0,BANanoVue,HasState,3304,0,BANanoVue,CreateDynamicComponent,3405,0,BANanoVue,CreateComponent,3397,0,BANanoVue,CreateH6,3454,0,BANanoVue,SetRequired,3661,0,BANanoVue,Show,3690,0,BANanoVue,JoinItems,3845,0,BANanoVue,ShowFileSelect,3874,0,BANanoVue,Class_Globals,131,0,Main,AppStart,14,0
 SelectedBuild=0
 VisibleModules=

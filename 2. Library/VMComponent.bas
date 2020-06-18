@@ -128,7 +128,6 @@ Sub SetStatic(b As Boolean) As VMComponent
 	Return Me
 End Sub
 
-
 Sub ToString As String
 	Return Template.ToString
 End Sub

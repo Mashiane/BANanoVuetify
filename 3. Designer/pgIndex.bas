@@ -7,6 +7,7 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private dtvuetifyattributes As VMDataTable
 	Private bisGroup As Boolean
 	Private bisHideonleave As Boolean
 	Private bisLeaveabsolute As Boolean
@@ -102,7 +103,7 @@ Sub Process_Globals
 	Private bisVisible As Boolean
 	Private sWidth As String
 	Private pbfooter As VMProperty
-	Private BANano As BANano  
+	Private BANano As BANano  'ignore
 	Private bisreactive As Boolean
 	Private sColor As String
 	Private sColorintensity As String
@@ -342,6 +343,7 @@ Sub Process_Globals
 	Private bHasBorder As Boolean
 	Private bShowMatrix As Boolean
 	Private tblProp As VMToolBar
+	Private tblPropx As VMToolBar
 	Private istool As Boolean
 	Private sconfirmfield As String
 	Private bislookup As Boolean
@@ -739,14 +741,26 @@ Sub Process_Globals
 	Private bisitemnogutter As Boolean
 	Private pbtreeview As VMProperty
 	Private contdbadmin As VMContainer
+	Private contattributes As VMContainer
 	Private db As BANanoSQL
+	Private drwV2B4x As VMNavigationDrawer
 End Sub
 
 Sub Init
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
+	
 	'
+'	Dim lst As List = vue.newlist
+'	Dim colors As Map = vm.ColorOptions
+'	For Each k As String In colors.keys
+'		lst.add(k)
+'	Next
+'	Dim s As String = vue.join("|", lst)
+'	Log(s)
+'	Return
+	
 	TotComponents = 0
 	'
 	BuildNavBar
@@ -786,6 +800,7 @@ Sub Init
 	CreateMyComponentsDrawer
 	CreateProjectDrawer
 	CreatePropertyBagsDrawer
+	CreateVuetify2B4x
 	
 	'
 	'add an invisible file uploader
@@ -877,6 +892,64 @@ Sub btnComponents_click(e As BANanoEvent)
 	vm.drawer.hide
 End Sub
 
+Sub btnVuetify2B4x_click(e As BANanoEvent)
+	'hide all property bags
+	ShowBag("")
+	vm.HideOtherDrawers(drwV2B4x.id)
+	drwV2B4x.Toggle
+	'show total items for components and update listing
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim vc As BANanoAlaSQLE
+	vc.Initialize("vuetifycomponents", "name")
+	vc.SelectAll(Array("*"), Array("name"))
+	vc.result = db.ExecuteWait(vc.query, vc.args)
+	vc.FromJSON
+	vue.setdata("vuetifycomponents", vc.result)
+	'update the counter
+	Dim compSize As Int = vc.result.Size
+	compSize = BANano.parseint(compSize)
+	vm.SetBadgeContent("btnVueExtract", compSize)
+	If compSize = 0 Then 
+		vm.SetBadgeColor("btnVueExtract", vue.COLOR_RED, vue.INTENSITY_NORMAL)
+	Else
+		vm.SetBadgeColor("btnVueExtract", vue.COLOR_GREEN, vue.INTENSITY_DARKEN4)
+	End If
+End Sub
+
+'an element has been clicked on the drawer for vuetify components
+Sub drwV2B4xitems_click(e As BANanoEvent)
+	Dim menuID As String = vm.getidfromevent(e)
+	If menuID = "" Then Return
+	'save the component to process
+	vm.setdata("vuetifycomponent", menuID)
+	'show the respective handler screen
+	contattributes.Show
+	contdbadmin.hide
+	tabs.hide
+	'
+	vm.showloading
+	
+	dtvuetifyattributes.SetTitle(menuID)
+	'show attributes for this component..
+	Dim rsAttributes As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	rsAttributes.Initialize("vuetifyattributes", "name")
+	Dim qw As Map = CreateMap()
+	qw.put("component", menuID)
+	rsAttributes.SelectWhere(Array("*"), qw, Array("="), Array("name"))
+	rsAttributes.result = db.ExecuteWait(rsAttributes.query, rsAttributes.args)
+	rsAttributes.FromJSON
+	'save records to state
+	vm.SetData("vuetifyattributes", rsAttributes.Result)
+	'update the data table records
+	dtvuetifyattributes.SetDataSource(rsAttributes.Result)
+	dtvuetifyattributes.SetPage("1")
+	'update the attributes counter
+	Dim aCnt As Int = rsAttributes.result.size
+	vm.SetBadgeContent("tbl2customview", aCnt)
+	vm.HideLoading
+End Sub
+
 Sub BuildNavBar
 	'add a hamburger
 	vm.SnackBar.SetColor("green")
@@ -892,6 +965,8 @@ Sub BuildNavBar
 	vm.NavBar.Hamburger.SetVisible(True)
 	vm.NavBar.Progress.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	'
+	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
+	vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")
 	'
@@ -1174,6 +1249,7 @@ Sub ExtractComponents(YesNo As String)
 	'
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	isDirty = True 
@@ -1223,6 +1299,7 @@ Sub SaveComponents(YesNo As String)
 	End If
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	'get the components
 	Dim compSQL As BANanoAlaSQLE
@@ -1433,6 +1510,7 @@ Sub LoadProjects
 	vm.setdata("projects", prjSQL.result)
 End Sub
 
+
 Sub btnProject_click(e As BANanoEvent)
 	'hide all property bags
 	ShowBag("")
@@ -1463,6 +1541,387 @@ Sub CreateMyComponentsDrawer
 	vm.AddDrawer(drwcomponents)
 End Sub
 #End Region
+
+
+Sub CreateVuetify2B4x
+	drwV2B4x = vm.CreateDrawer("drwv2b4x", Me)
+	drwV2B4x.Setwidth("450")
+	drwV2B4x.Setabsolute(True)
+	drwV2B4x.SetHideOverlay(True)
+	'
+	tblPropx = vm.CreateToolbar("tblvx", Me).SetDense(True).SetVisible(True).SetFlat(True)
+	tblPropx.AddIcon("btnVueExtract", "mdi-mine", "Extract from json files", "0")
+	tblPropx.AddSpacer
+	tblPropx.AddIcon("btnVueClassNames", "mdi-variable", "Component names to constants", "")
+	tblPropx.AddSpacer
+	tblPropx.AddIcon1("tbl2customview", "mdi-cog-transfer-outline", "green", "Convert to Custom View", "0")
+	tblPropx.AddSpacer
+	tblPropx.AddIcon1("tbl2exit", "mdi-logout", "orange", "Exit", "")
+	
+	
+	drwV2B4x.Container.AddHTML(tblPropx.tostring)
+	'
+	drwV2B4x.List.SetDense(True)
+	drwV2B4x.List.SetDataSourceTemplate("vuetifycomponents", "name", "", "icon", "name", "description", "")
+	
+	vm.AddDrawer(drwV2B4x)
+End Sub
+
+'generate constra
+Sub btnVueClassNames_click(e As BANanoEvent)
+	vm.Showloading
+	'open the database, clear all components
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim vc As BANanoAlaSQLE
+	vc.Initialize("vuetifycomponents", "name")
+	vc.SelectAll(Array("*"), Array("name"))
+	vc.result = db.ExecuteWait(vc.query, vc.args)
+	vc.FromJSON
+	'
+	Dim sbx As StringBuilder
+	sbx.initialize
+	For Each cm As Map In vc.result
+		Dim sname As String = cm.get("name")
+		'
+		Dim cname As String = sname.replace("-","_")
+		cname = cname.ToUpperCase
+		'
+		AddCode(sbx, $"Public CONST ${cname} As String = "${sname}""$) 
+		Dim bname As String = vue.BeautifyName(sname)
+	Next
+	vue.SaveText2File(sbx.tostring, "constants.txt")
+	vm.hideloading
+End Sub
+
+'import vuetify
+Sub btnVueExtract_click(e As BANanoEvent)
+	vm.ShowLoading
+	
+	'keep record all all components
+	Dim importComponents As Map = CreateMap()
+	'keep a flat file for all attributes
+	Dim importAttributes As Map = CreateMap()
+	Dim errors As Int = 0	
+	'process tags file
+	'*****
+	'lets use the php library to get the files
+	Dim bPHP As BANanoPHP
+	bPHP.Initialize
+	Dim tags As String = BANano.CallInlinePHPWait(bPHP.GET_FILE, bPHP.BuildGetFile("./assets/tags.json"))
+	'convert to json
+	Dim tResult As Map = BANano.fromjson(tags)
+	'these are maps
+	For Each k As String In tResult.Keys
+		'each key is the component name
+		Dim v As Map = tResult.get(k)
+		'get the description of the component
+		Dim cDescription As String = v.getdefault("description", "")
+		'get the list of attributes for this component
+		Dim la As List
+		la.initialize
+		Dim attributes As List = v.getdefault("attributes", la)
+		'add extra attributes
+		attributes.AddAll(Array("caption", "key", "v-html", "v-text", "v-model", "ref", "v-if", "v-else", "v-show", _
+	"v-for","v-pre","v-once", "v-cloak", "required", "enabled", "readonly"))
+	
+		'define the component
+		Dim component As Map = CreateMap()
+		component.put("name", k)
+		component.put("description", cDescription)
+		'add the component to the master list
+		importComponents.put(k, component)
+		'for each attribute we have managed to get, update the master list
+		For Each attr As String In attributes
+			'the key should be the component.attribute
+			Dim attrKey As String = $"${k}.${attr}"$
+			Dim attribute As Map = CreateMap()
+			attribute.put("key", attrKey)
+			attribute.put("name", attr)
+			attribute.put("component", k)
+			Select Case attr
+			Case "v-pre", "v-once", "v-cloak"
+				attribute.put("type", "boolean")
+			Case "caption", "key", "v-html", "v-text", "v-model", "ref", "v-if", "v-else", "v-show", _
+			"v-for","required", "enabled", "readonly"
+				attribute.put("type", "string")
+			End Select
+			'add the attribute to the master list
+			importAttributes.put(attrKey, attribute)
+		Next
+	Next
+	
+	'*****
+	Dim stuff As Map = CreateMap()
+	'process attributes file
+	Dim strattributes As String = BANano.CallInlinePHPWait(bPHP.GET_FILE, bPHP.BuildGetFile("./assets/attributes.json"))
+	'convert to json
+	Dim Result As Map = BANano.fromjson(strattributes)
+	'we will make a flat file for all components
+	'first a map with each key being the component
+	'in each value is a list of all attributes for that component
+	For Each k As String In Result.Keys
+		'get the component name
+		Dim compName As String = vue.MvField(k, 1, "/")
+		'get the attribute name
+		Dim attrName As String = vue.MvField(k, 2, "/")
+		'get the other stuff for the attribute
+		Dim v As Map = Result.get(k)
+		Dim cDescription As String = v.getdefault("description", "")
+		Dim cType As String = v.getdefault("type", "")
+		'do we have an existing component
+		If importComponents.ContainsKey(compName) = False Then
+			Log($"Component not found on tags (${compName})"$)
+			'update components
+			Dim component As Map = CreateMap()
+			component.put("name", compName)
+			component.put("description", "")
+			'add the component to the master list
+			importComponents.put(compName, component)
+			errors = errors + 1
+		End If
+		'define the attribute key
+		Dim attrKey As String = $"${compName}.${attrName}"$
+		'do we have an existing attribute
+		Dim attribute As Map
+		If importAttributes.ContainsKey(attrKey) = False Then
+			Log($"Attribute not found on tags (${attrKey})"$)
+			attribute.Initialize
+			errors = errors + 1
+		Else
+			'get existing attribute properties
+			attribute = importAttributes.get(attrKey)
+		End If
+		'do some cleaning on the types
+		cType = cType.replace("number", "string")
+		cType = cType.replace("any", "string")
+		If cType = "" Then cType = "string"
+		'ensure we have distinct types
+		cType = vue.MvDistinct("|", cType)
+		'update the attribute
+		attribute.put("component", compName)
+		attribute.put("name", attrName)
+		attribute.put("type", cType)
+		attribute.put("description", cDescription)
+		'update the master attributes
+		importAttributes.put(attrKey, attribute)
+	Next
+	'
+	'*****
+	'process the web types file
+	'Log(importAttributes)
+	'Log(importComponents)
+	
+	'process attributes file
+	Dim wtypes As String = BANano.CallInlinePHPWait(bPHP.GET_FILE, bPHP.BuildGetFile("./assets/web-types.json"))
+	'convert to json
+	Dim wResult As Map = BANano.fromjson(wtypes)
+	Dim mcontributions As Map = wResult.get("contributions")
+	Dim mhtml As Map = mcontributions.get("html")
+	Dim lattributes As List = mhtml.get("attributes")
+	Dim ltags As List = mhtml.get("tags")
+	'loop through each tag
+	For Each mtag As Map In ltags
+		'get the tag name
+		Dim tName As String = mtag.getdefault("name", "")
+		'fix the component name
+		Dim tagName As String = vue.CorrectName(tName)
+		'does the component exist
+		If importComponents.ContainsKey(tagName) = False Then
+			Log($"Component not found on web types (${tagName})"$)
+			'update components
+			Dim component As Map = CreateMap()
+			component.put("name", tagName)
+			component.put("description", "")
+			'add the component to the master list
+			importComponents.put(tagName, component)
+			errors = errors + 1
+		End If
+		'get a list of the attributes
+		Dim tl As List
+		tl.initialize
+		Dim tAttributes As List = mtag.getdefault("attributes", tl)
+		If tAttributes.size > 0 Then
+			'for each attribute
+			For Each tattribute As Map In tAttributes
+				Dim aname As String = tattribute.getdefault("name", "")
+				Dim adefault As String = tattribute.getdefault("default", "")
+				'fix the name camel case
+				aname = vue.CorrectName(aname)
+				'clean the defaults
+				adefault = adefault.replace("'","")
+				adefault = adefault.replace(QUOTE, "")
+				adefault = adefault.replace("undefined", "")
+				If adefault.startswith("[") Then adefault = ""
+				If adefault.startswith("{") Then adefault = ""
+				'define the attibute key
+				Dim attrKey As String = $"${tagName}.${aname}"$
+				'do we have an existing attribute
+				Dim eattribute As Map
+				If importAttributes.ContainsKey(attrKey) = False Then
+					Log($"Attribute not found on web tags (${attrKey})"$)
+					eattribute.Initialize
+					errors = errors + 1
+				Else
+					'get existing attribute properties
+					eattribute = importAttributes.get(attrKey)
+				End If
+				'update the attribute
+				eattribute.put("component", tagName)
+				eattribute.put("default", adefault)
+				'update the master attributes
+				importAttributes.put(attrKey, eattribute)
+			Next
+		End If
+		'***
+		'get the component to put events etc
+		Dim component As Map = importComponents.get(tagName)
+		'get a list of the events
+		Dim te As List
+		te.initialize
+		Dim tEvents As List = mtag.getdefault("events", te)
+		component.put("events", tEvents)
+		'***
+		'get a list of slots
+		Dim ts As List
+		ts.initialize
+		Dim tSlots As List = mtag.getdefault("slots", ts)
+		component.put("slots", tSlots)
+		importComponents.put(tagName, component)
+	Next
+	'
+	If errors <> 0 Then
+		vm.showsnackbarerror("Experienced some errors, please re-run!")
+	Else
+		vm.ShowSnackBarSuccess("So far we are going well...")
+	End If
+	
+	'we will use a memory database
+	Dim vuetifyDB As Map = CreateMap()
+	Dim vuetifycomponents As List = vue.newlist
+	Dim vuetifyevents As List = vue.newlist
+	Dim vuetifyattributes As List = vue.newlist
+	
+	'show components
+	Log(importComponents)
+	
+	
+	'add each of the records
+	For Each compm As Map In importComponents.values
+		Dim xname As String = compm.get("name")
+		Dim xdesc As String = compm.get("description")
+		Dim crec As Map = CreateMap()
+		crec.put("name", xname)
+		crec.put("description", xdesc)
+		crec.put("icon", "mdi-folder-cog-outline")
+		'
+		vuetifycomponents.add(crec)
+	Next
+	
+	'process events
+	For Each ck As String In importComponents.keys
+		Dim cm As Map = importComponents.get(ck)
+		Dim eve As List = cm.get("events")
+		For Each evem As Map In eve
+			Dim evename As String = evem.get("name")	
+			Dim earguments As List = evem.get("arguments")
+			Dim argumentsl As List
+			argumentsl.initialize
+			Dim args As List
+			args.initialize
+			For Each argumentsm As Map In earguments
+				Dim argname As String = argumentsm.get("name")
+				Dim argtype As String = argumentsm.get("type")
+				'
+				argtype = argtype.tolowercase
+				If argtype.Startswith("boolean") Then argtype = "Boolean"
+				If argtype.EndsWith("event") Then argtype = "BANanoEvent"
+				If argtype.startswith("file") Then argtype = "List"
+				If argtype.Startswith("number") Then argtype = "Int"
+				If argtype.startswith("any") Then argtype = "Object"
+				If argtype.startswith("array") Then argtype = "List"
+				If argtype.startswith("object") Then argtype = "Object"
+				If argtype.startswith("string") Then argtype = "String"
+				If argtype.startswith("void") Then argtype = "Object"
+				If argtype.startswith("{") Then argtype = "Object"
+				
+				stuff.put(argtype, argtype)
+				argumentsl.add($"${argname} As ${argtype}"$)
+				args.add(argname)
+			Next
+			'
+			Dim sarguments As String = vue.join(", ", argumentsl)
+			Dim sargs As String = vue.Join(",",args)
+			Dim eKey As String = $"${ck}.${evename}"$
+			Dim crece As Map = CreateMap()
+			crece.put("name", evename)
+			crece.put("component", ck)
+			crece.put("key", eKey)
+			crece.put("arguments", sarguments)
+			crece.put("args", sargs)
+			crece.put("icon", "mdi-set-none")
+					'
+			vuetifyevents.add(crece)
+		Next
+	Next
+	
+	'extract the values
+	For Each attrm As Map In importAttributes.values
+		attrm.put("icon", "mdi-set-none")
+		vuetifyattributes.add(attrm)
+	Next
+	
+	'clear db
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim vc As BANanoAlaSQLE
+	vc.Initialize("vuetifycomponents", "key")
+	vc.DeleteAll
+	vc.result = db.ExecuteWait(vc.query, vc.args)
+	'
+	Dim ve As BANanoAlaSQLE
+	ve.Initialize("vuetifyevents", "key")
+	ve.DeleteAll
+	ve.result = db.ExecuteWait(ve.query, ve.args)
+	'
+	Dim va As BANanoAlaSQLE
+	va.Initialize("vuetifyattributes", "key")
+	va.DeleteAll
+	va.result = db.ExecuteWait(va.query, va.args)
+	'
+	vc.Initialize("vuetifycomponents", "key")
+	vc.InsertList
+	vc.result = db.ExecuteWait(vc.query, Array(vuetifycomponents))
+	vc.fromjson
+	vm.ShowSnackBarSuccess($"${vc.Result} / ${vuetifycomponents.size} components created!"$)
+	'
+	ve.Initialize("vuetifyevents", "key")
+	ve.InsertList
+	ve.result = db.ExecuteWait(ve.query, Array(vuetifyevents))
+	ve.fromjson
+	vm.ShowSnackBarSuccess($"${ve.Result} / ${vuetifyevents.size} events created!"$)
+	'
+	va.Initialize("vuetifyattributes", "key")
+	va.InsertList
+	va.result = db.ExecuteWait(va.query, Array(vuetifyattributes))
+	va.fromjson
+	vm.ShowSnackBarSuccess($"${va.Result} / ${importAttributes.size} attributes created!"$)
+	
+	'update drawer and counters
+	vc.SelectAll(Array("*"), Array("name"))
+	vc.result = db.ExecuteWait(vc.query, vc.args)
+	vc.FromJSON
+	vue.setdata("vuetifycomponents", vc.result)
+	'update the counter
+	Dim compSize As Int = vc.result.Size
+	compSize = BANano.parseint(compSize)
+	vm.SetBadgeContent("btnVueExtract", compSize)
+	If compSize = 0 Then 
+		vm.SetBadgeColor("btnVueExtract", vue.COLOR_RED, vue.INTENSITY_NORMAL)
+	Else
+		vm.SetBadgeColor("btnVueExtract", vue.COLOR_GREEN, vue.INTENSITY_DARKEN4)
+	End If
+	vm.hideloading
+End Sub
+
 
 #Region PropertyBags
 Sub CreatePropertyBagsDrawer
@@ -1633,6 +2092,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	vue.setdata("tablestotransfer", vue.newmap)
 	contdbadmin.Show
 	tabs.Hide
+	contattributes.hide
 	
 	'get the record to create/update
 	Dim Record As Map = drwprojectdetails.Container.GetData
@@ -2218,6 +2678,7 @@ End Sub
 Sub btnLandScape_click(e As BANanoEvent)
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	vm.ToggleNamedState("landscape", "Yes", "No")
 	Dim sState As String = vm.getdata("landscape")
@@ -2237,6 +2698,7 @@ Sub btnMatrix_click(e As BANanoEvent)
 	vm.ToggleNamedState("showmatrix", "Yes", "No")
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -2245,6 +2707,7 @@ Sub btnBorder_click(e As BANanoEvent)
 	vm.togglenamedstate("hasborder", "Yes", "No")
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX	
 End Sub
@@ -5482,9 +5945,9 @@ Sub Design_Dialog
 	CodeLine(sb, bisLight, "b", "dlg", sname, "Setlight")
 	CodeLine(sb, bisnoclickanimation, "b", "dlg", sname, "Setnoclickanimation")
 	CodeLine(sb, bisopenonhover, "b", "dlg", sname, "Setopenonhover")
-	CodeLine(sb, bispersistent, "b", "dlg", sname, "Setpersistent")
-	CodeLine(sb, bisretainfocus, "b", "dlg", sname, "Setretainfocus")
-	CodeLine(sb, bisscrollable, "b", "dlg", sname, "Setscrollable")
+	CodeLine(sb, bisPersistent, "b", "dlg", sname, "Setpersistent")
+	CodeLine(sb, bisRetainfocus, "b", "dlg", sname, "Setretainfocus")
+	CodeLine(sb, bisScrollable, "b", "dlg", sname, "Setscrollable")
 	CodeLine(sb, bisslotactivator, "b", "dlg", sname, "Setslotactivator")
 	CodeLine(sb, bisTitleprimary, "b", "dlg", sname, "SetTitlePrimary")
 	sb.append($"vm.AddDialog(dlg${sname})"$).append(CRLF)
@@ -6905,6 +7368,7 @@ End Sub
 Sub btnRefresh_click(e As BANanoEvent)
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vue.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -6978,6 +7442,7 @@ Sub fucomponent_change(e As BANanoEvent)
 	Next
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7052,6 +7517,7 @@ Sub RemoveLastCompItem
 	isDirty = True
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7068,6 +7534,7 @@ Sub ClearComp
 	vm.setdata("tableitems", vm.newlist)
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7097,6 +7564,7 @@ Sub RemoveLastGridItem
 	isDirty = True
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7112,6 +7580,7 @@ Sub ClearGrid
 	rsSQL.FromJSON
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7235,7 +7704,132 @@ Sub DesignLayout
 	vm.container.AddComponent(1, 2, tabs.tostring)
 	'
 	CreateDBAdmin
+	CreateVuetifyAdmin
 End Sub
+
+Sub CreateVuetifyAdmin
+	contattributes.Initialize(vue, "contattributes", Me)
+	contattributes.SetFluid(True)
+	contattributes.SetVisible(False)
+	contattributes.SetElevation("1")
+	contattributes.SetTransition(vm.TRANSITION_SLIDE_X)
+	'
+	tbltoolbar2 = vm.CreateToolBar("tbltoolbar3", Me)
+	tbltoolbar2.SetToolBar(True)
+	tbltoolbar2.AddTitle("Attributes", "")
+	'add a hamburger
+	tbltoolbar2.AddSpacer
+	tbltoolbar2.SetDense(True)
+	tbltoolbar2.SetVisible(True)
+
+	contattributes.AddControl(tbltoolbar2.ToolBar, tbltoolbar2.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	'
+	CreateDataTable_vuetifyattributes
+	
+	vm.container.AddComponent(1, 2, contattributes.tostring)
+
+End Sub
+
+'convert a vuetify item to a custom view
+Sub tbl2customview_click(e As BANanoEvent)
+	vm.ShowLoading
+	
+	'
+	Dim extraCode As String = ""
+	Dim Result As String
+	Dim promise As BANanoPromise = BANano.GetFileAsText("./assets/customviewcode.txt", Null,Null)
+	promise.Then(Result)
+		extraCode = Result
+	promise.end
+	'
+	'get the name of the component
+	Dim compName As String = vm.getdata("vuetifycomponent")
+	Dim baeName As String = vue.BeautifyName(compName)
+	'get the attributes for the component
+	Dim rsAttributes As BANanoAlaSQLE
+	Dim rsEvents As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	rsAttributes.Initialize("vuetifyattributes", "name")
+	Dim qw As Map = CreateMap()
+	qw.put("component", compName)
+	rsAttributes.SelectWhere(Array("*"), qw, Array("="), Array("name"))
+	rsAttributes.result = db.ExecuteWait(rsAttributes.query, rsAttributes.args)
+	rsAttributes.FromJSON
+	'select events
+	rsEvents.Initialize("vuetifyevents", "name")
+	Dim qwe As Map = CreateMap()
+	qwe.put("component", compName)
+	rsEvents.SelectWhere(Array("*"), qwe, Array("="), Array("name"))
+	rsEvents.result = db.ExecuteWait(rsEvents.query, rsEvents.args)
+	rsEvents.FromJSON
+			
+	'build the custom view
+	Dim cb As clsCodeBuilder
+	cb.Initialize(vue, compName)
+	For Each am As Map In rsAttributes.result
+		Dim aname As String = am.get("name")
+		Dim adefault As String = am.getdefault("default","")
+		Dim atype As String = am.getdefault("type","string")
+		cb.AddProperty(aname,atype,adefault,"", vue.newlist)
+	Next
+	'add events
+	For Each em As Map In rsEvents.result
+		Dim ename As String = em.get("name")
+		Dim earguments As String = em.get("arguments")
+		Dim eargs As String = em.get("args")
+		cb.AddEvent(ename, earguments, eargs)
+	Next
+	'
+	Dim xcode As String = cb.CreateCustomView
+	'
+	extraCode = extraCode.Replace("CompName", baeName)
+	xcode = xcode & CRLF & extraCode
+	vm.SaveText2File(xcode, $"${baeName}.bas"$)
+	'
+	'delete the component so that we move the components up
+	Dim rsComp As BANanoAlaSQLE
+	rsComp.Initialize("vuetifycomponents", "name")
+	rsComp.Delete(compName)
+	rsComp.result = db.ExecuteWait(rsComp.query, rsComp.args)
+	rsComp.FromJSON
+	'
+	rsComp.Initialize("vuetifycomponents", "name")
+	rsComp.SelectAll(Array("*"), Array("name"))
+	rsComp.result = db.ExecuteWait(rsComp.query, rsComp.args)
+	rsComp.FromJSON
+	vue.setdata("vuetifycomponents", rsComp.result)
+	vm.hideloading
+End Sub
+
+'exit the attributes screen
+Sub tbl2exit_click(e As BANanoEvent)
+	contattributes.Hide
+	contdbadmin.hide
+	tabs.show
+End Sub
+
+Sub CreateDataTable_vuetifyattributes
+	dtvuetifyattributes = vm.CreateDataTable("dtvuetifyattributes", "key", Me)
+	dtvuetifyattributes.SetTitle("Vuetify Attributes")
+	'dtvuetifyattributes.SetSearchbox(True)
+	'dtvuetifyattributes.SetAddNew("btnNewAttribute", "mdi-plus", "Add a new attribute")
+	dtvuetifyattributes.SetItemsperpage("100")
+	dtvuetifyattributes.SetMobilebreakpoint("600")
+	dtvuetifyattributes.SetMultisort(True)
+	dtvuetifyattributes.SetPage("1")
+	dtvuetifyattributes.SetSingleselect(True)
+	dtvuetifyattributes.SetVisible(True)
+	dtvuetifyattributes.AddColumn1("icon", "Icon", "icon",0,False,"start")
+	dtvuetifyattributes.AddColumn1("name", "Name", "text",0,False,"start")
+	dtvuetifyattributes.AddColumn1("type", "Type", "text",0,False,"start")
+	dtvuetifyattributes.AddColumn1("default", "Default", "text",0,False,"start")
+	dtvuetifyattributes.AddColumn1("description", "Description", "text",0,False,"start")
+	dtvuetifyattributes.SetEdit(True)
+	dtvuetifyattributes.SetDelete(True)
+	contattributes.AddControl(dtvuetifyattributes.DataTable, dtvuetifyattributes.tostring, 2, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+End Sub
+
+
 
 
 Sub CreateDBAdmin
@@ -7497,6 +8091,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 	'
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7555,6 +8150,7 @@ End Sub
 Sub tblexit_click(e As BANanoEvent)
 	tabs.Show
 	contdbadmin.hide
+	contattributes.hide
 End Sub
 
 Sub builderlisting_click(e As BANanoEvent)
@@ -7692,11 +8288,11 @@ Sub Design_DBSourceCode
 	'show on navbar
 	If  bisShowonnavbar Then
 		AddInstruction(sbl, "pgIndex", "BuildNavBar" , "")
-		AddComment(sbl,$"Add ${stitle} to navbar"$)
+		AddComment(sbl,$"Add ${sTitle} to navbar"$)
 		If bisicon Then
 			AddCode(sbl, $"vm.NavBar.AddIcon1("nav${dlg}", "${siconname}", "${sIconcolor}","${stooltip}", "")"$)
 		Else
-			AddCode(sbl, $"vm.NavBar.AddButton1("nav${dlg}", "${siconname}", "${stitle}", "${stooltip}", "")"$)
+			AddCode(sbl, $"vm.NavBar.AddButton1("nav${dlg}", "${siconname}", "${sTitle}", "${stooltip}", "")"$)
 		End If
 		AddNewLine(sbl)
 		'AddComment(sbl, $"add add & refresh button to the navbar for ${dlg}"$)
@@ -8553,6 +9149,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	istool = False
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	vm.CallMethod("LoadProjects")
 	vm.CallMethod("LoadContainers")
@@ -9355,6 +9952,7 @@ Sub ItemDrop(e As BANanoEvent)
 		myiphone.show
 		tabs.show
 		contdbadmin.hide
+		contattributes.hide
 		myiphone.SetLandScape(False)
 		NewProject
 		Return
@@ -9366,6 +9964,7 @@ Sub ItemDrop(e As BANanoEvent)
 	dbCode.SetCode("")
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	Dim rsSQL As BANanoAlaSQLE
 	e.PreventDefault
@@ -10639,6 +11238,7 @@ Sub DeleteIT
 	rsSQL.FromJSON
 	tabs.show
 	contdbadmin.hide
+	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -13370,7 +13970,7 @@ Sub Design_Page
 		AddInstruction(sb, "pgIndex", "" , "")
 		AddComment(sb, $"click ${mdlName} nav button"$)
 		AddCode(sb, $"Sub nav${svmodel}_click(e As BANanoEvent)"$)
-		AddComment(sb, $"show the page ${stitle}"$)
+		AddComment(sb, $"show the page ${sTitle}"$)
 		AddCode(sb, $"${mdlName}.Show"$)
 		AddCode(sb, "End Sub")
 		AddCode(sb, CRLF)

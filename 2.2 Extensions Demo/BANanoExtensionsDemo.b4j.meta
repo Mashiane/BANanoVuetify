@@ -40,6 +40,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modSelectSides,Code,34,0,modAvatarGroup,Process_Globals,4,0,pgIndex,BuildDrawer,64,0,pgIndex,confirm_ok,75,0,pgIndex,alert_ok,98,0,pgIndex,draweritems_click,128,1,pgIndex,inbox_click,157,0,pgIndex,AddPages,179,0,pgIndex,btnButton_click,174,0,modAvatarGroup,Code,22,6
+NavigationStack=modSelectSides,Code,34,0,modAvatarGroup,Process_Globals,4,0,pgIndex,BuildDrawer,64,0,pgIndex,confirm_ok,75,0,pgIndex,alert_ok,98,0,pgIndex,draweritems_click,128,1,pgIndex,inbox_click,157,0,pgIndex,AddPages,179,0,pgIndex,btnButton_click,174,0,modAvatarGroup,Code,22,6,Main,AppStart,30,0
 SelectedBuild=0
 VisibleModules=9,13,1,2,12

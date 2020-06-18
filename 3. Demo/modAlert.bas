@@ -39,7 +39,7 @@ Sub Code
 	'
 	vm.SetData("alert1", True)
 	Dim sContent As String = vm.Rand_LoremIpsum(1)
-	vm.CreateAlert("a13", Me, "").SetVModel("alert1").SetContent(sContent).SetBorder("left").SetCloseText("Close Alert").SetDismissible(True).SetDark(True).SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4).AddToContainer(cont, 3, 1)
+	vm.CreateAlert("a13", Me, "").SetVModel("alert1").SetContent(sContent).SetBorder("left").SetCloseLabel("Close Alert").SetDismissible(True).SetDark(True).SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4).AddToContainer(cont, 3, 1)
 	
 	
 	'add container to page

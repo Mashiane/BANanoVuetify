@@ -24,71 +24,72 @@ File28=config.php
 File29=contactus.txt
 File3=3.jpg
 File30=container.png
-File31=dark-beach.jpg
-File32=database.png
-File33=datepicker.png
-File34=dialog.png
-File35=email.png
-File36=favicon.ico
-File37=favicon-16x16.png
-File38=favicon-32x32.png
-File39=fileselect.png
+File31=customviewcode.txt
+File32=dark-beach.jpg
+File33=database.png
+File34=datepicker.png
+File35=dialog.png
+File36=email.png
+File37=favicon.ico
+File38=favicon-16x16.png
+File39=favicon-32x32.png
 File4=4.jpg
-File40=footer.png
-File41=hover.png
-File42=icon.png
-File43=image.png
-File44=infobox.png
-File45=label.png
-File46=list.png
-File47=material.jpg
-File48=menu.png
-File49=newproject.json
+File40=fileselect.png
+File41=footer.png
+File42=hover.png
+File43=icon.png
+File44=image.png
+File45=infobox.png
+File46=label.png
+File47=list.png
+File48=material.jpg
+File49=menu.png
 File5=5.jpg
-File50=overlay.png
-File51=page.png
-File52=pagination.png
-File53=panel.png
-File54=parallax.png
-File55=password.png
-File56=planet.jpg
-File57=profilepic.png
-File58=progresscircular.png
-File59=progresslinear.png
+File50=newproject.json
+File51=overlay.png
+File52=page.png
+File53=pagination.png
+File54=panel.png
+File55=parallax.png
+File56=password.png
+File57=planet.jpg
+File58=profilepic.png
+File59=progresscircular.png
 File6=alasql.min.js
-File60=quill.png
-File61=radio.png
-File62=rating.png
-File63=select.png
-File64=sheet.png
-File65=sidebar.png
-File66=sky.jpg
-File67=slider.png
-File68=sparkline.png
-File69=speeddial.png
+File60=progresslinear.png
+File61=quill.png
+File62=radio.png
+File63=rating.png
+File64=select.png
+File65=sheet.png
+File66=sidebar.png
+File67=sky.jpg
+File68=slider.png
+File69=sparkline.png
 File7=alert.png
-File70=sponge.png
-File71=squirrel.jpg
-File72=stepper.png
-File73=switch.png
-File74=table.png
-File75=tabs.png
-File76=tags.json
-File77=telephone.png
-File78=text.png
-File79=textarea.png
+File70=speeddial.png
+File71=sponge.png
+File72=squirrel.jpg
+File73=stepper.png
+File74=switch.png
+File75=table.png
+File76=tabs.png
+File77=tags.json
+File78=telephone.png
+File79=text.png
 File8=android-chrome-192x192.png
-File80=time.png
-File81=timeline.png
-File82=timelineitem.png
-File83=toolbar.png
-File84=transition.png
-File85=treeview.png
-File86=upload.php
-File87=uploader.png
-File88=vbanner.jpg
-File89=web-types.json
+File80=textarea.png
+File81=time.png
+File82=timeline.png
+File83=timelineitem.png
+File84=toolbar.png
+File85=transition.png
+File86=treeview.png
+File87=upload.php
+File88=uploader.png
+File89=vbanner.jpg
 File9=android-chrome-512x512.png
+File90=web-types.json
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=JSON
@@ -132,9 +133,9 @@ FileGroup45=Default Group
 FileGroup46=Default Group
 FileGroup47=Default Group
 FileGroup48=Default Group
-FileGroup49=Templates
+FileGroup49=Default Group
 FileGroup5=Default Group
-FileGroup50=Default Group
+FileGroup50=Templates
 FileGroup51=Default Group
 FileGroup52=Default Group
 FileGroup53=Default Group
@@ -162,8 +163,8 @@ FileGroup72=Default Group
 FileGroup73=Default Group
 FileGroup74=Default Group
 FileGroup75=Default Group
-FileGroup76=JSON
-FileGroup77=Default Group
+FileGroup76=Default Group
+FileGroup77=JSON
 FileGroup78=Default Group
 FileGroup79=Default Group
 FileGroup8=Default Group
@@ -176,8 +177,9 @@ FileGroup85=Default Group
 FileGroup86=Default Group
 FileGroup87=Default Group
 FileGroup88=Default Group
-FileGroup89=JSON
+FileGroup89=Default Group
 FileGroup9=Default Group
+FileGroup90=JSON
 Group=Default Group
 Library1=jcore
 Library10=bananovuetifyinfobox
@@ -191,11 +193,12 @@ Library6=bananovuetifyconnect
 Library7=bananovuetifyprism
 Library8=bananovuetifydevice
 Library9=bananovuetifyquill
-Module1=pgIndex
-NumberOfFiles=89
+Module1=clsCodeBuilder
+Module2=pgIndex
+NumberOfFiles=90
 NumberOfLibraries=12
-NumberOfModules=1
-Version=8.3
+NumberOfModules=2
+Version=8.31
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -298,252 +301,25 @@ Sub BANano_Ready
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON
-	
-'	'keep record all all components
-'	Dim importComponents As Map = CreateMap()
-'	'keep a flat file for all attributes
-'	Dim importAttributes As Map = CreateMap()
-'		
-'	'process tags file
-'	'*****
-'	Dim tResult As Map
-'	Dim tPromise As BANanoPromise = BANano.GetFileAsJSON("./assets/tags.json",Null)
-'	tPromise.then(tResult)
-'		For Each k As String In tResult.Keys
-'			'each key is the component name
-'			Dim v As Map = tResult.get(k)
-'			'get the description of the component
-'			Dim sdescription As String = v.getdefault("description", "")
-'			'get the list of attributes for this component
-'			Dim la As List
-'			la.initialize
-'			Dim attributes As List = v.getdefault("attributes", la)
-'			'define the component
-'			Dim component As Map = CreateMap()
-'			component.put("name", k)
-'			component.put("description", sdescription)
-'			'add the component to the master list
-'			importComponents.put(k, component)
-'			'for each attribute we have managed to get, update the master list
-'			For Each attr As String In attributes
-'				'the key should be the component.attribute
-'				Dim attrKey As String = $"${k}.${attr}"$
-'				Dim attribute As Map = CreateMap()
-'				attribute.put("key", attrKey)
-'				attribute.put("name", attr)
-'				attribute.put("component", k)
-'				'add the attribute to the master list
-'				importAttributes.put(attrKey, attribute)
-'			Next
-'		Next
-'	tPromise.Else(tResult)
-'	tPromise.End
-'	'*****
-'	'process attributes file
-'	Dim Result As Map
-'	Dim promise As BANanoPromise = BANano.GetFileAsJSON("./assets/attributes.json",Null)
-'	promise.Then(Result)
-'		'we will make a flat file for all components
-'		'first a map with each key being the component
-'		'in each value is a list of all attributes for that component
-'		For Each k As String In Result.Keys
-'			'get the component name
-'			Dim compName As String = MvField(k, 1, "/")
-'			'get the attribute name
-'			Dim attrName As String = MvField(k, 2, "/")
-'			'get the other stuff for the attribute
-'			Dim v As Map = Result.get(k)
-'			Dim sdescription As String = v.getdefault("description", "")
-'			Dim stype As String = v.getdefault("type", "")
-'			'do we have an existing component
-'			If importComponents.ContainsKey(compName) = False Then
-'				Log($"Component not found on tags (${compName})"$)
-'				'update components
-'				Dim component As Map = CreateMap()
-'				component.put("name", compName)
-'				component.put("description", "")
-'				'add the component to the master list
-'				importComponents.put(compName, component)
-'			End If
-'			'define the attribute key
-'			Dim attrKey As String = $"${compName}.${attrName}"$
-'			'do we have an existing attribute
-'			Dim attribute As Map
-'			If importAttributes.ContainsKey(attrKey) = False Then
-'				Log($"Attribute not found on tags (${attrKey})"$)
-'				attribute.Initialize
-'			Else
-'				'get existing attribute properties
-'				attribute = importAttributes.get(attrKey)
-'			End If
-'			'update the attribute
-'			attribute.put("component", compName)
-'			attribute.put("name", attrName)
-'			attribute.put("type", stype)
-'			attribute.put("description", sdescription)
-'			'update the master attributes
-'			importAttributes.put(attrKey, attribute)
-'		Next
-'	promise.Else(Result)
-'	promise.End
-'	'*****
-'	'process the web types file
-'	'Log(importAttributes)
-'	'Log(importComponents)
-'	
-'	Dim wResult As Map
-'	Dim wpromise As BANanoPromise = BANano.GetFileAsJSON("./assets/web-types.json",Null)
-'	wpromise.Then(wResult)
-'		'Log(wResult)
-'		Dim mcontributions As Map = wResult.get("contributions")
-'		Dim mhtml As Map = mcontributions.get("html")
-'		Dim lattributes As List = mhtml.get("attributes")
-'		Dim ltags As List = mhtml.get("tags")
-'		Dim stuff As Map = CreateMap()
-'		'loop through each tag
-'		For Each mtag As Map In ltags
-'			'get the tag name
-'			Dim tName As String = mtag.getdefault("name", "")
-'			'fix the component name
-'			Dim tagName As String = CorrectName(tName)
-'			'does the component exist
-'			If importComponents.ContainsKey(tagName) = False Then
-'				Log($"Component not found on web types (${tagName})"$)
-'				'update components
-'				Dim component As Map = CreateMap()
-'				component.put("name", tagName)
-'				component.put("description", "")
-'				'add the component to the master list
-'				importComponents.put(tagName, component)
-'			End If
-'			'get a list of the attributes
-'			Dim tl As List
-'			tl.initialize
-'			Dim tAttributes As List = mtag.getdefault("attributes", tl)
-'			If tAttributes.size > 0 Then
-'				'for each attribute
-'				For Each tattribute As Map In tAttributes
-'					Dim aname As String = tattribute.getdefault("name", "")
-'					Dim adefault As String = tattribute.getdefault("default", "")
-'					'fix the name camel case
-'					aname = CorrectName(aname)
-'					'clean the defaults
-'					adefault = adefault.replace("'","")
-'					adefault = adefault.replace(QUOTE, "")
-'					adefault = adefault.replace("undefined", "")
-'					If adefault.startswith("[") Then adefault = ""
-'					If adefault.startswith("{") Then adefault = ""
-'					stuff.put(adefault, adefault)
-'					'define the attibute key
-'					Dim attrKey As String = $"${tagName}.${aname}"$
-'					'do we have an existing attribute
-'					Dim eattribute As Map
-'					If importAttributes.ContainsKey(attrKey) = False Then
-'						Log($"Attribute not found on web tags (${attrKey})"$)
-'						eattribute.Initialize
-'					Else
-'						'get existing attribute properties
-'						eattribute = importAttributes.get(attrKey)
-'					End If
-'					'update the attribute
-'					eattribute.put("component", tagName)
-'					eattribute.put("default", adefault)
-'					'update the master attributes
-'					importAttributes.put(attrKey, eattribute)
-'				Next
-'			End If
-'			'***
-'			'get the component to put events etc
-'			Dim component As Map = importComponents.get(tagName)
-'			'get a list of the events
-'			Dim te As List
-'			te.initialize
-'			Dim tEvents As List = mtag.getdefault("events", te)
-'			component.put("events", tEvents)
-'			'***
-'			'get a list of slots
-'			Dim ts As List
-'			ts.initialize
-'			Dim tSlots As List = mtag.getdefault("slots", ts)
-'			component.put("slots", tSlots)
-'			importComponents.put(tagName, component)
-'		Next
-'	'Log(ltags)
-'	wpromise.Else(wResult)
-'	wpromise.End
-'	'
-'	Log(importComponents)
-'	Log(importAttributes)
-	
+	'
+	'create the tables
+	alaSQL.Initialize("vuetifycomponents", "name")
+	alaSQL.SchemaAddStrings(Array("name", "description", "icon"))
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
+	'
+	alaSQL.Initialize("vuetifyattributes", "name")
+	alaSQL.SchemaAddStrings(Array("key", "component", "default", "type", "name", "description", "icon"))
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
+	'
+	alaSQL.Initialize("vuetifyevents", "name")
+	alaSQL.SchemaAddStrings(Array("key", "component", "name", "arguments", "args"))
+	alaSQL.SchemaCreateTable
+	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
+	alaSQL.FromJSON
+
 	pgIndex.init
-End Sub
-
-Sub CorrectName(oldName As String) As String
-	Dim strName As String = StringBreakAtUpperCase(oldName)
-	strName = strName.replace(" ", "-")
-	strName = strName.tolowercase
-	Return strName
-End Sub
-
-'break a string at uppercase to have a space
-Sub StringBreakAtUpperCase(st As String) As String
-	If st.Length = 0 Then Return ""
-	Dim k As Int
-	Dim s As String
-	Dim newst As String = st.CharAt(0)
-	For i = 1 To st.Length - 1
-		s = st.CharAt(i)
-		k = Asc(s)
-		If (k > 64) And (k < 91) And (st.CharAt(i-1) <> " ") Then
-			newst = newst & " " & s
-		Else
-			newst = newst & s
-		End If
-	Next
-	Return newst
-End Sub
-
-
-'mvfield sub
-Sub MvField(sValue As String, iPosition As Int, Delimiter As String) As String
-	If sValue.Length = 0 Then Return ""
-	Dim xPos As Int = sValue.IndexOf(Delimiter)
-	If xPos = -1 Then Return sValue
-	Dim mValues As List = StrParse(Delimiter,sValue)
-	Dim tValues As Int
-	tValues = mValues.size -1
-	Select Case iPosition
-		Case -1
-			Return mValues.get(tValues)
-		Case -2
-			Return mValues.get(tValues - 1)
-		Case -3
-			Dim sb As StringBuilder
-			sb.Initialize
-			Dim startcnt As Int
-			sb.Append(mValues.Get(1))
-			For startcnt = 2 To tValues
-				sb.Append(Delimiter)
-				sb.Append(mValues.get(startcnt))
-			Next
-			Return sb.tostring
-		Case Else
-			iPosition = iPosition - 1
-			If iPosition <= -1 Then
-				Return mValues.get(tValues)
-			End If
-			If iPosition > tValues Then
-				Return ""
-			End If
-			Return mValues.get(iPosition)
-	End Select
-End Sub
-
-
-Sub StrParse(delim As String, inputString As String) As List
-	Dim values() As String = BANano.Split(delim,inputString)
-	Dim nl As List
-	nl.Initialize
-	nl.AddAll(values)
-	Return nl
 End Sub

@@ -110,7 +110,7 @@ Module9=modButtons
 NumberOfFiles=26
 NumberOfLibraries=6
 NumberOfModules=48
-Version=8.3
+Version=8.31
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -127,7 +127,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.13"
+	Public Version As String = "4.14"
 	Public Port As String = "8080"
 End Sub
 
@@ -160,7 +160,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
 	BP.StylesPath = BANano.STYLES_FOLDER
 	BP.ScriptFile = BANano.JAVASCRIPT_NAME
-	BP.UnzipFonts
+	'BP.UnzipFonts
 	BP.OpenOnPort(True, Port)
 	ExitApplication
 End Sub
