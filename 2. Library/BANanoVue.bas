@@ -746,6 +746,15 @@ End Sub
         }; 
 #End If
 
+
+Sub CorrectName(oldName As String) As String
+	Dim strName As String = StringBreakAtUpperCase(oldName)
+	strName = strName.replace(" ", "-")
+	strName = strName.tolowercase
+	Return strName
+End Sub
+
+
 'double quote each item of the mv
 Sub MVQuoteItems(delim As String, mvstring As String) As String
 	Dim sbOut As StringBuilder
@@ -1050,6 +1059,20 @@ Sub Join(delimiter As String, lst As List) As String
 		sb.Append(delimiter).Append(fld)
 	Next
 	Return sb.ToString
+End Sub
+
+Sub MvDistinct(delim As String, strmv As String) As String
+	Dim items As List = StrParse(delim, strmv)
+	Dim mi As Map = CreateMap()
+	For Each k As String In items
+		mi.Put(k, k)
+	Next
+	Dim nl As List = NewList
+	For Each k As String In mi.Keys
+		nl.Add(k)
+	Next
+	Dim sout As String = Join(delim, nl)
+	Return sout
 End Sub
 
 'convert delimited values and keys to a map
@@ -1889,21 +1912,6 @@ Sub ProperCase(myStr As String) As String
 	End Try
 End Sub
 
-'Sub BeautifyName1(namx As String) As String
-'	namx = namx.trim
-'	If namx = "" Then Return ""
-'	Dim notCool As List
-'	notCool.Initialize 
-'	notCool.AddAll(Array("~", "`", "!" , "@" , "#" , "$" , "%", "^" , "&" , "*" , "(" , ")" , "-" , "_" , "+" , "=" , "{" , "}" , "|" , "\", "]", "["))
-'	notCool.AddAll(Array(":", ";", "'", "<", ">", "," , ".", "?", "/"))
-'	For Each cn As String In notCool
-'		namx = namx.Replace(cn, " ")
-'	Next
-'	Dim sname As String = ProperCase(namx)
-'	sname = sname.Replace(" ", "")
-'	Return sname
-'End Sub
-
 Sub BeautifyName(idName As String) As String
 	idName = idName.trim
 	If idName = "" Then Return ""
@@ -1914,15 +1922,32 @@ Sub BeautifyName(idName As String) As String
 	For i = 0 To slen - 1
 		Dim mout As String = idName.CharAt(i)
 		If "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".IndexOf(mout) = -1 Then
-			ls.Append(" ")
+			ls.Append("-")
 		Else
 			ls.Append(mout)
 		End If
 	Next
 	Dim sname As String = ls.tostring
-	sname = ProperCase(sname)
-	sname = sname.Replace(" ", "")
+	sname = ProperSubName(sname, False)
 	Return sname
+End Sub
+
+Sub ProperSubName(vx As String, removePref As Boolean) As String
+	vx = vx.Replace(":", "-")
+	vx = vx.Replace(".", "-")
+	Dim varList As List = StrParse("-", vx)
+	If removePref Then
+		varList.RemoveAt(0)
+	End If
+	Dim varTot As Int = varList.Size - 1
+	Dim varCnt As Int
+	For varCnt = 0 To varTot
+		Dim varItem As String = varList.Get(varCnt)
+		varItem = Capitalize(varItem)
+		varList.Set(varCnt, varItem)
+	Next
+	Dim subName1 As String = Join("",varList)
+	Return subName1
 End Sub
 
 Sub Capitalize(t As String) As String
@@ -1932,6 +1957,7 @@ Sub Capitalize(t As String) As String
 	o = s.ToUpperCase & r
 	Return o
 End Sub
+
 
 'lowercase map keys
 Sub MapKeysLowerCaseSingle(m As Map) As Map
@@ -3875,4 +3901,3 @@ Sub Decrement(elID As String, valueOf As Int) As BANanoVue
 	SetStateSingle(elID, oldv)
 	Return Me
 End Sub
-
