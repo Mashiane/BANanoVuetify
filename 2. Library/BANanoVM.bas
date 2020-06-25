@@ -200,7 +200,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Pages.initialize
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
-	VContent.Initialize(vue, "appcontent").SetTag("v-content")
+	VContent.Initialize(vue, "appcontent").SetTag("v-main")
 	Container.Initialize(vue, "appcontainer", eventHandler).SetFluid(True)
 	'
 	Drawer.Initialize(vue, "drawer", eventHandler)

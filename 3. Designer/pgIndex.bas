@@ -1610,6 +1610,13 @@ Sub btnVueExtract_click(e As BANanoEvent)
 	Dim tags As String = BANano.CallInlinePHPWait(bPHP.GET_FILE, bPHP.BuildGetFile("./assets/tags.json"))
 	'convert to json
 	Dim tResult As Map = BANano.fromjson(tags)
+	'
+	tResult.Put("v-router-view", CreateMap("name":"v-router-view"))
+	tResult.Put("v-router-link", CreateMap("name":"v-router-link"))
+	tResult.Put("v-div", CreateMap("name":"v-div"))
+	tResult.Put("v-template", CreateMap("name":"v-template"))
+	tResult.Put("v-a", CreateMap("name":"v-a"))
+		
 	'these are maps
 	For Each k As String In tResult.Keys
 		'each key is the component name
@@ -1622,7 +1629,7 @@ Sub btnVueExtract_click(e As BANanoEvent)
 		Dim attributes As List = v.getdefault("attributes", la)
 		'add extra attributes
 		attributes.AddAll(Array("caption", "key", "v-html", "v-text", "v-model", "ref", "v-if", "v-else", "v-show", _
-	"v-for","v-pre","v-once", "v-cloak", "required", "enabled", "readonly"))
+	"v-for","v-pre","v-once", "v-else-if", "v-cloak", "required", "disabled", "readonly","v-bind:class","v-bind:style"))
 	
 		'define the component
 		Dim component As Map = CreateMap()
@@ -1639,15 +1646,35 @@ Sub btnVueExtract_click(e As BANanoEvent)
 			attribute.put("name", attr)
 			attribute.put("component", k)
 			Select Case attr
-			Case "v-pre", "v-once", "v-cloak"
+			Case "v-pre", "v-once", "v-cloak", "has-id"
 				attribute.put("type", "boolean")
 			Case "caption", "key", "v-html", "v-text", "v-model", "ref", "v-if", "v-else", "v-show", _
-			"v-for","required", "enabled", "readonly"
+			"v-for","required", "disabled", "readonly", "v-bind:class", "v-bind:style", "v-else-if"
 				attribute.put("type", "string")
 			End Select
 			'add the attribute to the master list
 			importAttributes.put(attrKey, attribute)
 		Next
+	Next
+	
+	'define link items and missing items
+	Dim aitems As List = vue.newlist
+	aitems.AddAll(Array("v-a.href", "v-a.download", "v-a.title", "v-a.target", "v-a.name"))
+	For Each ak As String In aitems
+		Dim attr As String = vue.MvField(ak,2,".")
+		Dim k As String = vue.mvfield(ak,1,".")
+		Dim attribute As Map = CreateMap()
+		attribute.put("key", ak)
+		attribute.put("name", attr)
+		attribute.put("component", k)
+		Select Case attr
+		Case "download"
+			attribute.put("type", "boolean")
+		Case Else
+			attribute.put("type", "string")
+		End Select
+		'add the attribute to the master list
+		importAttributes.put(ak, attribute)
 	Next
 	
 	'*****
@@ -1692,11 +1719,21 @@ Sub btnVueExtract_click(e As BANanoEvent)
 			attribute = importAttributes.get(attrKey)
 		End If
 		'do some cleaning on the types
+		'
+		cType = cType.replace("function", "string")
+		cType = cType.replace("object", "string")
 		cType = cType.replace("number", "string")
 		cType = cType.replace("any", "string")
-		If cType = "" Then cType = "string"
-		'ensure we have distinct types
 		cType = vue.MvDistinct("|", cType)
+		cType = cType.replace("array|string", "string")
+		cType = cType.replace("boolean|array", "boolean")
+		cType = cType.replace("boolean|string", "string")
+		cType = cType.replace("string|array", "string")
+		cType = cType.replace("string|boolean","string")
+		cType = cType.replace("[","")
+		cType = cType.replace("}","")
+		cType = cType.replace("array", "List")
+		If cType = "" Then cType = "string"
 		'update the attribute
 		attribute.put("component", compName)
 		attribute.put("name", attrName)
@@ -1705,7 +1742,7 @@ Sub btnVueExtract_click(e As BANanoEvent)
 		'update the master attributes
 		importAttributes.put(attrKey, attribute)
 	Next
-	'
+	
 	'*****
 	'process the web types file
 	'Log(importAttributes)
@@ -1814,13 +1851,17 @@ Sub btnVueExtract_click(e As BANanoEvent)
 		crec.put("description", xdesc)
 		crec.put("icon", "mdi-folder-cog-outline")
 		'
+		'replaced in v2
+		If xname = "v-flex" Then Continue
+		If xname = "v-layout" Then Continue
 		vuetifycomponents.add(crec)
 	Next
 	
 	'process events
 	For Each ck As String In importComponents.keys
 		Dim cm As Map = importComponents.get(ck)
-		Dim eve As List = cm.get("events")
+		Dim ee As List = vue.newlist
+		Dim eve As List = cm.getDefault("events",ee)
 		For Each evem As Map In eve
 			Dim evename As String = evem.get("name")	
 			Dim earguments As List = evem.get("arguments")
@@ -1844,7 +1885,6 @@ Sub btnVueExtract_click(e As BANanoEvent)
 				If argtype.startswith("void") Then argtype = "Object"
 				If argtype.startswith("{") Then argtype = "Object"
 				
-				stuff.put(argtype, argtype)
 				argumentsl.add($"${argname} As ${argtype}"$)
 				args.add(argname)
 			Next
@@ -1919,9 +1959,91 @@ Sub btnVueExtract_click(e As BANanoEvent)
 	Else
 		vm.SetBadgeColor("btnVueExtract", vue.COLOR_GREEN, vue.INTENSITY_DARKEN4)
 	End If
+	'*****
+	'CREATE CUSTOM VIEWS
+	'convert everything to custom views
+	'get the extra code from file
+	vm.SetBadgeContent("tbl2customview", "0")
+	Dim fCnt As Int = 0
+	'create folder to hold custom views
+	BANano.CallInlinePHPWait(bPHP.DIRECTORY_MAKE, bPHP.BuildDirectoryMake("./customviews"))
+	'for each component
+	For Each vcc As Map In vc.Result
+		fCnt = fCnt + 1
+		vm.SetBadgeContent("tbl2customview", fCnt)
+		Dim extraCode As String = BANano.CallInlinePHPWait(bPHP.GET_FILE, bPHP.BuildGetFile("./assets/customviewcode.txt"))
+		Dim compName As String = vcc.get("name")
+		Dim baeName As String = vue.BeautifyName(compName)
+		'get the attributes for the component
+		Dim rsAttributes As BANanoAlaSQLE
+		Dim rsEvents As BANanoAlaSQLE
+		db.OpenWait("bvmdesigner", "bvmdesigner")
+		rsAttributes.Initialize("vuetifyattributes", "name")
+		Dim qw As Map = CreateMap()
+		qw.put("component", compName)
+		rsAttributes.SelectWhere(Array("*"), qw, Array("="), Array("name"))
+		rsAttributes.result = db.ExecuteWait(rsAttributes.query, rsAttributes.args)
+		rsAttributes.FromJSON
+		'select events
+		rsEvents.Initialize("vuetifyevents", "name")
+		Dim qwe As Map = CreateMap()
+		qwe.put("component", compName)
+		rsEvents.SelectWhere(Array("*"), qwe, Array("="), Array("name"))
+		rsEvents.result = db.ExecuteWait(rsEvents.query, rsEvents.args)
+		rsEvents.FromJSON
+		'
+		'build the custom view
+		Dim cb As clsCodeBuilder
+		cb.Initialize(vue, compName)
+		For Each am As Map In rsAttributes.result
+			Dim aname As String = am.get("name")
+			Dim adefault As String = am.getdefault("default","")
+			Dim atype As String = am.getdefault("type","string")
+			cb.AddProperty(aname,atype,adefault,"", vue.newlist)
+		Next
+		'
+		Select Case compName
+		Case "v-div"
+			cb.AddProperty("TagName","string","div","", vue.newlist)
+		End Select
+		
+		'add events
+		For Each em As Map In rsEvents.result
+			Dim xename As String = em.get("name")
+			Dim xearguments As String = em.get("arguments")
+			Dim xeargs As String = em.get("args")
+			cb.AddEvent(xename, xearguments, xeargs)
+		Next
+		'
+		Select Case compName
+		Case "v-app-bar-nav-icon"
+			cb.AddEvent("click", "e As BANanoEvent", "e")
+			cb.AddEvent("click.stop", "e As BANanoEvent", "e")
+		End Select
+		'add styles
+		cb.AddStyle("border-color","","")
+		cb.AddStyle("border-style", "","")	
+		cb.AddStyle("border-width", "","")
+		cb.AddStyle("border-radius", "", "")
+		cb.AddStyle("margin-top", "","")
+		cb.AddStyle("margin-right", "","")
+		cb.AddStyle("margin-bottom", "","")
+		cb.AddStyle("margin-left", "","")
+		cb.AddStyle("padding-top", "","")
+		cb.AddStyle("padding-right", "","")
+		cb.AddStyle("padding-bottom", "","")
+		cb.AddStyle("padding-left", "","")		
+		'
+		Dim xcode As String = cb.CreateCustomView
+		'
+		extraCode = extraCode.Replace("CompName", baeName)
+		xcode = xcode & CRLF & extraCode
+		Dim fName As String = $"./customviews/${baeName}.bas"$
+		'
+		BANano.CallInlinePHPWait(bPHP.FILE_LOG, bPHP.BuildWriteFile(fName, xcode))
+	Next
 	vm.hideloading
 End Sub
-
 
 #Region PropertyBags
 Sub CreatePropertyBagsDrawer
@@ -7762,7 +7884,7 @@ Sub tbl2customview_click(e As BANanoEvent)
 	rsEvents.SelectWhere(Array("*"), qwe, Array("="), Array("name"))
 	rsEvents.result = db.ExecuteWait(rsEvents.query, rsEvents.args)
 	rsEvents.FromJSON
-			
+	'
 	'build the custom view
 	Dim cb As clsCodeBuilder
 	cb.Initialize(vue, compName)
@@ -7772,6 +7894,13 @@ Sub tbl2customview_click(e As BANanoEvent)
 		Dim atype As String = am.getdefault("type","string")
 		cb.AddProperty(aname,atype,adefault,"", vue.newlist)
 	Next
+	'
+	Select Case compName
+	Case "v-div"
+		cb.AddProperty("TagName","string","div","", vue.newlist)
+	End Select
+	'
+	
 	'add events
 	For Each em As Map In rsEvents.result
 		Dim ename As String = em.get("name")

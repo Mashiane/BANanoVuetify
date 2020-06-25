@@ -19,6 +19,7 @@ Sub Class_Globals
 	Private TagName As String
 	Private CompName As String
 	Private vue As BANanoVue
+	Private styles As Map
 	Type VOptions(propname As String, options As String)
 	Private options As Map
 End Sub
@@ -27,11 +28,25 @@ End Sub
 Public Sub Initialize(v As BANanoVue, stag As String) As clsCodeBuilder
 	vue = v
 	TagName = stag
+	Select Case stag
+	Case "v-div"
+		TagName = "div"
+	Case "v-router-view"
+		TagName = "router-view"
+	Case "v-a"
+		TagName = "a"
+	Case "v-router-link"
+		TagName = "router-link"
+	Case "v-template"
+		TagName = "template"
+	End Select
+	'
 	Defaults.Initialize
 	properties.Initialize
 	events.Initialize
 	slots.Initialize
 	structure.Initialize
+	styles.initialize
 	CompName = vue.BeautifyName(stag)
 	options.initialize
 	Return Me
@@ -75,6 +90,24 @@ Sub AddProperty(propName As String, propType As String, propDefault As String, p
 	nv.values = values
 	nv.propdefault = propDefault
 	properties.Put(propName, nv)
+End Sub
+
+'add style
+Sub AddStyle(propName As String, propDefault As String, propDescription As String)
+	'exclude the id
+	If propName.EqualsIgnoreCase("id") Then Return
+	propName = propName.Trim
+	propDescription = propDescription.trim
+	propName = propName.tolowercase
+	'
+	Dim nv As VThing
+	nv.Initialize
+	nv.propName = propName
+	nv.propDescription = propDescription
+	nv.propType = "string"
+	nv.values = Null
+	nv.propdefault = propDefault
+	styles.Put(propName, nv)
 End Sub
 
 
@@ -141,41 +174,24 @@ AddCode(mc, "Version=8.3")
 AddCode(mc,"@EndOfDesignText@")
 	AddComment(mc, $"Custom BANano View class: ${CompName}"$)
 	AddCode(mc, "#IgnoreWarnings:12")
-	'add events
-	For Each e As VEvent In events.values
-		Dim ename As String = e.eventName
-		Dim oname As String = ename
-		Dim eargs As String = e.eventDescription
-		Dim eparts As String = e.eventParts
-		'
-		ename = vue.BeautifyName(ename)
-		Dim xname As String = ename
-		'call events
-		AddComment(ea, "This activates when the event exists on the module")
-		AddCode(ea, $"SetOn${ename}"$)
-		'add events for trapping
-		ename = ename.tolowercase
-		AddCode(mc, $"#Event: ${ename} (${eargs})"$)
-		'define setters
-		AddComment(es, "set on " & ename & " event, updates the master events records")
-		AddCode(es, $"Sub SetOn${xname}() As ${CompName}"$)
-		AddCode(es, $"Dim sName As String = #"#{mEventName}_${ename}"#"$)
-		AddCode(es, $"sName = sName.tolowercase"$)
-		AddCode(es, $"If SubExists(mCallBack, sName) = False Then Return Me"$)
-		AddCode(es, $"SetAttr("v-on:${oname}", sName)"$)
-		AddCode(es, $"Dim ${eargs} 'ignore"$)
-		AddCode(es, $"Dim cb As BANanoObject = BANano.CallBack(mCallBack, sName, Array(${eparts}))"$)
-		AddCode(es, $"methods.Put(sName, cb)"$)
-		AddCode(es, $"Return Me"$)
-		AddCode(es, "End Sub")
-		AddNewLine(es)
-	Next
-	AddNewLine(mc)
+		
+	'can have multiple items, read it
+	If TagName = "div" Or TagName = "v-div" Then
+		AddCode(dg, $"mTagName = props.Get("TagName")"$)
+	End If	
 		
 	For Each v As VThing In properties.Values
+		Select Case v.propName
+			'required, readonly for inputs only
+		End Select
+		
 		Dim baeName As String = vue.BeautifyName(v.propName)
+		If v.propname.EqualsIgnoreCase("tagname") Then
+			baeName = "TagName"
+		End If
 		Dim dpDef As String = $"#DesignerProperty: Key: ${baeName}, DisplayName: ${baeName}, Description: ${v.propDescription}"$
 		'
+		v.propdefault = ""
 		If v.propname = "caption" Then
 			Select Case TagName
 			Case "v-btn"
@@ -184,23 +200,25 @@ AddCode(mc,"@EndOfDesignText@")
 				v.propDefault = "Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 			Case "v-icon"
 				v.propDefault = "mdi-plus"
+			Case "v-card-title"
+				v.propDefault = "Card Title"
+			Case "v-card-subtitle"
+				v.propDefault = "Card Subtitle"
+			Case "v-card-text"
+				v.propDefault = "Card Text"
+			Case "v-chip"
+				v.propDefault = "Chip"
 			End Select
-			dpDef = dpDef & $", DefaultValue: ${v.propDefault}"$
-		Else
-			If v.propdefault = "" Then
-				If v.propType = "boolean" Then
-					v.propdefault = "False"
-				End If
-			End If
-			dpDef = dpDef & $", DefaultValue: ${v.propdefault}"$
 		End If
+		
 		'
 		If v.propDescription = "" Then v.propDescription = $"Set ${v.propName}"$
 		Select Case v.propName
 		Case "color", "text-color","background-color"
-			dpDef = dpDef & ", List: amber|black|blue|blue-grey|brown|cyan|deep-orange|deep-purple|green|grey|indigo|light-blue|light-green|lime|orange|pink|purple|red|teal|transparent|white|yellow|primary|secondary|accent|error|info|success|warning"
+			dpDef = dpDef & ", List: amber|black|blue|blue-grey|brown|cyan|deep-orange|deep-purple|green|grey|indigo|light-blue|light-green|lime|orange|pink|purple|red|teal|transparent|white|yellow|primary|secondary|accent|error|info|success|warning|none"
 		Case "elevation"
-			dpDef = $"#DesignerProperty: Key: Elevation, DisplayName: Elevation, FieldType: Int, DefaultValue: 0, MinRange: 0, MaxRange: 24, Description: Set elevation"$
+			v.propdefault = "0"
+			dpDef = $"#DesignerProperty: Key: Elevation, DisplayName: Elevation, FieldType: Int, MinRange: 0, MaxRange: 24, Description: Set elevation"$
 		Case "transition"
 			dpDef = dpDef & ", List: slide-x-transition|slide-x-reverse-transition|slide-y-transition|slide-y-reverse-transition|scroll-x-transition|scroll-x-reverse-transition|scroll-y-transition|scroll-y-reverse-transition|scale-transition|fade-transition|fab-transition"
 		Case "target"
@@ -213,19 +231,27 @@ AddCode(mc,"@EndOfDesignText@")
 			If TagName = "v-alert" Then
 				dpDef = dpDef & ", List: top|right|bottom|left"
 			End If
+		Case "tagname","TagName"
+			If TagName = "v-div" Or TagName = "div" Then
+				dpDef = dpDef & ", List:p|a|br|div|span|h1|h2|h3|h4|h5|h6"
+			End If
 		Case Else
 		End Select
 		'		
 			
+		
 		Select Case v.propType
 		Case "boolean"
-			dpDef = dpDef & ", FieldType: Boolean"
+			v.propDefault = "False"
+			dpDef = dpDef & $", FieldType: Boolean, DefaultValue: ${v.propdefault}"$
 			AddCode(dp, dpDef)
 			'update declarations
-			AddCode(dc, $"Private b${baeName} As Boolean = ${v.propDefault}"$)
+			AddCode(dc, $"Private b${baeName} As Boolean = False"$)
 			AddCode(dg, $"b${baeName} = props.Get("${baeName}")"$)
 			'
-			AddCode(bai, $"AddAttr(b${baeName}, "${v.propname}")"$)
+			If v.propName <> "has-id" Then
+				AddCode(bai, $"AddAttr(b${baeName}, "${v.propname}")"$)
+			End If
 			'
 			AddComment(sett, $"set ${v.propName}"$)
 			AddCode(sett, $"Sub Set${baeName}(var${baeName} As Boolean) As ${CompName}"$)
@@ -234,11 +260,11 @@ AddCode(mc,"@EndOfDesignText@")
 			AddCode(sett, $"Return Me"$)
 			AddCode(sett, $"End Sub"$)
 			AddNewLine(sett)
-		Case "string", "boolean|string"
-			dpDef = dpDef & ", FieldType: String"
+		Case "string"
+			dpDef = dpDef & $", FieldType: String, DefaultValue: ${v.propdefault}"$
 			AddCode(dp, dpDef)
 			'
-			AddCode(dc, $"Private s${baeName} As String = "${v.propDefault}""$)
+			AddCode(dc, $"Private s${baeName} As String = """$)
 			'
 			AddCode(dg, $"s${baeName} = props.Get("${baeName}")"$)
 			'
@@ -264,27 +290,99 @@ AddCode(mc,"@EndOfDesignText@")
 		
 	Next
 	'
+	'***** process the styles
+	For Each v As VThing In styles.values
+		Dim baeName As String = vue.BeautifyName(v.propName)
+		If v.propDescription = "" Then v.propDescription = $"Set ${v.propName}"$
+		Dim dpDef As String = $"#DesignerProperty: Key: ${baeName}, DisplayName: ${baeName}, Description: ${v.propDescription}, FieldType: String, DefaultValue: ${v.propDefault}"$
+		Select Case v.propname
+		Case "border-style"
+			dpDef = dpDef & ", List: dashed|dotted|double|groove|hidden|inset|none|outset|ridge|solid"
+		Case "border-color"
+			dpDef = dpDef & ", List: amber|black|blue|blue-grey|brown|cyan|deep-orange|deep-purple|green|grey|indigo|light-blue|light-green|lime|orange|pink|purple|red|teal|transparent|white|yellow|primary|secondary|accent|error|info|success|warning|none"
+		End Select
+		
+		AddCode(dp, dpDef)
+		'
+		AddCode(dc, $"Private s${baeName} As String = """$)
+		'
+		AddCode(dg, $"s${baeName} = props.Get("${baeName}")"$)
+		'
+		AddCode(bai, $"SetStyleSingle("${v.propname}", s${baeName})"$)
+			
+		AddComment(sett, $"set ${v.propName}"$)
+		AddCode(sett, $"Sub Set${baeName}(var${baeName} As String) As ${CompName}"$)
+		AddCode(sett, $"s${baeName} = var${baeName}"$)
+		AddCode(sett, $"SetStyleSingle("${v.propname}", s${baeName})"$)
+		AddCode(sett, $"Return Me"$)
+		AddCode(sett, $"End Sub"$)
+		AddNewLine(sett)
+	Next
+	'
 	'add extra dp
 	dp.Append($"#DesignerProperty: Key: Classes, DisplayName: Classes, FieldType: String, DefaultValue: , Description: Classes added to the HTML tag.
-#DesignerProperty: Key: Style, DisplayName: Style, FieldType: String, DefaultValue: , Description: Styles added to the HTML tag. Must be a json String."$)
+#DesignerProperty: Key: Style, DisplayName: Style, FieldType: String, DefaultValue: , Description: Styles added to the HTML tag. Must be a json String.
+#DesignerProperty: Key: Attributes, DisplayName: Attributes, FieldType: String, DefaultValue: , Description: Attributes added to the HTML tag. Must be a json String."$)
 AddNewLine(dp)
+'add events
+For Each e As VEvent In events.values
+	Dim ename As String = e.eventName
+	Dim oname As String = ename
+	Dim eargs As String = e.eventDescription
+	Dim eparts As String = e.eventParts
+	'
+	ename = vue.BeautifyName(ename)
+	Dim xname As String = ename
+	'call events
+	AddComment(ea, $"This activates ${ename} the event exists on the module"$)
+	AddCode(ea, $"SetOn${ename}"$)
+	'add events for trapping
+	ename = ename.tolowercase
+	AddCode(mc, $"#Event: ${ename} (${eargs})"$)
+	'define setters
+	AddComment(es, "set on " & ename & " event, updates the master events records")
+	AddCode(es, $"Sub SetOn${xname}() As ${CompName}"$)
+	AddCode(es, $"Dim sName As String = #"#{mEventName}_${ename}"#"$)
+	AddCode(es, $"sName = sName.tolowercase"$)
+	AddCode(es, $"If SubExists(mCallBack, sName) = False Then Return Me"$)
+	AddCode(es, $"Dim sCode As String = #"#{sName}(#{eOn${ename}})"#"$)
+	AddCode(es, $"SetAttr("v-on:${oname}", sCode)"$)
+	AddComment(es, "arguments for the event")
+	AddCode(es, $"Dim ${eargs} 'ignore"$)
+	AddCode(es, $"Dim cb As BANanoObject = BANano.CallBack(mCallBack, sName, Array(${eparts}))"$)
+	AddCode(es, $"methods.Put(sName, cb)"$)
+	AddCode(es, $"Return Me"$)
+	AddCode(es, "End Sub")
+	AddNewLine(es)
+	'
+	'add extra dp
+	dp.Append($"#DesignerProperty: Key: On${ename}, DisplayName: On${ename}, FieldType: String, DefaultValue: , Description: Event arguments to be passed to the attribute."$)
+	dp.append(CRLF)
+	AddCode(dc, $"Private eOn${ename} As String = """$)
+	'
+	AddCode(dg, $"eOn${ename} = props.Get("On${ename}")"$)
+Next
+AddNewLine(mc)
+
 	'
 	AddNewLine(mc)
 	AddCode(mc, dp.ToString)
-	AddCode(mc, $"Sub Class_Globals
-	Private BANano As BANano 'ignore
-	Private data As Map
-	Public mName As String 'ignore
-	Private mEventName As String 'ignore
-	Private mCallBack As Object 'ignore
-	Private mTarget As BANanoElement 'ignore
-	Private mElement As BANanoElement 'ignore"$)
+AddCode(mc, $"Sub Class_Globals
+Private BANano As BANano 'ignore
+Private data As Map
+private appLink As VueApp 'ignore
+Public mName As String 'ignore
+Private mEventName As String 'ignore
+Private mCallBack As Object 'ignore
+Private mTarget As BANanoElement 'ignore
+Private mElement As BANanoElement 'ignore"$)
 	AddNewLine(mc)
 	AddCode(mc, $"Private properties As Map"$)
 	AddCode(mc, $"Private styles As Map"$)
 	AddCode(mc, $"Private classList As Map"$)
 	AddCode(mc, $"Private mClasses As String = ""
-	Private mStyle As String = """$)
+	Private mStyle As String = ""
+	Private mAttributes As String = """$)
 	AddNewLine(mc)
 	AddCode(mc, $"Private mTagName As String = "${TagName}"
 	Public bindings As Map
@@ -314,6 +412,7 @@ AddNewLine(mc)
 	AddCode(mc, $"If props <> Null Then"$)
 	
 AddCode(mc, $"mClasses = props.Get("Classes")
+mAttributes = props.Get("Attributes")
 mStyle = props.Get("Style")"$)
 		'
 		AddCode(mc, dg.ToString)
@@ -328,10 +427,30 @@ mStyle = props.Get("Style")"$)
 	AddCode(sTo, $"cKeys = cKeys.trim"$)
 	AddCode(sTo, $"AddAttr(cKeys, "class")"$)
 	AddComment(sTo, "build the style list")
+AddCode(sTo, $"If BANano.IsUndefined(mStyle) Or BANano.IsNull(mStyle) Then mStyle = """$)
+AddCode(sTo, $"If mStyle.StartsWith("{") Then mStyle = """$)
+AddCode(sTo, $"If mStyle <> "" Then"$)
+AddCode(sTo, $"Dim sItems As List = BANanoShared.StrParse(",",mStyle)"$)
+AddCode(sTo, $"For Each st As String In sItems"$)
+AddCode(sTo, $"Dim k As String = BANanoShared.MvField(st,1,":")"$)
+AddCode(sTo, $"Dim v As String = BANanoShared.MvField(st,2,":")"$)
+AddCode(sTo, $"SetStyleSingle(k, v)"$)
+AddCode(sTo, "Next")
+AddCode(sTo, "End If")
 	AddCode(sTo, $"Dim sKeys As String = BANanoShared.BuildStyle(styles)"$)
-	AddCode(sTo, $"sKeys = sKeys & " " & mStyle"$)
 	AddCode(sTo, $"sKeys = sKeys.trim"$)
 	AddCode(sTo, $"AddAttr(sKeys, "style")"$)
+AddComment(sTo, "build the attributes")
+AddCode(sTo, $"If BANano.IsUndefined(mAttributes) Or BANano.IsNull(mAttributes) Then mAttributes = """$)
+AddCode(sTo, $"If mAttributes.StartsWith("{") Then mAttributes = """$)
+AddCode(sTo, $"If mAttributes <> "" Then"$)
+AddCode(sTo, $"Dim mItems As List = BANanoShared.StrParse(",",mAttributes)"$)
+AddCode(sTo, $"For Each mt As String In mItems"$)
+AddCode(sTo, $"Dim k As String = BANanoShared.MvField(mt,1,"=")"$)
+AddCode(sTo, $"Dim v As String = BANanoShared.MvField(mt,2,"=")"$)
+AddCode(sTo, $"AddAttr(v, k)"$)
+AddCode(sTo, "Next")
+AddCode(sTo, "End If")
 	AddCode(sTo, $"Dim exattr As String = BANanoShared.BuildAttributes(properties)"$)
 	'
 	AddCode(mc, $"Dim strHTML As String = ToString"$)
@@ -353,6 +472,7 @@ mStyle = props.Get("Style")"$)
 		
 	AddComment(mc, "return the generated html")
 	AddCode(mc, "Sub ToString As String")
+	'AddCode(mc, $"If bHasID Then AddAttr(mName, "id")"$)
 	AddCode(mc, sTo.ToString)
 	AddCode(mc, $"Dim strRes As String = ~"<~{mTagName} id="~{mName}" ~{exAttr}>~{sCaption}</~{mTagName}>"~"$)
 	AddCode(mc, "Return strRes")

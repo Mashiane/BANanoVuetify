@@ -214,7 +214,7 @@ Sub Process_Globals
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.14"
+	Public Version As String = "4.15"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE

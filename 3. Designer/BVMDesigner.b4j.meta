@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,btnVueClassNames_click,1585,0,pgIndex,btnVueExtract_click,1907,6,pgIndex,btnVuetify2B4x_click,908,0,pgIndex,CreateDBAdmin,7836,0,pgIndex,CreateVuetifyAdmin,7716,0,clsCodeBuilder,CreateCustomView,298,0,pgIndex,drwV2B4xitems_click,942,0,pgIndex,CreateVuetify2B4x,1552,1,pgIndex,CreateMyComponentsDrawer,1538,0,Main,Process_Globals,13,0,Main,AppStart,26,0
+NavigationStack=clsCodeBuilder,AddOptions,54,0,clsCodeBuilder,AddEvent,69,0,clsCodeBuilder,AddProperty,75,0,clsCodeBuilder,AddStyle,106,0,clsCodeBuilder,AddDefault,109,0,clsCodeBuilder,AddCode,124,0,pgIndex,btnVueExtract_click,1667,0,clsCodeBuilder,CreateCustomView,465,6,Main,AppStart,28,0,Main,Process_Globals,14,0
 SelectedBuild=0
 VisibleModules=

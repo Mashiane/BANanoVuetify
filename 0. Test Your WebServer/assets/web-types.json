@@ -2,7 +2,7 @@
   "$schema": "https://raw.githubusercontent.com/JetBrains/web-types/master/schema/web-types.json",
   "framework": "vue",
   "name": "vuetify",
-  "version": "2.2.30",
+  "version": "2.3.2",
   "contributions": {
     "html": {
       "types-syntax": "typescript",
@@ -302,12 +302,32 @@
               }
             },
             {
+              "name": "outlined",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "prominent",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
                 "kind": "expression",
                 "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
               }
             },
             {
@@ -336,6 +356,15 @@
                   "string",
                   "number"
                 ]
+              }
+            },
+            {
+              "name": "shaped",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
               }
             },
             {
@@ -378,7 +407,7 @@
             {
               "name": "tile",
               "type": "boolean",
-              "default": "\"true\"",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
                 "type": "boolean"
@@ -446,6 +475,14 @@
             {
               "name": "border",
               "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "closeIcon",
+              "default": "\"'$cancel'\"",
               "value": {
                 "kind": "expression",
                 "type": "string"
@@ -616,6 +653,26 @@
             },
             {
               "name": "prominent",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "shaped",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -1536,6 +1593,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -1550,9 +1610,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -1707,6 +1764,17 @@
               "value": {
                 "kind": "expression",
                 "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
               }
             },
             {
@@ -2065,14 +2133,42 @@
               }
             },
             {
-              "name": "mobileBreakPoint",
-              "default": "960",
+              "name": "mobileBreakpoint",
               "value": {
                 "kind": "expression",
                 "type": [
                   "number",
                   "string"
                 ]
+              }
+            },
+            {
+              "name": "outlined",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "shaped",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
               }
             },
             {
@@ -2104,7 +2200,7 @@
             {
               "name": "tile",
               "type": "boolean",
-              "default": "\"true\"",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
                 "type": "boolean"
@@ -2542,6 +2638,15 @@
                   "number",
                   "string"
                 ]
+              }
+            },
+            {
+              "name": "openOnFocus",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
               }
             },
             {
@@ -3198,6 +3303,15 @@
               }
             },
             {
+              "name": "shaped",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "small",
               "type": "boolean",
               "default": "\"false\"",
@@ -3492,6 +3606,54 @@
           },
           "attributes": [
             {
+              "name": "categories",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "array",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "categoryDays",
+              "default": "1",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "categoryForInvalid",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "categoryHideDynamic",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "categoryShowAll",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "color",
               "default": "\"undefined\"",
               "value": {
@@ -3521,7 +3683,22 @@
               "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
+              }
+            },
+            {
+              "name": "eventCategory",
+              "default": "\"category\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "function"
+                ]
               }
             },
             {
@@ -3640,6 +3817,17 @@
               }
             },
             {
+              "name": "eventTimed",
+              "default": "\"timed\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "function"
+                ]
+              }
+            },
+            {
               "name": "events",
               "default": "[]",
               "value": {
@@ -3655,6 +3843,18 @@
                 "type": [
                   "number",
                   "string"
+                ]
+              }
+            },
+            {
+              "name": "firstTime",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string",
+                  "object"
                 ]
               }
             },
@@ -3745,6 +3945,17 @@
               }
             },
             {
+              "name": "localeFirstDayOfYear",
+              "default": "0",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number"
+                ]
+              }
+            },
+            {
               "name": "maxDays",
               "default": "7",
               "value": {
@@ -3821,11 +4032,24 @@
               }
             },
             {
-              "name": "start",
-              "default": "\"'2020-05-26'\"",
+              "name": "showWeek",
+              "type": "boolean",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "start",
+              "default": "\"2020-06-24\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -3841,7 +4065,11 @@
               "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -3897,7 +4125,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3906,7 +4134,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3924,7 +4152,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3933,7 +4161,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3942,7 +4170,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3951,7 +4179,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3960,7 +4188,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3969,7 +4197,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3978,7 +4206,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3987,7 +4215,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -3996,7 +4224,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4005,7 +4233,97 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                }
+              ]
+            },
+            {
+              "name": "click:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "contextmenu:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mousedown:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mousemove:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mouseup:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mouseenter:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mouseleave:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "touchstart:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "touchmove:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "touchend:day-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
                 }
               ]
             },
@@ -4014,7 +4332,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4023,7 +4341,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4032,7 +4350,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4041,7 +4359,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4050,7 +4368,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4059,7 +4377,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4068,7 +4386,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4077,7 +4395,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4086,7 +4404,7 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
                 }
               ]
             },
@@ -4095,7 +4413,97 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]}"
+                }
+              ]
+            },
+            {
+              "name": "click:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "contextmenu:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mousedown:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mousemove:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mouseup:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mouseenter:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "mouseleave:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "touchstart:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "touchmove:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
+                }
+              ]
+            },
+            {
+              "name": "touchend:time-category",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\",\"timeToY\":\"(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false\",\"timeDelta\":\"(time: string | number | {hour: number, minute: number}): number | false\",\"minutesToPixels\":\"(minutes: number): number\",\"week\":[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}],\"category\":\"string | null\"}"
                 }
               ]
             },
@@ -4192,11 +4600,80 @@
           ],
           "slots": [
             {
+              "name": "category",
+              "vue-properties": [
+                {
+                  "name": "date",
+                  "type": "string"
+                },
+                {
+                  "name": "time",
+                  "type": "string"
+                },
+                {
+                  "name": "year",
+                  "type": "number"
+                },
+                {
+                  "name": "month",
+                  "type": "number"
+                },
+                {
+                  "name": "day",
+                  "type": "number"
+                },
+                {
+                  "name": "hour",
+                  "type": "number"
+                },
+                {
+                  "name": "minute",
+                  "type": "number"
+                },
+                {
+                  "name": "weekday",
+                  "type": "number"
+                },
+                {
+                  "name": "hasDay",
+                  "type": "boolean"
+                },
+                {
+                  "name": "hasTime",
+                  "type": "boolean"
+                },
+                {
+                  "name": "past",
+                  "type": "boolean"
+                },
+                {
+                  "name": "present",
+                  "type": "boolean"
+                },
+                {
+                  "name": "future",
+                  "type": "boolean"
+                },
+                {
+                  "name": "week",
+                  "type": "[{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"}]"
+                },
+                {
+                  "name": "category",
+                  "type": "string | null"
+                }
+              ]
+            },
+            {
               "name": "event",
               "vue-properties": [
                 {
                   "name": "event",
                   "type": "any"
+                },
+                {
+                  "name": "eventParsed",
+                  "type": "{\"input\":\"any\",\"start\":{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"},\"startIdentifier\":\"number\",\"startTimestampIdentifier\":\"number\",\"end\":{\"date\":\"string\",\"time\":\"string\",\"year\":\"number\",\"month\":\"number\",\"day\":\"number\",\"hour\":\"number\",\"minute\":\"number\",\"weekday\":\"number\",\"hasDay\":\"boolean\",\"hasTime\":\"boolean\",\"past\":\"boolean\",\"present\":\"boolean\",\"future\":\"boolean\"},\"endIdentifier\":\"number\",\"endTimestampIdentifier\":\"number\",\"allDay\":\"boolean\",\"index\":\"number\",\"category\":\"string\"}"
                 },
                 {
                   "name": "day",
@@ -4217,6 +4694,26 @@
                 {
                   "name": "timed",
                   "type": "boolean"
+                },
+                {
+                  "name": "singleline",
+                  "type": "boolean"
+                },
+                {
+                  "name": "overlapsNoon",
+                  "type": "boolean"
+                },
+                {
+                  "name": "formatTime",
+                  "type": "(time: VTimestamp, ampm: boolean): string"
+                },
+                {
+                  "name": "timeSummary",
+                  "type": "(): string"
+                },
+                {
+                  "name": "eventSummary",
+                  "type": "(): string"
                 }
               ]
             },
@@ -4346,7 +4843,11 @@
                 },
                 {
                   "name": "timeToY",
-                  "type": "(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number"
+                  "type": "(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false"
+                },
+                {
+                  "name": "timeDelta",
+                  "type": "(time: string | number | {hour: number, minute: number}): number | false"
                 },
                 {
                   "name": "minutesToPixels",
@@ -4415,7 +4916,11 @@
                 },
                 {
                   "name": "timeToY",
-                  "type": "(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number"
+                  "type": "(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false"
+                },
+                {
+                  "name": "timeDelta",
+                  "type": "(time: string | number | {hour: number, minute: number}): number | false"
                 },
                 {
                   "name": "minutesToPixels",
@@ -4655,7 +5160,11 @@
                 },
                 {
                   "name": "timeToY",
-                  "type": "(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number"
+                  "type": "(time: string | number | {hour: number, minute: number}, clamp: boolean = false): number | false"
+                },
+                {
+                  "name": "timeDelta",
+                  "type": "(time: string | number | {hour: number, minute: number}): number | false"
                 },
                 {
                   "name": "minutesToPixels",
@@ -4670,12 +5179,60 @@
           ]
         },
         {
-          "name": "VCalendarDaily",
+          "name": "VCalendarCategory",
           "source": {
             "module": "./src/components/index.ts",
-            "symbol": "VCalendarDaily"
+            "symbol": "VCalendarCategory"
           },
           "attributes": [
+            {
+              "name": "categories",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "array",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "categoryDays",
+              "default": "1",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "categoryForInvalid",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "categoryHideDynamic",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "categoryShowAll",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
             {
               "name": "color",
               "default": "\"undefined\"",
@@ -4706,7 +5263,11 @@
               "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -4717,6 +5278,18 @@
                 "type": [
                   "number",
                   "string"
+                ]
+              }
+            },
+            {
+              "name": "firstTime",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string",
+                  "object"
                 ]
               }
             },
@@ -4850,10 +5423,242 @@
             },
             {
               "name": "start",
-              "default": "\"'2020-05-26'\"",
+              "default": "\"2020-06-24\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
+              }
+            },
+            {
+              "name": "weekdayFormat",
+              "default": "\"null\"",
+              "value": {
+                "kind": "expression",
+                "type": "function"
+              }
+            },
+            {
+              "name": "weekdays",
+              "default": "[0,1,2,3,4,5,6]",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "array",
+                  "string"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "VCalendarDaily",
+          "source": {
+            "module": "./src/components/index.ts",
+            "symbol": "VCalendarDaily"
+          },
+          "attributes": [
+            {
+              "name": "color",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
                 "type": "string"
+              }
+            },
+            {
+              "name": "dark",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "dayFormat",
+              "default": "\"null\"",
+              "value": {
+                "kind": "expression",
+                "type": "function"
+              }
+            },
+            {
+              "name": "end",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
+              }
+            },
+            {
+              "name": "firstInterval",
+              "default": "0",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "firstTime",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string",
+                  "object"
+                ]
+              }
+            },
+            {
+              "name": "hideHeader",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "intervalCount",
+              "default": "24",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "intervalFormat",
+              "default": "\"null\"",
+              "value": {
+                "kind": "expression",
+                "type": "function"
+              }
+            },
+            {
+              "name": "intervalHeight",
+              "default": "48",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "intervalMinutes",
+              "default": "60",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "intervalStyle",
+              "default": "\"null\"",
+              "value": {
+                "kind": "expression",
+                "type": "function"
+              }
+            },
+            {
+              "name": "intervalWidth",
+              "default": "60",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "light",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "locale",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "maxDays",
+              "default": "7",
+              "value": {
+                "kind": "expression",
+                "type": "number"
+              }
+            },
+            {
+              "name": "now",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "shortIntervals",
+              "type": "boolean",
+              "default": "\"true\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "shortWeekdays",
+              "type": "boolean",
+              "default": "\"true\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "showIntervalLabel",
+              "default": "\"null\"",
+              "value": {
+                "kind": "expression",
+                "type": "function"
+              }
+            },
+            {
+              "name": "start",
+              "default": "\"2020-06-24\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -4914,7 +5719,11 @@
               "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -4941,6 +5750,17 @@
               "value": {
                 "kind": "expression",
                 "type": "string"
+              }
+            },
+            {
+              "name": "localeFirstDayOfYear",
+              "default": "0",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number"
+                ]
               }
             },
             {
@@ -4995,11 +5815,24 @@
               }
             },
             {
-              "name": "start",
-              "default": "\"'2020-05-26'\"",
+              "name": "showWeek",
+              "type": "boolean",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "start",
+              "default": "\"2020-06-24\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -5060,7 +5893,11 @@
               "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -5087,6 +5924,17 @@
               "value": {
                 "kind": "expression",
                 "type": "string"
+              }
+            },
+            {
+              "name": "localeFirstDayOfYear",
+              "default": "0",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number"
+                ]
               }
             },
             {
@@ -5141,11 +5989,24 @@
               }
             },
             {
-              "name": "start",
-              "default": "\"'2020-05-26'\"",
+              "name": "showWeek",
+              "type": "boolean",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
-                "type": "string"
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "start",
+              "default": "\"2020-06-24\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "number",
+                  "date"
+                ]
               }
             },
             {
@@ -5423,6 +6284,17 @@
                 "type": [
                   "boolean",
                   "object"
+                ]
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
                 ]
               }
             },
@@ -6376,6 +7248,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -6387,9 +7262,6 @@
                   "type": "string, // the message"
                 }
               ]
-            },
-            {
-              "name": "label"
             }
           ]
         },
@@ -6915,8 +7787,7 @@
               }
             },
             {
-              "name": "mobileBreakPoint",
-              "default": "1264",
+              "name": "mobileBreakpoint",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -6952,11 +7823,13 @@
             },
             {
               "name": "showArrows",
-              "type": "boolean",
-              "default": "\"false\"",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "boolean"
+                "type": [
+                  "boolean",
+                  "string"
+                ]
               }
             },
             {
@@ -7024,6 +7897,17 @@
             {
               "name": "dotSize",
               "default": "10",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "elevation",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -8133,6 +9017,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -8147,9 +9034,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -9202,24 +10086,28 @@
               "name": "item",
               "vue-properties": [
                 {
+                  "name": "expand",
+                  "type": "(v: boolean) => void"
+                },
+                {
                   "name": "item",
                   "type": "any"
                 },
                 {
-                  "name": "select",
-                  "type": "(v: boolean) => void"
+                  "name": "isExpanded",
+                  "type": "boolean"
+                },
+                {
+                  "name": "isMobile",
+                  "type": "boolean"
                 },
                 {
                   "name": "isSelected",
                   "type": "boolean"
                 },
                 {
-                  "name": "expand",
+                  "name": "select",
                   "type": "(v: boolean) => void"
-                },
-                {
-                  "name": "isExpanded",
-                  "type": "boolean"
                 }
               ]
             }
@@ -9585,6 +10473,17 @@
               }
             },
             {
+              "name": "itemClass",
+              "default": "\"\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "string",
+                  "function"
+                ]
+              }
+            },
+            {
               "name": "itemKey",
               "default": "\"'id'\"",
               "value": {
@@ -9618,8 +10517,19 @@
               }
             },
             {
+              "name": "loaderHeight",
+              "default": "4",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
               "name": "loading",
-              "default": "\"undefined\"",
+              "default": "false",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -9811,7 +10721,25 @@
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "any, { select: (value: boolean) => void, isSelected: boolean, expand: (value: boolean) => void, isExpanded: boolean }"
+                  "type": "any, {\n  expand: (value: boolean) => void,\n  headers: TableHeader[],\n  isExpanded: boolean,\n  isMobile: boolean,\n  isSelected: boolean,\n  item: any,\n  select: (value: boolean) => void\n}"
+                }
+              ]
+            },
+            {
+              "name": "contextmenu:row",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "MouseEvent, {\n  expand: (value: boolean) => void,\n  headers: TableHeader[],\n  isExpanded: boolean,\n  isMobile: boolean,\n  isSelected: boolean,\n  item: any,\n  select: (value: boolean) => void\n}"
+                }
+              ]
+            },
+            {
+              "name": "dblclick:row",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "MouseEvent, {\n  expand: (value: boolean) => void,\n  headers: TableHeader[],\n  isExpanded: boolean,\n  isMobile: boolean,\n  isSelected: boolean,\n  item: any,\n  select: (value: boolean) => void\n}"
                 }
               ]
             },
@@ -10337,24 +11265,28 @@
               "name": "item",
               "vue-properties": [
                 {
+                  "name": "expand",
+                  "type": "(v: boolean) => void"
+                },
+                {
                   "name": "item",
                   "type": "any"
                 },
                 {
-                  "name": "select",
-                  "type": "(v: boolean) => void"
+                  "name": "isExpanded",
+                  "type": "boolean"
+                },
+                {
+                  "name": "isMobile",
+                  "type": "boolean"
                 },
                 {
                   "name": "isSelected",
                   "type": "boolean"
                 },
                 {
-                  "name": "expand",
+                  "name": "select",
                   "type": "(v: boolean) => void"
-                },
-                {
-                  "name": "isExpanded",
-                  "type": "boolean"
                 },
                 {
                   "name": "headers",
@@ -10370,24 +11302,28 @@
               "name": "item.data-table-select",
               "vue-properties": [
                 {
+                  "name": "expand",
+                  "type": "(v: boolean) => void"
+                },
+                {
                   "name": "item",
                   "type": "any"
                 },
                 {
-                  "name": "select",
-                  "type": "(v: boolean) => void"
+                  "name": "isExpanded",
+                  "type": "boolean"
+                },
+                {
+                  "name": "isMobile",
+                  "type": "boolean"
                 },
                 {
                   "name": "isSelected",
                   "type": "boolean"
                 },
                 {
-                  "name": "expand",
+                  "name": "select",
                   "type": "(v: boolean) => void"
-                },
-                {
-                  "name": "isExpanded",
-                  "type": "boolean"
                 },
                 {
                   "name": "headers",
@@ -10399,24 +11335,28 @@
               "name": "item.data-table-expand",
               "vue-properties": [
                 {
+                  "name": "expand",
+                  "type": "(v: boolean) => void"
+                },
+                {
                   "name": "item",
                   "type": "any"
                 },
                 {
-                  "name": "select",
-                  "type": "(v: boolean) => void"
+                  "name": "isExpanded",
+                  "type": "boolean"
+                },
+                {
+                  "name": "isMobile",
+                  "type": "boolean"
                 },
                 {
                   "name": "isSelected",
                   "type": "boolean"
                 },
                 {
-                  "name": "expand",
+                  "name": "select",
                   "type": "(v: boolean) => void"
-                },
-                {
-                  "name": "isExpanded",
-                  "type": "boolean"
                 },
                 {
                   "name": "headers",
@@ -10891,6 +11831,17 @@
               }
             },
             {
+              "name": "elevation",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
               "name": "eventColor",
               "default": "\"warning\"",
               "value": {
@@ -10924,6 +11875,15 @@
                   "string",
                   "number"
                 ]
+              }
+            },
+            {
+              "name": "flat",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
               }
             },
             {
@@ -11030,6 +11990,22 @@
               }
             },
             {
+              "name": "nextMonthAriaLabel",
+              "default": "\"'$vuetify.datePicker.nextMonthAriaLabel'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "nextYearAriaLabel",
+              "default": "\"'$vuetify.datePicker.nextYearAriaLabel'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
               "name": "noTitle",
               "type": "boolean",
               "default": "\"false\"",
@@ -11049,6 +12025,22 @@
             {
               "name": "prevIcon",
               "default": "\"'$prev'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "prevMonthAriaLabel",
+              "default": "\"'$vuetify.datePicker.prevMonthAriaLabel'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "prevYearAriaLabel",
+              "default": "\"'$vuetify.datePicker.prevYearAriaLabel'\"",
               "value": {
                 "kind": "expression",
                 "type": "string"
@@ -11210,7 +12202,7 @@
               ]
             },
             {
-              "name": "click:date",
+              "name": "<domevent>:date",
               "arguments": [
                 {
                   "name": "argument",
@@ -11219,7 +12211,7 @@
               ]
             },
             {
-              "name": "click:month",
+              "name": "<domevent>:month",
               "arguments": [
                 {
                   "name": "argument",
@@ -11228,20 +12220,11 @@
               ]
             },
             {
-              "name": "dblclick:date",
+              "name": "<domevent>:year",
               "arguments": [
                 {
                   "name": "argument",
-                  "type": "string"
-                }
-              ]
-            },
-            {
-              "name": "dblclick:month",
-              "arguments": [
-                {
-                  "name": "argument",
-                  "type": "string"
+                  "type": "number"
                 }
               ]
             }
@@ -11406,8 +12389,24 @@
               }
             },
             {
+              "name": "nextAriaLabel",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
               "name": "nextIcon",
               "default": "\"'$next'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "prevAriaLabel",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
                 "type": "string"
@@ -12017,6 +13016,15 @@
                   "number",
                   "string"
                 ]
+              }
+            },
+            {
+              "name": "openOnFocus",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
               }
             },
             {
@@ -12754,6 +13762,15 @@
               }
             },
             {
+              "name": "hideInput",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "hint",
               "default": "\"undefined\"",
               "value": {
@@ -13171,6 +14188,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -13185,9 +14205,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -13354,7 +14371,36 @@
               }
             },
             {
+              "name": "outlined",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "padless",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "shaped",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -13373,7 +14419,7 @@
             {
               "name": "tile",
               "type": "boolean",
-              "default": "\"true\"",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
                 "type": "boolean"
@@ -13405,7 +14451,25 @@
           },
           "attributes": [
             {
+              "name": "disabled",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "lazyValidation",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "readonly",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -14393,6 +15457,15 @@
               }
             },
             {
+              "name": "dark",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "eager",
               "type": "boolean",
               "default": "\"false\"",
@@ -14426,6 +15499,15 @@
               "value": {
                 "kind": "expression",
                 "type": "string"
+              }
+            },
+            {
+              "name": "light",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
               }
             },
             {
@@ -14868,6 +15950,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -15014,107 +16099,6 @@
           ]
         },
         {
-          "name": "VLabel",
-          "source": {
-            "module": "./src/components/index.ts",
-            "symbol": "VLabel"
-          },
-          "attributes": [
-            {
-              "name": "absolute",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "color",
-              "default": "\"'primary'\"",
-              "value": {
-                "kind": "expression",
-                "type": "string"
-              }
-            },
-            {
-              "name": "dark",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "disabled",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "focused",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "for",
-              "default": "\"undefined\"",
-              "value": {
-                "kind": "expression",
-                "type": "string"
-              }
-            },
-            {
-              "name": "left",
-              "default": "0",
-              "value": {
-                "kind": "expression",
-                "type": [
-                  "number",
-                  "string"
-                ]
-              }
-            },
-            {
-              "name": "light",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "right",
-              "default": "\"auto\"",
-              "value": {
-                "kind": "expression",
-                "type": [
-                  "number",
-                  "string"
-                ]
-              }
-            },
-            {
-              "name": "value",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            }
-          ]
-        },
-        {
           "name": "VLazy",
           "source": {
             "module": "./src/components/index.ts",
@@ -15122,7 +16106,51 @@
           },
           "attributes": [
             {
+              "name": "height",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "maxHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "maxWidth",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
               "name": "minHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "minWidth",
               "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
@@ -15162,6 +16190,17 @@
               "value": {
                 "kind": "expression",
                 "type": "any"
+              }
+            },
+            {
+              "name": "width",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
               }
             }
           ],
@@ -15368,6 +16407,15 @@
               }
             },
             {
+              "name": "outlined",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "rounded",
               "type": "boolean",
               "default": "\"false\"",
@@ -15414,7 +16462,7 @@
             {
               "name": "tile",
               "type": "boolean",
-              "default": "\"true\"",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
                 "type": "boolean"
@@ -15937,6 +16985,17 @@
               }
             },
             {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
               "name": "size",
               "default": "40",
               "value": {
@@ -16080,6 +17139,23 @@
           "slots": [
             {
               "name": "default"
+            }
+          ]
+        },
+        {
+          "name": "VMain",
+          "source": {
+            "module": "./src/components/index.ts",
+            "symbol": "VMain"
+          },
+          "attributes": [
+            {
+              "name": "tag",
+              "default": "\"'main'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
             }
           ]
         },
@@ -16387,6 +17463,15 @@
               }
             },
             {
+              "name": "openOnFocus",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "openOnHover",
               "type": "boolean",
               "default": "\"false\"",
@@ -16429,6 +17514,26 @@
             },
             {
               "name": "right",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "tile",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -16496,49 +17601,6 @@
             },
             {
               "name": "default"
-            }
-          ]
-        },
-        {
-          "name": "VMessages",
-          "source": {
-            "module": "./src/components/index.ts",
-            "symbol": "VMessages"
-          },
-          "attributes": [
-            {
-              "name": "color",
-              "default": "\"undefined\"",
-              "value": {
-                "kind": "expression",
-                "type": "string"
-              }
-            },
-            {
-              "name": "dark",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "light",
-              "type": "boolean",
-              "default": "\"false\"",
-              "value": {
-                "kind": "expression",
-                "type": "boolean"
-              }
-            },
-            {
-              "name": "value",
-              "default": "[]",
-              "value": {
-                "kind": "expression",
-                "type": "array"
-              }
             }
           ]
         },
@@ -16697,8 +17759,7 @@
               }
             },
             {
-              "name": "mobileBreakPoint",
-              "default": "1264",
+              "name": "mobileBreakpoint",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -17700,6 +18761,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -17714,9 +18778,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -17889,6 +18950,14 @@
               }
             },
             {
+              "name": "currentPageAriaLabel",
+              "default": "\"'$vuetify.pagination.ariaLabel.currentPage'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
               "name": "dark",
               "type": "boolean",
               "default": "\"false\"",
@@ -17924,6 +18993,14 @@
               }
             },
             {
+              "name": "nextAriaLabel",
+              "default": "\"'$vuetify.pagination.ariaLabel.next'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
               "name": "nextIcon",
               "default": "\"'$next'\"",
               "value": {
@@ -17932,8 +19009,24 @@
               }
             },
             {
+              "name": "pageAriaLabel",
+              "default": "\"'$vuetify.pagination.ariaLabel.page'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
               "name": "prevIcon",
               "default": "\"'$prev'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "previousAriaLabel",
+              "default": "\"'$vuetify.pagination.ariaLabel.previous'\"",
               "value": {
                 "kind": "expression",
                 "type": "string"
@@ -17956,6 +19049,14 @@
               "value": {
                 "kind": "expression",
                 "type": "number"
+              }
+            },
+            {
+              "name": "wrapperAriaLabel",
+              "default": "\"'$vuetify.pagination.ariaLabel.wrapper'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
               }
             }
           ],
@@ -18089,6 +19190,35 @@
               }
             },
             {
+              "name": "outlined",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "shaped",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "tag",
               "default": "\"div\"",
               "value": {
@@ -18156,6 +19286,14 @@
                 "kind": "expression",
                 "type": "string"
               }
+            },
+            {
+              "name": "srcset",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
             }
           ],
           "slots": [
@@ -18181,6 +19319,26 @@
             },
             {
               "name": "dark",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "elevation",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "flat",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -18464,6 +19622,15 @@
               }
             },
             {
+              "name": "reverse",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "rounded",
               "type": "boolean",
               "default": "\"false\"",
@@ -18509,6 +19676,17 @@
                   "string"
                 ]
               }
+            }
+          ],
+          "events": [
+            {
+              "name": "change",
+              "arguments": [
+                {
+                  "name": "argument",
+                  "type": "number"
+                }
+              ]
             }
           ],
           "slots": [
@@ -18895,6 +20073,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -19083,7 +20264,29 @@
           ],
           "slots": [
             {
+              "name": "append"
+            },
+            {
+              "name": "default"
+            },
+            {
+              "name": "prepend"
+            },
+            {
               "name": "label"
+            },
+            {
+              "name": "message",
+              "vue-properties": [
+                {
+                  "name": "key",
+                  "type": "number, // the messages index"
+                },
+                {
+                  "name": "message",
+                  "type": "string, // the message"
+                }
+              ]
             }
           ]
         },
@@ -19544,6 +20747,9 @@
             },
             {
               "name": "prepend"
+            },
+            {
+              "name": "label"
             },
             {
               "name": "message",
@@ -20693,6 +21899,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -20707,9 +21916,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -21424,6 +22630,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -21513,8 +22722,7 @@
               }
             },
             {
-              "name": "mobileBreakPoint",
-              "default": "1264",
+              "name": "mobileBreakpoint",
               "value": {
                 "kind": "expression",
                 "type": [
@@ -21550,11 +22758,13 @@
             },
             {
               "name": "showArrows",
-              "type": "boolean",
-              "default": "\"false\"",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "boolean"
+                "type": [
+                  "boolean",
+                  "string"
+                ]
               }
             },
             {
@@ -21653,7 +22863,25 @@
               }
             },
             {
+              "name": "app",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "bottom",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "centered",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -21670,6 +22898,45 @@
               }
             },
             {
+              "name": "contentClass",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "dark",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "elevation",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "height",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
               "name": "left",
               "type": "boolean",
               "default": "\"false\"",
@@ -21679,7 +22946,69 @@
               }
             },
             {
+              "name": "light",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "maxHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "maxWidth",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "minHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "minWidth",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
               "name": "multiLine",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "outlined",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -21697,11 +23026,60 @@
               }
             },
             {
-              "name": "timeout",
-              "default": "6000",
+              "name": "rounded",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "number"
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "shaped",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "tag",
+              "default": "\"'div'\"",
+              "value": {
+                "kind": "expression",
+                "type": "string"
+              }
+            },
+            {
+              "name": "text",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "tile",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "timeout",
+              "default": "5000",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
               }
             },
             {
@@ -21711,6 +23089,17 @@
               "value": {
                 "kind": "expression",
                 "type": "boolean"
+              }
+            },
+            {
+              "name": "transition",
+              "default": "\"v-snack-transition\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
               }
             },
             {
@@ -21729,6 +23118,17 @@
                 "kind": "expression",
                 "type": "boolean"
               }
+            },
+            {
+              "name": "width",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
             }
           ],
           "events": [
@@ -21743,6 +23143,15 @@
             }
           ],
           "slots": [
+            {
+              "name": "action",
+              "vue-properties": [
+                {
+                  "name": "attrs",
+                  "type": "object"
+                }
+              ]
+            },
             {
               "name": "default"
             }
@@ -22686,6 +24095,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -22697,9 +24109,6 @@
                   "type": "string, // the message"
                 }
               ]
-            },
-            {
-              "name": "label"
             }
           ]
         },
@@ -22918,13 +24327,13 @@
               }
             },
             {
-              "name": "mobileBreakPoint",
-              "default": "1264",
+              "name": "mobileBreakpoint",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
                 "type": [
-                  "number",
-                  "string"
+                  "string",
+                  "number"
                 ]
               }
             },
@@ -22964,11 +24373,13 @@
             },
             {
               "name": "showArrows",
-              "type": "boolean",
-              "default": "\"false\"",
+              "default": "\"undefined\"",
               "value": {
                 "kind": "expression",
-                "type": "boolean"
+                "type": [
+                  "boolean",
+                  "string"
+                ]
               }
             },
             {
@@ -24080,6 +25491,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -24094,9 +25508,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -24676,6 +26087,9 @@
               "name": "prepend"
             },
             {
+              "name": "label"
+            },
+            {
               "name": "message",
               "vue-properties": [
                 {
@@ -24690,9 +26104,6 @@
             },
             {
               "name": "append-outer"
-            },
-            {
-              "name": "label"
             },
             {
               "name": "prepend-inner"
@@ -24981,6 +26392,26 @@
             },
             {
               "name": "disabled",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "elevation",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "flat",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -25577,7 +27008,36 @@
               }
             },
             {
+              "name": "outlined",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
               "name": "prominent",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "rounded",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "boolean",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "shaped",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -25616,7 +27076,7 @@
             {
               "name": "tile",
               "type": "boolean",
-              "default": "\"true\"",
+              "default": "\"false\"",
               "value": {
                 "kind": "expression",
                 "type": "boolean"
@@ -25917,6 +27377,15 @@
             },
             {
               "name": "openOnClick",
+              "type": "boolean",
+              "default": "\"false\"",
+              "value": {
+                "kind": "expression",
+                "type": "boolean"
+              }
+            },
+            {
+              "name": "openOnFocus",
               "type": "boolean",
               "default": "\"false\"",
               "value": {
@@ -26620,6 +28089,126 @@
                 "kind": "expression",
                 "type": "boolean"
               }
+            }
+          ]
+        },
+        {
+          "name": "VVirtualScroll",
+          "source": {
+            "module": "./src/components/index.ts",
+            "symbol": "VVirtualScroll"
+          },
+          "attributes": [
+            {
+              "name": "bench",
+              "default": "0",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "height",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "itemHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "items",
+              "default": "[]",
+              "value": {
+                "kind": "expression",
+                "type": "array"
+              }
+            },
+            {
+              "name": "maxHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "maxWidth",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "minHeight",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "minWidth",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            },
+            {
+              "name": "width",
+              "default": "\"undefined\"",
+              "value": {
+                "kind": "expression",
+                "type": [
+                  "number",
+                  "string"
+                ]
+              }
+            }
+          ],
+          "slots": [
+            {
+              "name": "default",
+              "vue-properties": [
+                {
+                  "name": "index",
+                  "type": "number"
+                },
+                {
+                  "name": "item",
+                  "type": "any"
+                }
+              ]
             }
           ]
         },
@@ -27871,10 +29460,10 @@
             "module": "./src/directives/index.ts",
             "symbol": "Intersect"
           },
-          "default": "{}",
+          "default": "undefined",
           "value": {
             "kind": "expression",
-            "type": "object"
+            "type": "Function | { handler: Function, options?: IntersectionObserverInit }"
           },
           "vue-modifiers": [
             {
@@ -27936,6 +29525,18 @@
           "value": {
             "kind": "expression",
             "type": "object"
+          }
+        },
+        {
+          "name": "v-click-outside",
+          "source": {
+            "module": "./src/directives/index.ts",
+            "symbol": "Click-outside"
+          },
+          "default": "undefined",
+          "value": {
+            "kind": "expression",
+            "type": "((e: Event) => void) | ClickOutsideBindingArgs"
           }
         }
       ]
