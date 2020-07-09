@@ -12,6 +12,8 @@ Sub Process_Globals
 	Private vm As BANanoVM
 	Private BANano As BANano  'ignore
 	Private dt1 As VMDataTable
+	Private dtUsers As VMDataTable
+	Private dtImages As VMDataTable
 End Sub
 
 
@@ -105,10 +107,70 @@ Sub Code
 	dt1.SetOnInput("dt1_input")
 	
 	dt1.AddToContainer(cont, 1, 1)
+	'
+	Dim users As List = vm.NewList
+	users.add(CreateMap("avatar": "./assets/1.jpg", "firstname":"Him", "lastname":"One", "active":True, "rating":5, "tasks":9))
+	users.add(CreateMap("avatar": "./assets/2.jpg", "firstname":"Him 2", "lastname":"One", "active":False, "rating":4, "tasks": 8))
+	users.add(CreateMap("avatar": "./assets/3.jpg", "firstname":"Her ", "lastname":"One", "active":True, "rating":3, "tasks": 5))
+	users.add(CreateMap("avatar": "./assets/4.jpg", "firstname":"Her 1", "lastname":"One", "active":True, "rating":2, "tasks": 3))
+	users.add(CreateMap("avatar": "./assets/5.jpg", "firstname":"Her 2", "lastname":"One", "active":False, "rating":1, "tasks": 1))
+	
+	dtUsers = vm.CreateDataTable("dtUsers", "firstname", Me)
+	dtUsers.SetTitle("Users")
+	dtUsers.AddAvatarImg("avatar", "Profile")
+	dtUsers.AddColumn("firstname", "First Name")
+	dtUsers.AddColumn("lastname", "Last Name")
+	dtUsers.AddSwitch("active", "Active")
+	dtUsers.AddRating("rating", "Performance")
+	'dtUsers.AddProgressCircular("tasks", "Completed")
+	'dtUsers.SetProgressCircularDimensions("tasks", "green", "-90", "46", "6")
+	dtUsers.AddProgressLinear("tasks", "Progress")
+	dtUsers.SetProgressLinearDimensions("tasks", "orange", "25", True)
+	
+	dtUsers.AddEditThrash
+	dtUsers.SetIconDimensions("edit", "32px", "success")
+	dtUsers.SetIconDimensions("delete", "32p", "error")
+	dtUsers.SetDataSource(users)
+	dtUsers.AddToContainer(cont, 2, 1)
+	'
+	Dim images As List = vm.newlist
+	images.add(CreateMap("image": "./assets/bird.jpg", "comment":"A bird seen from above", "lat":"16.0", "lng":"20.1"))
+	images.add(CreateMap("image": "./assets/dark-beach.jpg", "comment":"Seen whilst walking", "lat":"36.0", "lng":"24.8"))
+	images.add(CreateMap("image": "./assets/planet.jpg", "comment":"A need to visit planets", "lat":"1.0", "lng":"1.1"))
+	images.add(CreateMap("image": "./assets/sky.jpg", "comment":"A beautiful skyline", "lat":"0", "lng":"0"))
+	images.add(CreateMap("image": "./assets/squirrel.jpg", "comment":"Nutting around", "lat":"45", "lng":"30"))
+	'
+	dtImages = vm.CreateDataTable("dtImages", "image", Me)
+	dtImages.SetTitle("Presentation")
+	dtImages.AddImage("image", "Image")
+	dtImages.SetImageDimensions("image", "80px", "80px")
+	dtImages.AddColumn("comment", "Comment")
+	dtImages.AddColumn("datetaken", "Date Taken")
+	dtImages.AddColumn("lat", "Latitude")
+	dtImages.AddColumn("lng", "Longitude")
+	dtImages.SetDataSource(images)
+	dtImages.AddToContainer(cont, 3, 1)
+	
 	'add container to page
 	vm.AddContainer(cont)
 	'
 	vm.SetMethod(Me,"getcolor")
+End Sub
+
+Sub dtuserssave(e As BANanoEvent)
+
+End Sub
+
+Sub dtuserscancel(e As BANanoEvent)
+
+End Sub
+
+Sub dtusersopen(e As BANanoEvent)
+	
+End Sub
+
+Sub dtusersclose(e As BANanoEvent)
+
 End Sub
 
 Sub dt1_input(items As List)
@@ -158,7 +220,17 @@ Sub dt1_print(item As Map)
 	vm.ShowSnackBar("Print: " & BANano.tojson(item))
 End Sub
 
+Sub dtusers_active(item As Map)
+	vm.ShowSnackBar("Active: " & BANano.tojson(item))
+End Sub
 
+Sub dtusers_rating(item As Map)
+	vm.ShowSnackBar("Rating: " & BANano.tojson(item))
+End Sub
+
+Sub dtusers_firstname(item As Map)
+	vm.ShowSnackBar("FirstName: " & BANano.tojson(item))
+End Sub
 
 Sub btnNew_click(e As BANanoEvent)
 	vm.ShowSnackBar("Add record!")

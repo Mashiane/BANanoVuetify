@@ -56,6 +56,11 @@ Sub SetSwitch As VMCheckBox
 	Return Me
 End Sub
 
+Sub SetTag(sTag As String) As VMCheckBox
+	CheckBox.SetTag(sTag)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMCheckBox
 	bStatic = b
 	CheckBox.SetStatic(b)

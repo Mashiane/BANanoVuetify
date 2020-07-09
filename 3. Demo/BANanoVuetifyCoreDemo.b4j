@@ -110,7 +110,7 @@ Module9=modButtons
 NumberOfFiles=26
 NumberOfLibraries=6
 NumberOfModules=48
-Version=8.31
+Version=8.45
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -127,7 +127,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.15"
+	Public Version As String = "4.17"
 	Public Port As String = "8080"
 End Sub
 
@@ -144,7 +144,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
 	BANano.TranspilerOptions.MinifyOnline = False
-	
+	BANano.TranspilerOPtions.EnableLiveCodeSwapping = False
 	'
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$

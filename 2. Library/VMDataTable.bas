@@ -28,6 +28,11 @@ Sub Class_Globals
 	Public COLUMN_EDIT As String = "edit"
 	Public COLUMN_DELETE As String = "delete"
 	Public COLUMN_ACTION As String = "action"
+	Public COLUMN_SWITCH As String = "switch"
+	Public COLUMN_AVATARIMG As String = "avatarimg"
+	Public COLUMN_RATING As String = "rating"
+	Public COLUMN_PROGRESS_CIRCULAR As String = "progresscircular"
+	Public COLUMN_PROGRESS_LINEAR As String = "progresslinear"
 	
 	'alignment
 	Public ALIGN_CENTER As String = "center"
@@ -45,11 +50,12 @@ Sub Class_Globals
 	Private search As String
 	Private items As String
 	Type DataTableColumn(value As String, text As String, align As String, sortable As Boolean, filterable As Boolean, divider As Boolean, _
-	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean)
+	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean)
 	Private bStatic As Boolean
 	Private hdr As List
 	Private keyID As String
 	Private masterColumns As List
+	Private bInlineEditing As Boolean
 End Sub
 
 'initialize the DataTable
@@ -78,6 +84,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	vcard.IsTable = True	'
 	columnsM.Initialize 
 	masterColumns.Initialize 
+	bInlineEditing = False
 	Return Me
 End Sub
 
@@ -100,6 +107,10 @@ End Sub
 
 Sub ResetFilter
 	ApplyFilter(masterColumns)
+End Sub
+
+Sub SetInlineEditing(b As Boolean)
+	bInlineEditing = b
 End Sub
 
 Sub ApplyFilter(thisFilter As List)
@@ -182,10 +193,74 @@ Sub AddIcon(colField As String, colTitle As String, colIcon As String)
 	SetColumnIcon(colField, colIcon)
 End Sub
 
+Sub AddAction(colField As String, colTitle As String, colIcon As String)
+	AddExclusion(colField)
+	AddColumn(colField,colTitle)
+	SetColumnFilterable(colField,False)
+	SetColumnType(colField, COLUMN_ACTION)
+	SetColumnSortable(colField, False)
+	SetColumnAlignment(colField, ALIGN_CENTER)
+	SetColumnIcon(colField, colIcon)
+End Sub
+
+Sub AddIconView(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_ICON)
+	SetColumnFilterable(colField,False)
+	SetColumnSortable(colField, False)
+End Sub
+
+Sub AddSwitch(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_SWITCH)
+	SetColumnFilterable(colField,False)
+	SetColumnSortable(colField, False)
+End Sub
+
+Sub AddImage(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_IMAGE)
+	SetColumnFilterable(colField,False)
+	SetColumnSortable(colField, False)
+End Sub
+
+
+Sub AddAvatarImg(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_AVATARIMG)
+	SetColumnFilterable(colField,False)
+	SetColumnSortable(colField, False)
+End Sub
+
+Sub AddRating(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_RATING)
+End Sub
+
+Sub AddProgressCircular(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_PROGRESS_CIRCULAR)
+End Sub
+
+Sub AddProgressLinear(colField As String, colTitle As String)
+	AddColumn(colField,colTitle)
+	SetColumnType(colField, COLUMN_PROGRESS_LINEAR)
+End Sub
+
+'Sub AddTextField(colField As String, colTitle As String)
+'	AddColumn(colField,colTitle)
+'	SetColumnType(colField, COLUMN_TEXT_FIELD)
+'End Sub
+'
+'Sub AddTextArea(colField As String, colTitle As String)
+'	AddColumn(colField,colTitle)
+'	SetColumnType(colField, COLUMN_TEXT_AREA)
+'End Sub
+
 'add edit & delete button
 Sub AddEditThrash
-	AddIcon("edit", "Edit", "mdi-pencil")
-	AddIcon("delete", "Delete", "mdi-delete")
+	AddAction("edit", "Edit", "mdi-pencil")
+	AddAction("delete", "Delete", "mdi-delete")
 End Sub
 
 Sub SetDelete(b As Boolean) As VMDataTable
@@ -383,6 +458,17 @@ Sub AddColumn1(colName As String, colTitle As String, colType As String, colWidt
 	Return Me
 End Sub
 
+'set image dimensions
+Sub SetImageDimensions(colName As String, imgHeight As String, imgWidth As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.imgHeight = imgHeight
+		col.imgWidth = imgWidth
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
 'set column sortable
 Sub SetColumnSortable(colName As String, colSortable As Boolean) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
@@ -398,6 +484,16 @@ Sub SetColumnDisabled(colName As String, colDisabled As Boolean) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.Disabled = colDisabled
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'set column sortable
+Sub SetColumnReadOnly(colName As String, colReadOnly As Boolean) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.ReadOnly = colReadOnly
 		columnsM.Put(colName,col)
 	End If
 	Return Me
@@ -427,6 +523,49 @@ Sub SetColumnIcon(colName As String, icon As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.icon = icon
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+Sub SetIconDimensions(colName As String, iconSize As String, iconColor As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.iconSize = iconSize
+		col.iconColor = iconColor
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+Sub SetProgressCircularDimensions(colName As String, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.progressRotate = progressRotate
+		col.progressSize = progressSize
+		col.progressWidth = progressWidth
+		col.progressColor = progressColor
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+Sub SetProgressLinearDimensions(colName As String, progressColor As String, progressHeight As String, progressShowValue As Boolean) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.progressHeight = progressHeight
+		col.progressShowValue = progressShowValue
+		col.progressColor = progressColor
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+Sub SetRatingDimensions(colName As String, ratLength As String, ratColor As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.iconSize = ratLength
+		col.iconColor = ratColor
 		columnsM.Put(colName,col)
 	End If
 	Return Me
@@ -493,7 +632,7 @@ Sub SetColumnType(colName As String, colType As String) As VMDataTable
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.TypeOf = colType
 		Select Case colType
-		Case COLUMN_IMAGE
+		Case COLUMN_IMAGE, COLUMN_AVATARIMG, COLUMN_SWITCH
 			col.filterable = False
 		Case COLUMN_MONEY
 			col.align = ALIGN_RIGHT
@@ -520,22 +659,149 @@ private Sub BuildControls
 		Dim ct As String = nf.TypeOf
 		'get column name
 		Dim value As String = nf.value
+		Dim methodName As String = $"${ID}_${value}"$
 		'
 		Select Case ct
-		Case COLUMN_CHECKBOX	
-			Dim tmpc As VMTemplate
-			tmpc.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+		Case COLUMN_PROGRESS_LINEAR
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
-			tmpc.SetAttrLoose(sline)
+			tmp.SetAttrLoose(sline)
 			'
-			Dim scb As VMSimpleCheckBox
-			scb.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			scb.SetVModel($"item.${value}"$)
-			If nf.Disabled Then scb.SetAttrLoose("disabled")
-			If nf.extra <> "" Then scb.SetAttrLoose(nf.extra)
+			Dim pl As VMProgressLinear
+			pl.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			pl.SetVModel($"item.${value}"$)
+			pl.SetReactive(True)
+			pl.SetRounded(True)
+			If nf.progressColor <> "" Then pl.SetColor(nf.progressColor)
+			If nf.progressheight <> "" Then pl.SetHeight(nf.progressheight)
+			If nf.progressShowValue Then
+				Dim tmpx As VMElement
+				tmpx.Initialize(vue, "").SetTag("strong")
+				tmpx.AddComponent($"{{ Math.ceil(item.${value}) }}%"$)
+				pl.AddComponent(tmpx.ToString)
+			End If
+			tmp.AddComponent(pl.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_PROGRESS_CIRCULAR
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
 			'
-			tmpc.AddComponent(scb.ToString)
-			sb.Append(tmpc.ToString) 
+			Dim pc As VMProgressCircular
+			pc.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			pc.SetVModel($"item.${value}"$)
+			pc.SetReactive(True)
+			pc.AddComponent($"{{ item.${value} }}"$)
+			If nf.progressRotate <> "" Then pc.SetRotate(nf.progressRotate)
+			If nf.progressSize <> "" Then pc.SetSize(nf.progressSize)
+			If nf.progressWidth <> "" Then pc.SetWidth(nf.progressWidth)
+			If nf.progressColor <> "" Then pc.SetColor(nf.progressColor)
+			tmp.AddComponent(pc.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_RATING
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+			'
+			Dim rat As VMRating
+			rat.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			rat.SetDense(True)
+			rat.SetVModel($"item.${value}"$)
+			If nf.Disabled Then rat.SetAttrLoose("disabled")
+			If nf.ReadOnly Then rat.SetAttrLoose("readonly")
+			If nf.iconSize <> "" Then rat.SetLength(nf.iconSize)
+			If nf.iconColor <> "" Then rat.SetColor(nf.iconColor)
+			If SubExists(Module, methodName) Then
+				rat.SetAttrSingle("@input", $"${ID}_${value}(item)"$)
+				vue.SetMethod(Module, methodName)
+			End If
+			tmp.AddComponent(rat.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_AVATARIMG
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+				
+			Dim avt As VMAvatar
+			Dim avtimg As VMImage
+			'
+			avt.Initialize(vue,"", "").SetStatic(bStatic).SetDesignMode(DesignMode)
+			avtimg.Initialize(vue, "","").SetStatic(bStatic).SetDesignMode(DesignMode)
+			avtimg.SetSrc($"item.${value}"$)
+			avtimg.SetAlt($"item.${value}"$)
+			If nf.imgHeight <> "" Then
+				avtimg.SetHeight(nf.imgheight)
+				avtimg.SetMaxHeight(nf.imgheight)
+			End If
+			'
+			If nf.imgWidth <> "" Then
+				avtimg.SetWidth(nf.imgWidth)
+				avtimg.SetMaxWidth(nf.imgWidth)
+			End If
+			avt.AddComponent(avtimg.ToString)
+			tmp.AddComponent(avt.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_SWITCH, COLUMN_CHECKBOX
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+			'
+			Dim swt As VMCheckBox
+			swt.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			If ct = COLUMN_SWITCH Then 
+				swt.SetTag("v-switch")
+				swt.SetInset(True)
+				swt.SetDense(True)
+			End If
+			swt.SetVModel($"item.${value}"$)
+			If nf.Disabled Then swt.SetAttrLoose("disabled")
+			If SubExists(Module, methodName) Then
+				swt.SetAttrSingle("@change", $"${ID}_${value}(item)"$)
+				vue.SetMethod(Module, methodName)
+			End If
+			tmp.AddComponent(swt.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_ICON
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+			
+			Dim aIcon As VMIcon
+			aIcon.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			aIcon.SetVText($"item.${value}"$)
+			If nf.Disabled Then aIcon.SetAttrLoose("disabled")
+			If nf.iconSize <> "" Then aIcon.SetSize(nf.iconSize)
+			If nf.iconColor <> "" Then aIcon.SetColor(nf.iconcolor)
+			tmp.AddComponent(aIcon.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_IMAGE
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+			'		
+			Dim avtimg As VMImage
+			avtimg.Initialize(vue, "","").SetStatic(bStatic).SetDesignMode(DesignMode)
+			avtimg.SetSrc($"item.${value}"$)
+			avtimg.SetAlt($"item.${value}"$)
+			If nf.Disabled Then avtimg.SetAttrLoose("disabled")
+			If nf.imgHeight <> "" Then
+				avtimg.SetHeight(nf.imgheight)
+				avtimg.SetMaxHeight(nf.imgheight)
+			End If
+			'
+			If nf.imgWidth <> "" Then
+				avtimg.SetWidth(nf.imgWidth)
+				avtimg.SetMaxWidth(nf.imgWidth)
+			End If
+			tmp.AddComponent(avtimg.ToString)
+			sb.Append(tmp.ToString)
 		Case COLUMN_CHIP
 			Dim tmp As VMTemplate
 			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
@@ -544,47 +810,14 @@ private Sub BuildControls
 			'
 			Dim chp As VMChip
 			chp.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			chp.SetAttributes(Array("dark")).SetText($"{{ item.${value} }}"$)
-			If nf.Disabled Then scb.SetAttrLoose("disabled")
+			chp.SetAttributes(Array("dark"))
+			chp.SetText($"{{ item.${value} }}"$)
+			If nf.Disabled Then chp.SetAttrLoose("disabled")
 			If nf.extra <> "" Then chp.SetAttrLoose(nf.extra)
 			'
 			tmp.AddComponent(chp.ToString)
 			sb.Append(tmp.ToString)
-		Case COLUMN_EDIT
-			Dim tmp As VMTemplate
-			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			Dim sline As String = $"v-slot:item.edit="{ item }""$
-			tmp.SetAttrLoose(sline)
-				'
-			Dim eIcon As VMIcon
-			eIcon.Initialize(vue, $"${ID}edit"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			eIcon.AddClass("mr-2")
-			eIcon.SetAttrSingle("@click", $"${ID}_edit(item)"$)
-			eIcon.SetText("mdi-pencil")
-			If nf.Disabled Then eIcon.SetAttrLoose("disabled")
-			tmp.AddComponent(eIcon.ToString)
-			'
-			sb.Append(tmp.ToString)
-			vue.SetMethod(Module, $"${ID}_edit"$)
-		Case COLUMN_DELETE
-			Dim tmpd As VMTemplate
-			tmpd.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			Dim sline As String = $"v-slot:item.delete="{ item }""$
-			tmpd.SetAttrLoose(sline)
-			'
-			Dim eIcon As VMIcon
-			eIcon.Initialize(vue, $"${ID}delete"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			eIcon.AddClass("mr-2")
-			eIcon.SetAttrSingle("@click", $"${ID}_delete(item)"$)
-			eIcon.SetText("mdi-delete")
-			If nf.Disabled Then eIcon.SetAttrLoose("disabled")
-			tmpd.AddComponent(eIcon.ToString)
-			'
-			sb.Append(tmpd.ToString)
-			vue.SetMethod(Module, $"${ID}_delete"$)
-		Case COLUMN_ACTION
-			Dim methodName As String = $"${ID}_${value}"$
-			'
+		Case COLUMN_ACTION, COLUMN_EDIT, COLUMN_DELETE
 			Dim tmpa As VMTemplate
 			tmpa.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
@@ -593,13 +826,16 @@ private Sub BuildControls
 			Dim aIcon As VMIcon
 			aIcon.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			aIcon.AddClass("mr-2")
-			aIcon.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
 			aIcon.SetText(nf.icon)
+			If nf.iconSize <> "" Then aIcon.SetSize(nf.iconSize)
+			If nf.iconColor <> "" Then aIcon.SetColor(nf.iconcolor)
 			If nf.Disabled Then aIcon.SetAttrLoose("disabled")
+			If SubExists(Module, methodName) Then
+				aIcon.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
+				vue.SetMethod(Module, methodName)
+			End If
 			tmpa.AddComponent(aIcon.ToString)
-			'
 			sb.Append(tmpa.ToString)
-			vue.SetMethod(Module, methodName)
 		End Select	
 	Next
 	DataTable.SetText(sb.ToString)
@@ -615,8 +851,71 @@ Sub ToString As String
 	DataTable.Bind(":items", items)
 	DataTable.Bind("item-key",PrimaryKey)
 	BuildControls
+	BuildInline
 	vcard.AddStuff(DataTable.ToString)
 	Return vcard.ToString
+End Sub
+
+Sub BuildInline
+	If bInlineEditing = False Then Return
+	Dim tmpx As VMElement
+	tmpx.Initialize(vue, "").SetTag("template")
+	tmpx.SetAttrSingle("v-slot:body", "{ items, headers }")
+	'
+	Dim tbody As VMElement
+	tbody.Initialize(vue, "").SetTag("tbody")
+	'
+	Dim tr As VMElement
+	tr.Initialize(vue, "").SetTag("tr")
+	tr.SetVFor("(item,idx,k)", "items")
+	tr.SetAttrSingle(":key", "idx")
+	'
+	Dim td As VMElement
+	td.Initialize(vue, "").SetTag("td")
+	td.SetVFor("(header,key)", "headers")
+	td.SetAttrSingle(":key","key")
+	'
+	Dim ed As VMElement
+	ed.Initialize(vue, "").SetTag("v-edit-dialog")
+	ed.SetAttrSingle(":return-value.sync", "item[header.value]")
+	ed.SetAttrSingle("@save", $"${ID}save"$)
+	ed.SetAttrSingle("@cancel", $"${ID}cancel"$)
+	ed.SetAttrSingle("@open", $"${ID}open"$)
+	ed.SetAttrSingle("@close", $"${ID}close"$)
+	'
+	vue.SetMethod(Module, $"${ID}save"$)
+	vue.SetMethod(Module, $"${ID}cancel"$)
+	vue.SetMethod(Module, $"${ID}open"$)
+	vue.SetMethod(Module, $"${ID}close"$)
+	
+	ed.AddComponent("{{item[header.value]}}")
+	
+	'
+	Dim tmp As VMElement
+	tmp.Initialize(vue, "").SetTag("template")
+	tmp.SetAttrSingle("v-slot:input", True)
+	'
+	Dim inp As VMElement
+	inp.Initialize(vue, "").SetTag("v-text-field")
+	inp.SetVModel("item[header.value]")
+	inp.SetAttrSingle("label", "Edit")
+	inp.SetAttrLoose("single-line")
+	' add text to template
+	tmp.AddComponent(inp.ToString)
+	'add template to edit dialog
+	ed.AddComponent(tmp.ToString)
+	'add edit dialog to td
+	td.AddComponent(ed.ToString)
+	'add td to tr
+	tr.AddComponent(td.ToString)
+	'add tr to body
+	tbody.AddComponent(tr.ToString)
+	'add tbody to template
+	tmpx.AddComponent(tbody.ToString)
+	'add to body
+	Dim sout As String = tmpx.tostring
+	Log(sout)
+	DataTable.SetText(sout)	
 End Sub
 
 'update the key

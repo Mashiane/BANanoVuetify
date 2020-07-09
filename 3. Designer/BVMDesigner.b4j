@@ -198,7 +198,7 @@ Module2=pgIndex
 NumberOfFiles=90
 NumberOfLibraries=12
 NumberOfModules=2
-Version=8.31
+Version=8.45
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -214,7 +214,7 @@ Sub Process_Globals
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.15"
+	Public Version As String = "4.16"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
@@ -310,7 +310,7 @@ Sub BANano_Ready
 	alaSQL.FromJSON
 	'
 	alaSQL.Initialize("vuetifyattributes", "name")
-	alaSQL.SchemaAddStrings(Array("key", "component", "default", "type", "name", "description", "icon"))
+	alaSQL.SchemaAddStrings(Array("key", "component", "default", "type", "name", "description", "icon", "active", "onsub"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON

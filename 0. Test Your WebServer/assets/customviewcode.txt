@@ -1,3 +1,13 @@
+' returns the BANanoElement
+public Sub getElement() As BANanoElement
+	Return mElement
+End Sub
+
+' returns the tag id
+public Sub getID() As String
+	Return mName
+End Sub
+
 'add a child component
 Sub AddComponent(child As String) As CompName
 	mElement.Append(child)
@@ -81,6 +91,8 @@ End Sub
 
 'will add properties to attributes
 private Sub AddAttr(varName As String, actProp As String) As CompName
+	If BANano.IsUndefined(varName) Or BANano.IsNull(varName) Then varName = ""
+	If BANano.IsNumber(varName) Then varName = BANanoShared.CStr(varName)
 	If actProp = "caption" Then Return Me
 	Try
 		If BANano.IsBoolean(varName) Then
@@ -347,34 +359,34 @@ Sub SetStyleOnOff(styleName as string, styleValue As Boolean) As CompName
 End Sub
 
 'required
-Sub SetRequiredOnOff(b As Boolean) As CompName
-	If sRequired = "" Then
-		Log($"CompName.Required - the required for ${mName} has not been set!"$)
-		Return Me
-	End If
-	data.Put(sRequired, b)
-	Return Me
-End Sub
+'Sub SetRequiredOnOff(b As Boolean) As CompName
+'	If sRequired = "" Then
+'		Log($"CompName.Required - the required for ${mName} has not been set!"$)
+'		Return Me
+'	End If
+'	data.Put(sRequired, b)
+'	Return Me
+'End Sub
 
 'read only
-Sub SetReadOnlyOnOff(b As Boolean) As CompName
-	If sReadonly = "" Then
-		Log($"CompName.ReadOnly - the readonly for ${mName} has not been set!"$)
-		Return Me
-	End If
-	data.Put(sReadonly, b)
-	Return Me
-End Sub
+'Sub SetReadOnlyOnOff(b As Boolean) As CompName
+'	If sReadonly = "" Then
+'		Log($"CompName.ReadOnly - the readonly for ${mName} has not been set!"$)
+'		Return Me
+'	End If
+'	data.Put(sReadonly, b)
+'	Return Me
+'End Sub
 
 'disabled
-Sub SetDisabledOnOff(b As Boolean) As CompName
-	If sDisabled = "" Then
-		Log($"CompName.Disabled - the disabled for ${mName} has not been set!"$)
-		Return Me
-	End If
-	data.Put(sDisabled, b)
-	Return Me
-End Sub
+'Sub SetDisabledOnOff(b As Boolean) As CompName
+'	If sDisabled = "" Then
+'		Log($"CompName.Disabled - the disabled for ${mName} has not been set!"$)
+'		Return Me
+'	End If
+'	data.Put(sDisabled, b)
+'	Return Me
+'End Sub
 
 'bind this element to component
 Sub AddToComponent(ve As VMElement)

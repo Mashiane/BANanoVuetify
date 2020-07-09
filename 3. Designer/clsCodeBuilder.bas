@@ -29,6 +29,8 @@ Public Sub Initialize(v As BANanoVue, stag As String) As clsCodeBuilder
 	vue = v
 	TagName = stag
 	Select Case stag
+	Case "v-html"
+		TagName = "div"
 	Case "v-div"
 		TagName = "div"
 	Case "v-router-view"
@@ -176,7 +178,7 @@ AddCode(mc,"@EndOfDesignText@")
 	AddCode(mc, "#IgnoreWarnings:12")
 		
 	'can have multiple items, read it
-	If TagName = "div" Or TagName = "v-div" Then
+	If TagName = "div" Or TagName = "v-div" Or TagName = "v-html" Then
 		AddCode(dg, $"mTagName = props.Get("TagName")"$)
 	End If	
 		
@@ -216,9 +218,6 @@ AddCode(mc,"@EndOfDesignText@")
 		Select Case v.propName
 		Case "color", "text-color","background-color"
 			dpDef = dpDef & ", List: amber|black|blue|blue-grey|brown|cyan|deep-orange|deep-purple|green|grey|indigo|light-blue|light-green|lime|orange|pink|purple|red|teal|transparent|white|yellow|primary|secondary|accent|error|info|success|warning|none"
-		Case "elevation"
-			v.propdefault = "0"
-			dpDef = $"#DesignerProperty: Key: Elevation, DisplayName: Elevation, FieldType: Int, MinRange: 0, MaxRange: 24, Description: Set elevation"$
 		Case "transition"
 			dpDef = dpDef & ", List: slide-x-transition|slide-x-reverse-transition|slide-y-transition|slide-y-reverse-transition|scroll-x-transition|scroll-x-reverse-transition|scroll-y-transition|scroll-y-reverse-transition|scale-transition|fade-transition|fab-transition"
 		Case "target"
@@ -342,10 +341,10 @@ For Each e As VEvent In events.values
 	'define setters
 	AddComment(es, "set on " & ename & " event, updates the master events records")
 	AddCode(es, $"Sub SetOn${xname}() As ${CompName}"$)
-	AddCode(es, $"Dim sName As String = #"#{mEventName}_${ename}"#"$)
+	AddCode(es, $"Dim sName As String = ~"~{mEventName}_${ename}"~"$)
 	AddCode(es, $"sName = sName.tolowercase"$)
 	AddCode(es, $"If SubExists(mCallBack, sName) = False Then Return Me"$)
-	AddCode(es, $"Dim sCode As String = #"#{sName}(#{eOn${ename}})"#"$)
+	AddCode(es, $"Dim sCode As String = ~"~{sName}(~{eOn${ename}})"~"$)
 	AddCode(es, $"SetAttr("v-on:${oname}", sCode)"$)
 	AddComment(es, "arguments for the event")
 	AddCode(es, $"Dim ${eargs} 'ignore"$)
@@ -354,6 +353,12 @@ For Each e As VEvent In events.values
 	AddCode(es, $"Return Me"$)
 	AddCode(es, "End Sub")
 	AddNewLine(es)
+	AddCode(es, $"Sub SetOn${xname}E(s${xname} As String) As ${CompName}"$)
+	AddCode(es, $"eOn${ename} = s${xname}"$)
+	AddCode(es, $"Return Me"$)
+	AddCode(es, "End Sub")
+	AddNewLine(es)
+	
 	'
 	'add extra dp
 	dp.Append($"#DesignerProperty: Key: On${ename}, DisplayName: On${ename}, FieldType: String, DefaultValue: , Description: Event arguments to be passed to the attribute."$)
@@ -374,6 +379,8 @@ private appLink As VueApp 'ignore
 Public mName As String 'ignore
 Private mEventName As String 'ignore
 Private mCallBack As Object 'ignore
+'Private bindStyle As Map
+'Private bindClass As Map
 Private mTarget As BANanoElement 'ignore
 Private mElement As BANanoElement 'ignore"$)
 	AddNewLine(mc)
@@ -400,11 +407,17 @@ methods.Initialize
 properties.Initialize
 styles.Initialize
 classList.Initialize
-Return Me
-End Sub"$)
+'bindClass.Initialize 
+'bindStyle.Initialize"$)
+
+AddCode(mc, $"'bindings.Put(~"~{mName}style"~, bindStyle)"$)
+AddCode(mc, $"'bindings.Put(~"~{mName}class"~, bindClass)"$)
+AddCode(mc, $"'SetVBindStyle(~"~{mName}style"~)"$)
+AddCode(mc, $"'SetVBindClass(~"~{mName}class"~)"$)
+AddCode(mc, "Return Me")
+AddCode(mc, "End Sub")
 AddNewLine(mc)
-'
-	
+
 	AddCode(mc, $"' this is the place where you create the view in html and run initialize javascript.  Must be Public!"$)
 	AddCode(mc, $"Public Sub DesignerCreateView (Target As BANanoElement, props As Map)
 	mTarget = Target"$)
@@ -425,6 +438,7 @@ mStyle = props.Get("Style")"$)
 	AddCode(sTo, $"Dim cKeys As String = BANanoShared.JoinMapKeys(classList, " ")"$)
 	AddCode(sTo, $"cKeys = cKeys & " " & mClasses"$)
 	AddCode(sTo, $"cKeys = cKeys.trim"$)
+	AddCode(sTo, $"cKeys = BANanoShared.MvDistinct(" ", cKeys)"$)
 	AddCode(sTo, $"AddAttr(cKeys, "class")"$)
 	AddComment(sTo, "build the style list")
 AddCode(sTo, $"If BANano.IsUndefined(mStyle) Or BANano.IsNull(mStyle) Then mStyle = """$)
@@ -444,7 +458,7 @@ AddComment(sTo, "build the attributes")
 AddCode(sTo, $"If BANano.IsUndefined(mAttributes) Or BANano.IsNull(mAttributes) Then mAttributes = """$)
 AddCode(sTo, $"If mAttributes.StartsWith("{") Then mAttributes = """$)
 AddCode(sTo, $"If mAttributes <> "" Then"$)
-AddCode(sTo, $"Dim mItems As List = BANanoShared.StrParse(",",mAttributes)"$)
+AddCode(sTo, $"Dim mItems As List = BANanoShared.StrParse(";",mAttributes)"$)
 AddCode(sTo, $"For Each mt As String In mItems"$)
 AddCode(sTo, $"Dim k As String = BANanoShared.MvField(mt,1,"=")"$)
 AddCode(sTo, $"Dim v As String = BANanoShared.MvField(mt,2,"=")"$)
@@ -468,6 +482,7 @@ AddCode(sTo, "End If")
 	AddCode(mc, sett.tostring)
 	Dim xes As String = es.tostring
 	xes = xes.replace("#","$")
+	xes = xes.replace("~","$")
 	AddCode(mc, xes)
 		
 	AddComment(mc, "return the generated html")

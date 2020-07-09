@@ -1616,6 +1616,7 @@ Sub btnVueExtract_click(e As BANanoEvent)
 	tResult.Put("v-div", CreateMap("name":"v-div"))
 	tResult.Put("v-template", CreateMap("name":"v-template"))
 	tResult.Put("v-a", CreateMap("name":"v-a"))
+	tResult.Put("v-html", CreateMap("name":"v-html"))
 		
 	'these are maps
 	For Each k As String In tResult.Keys
@@ -1629,7 +1630,8 @@ Sub btnVueExtract_click(e As BANanoEvent)
 		Dim attributes As List = v.getdefault("attributes", la)
 		'add extra attributes
 		attributes.AddAll(Array("caption", "key", "v-html", "v-text", "v-model", "ref", "v-if", "v-else", "v-show", _
-	"v-for","v-pre","v-once", "v-else-if", "v-cloak", "required", "disabled", "readonly","v-bind:class","v-bind:style"))
+	"v-for","v-pre","v-once", "v-else-if", "v-cloak", "required", "disabled", "readonly","v-bind:class","v-bind:style", _
+	"parent-id"))
 	
 		'define the component
 		Dim component As Map = CreateMap()
@@ -1649,7 +1651,7 @@ Sub btnVueExtract_click(e As BANanoEvent)
 			Case "v-pre", "v-once", "v-cloak", "has-id"
 				attribute.put("type", "boolean")
 			Case "caption", "key", "v-html", "v-text", "v-model", "ref", "v-if", "v-else", "v-show", _
-			"v-for","required", "disabled", "readonly", "v-bind:class", "v-bind:style", "v-else-if"
+			"v-for","required", "disabled", "readonly", "v-bind:class", "v-bind:style", "v-else-if", "parent-id"
 				attribute.put("type", "string")
 			End Select
 			'add the attribute to the master list
@@ -1907,6 +1909,8 @@ Sub btnVueExtract_click(e As BANanoEvent)
 	'extract the values
 	For Each attrm As Map In importAttributes.values
 		attrm.put("icon", "mdi-set-none")
+		attrm.put("active", False)
+		attrm.put("onsub", False)
 		vuetifyattributes.add(attrm)
 	Next
 	
@@ -2005,6 +2009,8 @@ Sub btnVueExtract_click(e As BANanoEvent)
 		Select Case compName
 		Case "v-div"
 			cb.AddProperty("TagName","string","div","", vue.newlist)
+		Case "v-html"
+			cb.AddProperty("TagName","string","div","", Null)
 		End Select
 		
 		'add events
@@ -7898,6 +7904,8 @@ Sub tbl2customview_click(e As BANanoEvent)
 	Select Case compName
 	Case "v-div"
 		cb.AddProperty("TagName","string","div","", vue.newlist)
+	Case "v-html"
+		cb.AddProperty("TagName","string","div","", Null)
 	End Select
 	'
 	
@@ -7948,13 +7956,17 @@ Sub CreateDataTable_vuetifyattributes
 	dtvuetifyattributes.SetPage("1")
 	dtvuetifyattributes.SetSingleselect(True)
 	dtvuetifyattributes.SetVisible(True)
-	dtvuetifyattributes.AddColumn1("icon", "Icon", "icon",0,False,"start")
+	dtvuetifyattributes.AddIconView("icon", "Icon")
 	dtvuetifyattributes.AddColumn1("name", "Name", "text",0,False,"start")
 	dtvuetifyattributes.AddColumn1("type", "Type", "text",0,False,"start")
 	dtvuetifyattributes.AddColumn1("default", "Default", "text",0,False,"start")
 	dtvuetifyattributes.AddColumn1("description", "Description", "text",0,False,"start")
-	dtvuetifyattributes.SetEdit(True)
-	dtvuetifyattributes.SetDelete(True)
+	dtvuetifyattributes.AddSwitch("onsub", "On Sub")
+	dtvuetifyattributes.AddSwitch("active", "On Sub Signature")
+	'dtvuetifyattributes.SetEdit(True)
+	'dtvuetifyattributes.SetDelete(True)
+	'dtvuetifyattributes.SetIconDimensions("edit", "32px", "success")
+	'dtvuetifyattributes.SetIconDimensions("delete", "32px", "error")	
 	contattributes.AddControl(dtvuetifyattributes.DataTable, dtvuetifyattributes.tostring, 2, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 End Sub
 

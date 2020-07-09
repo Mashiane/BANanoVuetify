@@ -549,7 +549,7 @@ Sub SetSizes(varSizes As String) As VMImage
 End Sub
 
 'set src via vmodel
-private Sub SetSrc(varSrc As String) As VMImage
+Sub SetSrc(varSrc As String) As VMImage
 	If varSrc = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("src", varSrc)
