@@ -271,11 +271,16 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 		la.SetDesignMode(DesignMode)
 		la.SetVIf($"item.${actionIcon}"$)
 		Dim btn As VMButton
-		btn.Initialize(vue, "", Module).SetAttrLoose("icon")
+		Dim btnKey As String = $"${ID}action"$
+		btn.Initialize(vue, btnKey, Module).SetAttrLoose("icon")
 		Dim icon As VMIcon
 		icon.Initialize(vue, "", Module)
 		icon.SetVText($"item.${actionIcon}"$)
 		btn.AddComponent(icon.ToString)
+		If SubExists(Module, $"${ID}action_click"$) Then
+			Dim sCode As String = $"${ID}action_click(item.${key})"$
+			btn.SetAttrSingle("v-on:click.stop", sCode)
+		End If
 		la.AddComponent(btn.ToString)
 		la.Pop(vli.ListItem)
 	End If

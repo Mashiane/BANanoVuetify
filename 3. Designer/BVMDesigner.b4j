@@ -214,7 +214,7 @@ Sub Process_Globals
 	Private Publish As String = "C:\laragon\www"
 	Private BP As BANanoPostProcessor
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.16"
+	Public Version As String = "4.17"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
@@ -241,7 +241,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.TranspilerOptions.MinifyOnline = False
 	BANano.TranspilerOptions.IgnoreB4JLibrary("BANanoPostProcessor")
 	BANano.TranspilerOptions.ExternalTestConnectionServer = "http://www.localhost"
-	
+	BANano.TranspilerOptions.EnableLiveCodeSwapping = False
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$
 	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
@@ -281,7 +281,7 @@ Sub BANano_Ready
 	'create the table for the components
 	alaSQL.Initialize("components", "id")
 	alaSQL.SchemaAddIntegers(Array("id", "row","col","tabindex"))
-	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+	alaSQL.SchemaAddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype", "deletecomp"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON

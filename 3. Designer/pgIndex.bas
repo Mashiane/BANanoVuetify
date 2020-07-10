@@ -498,6 +498,7 @@ Sub Process_Globals
 	Private pc As VMPrism
 	Private htm As VMPrism
 	Private dbCode As VMPrism
+	Private compCode As VMPrism
 	Private bisfluid As Boolean
 	Private bisshowmatrix As Boolean
 	Private bisnogutters As Boolean
@@ -929,7 +930,7 @@ Sub drwV2B4xitems_click(e As BANanoEvent)
 	'
 	vm.showloading
 	
-	dtvuetifyattributes.SetTitle(menuID)
+	dtvuetifyattributes.SetTitle(menuID & " Attributes")
 	'show attributes for this component..
 	Dim rsAttributes As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -947,6 +948,7 @@ Sub drwV2B4xitems_click(e As BANanoEvent)
 	'update the attributes counter
 	Dim aCnt As Int = rsAttributes.result.size
 	vm.SetBadgeContent("tbl2customview", aCnt)
+	CompSourceCode
 	vm.HideLoading
 End Sub
 
@@ -1537,11 +1539,16 @@ Sub CreateMyComponentsDrawer
 	'drwcomponents.SetTemporary(True)
 	drwcomponents.SetHideOverlay(True)
 	drwcomponents.List.SetDense(True)
-	drwcomponents.List.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "")
+	drwcomponents.List.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "deletecomp")
 	vm.AddDrawer(drwcomponents)
 End Sub
 #End Region
 
+'delete a component
+Sub drwcomponentsitemsaction_click(itemKey As String)
+	BANano.SetLocalStorage("component", itemKey)
+	vm.ShowConfirm("removecomp", "Confirm Component", "Are you sure that you want to remove the component?", "Yes", "No")
+End Sub
 
 Sub CreateVuetify2B4x
 	drwV2B4x = vm.CreateDrawer("drwv2b4x", Me)
@@ -3616,19 +3623,19 @@ Sub Read_Menu
 	'menu
 	menutype = mattr.getdefault("menutype","")
 	sActivator = mattr.getdefault("activator", "")
-	sclosedelay = mattr.getdefault("closedelay", "")
+	sClosedelay = mattr.getdefault("closedelay", "")
 	sContentclass = mattr.getdefault("contentclass", "")
 	siconname = mattr.getdefault("iconname", "")
 	sMaxheight = mattr.getdefault("maxheight", "")
-	smaxwidth = mattr.getdefault("maxwidth", "")
-	sminwidth = mattr.getdefault("minwidth", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sMinwidth = mattr.getdefault("minwidth", "")
 	snudgebottom = mattr.getdefault("nudgebottom", "")
 	snudgeleft = mattr.getdefault("nudgeleft", "")
 	snudgeright = mattr.getdefault("nudgeright", "")
 	snudgetop = mattr.getdefault("nudgetop", "")
 	snudgewidth = mattr.getdefault("nudgewidth", "")
-	sopendelay = mattr.getdefault("opendelay", "")
-	sorigin = mattr.getdefault("origin", "")
+	sOpendelay = mattr.getdefault("opendelay", "")
+	sOrigin = mattr.getdefault("origin", "")
 	spositionx = mattr.getdefault("positionx", "")
 	spositiony = mattr.getdefault("positiony", "")
 	sreturnvalue = mattr.getdefault("returnvalue", "")
@@ -7616,9 +7623,39 @@ Sub confirm_ok(e As BANanoEvent)
 			ExtractComponents("Yes")
 		Case "confirmsave"
 			SaveComponents("yes")
+		Case "removecomp"
+			RemoveComponent
 	End Select
 End Sub
 
+Sub RemoveComponent
+	Dim sComponent As String = BANano.GetLocalStorage("component")
+	Dim rsSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	rsSQL.Initialize("components", "id")
+	rsSQL.AddIntegers(Array("id"))
+	rsSQL.Delete(sComponent)
+	rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
+	rsSQL.FromJSON
+	'reload list
+	'add the components
+	Dim compSQL As BANanoAlaSQLE
+	compSQL.Initialize("components", "id")
+	compSQL.SelectAll(Array("*"), Array("row","col"))
+	compSQL.result = db.ExecuteWait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
+	'update components
+	vm.setdata("myux", compSQL.result)
+	Dim compSize As Int = compSQL.result.Size
+	compSize = BANano.parseint(compSize)
+	vm.SetBadgeContent("btnComponents", compSize)
+	If compSize = 0 Then
+		vm.SetBadgeColor("btnComponents", vue.COLOR_RED, vue.INTENSITY_NORMAL)
+	Else
+		vm.SetBadgeColor("btnComponents", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
+	End If
+	CreateUX
+End Sub
 
 'remove last comp item
 Sub RemoveLastCompItem
@@ -7842,20 +7879,168 @@ Sub CreateVuetifyAdmin
 	contattributes.SetElevation("1")
 	contattributes.SetTransition(vm.TRANSITION_SLIDE_X)
 	'
-	tbltoolbar2 = vm.CreateToolBar("tbltoolbar3", Me)
-	tbltoolbar2.SetToolBar(True)
-	tbltoolbar2.AddTitle("Attributes", "")
-	'add a hamburger
-	tbltoolbar2.AddSpacer
-	tbltoolbar2.SetDense(True)
-	tbltoolbar2.SetVisible(True)
-
-	contattributes.AddControl(tbltoolbar2.ToolBar, tbltoolbar2.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
-	'
+	compCode.Initialize(vue, "compcode", Me)
+	compCode.SetLanguage("vb")
+	compCode.SetTitle("Component Source Code")
+	compCode.SetCode("")
+	contattributes.AddControl(compCode.PrismComponent, compCode.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+		
 	CreateDataTable_vuetifyattributes
 	
 	vm.container.AddComponent(1, 2, contattributes.tostring)
 
+End Sub
+
+'generate the source code for the component
+Sub CompSourceCode
+	vm.ShowLoading
+	'get the component to process
+	Dim scomp As String = vue.getdata("vuetifycomponent")
+	'get the attributes for this component..
+	Dim rsAttributes As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	rsAttributes.Initialize("vuetifyattributes", "name")
+	Dim qw As Map = CreateMap()
+	qw.put("component", scomp)
+	rsAttributes.SelectWhere(Array("*"), qw, Array("="), Array("name"))
+	rsAttributes.result = db.ExecuteWait(rsAttributes.query, rsAttributes.args)
+	rsAttributes.FromJSON
+	'
+	Dim bComp As String = vm.BeautifyName(scomp)
+	
+	'signature
+	Dim sbs As StringBuilder
+	sbs.Initialize
+	sbs.Append($"Sub Add${bComp}(Module As Object, parentID As String, elID As String"$)
+	'bindings
+	Dim sbb As StringBuilder
+	sbb.initialize
+	'attributes
+	Dim sba As StringBuilder
+	sba.initialize
+	'
+	Dim sbi As StringBuilder
+	sbi.Initialize
+	AddComment(sbi, "do some cleanup")
+	AddCode(sbi, $"parentID = parentID.tolowercase"$)
+	AddCode(sbi, $"elID = elID.tolowercase"$)
+	AddCode(sbi, $"parentID = parentID.replace("#","")"$)
+	AddCode(sbi, $"elID = elID.replace("#","")"$)
+	AddNewLine(sbi)
+	AddCode(sbi, $"Dim thisComp As ${bComp}"$)
+	AddCode(sbi, $"thisComp.initialize(Module, elID, elID)"$)
+	'	
+	For Each attrm As Map In rsAttributes.Result
+		Dim sType As String = attrm.get("type")
+		Dim sname As String = attrm.get("name")
+		Dim sdefault As String = attrm.getDefault("default","")
+		Dim bActive As String = attrm.getdefault("active", "false")
+		Dim bOnSub As String = attrm.getdefault("onsub", "false")
+		'
+		bActive = vm.cstr(bActive)
+		bOnSub = vm.cstr(bOnSub)
+		bActive = bActive.tolowercase
+		bOnSub = bOnSub.tolowercase
+		'
+		If bActive = "false" And bOnSub = "false" Then Continue
+		'define the binding
+		Dim bAttr As String = vm.Beautifyname(sname)
+		Dim lAttr As String = bAttr.tolowercase
+		
+		'update the signature
+		
+		'
+		Select Case sname
+		Case "value"
+		Case "v-html", "v-text", "v-if", "v-else", "v-for", _
+			 "v-pre","v-once", "v-else-if", "v-cloak", "v-text"
+			AddCode(sba, $"thisComp.SetAttr("${sname}", bnd${bAttr})"$)
+			Dim sbLine As String = $"Dim bnd${bAttr} As String = ~"~{elID}${lAttr}"~"$
+			sbLine = sbLine.replace("~","$")
+			AddCode(sbi, sbLine)
+			Select Case sType
+			Case "string"
+				AddCode(sbb, $"SetData(bnd${bAttr}, s${bAttr})"$)
+			Case "boolean"
+				AddCode(sbb, $"SetData(bnd${bAttr}, b${bAttr})"$)
+			End Select
+		Case "ref"
+			AddCode(sba, $"thisComp.SetAttr("${sname}", elID)"$)
+		Case "v-model"
+			AddCode(sba, $"thisComp.SetAttr("${sname}", elID)"$)
+			AddCode(sbb, $"SetData(elID, "")"$)
+		Case "v-show"
+			Dim sbLine As String = $"Dim bndShow As String = ~"~{elID}show"~"$
+			sbLine = sbLine.replace("~","$")
+			AddCode(sbi, sbLine)			
+			AddCode(sba, $"thisComp.SetAttr("${sname}", bndShow)"$)
+			AddCode(sbb, $"SetData(bndShow, True)"$)
+		Case Else
+			AddCode(sba, $"thisComp.SetAttr(":${sname}", bnd${bAttr})"$)
+			Dim sbLine As String = $"Dim bnd${bAttr} As String = ~"~{elID}${lAttr}"~"$
+			sbLine = sbLine.replace("~","$")
+			AddCode(sbi, sbLine)
+			Select Case sType
+			Case "string"
+				AddCode(sbb, $"SetData(bnd${bAttr}, s${bAttr})"$)
+			Case "boolean"
+				AddCode(sbb, $"SetData(bnd${bAttr}, b${bAttr})"$)
+			End Select
+		End Select
+		
+		If bActive = "true" Then
+			Select Case sType
+			Case "string"
+				sbs.append($", s${bAttr} As String"$)
+			Case "boolean"
+				sbs.append($", b${bAttr} As Boolean"$)
+			End Select
+		Else
+			Select Case sname
+			Case "ref", "v-show", "v-model"	
+			Case Else
+				Select Case sType
+				Case "string"
+					sbi.append($"Dim s${bAttr} As String = "${sdefault}"$).append(CRLF)
+				Case "boolean"
+					sbi.append($"Dim b${bAttr} As Boolean"$)
+					If sdefault <> "" Then sbi.append(" = " & sdefault)
+					sbi.append(CRLF)
+				End Select
+			End Select
+		End If
+	Next
+	'add a class to the signature
+	sbs.append($", Class As String)"$)
+	AddCode(sbi, $"thisComp.AddClass(Array(Class))"$)
+	sbi.append(sba.tostring)
+	AddNewLine(sbi)
+	AddComment(sbi, "add component to parent")
+	AddCode(sbi, $"thisComp.AddToParent(parentID)"$)
+	AddComment(sbi, "add component to app")
+	AddCode(sbi, $"thisComp.AddToApp(Me)"$)
+	AddComment(sbi, "bind the component data")
+	'
+	Dim thisCode As StringBuilder
+	thisCode.Initialize
+	AddComment(thisCode, $"'add ${scomp}"$)
+	AddCode(thisCode, sbs.tostring)
+	thisCode.append(sbi.tostring)
+	thisCode.append(sbb.tostring)
+	AddCode(thisCode, "End Sub")
+	AddNewLine(thisCode)
+	Dim xcode As String = thisCode.tostring
+	compCode.SetCode(xcode)
+	'save the code to download later
+	BANano.setsessionstorage("compcode", xcode)
+	vm.HideLoading
+End Sub
+
+Sub compcodecopy_click(e As BANanoEvent)
+	'get the component to process
+	Dim scomp As String = vue.getdata("vuetifycomponent")
+	Dim gridsource As String = BANano.GetSessionStorage("compcode")
+	vm.SaveText2File(gridsource, $"${scomp}.bas"$)
 End Sub
 
 'convert a vuetify item to a custom view
@@ -7967,10 +8152,36 @@ Sub CreateDataTable_vuetifyattributes
 	'dtvuetifyattributes.SetDelete(True)
 	'dtvuetifyattributes.SetIconDimensions("edit", "32px", "success")
 	'dtvuetifyattributes.SetIconDimensions("delete", "32px", "error")	
-	contattributes.AddControl(dtvuetifyattributes.DataTable, dtvuetifyattributes.tostring, 2, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	contattributes.AddControl(dtvuetifyattributes.DataTable, dtvuetifyattributes.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 End Sub
 
+Sub dtvuetifyattributes_active(item As Map)
+	'get the key
+	Dim skey As String = item.get("key")
+	'update the database
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim compSQL As BANanoAlaSQLE
+	compSQL.Initialize("vuetifyattributes", "key")
+	compSQL.Update1(item, skey)
+	compSQL.result = db.ExecuteWait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
+	'build the code
+	CompSourceCode
+End Sub
 
+Sub dtvuetifyattributes_onsub(item As Map)
+	'get the key
+	Dim skey As String = item.get("key")
+	'update the database
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim compSQL As BANanoAlaSQLE
+	compSQL.Initialize("vuetifyattributes", "key")
+	compSQL.Update1(item, skey)
+	compSQL.result = db.ExecuteWait(compSQL.query, compSQL.args)
+	compSQL.FromJSON
+	'build the code
+	CompSourceCode
+End Sub
 
 
 Sub CreateDBAdmin
@@ -8202,6 +8413,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		nTable.put("sizemedium",12)
 		nTable.put("sizelarge",12)
 		nTable.put("sizexlarge",12)
+		nTable.put("deletecomp", "mdi-delete")
 		'make to attributes
 		Dim attributesJSON As String = BANano.ToJSON(nTable)
 		'create actual component
@@ -8220,6 +8432,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		nComp.put("label", vue.propercase(tbKey))
 		nComp.put("items", itemsJSON)
 		nComp.put("controltype", "table")
+		nComp.put("deletecomp", "mdi-delete")
 		'add component to table
 		Dim contSQL As BANanoAlaSQLE
 		contSQL.Initialize("components", "vmodel")
@@ -10171,7 +10384,8 @@ Sub ItemDrop(e As BANanoEvent)
 					nrec.put("vmodel", sLabel)
 					nrec.put("label", sLabel)
 					nrec.put("avatar", avatar)
-					nrec.put("parentid", "vm.Container")		
+					nrec.put("parentid", "vm.Container")	
+					nrec.put("deletecomp", "mdi-delete")
 					'
 					Dim attr As Map = CreateMap()
 					attr.put("isupdatable", "Yes")
@@ -10186,6 +10400,7 @@ Sub ItemDrop(e As BANanoEvent)
 					attr.put("col", 1)
 					attr.put("label", sLabel)
 					attr.put("offsetsmall",0)
+					attr.put("deletecomp", "mdi-delete")
 					attr.put("offsetmedium",0)
 					attr.put("offsetlarge",0)
 					attr.put("offsetxlarge",0)
@@ -11702,7 +11917,7 @@ Sub SavePropertyBag
 	Dim svmodel As String = mattr.get("vmodel")
 	Dim smanyrecords As String = mattr.get("manyrecords")
 	Dim sparent As String = mattr.get("parent")
-	Dim scontroltype As String = mattr.get("controltype")
+	mattr.put("controltype", spropbagtype)
 	'
 	'is vmodel valid
 	If avatarMap.containskey(svmodel) Then
@@ -11730,7 +11945,8 @@ Sub SavePropertyBag
 	nrec.put("name", svmodel)
 	nrec.Put("items", scontents)
 	nrec.put("parentid", sparent)
-	nrec.put("controltype", scontroltype)
+	nrec.put("controltype", spropbagtype)
+	nrec.put("deletecomp", "mdi-delete")
 	'save the bag
 	vm.setdata("propbag", nrec)
 	'
@@ -11816,6 +12032,7 @@ Sub SavePropertyBag
 			nc.put("id", cid)
 			nc.put("label", ctitle)
 			nc.put("controltype", ccolcontroltype)
+			nc.put("deletecomp", "mdi-delete")
 			nc.put("parent", diagName & ".Container")
 			nc.put("parentid", diagName & ".Container")
 			nc.put("vmodel", ckey)
@@ -11875,6 +12092,7 @@ Sub SavePropertyBag
 			'create a new record
 			Dim nrec As Map = CreateMap()
 			nrec.put("controltype", ccolcontroltype)
+			nrec.put("deletecomp", "mdi-delete")
 			nrec.put("id", cid)
 			nrec.put("row", crow)
 			nrec.put("col", ccol)
@@ -12173,16 +12391,16 @@ End Sub
 #End Region
 
 Sub Read_Dialog
-	sactivator = mattr.getdefault("activator", "")
-	scontentclass = mattr.getdefault("contentclass", "")
-	sheight = mattr.getdefault("height", "")
-	smaxwidth = mattr.getdefault("maxwidth", "")
-	sorigin = mattr.getdefault("origin", "")
-	soverlaycolor = mattr.getdefault("overlaycolor", "")
-	soverlaycolorintensity = mattr.getdefault("overlaycolorintensity", "")
-	soverlayopacity = mattr.getdefault("overlayopacity", "")
-	stransition = mattr.getdefault("transition", "")
-	swidth = mattr.getdefault("width", "")
+	sActivator = mattr.getdefault("activator", "")
+	sContentclass = mattr.getdefault("contentclass", "")
+	sHeight = mattr.getdefault("height", "")
+	sMaxwidth = mattr.getdefault("maxwidth", "")
+	sOrigin = mattr.getdefault("origin", "")
+	sOverlaycolor = mattr.getdefault("overlaycolor", "")
+	sOverlaycolorintensity = mattr.getdefault("overlaycolorintensity", "")
+	sOverlayopacity = mattr.getdefault("overlayopacity", "")
+	sTransition = mattr.getdefault("transition", "")
+	sWidth = mattr.getdefault("width", "")
 	sCancelid = mattr.getdefault("cancelid", "")
 	sCancelcaption = mattr.getdefault("cancelcaption", "")
 	sOkid = mattr.getdefault("okid", "")
@@ -12196,18 +12414,18 @@ Sub Read_Dialog
 	bisbackdrop = YesNoToBoolean(mattr.getdefault("isbackdrop", "No"))
 	bisshowonopen = YesNoToBoolean(mattr.getdefault("isshowonopen", "No"))
 	bisDisabled = YesNoToBoolean(mattr.getdefault("isdisabled", "No"))
-	biseager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
-	bisfullscreen = YesNoToBoolean(mattr.getdefault("isfullscreen", "No"))
-	bishideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
-	bisinternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
+	bisEager = YesNoToBoolean(mattr.getdefault("iseager", "No"))
+	bisFullscreen = YesNoToBoolean(mattr.getdefault("isfullscreen", "No"))
+	bisHideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
+	bisInternalactivator = YesNoToBoolean(mattr.getdefault("isinternalactivator", "No"))
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-	bisnoclickanimation = YesNoToBoolean(mattr.getdefault("isnoclickanimation", "No"))
-	bisopenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
-	bispersistent = YesNoToBoolean(mattr.getdefault("ispersistent", "No"))
-	bisretainfocus = YesNoToBoolean(mattr.getdefault("isretainfocus", "No"))
-	bisscrollable = YesNoToBoolean(mattr.getdefault("isscrollable", "No"))
+	bisNoclickanimation = YesNoToBoolean(mattr.getdefault("isnoclickanimation", "No"))
+	bisOpenonhover = YesNoToBoolean(mattr.getdefault("isopenonhover", "No"))
+	bisPersistent = YesNoToBoolean(mattr.getdefault("ispersistent", "No"))
+	bisRetainfocus = YesNoToBoolean(mattr.getdefault("isretainfocus", "No"))
+	bisScrollable = YesNoToBoolean(mattr.getdefault("isscrollable", "No"))
 	bisslotactivator = YesNoToBoolean(mattr.getdefault("isslotactivator", "No"))
-	bistitleprimary = YesNoToBoolean(mattr.getdefault("istitleprimary", "No"))
+	bisTitleprimary = YesNoToBoolean(mattr.getdefault("istitleprimary", "No"))
 End Sub
 
 Sub LoremIpsum(count As Int) As String
@@ -14018,7 +14236,7 @@ Sub Read_Builder
 	sBuildertype = mattr.getdefault("buildertype", "")
 	sDecription = mattr.getdefault("decription", "")
 	sPrefix = mattr.getdefault("prefix", "")
-	stag = mattr.getdefault("tag", "")
+	sTag = mattr.getdefault("tag", "")
 End Sub
 
 Sub Design_Builder

@@ -172,6 +172,7 @@ Sub AddEdit(colField As String, colTitle As String)
 	SetColumnType(colField, COLUMN_EDIT)
 	SetColumnSortable(colField, False)
 	SetColumnAlignment(colField, ALIGN_CENTER)
+	SetColumnIcon(colField, "mdi-pencil")
 End Sub
 
 Sub AddDelete(colField As String, colTitle As String)
@@ -181,6 +182,7 @@ Sub AddDelete(colField As String, colTitle As String)
 	SetColumnType(colField, COLUMN_DELETE)
 	SetColumnSortable(colField, False)
 	SetColumnAlignment(colField, ALIGN_CENTER)
+	SetColumnIcon(colField, "mdi-delete")
 End Sub
 
 Sub AddIcon(colField As String, colTitle As String, colIcon As String)
@@ -265,13 +267,13 @@ End Sub
 
 Sub SetDelete(b As Boolean) As VMDataTable
 	If b = False Then Return Me
-	AddDelete("delete", "Delete")
+	AddAction("delete", "Delete", "mdi-delete")
 	Return Me
 End Sub
 
 Sub SetEdit(b As Boolean) As VMDataTable
 	If b = False Then Return Me
-	AddEdit("edit", "Edit")
+	AddAction("edit", "Edit", "mdi-pencil")
 	Return Me
 End Sub
 
