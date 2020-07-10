@@ -99,6 +99,7 @@ Sub SetStatic(b As Boolean) As VMToolBar
 	Tabs.SetStatic(b)
 	Title.SetStatic(b)
 	Logo.SetStatic(b)
+	Progress.SetStatic(b)
 	Return Me
 End Sub
 
@@ -982,6 +983,7 @@ Sub SetDesignMode(b As Boolean) As VMToolBar
 	Tabs.SetDesignMode(b)
 	Logo.SetDesignMode(b)
 	Title.SetDesignMode(b)
+	Progress.SetDesignMode(b)
 	Return Me
 End Sub
 

@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMList,SetDataSourceTemplate1,297,0,VMListItem,SetOnClick,397,0,VMDataTable,AddEdit,167,0,VMDataTable,AddIcon,185,0,VMDataTable,AddDelete,174,0,VMNavigationDrawer,Initialize,23,0,VMButton,SetHasBadge,49,0,VMButton,SetBadge,51,0,VMButton,Initialize,29,0,VMList,SetDataSourceTemplate,265,6
+NavigationStack=VMToolBar,Bind,951,0,VMToolBar,SetMarginAll,969,0,VMToolBar,SetDisabled,994,0,VMToolBar,SetDesignMode,981,2,VMToolBar,SetTabIndex,984,0,VMToolBar,SetStyleSingle,1001,0,VMToolBar,BuildModel,1011,0,VMList,SetDataSourceTemplate,265,0,VMToolBar,SetStatic,92,0,Main,Process_Globals,11,0
 SelectedBuild=0
 VisibleModules=
