@@ -751,7 +751,6 @@ Sub Init
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
-	
 	'
 '	Dim lst As List = vue.newlist
 '	Dim colors As Map = vm.ColorOptions
@@ -4341,7 +4340,7 @@ Sub Design_Badge
 	AddCode(sb, $"Dim bdg${sname} As VMBadge = vm.CreateBadge("bdg${sname}", Me)"$)
 	CodeLine(sb, bisAvatar, "b", "bdg", sname, "SetAvatar")
 	CodeLine(sb, bisBordered, "b", "bdg", sname, "SetBordered")
-	CodeLine(sb, bisbottom, "b", "bdg", sname, "SetBottom")
+	CodeLine(sb, bisBottom, "b", "bdg", sname, "SetBottom")
 	CodeLine2(sb, sColor, sColorintensity, "s", "bdg", sname, "SetColorintensity")
 	Select Case sbadgetype
 	Case "iscontent"
@@ -5210,7 +5209,7 @@ End Sub
 
 Sub Design_Time
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, stitle, bisRequired, sPlaceholder, shelpertext, serrortext, sTabindex)
+	Dim tp As VMDateTimePicker = ui.Newtimepicker(Me, True, sname, svmodel, sTitle, bisRequired, sPlaceholder, shelpertext, serrortext, sTabindex)
 	tp.SetVisible(bisVisible)
 	tp.SetDisabled(bisDisabled)
 	tp.SetAmPmInTitle(bisampm)
@@ -12148,11 +12147,12 @@ Sub SavePropertyBag
 				contSQL.FromJSON
 			End If
 		Next
-		vm.setdata("devspace", 3)
+		'vm.setdata("devspace", 3)
 	Else
-		vm.setdata("devspace", 0)
+		'vm.setdata("devspace", 0)
 	End If
-	CreateUX
+	vm.ShowSnackBarSuccess("You can click the refresh button to reflect the changes on the stage.")
+	'CreateUX
 End Sub
 
 'convert data type to field type
@@ -12486,13 +12486,13 @@ End Sub
 
 Sub Read_SpeedDial
 bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
-bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+bisBottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 sColor = mattr.getdefault("color", "")
 	smastericon = mattr.getdefault("mastericon","")
 sintensity = mattr.getdefault("intensity", "")
 sDirection = mattr.getdefault("direction", "")
 sFinalicon = mattr.getdefault("finalicon", "")
-bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
 shref = mattr.getdefault("href", "")
 sInitialicon = mattr.getdefault("initialicon", "")
 bisLarge = YesNoToBoolean(mattr.getdefault("islarge", "No"))
@@ -12572,9 +12572,9 @@ Sub Read_Rating
 	bisLarge = YesNoToBoolean(mattr.getdefault("islarge", "No"))
 	sLength = mattr.getdefault("length", "")
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
-	sopendelay = mattr.getdefault("opendelay", "")
+	sOpendelay = mattr.getdefault("opendelay", "")
 	bisRipple = YesNoToBoolean(mattr.getdefault("isripple", "No"))
-	ssize = mattr.getdefault("size", "")
+	sSize = mattr.getdefault("size", "")
 	bisSmall = YesNoToBoolean(mattr.getdefault("issmall", "No"))
 	sTabindex = mattr.getdefault("tabindex", "")
 	bisVisible = YesNoToBoolean(mattr.getdefault("isvisible", "No"))
@@ -12599,10 +12599,10 @@ Sub Design_Rating
 	rating.SetLarge(bisLarge)
 	rating.SetLength(sLength)
 	rating.SetLight(bisLight)
-	rating.SetOpendelay(sopendelay)
+	rating.SetOpendelay(sOpendelay)
 	rating.SetReadonly(bisreadonly)
 	rating.SetRipple(bisRipple)
-	rating.SetSize(ssize)
+	rating.SetSize(sSize)
 	rating.SetSmall(bisSmall)
 	rating.SetTabindex(sTabindex)
 	rating.SetVisible(bisVisible)
@@ -12645,7 +12645,7 @@ If spaddinga <> "" Then rating.AddClass("pa-" & spaddinga)
 	CodeLine(sb, bisDisabled, "b", "rat", sname, "SetDisabled")
 	CodeLine(sb, svalue, "s", "rat", sname, "SetValue")
 	CodeLine(sb, sfieldtype, "s", "rat", sname, "SetFieldType")
-	CodeLine(sb, sclosedelay, "s", "rat", sname, "SetClosedelay")
+	CodeLine(sb, sClosedelay, "s", "rat", sname, "SetClosedelay")
 	CodeLine(sb, bisDark, "b", "rat", sname, "SetDark")
 	CodeLine(sb, bisDense, "b", "rat", sname, "SetDense")
 	If sfloat <> "" Then
@@ -12659,10 +12659,10 @@ If spaddinga <> "" Then rating.AddClass("pa-" & spaddinga)
 	CodeLine(sb, bisLarge, "b", "rat", sname, "SetLarge")
 	CodeLine(sb, sLength, "s", "rat", sname, "SetLength")
 	CodeLine(sb, bisLight, "b", "rat", sname, "SetLight")
-	CodeLine(sb, sopendelay, "s", "rat", sname, "SetOpendelay")
+	CodeLine(sb, sOpendelay, "s", "rat", sname, "SetOpendelay")
 	CodeLine(sb, bisreadonly, "b", "rat", sname, "SetReadonly")
 	CodeLine(sb, bisRipple, "b", "rat", sname, "SetRipple")
-	CodeLine(sb, ssize, "s", "rat", sname, "SetSize")
+	CodeLine(sb, sSize, "s", "rat", sname, "SetSize")
 	CodeLine(sb, bisSmall, "b", "rat", sname, "SetSmall")
 	CodeLine(sb, sTabindex, "s", "rat", sname, "SetTabindex")
 	CodeLine(sb, bisVisible, "b", "rat", sname, "SetVisible")

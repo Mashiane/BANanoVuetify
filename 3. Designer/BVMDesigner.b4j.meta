@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,PropertyBag_Builder,14215,0,pgIndex,PropertyBag_ExpansionPanels,14031,0,pgIndex,PropertyBag_Stepper,13986,0,pgIndex,LoadContainers,1434,0,pgIndex,ItemDrop,10343,0,pgIndex,ToolBoxToolsPanel,9944,0,pgIndex,drwcomponentsitems_click,9531,0,pgIndex,SavePropertyBag,12125,2,pgIndex,DataType2FieldType,12154,0,pgIndex,MapRemovePrefix,12165,0,pgIndex,PropertyBag_SpeedDial,12442,0
+NavigationStack=pgIndex,RemoveLastGridItem,7725,0,pgIndex,ClearGrid,7741,0,pgIndex,tbltransfer_click,8441,0,pgIndex,drwcomponentsitems_click,9661,0,pgIndex,ItemDrop,10314,0,pgIndex,DeleteIT,11590,0,pgIndex,DeleteProject,11605,0,pgIndex,DataType2FieldType,12154,0,pgIndex,MapRemovePrefix,12162,0,pgIndex,SavePropertyBag,12148,2,pgIndex,Process_Globals,24,0
 SelectedBuild=0
 VisibleModules=
