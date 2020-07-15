@@ -6060,13 +6060,13 @@ Sub Design_Dialog
 	CodeLine(sb, sTitle, "s", "dlg", sname, "Settitle")
 	CodeLine2(sb, sCancelid, sCancelcaption, "s", "dlg", sname, "SetCancel")
 	CodeLine2(sb, sOkid, sOkcaption, "s", "dlg", sname, "SetOk")
-	CodeLine(sb, sactivator, "s", "dlg", sname, "Setactivator")
-	CodeLine(sb, scontentclass, "s", "dlg", sname, "Setcontentclass")
-	CodeLine(sb, sorigin, "s", "dlg", sname, "Setorigin")
-	CodeLine(sb, soverlaycolor, "s", "dlg", sname, "Setoverlaycolor")
-	CodeLine(sb, soverlaycolorintensity, "s", "dlg", sname, "Setoverlaycolorintensity")
-	CodeLine(sb, soverlayopacity, "s", "dlg", sname, "Setoverlayopacity")
-	CodeLine(sb, stransition, "s", "dlg", sname, "Settransition")
+	CodeLine(sb, sActivator, "s", "dlg", sname, "Setactivator")
+	CodeLine(sb, sContentclass, "s", "dlg", sname, "Setcontentclass")
+	CodeLine(sb, sOrigin, "s", "dlg", sname, "Setorigin")
+	CodeLine(sb, sOverlaycolor, "s", "dlg", sname, "Setoverlaycolor")
+	CodeLine(sb, sOverlaycolorintensity, "s", "dlg", sname, "Setoverlaycolorintensity")
+	CodeLine(sb, sOverlayopacity, "s", "dlg", sname, "Setoverlayopacity")
+	CodeLine(sb, sTransition, "s", "dlg", sname, "Settransition")
 	CodeLine(sb, sWidth, "s", "dlg", sname, "Setwidth")
 	CodeLine(sb, sMaxwidth, "s", "dlg", sname, "Setmaxwidth")
 	'
@@ -6074,13 +6074,13 @@ Sub Design_Dialog
 	CodeLine(sb, bisbackdrop, "b", "dlg", sname, "Setbackdrop")
 	CodeLine(sb, bisDark, "b", "dlg", sname, "Setdark")
 	CodeLine(sb, bisDisabled, "b", "dlg", sname, "Setdisabled")
-	CodeLine(sb, biseager, "b", "dlg", sname, "Seteager")
-	CodeLine(sb, bisfullscreen, "b", "dlg", sname, "Setfullscreen")
-	CodeLine(sb, bishideoverlay, "b", "dlg", sname, "Sethideoverlay")
-	CodeLine(sb, bisinternalactivator, "b", "dlg", sname, "Setinternalactivator")
+	CodeLine(sb, bisEager, "b", "dlg", sname, "Seteager")
+	CodeLine(sb, bisFullscreen, "b", "dlg", sname, "Setfullscreen")
+	CodeLine(sb, bisHideoverlay, "b", "dlg", sname, "Sethideoverlay")
+	CodeLine(sb, bisInternalactivator, "b", "dlg", sname, "Setinternalactivator")
 	CodeLine(sb, bisLight, "b", "dlg", sname, "Setlight")
-	CodeLine(sb, bisnoclickanimation, "b", "dlg", sname, "Setnoclickanimation")
-	CodeLine(sb, bisopenonhover, "b", "dlg", sname, "Setopenonhover")
+	CodeLine(sb, bisNoclickanimation, "b", "dlg", sname, "Setnoclickanimation")
+	CodeLine(sb, bisOpenonhover, "b", "dlg", sname, "Setopenonhover")
 	CodeLine(sb, bisPersistent, "b", "dlg", sname, "Setpersistent")
 	CodeLine(sb, bisRetainfocus, "b", "dlg", sname, "Setretainfocus")
 	CodeLine(sb, bisScrollable, "b", "dlg", sname, "Setscrollable")
@@ -6323,7 +6323,7 @@ Sub Design_Carousel
 	carousel.Sethidedelimiterbackground(bishidedelimiterbackground)
 	carousel.Sethidedelimiters(bishidedelimiters)
 	carousel.Setlight(bisLight)
-	carousel.Setmandatory(bismandatory)
+	carousel.Setmandatory(bisMandatory)
 	'carousel.Setmultiple(bismultiple)
 	carousel.Setnexticon(bisnexticon)
 	carousel.Setprevicon(bisprevicon)
@@ -6386,7 +6386,7 @@ Sub Design_Carousel
 	CodeLine(sb, bishidedelimiterbackground, "b", "car", sname, "Sethidedelimiterbackground")
 	CodeLine(sb, bishidedelimiters, "b", "car", sname, "Sethidedelimiters")
 	CodeLine(sb, bisLight, "b", "car", sname, "Setlight")
-	CodeLine(sb, bismandatory, "b", "car", sname, "Setmandatory")
+	CodeLine(sb, bisMandatory, "b", "car", sname, "Setmandatory")
 	'CodeLine(sb, bismultiple, "b", "car", sname, "Setmultiple")
 	CodeLine(sb, bisnexticon, "b", "car", sname, "Setnexticon")
 	If sfloat <> "" Then
@@ -6394,7 +6394,7 @@ Sub Design_Carousel
 	End If
 	CodeLine(sb, bisprevicon, "b", "car", sname, "Setprevicon")
 	CodeLine(sb, bisprogress, "b", "car", sname, "Setprogress")
-	CodeLine(sb, bisreverse, "b", "car", sname, "Setreverse")
+	CodeLine(sb, bisReverse, "b", "car", sname, "Setreverse")
 	CodeLine(sb, bisshowarrows, "b", "car", sname, "Setshowarrows")
 	CodeLine(sb, bisshowarrowsonhover, "b", "car", sname, "Setshowarrowsonhover")
 	CodeLine(sb, bistouchless, "b", "car", sname, "Settouchless")
@@ -8279,6 +8279,7 @@ Sub CreateDBAdmin
 	tbltoolbar2.SetDense(True)
 	tbltoolbar2.SetVisible(True)
 
+	'database to data-table
 	tbltoolbar2.AddIcon1("tbltransfer", "mdi-cog-transfer-outline", "green", "Convert to DataTable", "0")
 	'tbltoolbar2.AddIcon1("tbladd", "mdi-plus", "green", "Add Table", "")
 	'tbltoolbar2.AddIcon1("tbledit", "mdi-square-edit-outline", "amber", "Edit Table", "")
@@ -8434,7 +8435,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			'add to fields collection
 			tblItems.add(ifld)
 		Next
-		'
+		'these are field names
 		Dim itemsJSON As String = BANano.ToJson(tblItems)
 		'
 		If sAuto = "" Then 
@@ -8443,8 +8444,10 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			sAuto = "Yes"
 		End If
 		'
+		'define the record id once
+		Dim recID As String = DateTime.now
 		Dim nTable As Map = CreateMap()
-		nTable.put("id", DateTime.now)
+		nTable.put("id", recID)
 		nTable.put("controltype", "table")
 		nTable.put("parent", "vm.Container")
 		nTable.put("parentid", "vm.Container")
@@ -8502,7 +8505,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		Dim attributesJSON As String = BANano.ToJSON(nTable)
 		'create actual component
 		Dim nComp As Map = CreateMap()
-		nComp.put("id", DateTime.now)
+		nComp.put("id", recID)
 		nComp.put("row", 1)
 		nComp.put("col", 1)
 		nComp.put("parent","vm.Container")
@@ -8517,6 +8520,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		nComp.put("items", itemsJSON)
 		nComp.put("controltype", "table")
 		nComp.put("deletecomp", "mdi-delete")
+		nComp.put("tabindex", "0")
 		'add component to table
 		Dim contSQL As BANanoAlaSQLE
 		contSQL.Initialize("components", "vmodel")
@@ -8878,7 +8882,7 @@ Sub Design_DBSourceCode
 	AddCode(sbl, $"#IgnoreWarnings:12"$)
 	AddCode(sbl, $"Sub Process_Globals"$)
 	AddCode(sbl, $"Public Name As String = "${dlg}Code""$)
-	AddCode(sbl, $"Public Title As String = "${stitle}""$)
+	AddCode(sbl, $"Public Title As String = "${sTitle}""$)
 	AddCode(sbl, $"Private vm As BANanoVM"$)
 	AddCode(sbl, $"Private BANano As BANano  'ignore"$)
 	sbl.append($"Private ${diagName} As VMDialog"$).append(CRLF)
@@ -9600,6 +9604,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	'
 	Dim itemID As String = vm.GetIDFromEvent(e)
 	itemID = BANano.parseint(itemID)
+	'
 	vm.HideItems(Array("schemaarea"))
 	'read the record from the database
 	Dim rsSQL As BANanoAlaSQLE
@@ -9614,10 +9619,13 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	If rsSQL.result.size = 0 Then Return
 	'read the first record found
 	Dim rec As Map = rsSQL.result.get(0)
+	
 	'read the type of record
 	Dim stypeof As String = rec.get("controltype")
 	Dim sattributes As String = rec.get("attributes")
 	mattr = BANano.FromJson(sattributes)
+	'ensure this matches (bug from nowhere)
+	mattr.put("id", itemID)
 	Dim sname As String = rec.get("name")
 	'DONT OVERWRITE
 	If avatarMap.containskey(stypeof) Then 
@@ -9627,15 +9635,17 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	vm.setdata("propbag", rec)
 	dbCode.SetCode("")
 	vm.setdata("tableitems", vm.newlist)
+	'explode the items
 	Dim scontents As String = rec.getdefault("items", "")
 	Dim contents As List
 	contents.initialize
 	If scontents <> "" Then
 		contents = BANano.FromJson(scontents)
+		Log(contents)
 		vm.setdata("tableitems", contents)
 	End If
 	schemaDT.SetDataSourceName("tableitems")
-	vm.setdata("controltype", "table")
+	vm.setdata("controltype", stypeof)
 	'
 	'show the property bags
 	Select Case stypeof
@@ -11977,10 +11987,18 @@ Sub SavePropertyBag
 			mattr = pbtable.properties
 			'update the defined items
 			Dim svmodel As String = mattr.get("vmodel")
+			svmodel = svmodel.tolowercase
 			Dim ssingular As String = mattr.GetDefault("singular","")
-			Dim ssmanyrecords As String = mattr.getdefault("manyrecords","")
+			ssingular = ssingular.tolowercase
+			Dim smanyrecords As String = mattr.getdefault("manyrecords","")
+			smanyrecords = smanyrecords.tolowercase
 			Dim sconfirmfield As String = mattr.getdefault("confirmfield", "")
+			sconfirmfield = sconfirmfield.tolowercase
+			Dim sdisplayfield As String = mattr.getdefault("displayfield", "")
+			sdisplayfield = sdisplayfield.tolowercase
 			Dim sItemkey As String = mattr.getdefault("itemkey", "")
+			sItemkey = sItemkey.tolowercase
+			Dim sDatasourcename As String = svmodel
 			Dim sing As String = vm.propercase(ssingular)
 			sing = sing.Replace(" ","")
 			sing = sing.trim
@@ -11989,12 +12007,18 @@ Sub SavePropertyBag
 				sconfirmfield = sItemkey
 				mattr.put("confirmfield", sconfirmfield)
 			End If
+			mattr.put("singular", ssingular)
+			mattr.put("confirmfield", sconfirmfield)
+			mattr.put("displayfield", sdisplayfield)
+			mattr.put("itemkey", sItemkey)
+			mattr.put("manyrecords", smanyrecords)
 			mattr.put("datasourcename", svmodel)
 			mattr.put("newtooltip", "Add a new " & ssingular)
 			mattr.put("newid", $"btnNew${sing}"$)
-			mattr.put("tooltip", $"Maintain ${ssmanyrecords}"$)
+			mattr.put("tooltip", $"Maintain ${smanyrecords}"$)
+			mattr.put("controltype", spropbagtype)
+			mattr.put("tabindex", "0")
 			vm.SetState(mattr)
-			Design_DBSourceCode
 	End Select
 	'
 	Dim sid As String = mattr.get("id")
@@ -12037,19 +12061,20 @@ Sub SavePropertyBag
 	nrec.put("deletecomp", "mdi-delete")
 	'save the bag
 	vm.setdata("propbag", nrec)
-	'
+	
+	' save propertybag to table
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("components", "id")
 	rsSQL.AddIntegers(Array("id", "row","col","tabindex"))
-	rsSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
-
 	rsSQL.Update1(nrec,sid)
 	rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 	rsSQL.FromJSON
+	Log(rsSQL)
 	'
 	If isTable Then
 		Read_Table
+		Design_DBSourceCode
 		Dim dlg As String = vm.propercase(smanyrecords)
 		Dim dlg As String = dlg.replace(" ","")
 		dlg = dlg.trim
@@ -12844,6 +12869,7 @@ Sub PropertyBag_Table
 	pbtable.AddSwitches("p", CreateMap("isshowondrawer": "On Drawer", "isshowonnavbar": "On NavBar"))
 	pbtable.AddSwitches("p", CreateMap("isupdatenavtitle": "Update Title","isdivider":"Divider"))
 	pbtable.AddSwitches("p", CreateMap("isinsetdivider": "Inset Divider","isicon":"Icon"))
+	pbtable.AddSwitches("p", CreateMap("ishideonnavbar": "Hide on NavBar"))
 	'
 	pbtable.AddHeading("c", "Columns")
 	pbtable.AddDataTableColumns("c")
