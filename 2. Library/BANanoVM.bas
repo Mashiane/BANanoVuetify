@@ -211,9 +211,11 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.SetAppBar(True)
 	NavBar.Show
 	'
-	Footer.Initialize(vue, "footer", eventHandler).SetApp(True)
+	Footer.Initialize(vue, "footer", eventHandler)
+	Footer.SetApp(True)
 	'
-	BottomNav.Initialize(vue, "bottomnav", eventHandler).SetApp(True)
+	BottomNav.Initialize(vue, "bottomnav", eventHandler)
+	BottomNav.SetApp(True)
 	BottomNav.Hide
 	
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
@@ -234,8 +236,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Drawer.Hide
 	Footer.hide
 	Overlay.hide
-	
-	
+	BottomNav.hide	
 	'
 	vue.SetData("confirmtitle", "Confirm")
 	vue.SetData("btnconfirmcancellabel", "Cancel")
@@ -1384,6 +1385,23 @@ Sub SetBadgeContent(elID As String, counted As String) As BANanoVM
 	Return Me
 End Sub
 
+Sub SetBadgeOffsetX(elID As String, counted As String) As BANanoVM
+	elID = elID.tolowercase
+	counted = BANano.parseInt(counted)
+	Dim badValue As String = $"${elID}badgeoffsetx"$
+	vue.SetStateSingle(badValue, counted)
+	Return Me
+End Sub
+
+Sub SetBadgeOffsetY(elID As String, counted As String) As BANanoVM
+	elID = elID.tolowercase
+	counted = BANano.parseInt(counted)
+	Dim badValue As String = $"${elID}badgeoffsety"$
+	vue.SetStateSingle(badValue, counted)
+	Return Me
+End Sub
+
+
 Sub IncrementBadge(elID As String, counted As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim badValue As String = $"${elID}badgecontent"$
@@ -2226,10 +2244,9 @@ Sub UX
 	'add content
 	VContent.Pop(VApp)
 	'add footer
-	If Footer.HasContent Then Footer.Pop(VApp)
+	Footer.Pop(VApp)
 	'add bottom nan
-	If BottomNav.HasContent Then BottomNav.Pop(VApp)
-
+	BottomNav.Pop(VApp)
 	'template built from all pages
 	vue.SetTemplate(VApp.ToString)
 	'

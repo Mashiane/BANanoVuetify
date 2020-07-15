@@ -45,7 +45,7 @@ Sub Class_Globals
 	Private exclusions As List
 	'
 	Private headers As String
-	Private vcard As VMCard
+	Public vcard As VMCard
 	Private title As String
 	Private search As String
 	Private items As String
@@ -217,6 +217,22 @@ Sub AddSwitch(colField As String, colTitle As String)
 	SetColumnType(colField, COLUMN_SWITCH)
 	SetColumnFilterable(colField,False)
 	SetColumnSortable(colField, False)
+End Sub
+
+Sub SetColumnsSwitch(colFields As List)
+	For Each col As String In colFields
+		SetColumnType(col, COLUMN_SWITCH)
+		SetColumnFilterable(col,False)
+		SetColumnSortable(col, False)
+	Next
+End Sub
+
+Sub SetColumnsCheckBox(colFields As List)
+	For Each col As String In colFields
+		SetColumnType(col, COLUMN_CHECKBOX)
+		SetColumnFilterable(col,False)
+		SetColumnSortable(col, False)
+	Next
 End Sub
 
 Sub AddImage(colField As String, colTitle As String)
@@ -540,6 +556,18 @@ Sub SetIconDimensions(colName As String, iconSize As String, iconColor As String
 	Return Me
 End Sub
 
+Sub SetIconDimensions1(colName As String, iconSize As String, iconColor As String, columnWidth As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.iconSize = iconSize
+		col.iconColor = iconColor
+		col.width = columnWidth
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+
 Sub SetProgressCircularDimensions(colName As String, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
@@ -759,7 +787,11 @@ private Sub BuildControls
 				swt.SetTag("v-switch")
 				swt.SetInset(True)
 				swt.SetDense(True)
-			End If
+			End If			
+			swt.SetValue("Yes")
+			swt.SetTrueValue("Yes")
+			swt.SetUncheckedValue("No")
+			swt.SetFalseValue("No")
 			swt.SetVModel($"item.${value}"$)
 			If nf.Disabled Then swt.SetAttrLoose("disabled")
 			If SubExists(Module, methodName) Then
@@ -773,7 +805,7 @@ private Sub BuildControls
 			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
 			tmp.SetAttrLoose(sline)
-			
+			'
 			Dim aIcon As VMIcon
 			aIcon.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			aIcon.SetVText($"item.${value}"$)
@@ -825,18 +857,24 @@ private Sub BuildControls
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
 			tmpa.SetAttrLoose(sline)
 			'
+			Dim abtn As VMButton
+			abtn.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			abtn.SetElevation("4").SetFab(True).SetSmall(True).SetDark(True)
+			abtn.AddClass("mr-2")
+			If nf.iconColor <> "" Then abtn.SetColor(nf.iconcolor)
+			If nf.Disabled Then abtn.SetAttrLoose("disabled")
+			 
 			Dim aIcon As VMIcon
-			aIcon.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			aIcon.AddClass("mr-2")
+			aIcon.Initialize(vue, $"${ID}${value}icon"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			aIcon.SetText(nf.icon)
 			If nf.iconSize <> "" Then aIcon.SetSize(nf.iconSize)
-			If nf.iconColor <> "" Then aIcon.SetColor(nf.iconcolor)
-			If nf.Disabled Then aIcon.SetAttrLoose("disabled")
+			abtn.AddComponent(aIcon.tostring)
+			
 			If SubExists(Module, methodName) Then
-				aIcon.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
+				abtn.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
 				vue.SetMethod(Module, methodName)
 			End If
-			tmpa.AddComponent(aIcon.ToString)
+			tmpa.AddComponent(abtn.ToString)
 			sb.Append(tmpa.ToString)
 		End Select	
 	Next

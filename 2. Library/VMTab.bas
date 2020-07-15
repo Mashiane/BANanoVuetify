@@ -41,6 +41,8 @@ Sub SetBadge(scontent As String) As VMTab
 	Badge.SetAvatar(True)
 	Badge.SetIcon("")
 	Badge.SetDot(False)
+	Badge.SetOffsetX("0")
+	Badge.SetOffsetY("0")
 	hasBadge = True
 	Return Me
 End Sub

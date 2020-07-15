@@ -153,7 +153,6 @@ End Sub
 
 'set avatar
 Sub SetAvatar(varAvatar As Boolean) As VMBadge
-	If varAvatar = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("avatar", varAvatar)
 		Return Me
@@ -166,7 +165,6 @@ End Sub
 
 'set bordered
 Sub SetBordered(varBordered As Boolean) As VMBadge
-	If varBordered = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("bordered", varBordered)
 		Return Me
@@ -179,7 +177,6 @@ End Sub
 
 'set bottom
 Sub SetBottom(varBottom As Boolean) As VMBadge
-	If varBottom = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("bottom", varBottom)
 		Return Me
@@ -192,7 +189,6 @@ End Sub
 
 'set color
 Sub SetColor(varColor As String) As VMBadge
-	If varColor = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("color", varColor)
 		Return Me
@@ -218,7 +214,6 @@ End Sub
 
 'set dark
 Sub SetDark(varDark As Boolean) As VMBadge
-	If varDark = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dark", varDark)
 		Return Me
@@ -231,7 +226,6 @@ End Sub
 
 'set dot
 Sub SetDot(varDot As Boolean) As VMBadge
-	If varDot = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dot", varDot)
 		Return Me
@@ -256,7 +250,6 @@ End Sub
 
 'set inline
 Sub SetInline(varInline As Boolean) As VMBadge
-	If varInline = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("inline", varInline)
 		Return Me
@@ -269,7 +262,6 @@ End Sub
 
 'set label
 Sub SetLabel(varLabel As String) As VMBadge
-	If varLabel = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("label", varLabel)
 		Return Me
@@ -282,7 +274,6 @@ End Sub
 
 'set left
 Sub SetLeft(varLeft As Boolean) As VMBadge
-	If varLeft = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("left", varLeft)
 		Return Me
@@ -295,7 +286,6 @@ End Sub
 
 'set light
 Sub SetLight(varLight As Boolean) As VMBadge
-	If varLight = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("light", varLight)
 		Return Me
@@ -321,7 +311,6 @@ End Sub
 
 'set offset-x
 Sub SetOffsetX(varOffsetX As String) As VMBadge
-	If varOffsetX = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("offset-x", varOffsetX)
 		Return Me
@@ -334,7 +323,6 @@ End Sub
 
 'set offset-y
 Sub SetOffsetY(varOffsetY As String) As VMBadge
-	If varOffsetY = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("offset-y", varOffsetY)
 		Return Me
@@ -360,7 +348,6 @@ End Sub
 
 'set overlap
 Sub SetOverlap(varOverlap As Boolean) As VMBadge
-	If varOverlap = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("overlap", varOverlap)
 		Return Me
@@ -373,7 +360,6 @@ End Sub
 
 'set tile
 Sub SetTile(varTile As Boolean) As VMBadge
-	If varTile = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("tile", varTile)
 		Return Me

@@ -135,6 +135,28 @@ Sub AddIcon(key As String, iconName As String, iconColor As String, iconSize As 
 	HasContent = True
 	Return Me
 End Sub
+'
+Sub AddFab(key As String, iconName As String, iconColor As String, iconSize As String, toolTip As String, badge As String) As VMCardTitle
+	key = key.tolowercase
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetFab(True)
+	btn.SetDesignMode(DesignMode)
+	btn.AddIcon(iconName,"","")
+	btn.SetColor(iconColor)
+	btn.SetSize(iconSize)
+	btn.SetTooltip(toolTip)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
+	CardTitle.SetText(btn.tostring)
+	HasContent = True
+	Return Me
+End Sub
+
+
 
 Sub AddMenu(menu As VMMenu) As VMCardTitle
 	AddComponent(menu.ToString)

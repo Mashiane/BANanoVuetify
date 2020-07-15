@@ -228,7 +228,7 @@ Module99=VMSparkLine
 NumberOfFiles=49
 NumberOfLibraries=3
 NumberOfModules=123
-Version=8.45
+Version=8.5
 @EndOfDesignText@
 
 #IgnoreWarnings: 16, 10, 14, 15	
@@ -241,15 +241,14 @@ Version=8.45
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.17"
+	Public Version As String = "4.18"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
 	'initialize banano for first use
-	BANano.Initialize("BANano", AppName, Version)
+	BANano.Initialize("BANano", "BANanoVuetifyCore", DateTime.now)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = AppName
-	BANano.JAVASCRIPT_NAME = $"app${Version}.js"$
 	'online installation
 '	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900")
 '	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp")

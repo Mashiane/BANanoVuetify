@@ -165,6 +165,8 @@ Sub SetIconButton(iconName As String) As VMButton
 	Return Me
 End Sub
 
+
+
 Sub SetMenuTrigger(b As Boolean) As VMButton
 	If b = False Then Return Me
 	Button.SetAttrSingle("v-on","on")

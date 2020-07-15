@@ -39,6 +39,31 @@ Sub SetStatic(b As Boolean) As VMFooter
 	Return Me
 End Sub
 
+Sub AddMadeWithLove(Row As Int, Col As Int, Message As String, CreatorName As String, EmailAddress As String)
+	Dim footerDiv As VMElement
+	footerDiv.initialize(vue, "footerdiv")
+	footerDiv.AddClass("white--text ml-3")
+	footerDiv.SetText("Made with")
+	'
+	Dim footerIcon As VMIcon
+	footerIcon.Initialize(vue, "footerlove", Me).SetText("favorite").AddClass("red--text")
+	footerIcon.AddClass("mx-1")
+	footerDiv.SetText(footerIcon.tostring)
+	'
+	Dim lblWith As VMLabel
+	lblWith.initialize(vue, "lblwith")
+	lblWith.SetText(Message)
+	lblWith.AddClass("white--text").AddClass("mr-1")
+	footerDiv.SetText(lblWith.ToString)
+	'
+	Dim lbla As VMLabel
+	lbla.Initialize(vue, "lbla").SetTag("a").SetHREF($"mailto:${EmailAddress}"$).SetText($"${CreatorName}"$)
+	lbla.AddClass("white--text")
+	footerDiv.SetText(lbla.tostring)
+	'
+	Container.AddCOmponent(Row,Col, footerDiv.tostring)
+End Sub
+
 'set color intensity
 Sub SetColorIntensity(varColor As String, varIntensity As String) As VMFooter
 	If varColor = "" Then Return Me

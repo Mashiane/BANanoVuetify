@@ -26,6 +26,8 @@ Sub Class_Globals
 	Private spanCnt As Int
 	Public TitleVModel As String
 	Public Progress As VMProgressLinear
+	Public SubHeading As VMLabel
+	Private SubHeadingKey As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMToolBar
@@ -60,6 +62,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Progress.SetBottom(True)
 	Progress.SetIndeterminate(False) 
 	Progress.SetAbsolute(True)
+	'
+	SubHeadingKey = $"${ID}subheading"$
+	SubHeading.Initialize(vue, SubHeadingKey)
+	
 	Return Me
 End Sub
 
@@ -165,19 +171,16 @@ End Sub
 
 
 Sub AddSubHeading1(sText As String) As VMToolBar
-	Dim skey As String = $"${ID}subheading"$
-	Dim d As VMLabel
-	d.Initialize(vue, skey)
-	d.SetStatic(bStatic)
-	d.SetDesignMode(DesignMode)
+	SubHeading.SetStatic(bStatic)
+	SubHeading.SetDesignMode(DesignMode)
 	If bStatic Then
-		d.SetSpan.SetText(sText)
+		SubHeading.SetSpan.SetText(sText)
 	Else
-		d.SetSpan.SetText($"{{ ${skey} }}"$)
+		SubHeading.SetSpan.SetText($"{{ ${SubHeadingKey} }}"$)
 	End If
-	d.AddClass("subheading").AddClass("mx-2")
-	AddComponent(skey, d.ToString)
-	vue.SetData(skey, sText)
+	SubHeading.AddClass("subheading").AddClass("mx-2")
+	AddComponent(SubHeadingKey, SubHeading.ToString)
+	vue.SetData(SubHeadingKey, sText)
 	HasContent = True
 	Return Me
 End Sub

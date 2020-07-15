@@ -864,18 +864,13 @@ Sub Init
 End Sub
 '
 Sub BuildFooter
-	vm.Footer.Show
-	vm.Footer.SetAbsolute(True)
-	vm.Footer.SetPadless(True)
-	vm.Footer.SetDark(True)
+	vm.Footer.SHow
 	vm.Footer.SetFixed(True)
-	vm.Footer.SetHeight("60px")
-	'
-	vm.Footer.AddSpacer
-	vm.Footer.AddSpan("Conceptualized and created by Anele 'Mashy' Mbanga - mbanga[dot]anele[at]gmail.com")
-	vm.footer.AddSpacer
-	vm.Footer.AddCopyRight(vm.YearNow)
-	vm.footer.AddSpacer
+	vm.Footer.SetColor("indigo")
+	vm.footer.Container.SetTag("div")
+	vm.footer.Container.AddRows(1).AddColumns12
+	vm.Footer.Container.SetAttrRC(1, 0, "align", "center")
+	vm.Footer.AddMadeWithLove(1, 1, "with B4J, BANanano & BANanoVuetify by", "TheMash", "mbanga.anele@gmail.com")
 End Sub
 
 Sub btnToolbox_click(e As BANanoEvent)
@@ -2304,9 +2299,12 @@ Sub btnDbConnect_click(e As BANanoEvent)
 			Dim flds As List = lTables.get(k)
 			'add the table
 			Dim tKey As String = $"${sdatabasename}~${k}"$
+			tKey = tKey.tolowercase
 			tvtables.AddItem(sdatabasename, tKey, K, "", "mdi-table", False)
 			For Each fld As Map In flds
 				Dim sfld As String = fld.get("column_name")
+				'make field lowercase
+				sfld = sfld.tolowercase
 				Dim fldKey As String = $"${tKey}~${sfld}"$
 				tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
 			Next
@@ -2412,9 +2410,11 @@ Sub btnDbConnect_click(e As BANanoEvent)
 					Dim flds As List = lTables.get(k)
 					'add the table
 					Dim tKey As String = $"${sdatabasename}~${k}"$
+					tKey = tKey.tolowercase
 					tvtables.AddItem(sdatabasename, tKey, K, "", "mdi-table", False)
 					For Each fld As Map In flds
 						Dim sfld As String = fld.get("Field")
+						sfld = sfld.tolowercase
 						Dim fldKey As String = $"${tKey}~${sfld}"$
 						tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
 					Next
@@ -2470,9 +2470,11 @@ Sub sqlite_opened
 		Dim flds As List = lTables.get(k)
 		'add the table
 		Dim tKey As String = $"${sSuffix}~${k}"$
+		tKey = tKey.tolowercase
 		tvtables.AddItem(sSuffix, tKey, K, "", "mdi-table", False)
 		For Each fld As Map In flds
 			Dim sfld As String = fld.get("name")
+			sfld = sfld.tolowercase
 			Dim fldKey As String = $"${tKey}~${sfld}"$
 			tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
 		Next
@@ -6586,7 +6588,7 @@ Sub Design_Menu
 	CodeLine(sb, bisopenonhover, "b", "menu", sname, "Setopenonhover")
 	CodeLine(sb, bisRight, "b", "menu", sname, "Setright")
 	CodeLine(sb, bisslotactivator, "b", "menu", sname, "Setslotactivator")
-	CodeLine(sb, bistop, "b", "menu", sname, "Settop")
+	CodeLine(sb, bisTop, "b", "menu", sname, "Settop")
 	'
 	Dim pres As String = "menu"
 	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
@@ -7800,6 +7802,9 @@ Sub DesignLayout
 	'
 	schemaDT = vm.CreateDataTable("schemaDT", "key", Me)
 	schemaDT.SetTitle("Schema")
+	schemaDT.SetItemsperpage("100")
+	schemaDT.SetPage("1")
+	schemaDT.SetSingleselect(True)
 	schemaDT.AddButtonIcon("schemaDB", "mdi-database", "", "Database Schema")
 	schemaDT.AddButtonIcon("schemalisting", "mdi-file-outline", "", "Table Listing")
 	schemaDT.AddButtonIcon("formlisting", "mdi-laptop", "", "Form Listing")
@@ -7808,11 +7813,11 @@ Sub DesignLayout
 	
 	schemaDT.AddColumns(CreateMap("key": "Name", "title": "Title", "subtitle": "Type", "colwidth": "Width"))
 	schemaDT.AddColumns(CreateMap("colalign": "Align", "colcontroltype": "Component", "coldatatype": "Data Type", "collength": "Length",  "colvalue": "Value"))
-	schemaDT.AddColumns(CreateMap("colsortable": "Sortable", "colrequired": "Required", "colvisible": "Visible", "colactive": "Active", "colontable": "On Table"))
+	schemaDT.AddColumns(CreateMap("colsortable": "Sortable", "colrequired": "Required", "colvisible": "Visible", "colactive": "Active", "colontable": "On Table","colishidedetails":"Hide Details"))
 	schemaDT.AddColumns(CreateMap("colindexed": "Indexed", "colvaluedisplay": "Value / Display"))
 	
-	schemaDT.AddColumns(CreateMap("colrow": "Row"))
-	schemaDT.AddColumns(CreateMap("colcolumn": "Col"))
+	schemaDT.AddColumns(CreateMap("colrow": "R"))
+	schemaDT.AddColumns(CreateMap("colcolumn": "C"))
 	schemaDT.AddColumns(CreateMap("coloffsetsmall": "OS"))
 	schemaDT.AddColumns(CreateMap("coloffsetmedium": "OM"))
 	schemaDT.AddColumns(CreateMap("coloffsetlarge": "OL"))
@@ -7836,7 +7841,11 @@ Sub DesignLayout
 	's
 	schemaDT.SetEdit(True)
 	schemaDT.SetDelete(True)
+	schemaDT.SetIconDimensions1("edit", "24px", "success","80")
+	schemaDT.SetIconDimensions1("delete", "24px", "error","80")
 	schemaDT.SetDataSourceName("tableitems")
+	'make switches
+	schemaDT.SetColumnsSwitch(Array("colsortable", "colrequired", "colvisible", "colactive", "colontable", "colishidedetails"))
 	schema.AddComponent(1, 1, schemaDT.ToString)
 	'create the preview
 	'previewTB = vm.CreateDataTable("previewSchema", "key", Me)
@@ -7870,6 +7879,78 @@ Sub DesignLayout
 	CreateDBAdmin
 	CreateVuetifyAdmin
 End Sub
+
+
+'table row click
+Sub schemaDT_colontable(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+	UpdateRecord(item, skey)
+End Sub
+
+Sub UpdateRecord(item As Map, sKey As String)
+	Dim scolontable As String = item.get("colontable")
+	Dim scolactive As String = item.get("colactive")
+	Dim scolvisible As String = item.get("colvisible")
+	Dim scolsortable As String = item.get("colsortable")
+	Dim scolrequired As String = item.get("colrequired")
+	Dim scolishidedetails As String = item.get("colishidedetails")
+	item.put("itemscolontable", scolontable)
+	item.put("itemscolactive", scolactive)
+	item.put("itemscolvisible", scolvisible)
+	item.put("itemscolsortable", scolsortable)
+	item.put("itemscolrequired", scolrequired)
+	item.put("itemscolishidedetails", scolishidedetails)
+	'read the existing items
+	Dim contents As List = vue.GetData("tableitems")
+	'does the record exist
+	Dim rpos As Int = vm.ListOfMapsRecordPos(contents, "key", sKey)
+	rpos = BANano.parseInt(rpos)
+	If rpos <> -1 Then
+		contents.Set(rpos, item)
+		vue.SetData("tableitems", contents)
+		SavePropertyBag
+	End If	
+End Sub
+
+
+'table row click
+Sub schemaDT_colactive(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+	UpdateRecord(item, skey)
+End Sub
+
+
+'table row click
+Sub schemaDT_colvisible(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+	UpdateRecord(item, skey)
+End Sub
+
+
+'table row click
+Sub schemaDT_colsortable(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+	UpdateRecord(item, skey)
+End Sub
+
+
+'table row click
+Sub schemaDT_colrequired(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+	UpdateRecord(item, skey)
+End Sub
+
+Sub schemaDT_colishidedetails(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+	UpdateRecord(item, skey)
+End Sub
+
 
 Sub CreateVuetifyAdmin
 	contattributes.Initialize(vue, "contattributes", Me)
@@ -8240,6 +8321,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 		'get table structure from all tables, this is a list of all fields
 		Dim tbStructure As List = allTables.get(tbKey)
 		'
+		tbKey = tbKey.tolowercase
 		Dim sing As String = vm.propercase(tbKey)
 		sing = sing.Replace(" ","")
 		sing = sing.trim
@@ -8264,12 +8346,14 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			Case "mssql"
 				Dim fldL As String= fldm.getdefault("character_maximum_length","0")
 				sField = fldm.getdefault("column_name", "")
+				sField = sField.tolowercase
 				sType = fldm.getdefault("data_type", "text")
 				sType = sType & fldL
 			Case "mysql"	
 				sDefault = fldm.getdefault("Default","")
 				sExtra = fldm.getdefault("Extra", "")
 				sField = fldm.getdefault("Field", "")
+				sField = sField.tolowercase
 				sKey = fldm.getdefault("Key", "")
 				sNull = fldm.getdefault("Null", "")
 				sType = fldm.getdefault("Type", "")
@@ -8280,6 +8364,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			Case "sqlite"
 				sDefault = fldm.getdefault("dflt_value","")
 				sField = fldm.getdefault("name","")
+				sField = sField.tolowercase
 				sNull = fldm.getdefault("notnull", "")
 				sKey = fldm.getdefault("pk","")
 				If sKey = "1" Then sPri = sField
@@ -8516,11 +8601,14 @@ End Sub
 
 'show columns applicable to the form input
 Sub formlisting_click(e As BANanoEvent)
+	FormListing
+End Sub
+
+Sub FormListing
 	Dim dbFields As List
 	dbFields.initialize
-	dbFields.AddAll(Array("key", "title", "colcontroltype", "coldatatype" , "colrow" , _
-	"colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge", _
-	"colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge", "edit", "delete"))
+	dbFields.AddAll(Array("key", "title", "colcontroltype", "colontable", "colrequired", "colvisible", "colishidedetails", _
+	"coldatatype" ,"collength" , "colrow" , "colcolumn", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
 	schemaDT.SetDataSourceName("tableitems")
 End Sub
@@ -8596,7 +8684,7 @@ Sub Design_DBSourceCode
 	Dim smanyrecords As String = mattr.get("manyrecords")
 	Dim snewid As String = mattr.get("newid")
 	Dim sisaddnew As String = mattr.get("isaddnew")
-	Dim stitle As String = mattr.get("label")
+	Dim sTitle As String = mattr.get("label")
 	Dim isdialog As String = mattr.get("isdialog")
 	Dim sDatasourcename As String = mattr.get("datasourcename")
 	'
@@ -8677,7 +8765,7 @@ Sub Design_DBSourceCode
 		AddInstruction(sbl, "pgIndex", "" , "")
 		AddComment(sbl, $"click ${mdlName} nav button"$)
 		AddCode(sbl, $"Sub nav${dlg}_click(e As BANanoEvent)"$)
-		AddComment(sbl, $"show the page ${stitle}"$)
+		AddComment(sbl, $"show the page ${sTitle}"$)
 		AddCode(sbl, $"${mdlName}.Show"$)
 		AddCode(sbl, "End Sub")
 		AddCode(sbl, CRLF)
@@ -8686,8 +8774,8 @@ Sub Design_DBSourceCode
 	'show on drawer
 	If bisShowondrawer Then
 		AddInstruction(sbl, "pgIndex", "BuildNavDrawer", "")
-		AddComment(sbl,$"Add ${stitle} to drawer"$)
-		AddCode(sbl, $"vm.Drawer.AddIcon1("page${dlg}", "${siconname}", "${sIconcolor}", "${stitle}", "${stooltip}")"$)
+		AddComment(sbl,$"Add ${sTitle} to drawer"$)
+		AddCode(sbl, $"vm.Drawer.AddIcon1("page${dlg}", "${siconname}", "${sIconcolor}", "${sTitle}", "${stooltip}")"$)
 		If bisdivider Then
 			AddCode(sbl, $"vm.Drawer.AddDivider1(${bisinsetdivider})"$)
 		End If
@@ -8695,14 +8783,14 @@ Sub Design_DBSourceCode
 		'**** DRAWER CLICK TO SHOW PAGE
 		AddInstruction(sbl, "pgIndex", "draweritems_click" , "inside the case statement")
 		AddCode(sbl, $"Case "page${dlg.tolowercase}""$)
-		AddComment(sbl, $"show ${stitle}"$)
+		AddComment(sbl, $"show ${sTitle}"$)
 		AddCode(sbl, $"${mdlName}.Show"$)
 		AddCode(sbl, CRLF)
 	End If
 	'
 	'**** ADD PAGE TO MASTER
 	AddInstruction(sbl, "pgIndex", "AddPages" , "")
-	AddComment(sbl, $"code to add the ${stitle} template code to the master HTML template"$)
+	AddComment(sbl, $"code to add the ${sTitle} template code to the master HTML template"$)
 	AddCode(sbl, $"vm.AddPage(${mdlName}.name, ${mdlName})"$)
 	AddCode(sbl, CRLF)
 	AddCode(sbl, CRLF)
@@ -9048,6 +9136,7 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 	End Select
 	AddCode(sbl, $"${rsName}.FromJSON"$)
+	AddCode(sbl, $"${rsName}.Result = vue.MapKeysLowerCaseList(${rsName}.Result)"$)
 	AddComment(sbl, "save records to state")
 	sbl.append($"VM.SetData("${sDatasourcename}", ${rsName}.Result)"$).append(CRLF)
 	AddComment(sbl, "update the data table records")
@@ -12148,6 +12237,7 @@ Sub SavePropertyBag
 			End If
 		Next
 		'vm.setdata("devspace", 3)
+		FormListing
 	Else
 		'vm.setdata("devspace", 0)
 	End If
@@ -13032,12 +13122,12 @@ Sub Design_Table
 	'CodeLine(sb, sGroupby, "s", "dt", sname, "SetGroupby")
 	'CodeLine(sb, sGroupdesc, "s", "dt", sname, "SetGroupdesc")
 	'CodeLine(sb, sHeaderslength, "s", "dt", sname, "SetHeaderslength")
-	CodeLine(sb, sheight, "s", "dt", sname, "SetHeight")
+	CodeLine(sb, sHeight, "s", "dt", sname, "SetHeight")
 	CodeLine(sb, bisHidedefaultfooter, "b", "dt", sname, "SetHidedefaultfooter")
 	CodeLine(sb, bisHidedefaultheader, "b", "dt", sname, "SetHidedefaultheader")
 	CodeLine(sb, sItemsperpage, "s", "dt", sname, "SetItemsperpage")
 	CodeLine(sb, bisLight, "b", "dt", sname, "SetLight")
-	CodeLine(sb, bisloading, "b", "dt", sname, "SetLoading")
+	CodeLine(sb, bisLoading, "b", "dt", sname, "SetLoading")
 	'CodeLine(sb, sLoadingtext, "s", "dt", sname, "SetLoadingtext")
 	'CodeLine(sb, sLocale, "s", "dt", sname, "SetLocale")
 	CodeLine(sb, smobilebreakpoint, "s", "dt", sname, "SetMobilebreakpoint")
@@ -13111,6 +13201,7 @@ Sub Design_Table
 		Select Case xtype
 		Case "action"
 			sba.append($"dt${sname}.AddIcon("${xkey}", "${xtitle}", "${xicon}")"$).append(CRLF)
+			AddCode(sba, $"dt${sname}.SetIconDimensions1("${xkey}", "24px", "blue", "80")"$)
 		Case Else
 			If bcolislookup Then
 				sb.append($"dt${sname}.AddColumn1("${ccolforeignvalue}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
@@ -13126,6 +13217,14 @@ Sub Design_Table
 	CodeLine(sb, bisDownload, "b", "dt", sname, "SetDownload")
 	CodeLine(sb, bisPrint, "b", "dt", sname, "SetPrint")
 	CodeLine(sb, bisMenu, "b", "dt", sname, "SetMenu")
+	'
+	If bisEdit Then	AddCode(sb, $"dt${sname}.SetIconDimensions1("edit", "24px", "success", "80")"$)
+	If bisDelete Then AddCode(sb, $"dt${sname}.SetIconDimensions1("delete", "24px", "error", "80")"$)
+	If bisClone Then AddCode(sb, $"dt${sname}.SetIconDimensions1("clone", "24px", "orange", "80")"$)
+	If bisDownload Then	AddCode(sb, $"dt${sname}.SetIconDimensions1("download", "24px", "blue", "80")"$)
+	If bisPrint Then AddCode(sb, $"dt${sname}.SetIconDimensions1("print", "24px", "purple", "80")"$)
+	If bisMenu Then	AddCode(sb, $"dt${sname}.SetIconDimensions1("menu", "24px", "green", "80")"$)
+	'
 	sb.append(sba.tostring)
 	'
 	sb.append($"cont.AddControl(dt${sname}.DataTable, dt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
