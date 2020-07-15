@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=118,119
-NavigationStack=pgIndex,draweritems_click,1329,0,pgIndex,drwcomponentsitems_click,9723,0,pgIndex,TableStructure,9572,0,pgIndex,CreateDBAdmin,8276,0,pgIndex,tvtables_input,8537,0,pgIndex,btnbtnSaveProject_click,2708,0,pgIndex,tbltransfer_click,8441,0,pgIndex,ItemDrop,10466,0,pgIndex,SavePropertyBag,12136,1,Main,Process_Globals,7,0,Main,AppStart,19,0
+NavigationStack=pgIndex,drwcomponentsitems_click,9723,0,pgIndex,TableStructure,9572,0,pgIndex,CreateDBAdmin,8276,0,pgIndex,tvtables_input,8537,0,pgIndex,btnbtnSaveProject_click,2708,0,pgIndex,tbltransfer_click,8441,0,pgIndex,ItemDrop,10466,0,pgIndex,SavePropertyBag,12136,1,Main,AppStart,19,0,Main,Process_Globals,11,0
 SelectedBuild=0
 VisibleModules=

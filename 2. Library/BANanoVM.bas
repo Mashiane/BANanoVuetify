@@ -1536,11 +1536,9 @@ End Sub
 
 'change state of items to be false
 Sub HideItems(items As List)
-	Dim nm As Map = CreateMap()
 	For Each item As String In items
-		nm.Put(item, False)
+		HideItem(item)
 	Next
-	SetState(nm)
 End Sub
 
 Sub ShowItem(elID As String)
@@ -1553,11 +1551,9 @@ End Sub
 
 'change state of items to be true
 Sub ShowItems(items As List)
-	Dim nm As Map = CreateMap()
 	For Each item As String In items
-		nm.Put(item, True)
+		ShowItem(item)
 	Next
-	SetState(nm)
 End Sub
 
 Sub SetStateSingle(k As String, v As Object) As BANanoVM

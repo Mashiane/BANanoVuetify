@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMDataTable,AddColumn,425,0,VMDataTable,AddColumn1,468,0,VMDataTable,SetImageDimensions,477,0,VMDataTable,SetColumnsCheckBox,229,0,VMDataTable,Class_Globals,24,0,VMDataTable,AddSwitch,210,0,VMDataTable,SetColumnsSwitch,217,6,VMDataTable,SetColumnType,658,0,BANanoVM,NewSwitch,2328,0,VMDataTable,BuildControls,788,6
+NavigationStack=BANanoVM,ShowItems,1551,2,BANanoVM,SetStateMap,1572,0,BANanoVM,SetWatch,1578,0,BANanoVM,CreateTemplate,1584,0,BANanoVM,SetStateSingle,1556,0,BANanoVM,Map2Options,1526,0,BANanoVM,SetState,1514,0,BANanoVM,CreateLabel,1495,0,BANanoVM,CreateKeepAlive,1480,0,BANanoVM,CreateRouterView,1474,0,BANanoVM,HideItems,1531,0
 SelectedBuild=0
 VisibleModules=
