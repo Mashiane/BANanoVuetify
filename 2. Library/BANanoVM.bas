@@ -1284,6 +1284,11 @@ private Sub InitColors
 	ControlTypes.put("speeddial", "Speed Dial")
 	ControlTypes.Put("quill", "Quill Editor")
 	ControlTypes.Put("None", "None")
+	ControlTypes.Put("rangeslider", "Range Slider")
+	ControlTypes.Put("infobox", "Info Box")
+	ControlTypes.Put("fileselect", "File Select")
+	ControlTypes.Put("sparkline", "Sparkline")
+	ControlTypes.Put("number", "Number")
 	'
 	Direction.Initialize
 	Direction.Put("top", "Top")

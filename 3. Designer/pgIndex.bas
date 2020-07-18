@@ -13,6 +13,8 @@ Sub Process_Globals
 	Private bisHideonleave As Boolean
 	Private bisLeaveabsolute As Boolean
 	Private sMode As String
+	Private bisSave As Boolean
+	Private bisCancel As Boolean
 	Private sTextcolor As String
 	Private sTextcolorintensity As String
 	Private sType As String
@@ -404,7 +406,6 @@ Sub Process_Globals
 	Private pbbuilder As VMProperty
 	Private lstBags As List
 	Private avatarMap As Map
-	Private controltypes As Map
 	Private fieldtypes As Map
 	Private dnd As VMContainer
 	Private tabs As VMTabs
@@ -639,7 +640,10 @@ Sub Process_Globals
 	Private bisSingleexpand As Boolean
 	Private bisSingleselect As Boolean
 	Private smastericon As String
+	Private bisFilter As Boolean
 	Private bisDelete As Boolean
+	Private bisSave As Boolean
+	Private bisCancel As Boolean
 	Private bisClone As Boolean
 	Private bisDownload As Boolean
 	Private bisEdit As Boolean
@@ -775,11 +779,22 @@ Sub Init
 	Else
 		vm.setdata("selectedpanel", 0)
 	End If
-	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider", _
-	"quill": "quill","infobox":"infobox","fileselect":"fileselect","sparkline":"sparkline","radio":"radio","rating":"rating")
 	fieldtypes = CreateMap("string":"String", "int":"Integer", "bool":"Boolean", "date":"Date","dbl":"Float")
 	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
 	'
+	Dim datatypes As List = vm.Map2Options(vm.DataTypes, "id", "text")
+	vm.setdata("datatypes", datatypes)
+	'
+	Dim columntypes As List = vm.map2options(vm.ColumnTypes,"id", "text")
+	vm.setdata("columntypes", datatypes)
+	'
+	Dim alignment As List = vm.map2options(vm.ColumnAlign, "id", "text")
+	vm.setdata("alignment", alignment)
+	'
+	Dim ct As List = vm.Map2Options(vm.controltypes,"id","text")
+	vm.setdata("ct", ct)
+
+	
 	iconpos.initialize
 	iconpos.put("left", "Left")
 	iconpos.put("right", "Right")
@@ -2285,7 +2300,7 @@ End Sub
 
 Sub btnDbConnect_click(e As BANanoEvent)
 	'clear the treeview
-	vue.setdata("selectedtable", "")
+	vue.setdata("databasetable", "")
 	dtschema.SetDatasource(vm.newlist)
 	vm.setdata("tablenames", vm.newlist)
 	tbltoolbar2x.UpdateTitle("Database")
@@ -2467,7 +2482,8 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	End Select
 	'
 	SaveDatabaseSchema
-	
+	'
+	DTSchemaEditable
 	vm.HideDrawers
 	vm.Drawer.Hide
 End Sub
@@ -4218,8 +4234,8 @@ Sub Design_Chip
 	chip.SetReplace(bisReplace)
 	chip.SetRipple(bisRipple)
 	chip.SetSmall(bisSmall)
-	chip.SetTarget(starget)
-	chip.SetTextcolorintensity(stextcolor, stextintensity)
+	chip.SetTarget(sTarget)
+	chip.SetTextcolorintensity(sTextcolor, stextintensity)
 	chip.SetTo(sTo)
 	chip.SetVisible(bisVisible)
 	chip.SetXlarge(bisXlarge)
@@ -7867,78 +7883,28 @@ Sub DesignLayout
 	schemaDT.SetPage("1")
 	schemaDT.SetSingleselect(True)
 	schemaDT.SetDense(True)
-	schemaDT.AddButtonIcon("closedrawers", "mdi-exit-to-app", "", "Close drawers")
-	schemaDT.AddButtonIcon("schemaDBSave", "mdi-content-save", "", "Save Database Schema")
-	schemaDT.AddButtonIcon("schemaDB", "mdi-database", "", "Table Schema")
-	schemaDT.AddButtonIcon("schemalisting", "mdi-file-outline", "", "Table Listing")
-	schemaDT.AddButtonIcon("formlisting", "mdi-laptop", "", "Form Listing")
-	schemaDT.AddButtonIcon("schemaReset", "mdi-restart", "", "Reset")
 	'
-	schemaDT.AddColumn("key", "Name")
-	schemaDT.AddColumn("title", "Title")
-	schemaDT.AddColumns(CreateMap("subtitle": "Type", "colwidth": "Width"))
-	schemaDT.AddColumn("collength", "Length")
-	schemaDT.AddColumn("coldatatype", "Field Type")
-	schemaDT.AddColumn("colcontroltype", "Component")
-	schemaDT.AddColumns(CreateMap("colalign": "Align"))
-	schemaDT.AddColumn("colvalue", "Value")
-		
-	schemaDT.AddColumn("colrow", "R")
-	schemaDT.AddColumn("colcolumn", "C")
-	schemaDT.AddColumns(CreateMap("coloffsetsmall": "OS"))
-	schemaDT.AddColumns(CreateMap("coloffsetmedium": "OM"))
-	schemaDT.AddColumns(CreateMap("coloffsetlarge": "OL"))
-	schemaDT.AddColumns(CreateMap("coloffsetxlarge": "OX"))
-	schemaDT.AddColumn("colsizesmall", "SS")
-	schemaDT.AddColumn("colsizemedium", "SM")
-	schemaDT.AddColumn("colsizelarge", "SL")
-	schemaDT.AddColumn("colsizexlarge", "SX")
-	'
-	schemaDT.AddColumn("colprimarykey", "PriKey")
-	schemaDT.AddColumn("colautoincrement", "AutoInc")
-	schemaDT.AddColumn("colisautofocus", "Focus")
-	schemaDT.AddColumn("colontable", "OnTable")
-	schemaDT.AddColumn("coldisplayvalue", "DisplayValue")
-	schemaDT.AddColumn("colnoduplicate", "Unique")
-	schemaDT.AddColumn("colsortable", "Sortable")
-	schemaDT.AddColumn("colindexed", "Indexed")
-	schemaDT.AddColumn("colrequired", "Required")
-	schemaDT.AddColumn("colvisible", "Visible")
-	schemaDT.AddColumn("colishidedetails", "HideDetails")
-	schemaDT.AddColumn("colactive", "Active")
-	'
-	schemaDT.AddColumn("colislookup", "LookUp")
-	schemaDT.AddColumn("colforeigntable", "ForeignTable")
-	schemaDT.AddColumn("colforeignkey", "ForeignKey")
-	schemaDT.AddColumn("colforeignvalue", "ForeignValue")
-	'
-	schemaDT.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
-	schemaDT.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
-	schemaDT.SetColumnsSwitch(Array("colrequired","colvisible","colislookup"))
-	schemaDT.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed"))
-	'
-	schemaDT.AddEditDialog("title",False)
-	schemaDT.AddEditDialog("collength",False)
-	schemaDT.AddEditDialog("colrow",False)
-	schemaDT.AddEditDialog("colcolumn",False)
-	schemaDT.AddEditDialog("colsizesmall",False)
-	schemaDT.AddEditDialog("colsizemedium",False)
-	schemaDT.AddEditDialog("colsizelarge",False)
-	schemaDT.AddEditDialog("colsizexlarge",False)
-	schemaDT.AddEditDialog("colvalue", False)
-	'
-	schemaDT.AddEditDialogCombo("colcontroltype",False, "ct", "text", "value", False)
-	schemaDT.AddEditDialogCombo("colforeigntable",False,"tablenames","tablename","tablename",False)
-	schemaDT.AddEditDialogCombo("colforeignkey",False,"fields","key","key",False)
-	schemaDT.AddEditDialogCombo("colforeignvalue",False,"fields","key","key",False)
-	
-	schemaDT.AddSaveCancelOpenClose
+	ConfigureSchemaEntry(schemaDT)
 	'
 	schemaDT.SetEdit(True)
 	schemaDT.SetDelete(True)
 	schemaDT.SetIconDimensions1("edit", "24px", "success","80")
 	schemaDT.SetIconDimensions1("delete", "24px", "error","80")
 	schemaDT.SetDataSourceName("tableitems")
+	'
+	'
+	schemaDT.AddButtonIcon("closedrawers", "mdi-exit-to-app", "", "Close drawers").AddDivider
+	schemaDT.AddButtonIcon("schemaDBSave", "mdi-content-save", "", "Save Database Schema").AddDivider
+	
+	schemaDT.AddButtonIcon("btnEditable1", "mdi-briefcase-edit", "green", "Editable").AddDivider
+	schemaDT.AddButtonIcon("btnSwitches1", "mdi-electric-switch", "orange", "Switches").AddDivider
+	schemaDT.AddButtonIcon("btnRelationships1", "mdi-transit-connection", "purple", "Relationships")
+	'
+	'schemaDT.AddButtonIcon("schemaDB", "mdi-database", "", "Table Schema")
+	'schemaDT.AddButtonIcon("schemalisting", "mdi-file-outline", "", "Table Listing")
+	'schemaDT.AddButtonIcon("formlisting", "mdi-laptop", "", "Form Listing")
+	'schemaDT.AddButtonIcon("schemaReset", "mdi-restart", "", "Reset")
+	
 	
 	schema.AddComponent(1, 1, schemaDT.ToString)
 	'create the preview
@@ -7974,6 +7940,117 @@ Sub DesignLayout
 	CreateSchema
 End Sub
 
+Sub ConfigureSchemaEntry(dt As VMDataTable)
+	dt.AddColumn("key", "Name")
+	dt.AddColumn("title", "Title")
+	dt.AddColumns(CreateMap("subtitle": "ColType", "colwidth": "ColWidth"))
+	dt.AddColumn("collength", "Length")
+	dt.AddColumn("coldatatype", "Data Type")
+	
+	dt.AddColumn("colcontroltype", "Component")
+	dt.AddColumns(CreateMap("colalign": "ColAlign"))
+	dt.AddColumn("colvalue", "Value")
+		
+	dt.AddColumn("colrow", "R")
+	dt.AddColumn("colcolumn", "C")
+	dt.AddColumns(CreateMap("coloffsetsmall": "OS"))
+	dt.AddColumns(CreateMap("coloffsetmedium": "OM"))
+	dt.AddColumns(CreateMap("coloffsetlarge": "OL"))
+	dt.AddColumns(CreateMap("coloffsetxlarge": "OX"))
+	dt.AddColumn("colsizesmall", "SS")
+	dt.AddColumn("colsizemedium", "SM")
+	dt.AddColumn("colsizelarge", "SL")
+	dt.AddColumn("colsizexlarge", "SX")
+	'
+	dt.AddColumn("colprimarykey", "PriKey")
+	dt.AddColumn("colautoincrement", "AutoInc")
+	dt.AddColumn("colisautofocus", "Focus")
+	dt.AddColumn("colontable", "OnTable")
+	dt.AddColumn("coldisplayvalue", "DisplayValue")
+	dt.AddColumn("colnoduplicate", "Unique")
+	dt.AddColumn("colsortable", "ColSortable")
+	dt.AddColumn("colindexed", "Indexed")
+	dt.AddColumn("colrequired", "Required")
+	dt.AddColumn("colvisible", "Visible")
+	dt.AddColumn("colishidedetails", "HideDetails")
+	dt.AddColumn("colactive", "Active")
+	'
+	dt.AddColumn("colislookup", "LookUp")
+	dt.AddColumn("colforeigntable", "ForeignTable")
+	dt.AddColumn("colforeignkey", "ForeignKey")
+	dt.AddColumn("colforeignvalue", "ForeignValue")
+	dt.AddColumn("coluseoptions", "UseTheseItems")
+	dt.AddColumn("colkeys", "Item Keys (,)")
+	dt.AddColumn("colvalues", "Item Values (,)")
+	
+	'
+	dt.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
+	dt.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
+	dt.SetColumnsSwitch(Array("colrequired","colvisible","colislookup"))
+	dt.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
+	'
+	dt.AddEditDialog("title",False)
+	dt.AddEditDialog("collength",False)
+	dt.AddEditDialog("colrow",False)
+	dt.AddEditDialog("colcolumn",False)
+	dt.AddEditDialog("colsizesmall",False)
+	dt.AddEditDialog("colsizemedium",False)
+	dt.AddEditDialog("colsizelarge",False)
+	dt.AddEditDialog("colsizexlarge",False)
+	dt.AddEditDialog("colvalue", False)
+	dt.AddEditDialogTextArea("colkeys", False)
+	dt.AddEditDialogTextArea("colvalues", False)
+	
+	dt.AddEditDialog("colwidth", False)
+	dt.AddEditDialog("coloffsetsmall",False)
+	dt.AddEditDialog("coloffsetmedium",False)
+	dt.AddEditDialog("coloffsetlarge",False)
+	dt.AddEditDialog("coloffsetxlarge",False)
+	'
+	dt.AddEditDialogCombo("colcontroltype",False, "ct", "id", "text", False)
+	dt.AddEditDialogCombo("colforeigntable",False,"tablenames","tablename","tablename",False)
+	dt.AddEditDialogCombo("colforeignkey",False,"foreignfields","key","key",False)
+	dt.AddEditDialogCombo("colforeignvalue",False,"foreignfields","key","key",False)
+	dt.AddEditDialogCombo("subtitle",False,"columntypes","id","text",False)
+	dt.AddEditDialogCombo("coldatatype",False,"datatypes","id","text",False)
+	dt.AddEditDialogCombo("colalign",False,"alignment","id","text",False)
+	'
+	dt.AddSaveCancelOpenClose
+	'dt.SetColumnChooser(True)
+	'dt.AddDivider
+	
+End Sub	
+
+Sub btnEditable1_click(e As BANanoEvent)
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
+	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign"))
+	schemaDT.ApplyFilter(flt)
+End Sub
+
+Sub btnSwitches1_click(e As BANanoEvent)
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
+	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
+	flt.AddAll(Array("colrequired","colvisible","colislookup"))
+	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
+	schemaDT.Applyfilter(flt)
+End Sub
+
+Sub btnRelationships1_click(e As BANanoEvent)
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("colvalue", "colcontroltype"))
+	flt.AddAll(Array("colislookup", "colforeigntable", "colforeignkey", "colforeignvalue"))
+	flt.AddAll(Array("coluseoptions", "colkeys", "colvalues"))
+	
+	schemaDT.ApplyFilter(flt)
+End Sub
+
+
 Sub closedrawers_click(e As BANanoEvent)
 	vm.drawer.Hide
 	vm.HideDrawers
@@ -7989,6 +8066,7 @@ End Sub
 'change the foreign table, update the other 2 columns
 Sub schemadt_colforeigntable_change(item As Map)
 	'get the table name to process
+	'
 	Dim scolforeigntable As String = item.get("colforeigntable")
 	If scolforeigntable = "" Then Return
 	'
@@ -8002,8 +8080,8 @@ Sub schemadt_colforeigntable_change(item As Map)
 	Dim Result As List = prjSQL.Result
 	Dim rec As Map = Result.Get(0)
 	Dim fieldsJSON As String = rec.get("fields")
-	Dim fields As List = BANano.FromJson(fieldsJSON)
-	vm.setdata("fields", fields)
+	Dim forfields As List = BANano.FromJson(fieldsJSON)
+	vm.setdata("foreignfields", forfields)
 End Sub
 
 Sub schemadt_save(item As Map)
@@ -8416,6 +8494,7 @@ Sub cboDatabaseTable_change(value As String)
 	If value = "" Then Return
 	'save the table we are processing
 	vm.setdata("mytable", value)
+	dtschema.UpdateTitle($"${vm.Beautifyname(value)} Schema"$)
 	'
 	vm.ShowLoading
 	Dim prjSQL As BANanoAlaSQLE
@@ -8429,8 +8508,10 @@ Sub cboDatabaseTable_change(value As String)
 	Dim rec As Map = Result.Get(0)
 	Dim fieldsJSON As String = rec.get("fields")
 		
-	Dim fields As List = BANano.FromJson(fieldsJSON)
-	dtschema.SetDataSource(fields)
+	DTSchemaEditable
+		
+	Dim dbfields As List = BANano.FromJson(fieldsJSON)
+	dtschema.SetDataSource(dbfields)
 	vm.hideloading
 End Sub
 
@@ -8550,7 +8631,10 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	nTable.put("isaddnew", "Yes")
 	nTable.put("isedit", "Yes")
 	nTable.put("isdelete", "Yes")
+	nTable.put("issave", "No")
+	nTable.put("iscancel", "No")
 	nTable.put("issearchbox", "Yes")
+	nTable.put("isfilter", "Yes")
 	nTable.put("isdialog", "Yes")
 	nTable.put("newicon","mdi-plus")
 	nTable.put("ismultisort", "Yes")
@@ -8645,13 +8729,12 @@ Sub CreateSchema
 	'
 	contSchema.AddControl(tbltoolbar2x.ToolBar, tbltoolbar2x.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
-	vm.SetData("fields", vm.newlist)
-	Dim ct As List = vm.Map2Options(controltypes,"text","value")
-	vm.setdata("ct", ct)
+	vm.SetData("foreignfields", vm.newlist)
 	'
 	dtschema = vm.CreateDataTable("dtschema", "key", Me)
 	dtschema.SetTitle("Table Schema")
 	dtschema.SetSearchbox(True)
+	dtschema.AddToolBarDivider
 	dtschema.SetItemsperpage("100")
 	dtschema.SetMobilebreakpoint("600")
 	dtschema.SetMultisort(True)
@@ -8659,64 +8742,59 @@ Sub CreateSchema
 	dtschema.SetSingleselect(True)
 	dtschema.SetVisible(True)
 	dtschema.SetDense(True)
-	dtschema.AddColumn("key", "Name")
-	dtschema.AddColumn("title", "Title")
-	dtschema.AddColumn("collength", "Length")
-	dtschema.AddColumn("coldatatype", "Field Type")
-	dtschema.AddColumn("colcontroltype", "Component")
-	dtschema.AddColumn("colvalue", "Value")
-		
-	dtschema.AddColumn("colrow", "R")
-	dtschema.AddColumn("colcolumn", "C")
-	dtschema.AddColumn("colsizesmall", "SS")
-	dtschema.AddColumn("colsizemedium", "SM")
-	dtschema.AddColumn("colsizelarge", "SL")
-	dtschema.AddColumn("colsizexlarge", "SX")
 	'
-	dtschema.AddColumn("colprimarykey", "PriKey")
-	dtschema.AddColumn("colautoincrement", "AutoInc")
-	dtschema.AddColumn("colisautofocus", "Focus")
-	dtschema.AddColumn("colontable", "OnTable")
-	dtschema.AddColumn("coldisplayvalue", "DisplayValue")
-	dtschema.AddColumn("colnoduplicate", "Unique")
-	dtschema.AddColumn("colsortable", "Sortable")
-	dtschema.AddColumn("colindexed", "Indexed")
-	dtschema.AddColumn("colrequired", "Required")
-	dtschema.AddColumn("colvisible", "Visible")
-	dtschema.AddColumn("colishidedetails", "HideDetails")
-	dtschema.AddColumn("colactive", "Active")
-	'
-	dtschema.AddColumn("colislookup", "LookUp")
-	dtschema.AddColumn("colforeigntable", "ForeignTable")
-	dtschema.AddColumn("colforeignkey", "ForeignKey")
-	dtschema.AddColumn("colforeignvalue", "ForeignValue")
-	'			
-	dtschema.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
-	dtschema.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
-	dtschema.SetColumnsSwitch(Array("colrequired","colvisible","colislookup"))
-	dtschema.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed"))
-	'
-	dtschema.SetDataSource(vm.newlist)
-	dtschema.AddEditDialog("title",False)
-	dtschema.AddEditDialog("collength",False)
-	dtschema.AddEditDialog("colrow",False)
-	dtschema.AddEditDialog("colcolumn",False)
-	dtschema.AddEditDialog("colsizesmall",False)
-	dtschema.AddEditDialog("colsizemedium",False)
-	dtschema.AddEditDialog("colsizelarge",False)
-	dtschema.AddEditDialog("colsizexlarge",False)
-	dtschema.AddEditDialog("colvalue", False)
-	'
-	dtschema.AddEditDialogCombo("colcontroltype",False, "ct", "text", "value", False)
-	dtschema.AddEditDialogCombo("colforeigntable",False,"tablenames","tablename","tablename",False)
-	dtschema.AddEditDialogCombo("colforeignkey",False,"fields","key","key",False)
-	dtschema.AddEditDialogCombo("colforeignvalue",False,"fields","key","key",False)
+	ConfigureSchemaEntry(dtschema)
 	
-	dtschema.AddSaveCancelOpenClose
+	dtschema.AddButtonIcon("btnEditable", "mdi-briefcase-edit", "green", "Editable").AddDivider
+	dtschema.AddButtonIcon("btnSwitches", "mdi-electric-switch", "orange", "Switches").AddDivider
+	dtschema.AddButtonIcon("btnRelationships", "mdi-transit-connection", "purple", "Relationships")
 	
 	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	vm.container.AddComponent(1, 1, contSchema.tostring)
+End Sub
+
+Sub DTSchemaEditable
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
+	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign"))
+	dtschema.ApplyFilter(flt)
+	dtschema.SetDense(False)
+End Sub
+
+Sub DTSchemaEditable1
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
+	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign"))
+	schemaDT.ApplyFilter(flt)
+	schemaDT.SetDense(False)
+End Sub
+
+Sub btnEditable_click(e As BANanoEvent)
+	DTSchemaEditable
+End Sub
+
+Sub btnSwitches_click(e As BANanoEvent)
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
+	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
+	flt.AddAll(Array("colrequired","colvisible","colislookup"))
+	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
+	dtschema.Applyfilter(flt)
+End Sub
+
+Sub btnRelationships_click(e As BANanoEvent)
+	Dim flt As List = vm.newlist
+	flt.AddAll(Array("key", "title"))
+	flt.AddAll(Array("colvalue", "colcontroltype"))
+	flt.AddAll(Array("colislookup", "colforeigntable", "colforeignkey", "colforeignvalue"))
+	flt.AddAll(Array("coluseoptions", "colkeys", "colvalues"))
+	dtschema.ApplyFilter(flt)
 End Sub
 
 'save records anytime the data changes on switches
@@ -8746,36 +8824,36 @@ Sub dtschema_colforeigntable_change(item As Map)
 	'get the table name to process
 	Dim scolforeigntable As String = item.get("colforeigntable")
 	If scolforeigntable = "" Then Return
-	'
+'	'
 	Dim prjSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	prjSQL.Initialize("tables", "tablename")
 	prjSQL.Read(scolforeigntable)
 	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
 	prjSQL.fromJSON
-	'
+'	'
 	Dim Result As List = prjSQL.Result
 	Dim rec As Map = Result.Get(0)
 	Dim fieldsJSON As String = rec.get("fields")
-	Dim fields As List = BANano.FromJson(fieldsJSON)
-	vm.setdata("fields", fields)
+	Dim forfields As List = BANano.FromJson(fieldsJSON)
+	vm.setdata("foreignfields", forfields)
 End Sub
 
-Sub dtschema_save(item As Map)
+Sub dtschema_saveitem(item As Map)
 	Log("save")
 	Log(item)
 End Sub
 
-Sub dtschema_cancel(item As Map)
+Sub dtschema_cancelitem(item As Map)
 	Log("cancel")
 	Log(item)
 End Sub
 
-Sub dtschema_open
+Sub dtschema_openitem(item As Map)
 	
 End Sub
 
-Sub dtschema_close
+Sub dtschema_closeitem(item As Map)
 
 End Sub
 
@@ -8895,6 +8973,9 @@ Sub SaveDatabaseSchema
 			ifld.put("colprimarykey", "No")
 			ifld.put("coldisplayvalue", "No")
 			ifld.put("colautoincrement", "No")
+			ifld.put("coluseoptions","No")
+			ifld.put("colkeys","")
+			ifld.put("colvalues","")
 			ifld.put("table", tbKey)
 			ifld.put("parent", "vm.Container")
 			ifld.put("parentid", "vm.Container")
@@ -9192,6 +9273,8 @@ Sub Design_DBSourceCode
 '
 	If bisEdit Then actions.add(CreateMap("key":"edit","title":"Edit"))
 	If bisDelete Then actions.Add(CreateMap("key":"delete","title":"Delete"))
+	If bisSave Then actions.Add(CreateMap("key":"save","title":"Save"))
+	If bisCancel Then actions.Add(CreateMap("key":"cancel","title":"Cancel"))	
 	If bisClone Then actions.add(CreateMap("key":"clone","title":"Clone"))
 	If bisDownload Then actions.add(CreateMap("key":"download","title":"Download"))
 	If bisPrint Then actions.add(CreateMap("key":"print","title":"Print"))
@@ -9968,13 +10051,15 @@ End Sub
 
 'a component has been clicked
 Sub drwcomponentsitems_click(e As BANanoEvent)
+	vm.ShowLoading
 	vm.HideOtherDrawers(drwbags.id)
 	vm.Drawer.Hide
 	istool = False
 	tabs.show
 	contattributes.hide
 	contSchema.hide
-	vm.setdata("devspace", 0)
+	drwbags.Show
+	'
 	vm.CallMethod("LoadProjects")
 	vm.CallMethod("LoadContainers")
 	vm.CallMethod("LoadComponents")
@@ -9994,7 +10079,10 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	rsSQL.Read(itemID)
 	rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 	rsSQL.FromJSON
-	If rsSQL.result.size = 0 Then Return
+	If rsSQL.result.size = 0 Then 
+		vm.HideLoading
+		Return
+	End If
 	'read the first record found
 	Dim rec As Map = rsSQL.result.get(0)
 	
@@ -10019,7 +10107,6 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	contents.initialize
 	If scontents <> "" Then
 		contents = BANano.FromJson(scontents)
-		Log(contents)
 		vm.setdata("tableitems", contents)
 	End If
 	schemaDT.SetDataSourceName("tableitems")
@@ -10111,6 +10198,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbtable.ClearContents
 			TableStructure
 			Design_DBSourceCode
+			DTSchemaEditable1
 			vm.setdata("devspace", 3)
 		Case "rating"
 			ShowBag("pbrating")
@@ -10408,7 +10496,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 	End Select
 	'
 	vm.setstate(mattr)
-	drwbags.Show
+	vm.HideLoading
 End Sub
 
 Sub ToolBoxToolsPanel As VMExpansionPanel
@@ -11279,6 +11367,9 @@ Sub ItemDrop(e As BANanoEvent)
 							attr.put("isaddnew", "Yes")
 							attr.put("isedit", "Yes")
 							attr.put("isdelete", "Yes")
+							attr.put("issave", "Yes")
+							attr.put("iscancel", "Yes")
+							attr.put("isfilter", "Yes")
 							attr.put("issearchbox", "Yes")
 							attr.put("isdialog", "Yes")
 							attr.put("newid", "btnNew")
@@ -11456,7 +11547,7 @@ Sub PropertyBag_Slider
 	pbslider.SetVShow("pbslider")
 	pbslider.AddHeading("d","Details")
 	pbslider.AddText("d","id","ID","","")
-	pbslider.AddSelect("d", "controltype", "Type", controltypes)
+	pbslider.AddSelect("d", "controltype", "Type", vue.controltypes)
 	pbslider.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbslider.AddText("d","vmodel","VModel","","")
 	pbslider.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
@@ -11498,7 +11589,7 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.SetVShow("pbdatepicker")
 	pbdatepicker.AddHeading("d","Details")
 	pbdatepicker.AddText("d","id","ID","","")
-	pbdatepicker.AddSelect("d", "controltype", "Type", controltypes)
+	pbdatepicker.AddSelect("d", "controltype", "Type", vue.controltypes)
 	pbdatepicker.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbdatepicker.AddText("d","vmodel","VModel","","")
 	pbdatepicker.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
@@ -11553,7 +11644,7 @@ Sub PropertyBag_Button
 	pbbutton.SetVShow("pbbutton")
 	pbbutton.AddHeading("d","Details")
 	pbbutton.AddText("d","id","ID","","")
-	pbbutton.AddSelect("d", "controltype", "Type", controltypes)
+	pbbutton.AddSelect("d", "controltype", "Type", vue.controltypes)
 	pbbutton.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbbutton.AddText("d","vmodel","ID","","")
 	pbbutton.AddText2("d",CreateMap("label":"Label", "iconname":"Icon Name"))
@@ -11662,7 +11753,7 @@ Sub PropertyBag_CheckBox
 	pbcheckbox.SetVShow("pbcheckbox")
 	pbcheckbox.AddHeading("d","Details")
 	pbcheckbox.AddText("d","id","ID","","")
-	pbcheckbox.AddSelect("d", "controltype", "Type", controltypes)
+	pbcheckbox.AddSelect("d", "controltype", "Type", vue.controltypes)
 	pbcheckbox.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbcheckbox.AddText("d","vmodel","VModel","","")
 	pbcheckbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
@@ -11790,7 +11881,7 @@ Sub PropertyBag_Select
 	pbselectbox.SetVShow("pbselectbox")
 	pbselectbox.AddHeading("d","Details")
 	pbselectbox.AddText("d","id","ID","","")
-	pbselectbox.AddSelect("d", "controltype", "Type", controltypes)
+	pbselectbox.AddSelect("d", "controltype", "Type", vue.controltypes)
 	pbselectbox.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbselectbox.AddText("d","vmodel","VModel","","")
 	pbselectbox.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
@@ -12004,7 +12095,7 @@ Sub PropertyBag_TextField
 	pbtextfield.SetVShow("pbtextfield")
 	pbtextfield.AddHeading("d","Details")
 	pbtextfield.AddText("d","id","ID","","")
-	pbtextfield.AddSelect("d", "controltype", "Type", controltypes)
+	pbtextfield.AddSelect("d", "controltype", "Type", vue.controltypes)
 	pbtextfield.AddSelect1("d", "parent", "Parent", "containers", "component", "component")
 	pbtextfield.AddText("d","vmodel","VModel","","")
 	pbtextfield.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
@@ -12565,7 +12656,7 @@ Sub SavePropertyBag
 			matr.AddAll(Array("colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge"))
 			matr.AddAll(Array("coloffsetxlarge", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge"))
 			matr.AddAll(Array("colisautofocus","colishidedetails","colisdense","colnoduplicate","colprimarykey", _
-			"coldisplayvalue","colautoincrement"))
+			"coldisplayvalue","colautoincrement","coluseoptions","colkeys","colvalues"))
 			'
 			For Each k As String In matr
 				Dim v As String = item.GetDefault(k, "")
@@ -13258,6 +13349,7 @@ Sub PropertyBag_Table
 	pbtable.AddHeading("e","Settings")
 	pbtable.AddSwitches("e", CreateMap("isautoincrement": "Auto Increment", "isaddnew":"Add New"))
 	pbtable.AddSwitches("e", CreateMap("isedit": "Edit", "isdelete":"Delete"))
+	pbtable.AddSwitches("e", CreateMap("issave": "Save", "iscancel":"Cancel"))
 	pbtable.AddSwitches("e", CreateMap("isdownload": "Download", "isclone":"Clone"))
 	pbtable.AddSwitches("e", CreateMap("isprint": "Print", "ismenu":"Menu"))
 	pbtable.AddSwitches("e", CreateMap("issearchbox": "Search","isdialog": "Dialog"))
@@ -13302,6 +13394,9 @@ Sub Read_Table
 	bisautoincrement = YesNoToBoolean(mattr.getdefault("isautoincrement", "No"))
 	bisaddnew = YesNoToBoolean(mattr.getdefault("isaddnew", "No"))
 	bisDelete = YesNoToBoolean(mattr.getdefault("isdelete", "No"))
+	bisSave = YesNoToBoolean(mattr.getdefault("issave", "No"))
+	bisCancel = YesNoToBoolean(mattr.getdefault("iscancel", "No"))
+	bisFilter = YesNoToBoolean(mattr.getdefault("isfilter", "No"))
 	bisClone = YesNoToBoolean(mattr.getdefault("isclone", "No"))
 	bisDownload = YesNoToBoolean(mattr.getdefault("isdownload", "No"))
 	bisEdit = YesNoToBoolean(mattr.getdefault("isedit", "No"))
@@ -13436,10 +13531,6 @@ Sub Design_Table
 
 
 	'add columns
-	'
-	If bisaddnew Then
-		datatable.SetAddNew(snewid, snewicon, snewtooltip)
-	End If
 	'add columns
 	For Each m As Map In lcontents
 		Dim xkey As String = m.GetDefault("key","")   'Name
@@ -13478,6 +13569,8 @@ Sub Design_Table
 	
 	datatable.SetEdit(bisEdit)
 	datatable.SetDelete(bisDelete)
+	datatable.SetSave(bisSave)
+	datatable.SetCancel(bisCancel)
 	datatable.SetClone(bisClone)
 	datatable.SetDownload(bisDownload)
 	datatable.SetPrint(bisPrint)
@@ -13496,6 +13589,12 @@ Sub Design_Table
 		End Select
 	Next
 	'
+	datatable.SetColumnChooser(bisFilter)
+	If bisFilter Then datatable.AddToolbarDivider
+	If bisaddnew Then
+		datatable.SetAddNew(snewid, snewicon, snewtooltip)
+	End If
+	
 	ui.AddControl(datatable.DataTable, datatable.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
 	If smanyrecords = "" Then smanyrecords = sname
@@ -13510,8 +13609,8 @@ Sub Design_Table
 	CodeLine(sb, sTitle, "s", "dt", dlg, "SetTitle")
 	CodeLine(sb, sCaption, "s", "dt", dlg, "SetCaption")
 	CodeLine(sb, bisSearchbox, "b", "dt", dlg, "SetSearchbox")
-	If bisaddnew Then
-		sb.append($"dt${dlg}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
+	If bisSearchbox Then
+		AddCode(sb, $"dt${dlg}.AddToolBarDivider"$)
 	End If
 	'
 	'AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
@@ -13624,6 +13723,8 @@ Sub Design_Table
 	
 	CodeLine(sb, bisEdit, "b", "dt", dlg, "SetEdit")
 	CodeLine(sb, bisDelete, "b", "dt", dlg, "SetDelete")
+	CodeLine(sb, bisSave, "b", "dt", dlg, "SetSave")
+	CodeLine(sb, bisCancel, "b", "dt", dlg, "SetCancel")
 	CodeLine(sb, bisClone, "b", "dt", dlg, "SetClone")
 	CodeLine(sb, bisDownload, "b", "dt", dlg, "SetDownload")
 	CodeLine(sb, bisPrint, "b", "dt", dlg, "SetPrint")
@@ -13631,12 +13732,22 @@ Sub Design_Table
 	'
 	If bisEdit Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("edit", "24px", "success", "80")"$)
 	If bisDelete Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("delete", "24px", "error", "80")"$)
+	If bisSave Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("save", "24px", "green", "80")"$)
+	If bisCancel Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("cancel", "24px", "error", "80")"$)
 	If bisClone Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("clone", "24px", "orange", "80")"$)
 	If bisDownload Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("download", "24px", "blue", "80")"$)
 	If bisPrint Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("print", "24px", "purple", "80")"$)
 	If bisMenu Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("menu", "24px", "green", "80")"$)
 	'
 	sb.append(sba.tostring)
+	AddComment(sb,"add a column chooser, if any")
+	CodeLine(sb, bisFilter, "b", "dt", dlg, "SetColumnChooser")
+	If bisFilter Then 
+		AddCode(sb, $"dt${dlg}.AddToolbarDivider"$)
+	End If
+	If bisaddnew Then
+		sb.append($"dt${dlg}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
+	End If
 	'
 	sb.append($"cont.AddControl(dt${dlg}.DataTable, dt${dlg}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 	AddCode(sb, "End Sub")

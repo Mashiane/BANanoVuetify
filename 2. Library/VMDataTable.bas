@@ -118,6 +118,7 @@ End Sub
 Sub ApplyFilter(thisFilter As List)
 	'save this filter as a map, use the sequence of added columns
 	'to the data-table
+	Dim cols As List = vue.newlist
 	Dim tk As Map = CreateMap()
 	For Each colx As String In thisFilter
 		tk.Put(colx, colx)
@@ -130,9 +131,11 @@ Sub ApplyFilter(thisFilter As List)
 		If tk.ContainsKey(mc) Then
 			Dim nf As DataTableColumn = columnsM.Get(mc)
 			nm.Put(mc, nf)
+			cols.Add(mc)
 		End If
 	Next
 	BuildHeaders(nm)
+	vue.SetData($"${ID}columns"$, cols)
 End Sub
 
 Sub SetStatic(b As Boolean) As VMDataTable
@@ -327,6 +330,19 @@ Sub SetEdit(b As Boolean) As VMDataTable
 	Return Me
 End Sub
 
+Sub SetSave(b As Boolean) As VMDataTable
+	If b = False Then Return Me
+	AddSave("save", "Save")
+	Return Me
+End Sub
+
+Sub SetCancel(b As Boolean) As VMDataTable
+	If b = False Then Return Me
+	AddCancel("cancel", "Cancel")
+	Return Me
+End Sub
+
+
 Sub SetDownload(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddDownload
@@ -386,7 +402,85 @@ End Sub
 Sub AddSearch
 	DataTable.Bind(":search", search)
 	vcard.Title.AddSearch(search)
-	vcard.Title.addspacer
+End Sub
+
+'add spacer on the toolbar
+Sub AddToolBarSpacer As VMDataTable
+	vcard.Title.AddSpacer
+	Return Me
+End Sub
+
+Sub AddDivider
+	AddToolBarDivider
+End Sub
+
+Sub AddSpacer
+	AddToolBarSpacer
+End Sub
+
+'add divider on the toolbar
+Sub AddToolBarDivider As VMDataTable
+	vcard.Title.AddDivider(True, Null, Null, Array("mx-2"), Null)
+	Return Me
+End Sub
+
+'this should be added after all columns are added
+Sub SetColumnChooser(isfilter As Boolean)
+	If isfilter = False Then Return
+	Dim cols As Map = CreateMap()
+	Dim ftime As List = vue.newlist
+	For Each colname As String In masterColumns
+		Dim colm As DataTableColumn = columnsM.Get(colname)
+		Dim coltext As String = colm.text
+		cols.Put(colname,coltext)
+		ftime.Add(colname)
+	Next
+	vue.SetData($"${ID}columns"$, ftime)
+	'use select with map
+	Dim el As VMSelect
+	el.Initialize(vue, $"${ID}filter"$, Module) 
+	el.SetStatic(bStatic)
+	el.SetDesignMode(DesignMode)
+	el.SetOnChange(Me, "columnchooser")
+	el.SetSingleLine(True)
+	el.SetHideDetails(True)
+	el.SetSolo(True)
+	el.Setplaceholder("Filter")
+	el.Setmultiple(True)
+	el.SetSmallChips(True)
+	el.SetDeletableChips(True)
+	el.SetVModel($"${ID}columns"$)
+	el.SetOptions($"${ID}columnchooser"$, cols, "id", "text", False)
+	vcard.Title.AddComponent(el.ToString)
+	'
+	'add filter cancel
+	vcard.Title.AddDivider(True,Null,Null,Array("mx-2"),Null)
+	'
+	Dim btn As VMButton
+	btn.Initialize(vue, "removefilter", Me)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetToolTip("Reset filter")
+	btn.AddIcon("mdi-filter-remove","","")
+	btn.SetColor("red")
+	btn.SetTransparent(True)
+	vcard.Title.AddComponent(btn.tostring)
+End Sub
+
+private Sub removefilter_click(e As BANanoEvent)
+	ApplyFilter(masterColumns)
+End Sub
+
+private Sub columnchooser
+	'get chosen columns
+	Dim chosen As List = GetSelectedColumns
+	ApplyFilter(chosen)
+End Sub
+
+'return the chosen columns
+Sub GetSelectedColumns As List
+	Dim cols As List = vue.GetData($"${ID}columns"$)
+	Return cols
 End Sub
 
 Sub AddNew(key As String, iconName As String, toolTip As String) As VMDataTable
@@ -506,19 +600,19 @@ Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As Stri
 		Dim cb As BANanoObject = BANano.CallBack(Module, changeEvent, Array(item))
 		vue.SetCallBack(changeEvent, cb)
 	End If
-	el.SetStatic(True)
+	el.SetStatic(bStatic)
+	el.SetDesignMode(DesignMode)
+	el.SetAttrSingle(":label", "props.header.text")
 	el.SetComboBox
-	el.Setlabel("Edit")
-	el.SetSingleLine(True)
 	el.SetClearable(True)
-	el.SetAttrSingle("v-model", $"props.item.${colName}"$)
+	el.SetVModel($"props.item.${colName}"$)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	Dim scombo As String = el.tostring
 	'
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_save(props.item)" @cancel="${ID}_cancel(props.item)" @open="${ID}_open(props.item)" @close="${ID}_close(props.item)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -531,24 +625,24 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 	el.Initialize(vue, $"${ID}${colName}"$, Module)
 	If SubExists(Module, changeEvent) Then
 		el.SetOnChange(Module, $"${ID}_${colName}_change"$)
-		el.SetAttrSingle("@change", $"${changeEvent}(props.item)"$)
+		el.SetAttrSingle("@change", $"${changeEvent}(props)"$)
 		Dim item As Map
 		Dim cb As BANanoObject = BANano.CallBack(Module, changeEvent, Array(item))
 		vue.SetCallBack(changeEvent, cb)
 	End If
-	el.SetStatic(True)
+	el.SetStatic(bStatic)
+	el.SetDesignMode(DesignMode)
 	el.SetAutoComplete
-	el.Setlabel("Edit")
-	el.SetSingleLine(True)
+	el.SetAttrSingle(":label", $"props.header.text"$)
 	el.SetClearable(True)
-	el.SetAttrSingle("v-model", $"props.item.${colName}"$)
+	el.SetVModel($"props.item.${colName}"$)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	Dim scombo As String = el.tostring
 	'
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_save(props.item)" @cancel="${ID}_cancel(props.item)" @open="${ID}_open(props.item)" @close="${ID}_close(props.item)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -559,44 +653,55 @@ Sub AddEditDialog(colName As String, bLarge As Boolean)
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_save(props.item)" @cancel="${ID}_cancel(props.item)" @open="${ID}_open(props.item)" @close="${ID}_close(props.item)" ${slarge}> {{ props.item.${colName} }}
-<template v-slot:input> <v-text-field v-model="props.item.${colName}" label="Edit" single-line counter></v-text-field></template>
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
+<template v-slot:input> <v-text-field v-model="props.item.${colName}" :label="props.header.text" counter></v-text-field></template></v-edit-dialog>
+</template>"$
+	AddComponent(temp)
+End Sub
+
+Sub AddEditDialogTextArea(colName As String, bLarge As Boolean)
+	Dim slarge As String = "large lazy"
+	If bLarge = False Then slarge = ""
+Dim temp As String = $"<template v-slot:item.${colName}="props">
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
+<template v-slot:input> <v-textarea v-model="props.item.${colName}" :label="props.header.text" counter></v-textarea></template>
 </v-edit-dialog>
 </template>"$
 	  AddComponent(temp)
 End Sub
 
+
 Sub AddSaveCancelOpenClose
-	Dim methodName As String = $"${ID}_save"$
+	Dim methodName As String = $"${ID}_saveitem"$
 	If SubExists(Module, methodName) = False Then 
-		Log($"VMDataTable: Please add '${ID}_save(item As Map)' callback."$)
+		Log($"VMDataTable: Please add '${ID}_saveitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
 	vue.SetCallBack(methodName, cb)
 	'
-	methodName = $"${ID}_cancel"$
+	methodName = $"${ID}_cancelitem"$
 	If SubExists(Module, methodName) = False Then 
-		Log($"VMDataTable: Please add '${ID}_cancel(item As Map)' callback."$)
+		Log($"VMDataTable: Please add '${ID}_cancelitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
 	vue.SetCallBack(methodName, cb)
 	'
-	methodName = $"${ID}_open"$
+	methodName = $"${ID}_openitem"$
 	If SubExists(Module, methodName) = False Then 
-		Log($"VMDataTable: Please add '${ID}_open(item As Map)' callback."$)
+		Log($"VMDataTable: Please add '${ID}_openitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
 	vue.SetCallBack(methodName, cb)
 	
-	methodName = $"${ID}_close"$
+	methodName = $"${ID}_closeitem"$
 	If SubExists(Module, methodName) = False Then 
-		Log($"VMDataTable: Please add '${ID}_close(item As Map)' callback."$)
+		Log($"VMDataTable: Please add '${ID}_closeitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
@@ -1157,7 +1262,6 @@ End Sub
 
 'set dense
 Sub SetDense(varDense As Boolean) As VMDataTable
-	If varDense = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dense", varDense)
 		Return Me

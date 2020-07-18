@@ -39,8 +39,9 @@ End Sub
 'add a search box
 Sub AddSearch(key As String) As VMCardTitle
 	Dim txt As VMTextField
-	txt.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttributes(Array("flat", "single-line", "hide-details"))
-	txt.SetLabel("Search").SetAppendIcon("mdi-magnify").SetClearable(True).Setvmodel(key).AddClass("mx-4")
+	txt.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetAttributes(Array("single-line", "hide-details"))
+	txt.SetLabel("Search").SetAppendIcon("mdi-magnify").SetClearable(True).Setvmodel(key)
+	txt.SetSolo(True)
 	txt.SetOnChange(Module, $"${key}_change"$)
 	CardTitle.SetText(txt.ToString)
 	HasContent = True

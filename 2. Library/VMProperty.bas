@@ -125,6 +125,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	contentitems.Add("coldisplayvalue")
 	contentitems.Add("colautoincrement")
 	'
+	contentitems.Add("coluseoptions")
+	contentitems.Add("colkeys")
+	contentitems.Add("colvalues")
+	
 	IsTable = False
 	Return Me
 End Sub
@@ -1091,6 +1095,9 @@ Sub btnAddTable_click(e As BANanoEvent)
 	m.Put("colsizemedium", "12")
 	m.Put("colsizelarge", "12")
 	m.Put("colsizexlarge", "12")
+	m.put("coluseoptions","No")
+	m.Put("colkeys","1,2,3")
+	m.Put("colvalues","1,2,3")
 	'
 	For Each k As String In m.Keys
 		Dim vmodel As String = $"items${k}"$
@@ -1428,6 +1435,7 @@ Sub ToString As String
 				Dim forfound As Boolean = False
 				Dim datfound As Boolean = False
 				Dim disfound As Boolean = False
+				Dim useFound As Boolean = False
 				'
 				itemtypes.Initialize 
 				nc.vmodel = "items"
@@ -1476,9 +1484,14 @@ Sub ToString As String
 				nc.options.Put("collength", "Length")
 				nc.options.Put("colvalue", "Value")
 				'
-				nc.options.Put("colforeigntable","Data Source")
-				nc.options.Put("colforeignkey", "Item Value")
-				nc.options.Put("colforeignvalue", "Item Text")
+				nc.options.Put("colislookup", "Look Up")
+				nc.options.Put("colforeigntable","ForeignTable")
+				nc.options.Put("colforeignkey", "ForeignKey")
+				nc.options.Put("colforeignvalue", "ForeignValue")
+				'
+				nc.options.Put("coluseoptions","Use These Items")
+				nc.options.Put("colkeys", "Item Keys (,)")
+				nc.options.Put("colvalues", "Item Values (,)")
 				'
 				nc.options.Put("colisautofocus", "AutoFocus")
 				nc.options.Put("colishidedetails","HideDetails")
@@ -1493,7 +1506,6 @@ Sub ToString As String
 				nc.options.Put("colactive", "Active")
 				nc.options.Put("colontable", "On Table")
 				nc.options.Put("colindexed", "Indexed")
-				nc.options.Put("colislookup", "Look Up")
 				'
 				nc.options.Put("colrow", "Row")
 				nc.options.Put("colcolumn", "Col")
@@ -1537,12 +1549,27 @@ Sub ToString As String
 					End If
 					
 					If disfound Then
-						Dim vc As VMContainer = MultiText(nc, CreateMap("colforeignkey":"Item Value","colforeignvalue":"Item Text"))
+						Dim vc As VMContainer = MultiText(nc, CreateMap("colforeignkey":"ForeignKey","colforeignvalue":"ForeignValue"))
 						tcont.AddControlS(vc.Container, vc.ToString, 1, 1, 12, 12, 12, 12)
 						disfound = False
 					End If
 					
 					Select Case k
+					Case "colislookup"
+						Dim sw As VMCheckBox = AddSwitchA(k, $"${nc.vmodel}${k}"$, "Look Up")
+						tcont.AddControlS(sw.CheckBox, sw.ToString, 1, 1, 12, 12, 12, 12)
+						itemtypes.Put(k, "String")
+					Case "coluseoptions"
+						Dim sw As VMCheckBox = AddSwitchA(k, $"${nc.vmodel}${k}"$, "Use These Items")
+						tcont.AddControlS(sw.CheckBox, sw.ToString, 1, 1, 12, 12, 12, 12)
+						itemtypes.Put(k, "String")
+					Case "colkeys", "colvalues"
+						Dim lblName As String = "Item Keys (,)"
+						If k = "colvalues" Then lblName = "Item Values (,)"
+						Dim tt As VMTextField = AddTextFieldA(k, $"${nc.vmodel}${k}"$, lblName)
+						tcont.AddControlS(tt.TextField, tt.ToString, 1, 1, 12, 12, 12, 12)
+						itemtypes.Put(k, "String")
+						vue.SetData(vmodel,"")
 					Case "colvalue"
 						lenfound = True
 						itemtypes.Put(k, "String")
@@ -1591,7 +1618,7 @@ Sub ToString As String
 					Case "colforeigntable"
 						'"Data Source")
 						Dim cbo As VMSelect
-						cbo.Initialize(vue, "colforeigntable" , module).SetStatic(True).Setlabel("Data Source").SetVModel(vmodel)
+						cbo.Initialize(vue, "colforeigntable" , module).SetStatic(True).Setlabel("ForeignTable").SetVModel(vmodel)
 						cbo.SetDataSource("tablenames", "tablename", "tablename", False)
 						cbo.RemoveAttr("ref").SetDense(True).SetOutlined(True)
 						cbo.SetHideDetails(True).AddClass("my-1")
@@ -1633,8 +1660,7 @@ Sub ToString As String
 				xm.Put("colactive", "Active")
 				xm.Put("colontable", "On Table")
 				xm.Put("colindexed", "Indexed")
-				xm.Put("colislookup", "Look Up")
-				
+								
 				Dim acont As VMContainer
 				acont.Initialize(vue, "abc", module).SetTag("div")
 				acont.NoGutters = True
@@ -2404,6 +2430,42 @@ Sub AddTextField(tID As String, tVModel As String, tLabel As String) As VMTextFi
 	t.AddClass("my-1")
 	Return t
 End Sub
+
+Sub AddTextFieldA(tID As String, tVModel As String, tLabel As String) As VMTextField
+	Dim t As VMTextField
+	t.Initialize(vue, tID, module)
+	t.SetStatic(True)
+	t.Setlabel(tLabel)
+	t.SetVModel(tVModel)
+	t.SetType("text")
+	t.RemoveAttr("ref")
+	t.SetDense(True)
+	t.SetOutlined(True)
+	t.SetHideDetails(True)
+	t.SetTextArea
+	t.AddClass("my-1")
+	Return t
+End Sub
+
+Sub AddSwitchA(tID As String, tvModel As String, tLabel As String) As VMCheckBox
+	Dim sw As VMCheckBox
+	sw.Initialize(vue, tID, module)
+	sw.SetStatic(True)
+	sw.SetVModel(tvModel)
+	sw.SetSwitch
+	sw.Setlabel(tLabel)
+	sw.SetTrueValue("Yes")
+	sw.SetFalseValue("No")
+	sw.SetHideDetails(True)
+	sw.SetFieldType("string")
+	sw.RemoveAttr("ref")
+	sw.SetDense(True)
+	sw.SetInset(True)
+	sw.AddClass("my-1")
+	vue.SetData(tvModel, "No")
+	Return sw
+End Sub
+
 
 Sub ShowItem(item As String)
 	item = item.ToLowerCase & "show"
