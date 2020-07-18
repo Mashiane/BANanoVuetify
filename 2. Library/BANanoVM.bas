@@ -1232,6 +1232,14 @@ private Sub InitColors
 	ColumnTypes.put("edit","Edit")
 	ColumnTypes.put("delete","Delete")
 	ColumnTypes.put("action","Action")
+	ColumnTypes.put("save","Save")
+	ColumnTypes.put("cancel","Cancel")
+	ColumnTypes.Put("switch", "Switch")
+	ColumnTypes.put("avatarimg", "Avatar")
+	ColumnTypes.Put("rating", "Rating")
+	ColumnTypes.Put("progresscircular", "ProgressCircular")
+	ColumnTypes.Put("progresslinear", "ProgressLinear")
+	
 	'
 	ColumnAlign.Initialize
 	ColumnAlign.Put("start", "Start")
@@ -2296,7 +2304,8 @@ End Sub
 Sub AddDrawer(cont As VMNavigationDrawer)
 	drawers.Add(cont.ID)
 	Dim scont As String = cont.tostring
-	Container.SetText(scont)
+	'Container.SetText(scont)
+	VApp.SetText(scont)
 End Sub
 
 'add a container

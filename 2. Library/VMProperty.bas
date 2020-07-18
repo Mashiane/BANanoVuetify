@@ -120,7 +120,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	contentitems.Add("colisautofocus")
 	contentitems.Add("colishidedetails")
 	contentitems.Add("colisdense")
-	
+	contentitems.Add("colnoduplicate")
+	contentitems.Add("colprimarykey")
+	contentitems.Add("coldisplayvalue")
+	contentitems.Add("colautoincrement")
 	'
 	IsTable = False
 	Return Me
@@ -1067,6 +1070,10 @@ Sub btnAddTable_click(e As BANanoEvent)
 	m.Put("colisautofocus", "No")
 	m.Put("colishidedetails","No")
 	m.Put("colisdense", "No")
+	m.Put("colnoduplicate", "No")
+	m.Put("colprimarykey", "No")
+	m.Put("coldisplayvalue", "No")
+	m.Put("colautoincrement", "No")
 	m.Put("colislookup", "No")
 	m.Put("colvisible", "Yes")
 	m.Put("colactive", "Yes")
@@ -1476,6 +1483,10 @@ Sub ToString As String
 				nc.options.Put("colisautofocus", "AutoFocus")
 				nc.options.Put("colishidedetails","HideDetails")
 				nc.options.Put("colisdense", "Dense")
+				nc.options.Put("colnoduplicate", "Unique")
+				nc.Options.Put("colprimarykey", "Primary Key")
+				nc.options.Put("coldisplayvalue", "Display Value")
+				nc.options.Put("colautoincrement", "Auto Increment")
 				nc.options.Put("colsortable", "Sortable")
 				nc.options.Put("colrequired", "Required")
 				nc.options.Put("colvisible", "Visible")
@@ -1551,7 +1562,8 @@ Sub ToString As String
 					Case "colsizesmall","colsizemedium","colsizelarge","colsizexlarge"
 						itemtypes.Put(k, "String")
 					Case "colsortable" ,"colrequired", "colvisible","colindexed","colactive","colontable","colislookup", _
-						"colisautofocus","colishidedetails","colisdense"
+						"colisautofocus","colishidedetails","colisdense", "colnoduplicate","colprimarykey", _
+						"coldisplayvalue","colautoincrement"
 						itemtypes.put(k, "Boolean")
 					Case "colalign"
 						Dim rg As VMRadioGroup
@@ -1611,6 +1623,10 @@ Sub ToString As String
 				xm.put("colisautofocus", "AutoFocus")
 				xm.Put("colishidedetails","HideDetails")
 				xm.put("colisdense","Dense")
+				xm.Put("colnoduplicate", "Unique")
+				xm.put("colprimarykey", "Primary Key")
+				xm.Put("colautoincrement", "A.Increment")
+				xm.put("coldisplayvalue","Display Value")
 				xm.Put("colsortable", "Sortable")
 				xm.Put("colrequired", "Required")
 				xm.Put("colvisible", "Visible")

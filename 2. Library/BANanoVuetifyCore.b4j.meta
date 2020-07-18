@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoVM,ShowItems,1551,2,BANanoVM,SetStateMap,1572,0,BANanoVM,SetWatch,1578,0,BANanoVM,CreateTemplate,1584,0,BANanoVM,SetStateSingle,1556,0,BANanoVM,Map2Options,1526,0,BANanoVM,SetState,1514,0,BANanoVM,CreateLabel,1495,0,BANanoVM,CreateKeepAlive,1480,0,BANanoVM,CreateRouterView,1474,0,BANanoVM,HideItems,1531,0
+NavigationStack=VMDataTable,GetData,92,6,VMDataTable,BANanoReplace,107,0,VMDataTable,Reset,147,0,VMDataTable,AddColumn1,611,0,VMDataTable,Initialize,68,0,VMDataTable,Class_Globals,43,1,VMDataTable,ResetFilter,109,0,VMDataTable,ApplyFilter,116,6,BANanoVM,Map2Options,1537,0,Main,Process_Globals,10,0
 SelectedBuild=0
 VisibleModules=

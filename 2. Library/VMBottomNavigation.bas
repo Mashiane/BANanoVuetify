@@ -172,13 +172,7 @@ End Sub
 'set app
 Sub SetApp(varApp As Boolean) As VMBottomNavigation
 	If varApp = False Then Return Me
-	If bStatic Then
-		SetAttrSingle("app", varApp)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}App"$
-	vue.SetStateSingle(pp, varApp)
-	BottomNavigation.Bind(":app", pp)
+	BottomNavigation.SetAttrLoose("app")
 	Return Me
 End Sub
 

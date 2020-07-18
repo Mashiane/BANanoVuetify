@@ -28,6 +28,7 @@ Sub Class_Globals
 	Public Progress As VMProgressLinear
 	Public SubHeading As VMLabel
 	Private SubHeadingKey As String
+	Private BANano As BANano
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMToolBar
@@ -95,6 +96,9 @@ End Sub
 
 Sub menu_click(e As BANanoEvent)
 	vue.ToggleState("drawer")
+	If SubExists(module, "menu_click") Then
+		BANano.CallSub(module, "menu_click", Null)
+	End If
 End Sub
 
 Sub SetStatic(b As Boolean) As VMToolBar

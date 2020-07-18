@@ -33,6 +33,8 @@ Sub Class_Globals
 	Public COLUMN_RATING As String = "rating"
 	Public COLUMN_PROGRESS_CIRCULAR As String = "progresscircular"
 	Public COLUMN_PROGRESS_LINEAR As String = "progresslinear"
+	Public COLUMN_SAVE As String = "save"
+	Public COLUMN_CANCEL As String = "cancel"
 	
 	'alignment
 	Public ALIGN_CENTER As String = "center"
@@ -54,8 +56,7 @@ Sub Class_Globals
 	Private bStatic As Boolean
 	Private hdr As List
 	Private keyID As String
-	Private masterColumns As List
-	Private bInlineEditing As Boolean
+	Public masterColumns As List
 End Sub
 
 'initialize the DataTable
@@ -84,8 +85,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	vcard.IsTable = True	'
 	columnsM.Initialize 
 	masterColumns.Initialize 
-	bInlineEditing = False
 	Return Me
+End Sub
+
+'get all the data from the table
+Sub GetData As List
+	Dim lst As List = vue.GetData(items)
+	Return lst
 End Sub
 
 'return a list of selected primary keys
@@ -109,16 +115,21 @@ Sub ResetFilter
 	ApplyFilter(masterColumns)
 End Sub
 
-Sub SetInlineEditing(b As Boolean)
-	bInlineEditing = b
-End Sub
-
 Sub ApplyFilter(thisFilter As List)
+	'save this filter as a map, use the sequence of added columns
+	'to the data-table
+	Dim tk As Map = CreateMap()
+	For Each colx As String In thisFilter
+		tk.Put(colx, colx)
+	Next
+	'define new columns
 	Dim nm As Map = CreateMap()
-	For Each k As String In thisFilter
-		If columnsM.ContainsKey(k) Then
-			Dim nf As DataTableColumn = columnsM.Get(k)
-			nm.Put(k, nf)
+	'loop through master column
+	For Each mc As String In masterColumns
+		'is it on the filter
+		If tk.ContainsKey(mc) Then
+			Dim nf As DataTableColumn = columnsM.Get(mc)
+			nm.Put(mc, nf)
 		End If
 	Next
 	BuildHeaders(nm)
@@ -163,6 +174,29 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	SetDeviceSizes(small,medium, large, xlarge)
 	Return Me
 End Sub
+
+'add save icon
+Sub AddSave(colField As String, colTitle As String)
+	AddExclusion(colField)
+	AddColumn(colField,colTitle)
+	SetColumnFilterable(colField,False)
+	SetColumnType(colField, COLUMN_SAVE)
+	SetColumnSortable(colField, False)
+	SetColumnAlignment(colField, ALIGN_CENTER)
+	SetColumnIcon(colField, "mdi-content-save")
+End Sub
+
+'add cancel icon
+Sub AddCancel(colField As String, colTitle As String)
+	AddExclusion(colField)
+	AddColumn(colField,colTitle)
+	SetColumnFilterable(colField,False)
+	SetColumnType(colField, COLUMN_CANCEL)
+	SetColumnSortable(colField, False)
+	SetColumnAlignment(colField, ALIGN_CENTER)
+	SetColumnIcon(colField, "mdi-cancel")
+End Sub
+
 
 'add edit icon
 Sub AddEdit(colField As String, colTitle As String)
@@ -445,6 +479,133 @@ Sub AddColumns(flds As Map) As VMDataTable
 		AddColumn(k, v)
 	Next
 	Return Me
+End Sub
+
+'add expansion slot
+Sub AddExpandSlot(bSingleExpand As Boolean, cont As VMContainer)
+	AddExpandColumn
+	SetSingleExpand(bSingleExpand)
+	SetExpanded(vue.newlist)
+	SetShowExpand(True)
+	
+	Dim expandSlot As VMTemplate
+	expandSlot.Initialize(vue, $"${ID}expand"$, Module)
+	expandSlot.SetAttrSingle("v-slot:expanded-item", "{ headers, item }")
+	If cont <> Null Then expandSlot.SetText(cont.tostring)
+	AddComponent(expandSlot.tostring)
+End Sub
+
+Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean)
+	Dim changeEvent As String = $"${ID}_${colName}_change"$
+	Dim el As VMSelect
+	el.Initialize(vue, $"${ID}${colName}"$, Module)
+	If SubExists(Module, changeEvent) Then
+		el.SetOnChange(Module, $"${ID}_${colName}_change"$)
+		el.SetAttrSingle("@change", $"${changeEvent}(props.item)"$)
+		Dim item As Map
+		Dim cb As BANanoObject = BANano.CallBack(Module, changeEvent, Array(item))
+		vue.SetCallBack(changeEvent, cb)
+	End If
+	el.SetStatic(True)
+	el.SetComboBox
+	el.Setlabel("Edit")
+	el.SetSingleLine(True)
+	el.SetClearable(True)
+	el.SetAttrSingle("v-model", $"props.item.${colName}"$)
+	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
+	Dim scombo As String = el.tostring
+	'
+	Dim slarge As String = "large lazy"
+	If bLarge = False Then slarge = ""
+	Dim temp As String = $"<template v-slot:item.${colName}="props">
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_save(props.item)" @cancel="${ID}_cancel(props.item)" @open="${ID}_open(props.item)" @close="${ID}_close(props.item)" ${slarge}> {{ props.item.${colName} }}
+<template v-slot:input> ${scombo} </template>
+</v-edit-dialog>
+</template>"$
+	AddComponent(temp)
+End Sub
+'
+Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean)
+	Dim changeEvent As String = $"${ID}_${colName}_change"$
+	Dim el As VMSelect
+	el.Initialize(vue, $"${ID}${colName}"$, Module)
+	If SubExists(Module, changeEvent) Then
+		el.SetOnChange(Module, $"${ID}_${colName}_change"$)
+		el.SetAttrSingle("@change", $"${changeEvent}(props.item)"$)
+		Dim item As Map
+		Dim cb As BANanoObject = BANano.CallBack(Module, changeEvent, Array(item))
+		vue.SetCallBack(changeEvent, cb)
+	End If
+	el.SetStatic(True)
+	el.SetAutoComplete
+	el.Setlabel("Edit")
+	el.SetSingleLine(True)
+	el.SetClearable(True)
+	el.SetAttrSingle("v-model", $"props.item.${colName}"$)
+	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
+	Dim scombo As String = el.tostring
+	'
+	Dim slarge As String = "large lazy"
+	If bLarge = False Then slarge = ""
+	Dim temp As String = $"<template v-slot:item.${colName}="props">
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_save(props.item)" @cancel="${ID}_cancel(props.item)" @open="${ID}_open(props.item)" @close="${ID}_close(props.item)" ${slarge}> {{ props.item.${colName} }}
+<template v-slot:input> ${scombo} </template>
+</v-edit-dialog>
+</template>"$
+	AddComponent(temp)
+End Sub
+
+Sub AddEditDialog(colName As String, bLarge As Boolean)
+	Dim slarge As String = "large lazy"
+	If bLarge = False Then slarge = ""
+Dim temp As String = $"<template v-slot:item.${colName}="props">
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_save(props.item)" @cancel="${ID}_cancel(props.item)" @open="${ID}_open(props.item)" @close="${ID}_close(props.item)" ${slarge}> {{ props.item.${colName} }}
+<template v-slot:input> <v-text-field v-model="props.item.${colName}" label="Edit" single-line counter></v-text-field></template>
+</v-edit-dialog>
+</template>"$
+	  AddComponent(temp)
+End Sub
+
+Sub AddSaveCancelOpenClose
+	Dim methodName As String = $"${ID}_save"$
+	If SubExists(Module, methodName) = False Then 
+		Log($"VMDataTable: Please add '${ID}_save(item As Map)' callback."$)
+		Return
+	End If
+	Dim item As Map
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
+	vue.SetCallBack(methodName, cb)
+	'
+	methodName = $"${ID}_cancel"$
+	If SubExists(Module, methodName) = False Then 
+		Log($"VMDataTable: Please add '${ID}_cancel(item As Map)' callback."$)
+		Return
+	End If
+	Dim item As Map
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
+	vue.SetCallBack(methodName, cb)
+	'
+	methodName = $"${ID}_open"$
+	If SubExists(Module, methodName) = False Then 
+		Log($"VMDataTable: Please add '${ID}_open(item As Map)' callback."$)
+		Return
+	End If
+	Dim item As Map
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
+	vue.SetCallBack(methodName, cb)
+	
+	methodName = $"${ID}_close"$
+	If SubExists(Module, methodName) = False Then 
+		Log($"VMDataTable: Please add '${ID}_close(item As Map)' callback."$)
+		Return
+	End If
+	Dim item As Map
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
+	vue.SetCallBack(methodName, cb)
+End Sub
+
+Sub AddExpandColumn
+	AddColumn("data-table-expand", "")
 End Sub
 
 'add a column
@@ -744,8 +905,10 @@ private Sub BuildControls
 			If nf.ReadOnly Then rat.SetAttrLoose("readonly")
 			If nf.iconSize <> "" Then rat.SetLength(nf.iconSize)
 			If nf.iconColor <> "" Then rat.SetColor(nf.iconColor)
+			'
+			Dim methodName As String = $"${ID}_change"$
 			If SubExists(Module, methodName) Then
-				rat.SetAttrSingle("@input", $"${ID}_${value}(item)"$)
+				rat.SetAttrSingle("@input", $"${methodName}(item)"$)
 				vue.SetMethod(Module, methodName)
 			End If
 			tmp.AddComponent(rat.ToString)
@@ -794,8 +957,10 @@ private Sub BuildControls
 			swt.SetFalseValue("No")
 			swt.SetVModel($"item.${value}"$)
 			If nf.Disabled Then swt.SetAttrLoose("disabled")
+			'
+			Dim methodName As String = $"${ID}_change"$
 			If SubExists(Module, methodName) Then
-				swt.SetAttrSingle("@change", $"${ID}_${value}(item)"$)
+				swt.SetAttrSingle("@change", $"${methodName}(item)"$)
 				vue.SetMethod(Module, methodName)
 			End If
 			tmp.AddComponent(swt.ToString)
@@ -851,7 +1016,7 @@ private Sub BuildControls
 			'
 			tmp.AddComponent(chp.ToString)
 			sb.Append(tmp.ToString)
-		Case COLUMN_ACTION, COLUMN_EDIT, COLUMN_DELETE
+		Case COLUMN_ACTION, COLUMN_EDIT, COLUMN_DELETE, COLUMN_SAVE, COLUMN_CANCEL
 			Dim tmpa As VMTemplate
 			tmpa.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			Dim sline As String = $"v-slot:item.${value}="{ item }""$
@@ -891,71 +1056,8 @@ Sub ToString As String
 	DataTable.Bind(":items", items)
 	DataTable.Bind("item-key",PrimaryKey)
 	BuildControls
-	BuildInline
 	vcard.AddStuff(DataTable.ToString)
 	Return vcard.ToString
-End Sub
-
-Sub BuildInline
-	If bInlineEditing = False Then Return
-	Dim tmpx As VMElement
-	tmpx.Initialize(vue, "").SetTag("template")
-	tmpx.SetAttrSingle("v-slot:body", "{ items, headers }")
-	'
-	Dim tbody As VMElement
-	tbody.Initialize(vue, "").SetTag("tbody")
-	'
-	Dim tr As VMElement
-	tr.Initialize(vue, "").SetTag("tr")
-	tr.SetVFor("(item,idx,k)", "items")
-	tr.SetAttrSingle(":key", "idx")
-	'
-	Dim td As VMElement
-	td.Initialize(vue, "").SetTag("td")
-	td.SetVFor("(header,key)", "headers")
-	td.SetAttrSingle(":key","key")
-	'
-	Dim ed As VMElement
-	ed.Initialize(vue, "").SetTag("v-edit-dialog")
-	ed.SetAttrSingle(":return-value.sync", "item[header.value]")
-	ed.SetAttrSingle("@save", $"${ID}save"$)
-	ed.SetAttrSingle("@cancel", $"${ID}cancel"$)
-	ed.SetAttrSingle("@open", $"${ID}open"$)
-	ed.SetAttrSingle("@close", $"${ID}close"$)
-	'
-	vue.SetMethod(Module, $"${ID}save"$)
-	vue.SetMethod(Module, $"${ID}cancel"$)
-	vue.SetMethod(Module, $"${ID}open"$)
-	vue.SetMethod(Module, $"${ID}close"$)
-	
-	ed.AddComponent("{{item[header.value]}}")
-	
-	'
-	Dim tmp As VMElement
-	tmp.Initialize(vue, "").SetTag("template")
-	tmp.SetAttrSingle("v-slot:input", True)
-	'
-	Dim inp As VMElement
-	inp.Initialize(vue, "").SetTag("v-text-field")
-	inp.SetVModel("item[header.value]")
-	inp.SetAttrSingle("label", "Edit")
-	inp.SetAttrLoose("single-line")
-	' add text to template
-	tmp.AddComponent(inp.ToString)
-	'add template to edit dialog
-	ed.AddComponent(tmp.ToString)
-	'add edit dialog to td
-	td.AddComponent(ed.ToString)
-	'add td to tr
-	tr.AddComponent(td.ToString)
-	'add tr to body
-	tbody.AddComponent(tr.ToString)
-	'add tbody to template
-	tmpx.AddComponent(tbody.ToString)
-	'add to body
-	Dim sout As String = tmpx.tostring
-	Log(sout)
-	DataTable.SetText(sout)	
 End Sub
 
 'update the key
@@ -983,6 +1085,11 @@ End Sub
 Sub AddChild(child As VMElement) As VMDataTable
 	Dim childHTML As String = child.ToString
 	DataTable.SetText(childHTML)
+	Return Me
+End Sub
+
+Sub AddComponent(tcomp As String) As VMDataTable
+	SetText(tcomp)
 	Return Me
 End Sub
 
@@ -1442,15 +1549,10 @@ Sub SetServerItemsLength(varServerItemsLength As String) As VMDataTable
 End Sub
 
 'set expanded
-Sub SetExpanded(varExpanded As String) As VMDataTable
-	If varExpanded = "" Then Return Me
-	If bStatic Then
-		SetAttrSingle("expanded", varExpanded)
-		Return Me
-	End If
+Sub SetExpanded(varExpanded As List) As VMDataTable
 	Dim pp As String = $"${ID}Expanded"$
 	vue.SetStateSingle(pp, varExpanded)
-	DataTable.Bind(":expanded", pp)
+	DataTable.Bind(":expanded.sync", pp)
 	Return Me
 End Sub
 

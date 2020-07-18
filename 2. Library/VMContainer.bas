@@ -1491,6 +1491,26 @@ Sub SetBorder(bwidth As String, bcolor As String, bstyle As String) As VMContain
 	Return Me
 End Sub
 
+'show an rc
+Sub ShowRC(rowPos As Int, colPos As Int)
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	rowKey = $"${rowKey}show"$
+	vue.SetData(rowKey, True)
+End Sub
+
+Sub HideRC(rowPos As Int, colPos As Int)
+	Dim rowKey As String = $"${ID}r${CStr(rowPos)}c${CStr(colPos)}"$
+	If colPos = 0 Then
+		rowKey = $"${ID}r${CStr(rowPos)}"$
+	End If
+	rowKey = $"${rowKey}show"$
+	vue.SetData(rowKey, False)
+End Sub
+
+
 'set the border of the rc
 Sub SetBorderRC(rowPos As Int, colPos As Int, bwidth As String, bcolor As String, bstyle As String) As VMContainer
 	Dim rowc As Map
@@ -1591,6 +1611,11 @@ private Sub BuildRow(row As GridRow) As String
 		Dim tRow As VMRow
 		tRow.Initialize(vue, rowKey, Module)
 		tRow.SetDesignMode(DesignMode)
+		If DesignMode = False Then
+			Dim rowKeyShow As String = $"${rowKey}show"$
+			vue.SetData(rowKeyShow, True)
+			tRow.SetAttrSingle("v-show", rowKeyShow)
+		End If
 		'detect if we have styles for the Row
 		If rowStyles.ContainsKey(rowKey) Then
 			Dim cm As Map = rowStyles.Get(rowKey)
@@ -1651,6 +1676,12 @@ private Sub BuildRow(row As GridRow) As String
 				tColumn.SetOffsetMd(column.ofmd)
 				tColumn.SetOffsetLg(column.oflg)
 				tColumn.SetOffsetXl(column.ofxl)
+				'
+				If DesignMode = False Then
+					Dim cellKeyShow As String = $"${cellKey}show"$
+					vue.SetData(cellKeyShow, True)
+					tColumn.SetAttrSingle("v-show", cellKeyShow)
+				End If
 				'
 				If ShowMatrix Then
 					Dim matrix As String = $"R${LastRow}.C${LastColumn}"$

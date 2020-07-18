@@ -31,6 +31,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetAttrSingle(prop As String, value As String) As VMRating
+	Rating.SetAttrSingle(prop, value)
+	Return Me
+End Sub
 '
 Sub SetOnInput(eventHandler As Object,methodName As String) As VMRating
 	methodName = methodName.tolowercase
@@ -551,12 +556,6 @@ End Sub
 'set single style
 Sub SetStyleSingle(prop As String, value As String) As VMRating
 	Rating.SetStyleSingle(prop, value)
-	Return Me
-End Sub
-
-'set single attribute
-Sub SetAttrSingle(prop As String, value As String) As VMRating
-	Rating.SetAttrSingle(prop, value)
 	Return Me
 End Sub
 

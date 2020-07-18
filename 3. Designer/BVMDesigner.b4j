@@ -214,7 +214,7 @@ Sub Process_Globals
 	Public AppTitle As String = "BVMDesigner"
 	Private Publish As String = "C:\laragon\www"
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.18"
+	Public Version As String = "4.20"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
@@ -293,7 +293,7 @@ Sub BANano_Ready
 	
 	'create the tables
 	alaSQL.Initialize("tables", "tablename")
-	alaSQL.SchemaAddStrings(Array("tablename", "primarykey", "displayfields"))
+	alaSQL.SchemaAddStrings(Array("tablename", "primarykey", "displayfields", "fields", "autoincrement", "autofocus"))
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	alaSQL.FromJSON

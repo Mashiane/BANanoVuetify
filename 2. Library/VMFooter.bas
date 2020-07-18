@@ -204,13 +204,7 @@ End Sub
 'set app
 Sub SetApp(varApp As Boolean) As VMFooter
 	If varApp = False Then Return Me
-	If bStatic Then
-		SetAttrSingle("app", varApp)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}App"$
-	vue.SetStateSingle(pp, varApp)
-	Footer.Bind(":app", pp)
+	Footer.SetAttrLoose("app")
 	Return Me
 End Sub
 

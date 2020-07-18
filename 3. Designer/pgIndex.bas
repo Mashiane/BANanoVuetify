@@ -7,6 +7,7 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private dtschema As VMDataTable
 	Private dtvuetifyattributes As VMDataTable
 	Private bisGroup As Boolean
 	Private bisHideonleave As Boolean
@@ -22,6 +23,7 @@ Sub Process_Globals
 	Private sColor As String
 	Private sColorintensity As String
 	Private bisColoredborder As Boolean
+	Private smanyrecords As String
 	Private bisDark As Boolean
 	Private bisDense As Boolean
 	Private bisDismissible As Boolean
@@ -276,8 +278,7 @@ Sub Process_Globals
 	Private pbtimelineitem As VMProperty
 	Private bisAligntop As Boolean
 	Private pbtimeline As VMProperty
-	Private tvtables As VMTreeView
-	Private tbltoolbar2 As VMToolBar
+	Private tbltoolbar2x As VMToolBar
 	Private sdbusername As String
 	Private sdbpassword As String
 	Private sdbhost As String
@@ -741,7 +742,7 @@ Sub Process_Globals
 	Private bisitemdiv As Boolean
 	Private bisitemnogutter As Boolean
 	Private pbtreeview As VMProperty
-	Private contdbadmin As VMContainer
+	Private contSchema As VMContainer
 	Private contattributes As VMContainer
 	Private db As BANanoSQL
 	Private drwV2B4x As VMNavigationDrawer
@@ -775,7 +776,7 @@ Sub Init
 		vm.setdata("selectedpanel", 0)
 	End If
 	controltypes = CreateMap("number":"number", "text":"text", "tel":"tel", "email":"email","password":"password", "textarea":"textarea", "date":"date", "time":"time", "select":"select", "combo":"combo", "auto":"auto","file":"file","profile":"profile","image":"image","button":"button","rangeslider":"rangeslider", _
-	"quill": "quill","infobox":"infobox","fileselect":"fileselect","sparkline":"sparkline")
+	"quill": "quill","infobox":"infobox","fileselect":"fileselect","sparkline":"sparkline","radio":"radio","rating":"rating")
 	fieldtypes = CreateMap("string":"String", "int":"Integer", "bool":"Boolean", "date":"Date","dbl":"Float")
 	iconsizes = CreateMap("":"Normal","small":"Small", "medium":"Medium", "large":"Large", "x-small":"X-Small", "x-large":"X-Large")
 	'
@@ -844,6 +845,7 @@ Sub Init
 		vm.ShowSnackBArError("You need to create a new project first!")
 		Mode = "A"
 		vm.HideOtherDrawers(drwprojectdetails.id)
+		vm.Drawer.Hide
 		vm.setdata("dbtype", "mysql")
 		drwprojectdetails.Show
 		Return
@@ -863,6 +865,11 @@ Sub Init
 	vm.setstate(prjRec)
 End Sub
 '
+Sub menu_click(e As BANanoEvent)
+	vm.HideDrawers
+End Sub
+
+
 Sub BuildFooter
 	vm.Footer.SHow
 	vm.Footer.SetFixed(True)
@@ -874,23 +881,28 @@ Sub BuildFooter
 End Sub
 
 Sub btnToolbox_click(e As BANanoEvent)
-	vm.ScrollTo(drwtoolbox.id, Null, Null, Null)
 	vm.HideOtherDrawers(drwtoolbox.id)
-	drwtoolbox.Toggle
 	vm.drawer.hide
+	tabs.show
+	contattributes.hide
+	contSchema.hide
+	drwtoolbox.Toggle
 End Sub
 
 Sub btnComponents_click(e As BANanoEvent)
-	vm.ScrollTo(drwcomponents.id, Null, Null, Null)
 	vm.HideOtherDrawers(drwcomponents.id)
-	drwcomponents.Toggle
 	vm.drawer.hide
+	tabs.show
+	contattributes.hide
+	
+	contSchema.hide
+	drwcomponents.Toggle
 End Sub
 
 Sub btnVuetify2B4x_click(e As BANanoEvent)
 	'hide all property bags
-	ShowBag("")
 	vm.HideOtherDrawers(drwV2B4x.id)
+	vm.Drawer.Hide
 	drwV2B4x.Toggle
 	'show total items for components and update listing
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -919,11 +931,8 @@ Sub drwV2B4xitems_click(e As BANanoEvent)
 	vm.setdata("vuetifycomponent", menuID)
 	'show the respective handler screen
 	contattributes.Show
-	contdbadmin.hide
 	tabs.hide
 	'
-	vm.showloading
-	
 	dtvuetifyattributes.SetTitle(menuID & " Attributes")
 	'show attributes for this component..
 	Dim rsAttributes As BANanoAlaSQLE
@@ -934,16 +943,34 @@ Sub drwV2B4xitems_click(e As BANanoEvent)
 	rsAttributes.SelectWhere(Array("*"), qw, Array("="), Array("name"))
 	rsAttributes.result = db.ExecuteWait(rsAttributes.query, rsAttributes.args)
 	rsAttributes.FromJSON
+	Dim Result As List = rsAttributes.Result
+	Dim rsCnt As Int = 0
+	Dim rsTot As Int = Result.size - 1
+	For rsCnt = 0 To rsTot
+		Dim rsa As Map = Result.Get(rsCnt)
+		Dim sactive As String = rsa.getdefault("active", "No")
+		Dim sonsub As String = rsa.getdefault("onsub", "No")
+		sactive = vm.cstr(sactive)
+		sactive = sactive.tolowercase
+		sonsub = vm.cstr(sonsub)
+		sonsub = sonsub.tolowercase
+		If sactive = "true" Then sactive = "Yes"
+		If sactive = "false" Then sactive = "No"
+		If sonsub = "true" Then sonsub = "Yes"
+		If sonsub = "false" Then sonsub = "No"
+		rsa.put("active", sactive)
+		rsa.put("onsub", sonsub)
+		Result.Set(rsCnt, rsa)
+	Next
 	'save records to state
-	vm.SetData("vuetifyattributes", rsAttributes.Result)
+	vm.SetData("vuetifyattributes", Result)
 	'update the data table records
-	dtvuetifyattributes.SetDataSource(rsAttributes.Result)
+	dtvuetifyattributes.SetDataSource(Result)
 	dtvuetifyattributes.SetPage("1")
 	'update the attributes counter
-	Dim aCnt As Int = rsAttributes.result.size
+	Dim aCnt As Int = Result.size
 	vm.SetBadgeContent("tbl2customview", aCnt)
 	CompSourceCode
-	vm.HideLoading
 End Sub
 
 Sub BuildNavBar
@@ -962,9 +989,16 @@ Sub BuildNavBar
 	vm.NavBar.Progress.SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
-	vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
+	vm.NavBar.AddIcon("btnclosedrawers", "mdi-exit-to-app", "Close all drawers", "")
+	'
+	'vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
+	'vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
+	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")
+	'
+	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
+	vm.NavBar.AddIcon("btnDatabaseSchema", "mdi-database", "Database Schema", "0")
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnToolbox", "mdi-toolbox","Toolbox", "1")
@@ -1013,13 +1047,29 @@ Sub BuildNavBar
 	
 End Sub
 
+'close all drawers
+Sub btnclosedrawers_click(e As BANanoEvent)
+	vm.Drawer.Hide
+	vm.HideDrawers
+End Sub
+
+'show the database schema
+Sub btnDatabaseSchema_click(e As BANanoEvent)
+	vm.HideDrawers
+	vm.Drawer.Hide
+	tabs.hide
+	contattributes.hide
+	contSchema.Show
+	'
+	vm.CallMethod("LoadTables")
+End Sub
+
 Sub BuildDrawer
 	vm.Drawer.SetClipped(True)
 	vm.Drawer.AddTitleSubTitle("Projects", "")
 	vm.Drawer.SetWidth("430")
 	vm.Drawer.Setabsolute(True)
 	vm.Drawer.SetHideOverlay(True)
-	vm.drawer.SetOpenOnMediumLarge(True)
 	'
 	Dim dtbl As VMToolBar = vm.CreateToolbar("dtbl", Me)
 	dtbl.SetDense(True).SetFlat(True)
@@ -1244,8 +1294,8 @@ Sub ExtractComponents(YesNo As String)
 	End If
 	'
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	isDirty = True 
@@ -1294,8 +1344,8 @@ Sub SaveComponents(YesNo As String)
 		Return
 	End If
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	'get the components
 	Dim compSQL As BANanoAlaSQLE
@@ -1386,8 +1436,8 @@ End Sub
 Sub NewProject
 	Mode = "A"
 	'hide all property bags
-	ShowBag("")
 	vm.HideOtherDrawers(drwprojectdetails.id)
+	vm.Drawer.Hide
 	'show the drawer
 	drwprojectdetails.Container.SetDefaults
 	drwprojectdetails.Show
@@ -1408,6 +1458,7 @@ Sub LoadTables
 	prjSQL.result = db.ExecuteWait(prjSQL.query, prjSQL.args)
 	prjSQL.fromJSON
 	vm.setdata("tablenames", prjSQL.result)
+	vm.SetBadgeContent("btnDatabaseSchema", prjSQL.result.Size)
 End Sub
 
 Sub LoadComponents
@@ -1509,7 +1560,6 @@ End Sub
 
 Sub btnProject_click(e As BANanoEvent)
 	'hide all property bags
-	ShowBag("")
 	Dim prj As Map = vm.getdata("project")
 	Dim pid As String = prj.getdefault("id", "")
 	If pid = "" Then
@@ -1520,8 +1570,11 @@ Sub btnProject_click(e As BANanoEvent)
 	dbtype_change(prj.Get("dbtype"))
 	'show the drawer
 	vm.HideOtherDrawers(drwprojectdetails.id)
-	drwprojectdetails.toggle
 	vm.drawer.hide
+	tabs.show
+	contSchema.hide
+	contattributes.hide
+	drwprojectdetails.toggle
 End Sub
 
 #Region MyComponentsDrawer
@@ -1529,9 +1582,12 @@ Sub CreateMyComponentsDrawer
 	drwcomponents = vm.CreateDrawer("drwcomponents", Me)
 	drwcomponents.AddTitleSubTitle("My Components", "")
 	drwcomponents.Setwidth("450")
-	drwcomponents.Setabsolute(True)
+	drwcomponents.Hide
+	'drwcomponents.Setabsolute(True)
 	'drwcomponents.SetTemporary(True)
 	drwcomponents.SetHideOverlay(True)
+	drwcomponents.SetApp(True)
+	drwcomponents.SetClipped(True)
 	drwcomponents.List.SetDense(True)
 	drwcomponents.List.SetDataSourceTemplate("myux", "id", "avatar", "", "vmodel", "label", "deletecomp")
 	vm.AddDrawer(drwcomponents)
@@ -1547,8 +1603,12 @@ End Sub
 Sub CreateVuetify2B4x
 	drwV2B4x = vm.CreateDrawer("drwv2b4x", Me)
 	drwV2B4x.Setwidth("450")
-	drwV2B4x.Setabsolute(True)
+	'drwV2B4x.Setabsolute(True)
+	'drwV2B4x.SetTemporary(True)
 	drwV2B4x.SetHideOverlay(True)
+	drwV2B4x.SetApp(True)
+	drwV2B4x.SetClipped(True)
+	drwV2B4x.Hide
 	'
 	tblPropx = vm.CreateToolbar("tblvx", Me).SetDense(True).SetVisible(True).SetFlat(True)
 	tblPropx.AddIcon("btnVueExtract", "mdi-mine", "Extract from json files", "0")
@@ -1567,6 +1627,14 @@ Sub CreateVuetify2B4x
 	
 	vm.AddDrawer(drwV2B4x)
 End Sub
+
+Sub tbl2exit_click(e As BANanoEvent)
+	drwV2B4x.Hide
+	contattributes.Hide
+	contSchema.hide
+	tabs.show
+End Sub
+
 
 'generate constra
 Sub btnVueClassNames_click(e As BANanoEvent)
@@ -2056,9 +2124,11 @@ End Sub
 Sub CreatePropertyBagsDrawer
 	drwbags = vm.CreateDrawer("drwbags", Me)
 	drwbags.Setwidth("450")
-	drwbags.Setabsolute(True)
-	'drwbags.SetTemporary(True)
+	'drwbags.Setabsolute(True)
+	drwbags.SetApp(True)
 	drwbags.SetHideOverlay(True)
+	drwbags.Hide
+	drwbags.SetClipped(True)
 	'drwbags.SetTemporary(True)
 	'
 	'create a toolbar to save and delete the property bag
@@ -2131,10 +2201,12 @@ Sub CreateToolBarDrawer
 	drwtoolbox = vm.CreateDrawer("drwtoolbox", Me)
 	drwtoolbox.AddTitleSubTitle("Toolbox", "")
 	drwtoolbox.Setwidth("430")
-	drwtoolbox.Setabsolute(True)
+	'drwtoolbox.Setabsolute(True)
+	drwtoolbox.SetApp(True)
 	'drwtoolbox.SetTemporary(True)
 	drwtoolbox.SetHideOverlay(True)
-	drwtoolbox.Show
+	drwtoolbox.Hide
+	drwtoolbox.SetClipped(True)
 	
 	ep = vm.CreateExpansionpanels("ep1", Me).SetAccordion(True)
 	ep.SetVisible(True).SetFlat(True).SetFocusable(True).SetTile(True)
@@ -2157,6 +2229,7 @@ End Sub
 
 Sub dbtype_change(chosen As String)
 	vm.SetBadgeContent("btnDbConnect", "0")
+	vm.SetBadgeContent("btnDatabaseSchema", "0")
 	vm.ShowItem("btnDbConnect")
 	'vm.HideItem("btnDbCreate")
 	'vm.HideItem("btnDbDelete")
@@ -2212,17 +2285,16 @@ End Sub
 
 Sub btnDbConnect_click(e As BANanoEvent)
 	'clear the treeview
-	tvtables.clear
-	tvtables.Refresh
 	vue.setdata("selectedtable", "")
-	tbltoolbar2.UpdateTitle("Database")
+	dtschema.SetDatasource(vm.newlist)
+	vm.setdata("tablenames", vm.newlist)
+	tbltoolbar2x.UpdateTitle("Database")
 	vue.hideitem("tbltransfer")
 	vm.setdata("currenttables", vue.newlist)
-	vue.setdata("tablestotransfer", vue.newmap)
-	contdbadmin.Show
+	contSchema.Show
 	tabs.Hide
 	contattributes.hide
-	
+		
 	'get the record to create/update
 	Dim Record As Map = drwprojectdetails.Container.GetData
 	'validate the record
@@ -2245,7 +2317,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 	'
 	If sdatabasename.Contains("/") Then
 		Dim sSuffix As String = vue.mvfield(sdatabasename,-1,"/")
-		tbltoolbar2.UpdateTitle(vue.propercase(sSuffix))
+		tbltoolbar2x.UpdateTitle(vue.propercase(sSuffix))
 	End If
 	
 	Select Case sdbtype
@@ -2265,6 +2337,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		Dim tTables As Int = rsMSSQL.Result.Size
 		tTables = BANano.parseint(tTables)
 		vm.SetBadgeContent("btnDbConnect", tTables)
+			vm.SetBadgeContent("btnDatabaseSchema", tTables)
 		If tTables = 0 Then
 			vm.SetBadgeColor("btnDbConnect", vue.COLOR_RED, vue.INTENSITY_NORMAL)
 		Else
@@ -2293,23 +2366,6 @@ Sub btnDbConnect_click(e As BANanoEvent)
 			End If
 		Next
 		'
-		'add to the tree
-		tvtables.AddItem("", sdatabasename, sdatabasename, "", "mdi-database", False)
-		For Each k As String In lTables.keys
-			Dim flds As List = lTables.get(k)
-			'add the table
-			Dim tKey As String = $"${sdatabasename}~${k}"$
-			tKey = tKey.tolowercase
-			tvtables.AddItem(sdatabasename, tKey, K, "", "mdi-table", False)
-			For Each fld As Map In flds
-				Dim sfld As String = fld.get("column_name")
-				'make field lowercase
-				sfld = sfld.tolowercase
-				Dim fldKey As String = $"${tKey}~${sfld}"$
-				tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
-			Next
-		Next
-		tvtables.Refresh
 		'save list of tables
 		vm.setdata("currenttables", lTables)
 		Return
@@ -2377,6 +2433,7 @@ Sub btnDbConnect_click(e As BANanoEvent)
 				Dim tTables As Int = rsTables.Result.Size
 				tTables = BANano.parseint(tTables)
 				vm.SetBadgeContent("btnDbConnect", tTables)
+					vm.SetBadgeContent("btnDatabaseSchema", tTables)
 				If tTables = 0 Then
 					vm.SetBadgeColor("btnDbConnect", vue.COLOR_RED, vue.INTENSITY_NORMAL)
 				Else
@@ -2404,27 +2461,16 @@ Sub btnDbConnect_click(e As BANanoEvent)
 					End If
 				Next
 				'
-				'add to the tree
-				tvtables.AddItem("", sdatabasename, sdatabasename, "", "mdi-database", False)
-				For Each k As String In lTables.keys
-					Dim flds As List = lTables.get(k)
-					'add the table
-					Dim tKey As String = $"${sdatabasename}~${k}"$
-					tKey = tKey.tolowercase
-					tvtables.AddItem(sdatabasename, tKey, K, "", "mdi-table", False)
-					For Each fld As Map In flds
-						Dim sfld As String = fld.get("Field")
-						sfld = sfld.tolowercase
-						Dim fldKey As String = $"${tKey}~${sfld}"$
-						tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
-					Next
-				Next	
-				tvtables.Refresh
-				'	save list of tables
+				'save list of tables
 				vm.setdata("currenttables", lTables)
 			End If
 		End If	
 	End Select
+	'
+	SaveDatabaseSchema
+	
+	vm.HideDrawers
+	vm.Drawer.Hide
 End Sub
 
 'sqlite database is opened
@@ -2445,6 +2491,7 @@ Sub sqlite_opened
 	Dim tTables As Int = rsTables.Result.Size
 	tTables = BANano.parseint(tTables)
 	vm.SetBadgeContent("btnDbConnect", tTables)
+	vm.SetBadgeContent("btnDatabaseSchema", tTables)
 	If tTables = 0 Then
 		vm.SetBadgeColor("btnDbConnect", vue.COLOR_RED, vue.INTENSITY_NORMAL)
 	Else
@@ -2465,21 +2512,6 @@ Sub sqlite_opened
 		lTables.put(stable_name, rsFields.ReSult)
 	Next
 	'add to the tree
-	tvtables.AddItem("", sSuffix, sSuffix, "", "mdi-database", False)
-	For Each k As String In lTables.keys
-		Dim flds As List = lTables.get(k)
-		'add the table
-		Dim tKey As String = $"${sSuffix}~${k}"$
-		tKey = tKey.tolowercase
-		tvtables.AddItem(sSuffix, tKey, K, "", "mdi-table", False)
-		For Each fld As Map In flds
-			Dim sfld As String = fld.get("name")
-			sfld = sfld.tolowercase
-			Dim fldKey As String = $"${tKey}~${sfld}"$
-			tvtables.AddItem(tKey, fldKey, sfld, "", "mdi-file-document-outline", False)
-		Next
-	Next
-	tvtables.Refresh
 	'	save list of tables
 	vm.setdata("currenttables", lTables)	
 End Sub
@@ -2578,13 +2610,20 @@ Sub CreateProjectDrawer
 	drwprojectdetails = vm.CreateDrawer("drwprojectdetails", Me)
 	drwprojectdetails.AddTitleSubTitle("Project","Project Configuration")
 	drwprojectdetails.Setwidth("430")
-	drwprojectdetails.Setabsolute(True)
+	'drwprojectdetails.Setabsolute(True)
+	drwprojectdetails.SetApp(True)
+	drwprojectdetails.Hide
+	drwprojectdetails.SetHideOverlay(True)
+	drwprojectdetails.SetClipped(True)
+	'drwprojectdetails.SetTemporary(True)
 	'
 	Dim ptbl As VMToolBar = vm.CreateToolbar("ptbl", Me)
 	ptbl.SetDense(True).SetFlat(True)
 	ptbl.AddSpacer
 	ptbl.AddIcon1("btnDbImport", "mdi-plus", "", "Import SQLite Database","")
 	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","0")
+	'
+	dtschema.SetDataSource(vm.newlist)
 	'ptbl.AddIcon1("btnDbCreate", "mdi-database-plus", "", "Create the database","")
 	'ptbl.AddIcon1("btnDbDelete", "mdi-database-remove", "", "Delete the database","")
 	'ptbl.AddIcon1("btnDbCode", "mdi-code-braces", "", "Connection Settings","")
@@ -2813,8 +2852,8 @@ End Sub
 
 Sub btnLandScape_click(e As BANanoEvent)
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	vm.ToggleNamedState("landscape", "Yes", "No")
 	Dim sState As String = vm.getdata("landscape")
@@ -2833,7 +2872,7 @@ End Sub
 Sub btnMatrix_click(e As BANanoEvent)
 	vm.ToggleNamedState("showmatrix", "Yes", "No")
 	tabs.show
-	contdbadmin.hide
+	contSchema.hide
 	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
@@ -2842,8 +2881,8 @@ End Sub
 Sub btnBorder_click(e As BANanoEvent)
 	vm.togglenamedstate("hasborder", "Yes", "No")
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	CreateUX	
 End Sub
@@ -2980,6 +3019,7 @@ Sub CreateUX
 	'
 	'make it a div
 	ui = vm.CreateContainer("ui", Me).SetTag("div")
+	ui.AddClass("mx-0").AddClass("my-0")
 	ui.SetDesignMode(True)
 	ui.ShowMatrix = bShowMatrix
 	ui.HasBorder = bHasBorder
@@ -4490,31 +4530,31 @@ Sub Design_Select
 		Case "select"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+				Dim sel As VMSelect = ui.NewSelectOptions(Me, True, sname, svmodel, sTitle, bisRequired, bisMultiple, _
 						sPlaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+				Dim sel As VMSelect = ui.NewSelectDataSource(Me, True, sname, svmodel, sTitle, bisRequired, bisMultiple, _
 						sPlaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			End If
 		Case "combo"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewComboOptions(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+				Dim sel As VMSelect = ui.NewComboOptions(Me, True, sname, svmodel, sTitle, bisRequired, bisMultiple, _
 						sPlaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+				Dim sel As VMSelect = ui.NewComboDataSource(Me, True, sname, svmodel, sTitle, bisRequired, bisMultiple, _
 						sPlaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			End If
 		Case "auto"
 			If buseoptions Then
 				Dim optionsm As Map = vm.keyvalues2map(",", skeys, svalues)
-				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+				Dim sel As VMSelect = ui.NewAutoCompleteOptions(Me, True, sname, svmodel, sTitle, bisRequired, bisMultiple, _
 						sPlaceholder, optionsm, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			Else
 				'use data source
-				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, sname, svmodel, stitle, bisRequired, bisMultiple, _
+				Dim sel As VMSelect = ui.NewAutoCompleteDataSource(Me, True, sname, svmodel, sTitle, bisRequired, bisMultiple, _
 						sPlaceholder, ssourcetable, ssourcefield, sdisplayfield, bisReturnobject, shelpertext, serrortext, sTabindex)
 			End If
 	End Select
@@ -5644,23 +5684,23 @@ Sub Design_Drawer
 	drw.SetcolorIntensity(sColor,sintensity)
 	drw.Setminivariantwidth(sminivariantwidth)
 	drw.Setmobilebreakpoint(smobilebreakpoint)
-	drw.Setoverlaycolor(soverlaycolor)
-	drw.Setoverlayopacity(soverlayopacity)
+	drw.Setoverlaycolor(sOverlaycolor)
+	drw.Setoverlayopacity(sOverlayopacity)
 	drw.Setsrc(ssrc)
-	drw.Settag(stag)
+	drw.Settag(sTag)
 	drw.Setheight(sHeight)
 	drw.Setwidth(sWidth)
-	drw.Setabsolute(bisabsolute)
-	drw.Setapp(bisapp)
-	drw.Setbottom(bisbottom)
+	drw.Setabsolute(bisAbsolute)
+	drw.Setapp(bisApp)
+	drw.Setbottom(bisBottom)
 	drw.Setclipped(bisclipped)
 	drw.Setdark(bisDark)
 	drw.Setdisableresizewatcher(bisdisableresizewatcher)
 	drw.Setdisableroutewatcher(bisdisableroutewatcher)
 	drw.Setexpandonhover(bisexpandonhover)
-	drw.Setfixed(bisfixed)
+	drw.Setfixed(bisFixed)
 	drw.Setfloating(bisfloating)
-	drw.Sethideoverlay(bishideoverlay)
+	drw.Sethideoverlay(bisHideoverlay)
 	drw.Setlight(bisLight)
 	drw.Setminivariant(bisminivariant)
 	drw.Setpermanent(bispermanent)
@@ -5754,7 +5794,7 @@ Sub Design_Drawer
 	CodeLine2(sb, sColor, sintensity, "s", prefix, suffix, "SetColorIntensity")
 	CodeLine(sb, sminivariantwidth, "s", prefix, suffix, "Setminivariantwidth")
 	CodeLine(sb, smobilebreakpoint, "s", prefix, suffix, "Setmobilebreakpoint")
-	CodeLine(sb, soverlaycolor, "s", prefix, suffix, "Setoverlaycolor")
+	CodeLine(sb, sOverlaycolor, "s", prefix, suffix, "Setoverlaycolor")
 	'
 	CodeLine(sb, "mt-" & smargintop, "s", prefix, suffix, "AddClass")
 	CodeLine(sb, "mb-" & smarginbottom, "s", prefix, suffix, "AddClass")
@@ -6147,6 +6187,7 @@ Sub Design_Dialog
 		sb.append($"Dim Record As Map = ${rsName}.result.get(0)"$).append(CRLF)
 		AddComment(sb, "update the state, this updates the v-model(s) for each input control")
 		sb.append($"vm.SetState(Record)"$).append(CRLF)
+		AddCode(sb, $"vm.SetFocus()"$)
 	Case "sendcredentials"
 		AddComment(sbEvents, "read the contents!")
 		AddCode(sbEvents, $"Dim sfirstname As String = Record.get(?)"$)
@@ -6252,6 +6293,13 @@ Sub Design_Dialog
 			AddCode(sb, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 		End Select
 		AddCode(sb, $"${rsName}.FromJSON"$)
+		'
+		AddCode(sb, $"Select Case ${rsName}.OK"$)
+		AddCode(sb, $"Case False"$)
+		AddCode(sb, $"Dim strError As String = ${rsName}.Error"$)
+		AddCode(sb, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$) 
+		AddCode(sb, $"vm.SetFocus()"$) 
+		AddCode(sb, "End Select")
 	Case "save"
 		AddComment(sb, "read record id")
 		sb.append($"Dim RecID As String = Record.Get("${sprimarykey}")"$).append(CRLF)
@@ -6288,6 +6336,15 @@ Sub Design_Dialog
 			AddCode(sb, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 		End Select
 		AddCode(sb, $"${rsName}.FromJSON"$)
+		'	
+		AddCode(sb, $"Select Case ${rsName}.OK"$)
+		AddCode(sb, $"Case False"$)
+		AddCode(sb, $"Dim strError As String = ${rsName}.Error"$)
+		AddCode(sb, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$)
+		AddCode(sb, $"vm.SetFocus()"$)
+		AddCode(sb, "End Select")
+
+		
 		sb.append($"End Select"$).append(CRLF)
 	Case "delete"
 	End Select
@@ -6926,7 +6983,7 @@ Sub Design_ToolBar
 		CodeLine(sb, bisfloating, "b", "vm.NavBar", "", "SetFloating")
 		CodeLine(sb, bisHideonscroll, "b", "vm.NavBar", "", "SetHideOnScroll")
 		CodeLine(sb, bisinvertedscroll, "b", "vm.NavBar", "", "SetInvertedScroll")
-		CodeLine(sb, bisprominent, "b", "vm.NavBar", "", "SetProminent")
+		CodeLine(sb, bisProminent, "b", "vm.NavBar", "", "SetProminent")
 		CodeLine(sb, bisscrolloffscreen, "b", "vm.NavBar", "", "SetScrollOffScreen")
 		CodeLine(sb, bisshort, "b", "vm.NavBar", "", "SetShort")
 		CodeLine(sb, bisshrinkonscroll, "b", "vm.NavBar", "", "SetShrinkOnScroll")
@@ -7503,8 +7560,8 @@ End Sub
 
 Sub btnRefresh_click(e As BANanoEvent)
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vue.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7577,8 +7634,8 @@ Sub fucomponent_change(e As BANanoEvent)
 		compSQL.FromJSON
 	Next
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
@@ -7660,7 +7717,7 @@ End Sub
 
 'remove last comp item
 Sub RemoveLastCompItem
-	ShowBag("")
+	vm.hidedrawers
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("components", "id")
@@ -7682,15 +7739,15 @@ Sub RemoveLastCompItem
 	End If
 	isDirty = True
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
 
 'clear the contents of the grid
 Sub ClearComp
-	ShowBag("")
+	vm.Hidedrawers
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("components", "id")
@@ -7699,7 +7756,7 @@ Sub ClearComp
 	rsSQL.FromJSON
 	vm.setdata("tableitems", vm.newlist)
 	tabs.show
-	contdbadmin.hide
+	contSchema.hide
 	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
@@ -7707,7 +7764,7 @@ End Sub
 
 'remove last grid item
 Sub RemoveLastGridItem
-	ShowBag("")
+	vm.HideDrawers
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("grid", "id")
@@ -7729,15 +7786,15 @@ Sub RemoveLastGridItem
 	End If
 	isDirty = True
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
 
 'clear the contents of the grid
 Sub ClearGrid
-	ShowBag("")
+	vm.HideDrawers
 	Dim rsSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	rsSQL.Initialize("grid", "id")
@@ -7745,7 +7802,7 @@ Sub ClearGrid
 	rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 	rsSQL.FromJSON
 	tabs.show
-	contdbadmin.hide
+	contSchema.hide
 	contattributes.hide
 	vm.setdata("devspace", 0)
 	CreateUX
@@ -7753,14 +7810,16 @@ End Sub
 
 'create the layout of the page
 Sub DesignLayout
-	vm.Container.AddRows(1)
-	vm.Container.AddColumns(1,3,3,3,3)
-	vm.Container.AddColumns(1,9,9,9,9)
+	vm.Container.AddRows(1).AddColumns12
+	'vm.Container.AddColumns(1,3,3,3,3)
+	'vm.Container.AddColumns(1,9,9,9,9)
+	'vm.Container.SetNoGutters(True)
+	
 	'
-	Dim lblProject As VMLabel = vm.NewLabel(False, "lblProject", vm.NavBar.TitleVModel, vm.SIZE_H1, "BVMDesigner")
-	lblProject.SetFontFamily("Market Web").SetFontSize("50px")
-	lblProject.SetStyleSingle("writing-mode", "tb-rl")
-	vm.container.AddComponent(1, 1, lblProject.tostring)
+	'Dim lblProject As VMLabel = vm.NewLabel(False, "lblProject", vm.NavBar.TitleVModel, vm.SIZE_H1, "BVMDesigner")
+	'lblProject.SetFontFamily("Market Web").SetFontSize("50px")
+	'lblProject.SetStyleSingle("writing-mode", "tb-rl")
+	'vm.container.AddComponent(1, 1, lblProject.tostring)
 	
 	tabs = vm.CreateTabs("tabsd", Me).SetGrow(True).SetIconsAndText(True).SetCentered(True).SetVModel("devspace")
 	tabs.SetTransition(vm.TRANSITION_SLIDE_X)
@@ -7805,47 +7864,80 @@ Sub DesignLayout
 	schemaDT.SetItemsperpage("100")
 	schemaDT.SetPage("1")
 	schemaDT.SetSingleselect(True)
-	schemaDT.AddButtonIcon("schemaDB", "mdi-database", "", "Database Schema")
+	schemaDT.SetDense(True)
+	schemaDT.AddButtonIcon("closedrawers", "mdi-exit-to-app", "", "Close drawers")
+	schemaDT.AddButtonIcon("schemaDBSave", "mdi-content-save", "", "Save Database Schema")
+	schemaDT.AddButtonIcon("schemaDB", "mdi-database", "", "Table Schema")
 	schemaDT.AddButtonIcon("schemalisting", "mdi-file-outline", "", "Table Listing")
 	schemaDT.AddButtonIcon("formlisting", "mdi-laptop", "", "Form Listing")
-	schemaDT.AddButtonIcon("builderlisting", "build", "", "Builder Listing")
 	schemaDT.AddButtonIcon("schemaReset", "mdi-restart", "", "Reset")
-	
-	schemaDT.AddColumns(CreateMap("key": "Name", "title": "Title", "subtitle": "Type", "colwidth": "Width"))
-	schemaDT.AddColumns(CreateMap("colalign": "Align", "colcontroltype": "Component", "coldatatype": "Data Type", "collength": "Length",  "colvalue": "Value"))
-	schemaDT.AddColumns(CreateMap("colsortable": "Sortable", "colrequired": "Required", "colvisible": "Visible", "colactive": "Active", "colontable": "On Table","colishidedetails":"Hide Details"))
-	schemaDT.AddColumns(CreateMap("colindexed": "Indexed", "colvaluedisplay": "Value / Display"))
-	
-	schemaDT.AddColumns(CreateMap("colrow": "R"))
-	schemaDT.AddColumns(CreateMap("colcolumn": "C"))
+	'
+	schemaDT.AddColumn("key", "Name")
+	schemaDT.AddColumn("title", "Title")
+	schemaDT.AddColumns(CreateMap("subtitle": "Type", "colwidth": "Width"))
+	schemaDT.AddColumn("collength", "Length")
+	schemaDT.AddColumn("coldatatype", "Field Type")
+	schemaDT.AddColumn("colcontroltype", "Component")
+	schemaDT.AddColumns(CreateMap("colalign": "Align"))
+	schemaDT.AddColumn("colvalue", "Value")
+		
+	schemaDT.AddColumn("colrow", "R")
+	schemaDT.AddColumn("colcolumn", "C")
 	schemaDT.AddColumns(CreateMap("coloffsetsmall": "OS"))
 	schemaDT.AddColumns(CreateMap("coloffsetmedium": "OM"))
 	schemaDT.AddColumns(CreateMap("coloffsetlarge": "OL"))
 	schemaDT.AddColumns(CreateMap("coloffsetxlarge": "OX"))
-	schemaDT.AddColumns(CreateMap("colsizesmall": "SS"))
-	schemaDT.AddColumns(CreateMap("colsizemedium": "SM"))
-	schemaDT.AddColumns(CreateMap("colsizelarge": "SL"))
-	schemaDT.AddColumns(CreateMap("colsizexlarge": "SX"))
+	schemaDT.AddColumn("colsizesmall", "SS")
+	schemaDT.AddColumn("colsizemedium", "SM")
+	schemaDT.AddColumn("colsizelarge", "SL")
+	schemaDT.AddColumn("colsizexlarge", "SX")
 	'
-	schemaDT.AddColumns(CreateMap("colscope": "Scope"))
-	schemaDT.AddColumns(CreateMap("colfieldtype": "Field Type"))
-	schemaDT.AddColumns(CreateMap("coldefaultvalue": "Default Value"))
-	schemaDT.AddColumns(CreateMap("subtitle1": "Description"))
-	schemaDT.AddColumns(CreateMap("colminrange": "Min Range"))
-	schemaDT.AddColumns(CreateMap("colmaxrange": "Max Range"))
-	schemaDT.AddColumns(CreateMap("collist": "List / Parameters"))
-	schemaDT.AddColumns(CreateMap("coltype": "Type"))
-	schemaDT.AddColumns(CreateMap("colsetranges": "Set Ranges"))
-	schemaDT.AddColumns(CreateMap("colhasset": "Set"))
-	schemaDT.AddColumns(CreateMap("colhasget": "Get"))
-	's
+	schemaDT.AddColumn("colprimarykey", "PriKey")
+	schemaDT.AddColumn("colautoincrement", "AutoInc")
+	schemaDT.AddColumn("colisautofocus", "Focus")
+	schemaDT.AddColumn("colontable", "OnTable")
+	schemaDT.AddColumn("coldisplayvalue", "DisplayValue")
+	schemaDT.AddColumn("colnoduplicate", "Unique")
+	schemaDT.AddColumn("colsortable", "Sortable")
+	schemaDT.AddColumn("colindexed", "Indexed")
+	schemaDT.AddColumn("colrequired", "Required")
+	schemaDT.AddColumn("colvisible", "Visible")
+	schemaDT.AddColumn("colishidedetails", "HideDetails")
+	schemaDT.AddColumn("colactive", "Active")
+	'
+	schemaDT.AddColumn("colislookup", "LookUp")
+	schemaDT.AddColumn("colforeigntable", "ForeignTable")
+	schemaDT.AddColumn("colforeignkey", "ForeignKey")
+	schemaDT.AddColumn("colforeignvalue", "ForeignValue")
+	'
+	schemaDT.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
+	schemaDT.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
+	schemaDT.SetColumnsSwitch(Array("colrequired","colvisible","colislookup"))
+	schemaDT.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed"))
+	'
+	schemaDT.AddEditDialog("title",False)
+	schemaDT.AddEditDialog("collength",False)
+	schemaDT.AddEditDialog("colrow",False)
+	schemaDT.AddEditDialog("colcolumn",False)
+	schemaDT.AddEditDialog("colsizesmall",False)
+	schemaDT.AddEditDialog("colsizemedium",False)
+	schemaDT.AddEditDialog("colsizelarge",False)
+	schemaDT.AddEditDialog("colsizexlarge",False)
+	schemaDT.AddEditDialog("colvalue", False)
+	'
+	schemaDT.AddEditDialogCombo("colcontroltype",False, "ct", "text", "value", False)
+	schemaDT.AddEditDialogCombo("colforeigntable",False,"tablenames","tablename","tablename",False)
+	schemaDT.AddEditDialogCombo("colforeignkey",False,"fields","key","key",False)
+	schemaDT.AddEditDialogCombo("colforeignvalue",False,"fields","key","key",False)
+	
+	schemaDT.AddSaveCancelOpenClose
+	'
 	schemaDT.SetEdit(True)
 	schemaDT.SetDelete(True)
 	schemaDT.SetIconDimensions1("edit", "24px", "success","80")
 	schemaDT.SetIconDimensions1("delete", "24px", "error","80")
 	schemaDT.SetDataSourceName("tableitems")
-	'make switches
-	schemaDT.SetColumnsSwitch(Array("colsortable", "colrequired", "colvisible", "colactive", "colontable", "colishidedetails"))
+	
 	schema.AddComponent(1, 1, schemaDT.ToString)
 	'create the preview
 	'previewTB = vm.CreateDataTable("previewSchema", "key", Me)
@@ -7874,81 +7966,124 @@ Sub DesignLayout
 	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
 	tabs.AddTab("schemaarea", "Schema", "mdi-database", schema)
 	
-	vm.container.AddComponent(1, 2, tabs.tostring)
+	vm.container.AddComponent(1, 1, tabs.tostring)
 	'
-	CreateDBAdmin
 	CreateVuetifyAdmin
+	CreateSchema
+End Sub
+
+Sub closedrawers_click(e As BANanoEvent)
+	vm.drawer.Hide
+	vm.HideDrawers
+End Sub
+
+Sub schemaDBSave_click(e As BANanoEvent)
+	Dim schemaData As List = schemaDT.getdata
+	vm.SetData("tableitems", schemaData)
+	schemaDT.SetDataSourceName("tableitems")
+	SavePropertyBag
+End Sub
+
+'change the foreign table, update the other 2 columns
+Sub schemadt_colforeigntable_change(item As Map)
+	'get the table name to process
+	Dim scolforeigntable As String = item.get("colforeigntable")
+	If scolforeigntable = "" Then Return
+	'
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("tables", "tablename")
+	prjSQL.Read(scolforeigntable)
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	'
+	Dim Result As List = prjSQL.Result
+	Dim rec As Map = Result.Get(0)
+	Dim fieldsJSON As String = rec.get("fields")
+	Dim fields As List = BANano.FromJson(fieldsJSON)
+	vm.setdata("fields", fields)
+End Sub
+
+Sub schemadt_save(item As Map)
+	Log("save")
+	Log(item)
+End Sub
+
+Sub schemadt_cancel(item As Map)
+	Log("cancel")
+	Log(item)
+End Sub
+
+Sub schemadt_open
+	
+End Sub
+
+Sub schemadt_close
+
 End Sub
 
 
 'table row click
-Sub schemaDT_colontable(item As Map)
+Sub schemaDT_change(item As Map)
 	Dim skey As String = item.getdefault("key", "")
 	If skey = "" Then Return
 	UpdateRecord(item, skey)
+	'
+	Dim scolprimarykey As String = item.getdefault("colprimarykey","No")
+	If scolprimarykey = "Yes" Then
+		vm.setdata("itemkey", skey)
+	End If
+	'
+	Dim scoldisplayvalue As String = item.getdefault("coldisplayvalue","No")
+	If scoldisplayvalue = "Yes" Then
+		vm.SetData("displayfield", skey)
+		vm.Setdata("confirmfield", skey)
+		vm.SetData("islookup", "Yes")
+	End If
+	'
+	Dim scolautoincrement As String = item.getdefault("colautoincrement", "No")
+	If scolautoincrement = "Yes" Then
+		vm.setdata("isautoincrement", "Yes") 
+	End If
 End Sub
 
-Sub UpdateRecord(item As Map, sKey As String)
+Sub UpdateRecord(item As Map, skey As String)
 	Dim scolontable As String = item.get("colontable")
 	Dim scolactive As String = item.get("colactive")
 	Dim scolvisible As String = item.get("colvisible")
 	Dim scolsortable As String = item.get("colsortable")
 	Dim scolrequired As String = item.get("colrequired")
 	Dim scolishidedetails As String = item.get("colishidedetails")
+	Dim scolnoduplicate As String = item.get("colnoduplicate")
+	Dim scolprimarykey As String = item.get("colprimarykey")
+	Dim scoldisplayvalue As String = item.get("coldisplayvalue")
+	Dim scolautoincrement As String = item.get("colautoincrement")
+	Dim scolindexed As String = item.get("colindexed")
+	Dim scolislookup As String = item.get("colislookup")
+	'		
 	item.put("itemscolontable", scolontable)
 	item.put("itemscolactive", scolactive)
 	item.put("itemscolvisible", scolvisible)
 	item.put("itemscolsortable", scolsortable)
 	item.put("itemscolrequired", scolrequired)
 	item.put("itemscolishidedetails", scolishidedetails)
+	item.put("itemscolnoduplicate", scolnoduplicate)
+	item.put("itemscolprimarykey",scolprimarykey)
+	item.put("itemscoldisplayvalue", scoldisplayvalue)
+	item.put("itemscolautoincrement", scolautoincrement)
+	item.put("itemscolindexed", scolindexed)
+	item.put("itemscolislookup", scolislookup)	
+	'
 	'read the existing items
 	Dim contents As List = vue.GetData("tableitems")
 	'does the record exist
-	Dim rpos As Int = vm.ListOfMapsRecordPos(contents, "key", sKey)
+	Dim rpos As Int = vm.ListOfMapsRecordPos(contents, "key", skey)
 	rpos = BANano.parseInt(rpos)
 	If rpos <> -1 Then
 		contents.Set(rpos, item)
 		vue.SetData("tableitems", contents)
 		SavePropertyBag
 	End If	
-End Sub
-
-
-'table row click
-Sub schemaDT_colactive(item As Map)
-	Dim skey As String = item.getdefault("key", "")
-	If skey = "" Then Return
-	UpdateRecord(item, skey)
-End Sub
-
-
-'table row click
-Sub schemaDT_colvisible(item As Map)
-	Dim skey As String = item.getdefault("key", "")
-	If skey = "" Then Return
-	UpdateRecord(item, skey)
-End Sub
-
-
-'table row click
-Sub schemaDT_colsortable(item As Map)
-	Dim skey As String = item.getdefault("key", "")
-	If skey = "" Then Return
-	UpdateRecord(item, skey)
-End Sub
-
-
-'table row click
-Sub schemaDT_colrequired(item As Map)
-	Dim skey As String = item.getdefault("key", "")
-	If skey = "" Then Return
-	UpdateRecord(item, skey)
-End Sub
-
-Sub schemaDT_colishidedetails(item As Map)
-	Dim skey As String = item.getdefault("key", "")
-	If skey = "" Then Return
-	UpdateRecord(item, skey)
 End Sub
 
 
@@ -7967,13 +8102,12 @@ Sub CreateVuetifyAdmin
 		
 	CreateDataTable_vuetifyattributes
 	
-	vm.container.AddComponent(1, 2, contattributes.tostring)
+	vm.container.AddComponent(1, 1, contattributes.tostring)
 
 End Sub
 
 'generate the source code for the component
 Sub CompSourceCode
-	vm.ShowLoading
 	'get the component to process
 	Dim scomp As String = vue.getdata("vuetifycomponent")
 	'get the attributes for this component..
@@ -7985,7 +8119,25 @@ Sub CompSourceCode
 	rsAttributes.SelectWhere(Array("*"), qw, Array("="), Array("name"))
 	rsAttributes.result = db.ExecuteWait(rsAttributes.query, rsAttributes.args)
 	rsAttributes.FromJSON
-	'
+	Dim Result As List = rsAttributes.Result
+	Dim rsCnt As Int = 0
+	Dim rsTot As Int = Result.size - 1
+	For rsCnt = 0 To rsTot
+		Dim rsa As Map = Result.Get(rsCnt)
+		Dim sactive As String = rsa.getdefault("active", "No")
+		Dim sonsub As String = rsa.getdefault("onsub", "No")
+		sactive = vm.cstr(sactive)
+		sactive = sactive.tolowercase
+		sonsub = vm.cstr(sonsub)
+		sonsub = sonsub.tolowercase
+		If sactive = "true" Then sactive = "Yes"
+		If sactive = "false" Then sactive = "No"
+		If sonsub = "true" Then sonsub = "Yes"
+		If sonsub = "false" Then sonsub = "No"
+		rsa.put("active", sactive)
+		rsa.put("onsub", sonsub)
+		Result.Set(rsCnt, rsa)
+	Next
 	Dim bComp As String = vm.BeautifyName(scomp)
 	
 	'signature
@@ -8010,12 +8162,12 @@ Sub CompSourceCode
 	AddCode(sbi, $"Dim thisComp As ${bComp}"$)
 	AddCode(sbi, $"thisComp.initialize(Module, elID, elID)"$)
 	'	
-	For Each attrm As Map In rsAttributes.Result
+	For Each attrm As Map In Result
 		Dim sType As String = attrm.get("type")
 		Dim sname As String = attrm.get("name")
 		Dim sdefault As String = attrm.getDefault("default","")
-		Dim bActive As String = attrm.getdefault("active", "false")
-		Dim bOnSub As String = attrm.getdefault("onsub", "false")
+		Dim bActive As String = attrm.getdefault("active", "no")
+		Dim bOnSub As String = attrm.getdefault("onsub", "no")
 		'
 		bActive = vm.cstr(bActive)
 		bOnSub = vm.cstr(bOnSub)
@@ -8023,6 +8175,8 @@ Sub CompSourceCode
 		bOnSub = bOnSub.tolowercase
 		'
 		If bActive = "false" And bOnSub = "false" Then Continue
+		If bActive = "no" And bOnSub = "no" Then Continue
+		'
 		'define the binding
 		Dim bAttr As String = vm.Beautifyname(sname)
 		Dim lAttr As String = bAttr.tolowercase
@@ -8068,7 +8222,7 @@ Sub CompSourceCode
 			End Select
 		End Select
 		
-		If bActive = "true" Then
+		If bActive = "true" Or bActive = "yes" Then
 			Select Case sType
 			Case "string"
 				sbs.append($", s${bAttr} As String"$)
@@ -8113,7 +8267,6 @@ Sub CompSourceCode
 	compCode.SetCode(xcode)
 	'save the code to download later
 	BANano.setsessionstorage("compcode", xcode)
-	vm.HideLoading
 End Sub
 
 Sub compcodecopy_click(e As BANanoEvent)
@@ -8203,13 +8356,6 @@ Sub tbl2customview_click(e As BANanoEvent)
 	vm.hideloading
 End Sub
 
-'exit the attributes screen
-Sub tbl2exit_click(e As BANanoEvent)
-	contattributes.Hide
-	contdbadmin.hide
-	tabs.show
-End Sub
-
 Sub CreateDataTable_vuetifyattributes
 	dtvuetifyattributes = vm.CreateDataTable("dtvuetifyattributes", "key", Me)
 	dtvuetifyattributes.SetTitle("Vuetify Attributes")
@@ -8221,6 +8367,7 @@ Sub CreateDataTable_vuetifyattributes
 	dtvuetifyattributes.SetPage("1")
 	dtvuetifyattributes.SetSingleselect(True)
 	dtvuetifyattributes.SetVisible(True)
+	dtvuetifyattributes.SetDense(True)
 	dtvuetifyattributes.AddIconView("icon", "Icon")
 	dtvuetifyattributes.AddColumn1("name", "Name", "text",0,False,"start")
 	dtvuetifyattributes.AddColumn1("type", "Type", "text",0,False,"start")
@@ -8263,77 +8410,400 @@ Sub dtvuetifyattributes_onsub(item As Map)
 	CompSourceCode
 End Sub
 
-
-Sub CreateDBAdmin
-	contdbadmin.Initialize(vue, "contdbadmin", Me)
-	contdbadmin.SetFluid(True)
-	contdbadmin.SetVisible(False)
-	contdbadmin.SetElevation("1")
-	contdbadmin.SetTransition(vm.TRANSITION_SLIDE_X)
+Sub cboDatabaseTable_change(value As String)
+	If value = "" Then Return
+	'save the table we are processing
+	vm.setdata("mytable", value)
 	'
-	tbltoolbar2 = vm.CreateToolBar("tbltoolbar2", Me)
-	tbltoolbar2.SetToolBar(True)
-	tbltoolbar2.AddTitle("Tables", "")
-	'add a hamburger
-	tbltoolbar2.AddSpacer
-	tbltoolbar2.SetDense(True)
-	tbltoolbar2.SetVisible(True)
-
-	'database to data-table
-	tbltoolbar2.AddIcon1("tbltransfer", "mdi-cog-transfer-outline", "green", "Convert to DataTable", "0")
-	'tbltoolbar2.AddIcon1("tbladd", "mdi-plus", "green", "Add Table", "")
-	'tbltoolbar2.AddIcon1("tbledit", "mdi-square-edit-outline", "amber", "Edit Table", "")
-	'tbltoolbar2.AddIcon1("tbldelete", "mdi-delete-forever-outline", "red", "Delete Table", "")
-	'tbltoolbar2.AddIcon1("tblupdate", "mdi-content-save-move-outline", "cyan", "Update Table", "")
-	tbltoolbar2.AddIcon1("tblexit", "mdi-logout", "orange", "Exit", "")
-
-	contdbadmin.AddControl(tbltoolbar2.ToolBar, tbltoolbar2.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	vm.ShowLoading
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("tables", "tablename")
+	prjSQL.Read(value)
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
 	'
-	'add a treeview
-	tvtables.Initialize(vue, "tvtables", Me)
-	tvtables.SetOnInput("tvtables_input")
-	tvtables.SetActivatable(True)
-	tvtables.SetExpandicon("mdi-chevron-down")
-	tvtables.SetHoverable(True)
-	tvtables.SetOpenonclick(True)
-	tvtables.SetSelectiontype("leaf")
-	tvtables.SetVisible(True)
-	tvtables.SetDense(True)
-	tvtables.SetSelectable(True)
-	tvtables.SetTransition(True)
-	contdbadmin.AddControl(tvtables.TreeView, tvtables.tostring, 2, 1, 0, 0, 0, 0, 6, 6, 6, 6)
-
-	vm.container.AddComponent(1, 2, contdbadmin.tostring)
+	Dim Result As List = prjSQL.Result
+	Dim rec As Map = Result.Get(0)
+	Dim fieldsJSON As String = rec.get("fields")
+		
+	Dim fields As List = BANano.FromJson(fieldsJSON)
+	dtschema.SetDataSource(fields)
+	vm.hideloading
 End Sub
 
-'transfer a database table to a data-table
-private Sub tbltransfer_click(e As BANanoEvent)
-	isDirty = True
-	'get a list of all tables to transfer
-	Dim selTables As Map = vue.getdata("tablestotransfer")
-	'get a list of all tables from the database
-	Dim allTables As List = vm.getdata("currenttables")
+Sub btnSaveMySchema_click(e As BANanoEvent)
+	vm.Showloading
+	'get the table being processed
+	Dim mytable As String = vm.getdata("mytable")
+	'get the data of the table
+	Dim tblList As List = dtschema.getdata
+	'lets fine the auto-increment, primary key and display fields
+	Dim lcolprimarykey As List = vm.newlist
+	Dim lcoldisplayvalue As List = vm.newlist
+	Dim lcolautoincrement As List = vm.newlist
+	'
+	For Each rec As Map In tblList
+		Dim xkey As String = rec.get("key")
+		Dim xcolprimarykey As String = rec.get("colprimarykey")
+		Dim xcoldisplayvalue As String = rec.get("coldisplayvalue")
+		Dim xcolautoincrement As String = rec.get("colautoincrement")
+		'
+		If xcolprimarykey = "Yes" Then lcolprimarykey.add(xkey)
+		If xcoldisplayvalue = "Yes" Then lcoldisplayvalue.add(xkey)
+		If xcolautoincrement = "Yes" Then lcolautoincrement.add(xkey)
+	Next
+	If lcolprimarykey.size > 1 Then 
+		vm.ShowSnackBarError("You have more than 1 primary key defined, there should be 1 only!")
+		vm.HideLoading
+		Return
+	else if lcolprimarykey.size = 0 Then
+		vm.ShowSnackBarError("You have to select at least 1 primary key!")
+		vm.HideLoading
+		Return		
+	End If
+	If lcoldisplayvalue.size > 1 Then
+		vm.ShowSnackBarError("You have more than 1 display value key defined, there should be 1 only!")
+		vm.HideLoading
+		Return
+	else if lcoldisplayvalue.size = 0 Then
+		vm.ShowSnackBarError("You have to select at least 1 display value!")
+		vm.HideLoading
+		Return
+	End If
+	If lcolautoincrement.size > 1 Then
+		vm.ShowSnackBarError("You have more than 1 auto-increment key defined, there should be 1 only!")
+		vm.HideLoading
+		Return
+	End If
+	'join the fields, we need to update the table
+	Dim scolprimarykey As String = vm.Join("", lcolprimarykey)
+	Dim scoldisplayvalue As String = vm.join("", lcoldisplayvalue)
+	Dim scolautoincrement As String = vm.Join("", lcolautoincrement)
+	'convert the fields to json
+	Dim tblJSON As String = BANano.tojson(tblList)
+	'save to the database
+	Dim rec As Map = CreateMap()
+	rec.put("fields", tblJSON)
+	rec.put("tablename", mytable)
+	rec.put("primarykey", scolprimarykey)
+	rec.put("displayfields", scoldisplayvalue)
+	rec.put("autoincrement", scolautoincrement)
+	'open the database and write the record
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("tables", "tablename")
+	prjSQL.Update1(rec, mytable)
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	vm.hideloading
+	If prjSQL.ok = False Then
+		vm.ShowSnackBarError("An error was encountered saving the table: " & prjSQL.error)
+	End If
+End Sub
+
+'transfer content to data-table
+Sub tbltransfer1_click(e As BANanoEvent)
+	vm.Showloading
+	'get the table being processed
+	Dim tbKey As String = vm.getdata("mytable")
+	'read the table from the database
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("tables", "tablename")
+	prjSQL.Read(tbKey)
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	'
+	Dim Result As List = prjSQL.Result
+	Dim rec As Map = Result.Get(0)
+	Dim sfieldsJSON As String = rec.get("fields")
+	Dim sprimarykey As String = rec.get("primarykey")
+	Dim sdisplayfields As String = rec.get("displayfields")
+	Dim sautoincrement As String = rec.get("autoincrement")
+	'
+	Dim sing As String = vm.propercase(tbKey)
+	sing = sing.Replace(" ","")
+	sing = sing.trim
+	'	
+	'add the table as a component
+	Dim recID As String = DateTime.now
+	Dim nTable As Map = CreateMap()
+	nTable.put("id", recID)
+	nTable.put("controltype", "table")
+	nTable.put("parent", "vm.Container")
+	nTable.put("parentid", "vm.Container")
+	nTable.put("vmodel", tbKey)
+	nTable.put("name", tbKey)
+	nTable.put("label", vue.propercase(tbKey))
+	nTable.Put("selecttype", "all")
+	nTable.put("itemsperpage", "10")
+	nTable.put("itemkey", sprimarykey)
+	nTable.put("confirmfield", sdisplayfields)
+	nTable.put("displayfield", sdisplayfields)
+	nTable.put("mobilebreakpoint", "600")
+	nTable.put("page", "1")
+	nTable.put("serveritemslength", "-1")
+	nTable.put("isautoincrement", sautoincrement)
+	nTable.put("isaddnew", "Yes")
+	nTable.put("isedit", "Yes")
+	nTable.put("isdelete", "Yes")
+	nTable.put("issearchbox", "Yes")
+	nTable.put("isdialog", "Yes")
+	nTable.put("newicon","mdi-plus")
+	nTable.put("ismultisort", "Yes")
+	nTable.Put("issingleselect", "Yes")
+	nTable.put("singular", "record")
+	nTable.put("manyrecords","records")
+	nTable.put("isnavbarvisible", "Yes")
+	nTable.put("isdrawervisible", "No")
+	nTable.put("ishamburgervisible", "Yes")
+	nTable.put("islogovisible", "Yes")
+	nTable.put("isshowondrawer", "Yes")
+	nTable.put("isshowonnavbar", "Yes")
+	nTable.put("isdivider","Yes")
+	nTable.put("singular", tbKey)
+	nTable.put("manyrecords", tbKey)
+	nTable.put("datasourcename", tbKey)
+	nTable.put("islookup", "Yes")
+	nTable.put("isvisible", "Yes")
+	nTable.put("newtooltip", "Add a new " & tbKey)
+	nTable.put("newid", $"btnNew${sing}"$)
+	nTable.put("tooltip", $"Maintain ${tbKey}"$)
+	nTable.put("row", 1)
+	nTable.put("col", 1)
+	nTable.put("offsetsmall",0)
+	nTable.put("offsetmedium",0)
+	nTable.put("offsetlarge",0)
+	nTable.put("offsetxlarge",0)
+	nTable.put("sizesmall",12)
+	nTable.put("sizemedium",12)
+	nTable.put("sizelarge",12)
+	nTable.put("sizexlarge",12)
+	nTable.put("deletecomp", "mdi-delete")
+	'make to attributes
+	Dim attributesJSON As String = BANano.ToJSON(nTable)
+	'create actual component
+	Dim nComp As Map = CreateMap()
+	nComp.put("id", recID)
+	nComp.put("row", 1)
+	nComp.put("col", 1)
+	nComp.put("parent","vm.Container")
+	nComp.put("parentid", "vm.Container")
+	nComp.put("name", tbKey)
+	nComp.put("vmodel", tbKey)
+	nComp.put("attributes", attributesJSON)
+	nComp.put("styles", "")
+	nComp.put("classes", "")
+	nComp.put("loose","")
+	nComp.put("label", vue.propercase(tbKey))
+	nComp.put("items", sfieldsJSON)
+	nComp.put("controltype", "table")
+	nComp.put("deletecomp", "mdi-delete")
+	nComp.put("tabindex", "0")
+	'add component to table
+	Dim contSQL As BANanoAlaSQLE
+	contSQL.Initialize("components", "vmodel")
+	contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+	contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+	contSQL.Insert1(nComp)
+	contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+	contSQL.FromJSON
+	vm.HideLoading
+	'hide everything and show the stage
+	tabs.show
+	contattributes.hide
+	contSchema.hide
+	vm.setdata("devspace", 0)
+	CreateUX
+End Sub
+
+'lets process the schemas
+Sub CreateSchema
+	contSchema.Initialize(vue, "contschema", Me).SetDiv(True)
+	contSchema.SetFluid(True)
+	contSchema.SetVisible(False)
+	contSchema.SetTransition(vm.TRANSITION_SLIDE_X)
+	'
+	tbltoolbar2x = vm.CreateToolBar("tbltoolbar2x", Me)
+	tbltoolbar2x.SetToolBar(True)
+	tbltoolbar2x.AddTitle("Database Schema", "")
+	tbltoolbar2x.AddSpacer
+	tbltoolbar2x.SetVisible(True)
+	'
+	Dim cboTable As VMSelect = vm.NewComboDataSource(Me, False, "cboDatabaseTable", _
+	"databasetable", "Database Table", False, False,"Database Table", "tablenames", "tablename", "tablename", _
+	False, "", "", 0)
+	cboTable.SetHideDetails(True)
+	cboTable.SetSolo(True)
+	cboTable.SetOnChange(Me, "cboDatabaseTable_change")
+	tbltoolbar2x.AddComponent("cboDatabaseTable", cboTable.tostring)
+	tbltoolbar2x.AddIcon1("btnSaveMySchema","mdi-content-save","green","Save this schema", "")
+	tbltoolbar2x.AddIcon1("tbltransfer1", "mdi-cog-transfer-outline", "green", "Convert to DataTable", "")
+	'
+	contSchema.AddControl(tbltoolbar2x.ToolBar, tbltoolbar2x.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	'
+	vm.SetData("fields", vm.newlist)
+	Dim ct As List = vm.Map2Options(controltypes,"text","value")
+	vm.setdata("ct", ct)
+	'
+	dtschema = vm.CreateDataTable("dtschema", "key", Me)
+	dtschema.SetTitle("Table Schema")
+	dtschema.SetSearchbox(True)
+	dtschema.SetItemsperpage("100")
+	dtschema.SetMobilebreakpoint("600")
+	dtschema.SetMultisort(True)
+	dtschema.SetPage("1")
+	dtschema.SetSingleselect(True)
+	dtschema.SetVisible(True)
+	dtschema.SetDense(True)
+	dtschema.AddColumn("key", "Name")
+	dtschema.AddColumn("title", "Title")
+	dtschema.AddColumn("collength", "Length")
+	dtschema.AddColumn("coldatatype", "Field Type")
+	dtschema.AddColumn("colcontroltype", "Component")
+	dtschema.AddColumn("colvalue", "Value")
+		
+	dtschema.AddColumn("colrow", "R")
+	dtschema.AddColumn("colcolumn", "C")
+	dtschema.AddColumn("colsizesmall", "SS")
+	dtschema.AddColumn("colsizemedium", "SM")
+	dtschema.AddColumn("colsizelarge", "SL")
+	dtschema.AddColumn("colsizexlarge", "SX")
+	'
+	dtschema.AddColumn("colprimarykey", "PriKey")
+	dtschema.AddColumn("colautoincrement", "AutoInc")
+	dtschema.AddColumn("colisautofocus", "Focus")
+	dtschema.AddColumn("colontable", "OnTable")
+	dtschema.AddColumn("coldisplayvalue", "DisplayValue")
+	dtschema.AddColumn("colnoduplicate", "Unique")
+	dtschema.AddColumn("colsortable", "Sortable")
+	dtschema.AddColumn("colindexed", "Indexed")
+	dtschema.AddColumn("colrequired", "Required")
+	dtschema.AddColumn("colvisible", "Visible")
+	dtschema.AddColumn("colishidedetails", "HideDetails")
+	dtschema.AddColumn("colactive", "Active")
+	'
+	dtschema.AddColumn("colislookup", "LookUp")
+	dtschema.AddColumn("colforeigntable", "ForeignTable")
+	dtschema.AddColumn("colforeignkey", "ForeignKey")
+	dtschema.AddColumn("colforeignvalue", "ForeignValue")
+	'			
+	dtschema.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
+	dtschema.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
+	dtschema.SetColumnsSwitch(Array("colrequired","colvisible","colislookup"))
+	dtschema.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed"))
+	'
+	dtschema.SetDataSource(vm.newlist)
+	dtschema.AddEditDialog("title",False)
+	dtschema.AddEditDialog("collength",False)
+	dtschema.AddEditDialog("colrow",False)
+	dtschema.AddEditDialog("colcolumn",False)
+	dtschema.AddEditDialog("colsizesmall",False)
+	dtschema.AddEditDialog("colsizemedium",False)
+	dtschema.AddEditDialog("colsizelarge",False)
+	dtschema.AddEditDialog("colsizexlarge",False)
+	dtschema.AddEditDialog("colvalue", False)
+	'
+	dtschema.AddEditDialogCombo("colcontroltype",False, "ct", "text", "value", False)
+	dtschema.AddEditDialogCombo("colforeigntable",False,"tablenames","tablename","tablename",False)
+	dtschema.AddEditDialogCombo("colforeignkey",False,"fields","key","key",False)
+	dtschema.AddEditDialogCombo("colforeignvalue",False,"fields","key","key",False)
 	
+	dtschema.AddSaveCancelOpenClose
+	
+	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	'
+	vm.container.AddComponent(1, 1, contSchema.tostring)
+End Sub
+
+'save records anytime the data changes on switches
+Sub dtschema_change(item As Map)
+	'get the table being processed
+	Dim mytable As String = vm.getdata("mytable")
+	'get the data of the table
+	Dim tblList As List = dtschema.getdata
+	Dim tblJSON As String = BANano.tojson(tblList)
+	'save to the database
+	Dim rec As Map = CreateMap()
+	rec.put("fields", tblJSON)
+	rec.put("tablename", mytable)
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("tables", "tablename")
+	prjSQL.Update1(rec, mytable)
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	If prjSQL.ok = False Then
+		vm.ShowSnackBarError("An error was encountered saving the table: " & prjSQL.error)
+	End If
+End Sub
+
+'change the foreign table, update the other 2 columns
+Sub dtschema_colforeigntable_change(item As Map)
+	'get the table name to process
+	Dim scolforeigntable As String = item.get("colforeigntable")
+	If scolforeigntable = "" Then Return
+	'
+	Dim prjSQL As BANanoAlaSQLE
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	prjSQL.Initialize("tables", "tablename")
+	prjSQL.Read(scolforeigntable)
+	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
+	prjSQL.fromJSON
+	'
+	Dim Result As List = prjSQL.Result
+	Dim rec As Map = Result.Get(0)
+	Dim fieldsJSON As String = rec.get("fields")
+	Dim fields As List = BANano.FromJson(fieldsJSON)
+	vm.setdata("fields", fields)
+End Sub
+
+Sub dtschema_save(item As Map)
+	Log("save")
+	Log(item)
+End Sub
+
+Sub dtschema_cancel(item As Map)
+	Log("cancel")
+	Log(item)
+End Sub
+
+Sub dtschema_open
+	
+End Sub
+
+Sub dtschema_close
+
+End Sub
+
+'save the database schema for later use
+Sub SaveDatabaseSchema
+	vm.showloading
+	'get the sames tables
 	'open the database
 	db.OpenWait("bvmdesigner", "bvmdesigner")
+	'delete all tables
+	Dim contSQL As BANanoAlaSQLE
+	contSQL.Initialize("tables", "tablename")
+	contSQL.DeleteAll
+	contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+	contSQL.FromJSON
 	'
-	
-	For Each tbKey As String In selTables.keys
+	Dim dbTables As Map = vm.getdata("currenttables")
+	For Each tbKey As String In dbTables.keys
 		'get table structure from all tables, this is a list of all fields
-		Dim tbStructure As List = allTables.get(tbKey)
+		Dim tbStructure As List = dbTables.get(tbKey)
 		'
 		tbKey = tbKey.tolowercase
 		Dim sing As String = vm.propercase(tbKey)
 		sing = sing.Replace(" ","")
 		sing = sing.trim
 		'
-		'the name of the auto increment field
-		Dim sAuto As String = ""
-		'the name of the primary key
-		Dim sPri As String = $"${sing}id"$
-		'
 		'to store fields of the table
 		Dim tblItems As List = vue.newlist
+		Dim sauto As String = ""
+		Dim spri As String = ""
 		'
 		For Each fldm As Map In tbStructure
 			Dim sDefault As String = ""
@@ -8342,7 +8812,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			Dim sKey As String = ""
 			Dim sNull As String = ""
 			Dim sType As String = ""
-			'
+		'
 			Select Case sdbtype
 			Case "mssql"
 				Dim fldL As String= fldm.getdefault("character_maximum_length","0")
@@ -8350,7 +8820,7 @@ private Sub tbltransfer_click(e As BANanoEvent)
 				sField = sField.tolowercase
 				sType = fldm.getdefault("data_type", "text")
 				sType = sType & fldL
-			Case "mysql"	
+			Case "mysql"
 				sDefault = fldm.getdefault("Default","")
 				sExtra = fldm.getdefault("Extra", "")
 				sField = fldm.getdefault("Field", "")
@@ -8359,16 +8829,16 @@ private Sub tbltransfer_click(e As BANanoEvent)
 				sNull = fldm.getdefault("Null", "")
 				sType = fldm.getdefault("Type", "")
 				'we have found the auto increment
-				If sExtra.EqualsIgnoreCase("auto_increment") Then sAuto = sField
+				If sExtra.EqualsIgnoreCase("auto_increment") Then sauto = sField
 				'we have found the primary key
-				If sKey.EqualsIgnoreCase("pri") Then sPri = sField
+				If sKey.EqualsIgnoreCase("pri") Then spri = sField
 			Case "sqlite"
 				sDefault = fldm.getdefault("dflt_value","")
 				sField = fldm.getdefault("name","")
 				sField = sField.tolowercase
 				sNull = fldm.getdefault("notnull", "")
 				sKey = fldm.getdefault("pk","")
-				If sKey = "1" Then sPri = sField
+				If sKey = "1" Then spri = sField
 				sType = fldm.getdefault("type","")
 			End Select
 			'get the fld len
@@ -8392,34 +8862,25 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			Case "TEXT"
 			Case Else
 				fldType = "TEXT"
-			End Select	
-			'	
+			End Select
+			'
 			'start creating the items
 			Dim ifld As Map = CreateMap()
-			ifld.put("parent", "vm.Container")
-			ifld.put("parentid", "vm.Container")
 			ifld.put("key", sField)
 			ifld.put("title", vue.propercase(sField))
-			ifld.put("subtitle", "text")
 			ifld.put("colcontroltype", "text")
 			ifld.put("collength", fldLen)
 			ifld.put("coldatatype", fldType)
 			ifld.put("colfieldtype", DataType2FieldType(fldType))
-			ifld.put("icon", "")
-			ifld.put("colvalue", "")
 			ifld.put("colrequired", "No")
-			ifld.put("colvisible", "Yes")
-			ifld.put("colontable", "Yes")
+			ifld.put("colvisible", "No")
+			ifld.put("colontable", "No")
 			ifld.put("colforeigntable", "")
 			ifld.put("colforeignkey", "")
 			ifld.put("colforeignvalue", "")
 			ifld.put("colislookup", "No")
 			ifld.put("colrow", "1")
 			ifld.put("colcolumn", "1")
-			ifld.put("coloffsetsmall", "0")
-			ifld.put("coloffsetmedium", "0")
-			ifld.put("coloffsetlarge","0")
-			ifld.put("coloffsetxlarge", "0")
 			ifld.put("colsizesmall", "12")
 			ifld.put("colsizemedium", "12")
 			ifld.put("colsizelarge", "12")
@@ -8427,147 +8888,43 @@ private Sub tbltransfer_click(e As BANanoEvent)
 			ifld.put("colisautofocus", "No")
 			ifld.put("colishidedetails", "No")
 			ifld.put("colisdense", "No")
-			ifld.put("colscope", "Public")
-			ifld.put("subtitle", "text")
-			ifld.put("colalign", "start")
 			ifld.put("colactive", "Yes")
+			ifld.put("colnoduplicate", "No")
+			ifld.put("colprimarykey", "No")
+			ifld.put("coldisplayvalue", "No")
+			ifld.put("colautoincrement", "No")
+			ifld.put("table", tbKey)
+			ifld.put("parent", "vm.Container")
+			ifld.put("parentid", "vm.Container")
+			ifld.put("subtitle", "text")
+			ifld.put("icon", "")
+			ifld.put("colvalue", "")
+			ifld.put("coloffsetsmall", "0")
+			ifld.put("coloffsetmedium", "0")
+			ifld.put("coloffsetlarge","0")
+			ifld.put("coloffsetxlarge", "0")
+			ifld.put("colscope", "Public")
+			ifld.put("colalign", "start")
 			ifld.put("colwidth", "0")
 			'add to fields collection
 			tblItems.add(ifld)
 		Next
 		'these are field names
 		Dim itemsJSON As String = BANano.ToJson(tblItems)
+		'save to table
+		Dim trec As Map = CreateMap()
+		trec.put("tablename", tbKey)
+		trec.put("primarykey", spri)
+		trec.put("displayfields", "")
+		trec.put("fields", itemsJSON)
 		'
-		If sAuto = "" Then 
-			sAuto = "No"
-		Else
-			sAuto = "Yes"
-		End If
-		'
-		'define the record id once
-		Dim recID As String = DateTime.now
-		Dim nTable As Map = CreateMap()
-		nTable.put("id", recID)
-		nTable.put("controltype", "table")
-		nTable.put("parent", "vm.Container")
-		nTable.put("parentid", "vm.Container")
-		nTable.put("vmodel", tbKey)
-		nTable.put("name", tbKey)
-		nTable.put("label", vue.propercase(tbKey))
-		nTable.Put("selecttype", "all")
-		nTable.put("itemsperpage", "10")
-		nTable.put("itemkey", sPri)
-		nTable.put("confirmfield", sPri)
-		nTable.put("displayfield", sPri)
-		nTable.put("mobilebreakpoint", "600")
-		nTable.put("page", "1")
-		nTable.put("serveritemslength", "-1")
-		nTable.put("isautoincrement", sAuto)
-		nTable.put("isaddnew", "Yes")
-		nTable.put("isedit", "Yes")
-		nTable.put("isdelete", "Yes")
-		nTable.put("issearchbox", "Yes")
-		nTable.put("isdialog", "Yes")
-		nTable.put("newicon","mdi-plus")
-		nTable.put("ismultisort", "Yes")
-		nTable.Put("issingleselect", "Yes")
-		nTable.put("datasourcename", "records")
-		nTable.put("singular", "record")
-		nTable.put("manyrecords","records")
-		nTable.put("isnavbarvisible", "Yes")
-		nTable.put("isdrawervisible", "No")
-		nTable.put("ishamburgervisible", "Yes")
-		nTable.put("islogovisible", "Yes")
-		nTable.put("isshowondrawer", "Yes")
-		nTable.put("isshowonnavbar", "Yes")
-		nTable.put("isdivider","Yes")		
-		nTable.put("singular", tbKey)
-		nTable.put("manyrecords", tbKey)
-		nTable.put("datasourcename", tbKey)
-		nTable.put("islookup", "Yes")
-		nTable.put("isvisible", "Yes")		
-		nTable.put("newtooltip", "Add a new " & tbKey)
-		nTable.put("newid", $"btnNew${sing}"$)
-		nTable.put("tooltip", $"Maintain ${tbKey}"$)
-		nTable.put("issearchbox", "Yes")
-		nTable.put("row", 1)
-		nTable.put("col", 1)
-		nTable.put("offsetsmall",0)
-		nTable.put("offsetmedium",0)
-		nTable.put("offsetlarge",0)
-		nTable.put("offsetxlarge",0)
-		nTable.put("sizesmall",12)
-		nTable.put("sizemedium",12)
-		nTable.put("sizelarge",12)
-		nTable.put("sizexlarge",12)
-		nTable.put("deletecomp", "mdi-delete")
-		'make to attributes
-		Dim attributesJSON As String = BANano.ToJSON(nTable)
-		'create actual component
-		Dim nComp As Map = CreateMap()
-		nComp.put("id", recID)
-		nComp.put("row", 1)
-		nComp.put("col", 1)
-		nComp.put("parent","vm.Container")
-		nComp.put("parentid", "vm.Container")
-		nComp.put("name", tbKey)
-		nComp.put("vmodel", tbKey)
-		nComp.put("attributes", attributesJSON)
-		nComp.put("styles", "")
-		nComp.put("classes", "")
-		nComp.put("loose","")
-		nComp.put("label", vue.propercase(tbKey))
-		nComp.put("items", itemsJSON)
-		nComp.put("controltype", "table")
-		nComp.put("deletecomp", "mdi-delete")
-		nComp.put("tabindex", "0")
-		'add component to table
 		Dim contSQL As BANanoAlaSQLE
-		contSQL.Initialize("components", "vmodel")
-		contSQL.AddIntegers(Array("id", "row","col","tabindex"))
-		contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
-		contSQL.Insert1(nComp)
+		contSQL.Initialize("tables", "tablename")
+		contSQL.Insert1(trec)
 		contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
 		contSQL.FromJSON
 	Next
-	'
-	tabs.show
-	contdbadmin.hide
-	contattributes.hide
-	vm.setdata("devspace", 0)
-	CreateUX
-End Sub
-
-'save the list of selected tables
-Private Sub tvtables_input(lst As List)
-	Dim selSize As Int = lst.Size
-	If selSize = 0 Then
-		vue.Hideitem("tbltransfer")
-		vue.setdata("selectedtable", vue.newlist)
-		vue.setdata("tablestotransfer", vue.newmap)
-		Return
-	End If
-	'extract the tables to process
-	vue.Showitem("tbltransfer")
-	Dim selTables As Map = CreateMap()
-	For Each selItem As String In lst
-		'get the table name for unique list
-		Dim selTable As String = vue.MvField(selItem, 2, "~")
-		selTables.put(selTable, selTable)
-	Next
-	'update the badge for this button
-	Dim totTables As Int = selTables.Size
-	totTables = BANano.parseint(totTables)
-	vm.SetBadgeContent("tbltransfer", totTables)
-	If totTables = 0 Then
-		vm.SetBadgeColor("tbltransfer", vue.COLOR_RED, vue.INTENSITY_NORMAL)
-	Else
-		vm.SetBadgeColor("tbltransfer", vue.COLOR_TEAL, vue.INTENSITY_NORMAL)
-	End If
-	'save all selected items
-	vue.setdata("selectedtable", lst)
-	'save the list of selected tables
-	vue.setdata("tablestotransfer", selTables)
+	vm.hideloading
 End Sub
 
 
@@ -8591,16 +8948,8 @@ End Sub
 'show the designer section
 Sub tblexit_click(e As BANanoEvent)
 	tabs.Show
-	contdbadmin.hide
 	contattributes.hide
-End Sub
-
-Sub builderlisting_click(e As BANanoEvent)
-	Dim dbFields As List
-	dbFields.initialize
-	dbFields.AddAll(Array("key", "title", "coltype", "colscope" , "colfieldtype" , "coldefaultvalue", "colminrange", "colmaxrange", "colhasset", "colhasget", "edit", "delete"))
-	schemaDT.ApplyFilter(dbFields)
-	schemaDT.SetDataSourceName("tableitems")
+	contSchema.hide
 End Sub
 
 'show columns applicable to the form input
@@ -8609,12 +8958,15 @@ Sub formlisting_click(e As BANanoEvent)
 End Sub
 
 Sub FormListing
-	Dim dbFields As List
-	dbFields.initialize
-	dbFields.AddAll(Array("key", "title", "colcontroltype", "colontable", "colrequired", "colvisible", "colishidedetails", _
-	"coldatatype" ,"collength" , "colrow" , "colcolumn", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge", "edit", "delete"))
+	Dim dbFields As List = dtschema.mastercolumns
+	dbFields.AddAll(Array("edit", "delete"))
+	
+'	dbFields.initialize
+'	dbFields.AddAll(Array("key", "title", "colcontroltype", "colontable", "colprimarykey", "colautoincrement", "colnoduplicate", "coldisplayvalue", "colsortable", "colindexed", "colislookup", "colrequired", "colvisible", "colishidedetails", _
+'	"coldatatype" ,"collength" , "colrow" , "colcolumn", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge", "edit", "delete"))
 	schemaDT.ApplyFilter(dbFields)
 	schemaDT.SetDataSourceName("tableitems")
+	'vm.Container.HideRC(1,1)
 End Sub
 
 'show columns applicable to the table listing
@@ -8685,7 +9037,6 @@ Sub Design_DBSourceCode
 	Dim itemkey As String = mattr.get("itemkey")
 	bisautoincrement = YesNoToBoolean(mattr.getdefault("isautoincrement", "No"))
 	Dim ssingular As String = mattr.Get("singular")
-	Dim smanyrecords As String = mattr.get("manyrecords")
 	Dim snewid As String = mattr.get("newid")
 	Dim sisaddnew As String = mattr.get("isaddnew")
 	Dim sTitle As String = mattr.get("label")
@@ -8704,8 +9055,10 @@ Sub Design_DBSourceCode
 	Dim mdlName As String = $"pg${dlg}"$
 	Dim diagName As String = $"dlg${dlg}"$
 	Dim rsName As String = $"rs${dlg}"$
+	Dim tblName As String = $"dt${dlg}"$
 	'
 	If tbName = "" Then Return
+	Dim xAuto As String = ""
 	
 	Dim flds As List = vm.getdata("tableitems")
 	'define fields to sort by
@@ -8721,6 +9074,13 @@ Sub Design_DBSourceCode
 	For Each m As Map In flds
 		Dim bcolislookup As Boolean = YesNoToBoolean(m.GetDefault("colislookup", "No"))
 		If bcolislookup Then foreign.add(m)
+		'lets find the auto focus field
+		Dim bcolisautofocus As Boolean = YesNoToBoolean(m.getdefault("colisautofocus","No"))
+		Dim scolcontroltype As String = m.getdefault("colcontroltype", "")
+		Dim skey As String = m.getdefault("key", "")
+		If bcolisautofocus Then
+			xAuto = $"${scolcontroltype}.${skey}"$
+		End If
 	Next
 	'
 	Dim sbl As StringBuilder
@@ -8886,7 +9246,7 @@ Sub Design_DBSourceCode
 	AddCode(sbl, $"Private vm As BANanoVM"$)
 	AddCode(sbl, $"Private BANano As BANano  'ignore"$)
 	sbl.append($"Private ${diagName} As VMDialog"$).append(CRLF)
-	sbl.append($"Private dt${tbName} As VMDataTable"$).append(CRLF)
+	sbl.append($"Private ${tblName} As VMDataTable"$).append(CRLF)
 	sbl.append($"Private cont As VMContainer"$).append(CRLF)
 	sbl.append($"Private Mode As String"$).append(CRLF)
 	AddCode(sbl, "Private vue As BANanoVue")
@@ -8904,7 +9264,7 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "hide the container")
 	AddCode(sbl, "cont.Hide")
 	AddComment(sbl, "add the table to container")
-	AddCode(sbl, $"CreateDataTable_${tbName}"$)
+	AddCode(sbl, $"CreateDataTable_${dlg}"$)
 	AddComment(sbl, "add the dialog to page")
 	sbl.append($"CreateDialog_${dlg}"$).append(CRLF)
 	AddComment(sbl, "add the container to the page")
@@ -8963,11 +9323,7 @@ Sub Design_DBSourceCode
 	End If
 	'
 	If  bisShowonnavbar Then
-		AddComment(sbl, $"show ${sTitle} on navbar"$)
-		'AddCode(sbl, $"vm.ShowItem("btnAdd${dlg}")"$)
-		'AddCode(sbl, $"vm.ShowItem("btnRefresh${dlg}")"$)
-		AddCode(sbl, $"vm.ShowItem("nav${dlg}")"$)
-	Else
+		AddComment(sbl, "hide on navbar")
 		AddCode(sbl, $"vm.HideItem("nav${dlg}")"$)
 	End If
 	'
@@ -9140,11 +9496,12 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 	End Select
 	AddCode(sbl, $"${rsName}.FromJSON"$)
+	AddComment(sbl, "IMPORTANT: if your field names are all lowercase, comment this line")
 	AddCode(sbl, $"${rsName}.Result = vue.MapKeysLowerCaseList(${rsName}.Result)"$)
 	AddComment(sbl, "save records to state")
 	sbl.append($"VM.SetData("${sDatasourcename}", ${rsName}.Result)"$).append(CRLF)
 	AddComment(sbl, "update the data table records")
-	AddCode(sbl, $"dt${tbName}.SetDataSource(${rsName}.Result)"$)
+	AddCode(sbl, $"${tblName}.SetDataSource(${rsName}.Result)"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
 	'**** IS LOOKUP TABLE
@@ -9159,7 +9516,7 @@ Sub Design_DBSourceCode
 		Dim xtitle As String = a.GetDefault("title","")  'Title
 		'
 		AddComment(sbl, $"${tbName} ${xtitle} action"$)
-		sbl.append($"Sub dt${tbName}_${xkey}(item As Map)"$).append(CRLF)
+		sbl.append($"Sub ${tblName}_${xkey}(item As Map)"$).append(CRLF)
 		AddComment(sbl, "get the key")
 		sbl.append($"Dim RecID As String = item.Get("${sItemkey}")"$).append(CRLF)
 		AddCode(sbl, $"If RecID = "" Then Return"$)
@@ -9214,6 +9571,7 @@ Sub Design_DBSourceCode
 			AddCode(sbl, $"${diagName}.Show"$)
 			AddComment(sbl, "update the state, this updates the v-model(s) for each input control")
 			sbl.append($"vm.SetState(Record)"$).append(CRLF)
+				AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
 		Case "edit"
 			'we are editing
 			AddComment(sbl,"set mode to E-dit")
@@ -9262,6 +9620,7 @@ Sub Design_DBSourceCode
 			AddCode(sbl, $"${diagName}.Show"$)
 			AddComment(sbl, "update the state, this updates the v-model(s) for each input control")
 			sbl.append($"vm.SetState(Record)"$).append(CRLF)
+				AddCode(sbl,  $"vm.SetFocus(${xAuto})"$)
 		Case "delete"
 			'we are deleting
 			AddComment(sbl, "save the id to delete")
@@ -9293,6 +9652,7 @@ Sub Design_DBSourceCode
 	sbl.append($"${diagName}.SetTitle("New ${ssingular}")"$).append(CRLF)
 	AddComment(sbl, "show dialog")
 	sbl.append($"${diagName}.Show"$).append(CRLF)
+	AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF).Append(CRLF)
 	'
 	'**** CLICK - ADD NEW BUTTON ON TABLE
@@ -9311,11 +9671,11 @@ Sub Design_DBSourceCode
 		
 		sbl.append($"Sub CreateDialog_${dlg}"$).append(CRLF)
 		sbl.append($"${diagName} = vm.CreateDialog("${diagName}", Me)"$).Append(CRLF)
-		CodeLine(sbl, sTitle, "s", "dlg", tbName, "SetTitle")
-		CodeLine2(sbl, $"btnOk${dlg}"$, "Save", "s", "dlg", tbName, "SetOk")
-		CodeLine2(sbl, $"btnCancel${dlg}"$, "Cancel", "s", "dlg", tbName, "SetCancel")
-		CodeLine(sbl, "700px", "s", "dlg", tbName, "Setwidth")
-		CodeLine(sbl, True, "b", "dlg", tbName, "Setpersistent")
+		CodeLine(sbl, sTitle, "s", "", diagName, "SetTitle")
+		CodeLine2(sbl, $"btnOk${dlg}"$, "Save", "s", "", diagName, "SetOk")
+		CodeLine2(sbl, $"btnCancel${dlg}"$, "Cancel", "s", "", diagName, "SetCancel")
+		CodeLine(sbl, "700px", "s", "", diagName, "Setwidth")
+		CodeLine(sbl, True, "b", "", diagName, "Setpersistent")
 		AddComment(sbl, "*** Add code to create components below this line!")
 		AddNewLine(sbl)
 		sbl.append($"vm.AddDialog(${diagName})"$).append(CRLF)
@@ -9397,6 +9757,13 @@ Sub Design_DBSourceCode
 			AddCode(sbl, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 		End Select
 		AddCode(sbl, $"${rsName}.FromJSON"$)
+		AddCode(sbl, $"Select Case ${rsName}.OK"$)
+		AddCode(sbl, $"Case False"$)
+		AddCode(sbl, $"Dim strError As String = ${rsName}.Error"$)
+		AddCode(sbl, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$)
+		AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
+		AddCode(sbl, "End Select")
+
 		'
 		'**** CLICK OK ON DIALOG EDIT RECORD
 		sbl.append($"Case "E""$).Append(CRLF)
@@ -9431,10 +9798,17 @@ Sub Design_DBSourceCode
 			AddCode(sbl, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 		End Select
 		AddCode(sbl, $"${rsName}.FromJSON"$)
+		AddCode(sbl, $"Select Case ${rsName}.OK"$)
+		AddCode(sbl, $"Case False"$)
+		AddCode(sbl, $"Dim strError As String = ${rsName}.Error"$)
+		AddCode(sbl, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$)
+		AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
+		AddCode(sbl, "End Select")
+		'
 		sbl.append($"End Select"$).append(CRLF)
 		AddComment(sbl, "hide the modal")
 		AddCode(sbl, $"${diagName}.Hide"$)
-		AddComment(sbl, $"execute code to refresh listing for ${stitle}"$)
+		AddComment(sbl, $"execute code to refresh listing for ${sTitle}"$)
 		AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 		
@@ -9592,10 +9966,11 @@ End Sub
 'a component has been clicked
 Sub drwcomponentsitems_click(e As BANanoEvent)
 	vm.HideOtherDrawers(drwbags.id)
+	vm.Drawer.Hide
 	istool = False
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	vm.CallMethod("LoadProjects")
 	vm.CallMethod("LoadContainers")
@@ -10403,19 +10778,19 @@ Sub ItemDrop(e As BANanoEvent)
 		myipad.hide
 		myiphone.show
 		tabs.show
-		contdbadmin.hide
 		contattributes.hide
+		contSchema.hide
 		myiphone.SetLandScape(False)
 		NewProject
 		Return
 	End If
 	sdatabasename = project.getdefault("databasename", "")
-	ShowBag("")
+	vm.HideDrawers
 	istool = False
 	vm.setdata("tableitems", vm.newlist)
 	dbCode.SetCode("")
 	tabs.show
-	contdbadmin.hide
+	contSchema.hide
 	contattributes.hide
 	vm.setdata("devspace", 0)
 	Dim rsSQL As BANanoAlaSQLE
@@ -11677,7 +12052,7 @@ Sub DeletePropertyBag
 End Sub
 
 Sub DeleteIT
-	ShowBag("")
+	vm.HideDrawers
 	'get the id tp delete
 	Dim sid As String = vm.getdata("deleteid")
 	sid = BANano.parseint(sid)
@@ -11691,15 +12066,14 @@ Sub DeleteIT
 	rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 	rsSQL.FromJSON
 	tabs.show
-	contdbadmin.hide
 	contattributes.hide
+	contSchema.hide
 	vm.setdata("devspace", 0)
 	CreateUX
 End Sub
 
 Sub DeleteProject
-	drwprojectdetails.hide
-	ShowBag("")
+	vm.HideDrawers
 	'get the id tp delete
 	Dim sid As String = vm.getdata("deleteid")
 	sid = BANano.parseint(sid)
@@ -11990,7 +12364,7 @@ Sub SavePropertyBag
 			svmodel = svmodel.tolowercase
 			Dim ssingular As String = mattr.GetDefault("singular","")
 			ssingular = ssingular.tolowercase
-			Dim smanyrecords As String = mattr.getdefault("manyrecords","")
+			smanyrecords = mattr.getdefault("manyrecords","")
 			smanyrecords = smanyrecords.tolowercase
 			Dim sconfirmfield As String = mattr.getdefault("confirmfield", "")
 			sconfirmfield = sconfirmfield.tolowercase
@@ -12022,13 +12396,13 @@ Sub SavePropertyBag
 	End Select
 	'
 	Dim sid As String = mattr.get("id")
-	Dim srow As String = mattr.get("row")
-	Dim scol As String = mattr.get("col")
-	Dim sTabindex As String = mattr.get("tabindex")
-	Dim sTitle As String = mattr.get("label")
-	Dim svmodel As String = mattr.get("vmodel")
-	Dim smanyrecords As String = mattr.get("manyrecords")
-	Dim sparent As String = mattr.get("parent")
+	srow = mattr.get("row")
+	scol  = mattr.get("col")
+	sTabindex = mattr.get("tabindex")
+	sTitle = mattr.get("label")
+	svmodel = mattr.get("vmodel")
+	smanyrecords = mattr.get("manyrecords")
+	sparent = mattr.get("parent")
 	mattr.put("controltype", spropbagtype)
 	'
 	'is vmodel valid
@@ -12070,7 +12444,6 @@ Sub SavePropertyBag
 	rsSQL.Update1(nrec,sid)
 	rsSQL.result = db.ExecuteWait(rsSQL.query, rsSQL.args)
 	rsSQL.FromJSON
-	Log(rsSQL)
 	'
 	If isTable Then
 		Read_Table
@@ -12188,7 +12561,8 @@ Sub SavePropertyBag
 			matr.initialize
 			matr.AddAll(Array("colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge"))
 			matr.AddAll(Array("coloffsetxlarge", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge"))
-			matr.AddAll(Array("colisautofocus","colishidedetails","colisdense"))
+			matr.AddAll(Array("colisautofocus","colishidedetails","colisdense","colnoduplicate","colprimarykey", _
+			"coldisplayvalue","colautoincrement"))
 			'
 			For Each k As String In matr
 				Dim v As String = item.GetDefault(k, "")
@@ -12221,7 +12595,7 @@ Sub SavePropertyBag
 			contSQL.Initialize("components", "vmodel")
 			contSQL.AddIntegers(Array("id", "row","col","tabindex"))
 			contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
-
+			'
 			Dim cw As Map = CreateMap()
 			cw.put("vmodel", ckey)
 			contSQL.SelectWhere(Array("*"), cw, Array("="), Array("id"))
@@ -12292,6 +12666,8 @@ Sub MapRemovePrefix(m As Map) As Map
 End Sub
 
 Sub ShowBag(thisBag As String)
+	vm.HideDrawers
+	drwbags.show
 	tblProp.setvisible(False)
 	thisBag = thisBag.tolowercase
 	Dim m As Map = CreateMap()
@@ -12866,10 +13242,9 @@ Sub PropertyBag_Table
 	'
 	pbtable.AddSwitches("p", CreateMap("isnavbarvisible": "NavBar", "isdrawervisible": "Drawer"))
 	pbtable.AddSwitches("p", CreateMap("ishamburgervisible": "Hamburger", "islogovisible": "Logo"))
-	pbtable.AddSwitches("p", CreateMap("isshowondrawer": "On Drawer", "isshowonnavbar": "On NavBar"))
+	pbtable.AddSwitches("p", CreateMap("isshowondrawer": "On Drawer", "isshowonnavbar": " On NavBar"))
 	pbtable.AddSwitches("p", CreateMap("isupdatenavtitle": "Update Title","isdivider":"Divider"))
 	pbtable.AddSwitches("p", CreateMap("isinsetdivider": "Inset Divider","isicon":"Icon"))
-	pbtable.AddSwitches("p", CreateMap("ishideonnavbar": "Hide on NavBar"))
 	'
 	pbtable.AddHeading("c", "Columns")
 	pbtable.AddDataTableColumns("c")
@@ -12986,6 +13361,8 @@ Sub Read_Table
 	sconfirmfield = mattr.getdefault("confirmfield", "")
 	sconfirmfield = sconfirmfield.tolowercase
 	bislookup = YesNoToBoolean(mattr.getdefault("islookup", "No"))
+	smanyrecords = mattr.getdefault("manyrecords", "")
+	If smanyrecords = "" Then smanyrecords = svmodel
 End Sub
 
 
@@ -13118,81 +13495,86 @@ Sub Design_Table
 	'
 	ui.AddControl(datatable.DataTable, datatable.tostring, srow, scol, os, om, ol, ox, ss, sm, sl, sx)
 	'
+	If smanyrecords = "" Then smanyrecords = sname
+	Dim dlg As String = vm.propercase(smanyrecords)
+	Dim dlg As String = dlg.replace(" ","")
+	dlg = dlg.trim
+	
 	'build the code
 	AddInstruction(sb, "<Your Module>", "", "")
-	AddCode(sb, $"Sub CreateDataTable_${sname}"$)
-	sb.append($"dt${sname} = vm.CreateDataTable("dt${sname}", "${sItemkey}", Me)"$).append(CRLF)
-	CodeLine(sb, sTitle, "s", "dt", sname, "SetTitle")
-	CodeLine(sb, sCaption, "s", "dt", sname, "SetCaption")
-	CodeLine(sb, bisSearchbox, "b", "dt", sname, "SetSearchbox")
+	AddCode(sb, $"Sub CreateDataTable_${dlg}"$)
+	sb.append($"dt${dlg} = vm.CreateDataTable("dt${dlg}", "${sItemkey}", Me)"$).append(CRLF)
+	CodeLine(sb, sTitle, "s", "dt", dlg, "SetTitle")
+	CodeLine(sb, sCaption, "s", "dt", dlg, "SetCaption")
+	CodeLine(sb, bisSearchbox, "b", "dt", dlg, "SetSearchbox")
 	If bisaddnew Then
-		sb.append($"dt${sname}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
+		sb.append($"dt${dlg}.SetAddNew("${snewid}", "${snewicon}", "${snewtooltip}")"$).append(CRLF)
 	End If
 	'
 	'AddCode(sb, $"vm.setdata("${sDatasourcename}", vm.newlist)"$)
-	'CodeLine(sb, sDatasourcename, "s", "dt", sname, "SetDatasourcename")
-	CodeLine(sb, bisCalculatewidths, "b", "dt", sname, "SetCalculatewidths")
-	CodeLine(sb, bisDark, "b", "dt", sname, "SetDark")
+	'CodeLine(sb, sDatasourcename, "s", "dt", dlg, "SetDatasourcename")
+	CodeLine(sb, bisCalculatewidths, "b", "dt", dlg, "SetCalculatewidths")
+	CodeLine(sb, bisDark, "b", "dt", dlg, "SetDark")
 	
-	CodeLine(sb, bisDense, "b", "dt", sname, "SetDense")
+	CodeLine(sb, bisDense, "b", "dt", dlg, "SetDense")
 	If sfloat <> "" Then
-		AddCode(sb, $"dt${sname}.AddClass("${sfloat}")"$)
+		AddCode(sb, $"dt${dlg}.AddClass("${sfloat}")"$)
 	End If
-	CodeLine(sb, bisDisablefiltering, "b", "dt", sname, "SetDisablefiltering")
-	CodeLine(sb, bisDisablepagination, "b", "dt", sname, "SetDisablepagination")
-	CodeLine(sb, bisDisablesort, "b", "dt", sname, "SetDisablesort")
-	'CodeLine(sb, sExpandicon, "s", "dt", sname, "SetExpandicon")
-	'CodeLine(sb, sExpanded, "s", "dt", sname, "SetExpanded")
-	'CodeLine(sb, sFilters, "s", "dt", sname, "SetFilters")
-	CodeLine(sb, bisFixedheader, "b", "dt", sname, "SetFixedheader")
-	'CodeLine(sb, sGroupby, "s", "dt", sname, "SetGroupby")
-	'CodeLine(sb, sGroupdesc, "s", "dt", sname, "SetGroupdesc")
-	'CodeLine(sb, sHeaderslength, "s", "dt", sname, "SetHeaderslength")
-	CodeLine(sb, sHeight, "s", "dt", sname, "SetHeight")
-	CodeLine(sb, bisHidedefaultfooter, "b", "dt", sname, "SetHidedefaultfooter")
-	CodeLine(sb, bisHidedefaultheader, "b", "dt", sname, "SetHidedefaultheader")
-	CodeLine(sb, sItemsperpage, "s", "dt", sname, "SetItemsperpage")
-	CodeLine(sb, bisLight, "b", "dt", sname, "SetLight")
-	CodeLine(sb, bisLoading, "b", "dt", sname, "SetLoading")
-	'CodeLine(sb, sLoadingtext, "s", "dt", sname, "SetLoadingtext")
-	'CodeLine(sb, sLocale, "s", "dt", sname, "SetLocale")
-	CodeLine(sb, smobilebreakpoint, "s", "dt", sname, "SetMobilebreakpoint")
-	CodeLine(sb, bisMultisort, "b", "dt", sname, "SetMultisort")
-	CodeLine(sb, bisMustsort, "b", "dt", sname, "SetMustsort")
-	'CodeLine(sb, sNodatatext, "s", "dt", sname, "SetNodatatext")
-	'CodeLine(sb, sNoresultstext, "s", "dt", sname, "SetNoresultstext")
-	CodeLine(sb, sPage, "s", "dt", sname, "SetPage")
-	'CodeLine(sb, sSearch, "s", "dt", sname, "SetSearch")
-	'CodeLine(sb, sSelectablekey, "s", "dt", sname, "SetSelectablekey")
-	'CodeLine(sb, sServeritemslength, "s", "dt", sname, "SetServeritemslength")
-	CodeLine(sb, bisShowexpand, "b", "dt", sname, "SetShowexpand")
-	CodeLine(sb, bisShowgroupby, "b", "dt", sname, "SetShowgroupby")
-	CodeLine(sb, bisShowselect, "b", "dt", sname, "SetShowselect")
-	CodeLine(sb, bisSingleexpand, "b", "dt", sname, "SetSingleexpand")
-	CodeLine(sb, bisSingleselect, "b", "dt", sname, "SetSingleselect")
-	'CodeLine(sb, sSortby, "s", "dt", sname, "SetSortby")
-	'CodeLine(sb, sSortdesc, "s", "dt", sname, "SetSortdesc")
-	CodeLine(sb, bisVisible, "b", "dt", sname, "SetVisible")
+	CodeLine(sb, bisDisablefiltering, "b", "dt", dlg, "SetDisablefiltering")
+	CodeLine(sb, bisDisablepagination, "b", "dt", dlg, "SetDisablepagination")
+	CodeLine(sb, bisDisablesort, "b", "dt", dlg, "SetDisablesort")
+	'CodeLine(sb, sExpandicon, "s", "dt", dlg, "SetExpandicon")
+	'CodeLine(sb, sExpanded, "s", "dt", dlg, "SetExpanded")
+	'CodeLine(sb, sFilters, "s", "dt", dlg, "SetFilters")
+	CodeLine(sb, bisFixedheader, "b", "dt", dlg, "SetFixedheader")
+	'CodeLine(sb, sGroupby, "s", "dt", dlg, "SetGroupby")
+	'CodeLine(sb, sGroupdesc, "s", "dt", dlg, "SetGroupdesc")
+	'CodeLine(sb, sHeaderslength, "s", "dt", dlg, "SetHeaderslength")
+	CodeLine(sb, sHeight, "s", "dt", dlg, "SetHeight")
+	CodeLine(sb, bisHidedefaultfooter, "b", "dt", dlg, "SetHidedefaultfooter")
+	CodeLine(sb, bisHidedefaultheader, "b", "dt", dlg, "SetHidedefaultheader")
+	CodeLine(sb, sItemsperpage, "s", "dt", dlg, "SetItemsperpage")
+	CodeLine(sb, bisLight, "b", "dt", dlg, "SetLight")
+	CodeLine(sb, bisLoading, "b", "dt", dlg, "SetLoading")
+	'CodeLine(sb, sLoadingtext, "s", "dt", dlg, "SetLoadingtext")
+	'CodeLine(sb, sLocale, "s", "dt", dlg, "SetLocale")
+	CodeLine(sb, smobilebreakpoint, "s", "dt", dlg, "SetMobilebreakpoint")
+	CodeLine(sb, bisMultisort, "b", "dt", dlg, "SetMultisort")
+	CodeLine(sb, bisMustsort, "b", "dt", dlg, "SetMustsort")
+	'CodeLine(sb, sNodatatext, "s", "dt", dlg, "SetNodatatext")
+	'CodeLine(sb, sNoresultstext, "s", "dt", dlg, "SetNoresultstext")
+	CodeLine(sb, sPage, "s", "dt", dlg, "SetPage")
+	'CodeLine(sb, sSearch, "s", "dt", dlg, "SetSearch")
+	'CodeLine(sb, sSelectablekey, "s", "dt", dlg, "SetSelectablekey")
+	'CodeLine(sb, sServeritemslength, "s", "dt", dlg, "SetServeritemslength")
+	CodeLine(sb, bisShowexpand, "b", "dt", dlg, "SetShowexpand")
+	CodeLine(sb, bisShowgroupby, "b", "dt", dlg, "SetShowgroupby")
+	CodeLine(sb, bisShowselect, "b", "dt", dlg, "SetShowselect")
+	CodeLine(sb, bisSingleexpand, "b", "dt", dlg, "SetSingleexpand")
+	CodeLine(sb, bisSingleselect, "b", "dt", dlg, "SetSingleselect")
+	'CodeLine(sb, sSortby, "s", "dt", dlg, "SetSortby")
+	'CodeLine(sb, sSortdesc, "s", "dt", dlg, "SetSortdesc")
+	CodeLine(sb, bisVisible, "b", "dt", dlg, "SetVisible")
 	'
 	Dim pres As String = "dt"
-	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
-	CodeLine(sb, "mb-" & smarginbottom, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ml-" & smarginleft, "s", pres, sname, "AddClass")
-	CodeLine(sb, "mr-" & smarginright, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ms-" & smargins, "s", pres, sname, "AddClass")
-	CodeLine(sb, "me-" & smargine, "s", pres, sname, "AddClass")
-	CodeLine(sb, "mx-" & smarginx, "s", pres, sname, "AddClass")
-	CodeLine(sb, "my-" & smarginy, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ma-" & smargina, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pt-" & spaddingtop, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pl-" & spaddingleft, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pr-" & spaddingright, "s", pres, sname, "AddClass")
-	CodeLine(sb, "ps-" & spaddings, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pe-" & spaddinge, "s", pres, sname, "AddClass")
-	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
-	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
-	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
+	CodeLine(sb, "mt-" & smargintop, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "mb-" & smarginbottom, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "ml-" & smarginleft, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "mr-" & smarginright, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "ms-" & smargins, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "me-" & smargine, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "mx-" & smarginx, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "my-" & smarginy, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "ma-" & smargina, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "pt-" & spaddingtop, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "pb-" & spaddingbottom, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "pl-" & spaddingleft, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "pr-" & spaddingright, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "ps-" & spaddings, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "pe-" & spaddinge, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "px-" & spaddingx, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "py-" & spaddingy, "s", pres, dlg, "AddClass")
+	CodeLine(sb, "pa-" & spaddinga, "s", pres, dlg, "AddClass")
 	'
 	Dim sba As StringBuilder
 	sba.initialize
@@ -13226,34 +13608,34 @@ Sub Design_Table
 		ccolforeignvalue = ccolforeignvalue.tolowercase
 		Select Case xtype
 		Case "action"
-			sba.append($"dt${sname}.AddIcon("${xkey}", "${xtitle}", "${xicon}")"$).append(CRLF)
-			AddCode(sba, $"dt${sname}.SetIconDimensions1("${xkey}", "24px", "blue", "80")"$)
+			sba.append($"dt${dlg}.AddIcon("${xkey}", "${xtitle}", "${xicon}")"$).append(CRLF)
+			AddCode(sba, $"dt${dlg}.SetIconDimensions1("${xkey}", "24px", "blue", "80")"$)
 		Case Else
 			If bcolislookup Then
-				sb.append($"dt${sname}.AddColumn1("${ccolforeignvalue}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
+				sb.append($"dt${dlg}.AddColumn1("${ccolforeignvalue}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
 			Else	
-				sb.append($"dt${sname}.AddColumn1("${xkey}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
+				sb.append($"dt${dlg}.AddColumn1("${xkey}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
 			End If
 		End Select
 	Next
 	
-	CodeLine(sb, bisEdit, "b", "dt", sname, "SetEdit")
-	CodeLine(sb, bisDelete, "b", "dt", sname, "SetDelete")
-	CodeLine(sb, bisClone, "b", "dt", sname, "SetClone")
-	CodeLine(sb, bisDownload, "b", "dt", sname, "SetDownload")
-	CodeLine(sb, bisPrint, "b", "dt", sname, "SetPrint")
-	CodeLine(sb, bisMenu, "b", "dt", sname, "SetMenu")
+	CodeLine(sb, bisEdit, "b", "dt", dlg, "SetEdit")
+	CodeLine(sb, bisDelete, "b", "dt", dlg, "SetDelete")
+	CodeLine(sb, bisClone, "b", "dt", dlg, "SetClone")
+	CodeLine(sb, bisDownload, "b", "dt", dlg, "SetDownload")
+	CodeLine(sb, bisPrint, "b", "dt", dlg, "SetPrint")
+	CodeLine(sb, bisMenu, "b", "dt", dlg, "SetMenu")
 	'
-	If bisEdit Then	AddCode(sb, $"dt${sname}.SetIconDimensions1("edit", "24px", "success", "80")"$)
-	If bisDelete Then AddCode(sb, $"dt${sname}.SetIconDimensions1("delete", "24px", "error", "80")"$)
-	If bisClone Then AddCode(sb, $"dt${sname}.SetIconDimensions1("clone", "24px", "orange", "80")"$)
-	If bisDownload Then	AddCode(sb, $"dt${sname}.SetIconDimensions1("download", "24px", "blue", "80")"$)
-	If bisPrint Then AddCode(sb, $"dt${sname}.SetIconDimensions1("print", "24px", "purple", "80")"$)
-	If bisMenu Then	AddCode(sb, $"dt${sname}.SetIconDimensions1("menu", "24px", "green", "80")"$)
+	If bisEdit Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("edit", "24px", "success", "80")"$)
+	If bisDelete Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("delete", "24px", "error", "80")"$)
+	If bisClone Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("clone", "24px", "orange", "80")"$)
+	If bisDownload Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("download", "24px", "blue", "80")"$)
+	If bisPrint Then AddCode(sb, $"dt${dlg}.SetIconDimensions1("print", "24px", "purple", "80")"$)
+	If bisMenu Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("menu", "24px", "green", "80")"$)
 	'
 	sb.append(sba.tostring)
 	'
-	sb.append($"cont.AddControl(dt${sname}.DataTable, dt${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
+	sb.append($"cont.AddControl(dt${dlg}.DataTable, dt${dlg}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF)
 	AddCode(sb, "End Sub")
 	AddNewLine(sb)
 	
@@ -13416,7 +13798,7 @@ Sub Design_Avatar
 	avatar.SetMinheight(sMinheight)
 	avatar.SetMinwidth(sMinwidth)
 	avatar.SetRight(bisRight)
-	avatar.SetSize(ssize)
+	avatar.SetSize(sSize)
 	avatar.SetTextcolorintensity(sTextcolor, stextintensity)
 	avatar.SetTile(bisTile)	
 	avatar.SetVisible(bisVisible)
@@ -13690,7 +14072,7 @@ Sub Design_List
 	CodeLine(sb, bisDark, "b", "lst", sname, "SetDark")
 	CodeLine(sb, bisDense, "b", "lst", sname, "SetDense")
 	CodeLine(sb, bisDisabled, "b", "lst", sname, "SetDisabled")
-	CodeLine(sb, selevation, "s", "lst", sname, "SetElevation")
+	CodeLine(sb, sElevation, "s", "lst", sname, "SetElevation")
 	CodeLine(sb, bisExpand, "b", "lst", sname, "SetExpand")
 	CodeLine(sb, bisFlat, "b", "lst", sname, "SetFlat")
 	CodeLine(sb, sHeight, "s", "lst", sname, "SetHeight")
@@ -13705,10 +14087,10 @@ Sub Design_List
 	CodeLine(sb, sbottom, "s", "lst", sname, "List.SetBottom")
 	CodeLine(sb, stop, "s", "lst", sname, "List.SetTop")
 		
-	CodeLine(sb, smaxheight, "s", "lst", sname, "SetMaxheight")
-	CodeLine(sb, smaxwidth, "s", "lst", sname, "SetMaxwidth")
-	CodeLine(sb, sminheight, "s", "lst", sname, "SetMinheight")
-	CodeLine(sb, sminwidth, "s", "lst", sname, "SetMinwidth")
+	CodeLine(sb, sMaxheight, "s", "lst", sname, "SetMaxheight")
+	CodeLine(sb, sMaxwidth, "s", "lst", sname, "SetMaxwidth")
+	CodeLine(sb, sMinheight, "s", "lst", sname, "SetMinheight")
+	CodeLine(sb, sMinwidth, "s", "lst", sname, "SetMinwidth")
 	CodeLine(sb, bisNav, "b", "lst", sname, "SetNav")
 	CodeLine(sb, bisRounded, "b", "lst", sname, "SetRounded")
 	CodeLine(sb, bisShaped, "b", "lst", sname, "SetShaped")

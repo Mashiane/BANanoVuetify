@@ -147,10 +147,9 @@ Sub AddChildren(children As List)
 End Sub
 
 'set app
-Sub SetApp(varApp As Object) As VMBanner
-	Dim pp As String = $"${ID}App"$
-	vue.SetStateSingle(pp, varApp)
-	Banner.Bind(":app", pp)
+Sub SetApp(varApp As Boolean) As VMBanner
+	If varApp = False Then Return Me
+	Banner.SetAttrLoose("app")
 	Return Me
 End Sub
 
