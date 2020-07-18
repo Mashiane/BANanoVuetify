@@ -2368,7 +2368,6 @@ Sub btnDbConnect_click(e As BANanoEvent)
 		'
 		'save list of tables
 		vm.setdata("currenttables", lTables)
-		Return
 	Case "sqlite"
 		'check file existence
 		Dim bPHP As BANanoPHP
@@ -2511,9 +2510,12 @@ Sub sqlite_opened
 		stable_name = stable_name.tolowercase
 		lTables.put(stable_name, rsFields.ReSult)
 	Next
-	'add to the tree
 	'	save list of tables
-	vm.setdata("currenttables", lTables)	
+	vm.setdata("currenttables", lTables)
+	SaveDatabaseSchema
+	
+	vm.HideDrawers
+	vm.Drawer.Hide
 End Sub
 
 Sub btnDbCreate_click(e As BANanoEvent)
@@ -8925,6 +8927,7 @@ Sub SaveDatabaseSchema
 		contSQL.FromJSON
 	Next
 	vm.hideloading
+	vm.CallMethod("LoadTables")
 End Sub
 
 
@@ -11710,8 +11713,8 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddSelectDS("ds", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
 	pbradiogroup.AddText2("ds", CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
 	pbradiogroup.AddSwitches("ds", CreateMap("useoptions": "Use These Items"))
-	pbradiogroup.AddTextArea("ds","keys","Item Values (,)","", "1,2,3")
-	pbradiogroup.AddTextArea("ds","values","Item Texts (,)", "", "One,Two,Three")
+	pbradiogroup.AddTextArea("ds","keys","Item Keys (,)","", "1,2,3")
+	pbradiogroup.AddTextArea("ds","values","Item Values (,)", "", "One,Two,Three")
 	'
 	pbradiogroup.AddHeading("m","Margins & Padding")
 	pbradiogroup.AddMarginsPaddings("m")
@@ -11721,7 +11724,7 @@ Sub PropertyBag_RadioGroup
 	pbradiogroup.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
 	pbradiogroup.AddSwitches("e", CreateMap("ontable": "On Table", "ismandatory": "Mandatory"))
 	pbradiogroup.AddSwitches("e", CreateMap("isdense": "Dense", "ishidedetails": "Hide Details"))
-	pbradiogroup.AddSwitches("e", CreateMap("ismultiple": "Multiple", "useoptions": "Use Options"))
+	pbradiogroup.AddSwitches("e", CreateMap("ismultiple": "Multiple"))
 	'
 	pbradiogroup.AddHeading("f","Matrix")
 	pbradiogroup.AddMatrix("f")
@@ -11804,8 +11807,8 @@ Sub PropertyBag_Select
 	pbselectbox.AddSelectDS("ds", "sourcetable", "Data Source", "tablenames", "tablename", "tablename", "sourcetable_change")
 	pbselectbox.AddText2("ds",CreateMap("sourcefield":"Item Value", "displayfield":"Item Text"))
 	pbselectbox.AddSwitches("ds", CreateMap("useoptions": "Use These Items"))
-	pbselectbox.AddTextArea("ds","keys","Item Values (,)","", "1,2,3")
-	pbselectbox.AddTextArea("ds","values","Item Texts (,)", "", "One,Two,Three")
+	pbselectbox.AddTextArea("ds","keys","Item Keys (,)","", "1,2,3")
+	pbselectbox.AddTextArea("ds","values","Item Values (,)", "", "One,Two,Three")
 	'
 	pbselectbox.AddHeading("m","Margins & Padding")
 	pbselectbox.AddMarginsPaddings("m")
