@@ -11,6 +11,7 @@ Sub Class_Globals
 	Private BANAno As BANano  'ignore
 	Public methods As Map
 	Public filters As Map
+	Public ShowWarnings As Boolean
 	Public data As Map
 	'Public store As Map
 	Public el As BANanoObject
@@ -147,15 +148,18 @@ Sub Class_Globals
 	Public Algorithm As Map
 	Public Errors As Map
 	Public Position As Map
+	Public Module As Object
 End Sub
 
 'initialize view
-Public Sub Initialize(Module As Object)
+Public Sub Initialize(EventHandler As Object)
 	'empty the body of the page
+	ShowWarnings = True
 	body = BANAno.GetElement("#body")
 	body.empty
 	body.Append($"<div id="app"></div>"$)
 	Template.Initialize("app","div")
+	Module = EventHandler
 	'
 	Errors.Initialize
 	SourceCode.Initialize
@@ -580,38 +584,6 @@ Public Sub Initialize(Module As Object)
 	'If SubExists(Module, "ReadyChange") = False Then
 	'	Log("Initialize.ReadyChange - please consider adding this optional callback!")
 	'End If
-	
-	If SubExists(Module, "BeforeCreate") = False Then
-		Log("Initialize.BeforeCreate - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "Created") = False Then
-		Log("Initialize.Created - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "BeforeMount") = False Then
-		Log("Initialize.BeforeMount - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "Mounted") = False Then
-		Log("Initialize.Mounted - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "BeforeUpdate") = False Then
-		Log("Initialize.BeforeUpdate - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "Updated") = False Then
-		Log("Initialize.Updated - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "BeforeDestroy") = False Then
-		Log("Initialize.BeforeDestroy - please consider adding this optional callback!")
-	End If
-	'
-	If SubExists(Module, "Destroyed") = False Then
-		Log("Initialize.Destroyed - please consider adding this optional callback!")
-	End If
 End Sub
 
 #if css
@@ -760,14 +732,12 @@ End Sub
         }; 
 #End If
 
-
 Sub CorrectName(oldName As String) As String
 	Dim strName As String = StringBreakAtUpperCase(oldName)
 	strName = strName.replace(" ", "-")
 	strName = strName.tolowercase
 	Return strName
 End Sub
-
 
 'double quote each item of the mv
 Sub MVQuoteItems(delim As String, mvstring As String) As String
@@ -1261,7 +1231,7 @@ private Sub DoUpload(fileObj As Object) As String   'ignore
 	xhr.Send2(fd)
 End Sub
 
-Sub HTTPUpload(fileObj As Object, module As Object, methodname As String)
+Sub HTTPUpload(fileObj As Object, EventHandler As Object, methodname As String)
 	Dim promise As BANanoPromise 'ignore
 	' some vars to hold our results
 	Dim Error As String
@@ -1270,9 +1240,9 @@ Sub HTTPUpload(fileObj As Object, module As Object, methodname As String)
 	' call the http request
 	promise.CallSub(Me, "DoUpload", Array(fileObj))
 	promise.ThenWait(json)
-	BANAno.CallSub(module, methodname, Array(fileObj, json))
+	BANAno.CallSub(EventHandler, methodname, Array(fileObj, json))
 	promise.ElseWait(Error)  'ignore
-	BANAno.CallSub(module, methodname, Array(fileObj, Error))
+	BANAno.CallSub(EventHandler, methodname, Array(fileObj, Error))
 	promise.End
 End Sub
 
@@ -1281,6 +1251,27 @@ End Sub
 Sub State2Another(source As String, target As String, defaultValue As Object)
 	Dim readObj As Object = GetState(source, defaultValue)
 	SetStateSingle(target, readObj)
+End Sub
+
+Sub GetAlphaNumeric(value As String) As String
+	value = CStr(value)
+	Try
+		value = value.Trim
+		If value = "" Then value = ""
+		Dim sout As String = ""
+		Dim mout As String = ""
+		Dim slen As Int = value.Length
+		Dim i As Int = 0
+		For i = 0 To slen - 1
+			mout = value.CharAt(i)
+			If InStr("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", mout) <> -1 Then
+				sout = sout & mout
+			End If
+		Next
+		Return sout
+	Catch
+		Return value
+	End Try	
 End Sub
 
 
@@ -1499,10 +1490,11 @@ Sub FormatFileSize(Bytes As Float) As String
 			Private Po, Si As Double
 			Private I As Int
 			Bytes = Abs(Bytes)
-			I = Floor(Logarithm(Bytes, 1024))
+			I = Logarithm(Bytes, 1024)
+			i = Floor(I)
 			Po = Power(1024, I)
 			Si = Bytes / Po
-			Return NumberFormat(Si, 1, 3) & Unit(I)
+			Return NumberFormat2(Si,1,3,3,True) & Unit(I)
 		End If
 	Catch
 		Return "0 Bytes"
@@ -1827,11 +1819,18 @@ Sub Space(HM As Int) As String
 End Sub
 
 Sub MakeMoney(sValue As String) As String
-	If sValue.Length = 0 Then Return "0.00"
-	If sValue = "null" Then sValue = "0.00"
-	sValue = sValue.Replace(",","")
+	If BANAno.IsNull(sValue) Or BANAno.IsUndefined(sValue) Then 
+		sValue = "0.00"
+		Return sValue
+	End If
+	sValue = CStr(sValue)
+	sValue = sValue.trim
+	If sValue.Length = 0 Then 
+		Return "0.00"
+	End If
 	sValue = Val(sValue)
-	If sValue = "0" Then sValue = "000"
+	If sValue = "0" Then sValue = "0.00"
+	sValue = BANAno.parsefloat(sValue)
 	sValue = Round2(sValue,2)
 	Return NumberFormat2(sValue, 1, 2, 2, True)
 End Sub
@@ -1957,7 +1956,7 @@ Sub ProperSubName(vx As String, removePref As Boolean) As String
 	Dim varCnt As Int
 	For varCnt = 0 To varTot
 		Dim varItem As String = varList.Get(varCnt)
-		varItem = Capitalize(varItem)
+		varItem = ProperCase(varItem)
 		varList.Set(varCnt, varItem)
 	Next
 	Dim subName1 As String = Join("",varList)
@@ -1965,13 +1964,8 @@ Sub ProperSubName(vx As String, removePref As Boolean) As String
 End Sub
 
 Sub Capitalize(t As String) As String
-	Dim s , r , o As String
-	s = t.SubString2(0,1)
-	r = t.SubString2(1, t.Length)
-	o = s.ToUpperCase & r
-	Return o
+	Return ProperCase(t)
 End Sub
-
 
 'lowercase map keys
 Sub MapKeysLowerCaseSingle(m As Map) As Map
@@ -2561,22 +2555,29 @@ Sub Validate(rec As Map, required As Map) As Boolean
 	Errors.Initialize
 	Dim iv As Int = 0
 	For Each k As String In required.Keys
+		'get the error description
 		Dim error As String = required.GetDefault(k, "")
 		If error = "" Then
 			error = $"The ${k} should be specified!"$
 		End If
-		'get the message
+		'if the record contains this key
 		If rec.ContainsKey(k) Then
-			Dim v As String = rec.GetDefault(k,"")
-			v = CStr(v)
-			v = v.trim
-			If v = "" Then
+			Dim v As Object = rec.Get(k)
+			If BANAno.IsNull(v) Then v = ""
+			If BANAno.IsUndefined(v) Then v = ""
+			'Dim v As String = rec.GetDefault(k,"")
+			Dim vv As String = CStr(v)
+			vv = vv.trim
+			If vv = "" Then
 				iv = iv + 1
 				ShowError(k, error)
 				Errors.Put(k, error)
 			Else
 				HideError(k)
 			End If
+		Else
+			iv = iv + 1
+			Errors.Put(k, error)
 		End If
 	Next
 	If iv = 0 Then
@@ -2584,6 +2585,30 @@ Sub Validate(rec As Map, required As Map) As Boolean
 	Else
 		Return False
 	End If
+End Sub
+
+Sub ListOfMap2Strings(lst As List) As List
+	Dim nl As List
+	nl = NewList
+	For Each m As Map In lst
+		Dim nm As Map = Map2Strings(m)
+		nl.Add(nm)
+	Next
+	Return nl
+End Sub
+
+
+'ensure record meets the form requirements for display
+Sub Map2Strings(m As Map) As Map
+	Dim nm As Map = CreateMap()
+	For Each k As String In m.keys
+		Dim v As Object = m.get(k)
+		If BANAno.IsNull(v) Then v = ""
+		If BANAno.IsUndefined(v) Then v = ""
+		Dim vv As String = CStr(v)
+		nm.put(k, vv)
+	Next
+	Return nm
 End Sub
 
 Sub ShowError(elID As String, elError As String)
@@ -2773,6 +2798,38 @@ Sub MakeDate(m As Map, xkeys As List)
 	Next
 End Sub
 
+'convert data type to field type
+Sub DataType2FieldType(fldtype As String) As String
+	fldtype = fldtype.ToUpperCase
+	If fldtype.EqualsIgnoreCase("double") Then fldtype = "FLOAT"
+	If fldtype.EqualsIgnoreCase("integer") Then fldtype = "INT"
+	If fldtype.EqualsIgnoreCase("long") Then fldtype = "INT"
+	If fldtype.EqualsIgnoreCase("short") Then fldtype = "INT"
+	If fldtype.endswith("INT") Then fldtype = "INT"
+	If fldtype.endswith("CHAR") Then fldtype = "TEXT"
+	If fldtype.endswith("TEXT") Then fldtype = "TEXT"
+	If fldtype.endswith("REAL") Then fldtype = "FLOAT"
+	If fldtype.endswith("BIT") Then fldtype = "INT"
+	'
+	fldtype = fldtype.tolowercase
+	fldtype = fldtype.replace("text", "string")
+	fldtype = fldtype.replace("float", "dbl")
+	fldtype = fldtype.replace("blob", "string")
+	fldtype = fldtype.replace("none", "string")
+	fldtype = fldtype.replace("varchar", "string")
+	Return fldtype
+End Sub
+
+
+Sub MapRemovePrefix(m As Map) As Map
+	Dim nm As Map = CreateMap()
+	For Each k As String In m.keys
+		Dim v As String = m.Get(k)
+		k = MvField(k,2,"_")
+		nm.Put(k, v)
+	Next
+	Return nm
+End Sub
 
 'get id from event
 Sub GetIDFromEvent(e As BANanoEvent) As String
@@ -3049,16 +3106,6 @@ End Sub
 Sub Use1(bo As BANanoObject, opt As Map)
 	BOVue.RunMethod("use", Array(bo, opt))
 End Sub
-'
-'Sub SetFocus(sid As String) As BANanoVue
-'	If sid <> "" Then
-'		sid = sid.tolowercase
-'		Dim input As BANanoObject = refs.Get(sid)
-'		Dim el As String = "$el"
-'		input.GetField(el).RunMethod("focus", Null)
-'	End If
-'	Return Me
-'End Sub
 
 Sub SetFrameWork(optName As String, boFrameWork As BANanoObject)
 	Options.Put(optName, boFrameWork)
@@ -3066,6 +3113,40 @@ End Sub
 
 'render the ux
 Sub UX()
+	If ShowWarnings Then
+		If SubExists(Module, "BeforeCreate") = False Then
+			Log("Initialize.BeforeCreate - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "Created") = False Then
+			Log("Initialize.Created - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "BeforeMount") = False Then
+			Log("Initialize.BeforeMount - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "Mounted") = False Then
+			Log("Initialize.Mounted - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "BeforeUpdate") = False Then
+			Log("Initialize.BeforeUpdate - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "Updated") = False Then
+			Log("Initialize.Updated - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "BeforeDestroy") = False Then
+			Log("Initialize.BeforeDestroy - please consider adding this optional callback!")
+		End If
+		'
+		If SubExists(Module, "Destroyed") = False Then
+			Log("Initialize.Destroyed - please consider adding this optional callback!")
+		End If
+	End If
+
 	GetTemplate = Template.tostring
 	If routes.Size > 0 Then
 		Dim ropt As Map = CreateMap()
@@ -3110,117 +3191,117 @@ Sub ForceUpdate
 End Sub
 
 'set mounted
-Sub SetMounted(module As Object, methodName As String) As BANanoVue
+Sub SetMounted(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim mounted As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim mounted As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("mounted", mounted)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 
 'set destroyed
-Sub SetDestroyed(module As Object, methodName As String) As BANanoVue
+Sub SetDestroyed(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim destroyed As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim destroyed As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("destroyed", destroyed)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 
 'set activated
-Sub SetActivated(module As Object, methodName As String) As BANanoVue
+Sub SetActivated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim activated As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim activated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("activated", activated)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 
 'set deactivated
-Sub SetDeActivated(module As Object, methodName As String) As BANanoVue
+Sub SetDeActivated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim deactivated As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim deactivated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("deactivated", deactivated)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 
 'set updated
-Sub SetUpdated(module As Object, methodName As String) As BANanoVue
+Sub SetUpdated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim updated As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim updated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("updated", updated)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 'set beforemount
-Sub SetBeforeMount(module As Object, methodName As String) As BANanoVue
+Sub SetBeforeMount(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeMount As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim beforeMount As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("beforeMount", beforeMount)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 'set beforeupdate
-Sub SetBeforeUpdate(module As Object, methodName As String) As BANanoVue
+Sub SetBeforeUpdate(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeUpdate As Boolean = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim beforeUpdate As Boolean = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("beforeUpdate", beforeUpdate)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 'set before destroy
-Sub SetBeforeDestroy(module As Object, methodName As String) As BANanoVue
+Sub SetBeforeDestroy(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeDestroy As Boolean = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim beforeDestroy As Boolean = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("beforeDestroy", beforeDestroy)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 
 'set before created
-Sub SetBeforeCreate(module As Object, methodName As String) As BANanoVue
+Sub SetBeforeCreate(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeCreate As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim beforeCreate As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("beforeCreate", beforeCreate)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 
 'set created
-Sub SetCreated(module As Object, methodName As String) As BANanoVue
+Sub SetCreated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) = False Then Return Me
-	Dim created As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) = False Then Return Me
+	Dim created As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	Options.Put("created", created)
-	SetMethod(module, methodName)
+	SetMethod(EventHandler, methodName)
 	Return Me
 End Sub
 
 'set direct method
-Sub SetMethod(module As Object, methodName As String) As BANanoVue
+Sub SetMethod(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) Then
+	If SubExists(EventHandler, methodName) Then
 		Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(e))
+		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 		methods.Put(methodName, cb)
 	Else
 		Log($"SetMethod.${methodName} could not be found!"$)
@@ -3229,12 +3310,12 @@ Sub SetMethod(module As Object, methodName As String) As BANanoVue
 End Sub
 
 'set direct method
-Sub SetFilter(k As String, module As Object, methodName As String) As BANanoVue
+Sub SetFilter(k As String, EventHandler As Object, methodName As String) As BANanoVue
 	k = k.tolowercase
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) Then
+	If SubExists(EventHandler, methodName) Then
 		Dim value As Object
-		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(value))
+		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(value))
 		filters.Put(k, cb.Result)
 	Else
 		Log($"SetFilter.${methodName} could not be found!"$)
@@ -3256,30 +3337,30 @@ Sub RemoveMethod(methodName As String) As BANanoVue
 End Sub
 
 'set computed
-Sub SetComputed(k As String, module As Object, methodName As String) As BANanoVue
+Sub SetComputed(k As String, EventHandler As Object, methodName As String) As BANanoVue
 	k = k.tolowercase
 	methodName = methodName.ToLowerCase
-	If SubExists(module, methodName) Then
-		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	If SubExists(EventHandler, methodName) Then
+		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 		computed.Put(k, cb.Result)
 	End If
 	Return Me
 End Sub
 
-Sub SetNextTick(module As Object, methodName As String) As BANanoVue
+Sub SetNextTick(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Null)
+	Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
 	BOVue.RunMethod("nextTick", cb)
 	Return Me
 End Sub
 
 'set watches 
-Sub SetWatch(k As String, bImmediate As Boolean, bDeep As Boolean, module As Object, methodName As String) As BANanoVue
+Sub SetWatch(k As String, bImmediate As Boolean, bDeep As Boolean, EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.tolowercase
 	k = k.tolowercase
-	If SubExists(module, methodName) Then
+	If SubExists(EventHandler, methodName) Then
 		Dim newVal As Object
-		Dim cb As BANanoObject = BANAno.CallBack(module, methodName, Array(newVal))
+		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(newVal))
 		Dim deepit As Map = CreateMap()
 		deepit.Put("handler", methodName)
 		deepit.Put("deep", bDeep)

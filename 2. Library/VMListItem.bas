@@ -31,6 +31,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub AddComponent(comp As String) As VMListItem
+	ListItem.SetText(comp)
+	Return Me
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMListItem
 	bStatic = b
 	ListItem.SetStatic(b)
