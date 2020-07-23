@@ -26,6 +26,24 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'set on change
+Sub SetOnChange(methodName As String) As VMListItemGroup
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim items As List
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(items))
+	SetAttr(CreateMap("@change": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+Sub AddComponent(comp As String) As VMListItemGroup
+	ListItemGroup.SetText(comp)
+	Return Me
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMListItemGroup
 	bStatic = b
 	ListItemGroup.SetStatic(b)

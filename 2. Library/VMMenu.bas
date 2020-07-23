@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private act As VMTemplate
 	Private MenuContent As VMList
 	Private bStatic As Boolean
+	Private hasActivator As Boolean
 End Sub
 
 'initialize the Menu
@@ -23,14 +24,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	ID = sid.tolowercase
 	Menu.Initialize(v, ID).SetTag("v-menu")
-	act.Initialize(vue, "", Module)
 	MenuContent.Initialize(vue, $"${ID}items"$, Module)
 	'
+	act.Initialize(vue, "", Module)
 	act.SetSlotActivatorOn
 	
 	SetOpenOnHover(True)
 	SetOffsetY(True)
-	
+	hasActivator = False
 	Return Me
 End Sub
 
@@ -113,6 +114,7 @@ Sub SetIcon(iconName As String) As VMMenu
 	btn.SetIconButton(iconName)
 	btn.SetMenuTrigger(True)
 	btn.Pop(act.Template)
+	hasActivator = True
 	Return Me
 End Sub
 
@@ -127,6 +129,7 @@ Sub SetButton(iconName As String, btnText As String) As VMMenu
 	btn.SetMenuTrigger(True)
 	btn.SetTransparent(True)
 	btn.Pop(act.Template)
+	hasActivator = True
 	Return Me
 End Sub
 
@@ -138,6 +141,7 @@ Sub SetAvatar(url As String) As VMMenu
 	c6a.SetImage(url, "", Null, Null, Null)
 	c6a.SetMenuTrigger(True)
 	c6a.Pop(act.Template)
+	hasActivator = True
 	Return Me
 End Sub
 
@@ -163,7 +167,7 @@ End Sub
 
 'get component
 Sub ToString As String	
-	act.Pop(Menu)
+	If hasActivator Then act.Pop(Menu)
 	If MenuContent.HasContent Then MenuContent.Pop(Menu)
 	Return Menu.ToString
 End Sub

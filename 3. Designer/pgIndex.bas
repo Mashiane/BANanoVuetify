@@ -8786,7 +8786,9 @@ Sub CreateSchema
 	dtschema.AddButtonIcon("btnEditable", "mdi-briefcase-edit", "green", "Editable").AddDivider
 	dtschema.AddButtonIcon("btnSwitches", "mdi-electric-switch", "orange", "Switches").AddDivider
 	dtschema.AddButtonIcon("btnRelationships", "mdi-transit-connection", "purple", "Relationships")
-	
+	'
+	dtschema.SetColumnChooser(True)
+	'
 	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	vm.container.AddComponent(1, 1, contSchema.tostring)
@@ -18931,4 +18933,72 @@ Sub Design_Transition
 	sb.Append($"${sparent}.AddControl(trn${sname}.Transition, trn${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$)
 	AddNewLine(sb)
 	AddNewLine(sb)
+End Sub
+
+Sub AddFieldSelector(dtID As String, dtSource As String, dtKey As String, dtTitle As String, MethodName As String)
+	dtID = dtID.tolowercase
+	
+	Dim dtMenu As VMMenu
+	dtMenu.Initialize(vue, $"${dtID}fsmenu"$, Me)
+	dtMenu.SetAttrLoose("offset-y")
+	dtMenu.SetAttrSingle(":nudge-left", "170")
+	dtMenu.SetAttrSingle(":close-on-content-click", "false")
+	'create the menu button
+	Dim btnMenu As VMButton
+	btnMenu.Initialize(vue, $"${dtID}fsbutton"$, Me)
+	btnMenu.SetAttrLoose("icon")
+	btnMenu.SetAttrSingle("slot", "activator")
+	'
+	Dim btnIcon As VMIcon
+	btnIcon.initialize(vue, $"${dtID}fsicon"$, Me)
+	btnIcon.SetText("more_vert")
+	'add icon to button
+	btnMenu.AddComponent(btnIcon.tostring)
+	'add button to menu
+	dtMenu.AddComponent(btnMenu.tostring)
+	'
+	Dim dtList As VMList
+	dtList.Initialize(vue, $"${dtID}list"$, Me)
+	'
+	Dim dtLI As VMListItem
+	dtLI.Initialize(vue, $"${dtID}li"$, Me)
+	dtLI.SetAttrSingle("v-for", $"(item, index) in ${dtSource}"$)
+	dtLI.SetAttrSingle(":key", $"item.${dtKey}"$)
+	'add checkbox slot
+	'Dim tmp As VMTemplate
+	'tmp.Initialize(vue, "", Me)
+	'tmp.SetAttrSingle("v-slot:default", "{ active, toggle }")
+	'add action item
+	Dim vlia As VMListItemAction
+	vlia.Initialize(vue, "", Me)
+	'add checkbox
+	Dim vliacb As VMCheckBox
+	vliacb.Initialize(vue, "", Me)
+	vliacb.SetStatic(bStatic)
+	vliacb.SetColor("primary")
+	vliacb.SetVModel($"item.${dtKey}"$)
+	vliacb.SetVif($"item.${dtTitle}"$)
+	vliacb.SetAttrSingle("@click", $"${dtID}_change(item)"$)
+	'add checkbox to item action
+	vlia.AddComponent(vliacb.tostring)
+	'add title
+	Dim vlic As VMListItemContent
+	vlic.Initialize(vue, "", Me)
+	Dim vlit As VMListItemTitle
+	vlit.Initialize(vue, "", Me)
+	vlit.SetStatic(bStatic)
+	vlit.SetVif($"item.${dtTitle}"$)
+	vlit.SetVText($"item.${dtTitle}"$)
+	vlic.AddComponent(vlit.ToString)
+	'add content to item
+	vlia.AddComponent(vlic.tostring)
+	'add action to template
+	'tmp.AddComponent(vlia.tostring)
+	'add template to item
+	dtLI.AddComponent(vlia.tostring)	
+	'add item to list
+	dtList.AddComponent(dtLI.tostring)
+	'add list to menu
+	dtMenu.AddComponent(dtList.Tostring)
+	'add menu to toolbar
 End Sub

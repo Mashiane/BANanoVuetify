@@ -126,6 +126,8 @@ Sub ApplyFilter(thisFilter As List)
 	For Each colx As String In thisFilter
 		tk.Put(colx, colx)
 	Next
+	Dim ds As List = vue.NewList
+	
 	'define new columns
 	Dim nm As Map = CreateMap()
 	'loop through master column
@@ -135,10 +137,18 @@ Sub ApplyFilter(thisFilter As List)
 			Dim nf As DataTableColumn = columnsM.Get(mc)
 			nm.Put(mc, nf)
 			cols.Add(mc)
+			'
+			Dim ctext As String = nf.text
+			Dim nc As Map = CreateMap()
+			nc.Put("id", mc)
+			nc.Put("text", ctext)
+			ds.Add(nc)
 		End If
 	Next
 	BuildHeaders(nm)
 	vue.SetData($"${ID}columns"$, cols)
+	'filter source
+	vue.SetData($"${ID}fsource"$, ds)
 End Sub
 
 Sub SetStatic(b As Boolean) As VMDataTable
@@ -430,31 +440,114 @@ End Sub
 'this should be added after all columns are added
 Sub SetColumnChooser(isfilter As Boolean)
 	If isfilter = False Then Return
-	Dim cols As Map = CreateMap()
+	'all columns should be selected
 	Dim ftime As List = vue.newlist
+	Dim fsource As List = vue.newlist
 	For Each colname As String In masterColumns
 		Dim colm As DataTableColumn = columnsM.Get(colname)
 		Dim coltext As String = colm.text
-		cols.Put(colname,coltext)
-		ftime.Add(colname)
+		'for selected items
+		ftime.add(colname)
+		'for data source
+		Dim cols As Map = CreateMap()
+		cols.Put("id", colname)
+		cols.Put("text", coltext)
+		fsource.Add(cols)
 	Next
+	'selectec items
 	vue.SetData($"${ID}columns"$, ftime)
-	'use select with map
-	Dim el As VMSelect
-	el.Initialize(vue, $"${ID}filter"$, Module) 
-	el.SetStatic(bStatic)
-	el.SetDesignMode(DesignMode)
-	el.SetOnChange(Me, "columnchooser")
-	el.SetSingleLine(True)
-	el.SetHideDetails(True)
-	el.SetSolo(True)
-	el.Setplaceholder("Filter")
-	el.Setmultiple(True)
-	el.SetSmallChips(True)
-	el.SetDeletableChips(True)
-	el.SetVModel($"${ID}columns"$)
-	el.SetOptions($"${ID}columnchooser"$, cols, "id", "text", False)
-	vcard.Title.AddComponent(el.ToString)
+	'filter source
+	vue.SetData($"${ID}fsource"$, fsource)
+	'
+	Dim dSource As String = $"${ID}fsource"$
+	Dim dtKey As String = "id"
+	Dim dtTitle As String = "text"
+	'
+	Dim dtMenu As VMMenu
+	dtMenu.Initialize(vue, $"${ID}fsmenu"$, Me)
+	dtMenu.SetOffSetY(True)
+	'dtMenu.SetAttrSingle(":nudge-left", "170")
+	dtMenu.SetAttrSingle(":close-on-content-click", "false")
+	'
+	Dim tmpact As VMTemplate
+	tmpact.Initialize(vue, "", Me)
+	tmpact.SetAttrSingle("v-slot:activator", "{ on, attrs }")
+	'
+	'create the menu button
+	Dim btnMenu As VMButton
+	btnMenu.Initialize(vue, $"${ID}fsbutton"$, Me)
+	btnMenu.SetAttrLoose("icon")
+	btnMenu.SetAttrSingle("v-on", "on")
+	btnMenu.SetAttrSingle("v-bind", "attrs")
+	btnMenu.Show
+	'
+	Dim btnIcon As VMIcon
+	btnIcon.initialize(vue, $"${ID}fsicon"$, Me)
+	btnIcon.SetText("more_vert")
+	'add icon to button
+	btnMenu.AddComponent(btnIcon.tostring)
+	'add to template
+	tmpact.AddComponent(btnMenu.ToString)
+	'add button to menu
+	dtMenu.AddComponent(tmpact.tostring)
+	'create a list
+	Dim dtList As VMList
+	dtList.Initialize(vue, $"${ID}list"$, Me)
+	dtList.SetDense(True)
+	'
+	Dim vlig As VMListItemGroup
+	vlig.Initialize(vue, $"${ID}lig"$, Me)
+	vlig.SetVModel($"${ID}columns"$)
+	vlig.SetAttrLoose("multiple")
+	vlig.SetOnChange("columnchooser")
+	'
+	Dim dtLI As VMListItem
+	dtLI.Initialize(vue, "", Me)
+	dtLI.SetAttrSingle("v-for", $"(item, index) in ${dSource}"$)
+	dtLI.SetAttrSingle(":key", $"item.${dtKey}"$)
+	dtLI.SetAttrSingle(":value", $"item.${dtKey}"$)
+	'add checkbox slot
+	Dim tmpx As VMTemplate
+	tmpx.Initialize(vue, "", Me)
+	tmpx.SetAttrSingle("v-slot:default", "{ active, toggle }")
+	'add action item
+	Dim vlia As VMListItemAction
+	vlia.Initialize(vue, "", Me)
+	'add checkbox
+	Dim vliacb As VMCheckBox
+	vliacb.Initialize(vue, "", Me)
+	vliacb.SetStatic(bStatic)
+	vliacb.SetAttrSingle(":input-value", "active")
+	vliacb.SetAttrSingle(":key", $"item.${dtKey}"$)
+	vliacb.SetAttrSingle(":true-value", $"item.${dtKey}"$)
+	vliacb.SetColor("primary")
+	vliacb.SetDense(True)
+	vliacb.SetAttrSingle("@click", "toggle")
+		
+	'add checkbox to item action
+	vlia.AddComponent(vliacb.tostring)
+	tmpx.AddComponent(vlia.ToString)
+	
+	'add title
+	Dim vlic As VMListItemContent
+	vlic.Initialize(vue, "", Me)
+	Dim vlit As VMListItemTitle
+	vlit.Initialize(vue, "", Me)
+	vlit.SetStatic(bStatic)
+	vlit.SetVText($"item.${dtTitle}"$)
+	vlic.AddComponent(vlit.ToString)
+	'add template to item
+	tmpx.AddComponent(vlic.ToString)
+	dtLI.AddComponent(tmpx.tostring)
+	'add to group
+	vlig.AddComponent(dtLI.ToString)
+	'add item to list
+	dtList.AddComponent(vlig.tostring)
+	'add list to menu
+	dtMenu.AddComponent(dtList.Tostring)
+	'add to the card
+	Dim smenu As String = dtMenu.ToString
+	vcard.Title.AddComponent(smenu)
 	'
 	'add filter cancel
 	vcard.Title.AddDivider(True,Null,Null,Array("mx-2"),Null)
@@ -466,8 +559,11 @@ Sub SetColumnChooser(isfilter As Boolean)
 	btn.SetToolTip("Reset filter")
 	btn.AddIcon("mdi-filter-remove","","")
 	btn.SetColor("red")
+	btn.SetAttrLoose("icon")
 	btn.SetTransparent(True)
 	vcard.Title.AddComponent(btn.tostring)
+	'watch changes
+	'vue.SetWatch($"${ID}columns"$, True, False, Me, "columnchooser")
 End Sub
 
 private Sub removefilter_click(e As BANanoEvent)
@@ -476,8 +572,8 @@ End Sub
 
 private Sub columnchooser
 	'get chosen columns
-	Dim chosen As List = GetSelectedColumns
-	ApplyFilter(chosen)
+	Dim cols As List = vue.GetData($"${ID}columns"$)
+	ApplyFilter(cols)
 End Sub
 
 'return the chosen columns
