@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=Main,Process_Globals,14,1,BANanoOXML,Class_Globals,26,0,Main,AppStart,27,0,BANanoOXML,ReadFile,91,0,BANanoOXML,SetFormula1,445,0,BANanoOXML,Initialize,76,0
+NavigationStack=Main,AppStart,27,0,BANanoOXML,ReadFile,91,0,BANanoOXML,SetFormula1,445,0,BANanoOXML,Initialize,76,0,BANanoOXML,Class_Globals,63,0,Main,Process_Globals,13,1
 SelectedBuild=0
 VisibleModules=

@@ -186,6 +186,7 @@ Group=Default Group
 Library1=jcore
 Library10=bananosqliter2
 Library11=bananophplib
+Library12=bananoexcel
 Library2=jfx
 Library3=banano
 Library4=bananovuetifycore
@@ -197,7 +198,7 @@ Library9=bananovuetifyinfobox
 Module1=clsCodeBuilder
 Module2=pgIndex
 NumberOfFiles=91
-NumberOfLibraries=11
+NumberOfLibraries=12
 NumberOfModules=2
 Version=8.5
 @EndOfDesignText@
@@ -214,7 +215,7 @@ Sub Process_Globals
 	Public AppTitle As String = "BVMDesigner"
 	Private Publish As String = "C:\laragon\www"
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.20"
+	Public Version As String = "4.23"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
@@ -235,8 +236,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
 	BANano.TranspilerOptions.MinifyOnline = False
-	BANano.TranspilerOptions.IgnoreB4JLibrary("BANanoPostProcessor")
-	BANano.TranspilerOptions.ExternalTestConnectionServer = "http://www.localhost"
 	BANano.TranspilerOptions.EnableLiveCodeSwapping = False
 	BANano.TranspilerOptions.RedirectOutput(File.DirApp, "log.txt")
 	'set php settings
@@ -244,7 +243,6 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
 	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")	
 	'testing axios
-	'BANano.Header.AddJavascriptFile("axios.min.js")
 	
 	BANano.Build(Publish)
 	

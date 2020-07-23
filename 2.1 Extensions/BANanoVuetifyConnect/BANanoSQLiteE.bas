@@ -223,18 +223,19 @@ Sub SchemaAddBoolean(bools As List) As BANanoSQLiteE
 	Return Me
 End Sub
 '
-Sub SchemaFromDesign(vDesign As VMContainer) As BANanoSQLiteE
-	SchemaAddBoolean(vDesign.Booleans)
-	SchemaAddDate(vDesign.Dates)
-	SchemaAddFloat(vDesign.Doubles)
-	SchemaAddInt(vDesign.Integers)
-	SchemaAddText(vDesign.Strings)
+'
+Sub SchemaFromDesign(cont As VMContainer) As BANanoSQLiteE
+	SchemaAddBoolean(cont.Booleans)
+	SchemaAddDate(cont.Dates)
+	SchemaAddFloat(cont.Doubles)
+	SchemaAddInt(cont.Integers)
+	SchemaAddText(cont.Strings)
 	'update field types
-	AddStrings(vDesign.Strings)
-	AddIntegers(vDesign.Integers)
-	AddDoubles(vDesign.Doubles)
-	AddBooleans(vDesign.Booleans)
-	AddStrings(vDesign.Dates)
+	AddStrings(cont.Strings)
+	AddIntegers(cont.Integers)
+	AddDoubles(cont.Doubles)
+	AddBooleans(cont.Booleans)
+	AddStrings(cont.Dates)
 	Return Me
 End Sub
 
@@ -857,6 +858,7 @@ Sub Update(priValue As String) As BANanoSQLiteE
 End Sub
 
 Sub Update1(Rec As Map, priValue As String) As BANanoSQLiteE
+	Record = Rec
 	Dim tblWhere As Map = CreateMap()
 	tblWhere.Put(PrimaryKey, priValue)
 	UpdateWhere(TableName, Rec, tblWhere, Null)

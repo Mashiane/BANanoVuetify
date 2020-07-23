@@ -62,7 +62,6 @@ Sub SchemaAddBlob(bools As List) As BANanoAlaSQLE
 	Return Me
 End Sub
 
-
 'schema add boolean
 Sub SchemaAddBoolean(bools As List) As BANanoAlaSQLE
 	For Each b As String In bools
@@ -149,6 +148,7 @@ Sub Update(priValue As String) As BANanoAlaSQLE
 End Sub
 
 Sub Update1(rec As Map, priValue As String) As BANanoAlaSQLE
+	Record = rec
 	Dim tblWhere As Map = CreateMap()
 	tblWhere.Put(PrimaryKey, priValue)
 	UpdateWhere(rec, tblWhere, Null)
@@ -196,18 +196,18 @@ Sub SchemaAddStrings(strings As List) As BANanoAlaSQLE
 End Sub
 
 '
-Sub SchemaFromDesign(vDesign As VMContainer) As BANanoAlaSQLE
-	SchemaAddBoolean(vDesign.Booleans)
-	SchemaAddDate(vDesign.Dates)
-	SchemaAddFloat(vDesign.Doubles)
-	SchemaAddInt(vDesign.Integers)
-	SchemaAddText(vDesign.Strings)
+Sub SchemaFromDesign(cont As VMContainer) As BANanoAlaSQLE
+	SchemaAddBoolean(cont.Booleans)
+	SchemaAddDate(cont.Dates)
+	SchemaAddFloat(cont.Doubles)
+	SchemaAddInt(cont.Integers)
+	SchemaAddText(cont.Strings)
 	'update field types
-	AddStrings(vDesign.Strings)
-	AddIntegers(vDesign.Integers)
-	AddDoubles(vDesign.Doubles)
-	AddBooleans(vDesign.Booleans)
-	AddStrings(vDesign.Dates)
+	AddStrings(cont.Strings)
+	AddIntegers(cont.Integers)
+	AddDoubles(cont.Doubles)
+	AddBooleans(cont.Booleans)
+	AddStrings(cont.Dates)
 	Return Me
 End Sub
 
@@ -493,6 +493,7 @@ Sub Execute(strSQL As String) As BANanoAlaSQLE
 	affectedRows = 0
 	Return Me
 End Sub
+
 
 'return a sql map to insert record to table. sql = query string, values = list of values
 Sub Insert As BANanoAlaSQLE

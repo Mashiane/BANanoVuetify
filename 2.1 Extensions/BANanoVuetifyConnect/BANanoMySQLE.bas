@@ -49,6 +49,7 @@ Sub Class_Globals
 	Public PrimaryKey As String
 	Public Record As Map
 	Public Auto As String
+	Public fields As List
 End Sub
 
 'set database connection settings
@@ -131,6 +132,7 @@ Sub NewList As List
 	lst.Initialize
 	Return lst
 End Sub
+
 
 'convert the json
 Sub FromJSON As BANanoMySQLE
@@ -267,18 +269,19 @@ Sub SchemaAddBoolean(bools As List) As BANanoMySQLE
 	Return Me
 End Sub
 '
-Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMySQLE
-	SchemaAddBoolean(vDesign.Booleans)
-	SchemaAddDate(vDesign.Dates)
-	SchemaAddFloat(vDesign.Doubles)
-	SchemaAddInt(vDesign.Integers)
-	SchemaAddText(vDesign.Strings)
+'
+Sub SchemaFromDesign(cont As VMContainer) As BANanoMySQLE
+	SchemaAddBoolean(cont.Booleans)
+	SchemaAddDate(cont.Dates)
+	SchemaAddFloat(cont.Doubles)
+	SchemaAddInt(cont.Integers)
+	SchemaAddText(cont.Strings)
 	'update field types
-	AddStrings(vDesign.Strings)
-	AddIntegers(vDesign.Integers)
-	AddDoubles(vDesign.Doubles)
-	AddBooleans(vDesign.Booleans)
-	AddStrings(vDesign.Dates)
+	AddStrings(cont.Strings)
+	AddIntegers(cont.Integers)
+	AddDoubles(cont.Doubles)
+	AddBooleans(cont.Booleans)
+	AddStrings(cont.Dates)
 	Return Me
 End Sub
 
@@ -919,6 +922,7 @@ Sub Update(priValue As String) As BANanoMySQLE
 End Sub
 
 Sub Update1(Rec As Map, priValue As String) As BANanoMySQLE
+	Record = Rec
 	Dim tblWhere As Map = CreateMap()
 	tblWhere.Put(PrimaryKey, priValue)
 	UpdateWhere(TableName, Rec, tblWhere, Null)
@@ -962,6 +966,7 @@ Sub UpdateWhere(tblName As String, tblfields As Map, tblWhere As Map, operators 
 		Dim opr As String = operators.Get(i)
 		sb.Append($" ${opr} ?"$)
 	Next
+	fields = GetMapKeys(tblfields)
 	query = sb.tostring
 	args = listOfValues
 	types = listOfTypes

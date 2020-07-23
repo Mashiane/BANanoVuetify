@@ -40,6 +40,7 @@ Sub Class_Globals
 	Public DataTypes As Map
 	Public ControlTypes As Map
 	Public BottomNav As VMBottomNavigation
+	Public Notification As VMAlert
 	'
 	Public const COLOR_AMBER As String = "amber"
 	Public const COLOR_BLACK As String = "black"
@@ -168,6 +169,7 @@ Sub Class_Globals
 	Public FontSizes As Map
 	Private bUseRouter As Boolean
 	Public Position As Map
+	Public ShowWarnings As Boolean
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -177,6 +179,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Modules.Initialize 
 	Modules = vue.modules
 	placeHolder = 0
+	ShowWarnings = True
 	Options.Initialize
 	drawers.Initialize
 	Position.initialize
@@ -220,6 +223,16 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
 	'
+	Notification = CreateAlert("notif", eventHandler, "")
+	Notification.SetContent("Notification")
+	Notification.SetBorder("left")
+	Notification.SetColor("green")
+	Notification.SetColoredBorder(True)
+	Notification.SetDismissible(True)
+	Notification.SetIcon("")
+	Notification.SetType("")
+	Notification.Hide
+	'
 	'put loader on page
 	Overlay.Initialize(vue, "pageloader", eventHandler)
 	'
@@ -256,27 +269,6 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Alert.AddOK("btnalertOk", "Ok")
 	'
 	InitColors
-	
-	'
-	If SubExists(Module, "confirm_ok") = False Then
-		Log("Initialize.confirm_ok - please consider adding this optional event to trap confirm dialog!")
-	End If
-	'
-	If SubExists(Module, "confirm_cancel") = False Then
-		Log("Initialize.confirm_cancel - please consider adding this optional event to trap confirm dialog!")
-	End If
-	'
-	If SubExists(Module, "alert_ok") = False Then
-		Log("Initialize.alert_ok - please consider adding this optional event to trap alert dialog!")
-	End If
-	'
-	If SubExists(Module, "logo_click") = False Then
-		Log("Initialize.logo_click - please consider adding this optional event to trap logo click event if needed!")
-	End If
-	'
-	If SubExists(Module, "title_click") = False Then
-		Log("Initialize.title_click - please consider adding this optional event to trap title click event if needed!")
-	End If
 End Sub
 
 Sub SetUseRouter(b As Boolean) As BANanoVM
@@ -558,6 +550,18 @@ Sub ShowAlert(process As String, Title As String, Message As String, ConfirmText
 	Alert.Show
 End Sub
 
+Sub ShowNotification(Message As String, Color As String, Dismissable As Boolean)
+	Notification.SetContent(Message)
+	Notification.SetColor(Color)
+	Notification.SetDismissible(Dismissable)
+	Notification.SetIcon("")
+	Notification.Show
+End Sub
+
+Sub HideNotification
+	Notification.hide
+End Sub
+
 Sub GetConfirm As String
 	Dim sproc As String = vue.GetData("confirmkey")
 	Return sproc
@@ -705,6 +709,13 @@ Sub CreateDataTable(cID As String, PrimaryKey As String, eventHandler As Object)
 	Return el
 End Sub
 
+Sub CreatePagination(cID As String, eventHandler As Object) As VMPagination
+	Dim el As VMPagination
+	el.Initialize(vue, cID, eventHandler)
+	Return el
+End Sub
+
+
 Sub CreateDataTable1(el As VMDataTable, cID As String, PrimaryKey As String, eventHandler As Object)
 	el.Initialize(vue, cID,PrimaryKey,  eventHandler)
 End Sub
@@ -844,7 +855,7 @@ Sub BeautifyName(namx As String) As String
 End Sub
 
 Sub Capitalize(t As String) As String
-	Return vue.Capitalize(t)
+	Return vue.propercase(t)
 End Sub
 
 Sub ShowMulti(lst As List)
@@ -2218,6 +2229,28 @@ End Sub
 
 'build the page
 Sub UX
+	vue.ShowWarnings = ShowWarnings
+	If ShowWarnings Then
+		If SubExists(Module, "confirm_ok") = False Then
+			Log("Initialize.confirm_ok - please consider adding this optional event to trap confirm dialog!")
+		End If
+		'
+		If SubExists(Module, "confirm_cancel") = False Then
+			Log("Initialize.confirm_cancel - please consider adding this optional event to trap confirm dialog!")
+		End If
+		'
+		If SubExists(Module, "alert_ok") = False Then
+			Log("Initialize.alert_ok - please consider adding this optional event to trap alert dialog!")
+		End If
+		'
+		If SubExists(Module, "logo_click") = False Then
+			Log("Initialize.logo_click - please consider adding this optional event to trap logo click event if needed!")
+		End If
+		'
+		If SubExists(Module, "title_click") = False Then
+			Log("Initialize.title_click - please consider adding this optional event to trap title click event if needed!")
+		End If
+	End If
 	Drawer.SetRight(RTL)
 	'make spanish
 	Dim mlang As Map = CreateMap()
@@ -2237,6 +2270,7 @@ Sub UX
 	'
 	SnackBar.Pop(VContent)
 	Overlay.Pop(VContent)
+	Notification.Pop(VContent)
 	
 	'add drawer first
 	Drawer.Pop(VApp)

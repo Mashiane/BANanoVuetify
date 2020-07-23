@@ -40,7 +40,7 @@ End Sub
 
 Sub AddButton(btnID As String, btnText As String, btnIcon As String, btnColor As String, btnValue As String, btnToolTip As String, btnBadge As String)
 	Dim btn As VMButton
-	btn.Initialize(vue, btnID, Me)
+	btn.Initialize(vue, btnID, Module)
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
 	btn.SetColor(btnColor)

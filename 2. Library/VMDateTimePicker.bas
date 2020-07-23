@@ -17,6 +17,7 @@ Sub Class_Globals
 	Public TextField As VMTextField
 	Private bTimePicker As Boolean
 	Private bStatic As Boolean
+	Private bHideIcons As Boolean
 End Sub
 
 'initialize the DateTimePicker
@@ -34,7 +35,24 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	TextField.Initialize(vue, $"${ID}txt"$, Module)
 	bTimePicker = False
 	bStatic = False
+	bHideIcons = False
 	Return Me
+End Sub
+
+private Sub formatdate(sFormat As String) As String
+	Dim sdate As String = vue.GetData(vmodel)
+	If sdate.Length = 0 Then Return ""
+	Try
+		sdate = vue.MvField(sdate,1," ")
+		sdate = sdate.trim
+		DateTime.DateFormat = "yyyy-MM-dd"
+		Dim dt As Long = DateTime.DateParse(sdate)
+		DateTime.DateFormat = sFormat
+		Dim rslt As String = DateTime.Date(dt)
+		Return rslt
+	Catch
+		Return sdate
+	End Try
 End Sub
 
 'set autofocus
@@ -216,7 +234,7 @@ Sub ToString As String
 		dMenu.SetAttrSingle("ref", $"${ID}menu"$)
 		dMenu.SetVModel($"${ID}menu"$)
 		dMenu.SetAttrSingle(":close-on-content-click", False)
-		dMenu.SetAttrSingle(":nudge-right", "40")
+		'dMenu.SetAttrSingle(":nudge-right", "40")
 		dMenu.SetAttrSingle(":return-value.sync", vmodel)
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
@@ -224,9 +242,24 @@ Sub ToString As String
 		dMenu.SetAttrSingle("max-width", "290px")
 		'
 		Dim tmpl As VMTemplate
-		tmpl.Initialize(vue, $"${ID}tmpl"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetSlotActivatorOn
+		tmpl.Initialize(vue, $"${ID}tmpl"$, Module)
+		tmpl.SetStatic(bStatic)
+		tmpl.SetDesignMode(DesignMode)
+		tmpl.SetSlotActivator1($"on"$)
 		'
-		TextField.SetAttrloose("readonly").SetAttrSingle("v-on", "on")
+		TextField.SetAttrSingle("v-on", $"on"$)
+		'TextField.SetAttrSingle("v-bind", "attrs")
+		'TextField.SetAttrSingle("@blur", $"${ID}menu = false"$)
+		If bHideIcons = False Then
+			If bTimePicker Then
+				TextField.SetAppendIcon("schedule")
+				TextField.SetAttrSingle("@click:append", $"${ID}menu = !${ID}menu"$)
+			Else
+				TextField.SetAppendIcon("today")
+				TextField.SetAttrSingle("@click:append", $"${ID}menu = !${ID}menu"$)
+			End If
+		End If
+		
 		TextField.Pop(tmpl.Template)
 		dMenu.SetText(tmpl.ToString)
 		'
@@ -607,13 +640,14 @@ End Sub
 
 'set readonly
 Sub SetReadonly(varReadonly As Boolean) As VMDateTimePicker
-	If varReadonly = False Then Return Me
+	bHideIcons = varReadonly
 	If bStatic Then
-		DateTimePicker.SetAttrSingle("readonly", varReadonly)
+		TextField.SetAttrSingle("readonly", varReadonly)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Readonly"$
 	vue.SetStateSingle(pp, varReadonly)
+	TextField.Bind(":readonly", pp)
 	DateTimePicker.Bind(":readonly", pp)
 	Return Me
 End Sub

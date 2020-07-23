@@ -25,7 +25,7 @@ Module1=VMPrism
 NumberOfFiles=8
 NumberOfLibraries=4
 NumberOfModules=1
-Version=8.27
+Version=8.5
 @EndOfDesignText@
 '
 #IgnoreWarnings: 12, 15
@@ -38,17 +38,14 @@ Version=8.27
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyPrism"
-	Public Version As String = "1.02"
+	Public Version As String = "4.00"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
-	Dim appFile As String = $"app${Version}.js"$
-	
 	'initialize banano for first use
-	BANano.Initialize("BANano", AppName, Version)
+	BANano.Initialize("BANano", "BANanoVuetifyPrism", DateTime.now)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = AppName
-	BANano.JAVASCRIPT_NAME = appFile
 	'
 	BANano.Header.AddJavascriptFile("fileSaver.min.js")
 	BANano.Header.AddJavascriptFile("jszip.min.js")

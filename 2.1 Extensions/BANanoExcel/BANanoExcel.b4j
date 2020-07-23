@@ -12,12 +12,11 @@ Group=Default Group
 Library1=jcore
 Library2=jfx
 Library3=banano
-Library4=bananovuetifycore
 Module1=BANanoOXML
 NumberOfFiles=4
-NumberOfLibraries=4
+NumberOfLibraries=3
 NumberOfModules=1
-Version=8.27
+Version=8.5
 @EndOfDesignText@
 '
 #IgnoreWarnings: 12, 15
@@ -31,7 +30,7 @@ Version=8.27
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoExcel"
-	Public Version As String = "1.00"
+	Public Version As String = "4.00"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

@@ -119,6 +119,26 @@ Sub AddButton1(key As String, iconName As String, iconColor As String, text As S
 	Return Me
 End Sub
 
+Sub AddButton2(btnID As String, btnText As String, btnIcon As String, btnColor As String, btnValue As String, btnToolTip As String, btnBadge As String, btnRaised As Boolean, btnFab As Boolean)
+	Dim btn As VMButton
+	btn.Initialize(vue, btnID, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetColor(btnColor)
+	btn.SetSpan(btnText)
+	btn.AddIcon(btnIcon, "", "")
+	btn.SetTooltip(btnToolTip)
+	btn.SetRaised(btnRaised)
+	btn.SetAttrSingle("value", btnValue)
+	btn.SetFab(btnFab)
+	If btnBadge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(btnBadge)
+	End If
+	HasContent = True
+	CardTitle.SetText(btn.ToString)
+End Sub
+
 Sub AddIcon(key As String, iconName As String, iconColor As String, iconSize As String, toolTip As String, badge As String) As VMCardTitle
 	key = key.tolowercase
 	Dim btn As VMButton

@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=VMPrism,Class_Globals,13,0,Main,AppStart,28,5,VMPrism,Initialize,35,6,Main,Process_Globals,12,3
+NavigationStack=VMPrism,Class_Globals,13,0,VMPrism,Initialize,35,6,Main,AppStart,18,6,Main,Process_Globals,11,3
 SelectedBuild=0
 VisibleModules=

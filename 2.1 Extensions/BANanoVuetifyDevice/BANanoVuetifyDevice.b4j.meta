@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=VMDevice,SetIPhone8,437,0,VMDevice,SetIPhone5S,420,0,VMDevice,SetIPhone8Plus,442,0,VMDevice,ToString,216,0,Main,Process_Globals,14,0,Main,AppStart,19,0,VMDevice,Class_Globals,28,0,VMDevice,Initialize,64,0
+NavigationStack=VMDevice,SetIPhone8,437,0,VMDevice,SetIPhone5S,420,0,VMDevice,SetIPhone8Plus,442,0,VMDevice,ToString,216,0,Main,AppStart,19,0,VMDevice,Class_Globals,28,0,VMDevice,Initialize,64,0,Main,Process_Globals,12,0
 SelectedBuild=0
 VisibleModules=1

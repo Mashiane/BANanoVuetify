@@ -50,7 +50,7 @@ Module9=modPDF
 NumberOfFiles=7
 NumberOfLibraries=19
 NumberOfModules=13
-Version=8.31
+Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 

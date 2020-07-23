@@ -48,7 +48,6 @@ Sub Class_Globals
 	Private Auto As String
 End Sub
 
-
 'set database connection settings
 Sub SetConnection(shost As String, susername As String, spassword As String) As BANanoMSSQLE
 	host = shost
@@ -236,6 +235,7 @@ Sub Update(priValue As String) As BANanoMSSQLE
 End Sub
 
 Sub Update1(Rec As Map, priValue As String) As BANanoMSSQLE
+	Record = rec
 	Dim tblWhere As Map = CreateMap()
 	tblWhere.Put(PrimaryKey, priValue)
 	UpdateWhere(TableName, Rec, tblWhere, Null)
@@ -277,18 +277,19 @@ Sub SchemaAddBooleans(bools As List) As BANanoMSSQLE
 End Sub
 '
 
-Sub SchemaFromDesign(vDesign As VMContainer) As BANanoMSSQLE
-	SchemaAddBoolean(vDesign.Booleans)
-	SchemaAddDate(vDesign.Dates)
-	SchemaAddFloat(vDesign.Doubles)
-	SchemaAddInt(vDesign.Integers)
-	SchemaAddText(vDesign.Strings)
+'
+Sub SchemaFromDesign(cont As VMContainer) As BANanoMSSQLE
+	SchemaAddBoolean(cont.Booleans)
+	SchemaAddDate(cont.Dates)
+	SchemaAddFloat(cont.Doubles)
+	SchemaAddInt(cont.Integers)
+	SchemaAddText(cont.Strings)
 	'update field types
-	AddStrings(vDesign.Strings)
-	AddIntegers(vDesign.Integers)
-	AddDoubles(vDesign.Doubles)
-	AddBooleans(vDesign.Booleans)
-	AddStrings(vDesign.Dates)
+	AddStrings(cont.Strings)
+	AddIntegers(cont.Integers)
+	AddDoubles(cont.Doubles)
+	AddBooleans(cont.Booleans)
+	AddStrings(cont.Dates)
 	Return Me
 End Sub
 

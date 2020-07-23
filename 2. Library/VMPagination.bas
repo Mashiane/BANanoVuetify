@@ -59,6 +59,16 @@ Sub AddChild(child As VMElement) As VMPagination
 	Return Me
 End Sub
 
+'link a data-table to the pagination
+Sub SetDataTable(tblID As String) As VMPagination
+	tblID = tblID.tolowercase
+	SetAttrSingle(":length", $"${tblID}pagecount"$)
+	SetAttrSingle("v-model", $"${tblID}page"$)
+	vue.SetData($"${tblID}page"$, "1")
+	vue.SetData($"${tblID}pagecount"$, "0")
+	Return Me
+End Sub
+
 
 'add to parent
 Sub Pop(p As VMElement)

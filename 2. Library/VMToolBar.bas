@@ -70,6 +70,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'add divider on the toolbar
+Sub AddDivider1 As VMToolBar
+	AddDivider(True, Null, Null, Array("mx-2"), Null)
+	Return Me
+End Sub
+
 Sub SetLoading(b As Boolean)
 	Progress.SetActive(b)
 	Progress.SetIndeterminate(b)

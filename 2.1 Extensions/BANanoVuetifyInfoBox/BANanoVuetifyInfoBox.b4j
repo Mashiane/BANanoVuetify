@@ -16,7 +16,7 @@ Module2=VMInfoBox
 NumberOfFiles=3
 NumberOfLibraries=4
 NumberOfModules=2
-Version=8.3
+Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -29,7 +29,7 @@ Version=8.3
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyInfoBox"
-	Public Version As String = "1.02"
+	Public Version As String = "4.00"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

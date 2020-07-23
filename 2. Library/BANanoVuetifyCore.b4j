@@ -241,13 +241,12 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.20"
+	Public Version As String = "4.23"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
 	'initialize banano for first use
-	BANano.Initialize("BANano", "BANanoVuetifyCore", DateTime.now)
-	BANano.HTML_NAME = "index.html"
+	BANano.Initialize("BANano", AppName, Version)
 	BANano.Header.Title = AppName
 	'online installation
 '	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900")
@@ -264,7 +263,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'2. remove links that point to interweb above
 	'3. uncomment lines from below
 	
-	'BANano.Header.AddCSSFile("fontawesome.min.css")
+	BANano.Header.AddCSSFile("fontawesome.min.css")
 	BANano.Header.AddCSSFile("roboto.min.css")
 	BANano.Header.AddCSSFile("market.min.css")
 	BANano.Header.AddCSSFile("materialfont.min.css")

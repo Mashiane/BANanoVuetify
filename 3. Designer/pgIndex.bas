@@ -7,6 +7,7 @@ Version=8.1
 'Static code module
 #ignorewarnings: 12, 9
 Sub Process_Globals
+	Private focusOn As String
 	Private dtschema As VMDataTable
 	Private dtvuetifyattributes As VMDataTable
 	Private bisGroup As Boolean
@@ -793,7 +794,9 @@ Sub Init
 	'
 	Dim ct As List = vm.Map2Options(vm.controltypes,"id","text")
 	vm.setdata("ct", ct)
-
+	
+	Dim lfieldtypes As List = vm.map2options(fieldtypes, "id", "text")
+	vm.setdata("fieldtypes", lfieldtypes)
 	
 	iconpos.initialize
 	iconpos.put("left", "Left")
@@ -839,7 +842,7 @@ Sub Init
 	'
 	'Add an invisible file selector
 	vm.AddFileSelect(Me, "fssqlite")
-	
+	vm.AddFileSelect(Me, "importfields")
 	
 	vm.UX
 	'
@@ -2298,6 +2301,7 @@ Sub fssqlite_change(e As BANanoEvent)
 	vm.NullifyFileSelect("fssqlite")
 End Sub
 
+'import database
 Sub btnDbConnect_click(e As BANanoEvent)
 	'clear the treeview
 	vue.setdata("databasetable", "")
@@ -2639,6 +2643,7 @@ Sub CreateProjectDrawer
 	ptbl.SetDense(True).SetFlat(True)
 	ptbl.AddSpacer
 	ptbl.AddIcon1("btnDbImport", "mdi-plus", "", "Import SQLite Database","")
+	'import database
 	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","0")
 	'
 	dtschema.SetDataSource(vm.newlist)
@@ -3232,7 +3237,7 @@ Sub CreateUX
 		sHref = mattr.getdefault("href","")
 		sTarget = mattr.getdefault("target","")
 		sTo = mattr.getdefault("to","")
-		bistext = YesNoToBoolean(mattr.getdefault("istext", "No"))
+		bisText = YesNoToBoolean(mattr.getdefault("istext", "No"))
 		bisdepressed = YesNoToBoolean(mattr.getdefault("isdepressed", "No"))
 		bisTile = YesNoToBoolean(mattr.getdefault("istile", "No"))
 		sSize = mattr.GetDefault("size", "")
@@ -3543,8 +3548,8 @@ Sub Read_Toolbar
 	slogoheight = mattr.getdefault("logoheight","46px")
 	bishamburger = YesNoToBoolean(mattr.getdefault("ishamburger", "No"))
 	biscurrent = YesNoToBoolean(mattr.getdefault("iscurrent", "No"))
-	bisflat = YesNoToBoolean(mattr.getdefault("isflat","No"))
-	bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisFlat = YesNoToBoolean(mattr.getdefault("isflat","No"))
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
 	bisclippedleft = YesNoToBoolean(mattr.getdefault("isclippedleft", "No"))
 	bisclippedright = YesNoToBoolean(mattr.getdefault("isclippedright", "No"))
 	bisclippedleft = YesNoToBoolean(mattr.getdefault("isclippedleft", "No"))
@@ -3553,11 +3558,11 @@ Sub Read_Toolbar
 	biselevateonscroll = YesNoToBoolean(mattr.getdefault("iselevateonscroll", "No"))
 	bisextended = YesNoToBoolean(mattr.getdefault("isextended", "No"))
 	bisfadeimageonscroll = YesNoToBoolean(mattr.getdefault("isfadeimageonscroll", "No"))
-	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
 	bisfloating = YesNoToBoolean(mattr.getdefault("isfloating", "No"))
 	bisHideonscroll = YesNoToBoolean(mattr.getdefault("ishideonscroll", "No"))
 	bisinvertedscroll = YesNoToBoolean(mattr.getdefault("isinvertedscroll", "No"))
-	bisprominent = YesNoToBoolean(mattr.getdefault("isprominent", "No"))
+	bisProminent = YesNoToBoolean(mattr.getdefault("isprominent", "No"))
 	bisscrolloffscreen = YesNoToBoolean(mattr.getdefault("isscrolloffscreen", "No"))
 	bisshort = YesNoToBoolean(mattr.getdefault("isshort", "No"))
 	bisshrinkonscroll = YesNoToBoolean(mattr.getdefault("isshrinkonscroll", "No"))
@@ -3607,29 +3612,29 @@ Sub Read_Drawer
 	If sColor = "undefined" Then sColor = ""
 	If sColor = "none" Then sColor = ""
 	sintensity = mattr.getdefault("intensity","")
-	sheight = mattr.getdefault("height", "")
+	sHeight = mattr.getdefault("height", "")
 	sminivariantwidth = mattr.getdefault("minivariantwidth", "")
 	smobilebreakpoint = mattr.getdefault("mobilebreakpoint", "")
-	soverlaycolor = mattr.getdefault("overlaycolor", "")
-	soverlayopacity = mattr.getdefault("overlayopacity", "")
-	If soverlaycolor = "undefined" Then soverlaycolor = ""
-	If soverlaycolor = "none" Then soverlaycolor = ""
+	sOverlaycolor = mattr.getdefault("overlaycolor", "")
+	sOverlayopacity = mattr.getdefault("overlayopacity", "")
+	If sOverlaycolor = "undefined" Then sOverlaycolor = ""
+	If sOverlaycolor = "none" Then sOverlaycolor = ""
 	sTabindex = mattr.getdefault("tabindex", "")
 	sTag = mattr.getdefault("tag", "")
 	sWidth = mattr.getdefault("width", "")
 	smtitle = mattr.getdefault("mtitle", "")
 	smsubtitle = mattr.getdefault("msubtitle", "")
 	'
-	bisabsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
-	bisapp = YesNoToBoolean(mattr.getdefault("isapp", "No"))
-	bisbottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
+	bisAbsolute = YesNoToBoolean(mattr.getdefault("isabsolute", "No"))
+	bisApp = YesNoToBoolean(mattr.getdefault("isapp", "No"))
+	bisBottom = YesNoToBoolean(mattr.getdefault("isbottom", "No"))
 	bisclipped = YesNoToBoolean(mattr.getdefault("isclipped", "No"))
 	bisdisableresizewatcher = YesNoToBoolean(mattr.getdefault("isdisableresizewatcher", "No"))
 	bisdisableroutewatcher = YesNoToBoolean(mattr.getdefault("isdisableroutewatcher", "No"))
 	bisexpandonhover = YesNoToBoolean(mattr.getdefault("isexpandonhover", "No"))
-	bisfixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
+	bisFixed = YesNoToBoolean(mattr.getdefault("isfixed", "No"))
 	bisfloating = YesNoToBoolean(mattr.getdefault("isfloating", "No"))
-	bishideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
+	bisHideoverlay = YesNoToBoolean(mattr.getdefault("ishideoverlay", "No"))
 	bisLight = YesNoToBoolean(mattr.getdefault("islight", "No"))
 	bismini = YesNoToBoolean(mattr.getdefault("ismini", "No"))
 	bisminivariant = YesNoToBoolean(mattr.getdefault("isminivariant", "No"))
@@ -3640,7 +3645,7 @@ Sub Read_Drawer
 	bisstateless = YesNoToBoolean(mattr.getdefault("isstateless", "No"))
 	bistemporary = YesNoToBoolean(mattr.getdefault("istemporary", "No"))
 	bistouchless = YesNoToBoolean(mattr.getdefault("istouchless", "No"))
-	bisinset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
+	bisInset = YesNoToBoolean(mattr.getdefault("isinset", "No"))
 	bismasterdrawer = YesNoToBoolean(mattr.getdefault("ismasterdrawer", "No"))
 	bisopenonmedium = YesNoToBoolean(mattr.getdefault("isopenonmedium", "No"))
 	'
@@ -3862,6 +3867,7 @@ Sub Design_TextArea
 	CodeLine(sb, bisOutlined, "b", "txta", sname, "SetOutlined")
 	CodeLine(sb, bisFilled, "b", "txta", sname, "SetFilled")
 	CodeLine(sb, bisAutofocus, "b", "txta", sname, "SetAutoFocus")
+	If bisAutofocus Then focusOn = "txta" & sname
 	CodeLine(sb, bisDense, "b", "txta", sname, "SetDense")
 	CodeLine(sb, bisSingleline, "b", "txta", sname, "SetSingleLine")
 	CodeLine(sb, bisPersistenthint, "b", "txta", sname, "SetPersistentHint")
@@ -3952,7 +3958,7 @@ Sub Design_Switch
 	CodeLine(sb, bisDark, "b", "swt", sname, "SetDark")
 	CodeLine(sb, bisDense, "b", "swt", sname, "SetDense")
 	CodeLine(sb, bisHidedetails, "b", "swt", sname, "SetHideDetails")
-	CodeLine(sb, bisinset, "b", "swt", sname, "SetInset")
+	CodeLine(sb, bisInset, "b", "swt", sname, "SetInset")
 	CodeLine(sb, bisLight, "b", "swt", sname, "SetLight")
 	CodeLine(sb, sswitchloading, "s", "swt", sname, "SetLoading")
 	CodeLine(sb, bisMultiple, "b", "swt", sname, "SetMultiple")
@@ -3992,14 +3998,14 @@ End Sub
 
 Sub Design_CheckBox
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, stitle, struevalue, sfalsevalue, bisPrimary, sTabindex)
+	Dim chk As VMCheckBox = ui.NewCheckBox(Me, True, sname, svmodel, sTitle, struevalue, sfalsevalue, bisPrimary, sTabindex)
 	chk.SetColorIntensity(sColor, sintensity)
 	chk.SetRequired(bisRequired)
 	chk.SetDisabled(bisDisabled)
 	chk.SetDark(bisDark)
 	chk.SetDense(bisDense)
 	chk.SetHideDetails(bisHidedetails)
-	chk.SetIndeterminate(bisindeterminate)
+	chk.SetIndeterminate(bisIndeterminate)
 	chk.SetLight(bisLight)
 	chk.SetMultiple(bisMultiple)
 	chk.SetValue(svalue)
@@ -4034,7 +4040,7 @@ Sub Design_CheckBox
 	AddCode(sb, $"'INSTRUCTION: Copy & paste the code below to where your "${sparent}" is being built!"$)
 	AddNewLine(sb)
 	'
-	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${stitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${sTabindex})"$).append(CRLF)
+	sb.append($"Dim chk${sname} As VMCheckBox = vm.NewCheckBox(Me, ${bStatic}, "chk${sname}", "${svmodel}", "${sTitle}", "${struevalue}", "${sfalsevalue}", ${bisPrimary}, ${sTabindex})"$).append(CRLF)
 	CodeLine(sb, bisRequired, "b", "chk", sname, "SetRequired")
 	CodeLine(sb, svalue, "s", "chk", sname, "SetValue")
 	CodeLine(sb, bisDisabled, "b", "chk", sname, "SetDisabled")
@@ -4044,7 +4050,7 @@ Sub Design_CheckBox
 	End If
 	CodeLine(sb, bisDense, "b", "chk", sname, "SetDense")
 	CodeLine(sb, bisHidedetails, "b", "chk", sname, "SetHideDetails")
-	CodeLine(sb, bisindeterminate, "b", "chk", sname, "SetIndeterminate")
+	CodeLine(sb, bisIndeterminate, "b", "chk", sname, "SetIndeterminate")
 	CodeLine(sb, bisLight, "b", "chk", sname, "SetLight")
 	CodeLine(sb, bisMultiple, "b", "chk", sname, "SetMultiple")
 	CodeLine(sb, sfieldtype, "s", "chk", sname, "SetFieldType")
@@ -4145,7 +4151,11 @@ Sub Design_Date
 	CodeLine(sb, sfieldtype, "s", "dp", sname, "SetFieldType")
 	CodeLine(sb, bisVisible, "b", "dp", sname, "SetVisible")
 	CodeLine(sb, bisDisabled, "b", "dp", sname, "SetDisabled")
+	CodeLine(sb, bisreadonly, "b", "dp", sname, "SetReadonly")
 	CodeLine(sb, bisrange, "b", "dp", sname, "SetRange")
+	AddComment(sb, "NB: date / time pickers are recommended to be read only!")
+	AddComment(sb, "NB: comment the next line to be able to enter a date manually!")
+	CodeLine(sb, True, "b", "dp", sname, "SetReadonly")
 	If sfloat <> "" Then
 		AddCode(sb, $"dp${sname}.AddClass("${sfloat}")"$)
 	End If
@@ -4154,6 +4164,7 @@ Sub Design_Date
 	CodeLine(sb, svalue, "s", "dp", sname, "SetValue")
 	CodeLine(sb, bisnow, "b", "dp", sname, "SetIsNow")
 	CodeLine(sb, bisAutofocus, "b", "dp", sname, "SetAutoFocus")
+	If bisAutofocus Then focusOn = "dp" & sname
 	'CodeLine(sb, bisnotitle, "b", "dp", sname, "SetNotitle")
 	CodeLine(sb, sfirstdayofweek, "s", "dp", sname, "SetFirstDayOfWeek")
 	CodeLine(sb, bisMultiple, "b", "dp", sname, "SetMultiple")
@@ -4669,6 +4680,7 @@ Sub Design_Select
 	CodeLine(sb, bisFilled, "b", "sel", sname, "SetFilled")
 	CodeLine(sb, bisDense, "b", "sel", sname, "SetDense")
 	CodeLine(sb, bisAutofocus, "b", "sel", sname, "SetAutoFocus")
+	If bisAutofocus Then focusOn = "sel" & sname
 	CodeLine(sb, bisSingleline, "b", "sel", sname, "SetSingleLine")
 	CodeLine(sb, bisPersistenthint, "b", "sel", sname, "SetPersistentHint")
 	CodeLine(sb, bisShaped, "b", "sel", sname, "SetShaped")
@@ -5348,8 +5360,8 @@ Sub Design_Time
 	CodeLine(sb, bisSingleline, "b", "tp", sname, "TextField.SetSingleLine")
 	CodeLine(sb, bisPersistenthint, "b", "tp", sname, "TextField.SetPersistentHint")
 	CodeLine(sb, bisShaped, "b", "tp", sname, "TextField.SetShaped")
-	CodeLine(sb, bisloading, "b", "tp", sname, "TextField.SetLoading")
-	CodeLine(sb, bisflat, "b", "tp", sname, "TextField.SetFlat")
+	CodeLine(sb, bisLoading, "b", "tp", sname, "TextField.SetLoading")
+	CodeLine(sb, bisFlat, "b", "tp", sname, "TextField.SetFlat")
 	CodeLine(sb, bisRounded, "b", "tp", sname, "TextField.SetRounded")
 	CodeLine(sb, bclearable, "b", "tp", sname, "TextField.SetClearable")
 	CodeLine(sb, bisHidedetails, "b", "tp", sname, "TextField.SetHideDetails")
@@ -6099,7 +6111,7 @@ Sub Design_Dialog
 	AddNewLine(sb)
 	AddInstruction(sb, "<Your Module>", "Code","")
 	AddComment(sb, "add the dialog to page")
-	sb.append($"CreateDialog_${sname}"$).append(CRLF)
+	sb.append($"CreateDialog${sname}"$).append(CRLF)
 	'
 	If bisshowonopen Then
 		AddNewLine(sb)
@@ -6112,7 +6124,7 @@ Sub Design_Dialog
 	AddInstruction(sb, "<Your Module>", "", "")
 	AddNewLine(sb)
 	AddComment(sb, "create dialog")
-	sb.append($"Sub CreateDialog_${vm.propercase(sname)}"$).append(CRLF)
+	sb.append($"Sub CreateDialog${vm.propercase(sname)}"$).append(CRLF)
 	sb.append($"dlg${sname} = vm.CreateDialog("dlg${sname}", Me)"$).Append(CRLF)
 	'
 	CodeLine(sb, sTitle, "s", "dlg", sname, "Settitle")
@@ -6203,9 +6215,10 @@ Sub Design_Dialog
 		sb.append($"If ${rsName}.Result.Size = 0 Then Return"$).append(CRLF)
 		AddComment(sb, "the record as found!")
 		sb.append($"Dim Record As Map = ${rsName}.result.get(0)"$).append(CRLF)
+		AddCode(sb, $"Record = vue.Map2Strings(Record)"$)
 		AddComment(sb, "update the state, this updates the v-model(s) for each input control")
 		sb.append($"vm.SetState(Record)"$).append(CRLF)
-		AddCode(sb, $"vm.SetFocus()"$)
+			AddCode(sb, $"vm.SetFocus(${sprimarykey})"$)
 	Case "sendcredentials"
 		AddComment(sbEvents, "read the contents!")
 		AddCode(sbEvents, $"Dim sfirstname As String = Record.get(?)"$)
@@ -6316,7 +6329,7 @@ Sub Design_Dialog
 		AddCode(sb, $"Case False"$)
 		AddCode(sb, $"Dim strError As String = ${rsName}.Error"$)
 		AddCode(sb, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$) 
-		AddCode(sb, $"vm.SetFocus()"$) 
+			AddCode(sb, $"vm.SetFocus(${sprimarykey})"$)
 		AddCode(sb, "End Select")
 	Case "save"
 		AddComment(sb, "read record id")
@@ -6359,7 +6372,7 @@ Sub Design_Dialog
 		AddCode(sb, $"Case False"$)
 		AddCode(sb, $"Dim strError As String = ${rsName}.Error"$)
 		AddCode(sb, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$)
-		AddCode(sb, $"vm.SetFocus()"$)
+			AddCode(sb, $"vm.SetFocus(${sprimarykey})"$)
 		AddCode(sb, "End Select")
 
 		
@@ -7322,6 +7335,7 @@ Sub Design_Button
 		End If
 		AddComment(sbEvents,"add code to read the record as a map")
 		AddCode(sbEvents, "Dim Record As Map = CreateMap()")
+		AddCode(sbEvents, $"Record = vue.Map2Strings(Record)"$)
 		AddComment(sbEvents, "set state to display the record")
 		AddCode(sbEvents, "vm.SetState(Record)")
 	Case "save"
@@ -7480,6 +7494,7 @@ Sub Design_TextField
 	CodeLine(sb, bisFilled, "b", "txt", sname, "SetFilled")
 	CodeLine(sb, bisDense, "b", "txt", sname, "SetDense")
 	CodeLine(sb, bisAutofocus, "b", "txt", sname, "SetAutoFocus")
+	If bisAutofocus Then focusOn = "txt" & sname
 	CodeLine(sb, bisSingleline, "b", "txt", sname, "SetSingleLine")
 	CodeLine(sb, bisPersistenthint, "b", "txt", sname, "SetPersistentHint")
 	CodeLine(sb, bisShaped, "b", "txt", sname, "SetShaped")
@@ -7943,12 +7958,16 @@ End Sub
 Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.AddColumn("key", "Name")
 	dt.AddColumn("title", "Title")
-	dt.AddColumns(CreateMap("subtitle": "ColType", "colwidth": "ColWidth"))
+	dt.AddColumn("coldatatype", "DataType")
 	dt.AddColumn("collength", "Length")
-	dt.AddColumn("coldatatype", "Data Type")
-	
+	dt.AddColumn("colfieldtype", "FieldType")
+	dt.AddColumn("coldateformat","DateFormat")
+	dt.AddColumn("colontable", "OnTable")
+	dt.AddColumn("subtitle", "ColType")
+	dt.AddColumn("colwidth", "ColWidth")
+	dt.AddColumn("colalign", "ColAlign")
+	dt.AddColumn("colsortable", "ColSortable")	
 	dt.AddColumn("colcontroltype", "Component")
-	dt.AddColumns(CreateMap("colalign": "ColAlign"))
 	dt.AddColumn("colvalue", "Value")
 		
 	dt.AddColumn("colrow", "R")
@@ -7965,12 +7984,11 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.AddColumn("colprimarykey", "PriKey")
 	dt.AddColumn("colautoincrement", "AutoInc")
 	dt.AddColumn("colisautofocus", "Focus")
-	dt.AddColumn("colontable", "OnTable")
 	dt.AddColumn("coldisplayvalue", "DisplayValue")
 	dt.AddColumn("colnoduplicate", "Unique")
-	dt.AddColumn("colsortable", "ColSortable")
 	dt.AddColumn("colindexed", "Indexed")
 	dt.AddColumn("colrequired", "Required")
+	dt.AddColumn("colreadonly", "ReadOnly")
 	dt.AddColumn("colvisible", "Visible")
 	dt.AddColumn("colishidedetails", "HideDetails")
 	dt.AddColumn("colactive", "Active")
@@ -7986,7 +8004,7 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	'
 	dt.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
 	dt.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
-	dt.SetColumnsSwitch(Array("colrequired","colvisible","colislookup"))
+	dt.SetColumnsSwitch(Array("colrequired","colvisible","colislookup","colreadonly"))
 	dt.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
 	'
 	dt.AddEditDialog("title",False)
@@ -7998,8 +8016,9 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.AddEditDialog("colsizelarge",False)
 	dt.AddEditDialog("colsizexlarge",False)
 	dt.AddEditDialog("colvalue", False)
-	dt.AddEditDialogTextArea("colkeys", False)
-	dt.AddEditDialogTextArea("colvalues", False)
+	dt.AddEditDialogTextArea("colkeys", True)
+	dt.AddEditDialogTextArea("colvalues", True)
+	dt.AddEditDialog("coldateformat", False)
 	
 	dt.AddEditDialog("colwidth", False)
 	dt.AddEditDialog("coloffsetsmall",False)
@@ -8014,6 +8033,8 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.AddEditDialogCombo("subtitle",False,"columntypes","id","text",False)
 	dt.AddEditDialogCombo("coldatatype",False,"datatypes","id","text",False)
 	dt.AddEditDialogCombo("colalign",False,"alignment","id","text",False)
+	dt.AddEditDialogCombo("colfieldtype",False,"fieldtypes","id","text",False)
+	
 	'
 	dt.AddSaveCancelOpenClose
 	'dt.SetColumnChooser(True)
@@ -8026,7 +8047,7 @@ Sub btnEditable1_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
 	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
-	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive","edit","delete"))
 	schemaDT.ApplyFilter(flt)
 End Sub
 
@@ -8035,8 +8056,8 @@ Sub btnSwitches1_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
 	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
-	flt.AddAll(Array("colrequired","colvisible","colislookup"))
-	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
+	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly"))
+	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions","edit","delete"))
 	schemaDT.Applyfilter(flt)
 End Sub
 
@@ -8045,7 +8066,7 @@ Sub btnRelationships1_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("colvalue", "colcontroltype"))
 	flt.AddAll(Array("colislookup", "colforeigntable", "colforeignkey", "colforeignvalue"))
-	flt.AddAll(Array("coluseoptions", "colkeys", "colvalues"))
+	flt.AddAll(Array("coluseoptions", "colkeys", "colvalues","edit","delete"))
 	
 	schemaDT.ApplyFilter(flt)
 End Sub
@@ -8140,6 +8161,7 @@ Sub UpdateRecord(item As Map, skey As String)
 	Dim scolautoincrement As String = item.get("colautoincrement")
 	Dim scolindexed As String = item.get("colindexed")
 	Dim scolislookup As String = item.get("colislookup")
+	Dim scolreadonly As String = item.get("colreadonly")
 	'		
 	item.put("itemscolontable", scolontable)
 	item.put("itemscolactive", scolactive)
@@ -8153,6 +8175,7 @@ Sub UpdateRecord(item As Map, skey As String)
 	item.put("itemscolautoincrement", scolautoincrement)
 	item.put("itemscolindexed", scolindexed)
 	item.put("itemscolislookup", scolislookup)	
+	item.put("itemscolreadonly", scolreadonly)
 	'
 	'read the existing items
 	Dim contents As List = vue.GetData("tableitems")
@@ -8490,10 +8513,11 @@ Sub dtvuetifyattributes_onsub(item As Map)
 	CompSourceCode
 End Sub
 
+'select database table
 Sub cboDatabaseTable_change(value As String)
 	If value = "" Then Return
 	'save the table we are processing
-	vm.setdata("mytable", value)
+	vm.setdata("thistable", value)
 	dtschema.UpdateTitle($"${vm.Beautifyname(value)} Schema"$)
 	'
 	vm.ShowLoading
@@ -8511,6 +8535,7 @@ Sub cboDatabaseTable_change(value As String)
 	DTSchemaEditable
 		
 	Dim dbfields As List = BANano.FromJson(fieldsJSON)
+	vm.SetData("schema", dbfields)
 	dtschema.SetDataSource(dbfields)
 	vm.hideloading
 End Sub
@@ -8518,7 +8543,7 @@ End Sub
 Sub btnSaveMySchema_click(e As BANanoEvent)
 	vm.Showloading
 	'get the table being processed
-	Dim mytable As String = vm.getdata("mytable")
+	Dim thistable As String = vm.getdata("thistable")
 	'get the data of the table
 	Dim tblList As List = dtschema.getdata
 	'lets fine the auto-increment, primary key and display fields
@@ -8568,7 +8593,7 @@ Sub btnSaveMySchema_click(e As BANanoEvent)
 	'save to the database
 	Dim rec As Map = CreateMap()
 	rec.put("fields", tblJSON)
-	rec.put("tablename", mytable)
+	rec.put("tablename", thistable)
 	rec.put("primarykey", scolprimarykey)
 	rec.put("displayfields", scoldisplayvalue)
 	rec.put("autoincrement", scolautoincrement)
@@ -8576,7 +8601,7 @@ Sub btnSaveMySchema_click(e As BANanoEvent)
 	Dim prjSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	prjSQL.Initialize("tables", "tablename")
-	prjSQL.Update1(rec, mytable)
+	prjSQL.Update1(rec, thistable)
 	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
 	prjSQL.fromJSON
 	vm.hideloading
@@ -8587,9 +8612,10 @@ End Sub
 
 'transfer content to data-table
 Sub tbltransfer1_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("Please note that ONLY ACTIVE columns will be transfered!")
 	vm.Showloading
 	'get the table being processed
-	Dim tbKey As String = vm.getdata("mytable")
+	Dim tbKey As String = vm.getdata("thistable")
 	'read the table from the database
 	Dim prjSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
@@ -8604,6 +8630,12 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	Dim sprimarykey As String = rec.get("primarykey")
 	Dim sdisplayfields As String = rec.get("displayfields")
 	Dim sautoincrement As String = rec.get("autoincrement")
+	'
+	Dim fldJSON As List = BANano.fromjson(sfieldsJSON)
+	
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim rslt As List = db.ExecuteWait("select * from ? where colactive = 'Yes'", Array(fldJSON))
+	Dim nJSON As String = BANano.tojson(rslt)
 	'
 	Dim sing As String = vm.propercase(tbKey)
 	sing = sing.Replace(" ","")
@@ -8683,7 +8715,7 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	nComp.put("classes", "")
 	nComp.put("loose","")
 	nComp.put("label", vue.propercase(tbKey))
-	nComp.put("items", sfieldsJSON)
+	nComp.put("items", nJSON)
 	nComp.put("controltype", "table")
 	nComp.put("deletecomp", "mdi-delete")
 	nComp.put("tabindex", "0")
@@ -8724,7 +8756,11 @@ Sub CreateSchema
 	cboTable.SetSolo(True)
 	cboTable.SetOnChange(Me, "cboDatabaseTable_change")
 	tbltoolbar2x.AddComponent("cboDatabaseTable", cboTable.tostring)
+	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnImportTitles","mdi-database-import","orange","Import field descriptions", "")
+	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnSaveMySchema","mdi-content-save","green","Save this schema", "")
+	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("tbltransfer1", "mdi-cog-transfer-outline", "green", "Convert to DataTable", "")
 	'
 	contSchema.AddControl(tbltoolbar2x.ToolBar, tbltoolbar2x.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
@@ -8742,6 +8778,8 @@ Sub CreateSchema
 	dtschema.SetSingleselect(True)
 	dtschema.SetVisible(True)
 	dtschema.SetDense(True)
+	'check date fields and make red row.
+	dtschema.SetItemClass("checkDateTime")
 	'
 	ConfigureSchemaEntry(dtschema)
 	
@@ -8754,14 +8792,91 @@ Sub CreateSchema
 	vm.container.AddComponent(1, 1, contSchema.tostring)
 End Sub
 
+'import field descriptions
+Sub btnImportTitles_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("The excel file should have 3 columns being 'Field','Description'")
+	vm.ShowFileSelect("importfields")
+End Sub
+
+'file change event
+Sub importfields_change(e As BANanoEvent)
+	'get the table to process
+	Dim thisTable As String = vm.getdata("thistable")
+	Dim fileList As List = vm.GetFileListFromTarget(e)
+	If fileList.size = 0 Then Return 
+	'get fields
+	Dim fields As List = vm.GetData("schema")
+	
+	'to save the map fields
+	Dim desc As Map = CreateMap()
+	
+	'only process 1 file, 1st sheet
+	Dim fr As String = fileList.get(0)
+	'
+	Dim Result As Map
+	Dim promise As BANanoPromise = vm.readAsBinaryString(fr)
+	promise.Then(Result)
+		'get the json content
+		Dim data As String = Result.get("result")
+				
+		'save fields to a map structure
+		Dim be As BANanoOXML
+		be.Initialize("")
+		Dim records As List = be.ReadFile(data)
+		For Each rec As Map In records
+			Dim sField As String = rec.get("Field")
+			Dim sDesc As String = rec.get("Description")
+			sField = sField.trim
+			sDesc = sDesc.trim
+			'only process this table
+			sField = vm.BeautifyName(sField)
+			sField = sField.tolowercase
+			desc.Put(sField, sDesc)
+		Next
+		'
+		Dim fldTot As Int = fields.Size - 1
+		Dim fldCnt As Int 
+		For fldCnt = 0 To fldTot
+			Dim fld As Map = fields.Get(fldCnt)
+			Dim skey As String = fld.get("key")
+			skey = vm.beautifyname(skey)
+			skey = skey.ToLowerCase
+			If desc.containskey(skey) Then
+				Dim xTitle As String = desc.get(skey)
+				fld.put("title", xTitle)
+				fields.Set(fldCnt, fld)
+			End If
+		Next
+		dtschema.SetDataSource(fields)
+	promise.Else(Result)
+		Dim compError As String = Result.get("result")
+		Log(compError)
+	promise.End
+	
+	'nully file component so we can select same file
+	vm.NullifyFileSelect("importfields")
+End Sub
+
+
 Sub DTSchemaEditable
 	Dim flt As List = vm.newlist
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
 	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
-	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive"))
 	dtschema.ApplyFilter(flt)
 	dtschema.SetDense(False)
+End Sub
+
+'mark row as red if we have dates
+Sub checkDateTime(item As Map) As String
+	Dim scoldatatype As String = item.get("coldatatype")
+	Select Case scoldatatype
+	Case "date", "datetime"
+		Return "red"
+	Case Else
+		Return ""
+	End Select
 End Sub
 
 Sub DTSchemaEditable1
@@ -8769,7 +8884,7 @@ Sub DTSchemaEditable1
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
 	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
-	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive","edit","delete"))
 	schemaDT.ApplyFilter(flt)
 	schemaDT.SetDense(False)
 End Sub
@@ -8783,7 +8898,7 @@ Sub btnSwitches_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
 	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
-	flt.AddAll(Array("colrequired","colvisible","colislookup"))
+	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly"))
 	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
 	dtschema.Applyfilter(flt)
 End Sub
@@ -8800,18 +8915,18 @@ End Sub
 'save records anytime the data changes on switches
 Sub dtschema_change(item As Map)
 	'get the table being processed
-	Dim mytable As String = vm.getdata("mytable")
+	Dim thistable As String = vm.getdata("thistable")
 	'get the data of the table
 	Dim tblList As List = dtschema.getdata
 	Dim tblJSON As String = BANano.tojson(tblList)
 	'save to the database
 	Dim rec As Map = CreateMap()
 	rec.put("fields", tblJSON)
-	rec.put("tablename", mytable)
+	rec.put("tablename", thistable)
 	Dim prjSQL As BANanoAlaSQLE
 	db.OpenWait("bvmdesigner", "bvmdesigner")
 	prjSQL.Initialize("tables", "tablename")
-	prjSQL.Update1(rec, mytable)
+	prjSQL.Update1(rec, thistable)
 	prjSQL.Result = db.ExecuteWait(prjSQL.query, prjSQL.args)
 	prjSQL.fromJSON
 	If prjSQL.ok = False Then
@@ -8875,10 +8990,7 @@ Sub SaveDatabaseSchema
 		'get table structure from all tables, this is a list of all fields
 		Dim tbStructure As List = dbTables.get(tbKey)
 		'
-		tbKey = tbKey.tolowercase
-		Dim sing As String = vm.propercase(tbKey)
-		sing = sing.Replace(" ","")
-		sing = sing.trim
+		tbKey = vm.Beautifyname(tbKey)
 		'
 		'to store fields of the table
 		Dim tblItems As List = vue.newlist
@@ -8924,35 +9036,22 @@ Sub SaveDatabaseSchema
 			'get the fld len
 			Dim fldLen As String = vue.val(sType)
 			'get the fld type
-			Dim fldType As String = vue.alpha(sType)
-			fldType = fldType.ToUpperCase
-			If fldType.EqualsIgnoreCase("double") Then fldType = "FLOAT"
-			If fldType.EqualsIgnoreCase("integer") Then fldType = "INT"
-			If fldType.EqualsIgnoreCase("long") Then fldType = "INT"
-			If fldType.EqualsIgnoreCase("short") Then fldType = "INT"
-			If fldType.endswith("INT") Then fldType = "INT"
-			If fldType.endswith("CHAR") Then fldType = "TEXT"
-			If fldType.endswith("TEXT") Then fldType = "TEXT"
-			If fldType.endswith("REAL") Then fldType = "FLOAT"
-			If fldType.endswith("BIT") Then fldType = "INT"
+			Dim dataType As String = vue.alpha(sType)
+			dataType = dataType.tolowercase
+			Dim fldType As String = vue.DataType2FieldType(dataType)
 			'
-			Select Case fldType
-			Case "INT"
-			Case "FLOAT"
-			Case "TEXT"
-			Case Else
-				fldType = "TEXT"
-			End Select
+			sField = vue.BeautifyName(sField)
 			'
 			'start creating the items
 			Dim ifld As Map = CreateMap()
 			ifld.put("key", sField)
-			ifld.put("title", vue.propercase(sField))
+			ifld.put("title", sField)
 			ifld.put("colcontroltype", "text")
 			ifld.put("collength", fldLen)
-			ifld.put("coldatatype", fldType)
-			ifld.put("colfieldtype", DataType2FieldType(fldType))
+			ifld.put("coldatatype", dataType)
+			ifld.put("colfieldtype", fldType)
 			ifld.put("colrequired", "No")
+			ifld.put("colreadonly", "No")
 			ifld.put("colvisible", "No")
 			ifld.put("colontable", "No")
 			ifld.put("colforeigntable", "")
@@ -8989,16 +9088,31 @@ Sub SaveDatabaseSchema
 			ifld.put("colscope", "Public")
 			ifld.put("colalign", "start")
 			ifld.put("colwidth", "0")
+			ifld.put("coldateformat", "")
+			'
+			Select Case fldType
+			Case "date", "datetime"
+				ifld.put("subtitle", "date")
+				ifld.put("colcontroltype", "date")
+				ifld.put("coldateformat","yyyy-MM-dd")
+			Case "dbl", "int"
+				ifld.put("colcontroltype", "tel")
+				ifld.put("colalign", "end")
+			End Select
 			'add to fields collection
 			tblItems.add(ifld)
 		Next
 		'these are field names
 		Dim itemsJSON As String = BANano.ToJson(tblItems)
 		'save to table
+		spri = vue.beautifyname(spri)
+		sauto = vue.beautifyname(sauto)
+		'
 		Dim trec As Map = CreateMap()
 		trec.put("tablename", tbKey)
 		trec.put("primarykey", spri)
 		trec.put("displayfields", "")
+		trec.put("autoincrement", sauto)
 		trec.put("fields", itemsJSON)
 		'
 		Dim contSQL As BANanoAlaSQLE
@@ -9089,6 +9203,7 @@ Sub AddInstruction(sbx As StringBuilder, modName As String, subName As String, p
 End Sub
 
 Sub Design_DBSourceCode
+	focusOn = ""
 	Dim prj As Map = vm.getdata("project")
 	Dim pid As String = prj.getdefault("id", "")
 	sprojectname = prj.getdefault("projectname", "")
@@ -9250,7 +9365,7 @@ Sub Design_DBSourceCode
 	sbl.append($"Dim RecID As String = vm.GetState("${tbName}${sItemkey}", "")"$).append(CRLF)
 	sbl.append($"If RecID = "" Then Return"$).append(CRLF)
 	AddComment(sbl, "delete the record")
-	sbl.append($"${mdlName}.DeleteRecord_${dlg}(RecID)"$).append(CRLF)
+	sbl.append($"${mdlName}.DeleteRecord${dlg}(RecID)"$).append(CRLF)
 	sbl.append(CRLF).append(CRLF)
 	'
 	'**** OPEN DB & CREATE TABLE
@@ -9350,18 +9465,18 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "hide the container")
 	AddCode(sbl, "cont.Hide")
 	AddComment(sbl, "add the table to container")
-	AddCode(sbl, $"CreateDataTable_${dlg}"$)
+	AddCode(sbl, $"CreateDataTable${dlg}"$)
 	AddComment(sbl, "add the dialog to page")
-	sbl.append($"CreateDialog_${dlg}"$).append(CRLF)
+	sbl.append($"CreateDialog${dlg}"$).append(CRLF)
 	AddComment(sbl, "add the container to the page")
 	AddCode(sbl, "vm.AddContainer(cont)")
 	AddComment(sbl, "add method to get all records")
-	AddCode(sbl, $"vm.SetMethod(Me, "SelectAll_${dlg}")"$)
+	AddCode(sbl, $"vm.SetMethod(Me, "SelectAll${dlg}")"$)
 	'
 	'set methods for foreign linkages
 	For Each f As Map In foreign
 		Dim scolforeigntable As String = f.getdefault("colforeigntable", "")
-		AddCode(sbl, $"vm.SetMethod(Me, "Load_${scolforeigntable}")"$)
+		AddCode(sbl, $"vm.SetMethod(Me, "Load${scolforeigntable}")"$)
 	Next
 	'
 	AddCode(sbl, "End Sub")
@@ -9416,13 +9531,13 @@ Sub Design_DBSourceCode
 	AddComment(sbl, "2. Show the page and hide others")
 	AddCode(sbl, $"vm.ShowPage(Name)"$)
 	AddComment(sbl, "load records to table")
-	AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
+	AddCode(sbl, $"vm.CallMethod("SelectAll${dlg}")"$)
 	AddCode(sbl, "End Sub")
 	AddNewLine(sbl)
 	'
 	'**** DELETE ALL RECORDS
 	AddComment(sbl, "delete all records")
-	sbl.append($"Sub DeleteAll_${dlg}"$).append(CRLF)
+	sbl.append($"Sub DeleteAll${dlg}"$).append(CRLF)
 	Select Case sdbtype
 		Case "banano"
 			AddComment(sbl, "database variable")
@@ -9447,12 +9562,12 @@ Sub Design_DBSourceCode
 	
 	AddCode(sbl, $"${rsName}.FromJSON"$)
 	AddComment(sbl, $"execute code to refresh listing for ${sTitle}"$)
-	AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
+	AddCode(sbl, $"vm.CallMethod("SelectAll${dlg}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
 	'**** DELETE SINGLE RECORD
 	AddComment(sbl, "delete single record")
-	sbl.append($"Sub DeleteRecord_${dlg}(RecordID As String)"$).append(CRLF)
+	sbl.append($"Sub DeleteRecord${dlg}(RecordID As String)"$).append(CRLF)
 	Select Case sdbtype
 	Case "banano"
 		AddComment(sbl, "database variable")
@@ -9482,12 +9597,12 @@ Sub Design_DBSourceCode
 	End Select
 	AddCode(sbl, $"${rsName}.FromJSON"$)
 	AddComment(sbl, $"execute code to refresh listing for ${sTitle}"$)
-	AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
+	AddCode(sbl, $"vm.CallMethod("SelectAll${dlg}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF)
 	'
 	'**** SELECT ALL RECORDS
 	AddComment(sbl, "select all records")
-	sbl.append($"Sub SelectAll_${dlg}"$).append(CRLF)
+	sbl.append($"Sub SelectAll${dlg}"$).append(CRLF)
 	Select Case sdbtype
 		Case "banano"
 			AddComment(sbl, "database variable")
@@ -9614,7 +9729,7 @@ Sub Design_DBSourceCode
 			'set methods for foreign linkages
 			For Each f As Map In foreign
 				Dim scolforeigntable As String = f.getdefault("colforeigntable", "")
-				AddCode(sbl, $"vm.CallMethod("Load_${scolforeigntable}")"$)
+				AddCode(sbl, $"vm.CallMethod("Load${scolforeigntable}")"$)
 			Next			
 			AddComment(sbl,"read existing record from database")
 				'read record from the database
@@ -9656,8 +9771,9 @@ Sub Design_DBSourceCode
 			AddComment(sbl, "show the modal")
 			AddCode(sbl, $"${diagName}.Show"$)
 			AddComment(sbl, "update the state, this updates the v-model(s) for each input control")
+			AddCode(sbl,$"Record = vue.Map2Strings(Record)"$)
 			sbl.append($"vm.SetState(Record)"$).append(CRLF)
-				AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
+				AddCode(sbl, $"vm.SetFocus("${focusOn}")"$)
 		Case "edit"
 			'we are editing
 			AddComment(sbl,"set mode to E-dit")
@@ -9665,7 +9781,7 @@ Sub Design_DBSourceCode
 			'set methods for foreign linkages
 			For Each f As Map In foreign
 				Dim scolforeigntable As String = f.getdefault("colforeigntable", "")
-				AddCode(sbl, $"vm.CallMethod("Load_${scolforeigntable}")"$)
+				AddCode(sbl, $"vm.CallMethod("Load${scolforeigntable}")"$)
 			Next
 			AddComment(sbl,"read record from database")
 			'read record from the database
@@ -9705,12 +9821,13 @@ Sub Design_DBSourceCode
 			AddComment(sbl, "show the modal")
 			AddCode(sbl, $"${diagName}.Show"$)
 			AddComment(sbl, "update the state, this updates the v-model(s) for each input control")
+			AddCode(sbl, $"Record = vue.Map2Strings(Record)"$)
 			sbl.append($"vm.SetState(Record)"$).append(CRLF)
-				AddCode(sbl,  $"vm.SetFocus(${xAuto})"$)
+			AddCode(sbl,  $"vm.SetFocus("${focusOn}")"$)
 		Case "delete"
 			'we are deleting
 			AddComment(sbl, "save the id to delete")
-				sbl.append($"vm.SetData("${tbName}${sItemkey}", RecID)"$).append(CRLF)
+			sbl.append($"vm.SetData("${tbName}${sItemkey}", RecID)"$).append(CRLF)
 			AddComment(sbl, "show confirm dialog")
 			sconfirmfield = sconfirmfield.tolowercase
 			AddCode(sbl, $"Dim s${sconfirmfield} As String = item.getdefault("${sconfirmfield}","")"$)
@@ -9732,13 +9849,13 @@ Sub Design_DBSourceCode
 	'set methods for foreign linkages
 	For Each f As Map In foreign
 		Dim scolforeigntable As String = f.getdefault("colforeigntable", "")
-		AddCode(sbl, $"vm.CallMethod("Load_${scolforeigntable}")"$)
+		AddCode(sbl, $"vm.CallMethod("Load${scolforeigntable}")"$)
 	Next
 	AddComment(sbl, "update the title")
 	sbl.append($"${diagName}.SetTitle("New ${ssingular}")"$).append(CRLF)
 	AddComment(sbl, "show dialog")
 	sbl.append($"${diagName}.Show"$).append(CRLF)
-	AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
+	AddCode(sbl, $"vm.SetFocus("${focusOn}")"$)
 	sbl.append("End Sub").append(CRLF).append(CRLF).Append(CRLF)
 	'
 	'**** CLICK - ADD NEW BUTTON ON TABLE
@@ -9755,7 +9872,7 @@ Sub Design_DBSourceCode
 	If isdialog Then
 		AddComment(sbl, "create dialog")
 		
-		sbl.append($"Sub CreateDialog_${dlg}"$).append(CRLF)
+		sbl.append($"Sub CreateDialog${dlg}"$).append(CRLF)
 		sbl.append($"${diagName} = vm.CreateDialog("${diagName}", Me)"$).Append(CRLF)
 		CodeLine(sbl, sTitle, "s", "", diagName, "SetTitle")
 		CodeLine2(sbl, $"btnOk${dlg}"$, "Save", "s", "", diagName, "SetOk")
@@ -9847,7 +9964,7 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"Case False"$)
 		AddCode(sbl, $"Dim strError As String = ${rsName}.Error"$)
 		AddCode(sbl, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$)
-		AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
+		AddCode(sbl, $"vm.SetFocus("${focusOn}")"$)
 		AddCode(sbl, "End Select")
 
 		'
@@ -9888,14 +10005,14 @@ Sub Design_DBSourceCode
 		AddCode(sbl, $"Case False"$)
 		AddCode(sbl, $"Dim strError As String = ${rsName}.Error"$)
 		AddCode(sbl, $"vm.ShowSnackBarError("An error took place whilst saving the record. " & strError)"$)
-		AddCode(sbl, $"vm.SetFocus(${xAuto})"$)
+		AddCode(sbl, $"vm.SetFocus("${focusOn}")"$)
 		AddCode(sbl, "End Select")
 		'
 		sbl.append($"End Select"$).append(CRLF)
 		AddComment(sbl, "hide the modal")
 		AddCode(sbl, $"${diagName}.Hide"$)
 		AddComment(sbl, $"execute code to refresh listing for ${sTitle}"$)
-		AddCode(sbl, $"vm.CallMethod("SelectAll_${dlg}")"$)
+		AddCode(sbl, $"vm.CallMethod("SelectAll${dlg}")"$)
 		sbl.append("End Sub").append(CRLF).append(CRLF)
 		
 		
@@ -9931,7 +10048,7 @@ Sub Design_DBSourceCode
 			Dim sFields As String = vm.List2ArrayVariable(fsort)
 			'
 			AddComment(sbl, $"load records for ${scolforeigntable}"$)
-			AddCode(sbl, $"Sub Load_${scolforeigntable}"$)
+			AddCode(sbl, $"Sub Load${scolforeigntable}"$)
 			Select Case sdbtype
 			Case "banano"
 				AddComment(sbl, "database variable")
@@ -9957,7 +10074,10 @@ Sub Design_DBSourceCode
 				AddCode(sbl, $"${rsName}.JSON = BANano.CallInlinePHPWait(${rsName}.MethodName, ${rsName}.Build)"$)
 			End Select
 			AddCode(sbl, $"${rsName}.FromJSON"$)
-			AddCode(sbl, $"VM.SetData("${scolforeigntable}", ${rsName}.Result)"$)
+			AddCode(sbl, $"Dim Result As List = ${rsName}.Result"$)
+			AddComment(sbl, "ensure that the record keys and values are strings")
+			AddCode(sbl, $"Result = vue.ListOfMap2Strings(Result)"$)
+			AddCode(sbl, $"VM.SetData("${scolforeigntable}", Result)"$)
 			AddCode(sbl, "End Sub")
 		Next
 			
@@ -11594,7 +11714,7 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddText("d","vmodel","VModel","","")
 	pbdatepicker.AddSelect("d", "fieldtype", "Field Type", fieldtypes)
 	pbdatepicker.AddText2("d", CreateMap("label": "Label", "value":"Value"))
-	pbdatepicker.AddText("d","iconname","Icon Name","","")
+	pbdatepicker.AddText2("d", CreateMap("iconname":"IconName","dateformat":"DateFormat"))
 	pbdatepicker.AddText("d","placeholder","Placeholder","","")
 	pbdatepicker.AddText("d","helpertext","Helper Text","","")
 	pbdatepicker.AddText("d","errortext","Error Text","","")
@@ -11613,8 +11733,7 @@ Sub PropertyBag_DatePicker
 	pbdatepicker.AddHeading("e","Settings")
 	pbdatepicker.AddSwitches("e", CreateMap("isrequired": "Required", "isautofocus": "Auto Focus"))
 	pbdatepicker.AddSwitches("e", CreateMap("ishidedetails": "Hide Details","isnow":"Now"))
-	pbdatepicker.AddSwitches("e", CreateMap("isclearable": "Clearable"))
-	'
+	pbdatepicker.AddSwitches("e", CreateMap("isreadonly": "Read Only", "isclearable": "Clearable"))
 	pbdatepicker.AddSwitches("e", CreateMap("isvisible": "Visible", "isdisabled": "Disabled"))
 	pbdatepicker.AddSwitches("e", CreateMap("ontable": "On Table", "ismultiple": "Multiple"))
 	pbdatepicker.AddSwitches("e", CreateMap("isrange": "Range", "isshowweek": "Show Week"))
@@ -12597,13 +12716,15 @@ Sub SavePropertyBag
 			Dim ccoldatatype As String = item.getdefault("coldatatype", "")
 			Dim cicon As String = item.getdefault("icon", "")
 			Dim ccolvalue As String = item.getdefault("colvalue", "")
-			Dim ccolrequired As String = item.getdefault("colrequired", "")
-			Dim ccolvisible As String = item.getdefault("colvisible", "")
-			Dim ccolontable As String = item.getdefault("colontable", "")
+			Dim ccolrequired As String = item.getdefault("colrequired", "No")
+			Dim ccolreadonly As String = item.getdefault("colreadonly", "No")
+			Dim ccolvisible As String = item.getdefault("colvisible", "No")
+			Dim ccolontable As String = item.getdefault("colontable", "No")
 			Dim ccolforeigntable As String = item.GetDefault("colforeigntable", "")
 			Dim ccolforeignkey As String = item.getdefault("colforeignkey", "")
 			Dim ccolforeignvalue As String = item.getdefault("colforeignvalue", "")
 			Dim ccolislookup As String = item.getdefault("colislookup", "No")
+			Dim ccoldateformat As String = item.getdefault("coldateformat", "")
 			'
 			Dim cid As String = DateTime.now
 			cid = BANano.parseint(cid)
@@ -12616,13 +12737,15 @@ Sub SavePropertyBag
 			nc.put("parent", diagName & ".Container")
 			nc.put("parentid", diagName & ".Container")
 			nc.put("vmodel", ckey)
-			nc.put("fieldtype", DataType2FieldType(ccoldatatype))
+			nc.put("fieldtype", vue.DataType2FieldType(ccoldatatype))
 			nc.put("iconname", cicon)
 			nc.put("value", ccolvalue)
 			nc.put("sourcetable", ccolforeigntable)
 			nc.put("sourcefield", ccolforeignkey)
 			nc.put("displayfield", ccolforeignvalue)
 			nc.put("colislookup", ccolislookup)
+			nc.put("dateformat", ccoldateformat)
+			nc.put("isreadonly", ccolreadonly)
 			If ccolislookup = "Yes" Then
 				nc.put("useoptions", "No")
 			Else
@@ -12738,26 +12861,7 @@ Sub SavePropertyBag
 	'CreateUX
 End Sub
 
-'convert data type to field type
-Sub DataType2FieldType(xvalue As String) As String
-	xvalue = xvalue.tolowercase	
-	xvalue = xvalue.replace("text", "string")
-	xvalue = xvalue.replace("float", "dbl")
-	xvalue = xvalue.replace("blob", "string")
-	xvalue = xvalue.replace("none", "string")
-	xvalue = xvalue.replace("varchar", "string")
-	Return xvalue
-End Sub
 
-Sub MapRemovePrefix(m As Map) As Map
-	Dim nm As Map = CreateMap()
-	For Each k As String In m.keys
-		Dim v As String = m.Get(k)
-		k = vm.MvField(k,2,"_")
-		nm.Put(k, v)
-	Next
-	Return nm
-End Sub
 
 Sub ShowBag(thisBag As String)
 	vm.HideDrawers
@@ -13173,7 +13277,7 @@ Sub Design_Rating
 	rating.SetStatic(True)
 	rating.SetValue(svalue)
 	rating.SetFieldType(sfieldtype)
-	rating.SetClosedelay(sclosedelay)
+	rating.SetClosedelay(sClosedelay)
 	rating.SetDark(bisDark)
 	rating.SetDense(bisDense)
 	rating.SetEmptyicon(sEmptyicon)
@@ -13604,7 +13708,7 @@ Sub Design_Table
 	
 	'build the code
 	AddInstruction(sb, "<Your Module>", "", "")
-	AddCode(sb, $"Sub CreateDataTable_${dlg}"$)
+	AddCode(sb, $"Sub CreateDataTable${dlg}"$)
 	sb.append($"dt${dlg} = vm.CreateDataTable("dt${dlg}", "${sItemkey}", Me)"$).append(CRLF)
 	CodeLine(sb, sTitle, "s", "dt", dlg, "SetTitle")
 	CodeLine(sb, sCaption, "s", "dt", dlg, "SetCaption")
@@ -13702,6 +13806,7 @@ Sub Design_Table
 		Dim bcolislookup As Boolean = YesNoToBoolean(m.GetDefault("colislookup", "No"))
 		Dim ccolforeignkey As String = m.getdefault("colforeignkey", "")
 		Dim ccolforeignvalue As String = m.getdefault("colforeignvalue", "")
+		Dim ccoldateformat As String = m.getdefault("coldateformat", "")
 		
 		If xkey = "" Then Continue
 		If xontable = False Then Continue
@@ -13719,6 +13824,9 @@ Sub Design_Table
 				sb.append($"dt${dlg}.AddColumn1("${xkey}", "${xtitle}", "${xtype}",${xwidth},${bSortable},"${xalign}")"$).append(CRLF)
 			End If
 		End Select
+		If ccoldateformat <> "" Then
+			AddCode(sb, $"dt${dlg}.SetColumnDateFormat("${xkey}", "${ccoldateformat}")"$)
+		End If
 	Next
 	
 	CodeLine(sb, bisEdit, "b", "dt", dlg, "SetEdit")
@@ -16344,6 +16452,7 @@ Sub Design_FileInput
 	CodeLine(sb, sAppendicon, "s", pres, sname, "SetAppendicon")
 	CodeLine(sb, sAppendoutericon, "s", pres, sname, "SetAppendoutericon")
 	CodeLine(sb, bisAutofocus, "b", pres, sname, "SetAutofocus")
+	If bisAutofocus Then focusOn = pres & sname
 	CodeLine2(sb, sBackgroundcolor, sBackgroundcolorintensity, "s", pres, sname, "SetBackgroundcolorintensity")
 	CodeLine(sb, bisChips, "b", pres, sname, "SetChips")
 	CodeLine(sb, bisClearable, "b", pres, sname, "SetClearable")

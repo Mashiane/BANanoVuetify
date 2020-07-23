@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=BANanoSQLiteR2,DropTable,666,0,BANanoSQLiteR2,Execute,674,0,BANanoSQLiteR2,EQOperators,780,0,BANanoSQLiteR2,GetMapTypes,774,0,BANanoSQLiteR2,DeleteWhere,849,0,BANanoSQLiteR2,Class_Globals,4,0,BANanoSQLiteR2,OpenDatabase,33,0,BANanoSQLiteR2,Prepare,166,0,BANanoSQLiteR2,TableNames,231,1,BANanoSQLiteR2,Count,240,0,BANanoSQLiteR2,FromJSON,324,0
+NavigationStack=BANanoSQLiteR2,EQOperators,780,0,BANanoSQLiteR2,GetMapTypes,774,0,BANanoSQLiteR2,DeleteWhere,849,0,BANanoSQLiteR2,Class_Globals,4,0,BANanoSQLiteR2,OpenDatabase,33,0,BANanoSQLiteR2,Prepare,166,0,BANanoSQLiteR2,TableNames,231,1,BANanoSQLiteR2,Count,240,0,BANanoSQLiteR2,FromJSON,324,0,Main,Process_Globals,12,0,Main,AppStart,20,0
 SelectedBuild=0
 VisibleModules=1

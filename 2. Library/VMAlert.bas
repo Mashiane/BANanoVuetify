@@ -26,6 +26,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	bStatic = False
 	Container.Initialize(vue, $"${ID}cont"$, Module)
+	SetVModel(ID)
 	Return Me
 End Sub
 
@@ -171,7 +172,6 @@ End Sub
 
 'set icon
 Sub SetIcon(varIcon As String) As VMAlert
-	If varIcon = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("icon", varIcon)
 		Return Me
@@ -288,7 +288,6 @@ End Sub
 
 'set type
 Sub SetType(varType As String) As VMAlert
-	If varType = "" Then Return Me
 	If bStatic Then
 		SetAttrSingle("type", varType)
 		Return Me
@@ -314,7 +313,6 @@ End Sub
 
 'set colored-border
 Sub SetColoredBorder(varColoredBorder As Boolean) As VMAlert
-	If varColoredBorder = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("colored-border", varColoredBorder)
 		Return Me
@@ -327,7 +325,6 @@ End Sub
 
 'set dark
 Sub SetDark(varDark As Boolean) As VMAlert
-	If varDark = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dark", varDark)
 		Return Me
@@ -340,7 +337,6 @@ End Sub
 
 'set dense
 Sub SetDense(varDense As Boolean) As VMAlert
-	If varDense = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dense", varDense)
 		Return Me
@@ -353,7 +349,6 @@ End Sub
 
 'set dismissible
 Sub SetDismissible(varDismissible As Boolean) As VMAlert
-	If varDismissible = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("dismissible", varDismissible)
 		Return Me
@@ -366,7 +361,6 @@ End Sub
 
 'set light
 Sub SetLight(varLight As Boolean) As VMAlert
-	If varLight = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("light", varLight)
 		Return Me
@@ -379,7 +373,6 @@ End Sub
 
 'set outline
 Sub SetOutlined(varOutlined As Boolean) As VMAlert
-	If varOutlined = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("outlined", varOutlined)
 		Return Me
@@ -392,7 +385,6 @@ End Sub
 
 'set prominent
 Sub SetProminent(varProminent As Boolean) As VMAlert
-	If varProminent = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("prominent", varProminent)
 		Return Me
@@ -405,7 +397,6 @@ End Sub
 
 'set text
 Sub SetText(varText As Boolean) As VMAlert
-If varText = False Then Return Me
 If bStatic Then
 SetAttrSingle("text", varText)
 Return Me
@@ -418,7 +409,6 @@ End Sub
 
 'set tile
 Sub SetTile(varTile As Boolean) As VMAlert
-If varTile = False Then Return Me
 If bStatic Then
 SetAttrSingle("tile", varTile)
 Return Me

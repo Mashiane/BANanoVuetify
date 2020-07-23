@@ -35,6 +35,7 @@ Sub Class_Globals
 	Public COLUMN_PROGRESS_LINEAR As String = "progresslinear"
 	Public COLUMN_SAVE As String = "save"
 	Public COLUMN_CANCEL As String = "cancel"
+	Public COLUMN_TEXTFIELD As String = "textfield"
 	
 	'alignment
 	Public ALIGN_CENTER As String = "center"
@@ -52,11 +53,12 @@ Sub Class_Globals
 	Private search As String
 	Private items As String
 	Type DataTableColumn(value As String, text As String, align As String, sortable As Boolean, filterable As Boolean, divider As Boolean, _
-	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean)
+	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String)
 	Private bStatic As Boolean
 	Private hdr As List
 	Private keyID As String
 	Public masterColumns As List
+	Public CardTitle As VMCardTitle
 End Sub
 
 'initialize the DataTable
@@ -68,6 +70,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	DataTable.Initialize(v, ID)
 	DataTable.SetTag("v-data-table")
 	vcard.Initialize(vue, $"${ID}card"$, Module)
+	CardTitle = vcard.Title
 	DesignMode = False
 	filters.Initialize 
 	hasFilters = False
@@ -737,8 +740,10 @@ Sub AddColumn1(colName As String, colTitle As String, colType As String, colWidt
 	nf.sort = Null
 	nf.TypeOf = colType
 	nf.Disabled = False
+	nf.valueFormat = ""
 	'
 	columnsM.Put(colName, nf)
+	SetColumnType(colName, colType)
 	Return Me
 End Sub
 
@@ -932,14 +937,27 @@ Sub SetColumnType(colName As String, colType As String) As VMDataTable
 			col.filterable = False
 		Case COLUMN_MONEY
 			col.align = ALIGN_RIGHT
+			Dim item As Map
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getmoneyformat", Array(item))
+			'add to methods
+			vue.SetCallBack("getmoneyformat", cb)
 		Case COLUMN_FILESIZE
 			col.align = ALIGN_RIGHT
+			Dim item As Map
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getfilesize", Array(item))
+			'add to methods
+			vue.SetCallBack("getfilesize", cb)
 		Case COLUMN_DATE
-			'col.Put("format", "yyyy-mm-dd")
+			col.valueFormat = "yyyy-MM-dd"
+			Dim item As Map
+			Dim value As String
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getdateformat", Array(item, value))
+			'add to methods
+			vue.SetCallBack("getdateformat", cb)
 		Case COLUMN_TIME
-			'col.Put("format", "HH:MM")
+			col.valueFormat = "HH:MM"
 		Case COLUMN_DATETIME
-			'col.Put("format", "yyyy-mm-dd HH:MM")
+			col.valueFormat = "yyyy-MM-dd HH:MM"
 		End Select
 		columnsM.Put(colName,col)
 	End If
@@ -958,6 +976,62 @@ private Sub BuildControls
 		Dim methodName As String = $"${ID}_${value}"$
 		'
 		Select Case ct
+		Case COLUMN_TEXTFIELD
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			tmp.SetAttrSingle($"#item.${value}"$, "{item}")
+			'
+			Dim tmpSlot As VMTemplate
+			tmpSlot.Initialize(vue, "", Module).SetAttrLoose("v-slot:input")
+			tmpSlot.SetStatic(bStatic).SetDesignMode(DesignMode)
+			
+			Dim txtFIeld As VMTextField
+			txtFIeld.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			txtFIeld.SetVModel($"props.item.${value}"$)
+			txtFIeld.SetAttrSingle(":placeholer","props.header.text")
+			txtFIeld.SetHideDetails(True)
+			'
+			tmpSlot.AddComponent(txtFIeld.ToString)
+			tmp.AddComponent(tmpSlot.ToString)
+			sb.Append(tmp.ToString)
+				
+		Case COLUMN_DATE, COLUMN_DATETIME, COLUMN_TIME
+			'get the date format
+			Dim df As String = nf.valueFormat
+			'
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			tmp.SetAttrSingle($"#item.${value}"$, "{item}")
+			'
+			Dim span As VMElement
+			span.Initialize(vue,"")
+			span.SetTag("span") 
+			span.SetText($"{{ getdateformat(item.${value}, "${df}") }}"$)
+			tmp.AddComponent(span.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_MONEY
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			tmp.SetAttrSingle($"#item.${value}"$, "{item}")
+			'
+			Dim span As VMElement
+			span.Initialize(vue,"")
+			span.SetTag("span")
+			span.SetText($"{{ getmoneyformat(item.${value}) }}"$)
+			tmp.AddComponent(span.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_FILESIZE
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			tmp.SetAttrSingle($"#item.${value}"$, "{item}")
+				'
+			Dim span As VMElement
+			span.Initialize(vue,"")
+			span.SetTag("span")
+			span.SetText($"{{ getfilesize(item.${value}) }}"$)
+			tmp.AddComponent(span.ToString)
+			sb.Append(tmp.ToString)
+		
 		Case COLUMN_PROGRESS_LINEAR
 			Dim tmp As VMTemplate
 			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
@@ -1622,7 +1696,17 @@ Sub SetPage(varPage As String) As VMDataTable
 	End If
 	Dim pp As String = $"${ID}Page"$
 	vue.SetStateSingle(pp, varPage)
-	DataTable.Bind(":page", pp)
+	DataTable.Bind(":page.sync", pp)
+	Return Me
+End Sub
+
+'link a data-table to the pagination
+Sub SetExternalPagination As VMDataTable
+	SetPage("1")
+	vue.SetData($"${ID}pagecount"$, "0")
+	Dim scode As String = ID & "pagecount = $event"
+	SetAttrSingle("@page-count", scode)
+	SetHideDefaultFooter(True)
 	Return Me
 End Sub
 
@@ -2307,4 +2391,64 @@ Sub SetMoneyColumns(dates As List) As VMDataTable
 		SetColumnType(k, COLUMN_MONEY)
 	Next
 	Return Me
+End Sub
+
+Sub SetItemClass(methodName As String) As VMDataTable
+	methodName = methodName.tolowercase
+	If SubExists(Module, methodName) Then
+		SetAttrSingle(":item-class", methodName)
+		Dim Item As Map
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(Item))
+		'add to methods
+		vue.SetCallBack(methodName, cb)
+	Else
+		Log("VMDataTable:SetItemClass - the item-class method has not been defined!")
+	End If
+	Return Me
+End Sub
+
+'set the format of the date in the column
+Sub SetColumnDateFormat(colName As String, colFormat As String) As VMDataTable
+	'valueFormat
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.valueFormat = colFormat
+		columnsM.Put(colName,col)
+		'
+		Dim item As Map
+		Dim cb As BANanoObject = BANano.CallBack(Me, "getdateformat", Array(item, colFormat))
+		'add to methods
+		vue.SetCallBack("getdateformat", cb)
+	End If
+	Return Me
+End Sub
+
+private Sub getdateformat(item As String, sFormat As String) As String
+	If item.Length = 0 Then Return ""
+	Try
+		item = vue.MvField(item,1," ")
+		item = item.trim
+		DateTime.DateFormat = "yyyy-MM-dd"
+		Dim dt As Long = DateTime.DateParse(item)
+		DateTime.DateFormat = sFormat
+		Dim rslt As String = DateTime.Date(dt)
+		Return rslt
+	Catch
+		Return item
+	End Try
+End Sub
+
+
+private Sub getmoneyformat(item As String) As String
+	Dim svalue As String = vue.MakeMoney(item)
+	Return svalue
+End Sub
+
+private Sub getfilesize(item As String) As String
+	If BANano.IsNull(item) Or BANano.IsUndefined(item) Then 
+		item = "0"
+	End If
+	item = BANano.parsefloat(item)
+	Dim svalue As String = vue.FormatFileSize(item)
+	Return svalue
 End Sub

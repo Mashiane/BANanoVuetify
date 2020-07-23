@@ -128,6 +128,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	contentitems.Add("coluseoptions")
 	contentitems.Add("colkeys")
 	contentitems.Add("colvalues")
+	contentitems.Add("coldateformat")
 	
 	IsTable = False
 	Return Me
@@ -1483,6 +1484,7 @@ Sub ToString As String
 				nc.options.Put("coldatatype", "Data Type")
 				nc.options.Put("collength", "Length")
 				nc.options.Put("colvalue", "Value")
+				nc.options.Put("coldateformat", "DateFormat")
 				'
 				nc.options.Put("colislookup", "Look Up")
 				nc.options.Put("colforeigntable","ForeignTable")
@@ -1567,6 +1569,11 @@ Sub ToString As String
 						Dim lblName As String = "Item Keys (,)"
 						If k = "colvalues" Then lblName = "Item Values (,)"
 						Dim tt As VMTextField = AddTextFieldA(k, $"${nc.vmodel}${k}"$, lblName)
+						tcont.AddControlS(tt.TextField, tt.ToString, 1, 1, 12, 12, 12, 12)
+						itemtypes.Put(k, "String")
+						vue.SetData(vmodel,"")
+					Case "coldateformat"
+						Dim tt As VMTextField = AddTextFieldA(k, $"${nc.vmodel}${k}"$, "DateFormat")
 						tcont.AddControlS(tt.TextField, tt.ToString, 1, 1, 12, 12, 12, 12)
 						itemtypes.Put(k, "String")
 						vue.SetData(vmodel,"")

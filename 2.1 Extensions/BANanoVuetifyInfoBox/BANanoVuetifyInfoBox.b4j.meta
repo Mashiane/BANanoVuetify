@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=VMInfoBox,SetSuffix,223,0,VMCountTo,SetSuffix,208,0,VMInfoBox,SetPrefix,218,0,VMInfoBox,SetDecimal,211,0,Main,AppStart,24,0,Main,Process_Globals,12,0,VMInfoBox,Class_Globals,10,0,VMInfoBox,Initialize,33,0,VMCountTo,Initialize,21,0,VMInfoBox,NewInfoBox,62,0,VMInfoBox,SetTo,188,0
+NavigationStack=VMCountTo,SetSuffix,208,0,VMInfoBox,SetPrefix,218,0,VMInfoBox,SetDecimal,211,0,Main,AppStart,24,0,VMInfoBox,Class_Globals,10,0,VMInfoBox,Initialize,33,0,VMCountTo,Initialize,21,0,VMInfoBox,NewInfoBox,62,0,VMInfoBox,SetTo,188,0,Main,Process_Globals,11,0
 SelectedBuild=0
 VisibleModules=1,2

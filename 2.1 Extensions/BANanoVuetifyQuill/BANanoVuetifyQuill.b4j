@@ -19,7 +19,7 @@ Module1=VMQuill
 NumberOfFiles=5
 NumberOfLibraries=4
 NumberOfModules=1
-Version=8.3
+Version=8.5
 @EndOfDesignText@
 'https://www.vue2editor.com
 #IgnoreWarnings: 12, 15
@@ -33,7 +33,7 @@ Version=8.3
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyQuill"
-	Public Version As String = "1.01"
+	Public Version As String = "4.00"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

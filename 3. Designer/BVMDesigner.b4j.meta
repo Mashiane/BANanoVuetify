@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,Design_DBSourceCode,9283,0,pgIndex,TableStructure,10042,0,pgIndex,SavePropertyBag,12592,0,pgIndex,btnAddFields_click,1187,0,pgIndex,cboDatabaseTable_change,8504,0,pgIndex,DTSchemaEditable1,8761,0,pgIndex,DTSchemaEditable,8755,0,pgIndex,Design_Table,13683,0,pgIndex,dtschema_change,8813,0,pgIndex,dtschema_colforeigntable_change,8820,0
+NavigationStack=pgIndex,SaveDatabaseSchema,8976,2,Main,BANano_Ready,92,0,pgIndex,dtschema_cancelitem,8951,0,Main,AppStart,25,0,Main,Process_Globals,18,0,pgIndex,btnSaveMySchema_click,8543,0,pgIndex,cboDatabaseTable_change,8532,2,pgIndex,CreateSchema,8770,0,pgIndex,btnImportTitles_click,8790,0,pgIndex,importfields_change,8853,6
 SelectedBuild=0
 VisibleModules=
