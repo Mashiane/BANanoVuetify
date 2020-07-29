@@ -373,6 +373,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VueHTML,Initialize,92,0,VueHTML,Class_Globals,16,0,VueHTML,BuildModel,3553,0,VueHTML,Bind,173,0,VueHTML,SetVerticalAlignMiddle,155,0,VueHTML,SetLineHeight,163,0,VueHTML,SetDesignMode,2683,0,VueHTML,ToString,2700,0,Main,AppStart,14,0,Main,Process_Globals,9,0
+NavigationStack=VMDataTable,Class_Globals,9,0,BANanoVM,SetCallBack,1988,0,VMDataTable,AddEditDialogCombo,712,0,VMDataTable,AddEditDialogAutoComplete,743,0,VMDataTable,AddEditDialogTextArea,757,0,VMDataTable,AddEditDialog,754,0,VMDataTable,AddExpandColumn,809,0,VMDataTable,AddSaveCancelOpenClose,785,6,BANanoVue,SetCallBack,3385,0,Main,Process_Globals,10,0
 SelectedBuild=0
 VisibleModules=

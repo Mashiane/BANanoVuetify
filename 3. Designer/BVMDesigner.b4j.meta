@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,importfields_change,2659,0,pgIndex,DeleteMySQL,2614,0,pgIndex,ExtractComponents,1319,0,pgIndex,btnVueExtract_click,2005,0,pgIndex,btnDownloadSchema_click,2651,6,pgIndex,btnUploadSchema_click,2657,1,pgIndex,CreateProjectDrawer,2748,0,pgIndex,importschemalist,2697,2,pgIndex,importschema_change,2680,6,pgIndex,Init,827,1
+NavigationStack=pgIndex,btnRelationships_click,9068,0,pgIndex,SaveSchemaOutline,9081,0,pgIndex,dtschema_change,9074,0,pgIndex,dtschema_colforeigntable_change,9117,0,pgIndex,dtschema_saveitem,9120,0,pgIndex,BuildNavBar,1020,0,pgIndex,btnDatabaseSchema_click,1083,0,pgIndex,Init,839,0,pgIndex,importschema_change,2717,0,pgIndex,importschemalist,2774,0,Main,AppStart,21,0
 SelectedBuild=0
 VisibleModules=

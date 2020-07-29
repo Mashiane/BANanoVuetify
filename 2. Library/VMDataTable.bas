@@ -53,12 +53,13 @@ Sub Class_Globals
 	Private search As String
 	Private items As String
 	Type DataTableColumn(value As String, text As String, align As String, sortable As Boolean, filterable As Boolean, divider As Boolean, _
-	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String)
+	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String, bindTotals As String, hasTotal As Boolean)
 	Private bStatic As Boolean
 	Private hdr As List
 	Private keyID As String
 	Public masterColumns As List
 	Public CardTitle As VMCardTitle
+	Private hasTotals As Boolean
 End Sub
 
 'initialize the DataTable
@@ -88,6 +89,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	vcard.IsTable = True	'
 	columnsM.Initialize 
 	masterColumns.Initialize 
+	hasTotals = False
 	Return Me
 End Sub
 
@@ -711,7 +713,7 @@ Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As Stri
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -741,7 +743,7 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -752,7 +754,7 @@ Sub AddEditDialog(colName As String, bLarge As Boolean)
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> <v-text-field v-model="props.item.${colName}" :label="props.header.text" counter></v-text-field></template></v-edit-dialog>
 </template>"$
 	AddComponent(temp)
@@ -762,7 +764,7 @@ Sub AddEditDialogTextArea(colName As String, bLarge As Boolean)
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> <v-textarea v-model="props.item.${colName}" :label="props.header.text" counter></v-textarea></template>
 </v-edit-dialog>
 </template>"$
@@ -771,41 +773,41 @@ End Sub
 
 
 Sub AddSaveCancelOpenClose
-	Dim methodName As String = $"${ID}_saveitem"$
-	If SubExists(Module, methodName) = False Then 
+	Dim savemethodName As String = $"${ID}_saveitem"$
+	If SubExists(Module, savemethodName) = False Then 
 		Log($"VMDataTable: Please add '${ID}_saveitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
-	vue.SetCallBack(methodName, cb)
+	Dim cb As BANanoObject = BANano.CallBack(Module, savemethodName, Array(item))
+	vue.SetCallBack(savemethodName, cb)
 	'
-	methodName = $"${ID}_cancelitem"$
-	If SubExists(Module, methodName) = False Then 
+	Dim cancelmethodName As String = $"${ID}_cancelitem"$
+	If SubExists(Module, cancelmethodName) = False Then 
 		Log($"VMDataTable: Please add '${ID}_cancelitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
-	vue.SetCallBack(methodName, cb)
+	Dim cb As BANanoObject = BANano.CallBack(Module, cancelmethodName, Array(item))
+	vue.SetCallBack(cancelmethodName, cb)
 	'
-	methodName = $"${ID}_openitem"$
-	If SubExists(Module, methodName) = False Then 
+	Dim openmethodName As String = $"${ID}_openitem"$
+	If SubExists(Module, openmethodName) = False Then 
 		Log($"VMDataTable: Please add '${ID}_openitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
-	vue.SetCallBack(methodName, cb)
+	Dim cb As BANanoObject = BANano.CallBack(Module, openmethodName, Array(item))
+	vue.SetCallBack(openmethodName, cb)
 	
-	methodName = $"${ID}_closeitem"$
-	If SubExists(Module, methodName) = False Then 
+	Dim closemethodName As String = $"${ID}_closeitem"$
+	If SubExists(Module, closemethodName) = False Then 
 		Log($"VMDataTable: Please add '${ID}_closeitem(item As Map)' callback."$)
 		Return
 	End If
 	Dim item As Map
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(item))
-	vue.SetCallBack(methodName, cb)
+	Dim cb As BANanoObject = BANano.CallBack(Module, closemethodName, Array(item))
+	vue.SetCallBack(closemethodName, cb)
 End Sub
 
 Sub AddExpandColumn
@@ -837,9 +839,22 @@ Sub AddColumn1(colName As String, colTitle As String, colType As String, colWidt
 	nf.TypeOf = colType
 	nf.Disabled = False
 	nf.valueFormat = ""
+	nf.bindTotals = ""
+	nf.hasTotal = False
 	'
 	columnsM.Put(colName, nf)
 	SetColumnType(colName, colType)
+	Return Me
+End Sub
+
+'define whether a column will be totalled or not
+Sub SetColumnTotal(colName As String, callBackMethod As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.bindTotals = callBackMethod
+		columnsM.Put(colName,col)
+		hasTotals = True
+	End If
 	Return Me
 End Sub
 
@@ -1061,6 +1076,15 @@ Sub SetColumnType(colName As String, colType As String) As VMDataTable
 End Sub
 
 private Sub BuildControls
+	Dim sbTotals As StringBuilder
+	sbTotals.Initialize 
+	If hasTotals Then
+		'lets define the totals row
+		sbTotals.Append($"<template slot="body.append">"$)
+		sbTotals.Append($"<tr>"$)
+		sbTotals.Append($"<th class="title">Totals</th>"$)
+	End If
+	
 	Dim sb As StringBuilder
 	sb.Initialize 
 	For Each k As String In columnsM.Keys
@@ -1318,6 +1342,11 @@ private Sub BuildControls
 			sb.Append(tmpa.ToString)
 		End Select	
 	Next
+	'
+	If hasTotals Then
+		sbTotals.Append($"</tr>"$)
+		sb.Append(sbTotals.ToString)
+	End If
 	DataTable.SetText(sb.ToString)
 End Sub
 

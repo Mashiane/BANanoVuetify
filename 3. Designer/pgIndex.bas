@@ -2662,8 +2662,41 @@ Sub btnDownloadSchema_click(e As BANanoEvent)
 	vm.hideloading
 End Sub
 
+'download the database schema
+Sub btnDownloadSchema1_click(e As BANanoEvent)
+	vm.showloading
+	'open the database
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim contSQL As BANanoAlaSQLE
+	contSQL.Initialize("tables", "tablename")
+	contSQL.SelectAll(Array("*"), Array("tablename"))
+	contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+	contSQL.FromJSON
+	'how many tables
+	Dim Result As List = contSQL.Result
+	Dim tblCnt As Int = Result.Size
+	If tblCnt = 0 Then
+		vm.ShowSnackBarError("There are no tables to export to the schema!")
+		vm.hideloading
+		Return
+	Else
+		vm.ShowSnackBarSuccess($"${tblCnt} : tables will be downloaded to the schema JSON"$)
+	End If
+	'
+	'convert result to json
+	Dim reportJSON As String = BANano.tojson(Result)
+	vm.savetext2file(reportJSON, "schema.json")
+	vm.hideloading
+End Sub
+
 'upload the database schema
 Sub btnUploadSchema_click(e As BANanoEvent)
+	'open the file selector
+	vm.ShowFileSelect("importschema")
+End Sub
+
+'upload the database schema
+Sub btnUploadSchema1_click(e As BANanoEvent)
 	'open the file selector
 	vm.ShowFileSelect("importschema")
 End Sub
@@ -2745,6 +2778,7 @@ Sub importschemalist
 	Next
 	vm.HideLoading
 	vm.ShowSnackBarSuccess($"${doneCnt}: tables have been processed!"$)
+	vm.CallMethod("LoadTables")
 End Sub
 
 Sub CreateProjectDrawer
@@ -2762,9 +2796,12 @@ Sub CreateProjectDrawer
 	ptbl.SetDense(True).SetFlat(True)
 	ptbl.AddSpacer
 	ptbl.AddIcon1("btnDbImport", "mdi-plus", "", "Import SQLite Database","")
+	ptbl.AddDivider1
 	'import database
 	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","0")
+	ptbl.AddDivider1
 	ptbl.AddIcon1("btnDownloadSchema", "mdi-briefcase-download", "orange", "Download Schema as JSON","")
+	ptbl.AddDivider1
 	ptbl.AddIcon1("btnUploadSchema", "mdi-briefcase-upload", "purple", "Upload Schema from JSON","")
 	'
 	dtschema.SetDataSource(vm.newlist)
@@ -8019,6 +8056,7 @@ Sub DesignLayout
 	schemaDT.SetPage("1")
 	schemaDT.SetSingleselect(True)
 	schemaDT.SetDense(True)
+	schemaDT.SetFixedHeader(True)
 	'
 	ConfigureSchemaEntry(schemaDT)
 	'
@@ -8156,7 +8194,6 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.AddEditDialogCombo("colalign",False,"alignment","id","text",False)
 	dt.AddEditDialogCombo("colfieldtype",False,"fieldtypes","id","text",False)
 	
-	'
 	dt.AddSaveCancelOpenClose
 	'dt.SetColumnChooser(True)
 	'dt.AddDivider
@@ -8226,21 +8263,21 @@ Sub schemadt_colforeigntable_change(item As Map)
 	vm.setdata("foreignfields", forfields)
 End Sub
 
-Sub schemadt_save(item As Map)
+Sub schemadt_saveitem(item As Map)
 	Log("save")
 	Log(item)
 End Sub
 
-Sub schemadt_cancel(item As Map)
+Sub schemadt_cancelitem(item As Map)
 	Log("cancel")
 	Log(item)
 End Sub
 
-Sub schemadt_open
+Sub schemadt_openitem
 	
 End Sub
 
-Sub schemadt_close
+Sub schemadt_closeitem
 
 End Sub
 
@@ -8882,6 +8919,10 @@ Sub CreateSchema
 	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnSaveMySchema","mdi-content-save","green","Save this schema", "")
 	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnDownloadSchema1", "mdi-briefcase-download", "orange", "Download Schema as JSON for database","")
+	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnUploadSchema1", "mdi-briefcase-upload", "purple", "Upload Schema from JSON for database","")
+	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("tbltransfer1", "mdi-cog-transfer-outline", "green", "Convert to DataTable", "")
 	'
 	contSchema.AddControl(tbltoolbar2x.ToolBar, tbltoolbar2x.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
@@ -8904,9 +8945,9 @@ Sub CreateSchema
 	'
 	ConfigureSchemaEntry(dtschema)
 	
-	dtschema.AddButtonIcon("btnEditable", "mdi-briefcase-edit", "green", "Editable").AddDivider
-	dtschema.AddButtonIcon("btnSwitches", "mdi-electric-switch", "orange", "Switches").AddDivider
-	dtschema.AddButtonIcon("btnRelationships", "mdi-transit-connection", "purple", "Relationships")
+	dtschema.AddButtonIcon("btnEditable", "mdi-briefcase-edit", "green", "Update editable fields").AddDivider
+	dtschema.AddButtonIcon("btnSwitches", "mdi-electric-switch", "orange", "Update Switches").AddDivider
+	dtschema.AddButtonIcon("btnRelationships", "mdi-transit-connection", "purple", "Update Relationships")
 	'
 	dtschema.SetColumnChooser(True)
 	'
@@ -9037,6 +9078,11 @@ End Sub
 
 'save records anytime the data changes on switches
 Sub dtschema_change(item As Map)
+	SaveSchemaOutline
+End Sub
+
+'save the dt schema outline
+Sub SaveSchemaOutline
 	'get the table being processed
 	Dim thistable As String = vm.getdata("thistable")
 	'get the data of the table
@@ -9078,21 +9124,20 @@ Sub dtschema_colforeigntable_change(item As Map)
 End Sub
 
 Sub dtschema_saveitem(item As Map)
-	Log("save")
-	Log(item)
+	Log("save...")
+	SaveSchemaOutline
 End Sub
 
 Sub dtschema_cancelitem(item As Map)
-	Log("cancel")
-	Log(item)
+	Log("cancel...")
 End Sub
 
 Sub dtschema_openitem(item As Map)
-	
+	Log("open...")
 End Sub
 
 Sub dtschema_closeitem(item As Map)
-
+	Log("close...")
 End Sub
 
 'save the database schema for later use

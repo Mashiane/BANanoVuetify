@@ -2969,3 +2969,60 @@ Sub FileIcon(ext As String) As String
 		Return "mdi-file-document-outline"
 	End If
 End Sub
+
+'add a list with
+Sub CreateMultiCheckList(EventHandler As Object, dtID As String, dtSource As String, dtKey As String, dtTitle As String, dtTarget As String) As VMList
+	'create a list
+	dtID = dtID.tolowercase
+	Dim dtList As VMList
+	dtList.Initialize(vue, dtID, EventHandler)
+	dtList.SetDense(True)
+	'
+	Dim vlig As VMListItemGroup
+	vlig.Initialize(vue, $"${dtID}lig"$, EventHandler)
+	vlig.SetVModel(dtTarget)
+	vlig.SetAttrLoose("multiple")
+	vlig.SetOnChange($"${dtID}_check"$)
+	'
+	Dim dtLI As VMListItem
+	dtLI.Initialize(vue, "", EventHandler)
+	dtLI.SetAttrSingle("v-for", $"(item, index) in ${dtSource}"$)
+	dtLI.SetAttrSingle(":key", $"item.${dtKey}"$)
+	dtLI.SetAttrSingle(":value", $"item.${dtKey}"$)
+	'add checkbox slot
+	Dim tmpx As VMTemplate
+	tmpx.Initialize(vue, "", EventHandler)
+	tmpx.SetAttrSingle("v-slot:default", "{ active, toggle }")
+	'add action item
+	Dim vlia As VMListItemAction
+	vlia.Initialize(vue, "", EventHandler)
+	'add checkbox
+	Dim vliacb As VMCheckBox
+	vliacb.Initialize(vue, "", EventHandler)
+	vliacb.SetAttrSingle(":input-value", "active")
+	vliacb.SetAttrSingle(":key", $"item.${dtKey}"$)
+	vliacb.SetAttrSingle(":true-value", $"item.${dtKey}"$)
+	vliacb.SetColor("primary")
+	vliacb.SetDense(True)
+	vliacb.SetAttrSingle("@click", "toggle")
+		
+	'add checkbox to item action
+	vlia.AddComponent(vliacb.tostring)
+	tmpx.AddComponent(vlia.ToString)
+	
+	'add title
+	Dim vlic As VMListItemContent
+	vlic.Initialize(vue, "", EventHandler)
+	Dim vlit As VMListItemTitle
+	vlit.Initialize(vue, "", EventHandler)
+	vlit.SetVText($"item.${dtTitle}"$)
+	vlic.AddComponent(vlit.ToString)
+	'add template to item
+	tmpx.AddComponent(vlic.ToString)
+	dtLI.AddComponent(tmpx.tostring)
+	'add to group
+	vlig.AddComponent(dtLI.ToString)
+	'add item to list
+	dtList.AddComponent(vlig.tostring)
+	Return dtList
+End Sub
