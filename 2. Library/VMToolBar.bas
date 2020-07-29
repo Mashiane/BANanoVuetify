@@ -28,7 +28,7 @@ Sub Class_Globals
 	Public Progress As VMProgressLinear
 	Public SubHeading As VMLabel
 	Private SubHeadingKey As String
-	Private BANano As BANano
+	Private BANano As BANano   'ignore
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMToolBar

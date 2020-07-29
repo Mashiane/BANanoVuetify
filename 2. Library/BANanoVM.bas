@@ -480,6 +480,43 @@ Sub List2ArrayVariable(lst As List) As String
 	Return sb.ToString
 End Sub
 
+
+Sub AddHTMLElement(EventHandler As Object, parentID As String, elID As String, tag As String, props As Map, styleProps As Map, classNames As List, loose As List, Text As String)
+	parentID = parentID.ToLowerCase
+	elID = elID.tolowercase
+	parentID = parentID.Replace("#","")
+	elID = elID.Replace("#","")
+	'
+	Dim elIT As VMElement
+	elIT.Initialize(EventHandler, elID)
+	elIT.SetText(Text)
+	If loose <> Null Then
+		For Each k As String In loose
+			elIT.SetAttrSingle(k, True)
+		Next
+	End If
+	If props <> Null Then
+		For Each k As String In props.Keys
+			Dim v As String = props.Get(k)
+			elIT.SetAttrSingle(k, v)
+		Next
+	End If
+	If styleProps <> Null Then
+		For Each k As String In styleProps.Keys
+			Dim v As String = styleProps.get(k)
+			elIT.SetStyleSingle(k, v)
+		Next
+	End If
+	If classNames <> Null Then
+		For Each strClass As String In classNames
+			elIT.AddClass(strClass)
+		Next
+	End If
+	'add to the parent element
+	Dim sElement As String = elIT.tostring
+	BANano.GetElement($"#${parentID}"$).Append(sElement)
+End Sub
+
 'build the map to send an email to use in callinlinephp
 Sub BuildPHPEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
 	Dim se As Map = CreateMap("from":sfrom, "to":sto, "cc":scc, "subject":ssubject, "msg":smsg)

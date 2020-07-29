@@ -22,6 +22,7 @@ Sub Class_Globals
 	Private bUsedDisabled As Boolean
 	Private bUsesShow As Boolean
 	Public ErrorMessage As String
+	
 	'
 	Public R As String
 	Public C As String
@@ -60,6 +61,7 @@ Sub Class_Globals
 	Public CenterOnParent As Boolean
 	Private classList As List
 	Private classKey As String
+
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -128,8 +130,11 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	ActualID = ""
 	Host = ""
 	Exclude = False
+	
 	Return Me
 End Sub
+
+
 
 'active class for router links
 Sub SetActiveClass(sClass As String) As VMElement

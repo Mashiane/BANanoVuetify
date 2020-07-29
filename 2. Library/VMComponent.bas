@@ -25,6 +25,11 @@ Sub Class_Globals
 	Public name As String
 	Private propFrom As String
 	Public Query As Map
+	Public jsString As BANanoObject
+	Public jsNumber As BANanoObject
+	Public jsBoolean As BANanoObject
+	Public jsArray As BANanoObject
+	Public jsObject As BANanoObject
 End Sub
 
 'initialize component
@@ -47,7 +52,119 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As 
 	filters.Initialize 
 	Path = sPath
 	name = ID
-	Query.Initialize 
+	Query.Initialize
+	'
+	jsString.Initialize("String")
+	jsNumber.Initialize("Number")
+	jsBoolean.Initialize("Boolean")
+	jsArray.Initialize("Array")
+	jsObject.Initialize("Object")
+	'
+	Return Me
+End Sub
+
+
+'set mounted
+Sub SetMounted(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim mounted As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("mounted", mounted)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+'set updated
+Sub SetUpdated(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim updated As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("updated", updated)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+'set beforemount
+Sub SetBeforeMount(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeMount As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("beforeMount", beforeMount)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+'set beforeupdate
+Sub SetBeforeUpdate(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeUpdate As Boolean = BANano.CallBack(module, methodName, Null)
+	opt.Put("beforeUpdate", beforeUpdate)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+'set before destroy
+Sub SetBeforeDestroy(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeDestroy As Boolean = BANano.CallBack(module, methodName, Null)
+	opt.Put("beforeDestroy", beforeDestroy)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+
+'set before created
+Sub SetBeforeCreate(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim beforeCreate As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("beforeCreate", beforeCreate)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+
+'set created
+Sub SetCreated(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim created As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("created", created)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+'set destroyed
+Sub SetDestroyed(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim destroyed As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("destroyed", destroyed)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+
+'set activated
+Sub SetActivated(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim activated As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("activated", activated)
+	SetMethod(module, methodName)
+	Return Me
+End Sub
+
+
+'set deactivated
+Sub SetDeActivated(module As Object, methodName As String) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(module, methodName) = False Then Return Me
+	Dim deactivated As BANanoObject = BANano.CallBack(module, methodName, Null)
+	opt.Put("deactivated", deactivated)
+	SetMethod(module, methodName)
 	Return Me
 End Sub
 

@@ -843,6 +843,14 @@ Sub Init
 	'Add an invisible file selector
 	vm.AddFileSelect(Me, "fssqlite")
 	vm.AddFileSelect(Me, "importfields")
+	vm.AddFileSelect(Me, "importschema")
+	'
+	vm.setwatch("schemaimport", True, True, Me, "importschemalist")
+	'initialize the content
+	Dim recs As List = vm.newlist
+	vm.setdata("schemaimport", recs)
+
+	'vm.setmethod(Me, "importschemalist")
 	
 	vm.UX
 	'
@@ -2627,6 +2635,117 @@ Sub btnDbCode_click(e As BANanoEvent)
 	
 End Sub
 
+'download the database schema
+Sub btnDownloadSchema_click(e As BANanoEvent)
+	vm.showloading
+	'open the database
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim contSQL As BANanoAlaSQLE
+	contSQL.Initialize("tables", "tablename")
+	contSQL.SelectAll(Array("*"), Array("tablename"))
+	contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+	contSQL.FromJSON
+	'how many tables
+	Dim Result As List = contSQL.Result
+	Dim tblCnt As Int = Result.Size
+	If tblCnt = 0 Then
+		vm.ShowSnackBarError("There are no tables to export to the schema!")
+		vm.hideloading
+		Return
+	Else
+		vm.ShowSnackBarSuccess($"${tblCnt} : tables will be downloaded to the schema JSON"$)
+	End If
+	'
+	'convert result to json
+	Dim reportJSON As String = BANano.tojson(Result)
+	vm.savetext2file(reportJSON, "schema.json")
+	vm.hideloading
+End Sub
+
+'upload the database schema
+Sub btnUploadSchema_click(e As BANanoEvent)
+	'open the file selector
+	vm.ShowFileSelect("importschema")
+End Sub
+
+'a file has been selected for import
+Sub importschema_change(e As BANanoEvent)
+	Dim fileList As List = vm.GetFileListFromTarget(e)
+	If fileList.size = 0 Then Return 
+	
+	'only process 1 file, 1st sheet
+	Dim fr As String = fileList.get(0)
+	'
+	Dim recs As List = vm.newlist
+	'
+	Dim Result As Map
+	'read the file as text
+	Dim promise As BANanoPromise = vm.readAsText(fr)
+	promise.Then(Result)
+		'get the json content
+		Dim dataJSON As String = Result.get("result")
+		If dataJSON.StartsWith("{") Or dataJSON.startswith("[") Then
+			'this is valid JSON, convert to list
+			vm.ShowSnackBarSuccess("The file you have selected is valid JSON, let's try and import it!")
+			recs = BANano.fromjson(dataJSON)
+			vm.setdata("schemaimport", recs)
+		Else
+			vm.ShowSnackBarError("The file you have selected does not contain valid JSON!")
+		End If
+	promise.Else(Result)
+		Dim compError As String = Result.get("result")
+		Log(compError)
+	promise.End
+	'nully file component so we can select same file
+	vm.NullifyFileSelect("importschema")
+End Sub
+
+'ran after the watch is raised
+Sub importschemalist
+	vm.Showloading
+	Dim recs As List = vm.getdata("schemaimport")
+	If recs.size = 0 Then Return
+	'
+	'open the database for editing and clear the existing schame
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	Dim contSQL As BANanoAlaSQLE
+	contSQL.Initialize("tables", "tablename")
+	contSQL.DeleteAll
+	contSQL.result = db.ExecuteWait(contSQL.query, contSQL.args)
+	contSQL.fromjson
+	'
+	Dim doneCnt As Int = 0
+	'process the recs
+	'read each table name
+	For Each rec As Map In recs
+		'get the table name
+		Dim xtablename As String = rec.getdefault("tablename", "")
+		'the data does not have a table name, then continue
+		If xtablename = "" Then Continue
+		'does the record exist
+		contSQL.Read(xtablename)
+		contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+		contSQL.FromJSON
+		Dim rResult As List = contSQL.result
+		Dim recSize As Int = rResult.size
+		Select Case recSize
+			Case 0
+				'insert
+				contSQL.Insert1(rec)
+				contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+				contSQL.FromJSON
+			Case Else
+				'update
+				'update the records using table name
+				contSQL.Update1(rec, xtablename)
+				contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+				contSQL.FromJSON
+		End Select
+		doneCnt = doneCnt + 1
+	Next
+	vm.HideLoading
+	vm.ShowSnackBarSuccess($"${doneCnt}: tables have been processed!"$)
+End Sub
 
 Sub CreateProjectDrawer
 	drwprojectdetails = vm.CreateDrawer("drwprojectdetails", Me)
@@ -2645,6 +2764,8 @@ Sub CreateProjectDrawer
 	ptbl.AddIcon1("btnDbImport", "mdi-plus", "", "Import SQLite Database","")
 	'import database
 	ptbl.AddIcon1("btnDbConnect", "mdi-lan-connect", "", "Connect to the database","0")
+	ptbl.AddIcon1("btnDownloadSchema", "mdi-briefcase-download", "orange", "Download Schema as JSON","")
+	ptbl.AddIcon1("btnUploadSchema", "mdi-briefcase-upload", "purple", "Upload Schema from JSON","")
 	'
 	dtschema.SetDataSource(vm.newlist)
 	'ptbl.AddIcon1("btnDbCreate", "mdi-database-plus", "", "Create the database","")
@@ -9123,10 +9244,71 @@ Sub SaveDatabaseSchema
 		contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
 		contSQL.FromJSON
 	Next
+	'check duplicated fields in the database
+	CheckDuplicateFields
+	
 	vm.hideloading
 	vm.CallMethod("LoadTables")
 End Sub
 
+'check duplicate fields in the database
+Sub CheckDuplicateFields
+	'open the database
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	'delete all tables
+	Dim contSQL As BANanoAlaSQLE
+	contSQL.Initialize("tables", "tablename")
+	contSQL.SelectAll(Array("*"), Array("tablename"))
+	contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+	contSQL.FromJSON
+	'map to save fields
+	Dim fldMatch As Map = CreateMap()
+	'process each table
+	For Each tblm As Map In contSQL.result
+		'get the table name
+		Dim stablename As String = tblm.get("tablename")
+		'get the field names
+		Dim sfieldsJSON As String = tblm.get("fields")
+		'convert to a list
+		Dim fldList As List = BANano.fromjson(sfieldsJSON)
+		'get the field name
+		For Each fldM As Map In fldList
+			Dim fldKey As String = fldM.Get("key")
+			fldKey = fldKey.tolowercase
+			stablename = stablename.tolowercase
+			'existing table names
+			Dim tblnames As Map = CreateMap()
+			'we have a match for the field name
+			If fldMatch.containskey(fldKey) Then
+				'get the table names
+				tblnames = fldMatch.get(fldKey)
+			End If
+			'add this table to the list
+			tblnames.put(stablename, stablename)
+			'update match map
+			fldMatch.put(fldKey, tblnames)
+		Next
+	Next
+	'remove all matches where the count = 1
+	Dim reportM As Map = CreateMap()
+	For Each k As String In fldMatch.keys
+		'get the table names
+		Dim tblName As Map = fldMatch.get(k)
+		If tblName.size > 1 Then
+			reportM.put(k, tblName)
+		End If
+	Next
+	'we have errors
+	If reportM.size > 1 Then
+		'convert report to json
+		Dim reportJSON As String = BANano.tojson(reportM)
+		'save to text file
+		vm.ShowSnackBarError("The database has duplicate column names, please see the downloaded JSON report!")
+		vm.savetext2file(reportJSON, "database errors.json")
+	Else
+		vm.ShowSnackBarSuccess("The database seems to be perfectly structured!")
+	End If
+End Sub
 
 Private Sub tbladd_click(e As BANanoEvent)
 	vm.ShowSnackBar("TblAdd")

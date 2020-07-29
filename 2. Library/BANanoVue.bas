@@ -6,7 +6,6 @@ Version=7.8
 @EndOfDesignText@
 #IgnoreWarnings:12, 9
 Sub Class_Globals
-	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
 	Public BOVue As BANanoObject
 	Private BANAno As BANano  'ignore
 	Public methods As Map
@@ -149,6 +148,8 @@ Sub Class_Globals
 	Public Errors As Map
 	Public Position As Map
 	Public Module As Object
+	Public store As BANanoObject
+	Public state As Map
 End Sub
 
 'initialize view
@@ -166,7 +167,6 @@ Public Sub Initialize(EventHandler As Object)
 	Themes.Initialize
 	Modules.Initialize
 	BOVue.Initialize("Vue")
-	'store = BOVue.RunMethod("observable", Null).Result
 	
 	Template.SetVCloak
 	methods.Initialize
@@ -175,7 +175,10 @@ Public Sub Initialize(EventHandler As Object)
 	computed.Initialize  
 	watches.Initialize
 	routes.Initialize
-	
+	'
+	'***use a global prototype
+	state.Initialize
+		
 	Position.initialize
 	Position.Put("static","static")
 	Position.Put("relative","relative")
@@ -184,14 +187,6 @@ Public Sub Initialize(EventHandler As Object)
 	Position.Put("sticky", "sticky")
 	Position.Put("", "none")
 	
-	'TypeOfString = BOVue.GetField("String")
-	'TypeOfNumber = BOVue.GetField("Number")
-	'TypeOfBoolean = BOVue.GetField("Boolean")
-	'TypeOfArray = BOVue.GetField("Array")
-	'TypeOfObject = BOVue.GetField("Object")
-	'TypeOfDate = BOVue.GetField("Date")
-	'TypeOfFunction = BOVue.GetField("Function")
-	'TypeOfSymbol = BOVue.GetField("Symbol")
 	Options = CreateMap()
 	dynamicStyle = CreateMap()
 	'SetFontFamily("'Roboto', 'Helvetica', Arial, sans-serif")
@@ -731,6 +726,74 @@ End Sub
             } 
         }; 
 #End If
+
+Sub SetDataGlobal(prop As String, value As String) As BANanoVue
+	prop = prop.ToLowerCase
+	state.Put(prop, value)
+	'
+	Try
+		Dim bo As BANanoObject = store.GetField(prop)
+		If BANAno.IsNull(bo) Then Return Me
+		If BANAno.IsUndefined(bo) Then Return Me
+		'update the store
+		store.GetField(prop).SetField(prop, value)
+	Catch
+		Log($"Error - VueApp.SetDataGlobal: ${prop}.${value}"$)
+	End Try
+	'
+	'computed is not set
+	If computed.ContainsKey(prop) = False Then
+		Dim cb As BANanoObject = BANAno.CallBackExtra(Me, "getglobalstate", Null, Array(prop))
+		computed.Put(prop, cb.Result)
+	End If
+	Return Me
+End Sub
+
+'read the value of the prop we need
+private Sub getglobalstate(prop As String) As Object
+	prop = prop.tolowercase
+	Dim rslt As Object = GetDataGlobal(prop)
+	Return rslt
+End Sub
+
+Sub GetDataGlobal(prop As String) As Object
+	prop = prop.tolowercase
+	Dim rslt As Object
+	rslt = state.GetDefault(prop, Null)
+	Try
+		Dim bo As BANanoObject = store.GetField(prop)
+		If BANAno.IsNull(bo) Then Return Me
+		If BANAno.IsUndefined(bo) Then Return Me
+		rslt = store.GetField(prop)
+	Catch
+		Log($"Error - VueApp.GetDataGlobal: ${prop}"$)
+	End Try
+	Return rslt
+End Sub
+
+'increment state
+Sub IncrementGlobal(prop As String, addVal As Int)
+	prop = prop.tolowercase
+	'get the value of the coun
+	Dim cc As Int = GetDataGlobal(prop)
+	cc = BANAno.parseInt(cc)
+	'increment by 1
+	cc = cc + addVal
+	'save back to state
+	SetDataGlobal(prop, cc)
+End Sub
+
+'decremenent state
+Sub DecrementGlobal(prop As String, addVal As Int)
+	prop = prop.tolowercase
+	'get the value of the coun
+	Dim cc As Int = GetDataGlobal(prop)
+	cc = BANAno.parseInt(cc)
+	'decrement by 1
+	cc = cc - addVal
+	'save back to state
+	SetDataGlobal(prop, cc)
+End Sub
 
 Sub CorrectName(oldName As String) As String
 	Dim strName As String = StringBreakAtUpperCase(oldName)
@@ -3163,6 +3226,10 @@ Sub UX()
 	If computed.Size > 0 Then Options.Put("computed", computed)
 	If watches.Size > 0 Then Options.Put("watch", watches)
 	If components.Size > 0 Then Options.Put("components", components)
+	'
+	store = BOVue.RunMethod("observable", Array(state))
+	BOVue.GetField("prototype").SetField("$store", store)
+
 	Options.Put("template", GetTemplate)
 	BOVue.Initialize2("Vue", Options)
 	'get the state
@@ -3176,7 +3243,6 @@ Sub UX()
 	Dim emitKey As String = "$emit"
 	emit = BOVue.GetField(emitKey)
 	'enable data to be available globally
-	'BOVue.GetField("prototype").SetField("$store", store)
 End Sub
 
 Sub ForceUpdate
@@ -3408,8 +3474,8 @@ Sub GetStates(lst As List) As Map
 	Dim sm As Map = CreateMap()
 	For Each lstrec As String In lst
 		lstrec = lstrec.tolowercase
-		Dim state As Object = GetState(lstrec, Null)
-		sm.Put(lstrec, state)
+		Dim xstate As Object = GetState(lstrec, Null)
+		sm.Put(lstrec, xstate)
 	Next
 	Return sm
 End Sub

@@ -2581,16 +2581,45 @@ Sub AddClass(svalue As String) As VueHTML
 	Return Me
 End Sub
 
-'set attribute
-public Sub AddAttribute(skey As String, svalue As Object) As VueHTML
-	If svalue <> Null Then
-		skey = CStr(skey)
-		skey = skey.trim
-		properties.Put(skey,svalue)
+''set attribute
+'public Sub AddAttribute(skey As String, svalue As Object) As VueHTML
+'	If svalue <> Null Then
+'		skey = CStr(skey)
+'		skey = skey.trim
+'		properties.Put(skey,svalue)
+'		hasContent = True
+'	End If
+'	Return Me
+'End Sub
+
+'add an attribute
+public Sub AddAttribute(varProp As String, varvalue As String) As VueHTML
+	If BANano.IsUndefined(varvalue) Or BANano.IsNull(varvalue) Then Return Me
+	If BANano.IsNumber(varvalue) Then varvalue = BANanoShared.CStr(varvalue)
+	'we are adding a boolean
+	If BANano.IsBoolean(varvalue) Then
+		properties.put(varProp, varvalue)
 		hasContent = True
+	Else
+		'we are adding a string
+		If varvalue.StartsWith(":") Then
+			If varvalue.StartsWith("$") Then
+				properties.put(varProp, varvalue)
+				hasContent = True
+			Else
+				Dim rname As String = BANanoShared.MidString2(varvalue, 2)
+				properties.put($":${varProp}"$, rname)
+				hasContent = True
+			End If
+		Else
+			'does not start with :
+			properties.put(varProp, varvalue)
+			hasContent = True
+		End If
 	End If
 	Return Me
 End Sub
+
 
 Sub StrParse(delim As String, inputString As String) As List
 	Dim values() As String = BANano.Split(delim,inputString)
