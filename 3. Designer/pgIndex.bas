@@ -6141,7 +6141,7 @@ Sub Design_SpeedDial
 	'
 	sb.append($"Dim spd${sname} As VMSpeedDial = vm.CreateSpeedDial("spd${sname}", Me)"$).append(CRLF)
 	CodeLine(sb, bisAbsolute, "b", "spd", sname, "SetAbsolute")
-	CodeLine(sb, bisbottom, "b", "spd", sname, "SetBottom")
+	CodeLine(sb, bisBottom, "b", "spd", sname, "SetBottom")
 	CodeLine(sb, bisDark, "b", "spd", sname, "SetDark")
 	CodeLine(sb, sDirection, "s", "spd", sname, "SetDirection")
 	CodeLine(sb, sFinalicon, "s", "spd", sname, "SetFinalicon")
@@ -6155,15 +6155,15 @@ Sub Design_SpeedDial
 	CodeLine(sb, bisLarge, "b", "spd", sname, "SetLarge")
 	CodeLine(sb, bisLeft, "b", "spd", sname, "SetLeft")
 	CodeLine(sb, sMode, "s", "spd", sname, "SetMode")
-	CodeLine(sb, bisopenonhover, "b", "spd", sname, "SetOpenonhover")
-	CodeLine(sb, sorigin, "s", "spd", sname, "SetOrigin")
+	CodeLine(sb, bisOpenonhover, "b", "spd", sname, "SetOpenonhover")
+	CodeLine(sb, sOrigin, "s", "spd", sname, "SetOrigin")
 	CodeLine(sb, bisRight, "b", "spd", sname, "SetRight")
 	CodeLine(sb, bisSmall, "b", "spd", sname, "SetSmall")
 	CodeLine(sb, sTabindex, "s", "spd", sname, "SetTabindex")
 	CodeLine(sb, sTarget, "s", "spd", sname, "SetTarget")
 	CodeLine(sb, sTo, "s", "spd", sname, "SetTo")
-	CodeLine(sb, bistop, "b", "spd", sname, "SetTop")
-	CodeLine(sb, stransition, "s", "spd", sname, "SetTransition")
+	CodeLine(sb, bisTop, "b", "spd", sname, "SetTop")
+	CodeLine(sb, sTransition, "s", "spd", sname, "SetTransition")
 	CodeLine(sb, bisVisible, "b", "spd", sname, "SetVisible")
 	CodeLine(sb, bisXlarge, "b", "spd", sname, "SetXlarge")
 	CodeLine(sb, bisXsmall, "b", "spd", sname, "SetXsmall")
@@ -8057,6 +8057,7 @@ Sub DesignLayout
 	schemaDT.SetSingleselect(True)
 	schemaDT.SetDense(True)
 	schemaDT.SetFixedHeader(True)
+	schemaDT.SetMultiSort(True)
 	'
 	ConfigureSchemaEntry(schemaDT)
 	'
@@ -8792,7 +8793,29 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	Dim fldJSON As List = BANano.fromjson(sfieldsJSON)
 	
 	db.OpenWait("bvmdesigner", "bvmdesigner")
+	'get active fields from the json 
 	Dim rslt As List = db.ExecuteWait("select * from ? where colactive = 'Yes'", Array(fldJSON))
+	'fix the control types
+	Dim ctypes As Map = vm.controltypes
+	Dim recTot As Int = rslt.size -1
+	Dim recCnt As Int
+	For recCnt = 0 To recTot
+		Dim fldm As Map = rslt.get(recCnt)
+		Dim ctype As String = fldm.get("colcontroltype")
+		ctype = ctype.tolowercase
+		ctype = ctype.replace(" ","")
+		ctype = ctype.trim
+		'
+		If ctype.equalsignorecase("AutoComplete") Then ctype = "auto"
+		If ctype.equalsignorecase("QuillEditor") Then ctype = "quill"
+		'
+		If ctypes.ContainsKey(ctype) = False Then
+			Log("Import Error: " & fldm)
+		End If	
+		fldm.put("colcontroltype", ctype)
+		rslt.set(recCnt, fldm)
+	Next
+	'covert list to json
 	Dim nJSON As String = BANano.tojson(rslt)
 	'
 	Dim sing As String = vm.propercase(tbKey)
@@ -8915,6 +8938,14 @@ Sub CreateSchema
 	cboTable.SetOnChange(Me, "cboDatabaseTable_change")
 	tbltoolbar2x.AddComponent("cboDatabaseTable", cboTable.tostring)
 	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnEditable", "mdi-briefcase-edit", "green", "Update editable fields","")
+	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnSwitches", "mdi-electric-switch", "orange", "Update Switches","")
+	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnRelationships", "mdi-transit-connection", "purple", "Update Relationships","")
+	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnPreview","mdi-eye", "yellow", "Preview this schema on a modal form", "")
+	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnImportTitles","mdi-database-import","orange","Import field descriptions", "")
 	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnSaveMySchema","mdi-content-save","green","Save this schema", "")
@@ -8924,6 +8955,7 @@ Sub CreateSchema
 	tbltoolbar2x.AddIcon1("btnUploadSchema1", "mdi-briefcase-upload", "purple", "Upload Schema from JSON for database","")
 	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("tbltransfer1", "mdi-cog-transfer-outline", "green", "Convert to DataTable", "")
+	tbltoolbar2x.AddDivider1
 	'
 	contSchema.AddControl(tbltoolbar2x.ToolBar, tbltoolbar2x.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
@@ -8945,16 +8977,18 @@ Sub CreateSchema
 	'
 	ConfigureSchemaEntry(dtschema)
 	
-	dtschema.AddButtonIcon("btnEditable", "mdi-briefcase-edit", "green", "Update editable fields").AddDivider
-	dtschema.AddButtonIcon("btnSwitches", "mdi-electric-switch", "orange", "Update Switches").AddDivider
-	dtschema.AddButtonIcon("btnRelationships", "mdi-transit-connection", "purple", "Update Relationships")
-	'
 	dtschema.SetColumnChooser(True)
 	'
 	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	vm.container.AddComponent(1, 1, contSchema.tostring)
 End Sub
+
+'generate a preview of the database table schema
+Sub btnPreview_click(e As BANanoEvent)
+	
+End Sub
+
 
 'import field descriptions
 Sub btnImportTitles_click(e As BANanoEvent)
@@ -14278,7 +14312,7 @@ Sub Design_Avatar
 	End If
 	Select Case savatartype
 	Case "islabel"
-		avatar.SetTextOnly(stitle)
+		avatar.SetTextOnly(sTitle)
 	Case "isicon"
 		avatar.SetIconOnly(siconname)
 	Case "isimage"	
@@ -14300,8 +14334,8 @@ Sub Design_Avatar
 	If sfloat <> "" Then
 		AddCode(sb, $"avt${sname}.AddClass("${sfloat}")"$)
 	End If
-	CodeLine(sb, smaxheight, "s", "avt", sname, "SetMaxheight")
-	CodeLine(sb, smaxwidth, "s", "avt", sname, "SetMaxwidth")
+	CodeLine(sb, sMaxheight, "s", "avt", sname, "SetMaxheight")
+	CodeLine(sb, sMaxwidth, "s", "avt", sname, "SetMaxwidth")
 	CodeLine(sb, sminheight, "s", "avt", sname, "SetMinheight")
 	CodeLine(sb, sminwidth, "s", "avt", sname, "SetMinwidth")
 	CodeLine(sb, bisRight, "b", "avt", sname, "SetRight")
@@ -14311,7 +14345,7 @@ Sub Design_Avatar
 	CodeLine(sb, bisVisible, "b", "avt", sname, "SetVisible")
 	Select Case savatartype
 	Case "islabel"
-		CodeLine(sb, stitle, "s", "avt", sname, "SetTextonly")
+		CodeLine(sb, sTitle, "s", "avt", sname, "SetTextonly")
 	Case "isicon"
 		CodeLine(sb, siconname, "s", "avt", sname, "SetIcononly")
 	Case "isimage"
@@ -14774,10 +14808,10 @@ Sub Design_Stepper
 	For Each m As Map In lcontents
 		Dim sskey As String = m.getdefault("key", "")
 		Dim sstitle As String = m.getdefault("title", "")
-		Dim ssubtitle As String = m.getdefault("subtitle", "")
+		Dim sSubTitle As String = m.getdefault("subtitle", "")
 		If sskey = "" Then Continue
 		AddCode(sb, $"Dim cont${sskey} As VMContainer = CreateContainer_${sskey}"$)
-		AddCode(sb, $"stp${sname}.AddStep1("${sskey}", "${sstitle}", "${ssubtitle}", cont${sskey}.ToString)"$)
+		AddCode(sb, $"stp${sname}.AddStep1("${sskey}", "${sstitle}", "${sSubTitle}", cont${sskey}.ToString)"$)
 	Next
 			
 	sb.append($"${sparent}.AddControl(stp${sname}.Stepper, stp${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)

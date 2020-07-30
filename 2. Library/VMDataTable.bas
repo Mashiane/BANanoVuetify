@@ -706,6 +706,7 @@ Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As Stri
 	el.SetAttrSingle(":label", "props.header.text")
 	el.SetComboBox
 	el.SetClearable(True)
+	el.SetReturnObject(False)
 	el.SetVModel($"props.item.${colName}"$)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	Dim scombo As String = el.tostring
@@ -736,6 +737,7 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 	el.SetAutoComplete
 	el.SetAttrSingle(":label", $"props.header.text"$)
 	el.SetClearable(True)
+	el.SetReturnObject(False)
 	el.SetVModel($"props.item.${colName}"$)
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	Dim scombo As String = el.tostring
