@@ -159,7 +159,7 @@ Public Sub Initialize(EventHandler As Object)
 	body = BANAno.GetElement("#body")
 	body.empty
 	body.Append($"<div id="app"></div>"$)
-	Template.Initialize("app","div")
+	Template.Initialize("app1","<div>")
 	Module = EventHandler
 	'
 	Errors.Initialize
@@ -3229,7 +3229,6 @@ Sub UX()
 	'
 	store = BOVue.RunMethod("observable", Array(state))
 	BOVue.GetField("prototype").SetField("$store", store)
-
 	Options.Put("template", GetTemplate)
 	BOVue.Initialize2("Vue", Options)
 	'get the state

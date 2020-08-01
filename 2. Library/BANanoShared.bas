@@ -1397,7 +1397,7 @@ Sub SaveText2File(content As String, fileName As String)
 	fc.Add(content)
 	Dim blob As BANanoObject
 	blob.Initialize2("Blob",Array(fc, CreateMap("type": "text/plain;charset=utf-8")))
-	BANAno.RunJavascriptMethod("saveAs",Array(blob,fileName))
+	BANano.RunJavascriptMethod("saveAs",Array(blob,fileName))
 End Sub
 
 Sub SaveBinaryArray2File(iUint8Array As Object, dbName As String)
@@ -1576,7 +1576,7 @@ Sub MakeDouble(m As Map, xkeys As List)
 			v = CStr(v)
 			v = v.trim
 			If v = "" Then v = "0"
-			v = BANAno.parseFloat(v)
+			v = BANano.parseFloat(v)
 			m.Put(k, v)
 		End If
 	Next
