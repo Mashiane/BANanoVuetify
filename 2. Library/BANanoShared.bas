@@ -631,6 +631,15 @@ Sub DateAdd(mDate As String, HowManyDays As Int) As String
 	Return DateTime.Date(NewDateDay)
 End Sub
 
+Sub MonthAdd(mDate As String, HowManyMonths As Int) As String
+	HowManyMonths = BANano.parseInt(HowManyMonths)
+	Dim ConvertDate, NewDateDay As Long
+	ConvertDate = DateTime.DateParse(mDate)
+	NewDateDay = DateTime.Add(ConvertDate, 0, HowManyMonths, 0)
+	Return DateTime.Date(NewDateDay)
+End Sub
+
+
 'Returns the number of days that have passed between two dates.
 'Pass the dates as a String
 Sub NumberOfDaysBetweenDates(CurrentDate As String, OtherDate As String) As Int
