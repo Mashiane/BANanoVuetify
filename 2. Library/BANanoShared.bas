@@ -2294,3 +2294,64 @@ Sub SetCoverImage(imgURL As String)
 	Dim sjson As String = BANano.ToJson(opt)
 	BANano.GetElement("#body").SetStyle(sjson)
 End Sub
+
+
+'get the result of the file upload
+Sub GetUploadResult(fileName As String, rslt As Object) As String
+	'get the result of the upload
+	Dim sFileName As String
+	Dim res As Map = BANano.fromjson(rslt)
+	Dim sResult As String = res.get("status")
+	Select Case sResult
+		Case "success"
+			sFileName = $"./assets/${fileName}"$
+		Case "error"
+			sFileName = ""
+	End Select
+	Return sFileName
+End Sub
+
+'on file change
+Sub GetFileAsText(e As BANanoEvent) As BANanoPromise
+	Dim promise As BANanoPromise
+	Dim fileList As List = GetFileListFromTarget(e)
+	'no file is selected
+	If fileList.size = 0 Then Return promise
+	'only process 1 file
+	Dim fr As Map = fileList.get(0)
+	'
+	promise = readAsText(fr)
+	Return promise
+End Sub
+
+
+'get the file name from file_change(e)
+Sub GetUploadFileName(e As BANanoEvent) As String
+	'get selected file(s)
+	Dim fileList As List = GetFileListFromTarget(e)
+	If fileList.size = 0 Then Return ""
+	'get the file to upload
+	Dim fileO As Map = fileList.Get(0)
+	'
+	Dim fo As FileObject = GetFileDetails(fileO)
+	Dim sFileName As String = fo.FileName
+	Return sFileName
+End Sub
+
+'on file change
+Sub UploadFile(e As BANanoEvent) As BANanoPromise
+	Dim prom As BANanoPromise
+	'get selected file(s)
+	Dim fileList As List = GetFileListFromTarget(e)
+	If fileList.size = 0 Then Return prom
+	
+	'get the file to upload
+	Dim fileO As Map = fileList.Get(0)
+	'start uploading the file
+	Dim fd As BANanoObject
+	fd.Initialize2("FormData", Null)
+	fd.RunMethod("append", Array("upload", fileO))
+	'
+	prom = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
+	Return prom
+End Sub

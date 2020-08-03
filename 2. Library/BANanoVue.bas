@@ -2008,6 +2008,47 @@ Sub BeautifyName(idName As String) As String
 	Return sname
 End Sub
 
+Sub BeautifyRest(idName As String) As String
+	idName = idName.trim
+	If idName = "" Then Return ""
+	Dim ls As StringBuilder
+	ls.Initialize 
+	Dim slen As Int = idName.Length
+	Dim i As Int = 0
+	For i = 0 To slen - 1
+		Dim mout As String = idName.CharAt(i)
+		If "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".IndexOf(mout) = -1 Then
+			ls.Append("-")
+		Else
+			ls.Append(mout)
+		End If
+	Next
+	Dim sname As String = ls.tostring
+	sname = ProperSubNameRest(sname, False)
+	Return sname
+End Sub
+
+Sub ProperSubNameRest(vx As String, removePref As Boolean) As String
+	vx = vx.Replace(":", "-")
+	vx = vx.Replace(".", "-")
+	Dim varList As List = StrParse("-", vx)
+	If removePref Then
+		varList.RemoveAt(0)
+	End If
+	Dim varTot As Int = varList.Size - 1
+	Dim varCnt As Int
+	For varCnt = 0 To varTot
+		Dim varItem As String = varList.Get(varCnt)
+		If varCnt > 0 Then
+			varItem = ProperCase(varItem)
+		End If
+		varList.Set(varCnt, varItem)
+	Next
+	Dim subName1 As String = Join("",varList)
+	Return subName1
+End Sub
+
+
 Sub ProperSubName(vx As String, removePref As Boolean) As String
 	vx = vx.Replace(":", "-")
 	vx = vx.Replace(".", "-")

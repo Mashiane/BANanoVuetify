@@ -901,6 +901,10 @@ Sub ShowMulti(lst As List)
 	Next
 End Sub
 
+Sub BeautifyRest(idName As String) As String
+	Return vue.BeautifyRest(idName)
+End Sub
+
 Sub HideMulti(lst As List)
 	For Each item As String In lst
 		Hide(item)
