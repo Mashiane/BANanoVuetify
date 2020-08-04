@@ -1013,7 +1013,7 @@ Sub Enable As VMButton
 End Sub
 
 Sub Disable As VMButton
-	Button.Disable(True)
+	Button.Enable(False)
     Return Me
 End Sub
 

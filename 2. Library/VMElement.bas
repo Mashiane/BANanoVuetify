@@ -461,7 +461,9 @@ Sub Enable(b As Boolean) As VMElement
 End Sub
 
 Sub Disable(b As Boolean) As VMElement
+	If ID = "" Then Return Me
 	IsDisabled = b
+	bUsedDisabled = True
 	If bStatic Then
 		SetAttrSingle("disabled", b)
 		Return Me
@@ -470,7 +472,6 @@ Sub Disable(b As Boolean) As VMElement
 	Bind(":disabled", disKey)
 	Return Me
 End Sub
-
 
 'show using id
 Sub Show As VMElement

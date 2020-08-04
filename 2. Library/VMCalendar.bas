@@ -788,7 +788,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMCalendar
-	Calendar.Disable(True)
+	Calendar.Enable(false)
 	Return Me
 End Sub
 

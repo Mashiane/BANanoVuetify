@@ -685,13 +685,12 @@ End Sub
 
 'set readonly
 Sub SetReadonly(varReadonly As Boolean) As VMTextField
-	If varReadonly = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("readonly", varReadonly)
 	Else
-	Dim pp As String = $"${ID}Readonly"$
-	vue.SetStateSingle(pp, varReadonly)
-	TextField.Bind(":readonly", pp)
+		Dim pp As String = $"${ID}Readonly"$
+		vue.SetStateSingle(pp, varReadonly)
+		TextField.Bind(":readonly", pp)
 	End If
 	Return Me
 End Sub

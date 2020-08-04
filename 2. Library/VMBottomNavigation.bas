@@ -498,7 +498,7 @@ Sub Enable As VMBottomNavigation
 End Sub
 
 Sub Disable As VMBottomNavigation
-	BottomNavigation.Disable(True)
+	BottomNavigation.Enable(False)
 	Return Me
 End Sub
 

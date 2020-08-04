@@ -292,7 +292,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMBreadCrumbsItem
-	BreadCrumbsItem.Disable(True)
+	BreadCrumbsItem.Enable(False)
 	Return Me
 End Sub
 

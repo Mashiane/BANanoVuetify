@@ -412,7 +412,7 @@ Sub Enable As VMBadge
 End Sub
 
 Sub Disable As VMBadge
-	Badge.Disable(True)
+	Badge.Enable(false)
 	Return Me
 End Sub
 

@@ -369,7 +369,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMButtonToggle
-	ButtonToggle.Disable(True)
+	ButtonToggle.Enable(false)
 	Return Me
 End Sub
 

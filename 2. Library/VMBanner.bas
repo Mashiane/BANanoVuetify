@@ -324,7 +324,7 @@ Sub Enable As VMBanner
 End Sub
 
 Sub Disable As VMBanner
-	Banner.Disable(True)
+	Banner.Enable(false)
 	Return Me
 End Sub
 

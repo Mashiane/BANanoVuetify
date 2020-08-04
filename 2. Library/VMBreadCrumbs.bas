@@ -207,7 +207,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMBreadCrumbs
-	BreadCrumbs.Disable(True)
+	BreadCrumbs.Enable(False)
 	Return Me
 End Sub
 

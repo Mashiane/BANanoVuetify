@@ -465,7 +465,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMAlert
-	Alert.Disable(True)
+	Alert.Enable(False)
     Return Me
 End Sub
 

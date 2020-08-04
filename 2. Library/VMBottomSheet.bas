@@ -438,7 +438,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMBottomSheet
-	BottomSheet.Disable(True)
+	BottomSheet.Enable(False)
 	Return Me
 End Sub
 
