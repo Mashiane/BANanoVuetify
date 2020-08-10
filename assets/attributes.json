@@ -8960,7 +8960,7 @@
     "description": ""
   },
   "v-tooltip/z-index": {
-    "type": "any",
+    "type": "number|string",
     "description": ""
   },
   "v-tooltip/tag": {

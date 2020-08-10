@@ -971,11 +971,13 @@ Sub SetDefaults
 End Sub
 
 Sub AddRequired(r As String,e As String) As VMContainer
+	r = r.tolowercase
 	Required.put(r, e)
 	Return Me
 End Sub
 
 Sub RemoveRequired(r As String) As VMContainer
+	r = r.tolowercase
 	Required.Remove(r)
 	Return Me
 End Sub

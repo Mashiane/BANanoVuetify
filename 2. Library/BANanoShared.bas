@@ -2192,12 +2192,16 @@ Sub ShowElement(elID As String)
 	BANano.GetElement($"#${elID}"$).SetStyle(BANano.ToJson(stylem))
 End Sub
 
-'Sub DateDiff(currentDate As String, otherDate As String) As Int
-'	Dim dateS, dateE As BANanoObject
-'	dateS.Initialize4("moment", currentDate)
-'	dateE.Initialize4("moment", otherDate)
-'	Return dateS.RunMethod("diff", Array(dateE, "days"))
-'End Sub
+Sub Age(sdob As String) As Long
+	DateTime.dateformat = "yyyy-MM-dd"
+	Dim ldob As Long = DateTime.DateParse(sdob)
+	Dim diff As Long = DateTime.now - ldob
+	Dim tpd As Long = DateTime.TicksPerDay
+	Dim p1 As Long = diff / tpd
+	Dim p2 As Long = p1 / 365
+	p2 = NumberFormat(p2,0,0)
+	Return p2
+End Sub
 
 Sub GetAlphaNumeric(value As String) As String
 	value = CStr(value)
@@ -2348,7 +2352,7 @@ Sub GetUploadFileName(e As BANanoEvent) As String
 End Sub
 
 'on file change
-Sub UploadFile(e As BANanoEvent) As BANanoPromise
+Sub UploadFileWait(e As BANanoEvent) As BANanoPromise
 	Dim prom As BANanoPromise
 	'get selected file(s)
 	Dim fileList As List = GetFileListFromTarget(e)

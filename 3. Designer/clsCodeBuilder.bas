@@ -219,16 +219,16 @@ AddCode(mc,"@EndOfDesignText@")
 		Case "color", "text-color","background-color"
 			dpDef = dpDef & ", List: amber|black|blue|blue-grey|brown|cyan|deep-orange|deep-purple|green|grey|indigo|light-blue|light-green|lime|orange|pink|purple|red|teal|transparent|white|yellow|primary|secondary|accent|error|info|success|warning|none"
 		Case "transition"
-			dpDef = dpDef & ", List: slide-x-transition|slide-x-reverse-transition|slide-y-transition|slide-y-reverse-transition|scroll-x-transition|scroll-x-reverse-transition|scroll-y-transition|scroll-y-reverse-transition|scale-transition|fade-transition|fab-transition"
+			dpDef = dpDef & ", List: slide-x-transition|slide-x-reverse-transition|slide-y-transition|slide-y-reverse-transition|scroll-x-transition|scroll-x-reverse-transition|scroll-y-transition|scroll-y-reverse-transition|scale-transition|fade-transition|fab-transition|none"
 		Case "target"
-			dpDef = dpDef & ", List: _blank|_self|_parent|_top"
+			dpDef = dpDef & ", List: _blank|_self|_parent|_top|none"
 		Case "type"
 			If TagName = "v-alert" Then
-				dpDef = dpDef & ", List: success|info|warning|error"
+				dpDef = dpDef & ", List: success|info|warning|error|none"
 			End If
 		Case "border"
 			If TagName = "v-alert" Then
-				dpDef = dpDef & ", List: top|right|bottom|left"
+				dpDef = dpDef & ", List: top|right|bottom|left|none"
 			End If
 		Case "tagname","TagName"
 			If TagName = "v-div" Or TagName = "div" Then
@@ -236,8 +236,6 @@ AddCode(mc,"@EndOfDesignText@")
 			End If
 		Case Else
 		End Select
-		'		
-			
 		
 		Select Case v.propType
 		Case "boolean"
@@ -379,6 +377,7 @@ private appLink As VueApp 'ignore
 Public mName As String 'ignore
 Private mEventName As String 'ignore
 Private mCallBack As Object 'ignore
+Private sbText As StringBuilder
 'Private bindStyle As Map
 'Private bindClass As Map
 Private mTarget As BANanoElement 'ignore
@@ -399,13 +398,14 @@ Private mElement As BANanoElement 'ignore"$)
 	AddNewLine(mc)
 	'
 AddCode(mc, $"Public Sub Initialize (CallBack As Object, Name As String, EventName As String) As ${CompName}
-mName = Name
+mName = Name.tolowercase
 mEventName = EventName.ToLowerCase
 mCallBack = CallBack
 bindings.Initialize
 methods.Initialize
 properties.Initialize
 styles.Initialize
+sbText.Initialize
 classList.Initialize
 'bindClass.Initialize 
 'bindStyle.Initialize"$)
@@ -493,6 +493,8 @@ AddCode(sTo, "End If")
 	AddCode(mc, "Return strRes")
 	AddCode(mc, "End Sub")
 	'
+	
+	
 	Dim xout As String = mc.ToString
 	xout = xout.Replace("~","$")
 	
