@@ -26,15 +26,19 @@ End Sub
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMSpeedDial
 	ID = sid.tolowercase
 	SpeedDial.Initialize(v, ID)
-	SpeedDial.SetTag("v-speed-dial").SetVModel(ID)
+	SpeedDial.SetTag("v-speed-dial")
+	SpeedDial.SetVModel(ID)
 	DesignMode = False
 	Module = eventHandler
 	vue = v
 	Slot.Initialize(vue, $"${ID}slot"$, Module)
-	Button.Initialize(vue, $"${ID}btn"$, Module).SetVModel(ID)
-	InitialIcon.Initialize(vue, $"${ID}initial"$, Module).SetAttrLoose("v-else")
-	FinalIcon.Initialize(vue,$"${ID}finalicon"$, Module).SetVIf(ID)
-	vue.SetData(ID, False)
+	Button.Initialize(vue, $"${ID}btn"$, Module)
+	Button.SetVModel(ID)
+	InitialIcon.Initialize(vue, $"${ID}initial"$, Module)
+	InitialIcon.SetAttrLoose("v-else")
+	FinalIcon.Initialize(vue,$"${ID}finalicon"$, Module)
+	FinalIcon.SetVIf(ID)
+	vue.SetData(ID, True)
 	items.Initialize
 	bStatic = False
 	hasInitial = False
@@ -103,11 +107,19 @@ End Sub
 
 Sub AddItem(key As String, iconName As String, color As String) As VMSpeedDial
 	Dim btn As VMButton
-	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetFab(True).SetDark(True).SetSmall(True)
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetFab(True)
+	btn.SetDark(True)
+	btn.SetSmall(True)
 	btn.SetColor(color)
 	'
 	Dim icn As VMIcon
-	icn.Initialize(vue, $"${key}icon"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode).SetText(iconName)
+	icn.Initialize(vue, $"${key}icon"$, Module)
+	icn.SetStatic(bStatic)
+	icn.SetDesignMode(DesignMode)
+	icn.SetText(iconName)
 	btn.AddComponent(icn.ToString)
 	'
 	items.Add(btn.ToString)

@@ -37,6 +37,9 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub Refresh
+	List.Refresh
+End Sub
 
 Sub SetVOnce(t As Boolean) As VMNavigationDrawer
 	NavigationDrawer.setvonce(t)
@@ -143,8 +146,9 @@ Sub AddSubHeader1(hdr As String, bInset As Boolean) As VMNavigationDrawer
 	Return Me
 End Sub
 
-Sub AddSubItem(parent As String, key As String, iconName As String, title As String) As VMNavigationDrawer
-	List.AddSubItem(parent, key, "", iconName, title, "")
+'add parent child items
+Sub AddParentChild(parent As String, key As String, iconName As String, iconColor As String, title As String, badge As String) As VMNavigationDrawer
+	List.AddParentChild(parent, key, iconName, iconColor, title, badge)
 	Return Me
 End Sub
 

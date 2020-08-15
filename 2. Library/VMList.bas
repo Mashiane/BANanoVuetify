@@ -15,6 +15,7 @@ Sub Class_Globals
 	Public HasContent As Boolean
 	Private items As Map
 	Private bStatic As Boolean
+	Private parentchild As Map
 End Sub
 
 'initialize the List
@@ -28,6 +29,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	HasContent = False
 	items.Initialize
 	bStatic = False
+	parentchild.Initialize 
+	vue.SetData($"${ID}ds"$, Null)
 	Return Me
 End Sub
 
@@ -496,32 +499,44 @@ Sub AddItemSubHeader(hdr As String) As VMList
 	Return Me
 End Sub
 
-'NOT IMPLEMENTED
-Sub AddSubItem(parent As String, key As String, avatar As String, iconName As String, title As String, subtitle As String) As VMList
+'add parent child items
+Sub AddParentChild(parent As String, key As String, iconName As String, iconColor As String, title As String, badge As String) As VMList
 	parent = parent.ToLowerCase
 	key = key.tolowercase
-	If items.ContainsKey(parent) Then
-		'read the item
-		Dim pItem As Map = items.Get(parent)
-		If pItem.ContainsKey("subitems") = False Then
-			Dim subitems As List
-			subitems.Initialize
-			pItem.Put("subitems", subitems) 
+	If key = "" Then Return Me
+	'
+	If parent = "" Then
+		'add a parent item
+		Dim pitem As Map = CreateMap()
+		pitem.Put("id", key)
+		pitem.Put("icon", iconName)
+		pitem.Put("iconcolor", iconColor)
+		pitem.Put("title", title)
+		pitem.Put("badge", badge)
+		Dim psubitems As List 
+		psubitems.Initialize 
+		pitem.Put("items", psubitems)
+		parentchild.Put(key, pitem)
+		HasContent = True
+	Else	
+		If parentchild.ContainsKey(parent) Then
+			'read the item
+			Dim citem As Map = parentchild.Get(parent)
+			Dim csubitems As List = citem.Get("items")
+			'
+			Dim aitem As Map = CreateMap()
+			aitem.Put("id", key)
+			aitem.Put("icon", iconName)
+			aitem.Put("iconcolor", iconColor)
+			aitem.Put("title", title)
+			aitem.Put("badge", badge)
+			'add a new item
+			csubitems.Add(aitem)
+'			'update item
+			citem.Put("items", csubitems)
+			parentchild.Put(parent, citem)
+			HasContent = True
 		End If
-		'read the subitems
-		Dim subitems As List = pItem.Get("subitems")
-		'
-		Dim item As Map = CreateMap()
-		item.Put("id", key)
-		item.Put("avatar", avatar)
-		item.Put("icon", iconName)
-		item.Put("title", title)
-		item.Put("subtitle", subtitle)
-		'add a new item
-		subitems.Add(item)
-'		'update item
-		pItem.Put("subitems", subitems)
-		items.Put(parent, pItem)
 	End If
 	Return Me
 End Sub
@@ -712,12 +727,59 @@ Sub ToString As String
 		vue.SetStateSingle(listKey, xitems)
 		SetDataSourceTemplate(listKey, "id", "avatar", "icon", "title", "subtitle", "action")
 	End If
+	'we use parent child relationship
+	If parentchild.Size > 0 Then
+		Dim sCode As String = $"<v-list-group
+        v-for="item in ${ID}ds"
+        :key="item.id"
+        v-model="item.active"
+        :prepend-icon="item.icon"
+        no-action
+      >
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title v-text="item.title"></v-list-item-title>
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="subitem in item.items"
+          :key="subitem.id"
+          @click="${ID}_click(subitem.id)"
+        >
+          <v-list-item-content>
+            <v-list-item-title v-text="subitem.title"></v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list-group>"$
+		
+		List.SetText(sCode)
+		'
+		Dim methodname As String = $"${ID}_click"$
+		If SubExists(Module, methodname) Then
+			Dim value As Object
+			Dim cb As BANanoObject = BANano.CallBack(Module, methodname, Array(value))
+			vue.SetCallBack(methodname, cb)
+		End If
+	End If
 	Return List.ToString
+End Sub
+
+'refresh parent and child relationships
+Sub Refresh
+	Dim nl As List = vue.NewList
+	For Each k As String In parentchild.Keys
+		Dim li As Map = parentchild.get(k)
+		nl.Add(li)
+	Next
+	vue.SetData($"${ID}ds"$, nl)
+	Log(nl)
 End Sub
 
 
 Sub Clear As VMList
 	items.Clear
+	parentchild.Clear
 	Dim listKey As String = $"${ID}ds"$
 	vue.SetStateSingle(listKey, items)
 	Return Me

@@ -56,9 +56,8 @@ Group=Default Group
 Library1=jcore
 Library2=jfx
 Library3=banano
-Library4=bananopostprocessor
-Library5=bananovuetifycore
-Library6=bananovuetifyconnect
+Library4=bananovuetifycore
+Library5=bananovuetifyconnect
 Module1=modAlert
 Module10=modCard
 Module11=modCarousel
@@ -108,9 +107,9 @@ Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=26
-NumberOfLibraries=6
+NumberOfLibraries=5
 NumberOfModules=48
-Version=8.45
+Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
 #Region Project Attributes 
@@ -120,49 +119,53 @@ Version=8.45
 
 Sub Process_Globals
 	Public BANano As BANano 'ignore
-	Public AppName As String = "bananovuetifycoredemo"
-	Public AppTitle As String = "BANanoVuetifyCoreDemo"
-	Private Publish As String = "C:\laragon\www"
-	Private BP As BANanoPostProcessor
+	Public AppName As String = "bvmcoredemo"
+	Public AppTitle As String = "BVMCoreDemo"
+	Private Publish As String = "C:/laragon/www"
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.17"
+	Public Version As String = "4.26"
 	Public Port As String = "8080"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
-	'post processor
-	BP.Initialize
-	BP.RedirectOutput(File.DirApp,"log.txt")
-	
 	'initialize banano for first use
 	BANano.Initialize("BANano", AppName, Version)
 	BANano.HTML_NAME = "index.html"
 	BANano.Header.Title = AppTitle
+	BANano.Header.AddFavicon("favicon-16x16.png", "16x16")
+	BANano.Header.AddAppleTouchIcon("apple-touch-icon.png", "180x180")
+	'BANano.Header.AddMSTileIcon("mstile-150x150.png", "144x144")
+	'BANano.Header.SetMaskIcon("safari-pinned-tab.svg")
+	BANano.Header.AddManifestIcon("android-chrome-192x192.png", "192x192")
+	BANano.Header.AddManifestIcon("android-chrome-512x512.png", "512x512")
 	BANano.TranspilerOptions.UseServiceWorker = False
-	BANano.TranspilerOptions.MergeAllCSSFiles = True
-	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	BANano.TranspilerOptions.MergeAllCSSFiles = False
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = False
 	BANano.TranspilerOptions.MinifyOnline = False
-	BANano.TranspilerOPtions.EnableLiveCodeSwapping = False
-	'
+	#if release
+		BANano.TranspilerOptions.EnableLiveCodeSwapping = False
+	#end if
+	BANano.TranspilerOptions.RedirectOutput(File.DirApp, "log.txt")
+	
 	'set php settings
 	BANano.PHP_NAME = $"${AppName}.php"$
 	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
-	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")	
-	'
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")
+			
 	BANano.Build(Publish)
-	BP.OpenLog(File.DirApp, "log.txt")
 	
-	BP.PublishPath = Publish
-	BP.ShortName = AppName
-	BP.AssetsPath = BANano.ASSETS_FOLDER
-	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
-	BP.StylesPath = BANano.STYLES_FOLDER
-	BP.ScriptFile = BANano.JAVASCRIPT_NAME
-	'BP.UnzipFonts
-	BP.OpenOnPort(True, Port)
-	ExitApplication
+	Dim fx As JFX
+	Dim URL As String = File.GetUri(File.DirApp,"log.txt")
+	fx.ShowExternalDocument(URL)
+	'
+	Dim appPath As String = $"http://localhost/${AppName}/index.html"$
+	If Port <> "" Then appPath = $"http://localhost:${Port}/${AppName}/index.html"$
+	fx.ShowExternalDocument(appPath)
+	#if release
+		ExitApplication
+	#end if
 End Sub
 
 'Return true to allow the default exceptions handler to handle the uncaught exception.

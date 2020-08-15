@@ -6,6 +6,7 @@ Version=7.8
 @EndOfDesignText@
 #IgnoreWarnings:12, 9
 Sub Class_Globals
+	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
 	Public BOVue As BANanoObject
 	Private BANAno As BANano  'ignore
 	Public methods As Map
@@ -20,43 +21,11 @@ Sub Class_Globals
 	Public Template As VueHTML
 	Public computed As Map
 	Public watches As Map
-	'Private TypeOfString As BANanoObject   'ignore
-	'Private TypeOfNumber As BANanoObject   'ignore
-	'Private TypeOfBoolean As BANanoObject  'ignore
-	'Private TypeOfArray As BANanoObject    'ignore
-	'Private TypeOfObject As BANanoObject   'ignore
-	'Private TypeOfDate As BANanoObject     'ignore
-	'Private TypeOfFunction As BANanoObject  'ignore
-	'Private TypeOfSymbol As BANanoObject    'ignore
-	'Private BORouter As BANanoObject      'ignore
 	Private routes As List
 	Public components As Map
 	Public Options As Map
 	Private dynamicStyle As Map
 	Public GetTemplate As String
-	Public const colors_red As String = "#F44336"
-	Public const colors_pink As String = "#E91E63"
-	Public const colors_purple As String = "#9C27B0"
-	Public const colors_deepPurple As String = "#673AB7"
-	Public const colors_indigo As String = "#3F51B5"
-	Public const colors_blue As String = "#2196F3"
-	Public const colors_lightBlue As String = "#03A9F4"
-	Public const colors_cyan As String = "#00BCD4"
-	Public const colors_teal As String = "#009688"
-	Public const colors_green As String = "#4CAF50"
-	Public const colors_lightGreen As String = "#8BC34A"
-	Public const colors_lime As String = "#CDDC39"
-	Public const colors_yellow As String = "#ffe821"
-	Public const colors_amber As String = "#FFC107"
-	Public const colors_orange As String = "#FF9800"
-	Public const colors_deepOrange As String = "#FF5722"
-	Public const colors_brown As String = "#795548"
-	Public const colors_grey As String = "#9E9E9E"
-	Public const colors_blueGrey As String = "#607D8B"
-	Public const colors_black As String = "#000000"
-	Public const colors_white As String = "#ffffff"
-	Public const colors_transparent As String = "transparent"
-	'
 	Public const BORDER_DEFAULT As String = ""
 	Public const BORDER_DASHED As String = "dashed"
 	Public const BORDER_DOTTED As String = "dotted"
@@ -148,8 +117,8 @@ Sub Class_Globals
 	Public Errors As Map
 	Public Position As Map
 	Public Module As Object
-	Public store As BANanoObject
-	Public state As Map
+	'Public store As BANanoObject
+	'Public state As Map
 End Sub
 
 'initialize view
@@ -159,7 +128,7 @@ Public Sub Initialize(EventHandler As Object)
 	body = BANAno.GetElement("#body")
 	body.empty
 	body.Append($"<div id="app"></div>"$)
-	Template.Initialize("app1","<div>")
+	Template.Initialize("app1", "div")
 	Module = EventHandler
 	'
 	Errors.Initialize
@@ -168,7 +137,7 @@ Public Sub Initialize(EventHandler As Object)
 	Modules.Initialize
 	BOVue.Initialize("Vue")
 	
-	Template.SetVCloak
+	'Template.SetVCloak
 	methods.Initialize
 	filters.initialize
 	data.Initialize
@@ -177,7 +146,7 @@ Public Sub Initialize(EventHandler As Object)
 	routes.Initialize
 	'
 	'***use a global prototype
-	state.Initialize
+	'state.Initialize
 		
 	Position.initialize
 	Position.Put("static","static")
@@ -727,73 +696,73 @@ End Sub
         }; 
 #End If
 
-Sub SetDataGlobal(prop As String, value As String) As BANanoVue
-	prop = prop.ToLowerCase
-	state.Put(prop, value)
-	'
-	Try
-		Dim bo As BANanoObject = store.GetField(prop)
-		If BANAno.IsNull(bo) Then Return Me
-		If BANAno.IsUndefined(bo) Then Return Me
-		'update the store
-		store.GetField(prop).SetField(prop, value)
-	Catch
-		Log($"Error - VueApp.SetDataGlobal: ${prop}.${value}"$)
-	End Try
-	'
-	'computed is not set
-	If computed.ContainsKey(prop) = False Then
-		Dim cb As BANanoObject = BANAno.CallBackExtra(Me, "getglobalstate", Null, Array(prop))
-		computed.Put(prop, cb.Result)
-	End If
-	Return Me
-End Sub
-
-'read the value of the prop we need
-private Sub getglobalstate(prop As String) As Object
-	prop = prop.tolowercase
-	Dim rslt As Object = GetDataGlobal(prop)
-	Return rslt
-End Sub
-
-Sub GetDataGlobal(prop As String) As Object
-	prop = prop.tolowercase
-	Dim rslt As Object
-	rslt = state.GetDefault(prop, Null)
-	Try
-		Dim bo As BANanoObject = store.GetField(prop)
-		If BANAno.IsNull(bo) Then Return Me
-		If BANAno.IsUndefined(bo) Then Return Me
-		rslt = store.GetField(prop)
-	Catch
-		Log($"Error - VueApp.GetDataGlobal: ${prop}"$)
-	End Try
-	Return rslt
-End Sub
-
-'increment state
-Sub IncrementGlobal(prop As String, addVal As Int)
-	prop = prop.tolowercase
-	'get the value of the coun
-	Dim cc As Int = GetDataGlobal(prop)
-	cc = BANAno.parseInt(cc)
-	'increment by 1
-	cc = cc + addVal
-	'save back to state
-	SetDataGlobal(prop, cc)
-End Sub
-
-'decremenent state
-Sub DecrementGlobal(prop As String, addVal As Int)
-	prop = prop.tolowercase
-	'get the value of the coun
-	Dim cc As Int = GetDataGlobal(prop)
-	cc = BANAno.parseInt(cc)
-	'decrement by 1
-	cc = cc - addVal
-	'save back to state
-	SetDataGlobal(prop, cc)
-End Sub
+'Sub SetDataGlobal(prop As String, value As String) As BANanoVue
+'	prop = prop.ToLowerCase
+'	state.Put(prop, value)
+'	'
+'	Try
+'		Dim bo As BANanoObject = store.GetField(prop)
+'		If BANAno.IsNull(bo) Then Return Me
+'		If BANAno.IsUndefined(bo) Then Return Me
+'		'update the store
+'		store.GetField(prop).SetField(prop, value)
+'	Catch
+'		Log($"Error - VueApp.SetDataGlobal: ${prop}.${value}"$)
+'	End Try
+'	'
+'	'computed is not set
+'	If computed.ContainsKey(prop) = False Then
+'		Dim cb As BANanoObject = BANAno.CallBackExtra(Me, "getglobalstate", Null, Array(prop))
+'		computed.Put(prop, cb.Result)
+'	End If
+'	Return Me
+'End Sub
+'
+''read the value of the prop we need
+'private Sub getglobalstate(prop As String) As Object
+'	prop = prop.tolowercase
+'	Dim rslt As Object = GetDataGlobal(prop)
+'	Return rslt
+'End Sub
+'
+'Sub GetDataGlobal(prop As String) As Object
+'	prop = prop.tolowercase
+'	Dim rslt As Object
+'	rslt = state.GetDefault(prop, Null)
+'	Try
+'		Dim bo As BANanoObject = store.GetField(prop)
+'		If BANAno.IsNull(bo) Then Return Me
+'		If BANAno.IsUndefined(bo) Then Return Me
+'		rslt = store.GetField(prop)
+'	Catch
+'		Log($"Error - VueApp.GetDataGlobal: ${prop}"$)
+'	End Try
+'	Return rslt
+'End Sub
+'
+''increment state
+'Sub IncrementGlobal(prop As String, addVal As Int)
+'	prop = prop.tolowercase
+'	'get the value of the coun
+'	Dim cc As Int = GetDataGlobal(prop)
+'	cc = BANAno.parseInt(cc)
+'	'increment by 1
+'	cc = cc + addVal
+'	'save back to state
+'	SetDataGlobal(prop, cc)
+'End Sub
+'
+''decremenent state
+'Sub DecrementGlobal(prop As String, addVal As Int)
+'	prop = prop.tolowercase
+'	'get the value of the coun
+'	Dim cc As Int = GetDataGlobal(prop)
+'	cc = BANAno.parseInt(cc)
+'	'decrement by 1
+'	cc = cc - addVal
+'	'save back to state
+'	SetDataGlobal(prop, cc)
+'End Sub
 
 Sub CorrectName(oldName As String) As String
 	Dim strName As String = StringBreakAtUpperCase(oldName)
@@ -3254,7 +3223,7 @@ Sub UX()
 	GetTemplate = Template.tostring
 	If routes.Size > 0 Then
 		Dim ropt As Map = CreateMap()
-		ropt.Put("mode", "history") 
+		'ropt.Put("mode", "history") 
 		ropt.Put("routes", routes)
 		Dim router As BANanoObject
 		router.Initialize2("VueRouter", Array(ropt))
@@ -3268,8 +3237,8 @@ Sub UX()
 	If watches.Size > 0 Then Options.Put("watch", watches)
 	If components.Size > 0 Then Options.Put("components", components)
 	'
-	store = BOVue.RunMethod("observable", Array(state))
-	BOVue.GetField("prototype").SetField("$store", store)
+	'store = BOVue.RunMethod("observable", Array(state))
+	'BOVue.GetField("prototype").SetField("$store", store)
 	Options.Put("template", GetTemplate)
 	BOVue.Initialize2("Vue", Options)
 	'get the state

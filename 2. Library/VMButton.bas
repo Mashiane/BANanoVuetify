@@ -36,8 +36,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetOnClick($"${ID}_click"$)
 	hasToolTip = False
 	tooltip.Initialize(vue, $"${ID}tt"$, Module)
-	tmpl.Initialize(vue, $"${ID}tmp"$, Module).SetAttrSingle("v-slot:activator", "{ on }")
-	span.Initialize(vue, $"${ID}span"$).SetSpan
+	tmpl.Initialize(vue, $"${ID}tmp"$, Module)
+	tmpl.SetAttrSingle("v-slot:activator", "{ on }")
+	span.Initialize(vue, $"${ID}span"$)
+	span.SetSpan
 	Button.SetVShow($"${ID}show"$)
 	Button.typeOf = "button"
 	Badge.Initialize(vue, $"${ID}badge"$, Module) 

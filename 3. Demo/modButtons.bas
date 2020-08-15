@@ -19,7 +19,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(10).AddColumns(2, 12, 6, 6, 6)
+	cont.AddRows(5).AddColumns(2, 12, 6, 6, 6)
 	'
 	vm.CreateButton("btn4", Me).SetLabel("Confirm").UseTheme("red-l-2").AddToContainer(cont, 1, 1)
 	'
@@ -38,12 +38,12 @@ Sub Code
 	'
 	vm.CreateButton("roundx", Me).SetLabel("Round Button").SetRounded(True).SetColor("yellow").AddToContainer(cont, 5, 1)
 	'
-	Dim sp1 As VMSpeedDial = vm.CreateSpeedDial("sp1", Me, "mdi-account-circle", "mdi-close")
-	sp1.Button.SetColorIntensity(vm.COLOR_BLUE, vm.INTENSITY_DARKEN2)
-	sp1.AddItem("edit", "mdi-pencil", "green")
-	sp1.AddItem("addit", "mdi-plus", "indigo")
-	sp1.AddItem("deleteit", "mdi-delete", "red")
-	vm.AddSpeedDial(sp1)
+'	Dim sp1 As VMSpeedDial = vm.CreateSpeedDial("sp1", Me, "mdi-account-circle", "mdi-close")
+'	'sp1.Button.SetColorIntensity(vm.COLOR_BLUE, vm.INTENSITY_DARKEN2)
+'	'sp1.AddItem("edit", "mdi-pencil", "green")
+'	'sp1.AddItem("addit", "mdi-plus", "indigo")
+'	'sp1.AddItem("deleteit", "mdi-delete", "red")
+'	vm.AddSpeedDial(sp1)
 	
 	'add container to page
 	vm.AddContainer(cont)

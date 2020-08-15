@@ -15,6 +15,8 @@ Sub Init
 	'add a hamburger
 	vm.NavBar.AddHamburger
 	vm.NavBar.Hamburger.SetVisible(True)
+	'vm.NavBar.SetClippedLeft(True)
+		
 	'add a logo
 	vm.NavBar.Logo.SetBorderRadius("50%")
 	vm.NavBar.Logo.SetBorderWidth("1px")
@@ -40,7 +42,7 @@ Sub Init
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")
 	vm.NavBar.AddIcon("btnButton", "mdi-magnify", "My button", "")
 	'
-	'vm.NavBar.SetSrc("https://picsum.photos/1920/1080?random")
+	vm.NavBar.SetSrc("https://picsum.photos/1920/1080?random")
 	'
 
 	'
@@ -49,7 +51,7 @@ Sub Init
 	
 	BuildDrawer
 	'
-	'vm.Drawer.SetSrc("./assets/bg-2.jpg")
+	vm.Drawer.SetSrc("https://picsum.photos/1920/1080?random")
 	'
 	'Dim btnLogOff As VMButton = vm.CreateButton("logOff", Me).SetLabel("Log Off").SetBlock(True)
 	'vm.Drawer.AddOnBottomSection(btnLogOff.tostring)
@@ -66,24 +68,25 @@ Sub Init
 	vm.AddTheme("white-text-only", vm.vue.COLOR_WHITE, vm.vue.INTENSITY_NORMAL, vm.vue.COLOR_NONE, vm.vue.INTENSITY_NORMAL)
 	'
 	AddPages
-	'
-	'footer links
-	Dim footerLinks As List = Array("Home", "About Us", "Team", "Services", "Blog", "Contact Us")
-	vm.SetData("footerlinks", footerLinks)
-	
-	vm.Footer.SetAbsolute(True).SetPadless(True).SetColorIntensity(vm.COLOR_PRIMARY, vm.INTENSITY_LIGHTEN1)
-	'
-	vm.Footer.Container.AddRows(2).AddColumns12
-	vm.Footer.Container.SetColorIntensityRC(2, 0, vm.COLOR_PRIMARY, vm.INTENSITY_LIGHTEN2)
-	vm.Footer.Container.SetJustifyRC(2, 0, vm.JUSTIFY_CENTER)
-	vm.Footer.Container.SetAlignRC(2, 0, vm.JUSTifY_CENTER)
-	vm.Footer.Container.AddLabel(2, 2, "lbl2", vm.SIZE_P, "2020")
-	'
+	BuildFooter
 	vm.UX
-	vm.showpage(modProgress.name)
+	
+	vm.showpage(modButtons.name)
+End Sub
+
+Sub BuildFooter
+	vm.Footer.SHow
+	vm.Footer.SetFixed(True)
+	vm.Footer.SetColor("indigo")
+	vm.footer.Container.SetTag("div")
+	vm.footer.Container.AddRows(1).AddColumns12
+	vm.Footer.Container.SetAttrRC(1, 0, "align", "center")
+	vm.Footer.AddMadeWithLove(1, 1, "with B4J, BANanano & BANanoVuetify by", "TheMash", "mbanga.anele@gmail.com")
 End Sub
 
 Sub BuildDrawer
+	'vm.Drawer.SetClipped(True)
+	vm.Drawer.Show
 	vm.Drawer.List.SetDense(True)
 	vm.Drawer.SetWidth("300")
 	vm.Drawer.AddTitleSubTitle("BANanoVuetifyCore", $"Version ${Main.version}"$)
@@ -174,37 +177,6 @@ Sub alert_ok(e As BANanoEvent)
 	Case Else
 			vm.ShowSnackBar(sproc)
 	End Select
-End Sub
-
-
-Sub Destroyed
-End Sub
-
-
-Sub BeforeDestroy
-End Sub
-
-Sub Updated
-End Sub
-
-
-Sub BeforeUpdate
-End Sub
-
-Sub BeforeMount
-End Sub
-
-
-Sub BeforeCreate
-End Sub
-
-'when the #el is mounted
-Sub Mounted
-End Sub
-
-
-'when the instance is created
-Sub Created
 End Sub
 
 

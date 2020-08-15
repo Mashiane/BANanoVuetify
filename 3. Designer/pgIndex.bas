@@ -2779,6 +2779,7 @@ Sub importschemalist
 	vm.HideLoading
 	vm.ShowSnackBarSuccess($"${doneCnt}: tables have been processed!"$)
 	vm.CallMethod("LoadTables")
+	CheckDuplicateFields
 End Sub
 
 Sub CreateProjectDrawer
@@ -8167,6 +8168,7 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.SetColumnsSwitch(Array("colrequired","colvisible","colislookup","colreadonly"))
 	dt.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
 	'
+	dt.AddEditDialog("key",False)
 	dt.AddEditDialog("title",False)
 	dt.AddEditDialog("collength",False)
 	dt.AddEditDialog("colrow",False)
@@ -8710,6 +8712,9 @@ Sub btnSaveMySchema_click(e As BANanoEvent)
 	Dim lcoldisplayvalue As List = vm.newlist
 	Dim lcolautoincrement As List = vm.newlist
 	'
+	Dim foreignErrors As Int = 0
+	Dim useThese As Int = 0
+	
 	For Each rec As Map In tblList
 		Dim xkey As String = rec.get("key")
 		Dim xcolprimarykey As String = rec.get("colprimarykey")
@@ -8719,6 +8724,29 @@ Sub btnSaveMySchema_click(e As BANanoEvent)
 		If xcolprimarykey = "Yes" Then lcolprimarykey.add(xkey)
 		If xcoldisplayvalue = "Yes" Then lcoldisplayvalue.add(xkey)
 		If xcolautoincrement = "Yes" Then lcolautoincrement.add(xkey)
+		'
+		Dim scolforeigntable As String = rec.getdefault("colforeigntable", "")
+		Dim scolforeignkey As String = rec.getdefault("colforeignkey", "")
+		Dim scolforeignvalue As String = rec.getdefault("colforeignvalue", "")
+		'
+		Dim scolkeys As String = rec.getdefault("colkeys", "")
+		Dim scolvalues As String = rec.getdefault("colvalues","")
+		'
+		Dim icol As Int = 0
+		If scolkeys <> "" Then icol = icol + 1
+		If scolvalues <> "" Then icol = icol + 1
+		If icol <> 0 And icol <> 2 Then
+			useThese = useThese + 1
+		End If
+				
+		Dim fe As Int = 0
+		If scolforeigntable <> "" Then fe = fe + 1
+		If scolforeignkey <> "" Then fe = fe + 1
+		If scolforeignvalue <> "" Then fe = fe + 1
+		'
+		If fe <> 0 And fe <> 3 Then
+			foreignErrors = foreignErrors + 1
+		End If
 	Next
 	If lcolprimarykey.size > 1 Then 
 		vm.ShowSnackBarError("You have more than 1 primary key defined, there should be 1 only!")
@@ -8743,6 +8771,17 @@ Sub btnSaveMySchema_click(e As BANanoEvent)
 		vm.HideLoading
 		Return
 	End If
+	If foreignErrors <> 0 Then
+		vm.ShowSnackBarError("There are some foreign table errors in the content provided, ensure all 3 details for foreign links are provided!")
+		vm.HideLoading
+		Return
+	End If
+	If useThese <> 0 Then
+		vm.ShowSnackBarError("There are some Key/Value pair details that are not complete, ensure that both 'Key' and 'Value' as provided!")
+		vm.HideLoading
+		Return
+	End If
+		
 	'join the fields, we need to update the table
 	Dim scolprimarykey As String = vm.Join("", lcolprimarykey)
 	Dim scoldisplayvalue As String = vm.join("", lcoldisplayvalue)
@@ -8938,6 +8977,8 @@ Sub CreateSchema
 	cboTable.SetOnChange(Me, "cboDatabaseTable_change")
 	tbltoolbar2x.AddComponent("cboDatabaseTable", cboTable.tostring)
 	tbltoolbar2x.AddDivider1
+	tbltoolbar2x.AddIcon1("btnAddSchemaField", "mdi-plus-circle", "blue", "Add a field to the schema","")
+	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnEditable", "mdi-briefcase-edit", "green", "Update editable fields","")
 	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnSwitches", "mdi-electric-switch", "orange", "Update Switches","")
@@ -8976,12 +9017,90 @@ Sub CreateSchema
 	dtschema.SetItemClass("checkDateTime")
 	'
 	ConfigureSchemaEntry(dtschema)
-	
+	'
+	dtschema.SetDelete(True)
+	dtschema.SetIconDimensions1("delete", "24px", "error", "80")
 	dtschema.SetColumnChooser(True)
 	'
 	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	vm.container.AddComponent(1, 1, contSchema.tostring)
+End Sub
+
+Sub dtschema_delete(item As Map)
+	Dim skey As String = item.getdefault("key", "")
+	If skey = "" Then Return
+'	'read the existing items
+	Dim tblList As List = dtschema.getdata
+'	'does the record exist
+	Dim rpos As Int = vm.ListOfMapsRecordPos(tblList, "key", skey)
+	rpos = BANano.parseInt(rpos)
+	If rpos <> -1 Then
+		tblList.RemoveAt(rpos)
+	End If
+	dtschema.SetDataSource(tblList)
+End Sub
+
+'add a field to the existing schema...
+Sub btnAddSchemaField_click(e As BANanoEvent)
+	vm.Showloading
+	'get the table being processed
+	Dim thistable As String = vm.getdata("thistable")
+	'get the data of the table
+	Dim tblList As List = dtschema.getdata
+	Dim fldName As String = $"field${tblList.size}"$
+	
+	
+	'save the schema first
+	Dim nf As Map = CreateMap()
+	nf.put("key", fldName)
+	nf.put("title", fldName)
+	nf.put("coldatatype", "TEXT")
+	nf.put("collength", "")
+	nf.put("colfieldtype", "string")
+	nf.put("coldateformat","")
+	nf.put("colontable", "No")
+	nf.put("subtitle", "string")
+	nf.put("colwidth", "")
+	nf.put("colalign", "start")
+	nf.put("colsortable", "No")	
+	nf.put("colcontroltype", "text")
+	nf.put("colvalue", "")
+		
+	nf.put("colrow", "1")
+	nf.put("colcolumn", "1")
+	nf.put("coloffsetsmall", "0")
+	nf.put("coloffsetmedium", "0")
+	nf.put("coloffsetlarge", "0")
+	nf.put("coloffsetxlarge", "0")
+	nf.put("colsizesmall", "12")
+	nf.put("colsizemedium", "12")
+	nf.put("colsizelarge", "12")
+	nf.put("colsizexlarge", "12")
+	'
+	nf.put("colprimarykey", "No")
+	nf.put("colautoincrement", "No")
+	nf.put("colisautofocus", "No")
+	nf.put("coldisplayvalue", "No")
+	nf.put("colnoduplicate", "No")
+	nf.put("colindexed", "No")
+	nf.put("colrequired", "No")
+	nf.put("colreadonly", "No")
+	nf.put("colvisible", "Yes")
+	nf.put("colishidedetails", "Yes")
+	nf.put("colactive", "Yes")
+	'
+	nf.put("colislookup", "No")
+	nf.put("colforeigntable", "")
+	nf.put("colforeignkey", "")
+	nf.put("colforeignvalue", "")
+	nf.put("coluseoptions", "No")
+	nf.put("colkeys", "")
+	nf.put("colvalues", "")
+	'
+	tblList.add(nf)
+	dtschema.SetDataSource(tblList)
+	vm.HideLoading	
 End Sub
 
 'generate a preview of the database table schema

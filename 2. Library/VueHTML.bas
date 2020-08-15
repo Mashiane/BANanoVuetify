@@ -111,6 +111,10 @@ Sub MoveUp(sTop As String) As VueHTML
 End Sub
 
 
+Sub MidString2(Text As String, Start As Int) As String
+	Return Text.SubString(Start-1)
+End Sub
+
 Sub AddSpace() As VueHTML
 	SetText("{NBSP}")
 	Return Me
@@ -2595,7 +2599,7 @@ End Sub
 'add an attribute
 public Sub AddAttribute(varProp As String, varvalue As String) As VueHTML
 	If BANano.IsUndefined(varvalue) Or BANano.IsNull(varvalue) Then Return Me
-	If BANano.IsNumber(varvalue) Then varvalue = BANanoShared.CStr(varvalue)
+	If BANano.IsNumber(varvalue) Then varvalue = CStr(varvalue)
 	'we are adding a boolean
 	If BANano.IsBoolean(varvalue) Then
 		properties.put(varProp, varvalue)
@@ -2607,7 +2611,7 @@ public Sub AddAttribute(varProp As String, varvalue As String) As VueHTML
 				properties.put(varProp, varvalue)
 				hasContent = True
 			Else
-				Dim rname As String = BANanoShared.MidString2(varvalue, 2)
+				Dim rname As String = MidString2(varvalue, 2)
 				properties.put($":${varProp}"$, rname)
 				hasContent = True
 			End If

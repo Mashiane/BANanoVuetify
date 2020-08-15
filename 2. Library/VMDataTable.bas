@@ -714,7 +714,7 @@ Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As Stri
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -745,7 +745,7 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -756,7 +756,8 @@ Sub AddEditDialog(colName As String, bLarge As Boolean)
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" 
+@open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> <v-text-field v-model="props.item.${colName}" :label="props.header.text" counter></v-text-field></template></v-edit-dialog>
 </template>"$
 	AddComponent(temp)
