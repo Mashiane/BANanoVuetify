@@ -145,6 +145,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=pgIndex,Process_Globals,2,0,pgIndex,bottomnav_change,415,0,pgIndex,btnButton_click,359,0,modButtons,Process_Globals,6,0,pgIndex,AddPages,369,0,modButtons,Code,39,0,modButtons,tilex_click,46,0,pgIndex,BuildFooter,73,0,pgIndex,BuildDrawer,82,1,pgIndex,Init,44,6
+NavigationStack=pgIndex,BuildFooter,73,0,pgIndex,Init,30,6,pgIndex,BuildNavBar,43,0,pgIndex,dashboard_click,348,0,pgIndex,photos_click,354,0,pgIndex,drafs_click,366,0,pgIndex,AddPages,400,0,pgIndex,confirm_ok,169,0,pgIndex,draweritems_click,338,0,pgIndex,BuildDrawer,108,6
 SelectedBuild=0
 VisibleModules=48
