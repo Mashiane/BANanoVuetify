@@ -529,6 +529,19 @@ Sub SetHideDetails(varHideDetails As Boolean) As VMFileInput
 	Return Me
 End Sub
 
+'set hide-input
+Sub SetHideInput(varHideInput As Boolean) As VMFileInput
+	If varHideInput = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-input", varHideInput)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}HideInput"$
+	vue.SetStateSingle(pp, varHideInput)
+	FileInput.Bind(":hide-input", pp)
+	Return Me
+End Sub
+
 'set light
 Sub SetLight(varLight As Boolean) As VMFileInput
 	If varLight = False Then Return Me

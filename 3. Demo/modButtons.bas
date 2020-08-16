@@ -38,15 +38,32 @@ Sub Code
 	'
 	vm.CreateButton("roundx", Me).SetLabel("Round Button").SetRounded(True).SetColor("yellow").AddToContainer(cont, 5, 1)
 	'
-'	Dim sp1 As VMSpeedDial = vm.CreateSpeedDial("sp1", Me, "mdi-account-circle", "mdi-close")
-'	'sp1.Button.SetColorIntensity(vm.COLOR_BLUE, vm.INTENSITY_DARKEN2)
-'	'sp1.AddItem("edit", "mdi-pencil", "green")
-'	'sp1.AddItem("addit", "mdi-plus", "indigo")
-'	'sp1.AddItem("deleteit", "mdi-delete", "red")
-'	vm.AddSpeedDial(sp1)
+	Dim sp1 As VMSpeedDial = vm.CreateSpeedDial("sp1", Me, "mdi-account-circle", "mdi-close")
+	sp1.SetColorIntensity(vm.COLOR_BLUE, vm.INTENSITY_DARKEN2)
+	sp1.SetDark(True)
+	sp1.SetAbsolute(True)
+	sp1.SetBottom(True)
+	sp1.SetRight(True)
+	sp1.SetOpenOnHover(True)
+	sp1.AddItem("speededit", "mdi-pencil", "green")
+	sp1.AddItem("speedaddit", "mdi-plus", "indigo")
+	sp1.AddItem("speeddeleteit", "mdi-delete", "red")
+	vm.AddSpeedDial(sp1)
 	
 	'add container to page
 	vm.AddContainer(cont)
+End Sub
+
+Sub speededit_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("Speed edit")
+End Sub
+
+Sub speedaddit_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("Speed add it")
+End Sub
+
+Sub speeddeleteit_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("Speed delete it")
 End Sub
 
 Sub tilex_click(e As BANanoEvent)

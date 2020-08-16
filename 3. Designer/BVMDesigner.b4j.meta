@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,btnDbConnect_click,2488,0,pgIndex,Process_Globals,31,0,pgIndex,ConfigureSchemaEntry,8112,0,pgIndex,DesignLayout,8058,0,pgIndex,schemaDT_edit,10473,0,pgIndex,schemaDT_delete,9022,0,pgIndex,CreateSchema,9013,0,pgIndex,btnSaveMySchema_click,8702,0,pgIndex,btnAddSchemaField_click,9038,0,pgIndex,dtschema_delete,9026,0
+NavigationStack=pgIndex,dtschema_delete,9036,0,Main,Process_Globals,10,0,Main,AppStart,25,0,pgIndex,CreateSchema,9015,0,pgIndex,dtschema_change,9226,0,pgIndex,btnEditable_click,9205,0,pgIndex,DTSchemaEditable1,9197,1,pgIndex,DTSchemaEditable,9177,0,pgIndex,btnRelationships_click,9222,0,pgIndex,btnSwitches_click,9206,0
 SelectedBuild=0
 VisibleModules=2

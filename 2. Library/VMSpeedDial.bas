@@ -38,7 +38,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	InitialIcon.SetAttrLoose("v-else")
 	FinalIcon.Initialize(vue,$"${ID}finalicon"$, Module)
 	FinalIcon.SetVIf(ID)
-	vue.SetData(ID, True)
+	vue.SetData(ID, False)
 	items.Initialize
 	bStatic = False
 	hasInitial = False

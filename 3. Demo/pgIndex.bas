@@ -80,7 +80,7 @@ End Sub
 
 Sub BuildDrawer
 	'vm.Drawer.SetClipped(True)
-	'vm.Drawer.Show
+	vm.Drawer.Show
 	'
 	'vm.Drawer.SetMiniVariant(True)
 	'vm.Drawer.SetExpandOnHover(True)

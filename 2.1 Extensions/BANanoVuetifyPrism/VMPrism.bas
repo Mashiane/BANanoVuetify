@@ -15,6 +15,12 @@ Sub Class_Globals
 	Private codeKey As String
 	Private Card As VMCard
 	Private PC As BANanoObject
+	Public CODE_CSS As String = "css"
+	Public CODE_JS As String = "js"
+	Public CODE_HTML As String = "html"
+	Public CODE_VB As String = "vb"
+	Public CODE_OTHER As String = ""
+	Private lang As String = ""
 End Sub
 
 'initialize the PrismComponent
@@ -38,13 +44,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	BANano.DependsOnAsset("beautify.min.js")
 	BANano.DependsOnAsset("beautify-css.min.js")
 	BANano.DependsOnAsset("beautify-html.min.js")
+	BANano.DependsOnAsset("vue-clipboard.min.js")
 	'
 	ID = sid.tolowercase
 	PrismComponent.Initialize(v, ID)
 	PrismComponent.SetTag("prism")
 	DesignMode = False
 	codeKey =  $"${ID}code"$
-	vue.SetStateSingle(codeKey, "")
+	vue.SetStateSingle(codeKey , "")
 	Bind(":code", codeKey)
 	Card.Initialize(vue, $"${ID}card"$, Module) 
 	Card.ToolBar.AddTitle("Source Code", "")
@@ -60,12 +67,38 @@ Sub ToString As String
 	Card.ToolBar.SetDense(True)
 	Card.ToolBar.SetFlat(True)
 	Card.ToolBar.AddSpacer
-	Card.ToolBar.AddIcon($"${ID}copy"$, "mdi-content-copy", "Copy content", "")
+	Card.ToolBar.AddIcon($"${ID}copy"$, "mdi-content-copy", "Copy code to clipboard", "")
+	Card.ToolBar.AddDivider(True, Null, Null, Null, Null)
+	Card.ToolBar.AddIcon($"${ID}download"$, "mdi-cloud-download-outline", "Download code", "")
 	Card.Actions.SetVisible(False)
 	Card.Container.SetTag("div")
+	Card.container.SetNoGutters(True)
 	Card.Container.AddControlS(PrismComponent, PrismComponent.ToString,1,1,12,12,12,12)  
 	'Return PrismComponent.ToString
 	Return Card.ToString
+End Sub
+
+'download code to a file
+Sub Download(fileName As String)
+	Dim sCode As String = vue.GetData(codeKey)
+	Dim fc As List
+	fc.Initialize
+	fc.Add(sCode)
+	Dim blob As BANanoObject
+	blob.Initialize2("Blob",Array(fc, CreateMap("type": "text/plain;charset=utf-8")))
+	BANano.RunJavascriptMethod("saveAs",Array(blob,fileName))
+End Sub
+
+'send to clipboard
+Sub Copy2Clipboard
+	'get the object
+	Dim sCode As String = vue.GetData(codeKey)
+	Dim response As Map
+	Dim error As Map
+	Dim bp As BANanoPromise = vue.RunMethod("$copyText", Array(sCode))
+	bp.Then(response)
+	bp.Else(error)
+	bp.end
 End Sub
 
 Sub SetVIf(vif As Object) As VMPrism
@@ -122,6 +155,11 @@ End Sub
 
 'set code
 Sub SetCode(varCode As String) As VMPrism
+	Select lang
+	Case "js", "css", "html"
+		Dim sformat As String = BeautifySourceCode(lang, varCode)
+		varCode = sformat
+	End Select
 	vue.SetStateSingle(codeKey, varCode)
 	Return Me
 End Sub
@@ -135,11 +173,25 @@ Sub SetInline(varInline As Object) As VMPrism
 End Sub
 
 'set language
-Sub SetLanguage(varLanguage As Object) As VMPrism
-Dim pp As String = $"${ID}Language"$
-vue.SetStateSingle(pp, varLanguage)
-PrismComponent.Bind(":language", pp)
-Return Me
+Sub SetLanguage(varLanguage As String) As VMPrism
+	Dim pp As String = $"${ID}Language"$
+	vue.SetStateSingle(pp, varLanguage)
+	PrismComponent.Bind(":language", pp)
+	lang = varLanguage
+	Return Me
+End Sub
+
+
+Sub BeautifySourceCode(slang As String, sc As String) As String
+	Select Case slang
+	Case "js"
+		Dim res As String = BANano.RunJavascriptMethod("js_beautify", Array(sc))
+	Case "css"
+		Dim res As String = BANano.RunJavascriptMethod("css_beautify", Array(sc))
+	Case "html"
+		Dim res As String = BANano.RunJavascriptMethod("html_beautify", Array(sc))
+	End Select
+	Return res
 End Sub
 
 

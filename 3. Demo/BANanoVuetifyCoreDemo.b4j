@@ -58,6 +58,7 @@ Library2=jfx
 Library3=banano
 Library4=bananovuetifycore
 Library5=bananovuetifyconnect
+Library6=bananovuetifyprism
 Module1=modAlert
 Module10=modCard
 Module11=modCarousel
@@ -107,7 +108,7 @@ Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=26
-NumberOfLibraries=5
+NumberOfLibraries=6
 NumberOfModules=48
 Version=8.5
 @EndOfDesignText@
@@ -190,3 +191,14 @@ Sub BANano_Ready
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	pgIndex.Init
 End Sub
+
+
+Sub CreateVBCode(vue As BANanoVue, codeID As String, sTitle As String, scode As String) As VMPrism
+	Dim pri As VMPrism
+	pri.Initialize(vue, codeID, Me)
+	pri.SetLanguage("vb")
+	pri.SetTitle(sTitle)
+	pri.SetCode(scode)
+	Return pri
+End Sub
+  

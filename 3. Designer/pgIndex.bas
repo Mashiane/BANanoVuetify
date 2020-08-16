@@ -9180,7 +9180,7 @@ Sub DTSchemaEditable
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
 	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
-	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive","delete","colontable"))
 	dtschema.ApplyFilter(flt)
 	dtschema.SetDense(False)
 End Sub
@@ -9201,7 +9201,7 @@ Sub DTSchemaEditable1
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("collength","colrow","colcolumn","colsizesmall","colsizemedium","colsizelarge","colsizexlarge"))
 	flt.AddAll(Array("colwidth", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge"))
-	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive","edit","delete"))
+	flt.AddAll(Array("colvalue", "colcontroltype", "subtitle","coldatatype","colalign","colfieldtype","coldateformat","colactive","edit","delete","colontable"))
 	schemaDT.ApplyFilter(flt)
 	schemaDT.SetDense(False)
 End Sub
@@ -9216,7 +9216,7 @@ Sub btnSwitches_click(e As BANanoEvent)
 	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
 	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
 	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly"))
-	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
+	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions","delete"))
 	dtschema.Applyfilter(flt)
 End Sub
 
@@ -9225,7 +9225,7 @@ Sub btnRelationships_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("colvalue", "colcontroltype"))
 	flt.AddAll(Array("colislookup", "colforeigntable", "colforeignkey", "colforeignvalue"))
-	flt.AddAll(Array("coluseoptions", "colkeys", "colvalues"))
+	flt.AddAll(Array("coluseoptions", "colkeys", "colvalues","delete"))
 	dtschema.ApplyFilter(flt)
 End Sub
 

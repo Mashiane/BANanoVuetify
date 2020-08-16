@@ -111,7 +111,7 @@ Sub SetSlotActions As VMTemplate
 End Sub
 
 Sub SetSlotActivator As VMTemplate
-	SetAttrSingle("v-slot:activator", True)
+	Template.SetAttrLoose("v-slot:activator")
 	Return Me
 End Sub
 

@@ -23,7 +23,7 @@ Sub Code
 	'
 	vm.CreateFileInput("fi1", Me).SetMultiple(True).SetLabel("File input").SetVModel("myfiles").SetPlaceholder("Please choose some files").AddToContainer(cont, 1, 1)
 	'
-	vm.CreateFileInput("fi2", Me).SetAccept("image/*").SetLabel("File input").AddToContainer(cont, 2, 1)
+	vm.CreateFileInput("fi2", Me).SetAccept("image/*").SetLabel("File input").SetPrependIcon("mdi-camera").SetHideInput(True).AddToContainer(cont, 2, 1)
 	'
 	vm.CreateFileInput("fi3", Me).SetChips(True).SetLabel("File input (with chips)").AddToContainer(cont, 3, 1)
 	'

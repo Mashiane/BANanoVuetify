@@ -786,6 +786,29 @@ Sub MVQuoteItems(delim As String, mvstring As String) As String
 	Return sout
 End Sub
 
+'download code from a prism component
+Sub DownloadCode(prismID As String, fileName As String)
+	prismID = prismID.tolowercase
+	Dim codeKey As String = $"${prismID}code"$
+	Dim sCode As String = GetData(codeKey)
+	SaveText2File(sCode, fileName)
+End Sub
+
+'copy code from a prism component
+Sub CopyCode2Clipboard(prismID As String)
+	prismID = prismID.tolowercase
+	Dim codeKey As String = $"${prismID}code"$
+	'get the object
+	Dim sCode As String = GetData(codeKey)
+	Dim response As Map
+	Dim error As Map
+	Dim bp As BANanoPromise = BOVue.RunMethod("$copyText", Array(sCode))
+	bp.Then(response)
+	bp.Else(error)
+	bp.end
+End Sub
+
+
 'double quote each item of the mv
 Sub MVSingleQuoteItems(delim As String, mvstring As String) As String
 	Dim sbOut As StringBuilder
