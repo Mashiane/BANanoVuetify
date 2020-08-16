@@ -3,11 +3,10 @@ Build1=Default,b4j.example
 Group=Default Group
 Library1=jcore
 Library2=jfx
-Library3=jxui
-Library4=banano
+Library3=banano
 Module1=BANanoFireStoreDB
 NumberOfFiles=0
-NumberOfLibraries=4
+NumberOfLibraries=3
 NumberOfModules=1
 Version=8.5
 @EndOfDesignText@

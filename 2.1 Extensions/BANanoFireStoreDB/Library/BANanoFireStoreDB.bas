@@ -47,6 +47,10 @@ Sub Class_Globals
 	Public performance As BANanoObject
 	Public analytics As BANanoObject
 	Private settings As Map
+	Private GoogleAuthProvider As BANanoObject
+	Private FacebookAuthProvider As BANanoObject
+	Private TwitterAuthProvider As BANanoObject
+	Private GithubAuthProvider As BANanoObject
 End Sub
 
 'Notes: https://firebase.google.com/docs/firestore/quickstart
@@ -87,6 +91,42 @@ Sub Connect() As BANanoFireStoreDB
 	firestore = firebaseApp.RunMethod("firestore", Null)
 	firestore.SetField("settings", settings)
 	Return Me
+End Sub
+
+'sign with google popup
+Sub signInWithPopupGoogle() As BANanoPromise
+	GoogleAuthProvider.Initialize2("firebase.auth.GoogleAuthProvider", Null)
+	GoogleAuthProvider.RunMethod("addScope", Array("https://www.googleapis.com/auth/contacts.readonly"))
+	Dim si As BANanoPromise = getAuth.RunMethod("signInWithPopup", Array(GoogleAuthProvider))
+	Return si
+End Sub
+
+'sign with facebook popup
+Sub signInWithPopupFacebook() As BANanoPromise
+	FacebookAuthProvider.Initialize2("firebase.auth.FacebookAuthProvider", Null)
+	Dim si As BANanoPromise = getAuth.RunMethod("signInWithPopup", Array(FacebookAuthProvider))
+	Return si
+End Sub
+
+'sign with twitter popup
+Sub signInWithPopupTwitter() As BANanoPromise
+	TwitterAuthProvider.Initialize2("firebase.auth.TwitterAuthProvider", Null)
+	Dim si As BANanoPromise = getAuth.RunMethod("signInWithPopup", Array(TwitterAuthProvider))
+	Return si
+End Sub
+
+'sign with github popup
+Sub signInWithPopupGithub() As BANanoPromise
+	GithubAuthProvider.Initialize2("firebase.auth.GithubAuthProvider", Null)
+	Dim si As BANanoPromise = getAuth.RunMethod("signInWithPopup", Array(GithubAuthProvider))
+	Return si
+End Sub
+
+'get access token when login from google
+Sub getAccessToken(response As Map) As String
+	Dim bo As BANanoObject = response
+	Dim token As String = bo.getfield("credential").getfield("accessToken").Result
+	Return token
 End Sub
 
 'a user can sign in anonymously
@@ -228,6 +268,11 @@ Sub collectionGet(collection As String, colID As String) As BANanoPromise
 	Return promGet
 End Sub
 
+'get a user record by user id
+Sub readUser(uid As String) As BANanoPromise
+	Dim promGet As BANanoPromise = getCollection("users").RunMethod("doc", Array(uid)).RunMethod("get", Null)
+	Return promGet
+End Sub
 
 'register a user
 Sub createUserWithEmailAndPassword(emailaddress As String, password As String) As BANanoPromise
@@ -242,6 +287,23 @@ Sub signInWithEmailAndPassword(emailaddress As String, password As String) As BA
 	Return promRegister
 End Sub
 
+'signOut
+Sub signOut() As BANanoPromise
+	Dim promRegister As BANanoPromise = getAuth.RunMethod("signOut", Null)
+	Return promRegister
+End Sub
+
+'sendPasswordResetEmail
+Sub sendPasswordResetEmail(email As String) As BANanoPromise
+	Dim promRegister As BANanoPromise = getAuth.RunMethod("sendPasswordResetEmail", Array(email))
+	Return promRegister
+End Sub
+
+'sendEmailVerification
+Sub sendEmailVerification As BANanoPromise
+	Dim promRegister As BANanoPromise = getAuth.GetField("user").RunMethod("sendEmailVerification", Null)
+	Return promRegister
+End Sub
 
 'update display name
 Sub updateDisplayName(res As BANanoObject, displayName As String) As BANanoPromise
@@ -408,4 +470,32 @@ End Sub
 Sub LimitTo(lt As Int) As BANanoFireStoreDB
 	limitSelectionTo = lt
 	Return Me
+End Sub
+
+'get user data after sign in
+Sub GetUserData(user As Map) As Map
+	Dim userData As Map = CreateMap()
+	If BANano.IsNull(user) Or BANano.IsUndefined(user) Then Return userData
+	Dim displayName As String = user.Get("displayName")
+	Dim email As String = user.Get("email")
+	Dim emailVerified As Boolean = user.Get("emailVerified")
+	Dim photoURL As String = user.Get("photoURL")
+	Dim isAnonymous As Boolean = user.Get("isAnonymous")
+	Dim uid As String = user.Get("uid")
+	Dim phoneNumber As String = user.Get("phoneNumber")
+	'
+	userData.Put("displayName", displayName)
+	userData.Put("email", email)
+	userData.Put("emailVerified", emailVerified)
+	userData.Put("photoURL", photoURL)
+	userData.Put("isAnonymous", isAnonymous)
+	userData.Put("uid", uid)
+	userData.Put("phoneNumber", phoneNumber)
+	Return userData
+End Sub
+
+'get UID
+Sub getUID(userData As Map) As String
+	Dim suid As String = userData.Get("uid")
+	Return suid
 End Sub

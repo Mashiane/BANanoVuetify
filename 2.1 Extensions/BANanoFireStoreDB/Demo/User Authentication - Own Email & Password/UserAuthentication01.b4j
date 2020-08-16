@@ -1,0 +1,203 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananofirestore
+NumberOfFiles=0
+NumberOfLibraries=4
+NumberOfModules=0
+Version=8.5
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 600
+	#MainFormHeight: 600 
+	'#IgnoreWarnings: 16, 10, 14, 15	
+#End Region
+
+Sub Process_Globals
+	Private BANano As BANano 'ignore
+	Public AppName As String = "firebasedemo"
+	Private Version As String = "1.00"
+	Public AppTitle As String = "firebasedemo"
+	Private Publish As String = "C:\laragon\www"
+	Public ServerIP As String = "localhost"
+	Public Version As String = "1.00"
+	Public Port As String = "8080"
+	Private fb As BANanoFireStoreDB
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	' you can change some output params here
+	BANano.Initialize("BANano", AppName, DateTime.now)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppTitle
+	'
+	'BANano.Header.AddFavicon("favicon-16x16.png", "16x16")
+	'BANano.Header.AddAppleTouchIcon("apple-touch-icon.png", "180x180")
+	'BANano.Header.AddMSTileIcon("mstile-150x150.png", "144x144")
+	'BANano.Header.SetMaskIcon("safari-pinned-tab.svg")
+	'BANano.Header.AddManifestIcon("android-chrome-192x192.png", "192x192")
+	'BANano.Header.AddManifestIcon("android-chrome-512x512.png", "512x512")
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.transpileroptions.MergeAllCSSFiles = True
+	BANano.transpileroptions.MergeAllJavascriptFiles = True
+	BANano.TranspilerOptions.EnableLiveCodeSwapping = False
+	BANano.TranspilerOptions.RedirectOutput(File.DirApp, "log.txt")
+	'BANano.TranspilerOptions.RemoveDeadCode = True
+	'
+	'set php settings
+	BANano.PHP_NAME = $"${AppName}.php"$
+	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")
+		
+	BANano.Build(Publish)
+	Dim fx As JFX
+	Dim URL As String = File.GetUri(File.DirApp,"log.txt")
+	fx.ShowExternalDocument(URL)
+	'
+	Dim appPath As String = $"http://localhost/${AppName}/index.html"$
+	If Port <> "" Then appPath = $"http://localhost:${Port}/${AppName}/index.html"$
+	fx.ShowExternalDocument(appPath)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+' HERE STARTS YOUR APP
+Sub BANano_Ready()
+	Log("Initialize firebase...")
+	
+	fb.Initialize
+	'use your own credentials
+	
+	fb.apiKey = "AIzaSyDBijdfdG3KPx7qd5-jDGrRNr2RRXWS57o"
+	fb.authDomain = "fbtests-f9490.firebaseapp.com"
+	fb.databaseURL = "https://fbtests-f9490.firebaseio.com"
+	fb.projectId = "fbtests-f9490"
+	fb.storageBucket = "fbtests-f9490.appspot.com"
+	fb.messagingSenderId = "905575318254"
+	fb.appId = "1:905575318254:web:fb5c35cdc13288aeb329ff"
+	fb.measurementId = "G-41GS0509JY"
+	'
+	Log("Connect to firebase...")
+	fb.connect
+	'
+	'detect onAuthStateChanged
+	fb.onAuthStateChanged(Me, "onAuthStateChanged")
+	'
+	'sign with google popup
+'	Dim googleR As Map
+'	Dim googleE As Map
+'	Dim googleSign As BANanoPromise = fb.signInWithPopupGoogle
+'	googleSign.Then(googleR)
+'	Log("signInWithPopupGoogle")
+'	'get the token
+'	Dim token As String = fb.getAccessToken(googleR)
+'	Log($"token: ${token}"$)
+'	Dim usr As Map = fb.getUser(googleR)
+'	usr = fb.GetUserData(usr)
+'	Log(usr)
+'	googleSign.Else(googleE)
+'	Log(fb.getMessage(googleE))
+'	googleSign.End
+	
+	'register a new user (enable authentication)
+	Dim regResponse As Map
+	Dim regError As Map
+	Dim reguser As BANanoPromise = fb.CreateUserWithEmailAndPassword("mbanga.anele@gmail.com", "userxyz")
+	reguser.ThenWait(regResponse)
+	Log("CreateUserWithEmailAndPassword")
+	'get the user from the credentials
+	Dim user As Map = fb.getUser(regResponse)
+	'get the user id
+	Dim uid As String = fb.getUID(user)
+	'read the user from users collection
+	Dim ur As Map
+	Dim ue As Map
+	Dim pu As BANanoPromise = fb.readUser(uid)
+	pu.ThenWait(ur)
+	Log("readUser")
+	Log(ur)
+	pu.ElseWait(ue)
+	Log(fb.getMessage(ue))
+	pu.end
+	'get the user details
+	'Dim userData As Map = fb.GetUserData(user)
+	'Log(userData)
+	'update display name
+	'Dim uu As Map
+	'Dim ue As Map
+	'Dim ud As BANanoPromise = fb.updateDisplayName(regResponse, "Anele Mbanga")
+	'ud.Then(uu)
+	'Log("updateDisplayName")
+	'Log(uu)
+	'ud.Else(ue)
+	'Log(fb.getMessage(ue))
+	'ud.End
+	
+	'get the user
+	'Dim usr As Map = fb.getUser(regResponse)
+	'get the user details
+	'usr = fb.GetUserData(usr)
+	'Log(usr)
+	reguser.ElseWait(regError)
+	Dim strError As String = fb.getMessage(regError)
+	Log(strError)
+	reguser.End
+	
+	'sign in
+	'Dim sres As Map
+	'Dim serr As Map
+	'Dim signIn As BANanoPromise = fb.signInWithEmailAndPassword("mbanga.anele@gmail.com", "userxyz")
+	'signIn.Then(sres)
+	'Log("signInWithEmailAndPassword")
+	'Log(sres)
+	'signIn.Else(serr)
+	'Log(fb.getMessage(serr))
+	'signIn.end
+	'
+	'sendEmailVerification
+	'Dim eRes As Map
+	'Dim eErr As Map
+	'Dim sendEmail As BANanoPromise = fb.sendEmailVerification
+	'sendEmail.Then(eRes)
+	'Log(eRes)
+	'sendEmail.Else(eErr)
+	'Log(fb.getMessage(eErr))
+	'sendEmail.end
+	'
+	
+	'send password rest email
+	'Dim pRes As Map
+	'Dim pErr As Map
+	'Dim prEmail As BANanoPromise = fb.sendPasswordResetEmail("mbanga.anele@gmail.com")
+	'prEmail.Then(pRes)
+	'Log(pRes)
+	'prEmail.Else(pErr)
+	'Log(fb.getMessage(pErr))
+	'prEmail.End
+	'
+	
+	'sign out
+	'Dim oRes As Map
+	'Dim oErr As Map
+	'Dim signOut As BANanoPromise = fb.signOut
+	'signOut.Then(oRes)
+	'Log("signOut")
+	'Log(oRes)
+	'signOut.Else(oErr)
+	'Log(fb.getMessage(oErr))
+	'signOut.end
+End Sub
+
+
+Sub onAuthStateChanged(user As Map)
+	'Log("onAuthStateChanged")
+	'Dim usr As Map = fb.GetUserData(user)
+	'Log(usr)
+End Sub
