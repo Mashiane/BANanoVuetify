@@ -800,14 +800,8 @@ Sub CopyCode2Clipboard(prismID As String)
 	Dim codeKey As String = $"${prismID}code"$
 	'get the object
 	Dim sCode As String = GetData(codeKey)
-	Dim response As Map
-	Dim error As Map
-	Dim bp As BANanoPromise = BOVue.RunMethod("$copyText", Array(sCode))
-	bp.Then(response)
-	bp.Else(error)
-	bp.end
+	BOVue.RunMethod("$copyText", Array(sCode))
 End Sub
-
 
 'double quote each item of the mv
 Sub MVSingleQuoteItems(delim As String, mvstring As String) As String

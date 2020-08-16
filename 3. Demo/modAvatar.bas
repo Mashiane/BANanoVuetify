@@ -9,31 +9,47 @@ Sub Process_Globals
 	Public name As String = "avatarCode"
 	Public title As String = "Avatars"
 	Private vm As BANanoVM
+	Private vue As BANanoVue
 End Sub
 
 
 Sub Code
 	vm = pgIndex.vm
+	vue = vm.vue
 	'create a container to hold all contents
 	Dim cont As VMContainer = vm.CreateContainer(name, Me)
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(2).AddColumns(2, 12, 6, 6, 6)
+	cont.AddRows(4).AddColumns12
 	'*** AVATARS
-	Dim a1 As VMAvatar = vm.CreateAvatar("a1", Me).SetSize("36").SetColor("indigo").SetText("36", Null, Null, Null)
-	a1.Label.UseTheme("white-text-only")
-	cont.AddComponent(1, 1, a1.ToString)
+	vm.CreateAvatar("av1", Me).SetSize("36").SetColor("indigo").SetLabelTheme("white-text-only").SetText("36", Null, Null, Null).AddToContainer(cont, 1, 1)
+	Main.CreateVBCode(vue, Me, "av1code", "Avatar", $"vm.CreateAvatar("av1", Me).SetSize("36").SetColor("indigo").SetLabelTheme("white-text-only").SetText("36", Null, Null, Null).AddToContainer(cont, 1, 1)"$).AddToContainer(cont, 1, 1)
 	'
-	Dim a2 As VMAvatar = vm.CreateAvatar("a2", Me).SetTile(True).SetColor("blue").SetIcon("mdi-alarm","",Null, Null, Null)
-	cont.AddComponent(1, 2, a2.ToString)
+	vm.CreateAvatar("av2", Me).SetTile(True).SetColor("blue").SetIcon("mdi-alarm","",Null, Null, Null).AddToContainer(cont, 2, 1)
+	Main.CreateVBCode(vue, Me, "av2code", "Avatar", $"vm.CreateAvatar("av2", Me).SetTile(True).SetColor("blue").SetIcon("mdi-alarm","",Null, Null, Null).AddToContainer(cont, 1, 1)"$).AddToContainer(cont, 2, 1)
 	'
-	Dim a3 As VMAvatar = vm.CreateAvatar("a3", Me).SetImage("./assets/sponge.png", "Sponge", Null, Null, Null)
-	cont.AddComponent(2, 1, a3.ToString)
+	vm.CreateAvatar("av3", Me).SetImage("./assets/sponge.png", "Sponge", Null, Null, Null).AddToContainer(cont, 3, 1)
+	Main.CreateVBCode(vue, Me,"av3code", "Avatar", $"vm.CreateAvatar("av3", Me).SetImage("./assets/sponge.png", "Sponge", Null, Null, Null).AddToContainer(cont, 1, 1)"$).AddToContainer(cont, 3, 1)
 	'
-	Dim a4 As VMAvatar = vm.CreateAvatar("a4", Me).SetColor("red").SetIcon("mdi-account-circle", "", Null, Null, Null)
-	cont.AddComponent(2, 2, a4.ToString)
-	
+	vm.CreateAvatar("av4", Me).SetColor("red").SetIcon("mdi-account-circle", "", Null, Null, Null).AddToContainer(cont, 4, 1)
+	Main.CreateVBCode(vue, Me, "av4code", "Avatar", $"vm.CreateAvatar("av4", Me).SetColor("red").SetIcon("mdi-account-circle", "", Null, Null, Null).AddToContainer(cont, 3, 1)"$).AddToContainer(cont, 4, 1)
 	'add container to page
 	vm.AddContainer(cont)
+End Sub
+
+Sub av1codecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("av1code")
+End Sub
+
+Sub av2codecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("av2code")
+End Sub
+
+Sub av3codecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("av3code")
+End Sub
+
+Sub av4codecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("av4code")
 End Sub

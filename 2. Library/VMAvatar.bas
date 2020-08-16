@@ -63,6 +63,10 @@ Sub SetBadge(scontent As String) As VMAvatar
 	Return Me
 End Sub
 
+Sub SetLabelTheme(stheme As String) As VMAvatar
+	Label.UseTheme(stheme)
+	Return Me
+End Sub
 
 Sub SetOnClick(EventHandler As Object, methodName As String) As VMAvatar
 	methodName = methodName.tolowercase

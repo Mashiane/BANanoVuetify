@@ -193,9 +193,9 @@ Sub BANano_Ready
 End Sub
 
 
-Sub CreateVBCode(vue As BANanoVue, codeID As String, sTitle As String, scode As String) As VMPrism
+Sub CreateVBCode(vue As BANanoVue, module As Object, codeID As String, sTitle As String, scode As String) As VMPrism
 	Dim pri As VMPrism
-	pri.Initialize(vue, codeID, Me)
+	pri.Initialize(vue, codeID, module)
 	pri.SetLanguage("vb")
 	pri.SetTitle(sTitle)
 	pri.SetCode(scode)
