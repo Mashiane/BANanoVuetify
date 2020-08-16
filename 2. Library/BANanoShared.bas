@@ -7,7 +7,23 @@ Version=8.3
 #ignorewarnings: 12
 Sub Process_Globals
 	Private BANano As BANano  'ignore
-	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
+	Dim UnitWords() As String = Array As String( _
+        "", "One", "Two", "Three", "Four", _
+        "Five", "Six", "Seven", "Eight", "Nine", _
+        "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", _
+        "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen" _
+    )
+ 
+	Dim TenWords() As String = Array As String( _
+        "", "Ten", "Twenty", "Thirty", "Forty", _
+        "Fifty", "Sixty", "Seventy", "Eighty", "Ninety" _
+    )
+ 
+	'only need to go up to Pentillions to handle largest Long integer, but while we're here...
+	Dim ThousandWords() As String = Array As String( _
+        "", "Thousand", "Million", "Billion", "Trillion", _
+        "Quadrillion", "Pentillion", "Sexillion", "Septillion", "Octillion" _
+    )
 End Sub
 
 Sub NewList As List
@@ -2351,20 +2367,132 @@ Sub GetUploadFileName(e As BANanoEvent) As String
 	Return sFileName
 End Sub
 
-'on file change
-Sub UploadFileWait(e As BANanoEvent) As BANanoPromise
-	Dim prom As BANanoPromise
-	'get selected file(s)
-	Dim fileList As List = GetFileListFromTarget(e)
-	If fileList.size = 0 Then Return prom
+''on file change
+'Sub UploadFileWait(e As BANanoEvent) As BANanoPromise
+'	Dim prom As BANanoPromise
+'	'get selected file(s)
+'	Dim fileList As List = GetFileListFromTarget(e)
+'	If fileList.size = 0 Then Return prom
+'	
+'	'get the file to upload
+'	Dim fileO As Map = fileList.Get(0)
+'	'start uploading the file
+'	Dim fd As BANanoObject
+'	fd.Initialize2("FormData", Null)
+'	fd.RunMethod("append", Array("upload", fileO))
+'	'
+'	prom = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
+'	Return prom
+'End Sub
+
+public Sub GenerateNanoID() As String
+	' for IE
+	Dim crypto As BANanoObject
+	If Not(BANano.Window.GetField("crypto")) Then
+		crypto = BANano.Window.GetField("msCrypto")
+	Else
+		crypto = BANano.Window.GetField("crypto")
+	End If
 	
-	'get the file to upload
-	Dim fileO As Map = fileList.Get(0)
-	'start uploading the file
-	Dim fd As BANanoObject
-	fd.Initialize2("FormData", Null)
-	fd.RunMethod("append", Array("upload", fileO))
-	'
-	prom = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
-	Return prom
+	Dim nanoID As String
+	Dim tmpInts As BANanoObject
+	tmpInts.Initialize2("Uint8Array", 21)
+	Dim Randoms(21) As Byte = crypto.RunMethod("getRandomValues", tmpInts)
+	For i = 20 To 0 Step -1
+		Dim n As BANanoObject = Bit.And(63, Randoms(i)) 'ignore
+		If n < 36 Then
+			nanoID = nanoID & n.RunMethod("toString", 36).Result
+		else if n < 62 Then
+			n = n - 26 'ignore
+			Dim tmpN As String = n.RunMethod("toString", 36).Result
+			nanoID = nanoID & tmpN.ToUpperCase
+		Else if n < 63 Then
+			nanoID = nanoID & "_"
+		Else
+			nanoID = nanoID & "-"
+		End If
+	Next
+	Return nanoID
+End Sub
+
+Sub NumberToWords(N As Long) As String
+ 	If N < 0 Then
+		Return "Minus " & NumberToWordsPositive(-N)
+	Else
+		Return NumberToWordsPositive(N)    'including zero
+	End If
+End Sub
+
+private Sub NumberToWordsPositive(N As Long) As String
+	If N = 0 Then
+		Return "Zero"    'that gets rid of that pesky special case
+	End If
+ 
+	Dim GroupsOfThree(10) As Int
+ 
+	Dim NumGroupsOfThree As Int = 0
+ 
+	Do While N <> 0
+		GroupsOfThree(NumGroupsOfThree) = N Mod 1000
+		NumGroupsOfThree = NumGroupsOfThree + 1
+     
+		N = N / 1000
+	Loop
+ 
+	Dim Temp As String = ""
+	For GroupOfThree = NumGroupsOfThree - 1 To 0 Step -1
+		Dim ThisGroup As Int = GroupsOfThree(GroupOfThree)
+     
+		If ThisGroup <> 0 Then
+			If Temp.Length <> 0 Then
+				If GroupOfThree = 0 And ThisGroup < 100 Then
+					Temp = Temp & " and "
+				Else
+					Temp = Temp & ", "
+				End If
+			End If
+         
+			Temp = Temp & NumberToWords1000(ThisGroup)
+         
+			If GroupOfThree <> 0 Then
+				Temp = Temp & " " & ThousandWords(GroupOfThree)
+			End If
+		End If
+	Next
+ 
+	Return Temp
+
+End Sub
+
+private Sub NumberToWords1000(N As Int) As String
+ 
+	If N < 100 Then
+		Return NumberToWords100(N)
+	End If
+ 
+	Dim Hundreds As String = UnitWords(N / 100) & " Hundred"    'Hundreds always non-blank since N < 100 already done
+	Dim TensUnits As String = NumberToWords100(N Mod 100)    'TensUnits could be blank if digits are 00
+ 
+	If TensUnits.Length = 0 Then
+		Return Hundreds
+	Else
+		Return Hundreds & " and " & TensUnits
+	End If
+ 
+End Sub
+
+private Sub NumberToWords100(N As Int) As String 
+	If N < 20 Then
+		Return UnitWords(N)
+	End If
+ 
+	Dim Tens As String = TenWords(N / 10)    'Tens always non-blank since N < 20 already done
+	Dim Units As String = UnitWords(N Mod 10)    'Units could be blank if digit is 0
+ 
+	If Units.Length = 0 Then
+		Return Tens
+	Else
+		Return Tens & "-" & Units
+	End If
+ 
 End Sub

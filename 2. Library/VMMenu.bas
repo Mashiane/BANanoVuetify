@@ -35,6 +35,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub UseVisibility
+	MenuContent.UseVisibility = True
+End Sub
+
 
 Sub SetVOnce(t As Boolean) As VMMenu
 	Menu.setvonce(t)
@@ -145,6 +149,12 @@ Sub SetAvatar(url As String) As VMMenu
 	Return Me
 End Sub
 
+'update the avatar image
+Sub UpdateAvatar(url As String) As VMMenu
+	Dim urlLink As String = $"${ID}avatarimage"$
+	vue.SetData(urlLink, url)
+	Return Me
+End Sub
 
 'add an item to the menu content
 Sub AddItem(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String)
@@ -157,6 +167,26 @@ End Sub
 
 Sub AddDivider1(bInset As Boolean) As VMMenu
 	MenuContent.AddDivider1(bInset)
+	Return Me
+End Sub
+
+Sub AddItemDivider() As VMMenu
+	MenuContent.AddItemDivider
+	Return Me
+End Sub
+
+Sub AddItemHeader(hdr As String) As VMMenu
+	MenuContent.AddItemHeader(hdr)
+	Return Me
+End Sub
+
+Sub SetItemVisibility(itms As Map)
+	MenuContent.SetItemVisibility(itms)
+End Sub
+
+'add an item with visibility
+Sub AddItemV(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String,visibility As Boolean) As VMMenu
+	MenuContent.AddItemV(key, avatar, iconName, title, subtitle, actionIcon,visibility)
 	Return Me
 End Sub
 

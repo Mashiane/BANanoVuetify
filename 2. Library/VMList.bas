@@ -16,6 +16,7 @@ Sub Class_Globals
 	Private items As Map
 	Private bStatic As Boolean
 	Private parentchild As Map
+	Public UseVisibility As Boolean
 End Sub
 
 'initialize the List
@@ -31,6 +32,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	parentchild.Initialize 
 	vue.SetData($"${ID}ds"$, Null)
+	UseVisibility = False
 	Return Me
 End Sub
 
@@ -200,10 +202,14 @@ Sub SetDataSourceTemplate(datasource As String, key As String, avatar As String,
 	'
 	Dim vli As VMListItem
 	vli.Initialize(vue, "", Module).SetStatic(bStatic)
-	vli.SetVIf($"item.${key}"$)
 	vli.Bind(":key", $"item.${key}"$)
 	vli.SetAttrSingle(":id", $"item.${key}"$)
 	vli.SetOnClick($"${ID}_click"$)
+	If UseVisibility Then
+		vli.SetVIf($"item.visibility"$)
+	Else
+		vli.SetVIf($"item.${key}"$)
+	End If
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
@@ -466,6 +472,46 @@ Sub AddItem(key As String, avatar As String, iconName As String, title As String
 	Return Me
 End Sub
 
+Sub AddItemDivider() As VMList
+	Dim key As String = items.size
+	Dim item As Map = CreateMap()
+	item.Put("divider", True)
+	items.Put(key, item)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddItemHeader(hdr As String) As VMList
+	Dim key As String = items.size
+	Dim item As Map = CreateMap()
+	item.Put("header", hdr)
+	items.Put(key, item)
+	HasContent = True
+	Return Me
+End Sub
+
+'add an item with visibility
+Sub AddItemV(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String,visibility As Boolean) As VMList
+	key = key.tolowercase
+	If key = "" Then
+		key = items.size
+	End If
+	title = BANano.SF(title)
+	subtitle = BANano.SF(subtitle)
+	Dim item As Map = CreateMap()
+	item.Put("id", key)
+	item.Put("avatar", avatar)
+	item.Put("icon", iconName)
+	item.Put("title", title)
+	item.Put("subtitle", subtitle)
+	item.Put("action", actionIcon)
+	item.Put("visibility", visibility)
+	items.Put(key, item)
+	HasContent = True
+	Return Me
+End Sub
+
+
 'add item from json
 Sub AddItemJSON(json As String) As VMList
 	Dim m As Map = vue.Json2Map(json)
@@ -477,15 +523,6 @@ End Sub
 'add an item from a map
 Sub AddItemMap(m As Map) As VMList
 	items.Put(items.size, m)
-	HasContent = True
-	Return Me
-End Sub
-
-'add a divider to separate items
-Sub AddItemDivider As VMList
-	Dim item As Map = CreateMap()
-	item.Put("divider", True)
-	items.Put(items.Size, item)
 	HasContent = True
 	Return Me
 End Sub
@@ -711,6 +748,23 @@ Sub AddSubHeader1(hdr As String, bInset As Boolean) As VMList
 	sh.SetText(hdr)
 	sh.Pop(List)
 	Return Me
+End Sub
+
+Sub SetItemVisibility(itms As Map)
+	Dim listKey As String = $"${ID}ds"$
+	Dim xitems As List = vue.GetData(listKey)
+	Dim tItems As Int = xitems.Size - 1
+	Dim cItems As Int
+	For cItems = 0 To tItems
+		Dim itemm As Map = xitems.Get(cItems)
+		Dim ikey As String = itemm.Get("id")
+		If itms.ContainsKey(ikey) Then
+			Dim visibility As Boolean = itms.Get(ikey)
+			itemm.Put("visibility", visibility)
+			xitems.Set(cItems, itemm)
+		End If
+	Next
+	vue.SetData(listKey, xitems)
 End Sub
 
 'get component
