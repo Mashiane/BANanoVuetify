@@ -75,7 +75,7 @@ Sub AddClass(c As String) As VMDataFooter
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMDataFooter
+Sub SetAttr(attr As Map) As VMDataFooter
 	DataFooter.SetAttr(attr)
 	Return Me
 End Sub

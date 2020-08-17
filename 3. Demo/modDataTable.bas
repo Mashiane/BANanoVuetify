@@ -14,11 +14,13 @@ Sub Process_Globals
 	Private dt1 As VMDataTable
 	Private dtUsers As VMDataTable
 	Private dtImages As VMDataTable
+	Private vue As BANanoVue
 End Sub
 
 
 Sub Code
 	vm = pgIndex.vm
+	vue = vm.vue
 	'create a container to hold all contents
 	Dim cont As VMContainer = vm.CreateContainer(name, Me)
 	'hide this container
@@ -85,6 +87,7 @@ Sub Code
 	dt1 = vm.CreateDataTable("dt1", "name", Me)
 	dt1.SetTitle("Food Intake")
 	dt1.AddSearch
+	dt1.AddDivider
 	dt1.AddNew("btnNew", "mdi-plus", "Add a new record")
 	dt1.SetDataSource(recs)
 	dt1.AddColumn1("name", "Desset (100g serving)", dt1.COLUMN_TEXT, 0, False, dt1.ALIGN_LEFT)
@@ -95,6 +98,9 @@ Sub Code
 	dt1.AddMenuV
 	dt1.AddClone
 	dt1.AddPrint
+	dt1.SetColumnTotal("calories", "sumfield('calories')")
+	'register the method
+	vue.SetMethod(Me, "sumfield")
 	
 	dt1.SetColumnType("glutenfree", dt1.COLUMN_CHECKBOX)
 	dt1.SetColumnType("calories", dt1.COLUMN_CHIP)
@@ -105,7 +111,8 @@ Sub Code
 	'dt1.SetOnToggleSelectAll("dt1_selectall")
 	'dt1.SetOnItemSelected("dt1_itemselected")
 	dt1.SetOnInput("dt1_input")
-	
+	'add an external pagination
+	dt1.SetExternalPagination
 	dt1.AddToContainer(cont, 1, 1)
 	'
 	Dim users As List = vm.NewList
@@ -131,6 +138,7 @@ Sub Code
 	dtUsers.SetIconDimensions("edit", "32px", "success")
 	dtUsers.SetIconDimensions("delete", "32p", "error")
 	dtUsers.SetDataSource(users)
+	dtUsers.SetExternalPagination
 	dtUsers.AddToContainer(cont, 2, 1)
 	'
 	Dim images As List = vm.newlist
@@ -149,12 +157,26 @@ Sub Code
 	dtImages.AddColumn("lat", "Latitude")
 	dtImages.AddColumn("lng", "Longitude")
 	dtImages.SetDataSource(images)
+	dtImages.SetExternalPagination
 	dtImages.AddToContainer(cont, 3, 1)
 	
 	'add container to page
 	vm.AddContainer(cont)
 	'
 	vm.SetMethod(Me,"getcolor")
+End Sub
+
+'sum any column passed
+Sub sumfield(fld As String) As String
+	'get all the records
+	Dim totSum As Int = 0
+	Dim recs As List = dt1.GetData
+	For Each rec As Map In recs
+		Dim fldNum As String = rec.get(fld)
+		totSum = totSum + BANano.parseInt(fldNum)
+	Next
+	totSum = vue.makemoney(totSum)
+	Return totSum
 End Sub
 
 Sub dtuserssave(e As BANanoEvent)

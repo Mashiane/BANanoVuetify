@@ -60,6 +60,8 @@ Sub Class_Globals
 	Public masterColumns As List
 	Public CardTitle As VMCardTitle
 	Private hasTotals As Boolean
+	Private hasExternalPagination As Boolean
+	Private totalVisible As String
 End Sub
 
 'initialize the DataTable
@@ -90,6 +92,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	columnsM.Initialize 
 	masterColumns.Initialize 
 	hasTotals = False
+	hasExternalPagination = False
+	totalVisible = ""
 	Return Me
 End Sub
 
@@ -1097,6 +1101,16 @@ private Sub BuildControls
 		'get column name
 		Dim value As String = nf.value
 		Dim methodName As String = $"${ID}_${value}"$
+		'does it have a total
+		If hasTotals Then
+			Dim bindTotals As String = nf.bindTotals
+			Select Case bindTotals
+			Case ""
+				sbTotals.Append($"<th class="title"></th>"$)
+			Case Else
+				sbTotals.Append($"<th class="title">{{ ${bindTotals} }}</th>"$)
+			End Select
+		End If
 		'
 		Select Case ct
 		Case COLUMN_TEXTFIELD
@@ -1348,6 +1362,7 @@ private Sub BuildControls
 	'
 	If hasTotals Then
 		sbTotals.Append($"</tr>"$)
+		sbTotals.Append("</template>")
 		sb.Append(sbTotals.ToString)
 	End If
 	DataTable.SetText(sb.ToString)
@@ -1364,7 +1379,25 @@ Sub ToString As String
 	DataTable.Bind("item-key",PrimaryKey)
 	BuildControls
 	vcard.AddStuff(DataTable.ToString)
+	If hasExternalPagination Then
+		Dim pgDiv As VMElement
+		pgDiv.Initialize(vue, $"${ID}pgdiv"$)
+		pgDiv.AddClass("text-xs-center pt-2")
+		'
+		Dim pg As VMPagination
+		pg.Initialize(vue, $"${ID}pagination"$, Module)
+		pg.SetTotalVisible(totalVisible)
+		pg.SetDataTable(ID)
+		pgDiv.AddComponent(pg.ToString)
+		vcard.AddStuff(pgDiv.ToString)
+	End If
 	Return vcard.ToString
+End Sub
+
+'set total-visible
+Sub SetTotalVisible(varTotalVisible As String) As VMDataTable
+	totalVisible = varTotalVisible
+	Return Me
 End Sub
 
 'update the key
@@ -1835,6 +1868,7 @@ Sub SetExternalPagination As VMDataTable
 	Dim scode As String = ID & "pagecount = $event"
 	SetAttrSingle("@page-count", scode)
 	SetHideDefaultFooter(True)
+	hasExternalPagination = True
 	Return Me
 End Sub
 

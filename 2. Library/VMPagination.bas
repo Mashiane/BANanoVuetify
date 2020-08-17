@@ -66,6 +66,7 @@ Sub SetDataTable(tblID As String) As VMPagination
 	SetAttrSingle("v-model", $"${tblID}page"$)
 	vue.SetData($"${tblID}page"$, "1")
 	vue.SetData($"${tblID}pagecount"$, "0")
+	SetCircle(True)
 	Return Me
 End Sub
 
@@ -170,9 +171,9 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMPagination
-	if varValue = "" Then Return Me
-	if varValue = "0" Then Return Me
-	if bStatic Then
+	If varValue = "" Then Return Me
+	If varValue = "0" Then Return Me
+	If bStatic Then
 		SetAttrSingle("value", varValue)
 		Return Me
 	End If
@@ -184,8 +185,8 @@ End Sub
 
 'set circle
 Sub SetCircle(varCircle As Boolean) As VMPagination
-	if varCircle = False Then Return Me
-	if bStatic Then
+	If varCircle = False Then Return Me
+	If bStatic Then
 		SetAttrSingle("circle", varCircle)
 		Return Me
 	End If
@@ -197,8 +198,8 @@ End Sub
 
 'set dark
 Sub SetDark(varDark As Boolean) As VMPagination
-	if varDark = False Then Return Me
-	if bStatic Then
+	If varDark = False Then Return Me
+	If bStatic Then
 		SetAttrSingle("dark", varDark)
 		Return Me
 	End If
