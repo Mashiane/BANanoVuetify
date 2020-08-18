@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,dtschema_delete,9036,0,Main,Process_Globals,10,0,Main,AppStart,25,0,pgIndex,CreateSchema,9015,0,pgIndex,dtschema_change,9226,0,pgIndex,btnEditable_click,9205,0,pgIndex,DTSchemaEditable1,9197,1,pgIndex,DTSchemaEditable,9177,0,pgIndex,btnRelationships_click,9222,0,pgIndex,btnSwitches_click,9206,0,pgIndex,BuildNavBar,1031,0
+NavigationStack=pgIndex,drwcomponentsitems_click,10906,0,pgIndex,ShowBag,13450,0,pgIndex,SavePropertyBag,13439,0,pgIndex,btnmac_click,3071,0,pgIndex,btnipad_click,3078,0,pgIndex,btniphone_click,3085,0,pgIndex,btnBorder_click,3060,0,pgIndex,Read_Chip,3026,0,pgIndex,btnLandScape_click,3047,0,pgIndex,btnMatrix_click,3052,0
 SelectedBuild=0
 VisibleModules=

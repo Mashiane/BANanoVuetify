@@ -1800,6 +1800,13 @@ Sub CreateDynamicContent(sid As String) As VMElement
 	SetStateSingle(pp,"<div></div>")
 	Dim UI As VMElement = CreateTag(sid, "renderstring")
 	UI.Bind(":string", pp)
+	UI.SetStyleSingle("width", "100% !important")
+	UI.SetStyleSingle("height", "100% !important")
+	UI.SetStyleSingle("max-height", "100% !important")
+	UI.SetStyleSingle("max-width", "100% !important")
+	UI.SetStyleSingle("overflow-y", "auto !important")
+	UI.SetStyleSingle("overflow-x", "hidden !important")
+	UI.SetStyleSingle("float", "left !important")
 	Return UI
 End Sub
 

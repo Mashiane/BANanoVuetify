@@ -31,7 +31,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	hasContent = False
 	OnToolBar = False
 	bStatic = False
-	titems.Initialize 
+	titems.Initialize
 	iconPos = "left"
 	Return Me
 End Sub
@@ -110,7 +110,9 @@ Sub AddTabItemBadge(tabID As String, tabLabel As String, tabIcon As String, tabC
 	tabID = tabID.ToLowerCase
 	Dim tabi As VMTab
 	tabi.Initialize(vue, tabID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-	tabi.SetKey(tabID)
+	Dim tTot As Int = titems.Size
+	tabi.SetKey(tTot)
+	'tabi.SetKey(tabID)
 	tabi.SetBadge(badge)
 	tabi.SetHref($"#tab${tabID}"$)
 	Select Case iconPos
@@ -147,7 +149,10 @@ Sub AddTabItem(tabID As String, tabLabel As String, tabIcon As String, tabConten
 	tabID = tabID.ToLowerCase
 	Dim tabi As VMTab
 	tabi.Initialize(vue, tabID, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-	tabi.SetKey(tabID)
+	Dim tTot As Int = titems.Size
+	tabi.SetKey(tTot)
+	
+	'tabi.SetKey(tabID)
 	tabi.SetHref($"#tab${tabID}"$)
 	Select Case iconPos
 		Case "right"
@@ -375,7 +380,7 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMTabs
 	If varColor = "" Then Return Me
 	Dim scolor As String = $"${varColor} ${varIntensity}"$
 	If bStatic Then
-		SetAttrSingle("color", scolor)	
+		SetAttrSingle("color", scolor)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Color"$
@@ -708,7 +713,7 @@ End Sub
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMTabs
 	Tabs.BuildModel(mprops, mstyles, lclasses, loose)
 	Return Me
-	End Sub
+End Sub
 	
 Sub SetVisible(b As Boolean) As VMTabs
 	Tabs.SetVisible(b)

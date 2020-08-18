@@ -35,8 +35,7 @@ Sub Class_Globals
 	Public COLUMN_PROGRESS_LINEAR As String = "progresslinear"
 	Public COLUMN_SAVE As String = "save"
 	Public COLUMN_CANCEL As String = "cancel"
-	Public COLUMN_TEXTFIELD As String = "textfield"
-	
+		
 	'alignment
 	Public ALIGN_CENTER As String = "center"
 	Public ALIGN_RIGHT As String = "end"
@@ -718,7 +717,7 @@ Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As Stri
 	Dim slarge As String = "large lazy"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge}> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -746,10 +745,10 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 	el.SetDataSource(sourceTable, sourceField, displayField,returnObject)
 	Dim scombo As String = el.tostring
 	'
-	Dim slarge As String = "large lazy"
+	Dim slarge As String = "large"
 	If bLarge = False Then slarge = ""
 	Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge} lazy> {{ props.item.${colName} }}
 <template v-slot:input> ${scombo} </template>
 </v-edit-dialog>
 </template>"$
@@ -757,21 +756,21 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 End Sub
 
 Sub AddEditDialog(colName As String, bLarge As Boolean)
-	Dim slarge As String = "large lazy"
+	Dim slarge As String = "large"
 	If bLarge = False Then slarge = ""
 Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" 
-@open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
-<template v-slot:input> <v-text-field v-model="props.item.${colName}" :label="props.header.text" counter></v-text-field></template></v-edit-dialog>
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" 
+@open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge} lazy> {{ props.item.${colName} }}
+<template v-slot:input> <v-text-field @change="${ID}_saveitem(props.item)" v-model="props.item.${colName}" :label="props.header.text" counter></v-text-field></template></v-edit-dialog>
 </template>"$
 	AddComponent(temp)
 End Sub
 
 Sub AddEditDialogTextArea(colName As String, bLarge As Boolean)
-	Dim slarge As String = "large lazy"
+	Dim slarge As String = "large"
 	If bLarge = False Then slarge = ""
 Dim temp As String = $"<template v-slot:item.${colName}="props">
-<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props)" @cancel="${ID}_cancelitem(props)" @open="${ID}_openitem(props)" @close="${ID}_closeitem(props)" ${slarge}> {{ props.item.${colName} }}
+<v-edit-dialog :return-value.sync="props.item.${colName}" @save="${ID}_saveitem(props.item)" @cancel="${ID}_cancelitem(props.item)" @open="${ID}_openitem(props.item)" @close="${ID}_closeitem(props.item)" ${slarge} lazy> {{ props.item.${colName} }}
 <template v-slot:input> <v-textarea v-model="props.item.${colName}" :label="props.header.text" counter></v-textarea></template>
 </v-edit-dialog>
 </template>"$
@@ -1113,25 +1112,6 @@ private Sub BuildControls
 		End If
 		'
 		Select Case ct
-		Case COLUMN_TEXTFIELD
-			Dim tmp As VMTemplate
-			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			tmp.SetAttrSingle($"#item.${value}"$, "{item}")
-			'
-			Dim tmpSlot As VMTemplate
-			tmpSlot.Initialize(vue, "", Module).SetAttrLoose("v-slot:input")
-			tmpSlot.SetStatic(bStatic).SetDesignMode(DesignMode)
-			
-			Dim txtFIeld As VMTextField
-			txtFIeld.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-			txtFIeld.SetVModel($"props.item.${value}"$)
-			txtFIeld.SetAttrSingle(":placeholer","props.header.text")
-			txtFIeld.SetHideDetails(True)
-			'
-			tmpSlot.AddComponent(txtFIeld.ToString)
-			tmp.AddComponent(tmpSlot.ToString)
-			sb.Append(tmp.ToString)
-				
 		Case COLUMN_DATE, COLUMN_DATETIME, COLUMN_TIME
 			'get the date format
 			Dim df As String = nf.valueFormat
@@ -1376,7 +1356,7 @@ Sub ToString As String
 	vcard.Bind(":key", keyID)
 	DataTable.Bind(":headers", headers)
 	DataTable.Bind(":items", items)
-	DataTable.Bind("item-key",PrimaryKey)
+	'DataTable.Bind("item-key",PrimaryKey)
 	BuildControls
 	vcard.AddStuff(DataTable.ToString)
 	If hasExternalPagination Then
@@ -1756,14 +1736,15 @@ End Sub
 
 'set item-key
 Sub SetItemKey(varItemKey As String) As VMDataTable
-	If varItemKey = "" Then Return Me
-	If bStatic Then
-		SetAttrSingle("item-key", varItemKey)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}ItemKey"$
-	vue.SetStateSingle(pp, varItemKey)
-	DataTable.Bind(":item-key", pp)
+	PrimaryKey = varItemKey
+	'If varItemKey = "" Then Return Me
+	'If bStatic Then
+	'	SetAttrSingle("item-key", varItemKey)
+	'	Return Me
+	'End If
+	'Dim pp As String = $"${ID}ItemKey"$
+	'vue.SetStateSingle(pp, varItemKey)
+	'DataTable.Bind(":item-key", pp)
 	Return Me
 End Sub
 
@@ -2586,18 +2567,8 @@ Sub SetColumnDateFormat(colName As String, colFormat As String) As VMDataTable
 End Sub
 
 private Sub getdateformat(item As String, sFormat As String) As String
-	If item.Length = 0 Then Return ""
-	Try
-		item = vue.MvField(item,1," ")
-		item = item.trim
-		DateTime.DateFormat = "yyyy-MM-dd"
-		Dim dt As Long = DateTime.DateParse(item)
-		DateTime.DateFormat = sFormat
-		Dim rslt As String = DateTime.Date(dt)
-		Return rslt
-	Catch
-		Return item
-	End Try
+	Dim svalue As String = vue.DateFormat(item, sFormat)
+	Return svalue
 End Sub
 
 
@@ -2607,10 +2578,6 @@ private Sub getmoneyformat(item As String) As String
 End Sub
 
 private Sub getfilesize(item As String) As String
-	If BANano.IsNull(item) Or BANano.IsUndefined(item) Then 
-		item = "0"
-	End If
-	item = BANano.parsefloat(item)
 	Dim svalue As String = vue.FormatFileSize(item)
 	Return svalue
 End Sub

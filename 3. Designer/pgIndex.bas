@@ -412,6 +412,7 @@ Sub Process_Globals
 	Private tabs As VMTabs
 	Private b4x As VMContainer
 	Private html5 As VMContainer
+	Private device As VMContainer
 	Private schema As VMContainer
 	Private schemaDT As VMDataTable
 	Private mymac As VMDevice
@@ -751,6 +752,7 @@ Sub Process_Globals
 	Private contattributes As VMContainer
 	Private db As BANanoSQL
 	Private drwV2B4x As VMNavigationDrawer
+	Private previewUX As VMElement
 End Sub
 
 Sub Init
@@ -1017,8 +1019,8 @@ Sub BuildNavBar
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnclosedrawers", "mdi-exit-to-app", "Close all drawers", "")
 	'
-	'vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
-	'vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
+	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
+	vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")
@@ -3036,7 +3038,6 @@ Sub btnLandScape_click(e As BANanoEvent)
 	tabs.show
 	contattributes.hide
 	contSchema.hide
-	vm.setdata("devspace", 0)
 	vm.ToggleNamedState("landscape", "Yes", "No")
 	Dim sState As String = vm.getdata("landscape")
 	Select Case sState
@@ -3049,6 +3050,7 @@ Sub btnLandScape_click(e As BANanoEvent)
 		myiphone.SetLandScape(True)
 		myipad.SetLandScape(True)
 	End Select
+	'vm.setdata("devspace", 1)
 End Sub
 
 Sub btnMatrix_click(e As BANanoEvent)
@@ -3056,8 +3058,8 @@ Sub btnMatrix_click(e As BANanoEvent)
 	tabs.show
 	contSchema.hide
 	contattributes.hide
-	vm.setdata("devspace", 0)
 	CreateUX
+	vm.setdata("devspace", 0)
 End Sub
 	
 Sub btnBorder_click(e As BANanoEvent)
@@ -3065,29 +3067,29 @@ Sub btnBorder_click(e As BANanoEvent)
 	tabs.show
 	contattributes.hide
 	contSchema.hide
+	CreateUX
 	vm.setdata("devspace", 0)
-	CreateUX	
 End Sub
 
 Sub btnmac_click(e As BANanoEvent)
-	vm.setdata("devspace", 0)
 	mymac.Show
 	myipad.hide
 	myiphone.hide
+	'vm.setdata("devspace", 1)
 End Sub
 
 Sub btnipad_click(e As BANanoEvent)
-	vm.setdata("devspace", 0)
 	mymac.hide
 	myipad.show
 	myiphone.hide
+	'vm.setdata("devspace", 1)
 End Sub
 
 Sub btniphone_click(e As BANanoEvent)
-	vm.setdata("devspace", 0)
 	mymac.hide
 	myipad.hide
 	myiphone.show
+	'vm.setdata("devspace", 1)
 End Sub
 	
 
@@ -3213,6 +3215,7 @@ Sub CreateUX
 		controltype = rec.get("controltype")
 		sname = rec.get("name")
 		sparent = rec.get("parentid")
+		
 		Select Case controltype
 		Case "timeline"
 			Dim citems As List
@@ -3646,6 +3649,7 @@ Sub CreateUX
 	pc.SetCode(sb.tostring)
 	htm.setcode(shtml)
 	'
+	vm.SetDynamicContent("previewux", html)
 	mymac.SetContent(html)
 	myipad.SetContent(html)
 	myiphone.SetContent(html)
@@ -5343,7 +5347,7 @@ End Sub
 
 Sub Design_Tel
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, siconname, shelpertext, serrortext, sTabindex)
+	Dim tel As VMTextField = ui.NewTel(Me, True, sname, svmodel, sTitle, sPlaceholder, bisRequired, siconname, shelpertext, serrortext, sTabindex)
 	tel.SetFieldType(sfieldtype)
 	tel.SetSolo(bisSolo)
 	tel.SetValue(svalue)
@@ -5689,8 +5693,8 @@ End Sub
 
 Sub Design_Container
 	Dim cont As VMContainer = ui.NewContainer(Me, True, sname)
-	cont.SetElevation(selevation)
-	cont.SetTransition(stransition)
+	cont.SetElevation(sElevation)
+	cont.SetTransition(sTransition)
 	cont.SetFluid(bisfluid)
 	cont.SetShowMatrix(bisshowmatrix)
 	cont.SetNoGutters(bisnogutters)
@@ -5703,10 +5707,10 @@ Sub Design_Container
 	cont.SetColorIntensity(sColor, sintensity)
 	cont.SetWidth(sWidth)
 	cont.SetHeight(sHeight)
-	cont.SetMinWidth(sminwidth)
-	cont.SetMaxWidth(smaxwidth)
-	cont.SetMinHeight(sminheight)
-	cont.SetMaxHeight(smaxheight)
+	cont.SetMinWidth(sMinwidth)
+	cont.SetMaxWidth(sMaxwidth)
+	cont.SetMinHeight(sMinheight)
+	cont.SetMaxHeight(sMaxheight)
 	If smargintop <> "" Then cont.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then cont.AddClass("mb-" & smarginbottom)
 	If smarginleft <> "" Then cont.AddClass("ml-" & smarginleft)
@@ -5739,8 +5743,8 @@ Sub Design_Container
 	sb.append($"Dim cont${sname} As VMContainer = vm.NewContainer(Me, cont${bStatic}, "cont${sname}")"$).append(CRLF)
 	CodeLine(sb, bisnogutters, "b", "cont", sname, "SetNoGutters")
 	CodeLine(sb, bisitemdiv, "b", "cont", sname, "SetDiv")
-	CodeLine(sb, selevation, "s", "cont", sname, "SetElevation")
-	CodeLine(sb, stransition, "s", "cont", sname, "SetTransition")
+	CodeLine(sb, sElevation, "s", "cont", sname, "SetElevation")
+	CodeLine(sb, sTransition, "s", "cont", sname, "SetTransition")
 	CodeLine(sb, bisfluid, "b", "cont", sname, "SetFluid")
 	If sfloat <> "" Then
 		AddCode(sb, $"cont${sname}.AddClass("${sfloat}")"$)
@@ -5753,10 +5757,10 @@ Sub Design_Container
 	CodeLine(sb, sborderstyle, "s", "cont", sname, "SetBorderStyle")
 	CodeLine(sb, sWidth, "s", "cont", sname, "SetWidth")
 	CodeLine(sb, sHeight, "s", "cont", sname, "SetHeight")
-	CodeLine(sb, sminwidth, "s", "cont", sname, "SetMinWidth")
-	CodeLine(sb, smaxwidth, "s", "cont", sname, "SetMaxWidth")
-	CodeLine(sb, sminheight, "s", "cont", sname, "SetMinHeight")
-	CodeLine(sb, smaxheight, "s", "cont", sname, "SetMaxHeight")
+	CodeLine(sb, sMinwidth, "s", "cont", sname, "SetMinWidth")
+	CodeLine(sb, sMaxwidth, "s", "cont", sname, "SetMaxWidth")
+	CodeLine(sb, sMinheight, "s", "cont", sname, "SetMinHeight")
+	CodeLine(sb, sMaxheight, "s", "cont", sname, "SetMaxHeight")
 	'
 	Dim pres As String = "cont"
 	CodeLine(sb, "mt-" & smargintop, "s", pres, sname, "AddClass")
@@ -6690,8 +6694,8 @@ Sub Design_Menu
 		menu.SetAvatar(savatar)
 	End Select
 	menu.Setactivator(sactivator)
-	menu.Setclosedelay(sclosedelay)
-	menu.Setcontentclass(scontentclass)
+	menu.Setclosedelay(sClosedelay)
+	menu.Setcontentclass(sContentclass)
 	menu.Setmaxheight(sMaxheight)
 	menu.Setmaxwidth(sMaxwidth)
 	menu.Setminwidth(sMinwidth)
@@ -6700,35 +6704,35 @@ Sub Design_Menu
 	menu.Setnudgeright(snudgeright)
 	menu.Setnudgetop(snudgetop)
 	menu.Setnudgewidth(snudgewidth)
-	menu.Setopendelay(sopendelay)
-	menu.Setorigin(sorigin)
+	menu.Setopendelay(sOpendelay)
+	menu.Setorigin(sOrigin)
 	menu.Setpositionx(spositionx)
 	menu.Setpositiony(spositiony)
 	menu.Setreturnvalue(sreturnvalue)
-	menu.Settransition(stransition)
+	menu.Settransition(sTransition)
 	'
 	menu.Setabsolute(bisAbsolute)
 	menu.Setallowoverflow(bisallowoverflow)
 	menu.Setauto(bisauto)
-	menu.Setbottom(bisbottom)
+	menu.Setbottom(bisBottom)
 	menu.Setcloseonclick(biscloseonclick)
 	menu.Setcloseoncontentclick(biscloseoncontentclick)
 	menu.Setdark(bisDark)
 	menu.Setdisablekeys(bisdisablekeys)
 	menu.Setdisabled(bisDisabled)
-	menu.Seteager(biseager)
+	menu.Seteager(bisEager)
 	menu.Setfixed(bisFixed)
-	menu.Setinternalactivator(bisinternalactivator)
+	menu.Setinternalactivator(bisInternalactivator)
 	menu.Setleft(bisLeft)
 	menu.Setlight(bisLight)
 	menu.Setoffsetoverflow(bisoffsetoverflow)
 	menu.Setoffsetx(bisoffsetx)
 	menu.Setoffsety(bisoffsety)
 	menu.Setopenonclick(bisOpenonclick)
-	menu.Setopenonhover(bisopenonhover)
+	menu.Setopenonhover(bisOpenonhover)
 	menu.Setright(bisRight)
 	menu.Setslotactivator(bisslotactivator)
-	menu.Settop(bistop)
+	menu.Settop(bisTop)
 	menu.SetVisible(bisVisible)
 	If smargintop <> "" Then menu.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then menu.AddClass("mb-" & smarginbottom)
@@ -6793,9 +6797,9 @@ Sub Design_Menu
 		CodeLine(sb, savatar, "s", "menu", sname, "SetAvatar")
 	End Select
 	CodeLine(sb, bisVisible, "b", "menu", sname, "SetVisible")
-	CodeLine(sb, sactivator, "s", "menu", sname, "Setactivator")
-	CodeLine(sb, sclosedelay, "s", "menu", sname, "Setclosedelay")
-	CodeLine(sb, scontentclass, "s", "menu", sname, "Setcontentclass")
+	CodeLine(sb, sActivator, "s", "menu", sname, "Setactivator")
+	CodeLine(sb, sClosedelay, "s", "menu", sname, "Setclosedelay")
+	CodeLine(sb, sContentclass, "s", "menu", sname, "Setcontentclass")
 	CodeLine(sb, sMaxheight, "s", "menu", sname, "Setmaxheight")
 	CodeLine(sb, sMaxwidth, "s", "menu", sname, "Setmaxwidth")
 	CodeLine(sb, sMinwidth, "s", "menu", sname, "Setminwidth")
@@ -6804,15 +6808,15 @@ Sub Design_Menu
 	CodeLine(sb, snudgeright, "s", "menu", sname, "Setnudgeright")
 	CodeLine(sb, snudgetop, "s", "menu", sname, "Setnudgetop")
 	CodeLine(sb, snudgewidth, "s", "menu", sname, "Setnudgewidth")
-	CodeLine(sb, sopendelay, "s", "menu", sname, "Setopendelay")
-	CodeLine(sb, sorigin, "s", "menu", sname, "Setorigin")
+	CodeLine(sb, sOpendelay, "s", "menu", sname, "Setopendelay")
+	CodeLine(sb, sOrigin, "s", "menu", sname, "Setorigin")
 	If sfloat <> "" Then
 		AddCode(sb, $"menu${sname}.AddClass("${sfloat}")"$)
 	End If
 	CodeLine(sb, spositionx, "s", "menu", sname, "Setpositionx")
 	CodeLine(sb, spositiony, "s", "menu", sname, "Setpositiony")
 	CodeLine(sb, sreturnvalue, "s", "menu", sname, "Setreturnvalue")
-	CodeLine(sb, stransition, "s", "menu", sname, "Settransition")
+	CodeLine(sb, sTransition, "s", "menu", sname, "Settransition")
 	'
 	CodeLine(sb, bisAbsolute, "b", "menu", sname, "Setabsolute")
 	CodeLine(sb, bisallowoverflow, "b", "menu", sname, "Setallowoverflow")
@@ -7260,7 +7264,7 @@ Sub Design_Button
 	btn.SetColorIntensity(sColor, sintensity)
 	btn.SetTextColorIntensity(sTextcolor, stextintensity)
 	btn.SetDisabled(bisDisabled).Setoutlined(bisOutlined)
-	btn.SetRounded(bisRounded).SetTransparent(bistext)
+	btn.SetRounded(bisRounded).SetTransparent(bisText)
 	'
 	Select Case sbuttontype
 	Case "normal"
@@ -8013,20 +8017,20 @@ Sub DesignLayout
 	'lblProject.SetStyleSingle("writing-mode", "tb-rl")
 	'vm.container.AddComponent(1, 1, lblProject.tostring)
 	
-	tabs = vm.CreateTabs("tabsd", Me).SetGrow(True).SetIconsAndText(True).SetCentered(True).SetVModel("devspace")
-	tabs.SetTransition(vm.TRANSITION_SLIDE_X)
-	tabs.Show
-	tabs.OnToolBar = True
-	
-	'
 	dnd = vm.CreateContainer("dnd", Me).SetFluid(True)
 	dnd.AddRows(1).AddColumns12
-	dnd.SetJustifyRC(1, 1, "center")
-	dnd.SetAlignRC(1, 1, "center")
-	dnd.AddClassRC(1, 1, Array("mx-auto"))
+	'
+	previewUX = vm.CreateDynamicContent("previewux")
+	dnd.AddComponent(1,1, previewUX.tostring)
+	
+	'dnd.SetJustifyRC(1, 1, "center")
+	'dnd.SetAlignRC(1, 1, "center")
+	'dnd.AddClassRC(1, 1, Array("mx-auto"))
 	dnd.SetOnDragOver("ItemDragOver")
 	dnd.SetOnDrop("ItemDrop")
+	dnd.SetBorder("2px", vue.COLOR_BLUEGREY, vue.BORDER_DASHED)
 	'
+	
 	mymac.Initialize(vue, "myma", Me)
 	mymac.SetMacbook
 	'
@@ -8038,9 +8042,19 @@ Sub DesignLayout
 	myiphone.SetIphone8Plus
 	myiphone.hide
 		
-	dnd.AddComponent(1, 1, mymac.tostring)
-	dnd.AddComponent(1, 1, myipad.tostring)
-	dnd.AddComponent(1, 1, myiphone.tostring)
+	'dnd.AddComponent(1, 1, mymac.tostring)
+	'dnd.AddComponent(1, 1, myipad.tostring)
+	'dnd.AddComponent(1, 1, myiphone.tostring)
+	'
+	device = vm.CreateContainer("device", Me).SetFluid(True)
+	device.AddRows(1).AddColumns12
+	device.SetJustifyRC(1, 1, "center")
+	device.SetAlignRC(1, 1, "center")
+	device.AddClassRC(1, 1, Array("mx-auto"))
+	device.AddComponent(1, 1, mymac.tostring)
+	device.AddComponent(1, 1, myipad.tostring)
+	device.AddComponent(1, 1, myiphone.tostring)
+	
 	'
 	b4x = vm.CreateContainer("b4x", Me).SetFluid(True)
 	b4x.AddRows(1).AddColumns12
@@ -8053,12 +8067,13 @@ Sub DesignLayout
 	'
 	schemaDT = vm.CreateDataTable("schemaDT", "key", Me)
 	schemaDT.SetTitle("Schema")
-	schemaDT.SetItemsperpage("100")
+	schemaDT.SetItemsperpage("50")
 	schemaDT.SetPage("1")
 	schemaDT.SetSingleselect(True)
 	schemaDT.SetDense(True)
 	schemaDT.SetFixedHeader(True)
 	schemaDT.SetMultiSort(True)
+	schemaDT.SetExternalPagination
 	'
 	ConfigureSchemaEntry(schemaDT)
 	'
@@ -8105,7 +8120,16 @@ Sub DesignLayout
 	htm.SetTitle("HTML Source Code")
 	html5.AddComponent(1, 1, htm.tostring)
 	'
+	tabs = vm.CreateTabs("tabsd", Me)
+	tabs.SetGrow(True)
+	tabs.SetIconsAndText(True)
+	tabs.SetCentered(True)
+	tabs.SetVModel("devspace")
+	tabs.SetTransition(vm.TRANSITION_SLIDE_X)
+	tabs.Show
+	tabs.OnToolBar = True
 	tabs.AddTab("dndrea", "Drag n Drop / Preview", "mdi-drag-variant", dnd)
+	tabs.AddTab("previewdevide", "Device", "mdi-laptop-mac", device)
 	tabs.AddTab("b4xarea", "B4X", "code", b4x)
 	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
 	tabs.AddTab("schemaarea", "Schema", "mdi-database", schema)
@@ -8152,6 +8176,7 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	dt.AddColumn("colreadonly", "ReadOnly")
 	dt.AddColumn("colvisible", "Visible")
 	dt.AddColumn("colishidedetails", "HideDetails")
+	dt.AddColumn("coldontupdate", "DontUpdate")
 	dt.AddColumn("colactive", "Active")
 	'
 	dt.AddColumn("colislookup", "LookUp")
@@ -8165,7 +8190,7 @@ Sub ConfigureSchemaEntry(dt As VMDataTable)
 	'
 	dt.SetColumnsSwitch(Array("colprimarykey","colautoincrement","colisautofocus"))
 	dt.SetColumnsSwitch(Array("colontable","coldisplayvalue","colnoduplicate"))
-	dt.SetColumnsSwitch(Array("colrequired","colvisible","colislookup","colreadonly"))
+	dt.SetColumnsSwitch(Array("colrequired","colvisible","colislookup","colreadonly","coldontupdate"))
 	dt.SetColumnsSwitch(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions"))
 	'
 	dt.AddEditDialog("key",False)
@@ -8217,7 +8242,7 @@ Sub btnSwitches1_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
 	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
-	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly"))
+	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly","coldontupdate"))
 	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions","edit","delete"))
 	schemaDT.Applyfilter(flt)
 End Sub
@@ -8323,6 +8348,7 @@ Sub UpdateRecord(item As Map, skey As String)
 	Dim scolindexed As String = item.get("colindexed")
 	Dim scolislookup As String = item.get("colislookup")
 	Dim scolreadonly As String = item.get("colreadonly")
+	Dim scoldontupdate As String = item.get("coldontupdate")
 	'		
 	item.put("itemscolontable", scolontable)
 	item.put("itemscolactive", scolactive)
@@ -8337,6 +8363,7 @@ Sub UpdateRecord(item As Map, skey As String)
 	item.put("itemscolindexed", scolindexed)
 	item.put("itemscolislookup", scolislookup)	
 	item.put("itemscolreadonly", scolreadonly)
+	item.put("itemscoldontupdate", scoldontupdate)
 	'
 	'read the existing items
 	Dim contents As List = vue.GetData("tableitems")
@@ -8623,9 +8650,10 @@ End Sub
 Sub CreateDataTable_vuetifyattributes
 	dtvuetifyattributes = vm.CreateDataTable("dtvuetifyattributes", "key", Me)
 	dtvuetifyattributes.SetTitle("Vuetify Attributes")
-	'dtvuetifyattributes.SetSearchbox(True)
+	dtvuetifyattributes.SetSearchbox(True)
 	'dtvuetifyattributes.SetAddNew("btnNewAttribute", "mdi-plus", "Add a new attribute")
-	dtvuetifyattributes.SetItemsperpage("100")
+	dtvuetifyattributes.SetItemsperpage("50")
+	dtvuetifyattributes.SetExternalPagination
 	dtvuetifyattributes.SetMobilebreakpoint("600")
 	dtvuetifyattributes.SetMultisort(True)
 	dtvuetifyattributes.SetPage("1")
@@ -8872,7 +8900,7 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	nTable.put("name", tbKey)
 	nTable.put("label", vue.propercase(tbKey))
 	nTable.Put("selecttype", "all")
-	nTable.put("itemsperpage", "10")
+	nTable.put("itemsperpage", "50")
 	nTable.put("itemkey", sprimarykey)
 	nTable.put("confirmfield", sdisplayfields)
 	nTable.put("displayfield", sdisplayfields)
@@ -8953,8 +8981,168 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	contattributes.hide
 	contSchema.hide
 	vm.setdata("devspace", 0)
+	ExplodeTable(tbKey, nJSON)
+End Sub
+
+Sub ExplodeTable(tblName As String, jsonFields As String)
+	Dim dlg As String = vm.propercase(tblName)
+	Dim dlg As String = dlg.replace(" ","")
+	dlg = dlg.trim
+	Dim diagName As String = $"dlg${dlg}"$
+	
+
+	Dim contents As List = BANano.fromjson(jsonFields)
+	db.OpenWait("bvmdesigner", "bvmdesigner")
+	'explode the controls
+	Dim contSQL As BANanoAlaSQLE
+			
+	For Each item As Map In contents
+		Dim ckey As String = item.getdefault("key", "")
+		Dim ctitle As String = item.getdefault("title", "")
+		Dim ccolcontroltype As String = item.getdefault("colcontroltype", "")
+		Dim ccollength As String = item.getdefault("collength", "")
+		Dim ccoldatatype As String = item.getdefault("coldatatype", "")
+		Dim cicon As String = item.getdefault("icon", "")
+		Dim ccolvalue As String = item.getdefault("colvalue", "")
+		Dim ccolrequired As String = item.getdefault("colrequired", "No")
+		Dim ccolreadonly As String = item.getdefault("colreadonly", "No")
+		Dim ccolvisible As String = item.getdefault("colvisible", "No")
+		Dim ccolontable As String = item.getdefault("colontable", "No")
+		Dim ccolforeigntable As String = item.GetDefault("colforeigntable", "")
+		Dim ccolforeignkey As String = item.getdefault("colforeignkey", "")
+		Dim ccolforeignvalue As String = item.getdefault("colforeignvalue", "")
+		Dim ccolislookup As String = item.getdefault("colislookup", "No")
+		Dim ccoldateformat As String = item.getdefault("coldateformat", "")
+		'
+		Dim cid As String = DateTime.now
+		cid = BANano.parseint(cid)
+		'
+		Dim nc As Map = CreateMap()
+		nc.put("id", cid)
+		nc.put("label", ctitle)
+		nc.put("controltype", ccolcontroltype)
+		nc.put("deletecomp", "mdi-delete")
+		nc.put("parent", diagName & ".Container")
+		nc.put("parentid", diagName & ".Container")
+		nc.put("vmodel", ckey)
+		nc.put("fieldtype", vue.DataType2FieldType(ccoldatatype))
+		nc.put("iconname", cicon)
+		nc.put("value", ccolvalue)
+		nc.put("sourcetable", ccolforeigntable)
+		nc.put("sourcefield", ccolforeignkey)
+		nc.put("displayfield", ccolforeignvalue)
+		nc.put("colislookup", ccolislookup)
+		nc.put("dateformat", ccoldateformat)
+		nc.put("isreadonly", ccolreadonly)
+		If ccolislookup = "Yes" Then
+			nc.put("useoptions", "No")
+		Else
+			nc.put("useoptions", "Yes")
+		End If
+		Dim cavatar As String = ""
+		If avatarMap.containskey(ccolcontroltype) Then cavatar = avatarMap.get(ccolcontroltype)
+		nc.put("avatar", cavatar)
+		nc.put("maxlength", ccollength)
+		nc.put("isrequired", ccolrequired)
+		nc.put("isvisible", ccolvisible)
+		nc.put("ontable", ccolontable)
+		nc.put("showlabel", "Yes")
+		nc.put("tformat","24hr")
+		nc.put("isforinput", "Yes")
+		nc.put("minvalue", "0")
+		nc.put("maxvalue", "100")
+		nc.put("slidervalue", "20")
+		nc.put("stepvalue", "1")
+		nc.put("truevalue", "Yes")
+		nc.put("falsevalue", "No")
+		nc.put("isupdatable", "Yes")
+		nc.put("parentid", diagName)
+		If ccolrequired = "Yes" Then
+			serrortext = $"The ${ctitle.tolowercase} is required!"$
+			nc.Put("errortext", serrortext)
+		End If
+		'
+		Dim matr As List
+		matr.initialize
+		matr.AddAll(Array("colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge"))
+		matr.AddAll(Array("coloffsetxlarge", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge"))
+		matr.AddAll(Array("colisautofocus","colishidedetails","colisdense","colnoduplicate","colprimarykey", _
+			"coldisplayvalue","colautoincrement","coluseoptions","colkeys","colvalues","coldontupdate"))
+		'
+		For Each k As String In matr
+			Dim v As String = item.GetDefault(k, "")
+			Dim nk As String = vm.MidString2(k, 4)
+			nc.put(nk, v)
+		Next
+		'
+		Dim crow As String = item.getdefault("colrow","")
+		Dim ccol As String = item.getdefault("colcolumn", "")
+		crow = BANano.parseint(crow)
+		ccol = BANano.parseint(ccol)
+		'convert to attributes
+		Dim attrJSON As String = BANano.ToJson(nc)
+		'create a new record
+		Dim nrec As Map = CreateMap()
+		nrec.put("controltype", ccolcontroltype)
+		nrec.put("deletecomp", "mdi-delete")
+		nrec.put("id", cid)
+		nrec.put("row", crow)
+		nrec.put("col", ccol)
+		nrec.put("parentid", diagName)
+		nrec.put("name", ckey)
+		nrec.put("vmodel", ckey)
+		nrec.put("attributes", attrJSON)
+		nrec.put("label", ctitle)
+		nrec.put("icon", cicon)
+		nrec.put("avatar", cavatar)
+		'
+		'we need to search for the component
+		contSQL.Initialize("components", "vmodel")
+		contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+		contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+		'
+		Dim cw As Map = CreateMap()
+		cw.put("vmodel", ckey)
+		contSQL.SelectWhere(Array("*"), cw, Array("="), Array("id"))
+		contSQL.result = db.ExecuteWait(contSQL.query, contSQL.args)
+		contSQL.FromJSON
+		'if we have zero, add it
+		If contSQL.affectedRows = 0 Then
+			contSQL.Initialize("components", "id")
+			contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+			contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+
+			contSQL.Insert1(nrec)
+			contSQL.Result = db.ExecuteWait(contSQL.query, contSQL.args)
+			contSQL.FromJSON
+		Else
+			'update existing record
+			Dim oldrec As Map = contSQL.result.get(0)
+			attrJSON = oldrec.get("attributes")
+			Dim olda As Map = BANano.fromjson(attrJSON)
+			For Each k As String In nc.keys
+				Dim v As String = nc.get(k)
+				If k <> "id" Then olda.put(k, v)
+			Next
+			attrJSON = BANano.tojson(olda)
+			oldrec.Put("attributes", attrJSON)
+			For Each k As String In nrec.keys
+				If k = "attributes" Then Continue
+				If k = "id" Then Continue
+				Dim v As String = nrec.get(k)
+				oldrec.put(k, v)
+			Next
+			contSQL.Initialize("components", "vmodel")
+			contSQL.AddIntegers(Array("id", "row","col","tabindex"))
+			contSQL.AddStrings(Array("parentid","name","vmodel","attributes","styles","classes", "loose","label", "icon","avatar","items", "controltype"))
+			contSQL.Update1(oldrec, ckey)
+			contSQL.result = db.ExecuteWait(contSQL.query, contSQL.args)
+			contSQL.FromJSON
+		End If
+	Next
 	CreateUX
 End Sub
+
 
 'lets process the schemas
 Sub CreateSchema
@@ -8985,8 +9173,6 @@ Sub CreateSchema
 	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnRelationships", "mdi-transit-connection", "purple", "Update Relationships","")
 	tbltoolbar2x.AddDivider1
-	tbltoolbar2x.AddIcon1("btnPreview","mdi-eye", "yellow", "Preview this schema on a modal form", "")
-	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnImportTitles","mdi-database-import","orange","Import field descriptions", "")
 	tbltoolbar2x.AddDivider1
 	tbltoolbar2x.AddIcon1("btnSaveMySchema","mdi-content-save","green","Save this schema", "")
@@ -9006,13 +9192,14 @@ Sub CreateSchema
 	dtschema.SetTitle("Table Schema")
 	dtschema.SetSearchbox(True)
 	dtschema.AddToolBarDivider
-	dtschema.SetItemsperpage("100")
+	dtschema.SetItemsperpage("50")
 	dtschema.SetMobilebreakpoint("600")
 	dtschema.SetMultisort(True)
 	dtschema.SetPage("1")
 	dtschema.SetSingleselect(True)
 	dtschema.SetVisible(True)
 	dtschema.SetDense(True)
+	dtschema.SetExternalPagination
 	'check date fields and make red row.
 	dtschema.SetItemClass("checkDateTime")
 	'
@@ -9049,8 +9236,7 @@ Sub btnAddSchemaField_click(e As BANanoEvent)
 	'get the data of the table
 	Dim tblList As List = dtschema.getdata
 	Dim fldName As String = $"field${tblList.size}"$
-	
-	
+		
 	'save the schema first
 	Dim nf As Map = CreateMap()
 	nf.put("key", fldName)
@@ -9089,6 +9275,7 @@ Sub btnAddSchemaField_click(e As BANanoEvent)
 	nf.put("colvisible", "Yes")
 	nf.put("colishidedetails", "Yes")
 	nf.put("colactive", "Yes")
+	nf.put("coldontupdate", "No")
 	'
 	nf.put("colislookup", "No")
 	nf.put("colforeigntable", "")
@@ -9098,7 +9285,8 @@ Sub btnAddSchemaField_click(e As BANanoEvent)
 	nf.put("colkeys", "")
 	nf.put("colvalues", "")
 	'
-	tblList.add(nf)
+	'add at the top of the schema
+	tblList.InsertAt(0, nf)
 	dtschema.SetDataSource(tblList)
 	vm.HideLoading	
 End Sub
@@ -9215,7 +9403,7 @@ Sub btnSwitches_click(e As BANanoEvent)
 	flt.AddAll(Array("key", "title"))
 	flt.AddAll(Array("colprimarykey","colautoincrement","colisautofocus"))
 	flt.AddAll(Array("colontable","coldisplayvalue","colnoduplicate"))
-	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly"))
+	flt.AddAll(Array("colrequired","colvisible","colislookup","colreadonly","coldontupdate"))
 	flt.AddAll(Array("colishidedetails","colactive","colsortable","colindexed","coluseoptions","delete"))
 	dtschema.Applyfilter(flt)
 End Sub
@@ -9387,6 +9575,7 @@ Sub SaveDatabaseSchema
 			ifld.put("colsizexlarge", "12")
 			ifld.put("colisautofocus", "No")
 			ifld.put("colishidedetails", "No")
+			ifld.put("coldontupdate", "No")
 			ifld.put("colisdense", "No")
 			ifld.put("colactive", "Yes")
 			ifld.put("colnoduplicate", "No")
@@ -9585,6 +9774,7 @@ Sub AddInstruction(sbx As StringBuilder, modName As String, subName As String, p
 End Sub
 
 Sub Design_DBSourceCode
+	Dim dontUpdate As List = vue.newlist
 	focusOn = ""
 	Dim prj As Map = vm.getdata("project")
 	Dim pid As String = prj.getdefault("id", "")
@@ -9653,12 +9843,18 @@ Sub Design_DBSourceCode
 	foreign.initialize
 	'find if we have foreign key linkages
 	For Each m As Map In flds
+		Dim skey As String = m.getdefault("key", "")
+		
+		Dim bcoldontupdate As Boolean = YesNoToBoolean(m.getdefault("coldontupdate", "No"))
+		If bcoldontupdate Then 
+			dontUpdate.add(skey)
+			Continue
+		End If
 		Dim bcolislookup As Boolean = YesNoToBoolean(m.GetDefault("colislookup", "No"))
 		If bcolislookup Then foreign.add(m)
 		'lets find the auto focus field
 		Dim bcolisautofocus As Boolean = YesNoToBoolean(m.getdefault("colisautofocus","No"))
 		Dim scolcontroltype As String = m.getdefault("colcontroltype", "")
-		Dim skey As String = m.getdefault("key", "")
 		If bcolisautofocus Then
 			xAuto = $"${scolcontroltype}.${skey}"$
 		End If
@@ -9787,7 +9983,9 @@ Sub Design_DBSourceCode
 		Dim xvalue As String = m.GetDefault("colvalue", "")   'Value
 		Dim xindexed As String = m.GetDefault("colindexed", "No")      'Indexed
 		Dim xsortable As Boolean = YesNoToBoolean(m.GetDefault("colsortable", "No"))    'Sortable
-		
+		Dim bcoldontupdate As Boolean = YesNoToBoolean(m.getdefault("coldontupdate", "No"))
+		If bcoldontupdate Then Continue
+		'
 		If xkey = "" Then Continue
 		xkey= xkey.tolowercase
 		Select Case xtype
@@ -10025,6 +10223,8 @@ Sub Design_DBSourceCode
 		'
 		For Each m As Map In flds
 			Dim fld As String = m.GetDefault("key","")
+			Dim bcoldontupdate As Boolean = YesNoToBoolean(m.getdefault("coldontupdate", "No"))
+			If bcoldontupdate Then Continue
 			Dim xsortable As Boolean = YesNoToBoolean(m.GetDefault("colsortable", "No"))
 			'Dim xontable As Boolean = YesNoToBoolean(m.GetDefault("colontable", "No"))
 			If fld = "" Then Continue
@@ -10273,6 +10473,15 @@ Sub Design_DBSourceCode
 		AddComment(sbl, "create/update record to table")
 		AddComment(sbl, "get the record to create/update")
 		sbl.append($"Dim Record As Map = ${diagName}.Container.GetData"$).append(CRLF)
+		'remove fields that we dont want involved
+		If dontUpdate.size > 0 Then
+			AddComment(sbl, "remove helper fields")
+			For Each fx As String In dontUpdate
+				fx = fx.tolowercase
+				AddCode(sbl, $"Record.Remove("${fx}")"$)
+			Next
+			AddNewLine(sbl)
+		End If
 		AddComment(sbl, "validate the record")
 		sbl.append($"Dim bValid As Boolean = vm.Validate(Record, ${diagName}.Container.Required)"$).append(CRLF)
 		AddComment(sbl, "if invalid exit create/update")
@@ -10701,7 +10910,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			TableStructure
 			Design_DBSourceCode
 			DTSchemaEditable1
-			vm.setdata("devspace", 3)
+			vm.setdata("devspace", 4)
 		Case "rating"
 			ShowBag("pbrating")
 			pbrating.SetDefaults
@@ -10718,7 +10927,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbpage.SetDefaults
 			pbpage.hideitem("id")
 			pbpage.Hideitem("controltype")
-			vm.setdata("devspace", 1)
+			vm.setdata("devspace", 0)
 		Case "avatar"
 			ShowBag("pbavatar")
 			pbavatar.SetDefaults
@@ -10732,7 +10941,7 @@ Sub drwcomponentsitems_click(e As BANanoEvent)
 			pbbuilder.Hideitem("controltype")
 			pbbuilder.ClearContents
 			DesignStructure
-			vm.setdata("devspace", 1)
+			vm.setdata("devspace", 0)
 		Case "panel"
 			ShowBag("pbexpansionpanels")
 			pbexpansionpanels.SetDefaults
@@ -11859,7 +12068,7 @@ Sub ItemDrop(e As BANanoEvent)
 							BANano.SetLocalStorage("selectedpanel", 2)
 						Case "table"
 							attr.Put("selecttype", "all")
-							attr.put("itemsperpage", "10")
+							attr.put("itemsperpage", "50")
 							attr.put("itemkey", "id")
 							attr.put("mobilebreakpoint", "600")
 							attr.put("page", "1")
@@ -13161,7 +13370,7 @@ Sub SavePropertyBag
 			matr.AddAll(Array("colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge"))
 			matr.AddAll(Array("coloffsetxlarge", "colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge"))
 			matr.AddAll(Array("colisautofocus","colishidedetails","colisdense","colnoduplicate","colprimarykey", _
-			"coldisplayvalue","colautoincrement","coluseoptions","colkeys","colvalues"))
+			"coldisplayvalue","colautoincrement","coluseoptions","colkeys","colvalues","coldontupdate"))
 			'
 			For Each k As String In matr
 				Dim v As String = item.GetDefault(k, "")
@@ -14075,7 +14284,7 @@ Sub Design_Table
 		End Select
 	Next
 	'
-	datatable.SetColumnChooser(bisFilter)
+	'datatable.SetColumnChooser(bisFilter)
 	If bisFilter Then datatable.AddToolbarDivider
 	If bisaddnew Then
 		datatable.SetAddNew(snewid, snewicon, snewtooltip)
@@ -14143,6 +14352,7 @@ Sub Design_Table
 	'CodeLine(sb, sSortby, "s", "dt", dlg, "SetSortby")
 	'CodeLine(sb, sSortdesc, "s", "dt", dlg, "SetSortdesc")
 	CodeLine(sb, bisVisible, "b", "dt", dlg, "SetVisible")
+	AddCode(sb, $"dt${dlg}.SetExternalPagination"$)
 	'
 	Dim pres As String = "dt"
 	CodeLine(sb, "mt-" & smargintop, "s", pres, dlg, "AddClass")

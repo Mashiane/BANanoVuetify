@@ -1531,6 +1531,10 @@ End Sub
 
 
 Sub FormatFileSize(Bytes As Float) As String
+	If BANAno.IsNull(Bytes) Or BANAno.IsUndefined(Bytes) Then
+		Bytes = 0
+	End If
+	Bytes = BANAno.parsefloat(Bytes)
 	Try
 		Private Unit() As String = Array As String(" Byte", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB")
 		If Bytes = 0 Then
@@ -1929,6 +1933,24 @@ Sub LongDate(sDate As String) As String
 		Return ""
 	End Try
 End Sub
+
+
+Sub DateFormat(item As String, sFormat As String) As String
+	If BANAno.IsUndefined(item) Or BANAno.IsNull(item) Then Return ""
+	If item.Length = 0 Then Return ""
+	Try
+		item = MvField(item,1," ")
+		item = item.trim
+		DateTime.DateFormat = "yyyy-MM-dd"
+		Dim dt As Long = DateTime.DateParse(item)
+		DateTime.DateFormat = sFormat
+		Dim rslt As String = DateTime.Date(dt)
+		Return rslt
+	Catch
+		Return item
+	End Try
+End Sub
+
 
 Sub LongDateTime(sDate As String) As String
 	If sDate.Length = 0 Then Return ""

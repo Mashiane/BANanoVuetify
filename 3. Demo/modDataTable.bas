@@ -36,7 +36,7 @@ Sub Code
         "carbs": 24,
         "protein": 4,
         "iron": "1%",
-        "glutenfree": true
+        "glutenfree": "Yes"
     },
     {
         "name": "Ice cream sandwich",
@@ -45,7 +45,7 @@ Sub Code
         "carbs": 37,
         "protein": 4.3,
         "iron": "1%",
-        "glutenfree": false
+        "glutenfree": "No"
     },
     {
         "name": "Eclair",
@@ -54,7 +54,7 @@ Sub Code
         "carbs": 23,
         "protein": 6,
         "iron": "7%",
-        "glutenfree": false
+        "glutenfree": "No"
     },
     {
         "name": "Jelly bean",
@@ -63,7 +63,7 @@ Sub Code
         "carbs": 94,
         "protein": 0,
         "iron": "0%",
-        "glutenfree": true
+        "glutenfree": "Yes"
     },
     {
         "name": "Lollipop",
@@ -72,7 +72,7 @@ Sub Code
         "carbs": 98,
         "protein": 0,
         "iron": "2%",
-        "glutenfree": true
+        "glutenfree": "Yes"
     },
     {
         "name": "KitKat",
@@ -81,7 +81,7 @@ Sub Code
         "carbs": 65,
         "protein": 7,
         "iron": "6%",
-        "glutenfree": false
+        "glutenfree": "False"
     }
 ]"$)
 	dt1 = vm.CreateDataTable("dt1", "name", Me)
@@ -116,11 +116,11 @@ Sub Code
 	dt1.AddToContainer(cont, 1, 1)
 	'
 	Dim users As List = vm.NewList
-	users.add(CreateMap("avatar": "./assets/1.jpg", "firstname":"Him", "lastname":"One", "active":True, "rating":5, "tasks":9))
-	users.add(CreateMap("avatar": "./assets/2.jpg", "firstname":"Him 2", "lastname":"One", "active":False, "rating":4, "tasks": 8))
-	users.add(CreateMap("avatar": "./assets/3.jpg", "firstname":"Her ", "lastname":"One", "active":True, "rating":3, "tasks": 5))
-	users.add(CreateMap("avatar": "./assets/4.jpg", "firstname":"Her 1", "lastname":"One", "active":True, "rating":2, "tasks": 3))
-	users.add(CreateMap("avatar": "./assets/5.jpg", "firstname":"Her 2", "lastname":"One", "active":False, "rating":1, "tasks": 1))
+	users.add(CreateMap("avatar": "./assets/1.jpg", "firstname":"Him", "lastname":"One", "active":"Yes", "rating":5, "tasks":9))
+	users.add(CreateMap("avatar": "./assets/2.jpg", "firstname":"Him 2", "lastname":"One", "active":"No", "rating":4, "tasks": 8))
+	users.add(CreateMap("avatar": "./assets/3.jpg", "firstname":"Her ", "lastname":"One", "active":"Yes", "rating":3, "tasks": 5))
+	users.add(CreateMap("avatar": "./assets/4.jpg", "firstname":"Her 1", "lastname":"One", "active":"Yes", "rating":2, "tasks": 3))
+	users.add(CreateMap("avatar": "./assets/5.jpg", "firstname":"Her 2", "lastname":"One", "active":"No", "rating":1, "tasks": 1))
 	
 	dtUsers = vm.CreateDataTable("dtUsers", "firstname", Me)
 	dtUsers.SetTitle("Users")

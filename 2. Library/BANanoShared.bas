@@ -706,6 +706,10 @@ End Sub
 
 
 Sub FormatFileSize(Bytes As Float) As String
+	If BANano.IsNull(Bytes) Or BANano.IsUndefined(Bytes) Then
+		Bytes = 0
+	End If
+	Bytes = BANano.parsefloat(Bytes)
 	Try
 		Private Unit() As String = Array As String(" Byte", " KB", " MB", " GB", " TB", " PB", " EB", " ZB", " YB")
 		If Bytes = 0 Then
@@ -2217,6 +2221,23 @@ Sub Age(sdob As String) As Long
 	Dim p2 As Long = p1 / 365
 	p2 = NumberFormat(p2,0,0)
 	Return p2
+End Sub
+
+
+Sub DateFormat(item As String, sFormat As String) As String
+	If BANano.IsUndefined(item) Or BANano.IsNull(item) Then Return ""
+	If item.Length = 0 Then Return ""
+	Try
+		item = MvField(item,1," ")
+		item = item.trim
+		DateTime.DateFormat = "yyyy-MM-dd"
+		Dim dt As Long = DateTime.DateParse(item)
+		DateTime.DateFormat = sFormat
+		Dim rslt As String = DateTime.Date(dt)
+		Return rslt
+	Catch
+		Return item
+	End Try
 End Sub
 
 Sub GetAlphaNumeric(value As String) As String
