@@ -82,26 +82,27 @@ Module27=modLoadingSkeleton
 Module28=modMenus
 Module29=modMessageBoard
 Module3=modAvatar
-Module30=modPagination
-Module31=modParallax
-Module32=modProgress
-Module33=modRadioGroups
-Module34=modRating
-Module35=modSelects
-Module36=modSlider
-Module37=modSnackBar
-Module38=modSparkLine
-Module39=modStepper
+Module30=modOverlay
+Module31=modPagination
+Module32=modParallax
+Module33=modProgress
+Module34=modRadioGroups
+Module35=modRating
+Module36=modSelects
+Module37=modSlider
+Module38=modSnackBar
+Module39=modSparkLine
 Module4=modBadges
-Module40=modSwitch
-Module41=modTabs
-Module42=modTextArea
-Module43=modTextField
-Module44=modTimeLine
-Module45=modTimePicker
-Module46=modToolbar
-Module47=modTreeView
-Module48=pgIndex
+Module40=modStepper
+Module41=modSwitch
+Module42=modTabs
+Module43=modTextArea
+Module44=modTextField
+Module45=modTimeLine
+Module46=modTimePicker
+Module47=modToolbar
+Module48=modTreeView
+Module49=pgIndex
 Module5=modBanner
 Module6=modBottomNavigation
 Module7=modBottomSheet
@@ -109,7 +110,7 @@ Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=26
 NumberOfLibraries=6
-NumberOfModules=48
+NumberOfModules=49
 Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
@@ -194,6 +195,7 @@ End Sub
 
 
 Sub CreateVBCode(vue As BANanoVue, module As Object, codeID As String, sTitle As String, scode As String) As VMPrism
+	scode = scode.Replace("~", "$")
 	Dim pri As VMPrism
 	pri.Initialize(vue, codeID, module)
 	pri.SetLanguage("vb")

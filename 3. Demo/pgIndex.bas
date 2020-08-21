@@ -264,9 +264,9 @@ Sub draweritems_click(elID As Object)
 		vm.NavBar.UpdateTitle(modTreeView.title)
 		vm.ShowPage(modTreeView.name)
 	Case "overlays"
-		vm.NavBar.UpdateTitle("Overlay")
-		vm.ShowPage("")
-		vm.PagePause		
+		vm.NavBar.UpdateTitle(modOverlay.title)
+		vm.ShowPage(modOverlay.name)
+			vm.PagePause
 	Case "images"
 		vm.NavBar.UpdateTitle(modImages.title)
 		vm.ShowPage(modImages.name)
@@ -433,6 +433,7 @@ Sub AddPages
 	vm.AddPage(modBreadCrumbs.name, modBreadCrumbs)
 	vm.AddPage(modPagination.name, modPagination)
 	vm.AddPage(modProgress.name, modProgress)
+	vm.AddPage(modOverlay.name, modOverlay)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

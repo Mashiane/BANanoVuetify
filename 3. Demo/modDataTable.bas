@@ -119,6 +119,200 @@ Sub Code
 	dt1.SetColumnChooser(True)
 	dt1.AddToContainer(cont, 1, 1)
 	'
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Dim recs As List = vm.Json2List($"["$)
+vue.AddCode($"{"$)
+vue.AddCode($""name": "Frozen Yogurt","$)
+vue.AddCode($""calories": 159,"$)
+vue.AddCode($""fat": 6,"$)
+vue.AddCode($""carbs": 24,"$)
+vue.AddCode($""protein": 4,"$)
+vue.AddCode($""iron": "1%","$)
+vue.AddCode($""glutenfree": "Yes""$)
+vue.AddCode($"},"$)
+vue.AddCode($"{"$)
+vue.AddCode($""name": "Ice cream sandwich","$)
+vue.AddCode($""calories": 237,"$)
+vue.AddCode($""fat": 9,"$)
+vue.AddCode($""carbs": 37,"$)
+vue.AddCode($""protein": 4.3,"$)
+vue.AddCode($""iron": "1%","$)
+vue.AddCode($""glutenfree": "No""$)
+vue.AddCode($"},"$)
+vue.AddCode($"{"$)
+vue.AddCode($""name": "Eclair","$)
+vue.AddCode($""calories": 262,"$)
+vue.AddCode($""fat": 16,"$)
+vue.AddCode($""carbs": 23,"$)
+vue.AddCode($""protein": 6,"$)
+vue.AddCode($""iron": "7%","$)
+vue.AddCode($""glutenfree": "No""$)
+vue.AddCode($"},"$)
+vue.AddCode($"{"$)
+vue.AddCode($""name": "Jelly bean","$)
+vue.AddCode($""calories": 375,"$)
+vue.AddCode($""fat": 0,"$)
+vue.AddCode($""carbs": 94,"$)
+vue.AddCode($""protein": 0,"$)
+vue.AddCode($""iron": "0%","$)
+vue.AddCode($""glutenfree": "Yes""$)
+vue.AddCode($"},"$)
+vue.AddCode($"{"$)
+vue.AddCode($""name": "Lollipop","$)
+vue.AddCode($""calories": 392,"$)
+vue.AddCode($""fat": 0.2,"$)
+vue.AddCode($""carbs": 98,"$)
+vue.AddCode($""protein": 0,"$)
+vue.AddCode($""iron": "2%","$)
+vue.AddCode($""glutenfree": "Yes""$)
+vue.AddCode($"},"$)
+vue.AddCode($"{"$)
+vue.AddCode($""name": "KitKat","$)
+vue.AddCode($""calories": 518,"$)
+vue.AddCode($""fat": 26,"$)
+vue.AddCode($""carbs": 65,"$)
+vue.AddCode($""protein": 7,"$)
+vue.AddCode($""iron": "6%","$)
+vue.AddCode($""glutenfree": "False""$)
+vue.AddCode($"}"$)
+vue.AddCode($"]"~)"$)
+Main.CreateVBCode(vue, Me, "datDataCode", "Define DataTable Data - JSON Arrray", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+'
+'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"dt1 = vm.CreateDataTable("dt1", "name", Me)"$)
+vue.AddCode($"dt1.SetTitle("Food Intake")"$)
+vue.AddCode($"dt1.AddSearch"$)
+vue.AddCode($"dt1.AddDivider"$)
+vue.AddCode($"dt1.AddNew("btnNew", "mdi-plus", "Add a new record")"$)
+vue.AddCode($"dt1.SetDataSource(recs)"$)
+vue.AddCode($"dt1.AddColumn1("name", "Desset (100g serving)", dt1.COLUMN_TEXT, 0, False, dt1.ALIGN_LEFT)"$)
+vue.AddCode($"dt1.AddColumns(CreateMap("calories": "Calories", "fat": "Fat (g)", "carbs": "Carbs (g)", "protein": "Protein (g)", "iron": "Iron (%)"))"$)
+vue.AddCode($"dt1.AddColumn("glutenfree", "Gluten-Free")"$)
+vue.AddCode($"dt1.AddEditThrash"$)
+vue.AddCode($"dt1.AddDownload"$)
+vue.AddCode($"dt1.AddMenuV"$)
+vue.AddCode($"dt1.AddClone"$)
+vue.AddCode($"dt1.AddPrint"$)
+vue.AddCode($"dt1.SetColumnTotal("calories", "sumfield('calories')")"$)
+vue.AddCode($"'register the method"$)
+vue.AddCode($"vue.SetMethod(Me, "sumfield")"$)
+vue.AddCode($""$)
+vue.AddCode($"dt1.SetColumnType("glutenfree", dt1.COLUMN_CHECKBOX)"$)
+vue.AddCode($"dt1.SetColumnType("calories", dt1.COLUMN_CHIP)"$)
+vue.AddCode($"dt1.SetColumnExtra("calories", ~":color="getcolor(item.calories)""~)"$)
+vue.AddCode($"'dt1.SetColumnDisabled("calories", True)"$)
+vue.AddCode($"'"$)
+vue.AddCode($"dt1.SetShowSelect(True)"$)
+vue.AddCode($"'dt1.SetOnToggleSelectAll("dt1_selectall")"$)
+vue.AddCode($"'dt1.SetOnItemSelected("dt1_itemselected")"$)
+vue.AddCode($"dt1.SetOnInput("dt1_input")"$)
+vue.AddCode($"'add an external pagination"$)
+vue.AddCode($"dt1.SetExternalPagination"$)
+vue.AddCode($"dt1.AddDivider"$)
+vue.AddCode($"dt1.SetClearSort"$)
+vue.AddCode($"dt1.AddDivider"$)
+vue.AddCode($"dt1.SetColumnChooser(True)"$)
+vue.AddCode($"dt1.AddToContainer(cont, 1, 1)"$)
+Main.CreateVBCode(vue, Me, "dt1code", "Data Table", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+'
+'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"vm.SetMethod(Me,"getcolor")"$)
+vue.AddCode($""$)
+vue.AddCode($"'sum any column passed"$)
+vue.AddCode($"Sub sumfield(fld As String) As String"$)
+vue.AddCode($"'get all the records"$)
+vue.AddCode($"Dim totSum As Int = 0"$)
+vue.AddCode($"Dim recs As List = dt1.GetData"$)
+vue.AddCode($"For Each rec As Map In recs"$)
+vue.AddCode($"Dim fldNum As String = rec.get(fld)"$)
+vue.AddCode($"totSum = totSum + BANano.parseInt(fldNum)"$)
+vue.AddCode($"Next"$)
+vue.AddCode($"totSum = vue.makemoney(totSum)"$)
+vue.AddCode($"Return totSum"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtuserssave(e As BANanoEvent)"$)
+vue.AddCode($""$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtuserscancel(e As BANanoEvent)"$)
+vue.AddCode($""$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtusersopen(e As BANanoEvent)"$)
+vue.AddCode($""$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtusersclose(e As BANanoEvent)"$)
+vue.AddCode($""$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_input(items As List)"$)
+vue.AddCode($"Log("selected items")"$)
+vue.AddCode($"Dim selKeys As List = dt1.GetItemKeys(items)"$)
+vue.AddCode($"Log(selKeys)"$)
+vue.AddCode($"'join the items"$)
+vue.AddCode($"Log("String Join")"$)
+vue.AddCode($"Dim selItems As String = vm.JoinItems(",", "'", selKeys)"$)
+vue.AddCode($"Log(selItems)"$)
+vue.AddCode($"'normal join"$)
+vue.AddCode($"Log("Normal Join")"$)
+vue.AddCode($"Dim selNormal As String = vm.Join(",", selKeys)"$)
+vue.AddCode($"Log(selNormal)"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_itemselected(item As Map)"$)
+vue.AddCode($"Log("item selected")"$)
+vue.AddCode($"Log(item)"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_selectall(items As List)"$)
+vue.AddCode($"Log(items)"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_edit(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBar("Edit: " & BANano.tojson(item))"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_delete(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBar("Delete: " & BANano.tojson(item))"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_download(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBar("Download: " & BANano.tojson(item))"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_menu(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBar("Menu: " & BANano.tojson(item))"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_clone(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBar("Clone: " & BANano.tojson(item))"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dt1_print(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBar("Print: " & BANano.tojson(item))"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub getcolor(calories As Int) As String"$)
+vue.AddCode($"If calories > 400 Then"$)
+vue.AddCode($"Return "red""$)
+vue.AddCode($"else if calories > 200 Then"$)
+vue.AddCode($"Return "orange""$)
+vue.AddCode($"Else"$)
+vue.AddCode($"Return "green""$)
+vue.AddCode($"End If"$)
+vue.AddCode($"End Sub"$)
+Main.CreateVBCode(vue, Me, "dt1codex", "Data Table Methods", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+
+	
+	
+	'
 	Dim users As List = vm.NewList
 	users.add(CreateMap("avatar": "./assets/1.jpg", "firstname":"Him", "lastname":"One", "active":"Yes", "rating":5, "tasks":9))
 	users.add(CreateMap("avatar": "./assets/2.jpg", "firstname":"Him 2", "lastname":"One", "active":"No", "rating":4, "tasks": 8))
@@ -143,7 +337,38 @@ Sub Code
 	dtUsers.SetIconDimensions("delete", "32p", "error")
 	dtUsers.SetDataSource(users)
 	dtUsers.SetExternalPagination
-	dtUsers.AddToContainer(cont, 2, 1)
+	dtUsers.AddToContainer(cont, 3, 1)
+	'
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Dim users As List = vm.NewList"$)
+vue.AddCode($"users.add(CreateMap("avatar": "./assets/1.jpg", "firstname":"Him", "lastname":"One", "active":"Yes", "rating":5, "tasks":9))"$)
+vue.AddCode($"users.add(CreateMap("avatar": "./assets/2.jpg", "firstname":"Him 2", "lastname":"One", "active":"No", "rating":4, "tasks": 8))"$)
+vue.AddCode($"users.add(CreateMap("avatar": "./assets/3.jpg", "firstname":"Her ", "lastname":"One", "active":"Yes", "rating":3, "tasks": 5))"$)
+vue.AddCode($"users.add(CreateMap("avatar": "./assets/4.jpg", "firstname":"Her 1", "lastname":"One", "active":"Yes", "rating":2, "tasks": 3))"$)
+vue.AddCode($"users.add(CreateMap("avatar": "./assets/5.jpg", "firstname":"Her 2", "lastname":"One", "active":"No", "rating":1, "tasks": 1))"$)
+vue.AddCode($""$)
+vue.AddCode($"dtUsers = vm.CreateDataTable("dtUsers", "firstname", Me)"$)
+vue.AddCode($"dtUsers.SetTitle("Users")"$)
+vue.AddCode($"dtUsers.AddAvatarImg("avatar", "Profile")"$)
+vue.AddCode($"dtUsers.AddColumn("firstname", "First Name")"$)
+vue.AddCode($"dtUsers.AddColumn("lastname", "Last Name")"$)
+vue.AddCode($"dtUsers.AddSwitch("active", "Active")"$)
+vue.AddCode($"dtUsers.AddRating("rating", "Performance")"$)
+vue.AddCode($"'dtUsers.AddProgressCircular("tasks", "Completed")"$)
+vue.AddCode($"'dtUsers.SetProgressCircularDimensions("tasks", "green", "-90", "46", "6")"$)
+vue.AddCode($"dtUsers.AddProgressLinear("tasks", "Progress")"$)
+vue.AddCode($"dtUsers.SetProgressLinearDimensions("tasks", "orange", "25", True)"$)
+vue.AddCode($""$)
+vue.AddCode($"dtUsers.AddEditThrash"$)
+vue.AddCode($"dtUsers.SetIconDimensions("edit", "32px", "success")"$)
+vue.AddCode($"dtUsers.SetIconDimensions("delete", "32p", "error")"$)
+vue.AddCode($"dtUsers.SetDataSource(users)"$)
+vue.AddCode($"dtUsers.SetExternalPagination"$)
+vue.AddCode($"dtUsers.AddToContainer(cont, 3, 1)"$)
+Main.CreateVBCode(vue, Me, "usrdtcode", "Users Data Table", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+
+
 	'
 	Dim images As List = vm.newlist
 	images.add(CreateMap("image": "./assets/bird.jpg", "comment":"A bird seen from above", "lat":"16.0", "lng":"20.1"))
@@ -162,13 +387,86 @@ Sub Code
 	dtImages.AddColumn("lng", "Longitude")
 	dtImages.SetDataSource(images)
 	dtImages.SetExternalPagination
-	dtImages.AddToContainer(cont, 3, 1)
-	
+	dtImages.AddToContainer(cont, 4, 1)
+	'
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Dim images As List = vm.newlist"$)
+vue.AddCode($"images.add(CreateMap("image": "./assets/bird.jpg", "comment":"A bird seen from above", "lat":"16.0", "lng":"20.1"))"$)
+vue.AddCode($"images.add(CreateMap("image": "./assets/dark-beach.jpg", "comment":"Seen whilst walking", "lat":"36.0", "lng":"24.8"))"$)
+vue.AddCode($"images.add(CreateMap("image": "./assets/planet.jpg", "comment":"A need to visit planets", "lat":"1.0", "lng":"1.1"))"$)
+vue.AddCode($"images.add(CreateMap("image": "./assets/sky.jpg", "comment":"A beautiful skyline", "lat":"0", "lng":"0"))"$)
+vue.AddCode($"images.add(CreateMap("image": "./assets/squirrel.jpg", "comment":"Nutting around", "lat":"45", "lng":"30"))"$)
+vue.AddCode($"'"$)
+vue.AddCode($"dtImages = vm.CreateDataTable("dtImages", "image", Me)"$)
+vue.AddCode($"dtImages.SetTitle("Presentation")"$)
+vue.AddCode($"dtImages.AddImage("image", "Image")"$)
+vue.AddCode($"dtImages.SetImageDimensions("image", "80px", "80px")"$)
+vue.AddCode($"dtImages.AddColumn("comment", "Comment")"$)
+vue.AddCode($"dtImages.AddColumn("datetaken", "Date Taken")"$)
+vue.AddCode($"dtImages.AddColumn("lat", "Latitude")"$)
+vue.AddCode($"dtImages.AddColumn("lng", "Longitude")"$)
+vue.AddCode($"dtImages.SetDataSource(images)"$)
+vue.AddCode($"dtImages.SetExternalPagination"$)
+vue.AddCode($"dtImages.AddToContainer(cont, 4, 1)"$)
+vue.AddCode($""$)
+Main.CreateVBCode(vue, Me, "imgdtcode", "Images Data Table", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+
 	'add container to page
 	vm.AddContainer(cont)
 	'
 	vm.SetMethod(Me,"getcolor")
 End Sub
+
+
+Sub imgdtcodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("imgdtcode")
+End Sub
+
+Sub imgdtcodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("imgdtcode", "imgdtcode.txt")
+End Sub
+
+
+
+Sub usrdtcodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("usrdtcode")
+End Sub
+
+Sub usrdtcodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("usrdtcode", "usrdtcode.txt")
+End Sub
+
+
+Sub dt1codexcopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("dt1codex")
+End Sub
+
+Sub dt1codexdownload_click(e As BANanoEvent)
+	vue.DownloadCode("dt1codex", "dt1codex.txt")
+End Sub
+
+
+
+
+Sub dt1codecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("dt1code")
+End Sub
+
+Sub dt1codedownload_click(e As BANanoEvent)
+	vue.DownloadCode("dt1code", "dt1code.txt")
+End Sub
+
+
+Sub datDataCodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("datDataCode")
+End Sub
+
+Sub datDataCodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("datDataCode", "datDataCode.txt")
+End Sub
+
+
 
 'sum any column passed
 Sub sumfield(fld As String) As String

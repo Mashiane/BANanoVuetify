@@ -373,6 +373,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMItemGroup,Initialize,22,0,VMItemGroup,SetVModel,33,0,VMItemGroup,SetAttr,74,0,VMItemGroup,SetActiveClass,98,0,VMItemGroup,SetMax,113,0,VMItemGroup,SetValue,122,0,VMItemGroup,AddComponent,371,0,VMItemGroup,SetVShow,44,0,VMItemGroup,AddChild,58,0,VMItemGroup,Render,51,0
+NavigationStack=VMItemGroup,Render,51,0,VMImage,Class_Globals,8,0,VMImage,Initialize,34,0,VMImage,SetValue,296,0,BANanoVM,NewImage,2670,0,VMImage,SetVModel,296,0,VMDataTable,BuildControls,1259,0,VMImage,ToString,287,0,VMImage,SetSrc,548,0,VMImage,SetSizes,539,0
 SelectedBuild=0
 VisibleModules=
