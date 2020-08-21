@@ -113,6 +113,10 @@ Sub Code
 	dt1.SetOnInput("dt1_input")
 	'add an external pagination
 	dt1.SetExternalPagination
+	dt1.AddDivider
+	dt1.SetClearSort
+	dt1.AddDivider
+	dt1.SetColumnChooser(True)
 	dt1.AddToContainer(cont, 1, 1)
 	'
 	Dim users As List = vm.NewList

@@ -10,17 +10,20 @@ Sub Process_Globals
 	Public title As String = "Dialog"
 	Private vm As BANanoVM
 	Private BANano As BANano   'ignore
+	Private vue As BANanoVue
 End Sub
 
 
 Sub Code
 	vm = pgIndex.vm
+	vue = vm.vue
 	'create a container to hold all contents
 	Dim cont As VMContainer = vm.CreateContainer(name, Me)
 	'hide this container
 	cont.Hide
 	'
 	cont.AddRows(3).AddColumns2x6
+	cont.AddRows(10).AddColumns12
 	'
 	vm.CreateButton("btnDialog", Me).SetLabel("Show Dialog").AddToContainer(cont, 1, 1)
 	vm.CreateButton("btnPersistent", Me).SetLabel("Persistent").AddToContainer(cont, 1, 2)
@@ -37,12 +40,71 @@ Sub Code
 	diag.AddOK("btnOk", "I agree")
 	vm.AddDialog(diag)
 	'
+	'initialize code builder
+	vue.SourceCodeBuilder
+	vue.AddCode($"Dim diag As VMDialog = vm.CreateDialog("diag1", Me)"$)
+	vue.AddCode($"diag.SetWidth("500")"$)
+	vue.AddCode($"diag.SetTitle("Privacy Policy")"$)
+	vue.AddCode($"diag.Container.SetText("Lorem ipsum...")"$)
+	vue.AddCode($"diag.AddOK("btnOk", "I agree")"$)
+	vue.AddCode($"vm.AddDialog(diag)"$)
+	vue.AddCode($"'"$)
+	vue.AddCode("Sub btnok_click(e As BANanoEvent)")
+	vue.AddCode($"vm.hidedialog("diag1")"$)
+	vue.AddCode("End Sub")
+	Main.CreateVBCode(vue, Me, "diag1code", "Dialog", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+
+	'
 	Dim diag2 As VMDialog = vm.CreateDialog("diag2", Me).SetMaxWidth("390").SetModal(True).SetTitle("Use Google's location service?")
 	diag2.SetScrollable(True)
 	diag2.Container.SetText("Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running")
 	diag2.AddCancel("btnDisagree", "I Disagree")
 	diag2.AddOK("btnOk1", "I agree")
 	vm.AddDialog(diag2)
+	
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Dim diag2 As VMDialog = vm.CreateDialog("diag2", Me).SetMaxWidth("390").SetModal(True).SetTitle("Use Google's location service?")"$)
+vue.AddCode($"diag2.SetScrollable(True)"$)
+vue.AddCode($"diag2.Container.SetText("Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running")"$)
+vue.AddCode($"diag2.AddCancel("btnDisagree", "I Disagree")"$)
+vue.AddCode($"diag2.AddOK("btnOk1", "I agree")"$)
+vue.AddCode($"vm.AddDialog(diag2)"$)
+Main.CreateVBCode(vue, Me, "diag2code", "Dialog", vue.GetSourceCode).AddToContainer(cont, 5, 1)
+'
+'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"'see pgIndex.alert_ok"$)
+vue.AddCode($"Sub btnPrompt1_click(e As BANanoEvent)"$)
+vue.AddCode($"vm.ShowAlert("alertuser", "Alert User", "This is an alert!", "Yippie!")"$)
+vue.AddCode($"End Sub"$)
+Main.CreateVBCode(vue, Me, "alertCode", "Alert", vue.GetSourceCode).AddToContainer(cont, 6, 1)
+'
+'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($""$)
+vue.AddCode($"'see pgIndex.confirm_ok"$)
+vue.AddCode($"Sub btnConfirm1_click(e As BANanoEvent)"$)
+vue.AddCode($"vm.ShowConfirm("promptuser", "Confirm Vuetify", "Are you sure that you want to use Vuetify?", "Yep", "Nada")"$)
+vue.AddCode($"End Sub"$)
+Main.CreateVBCode(vue, Me, "confirmCode", "Confirm", vue.GetSourceCode).AddToContainer(cont, 7, 1)
+'
+'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"'when the ok button is clicked for a confirm dialog"$)
+vue.AddCode($"Sub confirm_ok(e As BANanoEvent)"$)
+vue.AddCode($"Dim sproc As String = vm.GetConfirm"$)
+vue.AddCode($"Select Case sproc"$)
+vue.AddCode($"Case "promptuser""$)
+vue.AddCode($"vm.ShowSnackBar("Yes, use Vuetify!")"$)
+vue.AddCode($"Case Else"$)
+vue.AddCode($"vm.ShowSnackBar(sproc)"$)
+vue.AddCode($"End Select"$)
+vue.AddCode($"End Sub"$)
+Main.CreateVBCode(vue, Me, "confirmAnswer", "Confirm Response", vue.GetSourceCode).AddToContainer(cont, 8, 1)
+
+
+
 	'
 	Dim diag3 As VMDialog = vm.CreateDialog("diag3", Me).SetHideOverlay(True).SetMaxWidth("80%").SetTitle("This is it").SetScrollable(True)
 	diag3.Container.SetText("Let Google help apps determine location. This means sending anonymous location data to Google, even when no apps are running")
@@ -57,6 +119,52 @@ Sub Code
 	vm.AddDialog(diagx)
 	
 End Sub
+
+
+Sub confirmAnswercopy_click(e As BANanoEvent)
+vue.CopyCode2Clipboard("confirmAnswer")
+End Sub
+
+Sub confirmAnswerdownload_click(e As BANanoEvent)
+vue.DownloadCode("confirmAnswer", "confirmAnswer.txt")
+End Sub
+
+
+
+Sub confirmCodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("confirmCode")
+End Sub
+
+Sub confirmCodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("confirmCode", "confirmCode.txt")
+End Sub
+
+
+Sub alertCodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("alertCode")
+End Sub
+
+Sub alertCodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("alertCode", "alertCode.txt")
+End Sub
+
+
+Sub diag2codecopy_click(e As BANanoEvent)
+vue.CopyCode2Clipboard("diag2code")
+End Sub
+
+Sub diag2codedownload_click(e As BANanoEvent)
+vue.DownloadCode("diag2code", "diag2code.txt")
+End Sub
+
+Sub diag1codecopy_click(e As BANanoEvent)
+vue.CopyCode2Clipboard("diag1code")
+End Sub
+
+Sub diag1codedownload_click(e As BANanoEvent)
+vue.DownloadCode("diag1code", "diag1code.txt")
+End Sub
+
 
 'see pgIndex.confirm_ok
 Sub btnConfirm1_click(e As BANanoEvent)

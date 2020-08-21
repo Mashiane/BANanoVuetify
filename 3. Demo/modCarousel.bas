@@ -9,11 +9,13 @@ Sub Process_Globals
 	Public name As String = "carouselCode"
 	Public title As String = "Carousel"
 	Private vm As BANanoVM
+	Private vue As BANanoVue
 End Sub
 
 
 Sub Code
 	vm = pgIndex.vm
+	vue = vm.vue
 	'create a container to hold all contents
 	Dim cont As VMContainer = vm.CreateContainer(name, Me)
 	'hide this container
@@ -39,7 +41,38 @@ Sub Code
 	c1.item.SetReverseTransition("fade-transition")
 	c1.item.SetTransition("fade-transition")
 	cont.AddComponent(1, 1, c1.tostring)
-	
+	'
+	'initialize code builder
+	vue.SourceCodeBuilder
+	vue.AddCode($"' create a list of images"$)
+	vue.AddCode($"Dim items As List"$)
+	vue.AddCode($"items.initialize"$)
+	vue.AddCode($"items.add(CreateMap("src":"./assets/squirrel.jpg"))"$)
+	vue.AddCode($"items.add(CreateMap("src":"./assets/sky.jpg"))"$)
+	vue.AddCode($"items.add(CreateMap("src":"./assets/bird.jpg"))"$)
+	vue.AddCode($"items.add(CreateMap("src":"./assets/planet.jpg"))"$)
+	vue.AddCode($"'save to state"$)
+	vue.AddCode($"vm.setdata("images", items)"$)
+	vue.AddCode($""$)
+	vue.AddCode($"Dim c1 As VMCarousel = vm.CreateCarousel("c1", Me).SetHeight("400").SetCycle(True).SetHideDelimiterBackground(True)"$)
+	vue.AddCode($"c1.SetShowArrowsOnHover(True)"$)
+	vue.AddCode($"c1.item.SetVFor("(item, i)", "images")"$)
+	vue.AddCode($"c1.item.Bind(":key", "i")"$)
+	vue.AddCode($"c1.item.Bind(":src", "item.src")"$)
+	vue.AddCode($"c1.item.SetReverseTransition("fade-transition")"$)
+	vue.AddCode($"c1.item.SetTransition("fade-transition")"$)
+	vue.AddCode($"cont.AddComponent(1, 1, c1.tostring)"$)
+	Main.CreateVBCode(vue, Me, "carcode", "Carousel", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+
 	'add container to page
 	vm.AddContainer(cont)
+End Sub
+
+
+Sub carcodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("carcode")
+End Sub
+
+Sub carcodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("carcode", "carcode.txt")
 End Sub
