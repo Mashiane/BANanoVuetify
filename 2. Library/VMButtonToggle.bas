@@ -49,7 +49,6 @@ Sub AddButton(btnID As String, btnText As String, btnIcon As String, btnColor As
 	btn.SetDesignMode(DesignMode)
 	btn.SetColor(btnColor)
 	
-	
 	If btnText = "" Then
 		btn.SetLabel(btnText)
 		btn.AddIcon(btnIcon, "left", "")
@@ -369,7 +368,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMButtonToggle
-	ButtonToggle.Enable(false)
+	ButtonToggle.Enable(False)
 	Return Me
 End Sub
 

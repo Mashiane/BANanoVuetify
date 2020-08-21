@@ -373,6 +373,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMTabs,SetStatic,59,0,VMTabs,SetDevicePositions,86,0,VMTabs,SetAttrLoose,202,0,VMTabs,SetAttributes,203,0,VMTabs,ToString,221,0,VMTabs,AddTab,178,0,VMTabs,AddTabBadge,185,0,VMTabs,AddTabItem,146,0,VMTabs,AddTabSlider,90,0,VMTabs,AddTabItemBadge,113,6
+NavigationStack=VMItemGroup,Initialize,22,0,VMItemGroup,SetVModel,33,0,VMItemGroup,SetAttr,74,0,VMItemGroup,SetActiveClass,98,0,VMItemGroup,SetMax,113,0,VMItemGroup,SetValue,122,0,VMItemGroup,AddComponent,371,0,VMItemGroup,SetVShow,44,0,VMItemGroup,AddChild,58,0,VMItemGroup,Render,51,0
 SelectedBuild=0
 VisibleModules=

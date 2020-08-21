@@ -21,7 +21,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(2).AddColumns(2, 12, 6, 6, 6)
+	cont.AddRows(2).AddColumns12
 	
 	Dim bcbreadcrumbs1 As VMBreadCrumbs
 	bcbreadcrumbs1.Initialize(vue, "bcbreadcrumbs1", Me)
@@ -34,9 +34,33 @@ Sub Code
 	bcbreadcrumbs1.AddItem("Planet", "", "", False, False, True)
 	bcbreadcrumbs1.AddItem("Bird", "", "", False, False, True)
 	bcbreadcrumbs1.Refresh
+	bcbreadcrumbs1.AddToContainer(cont, 2,1)
 	
-	cont.AddControl(bcbreadcrumbs1.BreadCrumbs, bcbreadcrumbs1.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Dim bcbreadcrumbs1 As VMBreadCrumbs"$)
+vue.AddCode($"bcbreadcrumbs1.Initialize(vue, "bcbreadcrumbs1", Me)"$)
+vue.AddCode($"bcbreadcrumbs1.SetVisible(True)"$)
+vue.AddCode($"'add each item"$)
+vue.AddCode($"bcbreadcrumbs1.clear"$)
+vue.AddCode($"bcbreadcrumbs1.AddItem("Banner", "", "", False, False, True)"$)
+vue.AddCode($"bcbreadcrumbs1.AddItem("Squirrel", "", "", False, False, True)"$)
+vue.AddCode($"bcbreadcrumbs1.AddItem("Sky", "", "", False, False, True)"$)
+vue.AddCode($"bcbreadcrumbs1.AddItem("Planet", "", "", False, False, True)"$)
+vue.AddCode($"bcbreadcrumbs1.AddItem("Bird", "", "", False, False, True)"$)
+vue.AddCode($"bcbreadcrumbs1.Refresh"$)
+vue.AddCode($""$)
+	vue.AddCode($"bcbreadcrumbs1.AddToContainer(cont, 2,1)"$)
+Main.CreateVBCode(vue, Me, "bccode", "Bread Crumb", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'add container to page
 	vm.AddContainer(cont)
+End Sub
+
+Sub bccodecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("bccode")
+End Sub
+
+Sub bccodedownload_click(e As BANanoEvent)
+	vue.DownloadCode("bccode", "bccode.txt")
 End Sub

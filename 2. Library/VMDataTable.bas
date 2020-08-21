@@ -85,6 +85,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	vue.SetData(items, vue.newlist)
 	vue.SetData(title, "")
 	PrimaryKey = sPrimaryKey
+	SetSortBy(vue.newlist)
+	SetGroupBy(vue.NewList)
+	SetExpanded(vue.NewList)
+	SetGroupDesc(vue.NewList)
+	SetSortDesc(vue.NewList)
+	SetValue(vue.NewList)
 	'
 	vcard.IsDialog = False
 	vcard.IsTable = True	'
@@ -442,6 +448,25 @@ Sub AddToolBarDivider As VMDataTable
 	Return Me
 End Sub
 
+
+'add a column to clear sort
+Sub SetClearSort
+	Dim btn As VMButton
+	btn.Initialize(vue, "removesort", Me)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetToolTip("Clear Sort")
+	btn.AddIcon("mdi-sort-variant-remove","","")
+	btn.SetColor("orange")
+	btn.SetAttrLoose("icon")
+	btn.SetTransparent(True)
+	vcard.Title.AddComponent(btn.tostring)
+End Sub
+
+Sub removesort_click(e As BANanoEvent)
+	SetSortBy(vue.NewList)
+End Sub
+
 'this should be added after all columns are added
 Sub SetColumnChooser(isfilter As Boolean)
 	If isfilter = False Then Return
@@ -470,6 +495,7 @@ Sub SetColumnChooser(isfilter As Boolean)
 	'
 	Dim dtMenu As VMMenu
 	dtMenu.Initialize(vue, $"${ID}fsmenu"$, Me)
+	dtMenu.SetOpenOnHover(False)
 	dtMenu.SetOffSetY(True)
 	'dtMenu.SetAttrSingle(":nudge-left", "170")
 	dtMenu.SetAttrSingle(":close-on-content-click", "false")
@@ -604,12 +630,24 @@ Sub SetDataSourceName(dsName As String) As VMDataTable
 	End If
 	Dim recs As List = vue.GetData(dsName)
 	vue.SetData(items, recs)
+	SetSortBy(vue.newlist)
+	SetGroupBy(vue.NewList)
+	SetExpanded(vue.NewList)
+	SetGroupDesc(vue.NewList)
+	SetSortDesc(vue.NewList)
+	SetValue(vue.NewList)
 	Return Me
 End Sub
 
 'update from a list of existing recods
 Sub SetDataSource(ds As List) As VMDataTable
 	vue.SetData(items, ds)
+	SetSortBy(vue.newlist)
+	SetGroupBy(vue.NewList)
+	SetExpanded(vue.NewList)
+	SetGroupDesc(vue.NewList)
+	SetSortDesc(vue.NewList)
+	SetValue(vue.NewList)
 	Return Me
 End Sub
 
@@ -1888,10 +1926,9 @@ Sub SetExpanded(varExpanded As List) As VMDataTable
 End Sub
 
 'set group-by
-Sub SetGroupBy(varGroupBy As String) As VMDataTable
-	If varGroupBy = "" Then Return Me
+Sub SetGroupBy(varGroupBy As List) As VMDataTable
 	If bStatic Then
-		SetAttrSingle("group-by", varGroupBy)
+		SetAttrSingle("group-by", BANano.FromJson(varGroupBy))
 		Return Me
 	End If
 	Dim pp As String = $"${ID}GroupBy"$
@@ -1901,10 +1938,9 @@ Sub SetGroupBy(varGroupBy As String) As VMDataTable
 End Sub
 
 'set group-desc
-Sub SetGroupDesc(varGroupDesc As String) As VMDataTable
-	If varGroupDesc = "" Then Return Me
+Sub SetGroupDesc(varGroupDesc As List) As VMDataTable
 	If bStatic Then
-		SetAttrSingle("group-desc", varGroupDesc)
+		SetAttrSingle("group-desc", BANano.FromJson(varGroupDesc))
 		Return Me
 	End If
 	Dim pp As String = $"${ID}GroupDesc"$
@@ -1914,10 +1950,9 @@ Sub SetGroupDesc(varGroupDesc As String) As VMDataTable
 End Sub
 
 'set sort-by
-Sub SetSortBy(varSortBy As String) As VMDataTable
-	If varSortBy = "" Then Return Me
+Sub SetSortBy(varSortBy As List) As VMDataTable
 	If bStatic Then
-		SetAttrSingle("sort-by", varSortBy)
+		SetAttrSingle("sort-by", BANano.FromJson(varSortBy))
 		Return Me
 	End If
 	Dim pp As String = $"${ID}SortBy"$
@@ -1927,10 +1962,9 @@ Sub SetSortBy(varSortBy As String) As VMDataTable
 End Sub
 
 'set sort-desc
-Sub SetSortDesc(varSortDesc As String) As VMDataTable
-	If varSortDesc = "" Then Return Me
+Sub SetSortDesc(varSortDesc As List) As VMDataTable
 	If bStatic Then
-		SetAttrSingle("sort-desc", varSortDesc)
+		SetAttrSingle("sort-desc", BANano.FromJson(varSortDesc))
 		Return Me
 	End If
 	Dim pp As String = $"${ID}SortDesc"$
@@ -1941,8 +1975,14 @@ End Sub
 
 
 'set value
-Sub SetValue(varValue As Object) As VMDataTable
-	DataTable.SetValue(varValue, False)
+Sub SetValue(varValue As List) As VMDataTable
+	If bStatic Then
+		SetAttrSingle("value", BANano.FromJson(varValue))
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Value"$
+	vue.SetStateSingle(pp, varValue)
+	DataTable.Bind(":value", pp)
 	Return Me
 End Sub
 

@@ -4989,7 +4989,7 @@ Sub Design_Slider
 End Sub
 
 Sub Design_Label
-	Dim sLabelsize As String = mattr.GetDefault("labelsize", "")
+	Dim sLabelsize As String = mattr.GetDefault("labelsize", "p")
 	Dim sdisplay As String = mattr.getdefault("display", "")
 	Dim salign As String = mattr.getdefault("align", "")
 	Dim sfontweight As String = mattr.getdefault("fontweight", "")
@@ -5002,7 +5002,7 @@ Sub Design_Label
 	If sfontsize <> "" Then lbl.SetStyleSingle("font-size", sfontsize)
 
 	lbl.SetItalic(bisitalic)
-	lbl.SetTextColorIntensity(stextcolor, stextintensity)
+	lbl.SetTextColorIntensity(sTextcolor, stextintensity)
 	lbl.Setcaption(biscaption)
 	lbl.Setdisplay1(bisdisplay1)
 	lbl.Setdisplay2(bisdisplay2)
@@ -5015,7 +5015,7 @@ Sub Design_Label
 	lbl.Settextcapitalize(bistextcapitalize)
 	lbl.Settextlowercase(bistextlowercase)
 	lbl.Settextuppercase(bistextuppercase)
-	lbl.Settitle(bistitle)
+	lbl.Settitle(bisTitle)
 	lbl.Setvisible(bisVisible)
 	If smargintop <> "" Then lbl.AddClass("mt-" & smargintop)
 	If smarginbottom <> "" Then lbl.AddClass("mb-" & smarginbottom)
@@ -5101,7 +5101,7 @@ Sub Design_Label
 	CodeLine(sb, "px-" & spaddingx, "s", pres, sname, "AddClass")
 	CodeLine(sb, "py-" & spaddingy, "s", pres, sname, "AddClass")
 	CodeLine(sb, "pa-" & spaddinga, "s", pres, sname, "AddClass")
-	If stextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${stextcolor}", "${stextintensity}")"$).append(CRLF)
+	If sTextcolor <> "" Then sb.append($"lbl${sname}.SetTextColorIntensity("${sTextcolor}", "${stextintensity}")"$).append(CRLF)
 
 	sb.append($"${sparent}.AddControl(lbl${sname}.Label, lbl${sname}.tostring, ${srow}, ${scol}, ${os}, ${om}, ${ol}, ${ox}, ${ss}, ${sm}, ${sl}, ${sx})"$).append(CRLF).append(CRLF)
 	'
@@ -5110,7 +5110,7 @@ End Sub
 
 Sub Design_Email
 	AddCode(sbRead, $"Dim s${svmodel} As String = Record.Get("${svmodel}")"$)
-	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, stitle, sPlaceholder, bisRequired, siconname, shelpertext, serrortext, sTabindex)
+	Dim email As VMTextField = ui.NewEmail(Me, True, sname, svmodel, sTitle, sPlaceholder, bisRequired, siconname, shelpertext, serrortext, sTabindex)
 	email.SetFieldType(sfieldtype)
 	email.SetSolo(bisSolo)
 	email.SetValue(svalue)
@@ -9207,6 +9207,8 @@ Sub CreateSchema
 	'
 	dtschema.SetDelete(True)
 	dtschema.SetIconDimensions1("delete", "24px", "error", "80")
+	dtschema.AddDivider
+	dtschema.SetClearSort
 	dtschema.SetColumnChooser(True)
 	'
 	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
@@ -14440,6 +14442,9 @@ Sub Design_Table
 	If bisMenu Then	AddCode(sb, $"dt${dlg}.SetIconDimensions1("menu", "24px", "green", "80")"$)
 	'
 	sb.append(sba.tostring)
+	AddCode(sb, $"dt${dlg}.AddDivider"$)
+	AddCode(sb, $"dt${dlg}.SetClearSort"$)
+	
 	AddComment(sb,"add a column chooser, if any")
 	CodeLine(sb, bisFilter, "b", "dt", dlg, "SetColumnChooser")
 	If bisFilter Then 

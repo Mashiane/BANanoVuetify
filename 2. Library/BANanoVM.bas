@@ -237,7 +237,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Overlay.Initialize(vue, "pageloader", eventHandler)
 	'
 	Animate.Initialize(vue, "appanimate", eventHandler).SetType(TRANSITION_FADE)
-	Animate.SetMode("in").SetHideOnLeave(True)
+	Animate.SetMode("out-in").SetHideOnLeave(True)
 	
 	Dim vpc As VMProgressCircular
 	vpc.Initialize(vue, "pageloaderprogress", eventHandler)
@@ -1402,6 +1402,7 @@ End Sub
 
 Sub AddRoute(comp As VMComponent) As BANanoVM
 	vue.AddRoute(comp)
+	SetUseRouter(True)
 	Return Me
 End Sub
 
@@ -2163,6 +2164,19 @@ Sub CreateButton(sid As String,moduleObj As Object) As VMButton
 	el.Initialize(vue, sid, moduleObj)
 	el.SetType("button")
 	Return el
+End Sub
+
+Sub CreateButtonToggle(bid As String, moduleObj As Object) As VMButtonToggle
+	Dim el As VMButtonToggle
+	el.Initialize(vue, bid, moduleObj)
+	Return el 
+End Sub
+
+Sub CreateB4xList(lst As List) As List
+	Dim nl As List
+	nl.Initialize 
+	nl.AddAll(lst)
+	Return nl
 End Sub
 
 Sub CreateIconButton(sid As String,moduleObj As Object, iconName As String) As VMButton

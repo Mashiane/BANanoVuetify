@@ -818,6 +818,12 @@ Sub MVSingleQuoteItems(delim As String, mvstring As String) As String
 	Return sout
 End Sub
 
+Sub CreateB4xList(lst As List) As List
+	Dim nl As List
+	nl.Initialize
+	nl.AddAll(lst)
+	Return nl
+End Sub
 
 'format the text
 Sub FormatText(sText As String) As String

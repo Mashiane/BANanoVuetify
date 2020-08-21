@@ -152,6 +152,13 @@ Sub CreateList(sid As String, eventHandler As Object) As VMList
 	Return el
 End Sub
 
+Sub CreateButtonToggle(bid As String, moduleObj As Object) As VMButtonToggle
+	Dim el As VMButtonToggle
+	el.Initialize(vue, bid, moduleObj)
+	el.SetDesignMode(DesignMode)
+	Return el
+End Sub
+
 Sub CreateStepper(sid As String, eventHandler As Object) As VMStepper
 	Dim el As VMStepper
 	el.Initialize(vue, sid, eventHandler)
