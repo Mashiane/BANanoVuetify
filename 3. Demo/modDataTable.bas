@@ -98,6 +98,7 @@ Sub Code
 	dt1.AddMenuV
 	dt1.AddClone
 	dt1.AddPrint
+	dt1.SetItemKey("name")
 	dt1.SetColumnTotal("calories", "sumfield('calories')")
 	'register the method
 	vue.SetMethod(Me, "sumfield")
@@ -118,6 +119,9 @@ Sub Code
 	dt1.AddDivider
 	dt1.SetColumnChooser(True)
 	dt1.AddToContainer(cont, 1, 1)
+	'
+	Dim lblSel As VMLabel = vm.CreateLabel("lblSelected").SetParagraph.SetText("Selected: {{ dt1selected }}").AddClass("ma-2")
+	lblSel.AddToContainer(cont, 1,1)
 	'
 	'initialize code builder
 vue.SourceCodeBuilder

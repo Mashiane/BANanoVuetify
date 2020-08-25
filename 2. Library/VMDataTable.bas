@@ -61,6 +61,7 @@ Sub Class_Globals
 	Private hasTotals As Boolean
 	Private hasExternalPagination As Boolean
 	Private totalVisible As String
+	Private selected As String
 End Sub
 
 'initialize the DataTable
@@ -81,9 +82,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	title = $"${ID}title"$
 	search = $"${ID}search"$
 	items = $"${ID}items"$
+	selected = $"${ID}selected"$
 	vue.SetData(headers, vue.newlist)
 	vue.SetData(items, vue.newlist)
 	vue.SetData(title, "")
+	vue.SetData(selected, vue.NewList)
 	PrimaryKey = sPrimaryKey
 	SetSortBy(vue.newlist)
 	SetGroupBy(vue.NewList)
@@ -99,7 +102,19 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	hasTotals = False
 	hasExternalPagination = False
 	totalVisible = ""
+	SetVModel(selected)
 	Return Me
+End Sub
+
+'set all selected
+Sub SetSelected(nl As List)
+	vue.SetData(selected, nl)
+End Sub
+
+'get all selected
+Sub GetSelected As List
+	Dim lst As List = vue.GetData(selected)
+	Return lst
 End Sub
 
 'get all the data from the table
@@ -1773,16 +1788,30 @@ Sub SetHeight(varHeight As String) As VMDataTable
 End Sub
 
 'set item-key
+Sub SetItemKey1(varItemKey As String) As VMDataTable
+	PrimaryKey = varItemKey
+'	If varItemKey = "" Then Return Me
+'	If bStatic Then
+'		SetAttrSingle("item-key", varItemKey)
+'		Return Me
+'	End If
+'	Dim pp As String = $"${ID}ItemKey"$
+'	vue.SetStateSingle(pp, varItemKey)
+'	DataTable.Bind(":item-key", pp)
+	Return Me
+End Sub
+
+'set item-key and force usage
 Sub SetItemKey(varItemKey As String) As VMDataTable
 	PrimaryKey = varItemKey
-	'If varItemKey = "" Then Return Me
-	'If bStatic Then
-	'	SetAttrSingle("item-key", varItemKey)
-	'	Return Me
-	'End If
-	'Dim pp As String = $"${ID}ItemKey"$
-	'vue.SetStateSingle(pp, varItemKey)
-	'DataTable.Bind(":item-key", pp)
+	If varItemKey = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("item-key", varItemKey)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ItemKey"$
+	vue.SetStateSingle(pp, varItemKey)
+	DataTable.Bind(":item-key", pp)
 	Return Me
 End Sub
 

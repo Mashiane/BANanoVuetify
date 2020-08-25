@@ -1019,8 +1019,8 @@ Sub BuildNavBar
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnclosedrawers", "mdi-exit-to-app", "Close all drawers", "")
 	'
-	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
-	vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
+	'vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
+	'vm.NavBar.AddIcon("btnVuetify2B4x", "mdi-tools", "Vuetify To B4x", "")
 	'
 	vm.NavBar.AddDivider(True, Null, Null, Array("mx-2"), Null)
 	vm.NavBar.AddIcon("btnProject", "mdi-cogs", "Project", "")

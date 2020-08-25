@@ -33,7 +33,7 @@ Sub Code
 	Dim s1 As VMSheet = vm.CreateSheet("s1", Me).SetTextCenter.SetHeight("200px")
 	s1.Sheet.AddRows(1).AddColumns12
 	'
-	Dim lbl As VMLabel = vm.CreateLabel("lblme").SetText("This is a bottom sheet using persistent prop!").SetParagraph
+	Dim lbl As VMLabel = vm.CreateLabel("lblme").SetText("This is a bottom sheet using persistent prop!").SetSpan
 	s1.Sheet.AddComponent(1, 1, lbl.ToString)
 	'
 	Dim btnClose As VMButton = vm.CreateButton("btnCloseSheet", Me).SetLabel("Close Sheet")
