@@ -7,6 +7,6 @@ ModuleBreakpoints2=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
 ModuleClosedNodes2=
-NavigationStack=pgIndex,btnAddSchemaField_click,9285,0,pgIndex,dtschema_delete,9223,0,pgIndex,cboDatabaseTable_change,8721,0,pgIndex,btnDbConnect_click,2311,0,pgIndex,fssqlite_change,2289,0,pgIndex,Design_Table,14442,1,pgIndex,CreateSchema,9188,2,Main,AppStart,41,0,Main,Process_Globals,16,0,pgIndex,DesignLayout,8058,0,pgIndex,BuildNavBar,1017,0
+NavigationStack=pgIndex,btnDbConnect_click,2311,0,pgIndex,fssqlite_change,2289,0,pgIndex,Design_Table,14442,1,pgIndex,CreateSchema,9188,2,Main,AppStart,41,0,Main,Process_Globals,16,0,pgIndex,BuildNavBar,1017,0,pgIndex,btnEditable1_click,8225,0,pgIndex,DesignLayout,8126,0,pgIndex,ConfigureSchemaEntry,8201,0
 SelectedBuild=0
 VisibleModules=2
