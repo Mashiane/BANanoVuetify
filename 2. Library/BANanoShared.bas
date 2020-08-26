@@ -26,28 +26,6 @@ Sub Process_Globals
     )
 End Sub
 
-#if PHP
-function SendHTMLEmail($from,$to,$cc,$subject,$msg) {
-    //$msg = str_replace("\n.", "\n..", $msg);
-    // use wordwrap() if lines are longer than 70 characters
-    //$msg = wordwrap($msg,70,"\r\n");
-    //define from header
-    $headers = "From:" . $from . "\r\n";
-    $headers .= "Cc: " . $cc . "\r\n";
-    $headers .= "X-Mailer:PHP/" . phpversion() . "\r\n";
-	$headers .= "MIME-Version: 1.0" . "\r\n";
-	$headers .= "Content-type:text/html;charset=iso-8859-1" . "\r\n";
-    // send email
-    $response = mail($to,$subject,$msg,$headers);
-    echo($response);    
-	//$response = (mail($to,$subject,$msg,$headers)) ? "success" : "failure";
-    //$output = json_encode(array("response" => $response));
-    //header('content-type: application/json; charset=utf-8');
-    //echo($output);
-}
-#End If
-
-
 Sub NewList As List
 	Dim elx As List
 	elx.Initialize 
@@ -56,18 +34,18 @@ End Sub
 
 'build the map to send an email to use in callinlinephp
 Sub BuildPHPEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
-	Dim se As Map = CreateMap("from":sfrom, "to":sto, "cc":scc, "subject":ssubject, "msg":smsg)
-	Return se
+	Dim Se As Map = CreateMap("from":sfrom, "to":sto, "cc":scc, "subject":ssubject, "msg":smsg)
+	Return Se
 End Sub
 
-Sub SendHTMLEmailWait(sfrom As String, sto As String, scc As String, sSubject As String, smsg As String) As Boolean
-	Dim se As Map = CreateMap()
-	se.put("from", sfrom)
-	se.put("to", sto)
-	se.put("cc", scc)
-	se.put("subject", sSubject)
-	se.put("msg", smsg)
-	Dim Result As String = BANano.CallInlinePHPWait("SendHTMLEmail", se)
+Sub SendEmail(sfrom As String, sto As String, scc As String, sSubject As String, smsg As String) As Boolean
+	Dim Se As Map = CreateMap()
+	Se.put("from", sfrom)
+	Se.put("to", sto)
+	Se.put("cc", scc)
+	Se.put("subject", sSubject)
+	Se.put("msg", smsg)
+	Dim Result As String = BANano.CallInlinePHPWait("SendEmail", Se)
 	Dim ResultM As Map = BANano.FromJSON(Result)
 	Dim Response As String = ResultM.Get("response")
 	Select Case Response

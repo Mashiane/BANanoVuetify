@@ -184,12 +184,34 @@ Sub SetStatic(b As Boolean) As VMDataTable
 	Return Me
 End Sub
 
+'reset the structure of the data-table
 Sub Reset
 	exclusions.Initialize 
 	filters.Initialize
 	hasFilters = False
 	columnsM.Initialize
-	masterColumns.Initialize 
+	masterColumns.Initialize
+	vue.SetData(headers, vue.newlist)
+	vue.SetData(items, vue.newlist)
+	vue.SetData(title, "")
+	vue.SetData(selected, vue.NewList)
+	SetSortBy(vue.newlist)
+	SetGroupBy(vue.NewList)
+	SetExpanded(vue.NewList)
+	SetGroupDesc(vue.NewList)
+	SetSortDesc(vue.NewList)
+	SetValue(vue.NewList)
+	vue.SetData($"${ID}columns"$, vue.newlist)
+	vue.SetData($"${ID}fsource"$, vue.newlist)
+	SetPage("1")
+	vue.SetData($"${ID}pagecount"$, "0")
+	vue.SetData(keyID, DateTime.Now)
+End Sub
+
+
+'set dynamic data after adding columns
+Sub ResetColumns
+	BuildHeaders(columnsM)
 End Sub
 
 'set the row and column position
@@ -340,16 +362,6 @@ Sub AddProgressLinear(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_PROGRESS_LINEAR)
 End Sub
-
-'Sub AddTextField(colField As String, colTitle As String)
-'	AddColumn(colField,colTitle)
-'	SetColumnType(colField, COLUMN_TEXT_FIELD)
-'End Sub
-'
-'Sub AddTextArea(colField As String, colTitle As String)
-'	AddColumn(colField,colTitle)
-'	SetColumnType(colField, COLUMN_TEXT_AREA)
-'End Sub
 
 'add edit & delete button
 Sub AddEditThrash
@@ -663,6 +675,8 @@ Sub SetDataSource(ds As List) As VMDataTable
 	SetGroupDesc(vue.NewList)
 	SetSortDesc(vue.NewList)
 	SetValue(vue.NewList)
+	SetPage("1")
+	vue.SetData($"${ID}pagecount"$, "0")
 	Return Me
 End Sub
 
@@ -1409,7 +1423,6 @@ Sub ToString As String
 	vcard.Bind(":key", keyID)
 	DataTable.Bind(":headers", headers)
 	DataTable.Bind(":items", items)
-	'DataTable.Bind("item-key",PrimaryKey)
 	BuildControls
 	vcard.AddStuff(DataTable.ToString)
 	If hasExternalPagination Then
@@ -1433,7 +1446,7 @@ Sub SetTotalVisible(varTotalVisible As String) As VMDataTable
 	Return Me
 End Sub
 
-'update the key
+'update the data
 Sub Refresh
 	Dim dt As String = DateTime.now
 	vue.SetData(keyID, dt)
