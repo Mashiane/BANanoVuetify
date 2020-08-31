@@ -27,6 +27,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+'add a child element
+Sub SetText(child As String)
+	ScrollXReverseTransition.SetText(child)
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return ScrollXReverseTransition.ToString
@@ -162,7 +169,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMScrollXReverseTransition
-	ScrollXReverseTransition.Disable(true)
+	ScrollXReverseTransition.Disable(True)
 	Return Me
 End Sub
 

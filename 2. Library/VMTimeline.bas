@@ -27,6 +27,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub AddTimeLineItem(tlItem As VMTimelineItem)
+	AddComponent(tlItem.tostring)
+End Sub
+
 'get component
 Sub ToString As String
 	Return TimeLine.ToString

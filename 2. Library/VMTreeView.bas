@@ -18,6 +18,8 @@ Sub Class_Globals
 	Private bStatic As Boolean
 	Private sOpen As String
 	Private IconSlot As VMTemplate
+	Private sSelected As String
+	Private extm As Map
 End Sub
 
 'initialize the TreeView
@@ -29,14 +31,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	bStatic = False
+	extm = CreateMap()
 	'
 	sActive = $"${ID}active"$
 	sOpen = $"${ID}open"$
+	sSelected = $"${ID}selected"$
 	items.Initialize
 	SetActive(vue.NewList)
 	SetItems(vue.NewList)
-	SetValue(vue.NewList)
 	SetOpen(vue.NewList)
+	SetVModel(sSelected)
+	vue.SetData(sSelected, vue.NewList)
 	SetExpandIcon("mdi-chevron-down")
 	loaded = False
 	'define the icon slot
@@ -45,11 +50,45 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Dim tvicon As VMIcon
 	tvicon.Initialize(vue,"", Module).SetVIf("item.icon").SetVText("item.icon")
 	IconSlot.AddComponent(tvicon.ToString)
+	SetItemKey("id")
+	SetItemText("name")
+	SetOpenOnClick(True)
+	SetTransition(True)
+	SetOnUpdateActive
+	SetOnUpdateOpen
+	SetOnInput
+	'
+	extm.Put("html", "mdi-language-html5")
+	extm.Put("js", "mdi-nodejs")
+	extm.Put("json", "mdi-code-json")
+	extm.Put("md", "mdi-markdown")
+	extm.Put("pdf", "mdi-file-pdf")
+	extm.Put("png", "mdi-file-image")
+	extm.Put("txt", "mdi-file-document-outline")
+	extm.Put("xls", "mdi-file-excel")
+	extm.Put("csv", "mdi-file-delimited-outline")
+	extm.Put("pre", "mdi-file-code-outline")
+	extm.Put("code", "mdi-file-code-outline")
+	extm.Put("doc", "mdi-file-word-box-outline")
+	extm.Put("mp3", "mdi-file-music-outline")
+	extm.Put("folder", "mdi-folder")
+	extm.Put("woff", "marketweb-webfont.woff")
+	extm.Put("css", "mdi-language-css3")
 	Return Me
 End Sub
 
+'add an icon extension
+Sub AddExtension(icon As String, fullicon As String)
+	extm.Put(icon, fullicon)
+End Sub
+
+'set selected items
+Sub SetSelected(xitems As List)
+	vue.SetData(sSelected, xitems)	
+End Sub
+
 Sub GetSelected As List
-	Dim res As List = vue.GetData(sActive)
+	Dim res As List = vue.GetData(sSelected)
 	Return res
 End Sub
 
@@ -112,6 +151,10 @@ Sub AddItem(parentID As String, key As String, text As String, mhref As String, 
 	mitem.Put("icon", mIcon)
 	mitem.Put("disabled", mDisabled)
 	mitem.Put("parentid", parentID)
+	If extm.ContainsKey(mIcon) Then
+		mIcon = extm.Get(mIcon)
+		mitem.Put("icon", mIcon)
+	End If
 	items.Add(mitem)
 	loaded = False
 	Return Me
@@ -121,11 +164,13 @@ End Sub
 Sub Clear
 	items.clear
 	SetItems(items)
+	SetActive(vue.NewList)
+	SetValue(vue.NewList)
+	SetOpen(vue.NewList)
 End Sub
 
-Sub Refresh
+Sub Update
 	SetDataSource(items)
-	loaded = True
 End Sub
 
 'get component
@@ -139,7 +184,7 @@ Sub ToString As String
 End Sub
 
 'from a database
-Sub SetDataSource(recs As List)
+private Sub SetDataSource(recs As List)
 	Dim unflat As List = vue.Unflatten(recs, "children")
 	vue.SetData($"${ID}items"$, unflat)
 	loaded = True
@@ -595,10 +640,10 @@ Sub SetSlotPrepend(b As Boolean) As VMTreeView    'ignore
 End Sub
 
 '
-Sub SetOnInput(methodName As String) As VMTreeView
-	methodName = methodName.tolowercase
+Sub SetOnInput As VMTreeView
+	Dim methodName As String = $"${ID}_input"$
 	If SubExists(Module, methodName) = False Then Return Me
-	Dim xitems As BANanoEvent
+	Dim xitems As Object
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(xitems))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
@@ -607,10 +652,10 @@ Sub SetOnInput(methodName As String) As VMTreeView
 End Sub
 
 '
-Sub SetOnUpdateActive(methodName As String) As VMTreeView
-	methodName = methodName.tolowercase
+Sub SetOnUpdateActive As VMTreeView
+	Dim methodName As String = $"${ID}_updateactive"$
 	If SubExists(Module, methodName) = False Then Return Me
-	Dim xitems As BANanoEvent
+	Dim xitems As Object
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(xitems))
 	SetAttr(CreateMap("@update:active": methodName))
 	'add to methods
@@ -619,10 +664,10 @@ Sub SetOnUpdateActive(methodName As String) As VMTreeView
 End Sub
 
 '
-Sub SetOnUpdateOpen(methodName As String) As VMTreeView
-	methodName = methodName.tolowercase
+Sub SetOnUpdateOpen As VMTreeView
+	Dim methodName As String = $"${ID}_updateopen"$
 	If SubExists(Module, methodName) = False Then Return Me
-	Dim xitems As BANanoEvent
+	Dim xitems As Object
 	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(xitems))
 	SetAttr(CreateMap("@update:open": methodName))
 	'add to methods

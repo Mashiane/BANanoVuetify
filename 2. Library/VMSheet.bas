@@ -63,6 +63,10 @@ Sub Pop(p As VMElement)
 	p.SetText(ToString)
 End Sub
 
+Sub SetText(txt As String)
+	Sheet.SetText(txt)
+End Sub
+
 'add a class
 Sub AddClass(c As String) As VMSheet
 	Sheet.AddClass(c)

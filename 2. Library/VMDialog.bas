@@ -48,6 +48,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub RemoveVModel As VMDialog
+	RemoveAttr("v-model")
+	Return Me
+End Sub
+
+
 Sub Validate
 	Card.Form.validate
 End Sub

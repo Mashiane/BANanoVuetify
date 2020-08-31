@@ -29,6 +29,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardText
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	SetText(d.ToString)
+	HasContent = True
+	Return Me
+End Sub
 
 Sub SetStatic(b As Boolean) As VMCardText
 	bStatic = b
@@ -79,18 +88,20 @@ Sub UseTheme(themeName As String) As VMCardText
 End Sub
 
 'set color intensity
-Sub SetColorIntensity(color As String, intensity As String) As VMCardText
-	If color = "" Then Return Me
-	Dim scolor As String = $"${color} ${intensity}"$
-	If bStatic Then
-		SetAttrSingle("color", scolor)
-		Return Me
-	End If
-	Dim pp As String = $"${ID}Color"$
-	vue.SetStateSingle(pp, scolor)
-	CardText.Bind(":color", pp)
+Sub SetColor(varColor As String) As VMCardText
+	If varColor = "" Then Return Me
+	AddClass(varColor)
 	Return Me
 End Sub
+
+'set color intensity
+Sub SetColorIntensity(varColor As String, varIntensity As String) As VMCardText
+	If varColor = "" Then Return Me
+	Dim scolor As String = $"${varColor} ${varIntensity}"$
+	AddClass(scolor)
+	Return Me
+End Sub
+
 
 'get component
 Sub ToString As String

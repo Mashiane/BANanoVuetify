@@ -322,10 +322,14 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	'
 	Dim vli As VMListItem
 	vli.Initialize(vue, "", Module).SetStatic(bStatic)
-	vli.SetVIf($"item.${key}"$)
 	vli.Bind(":key", $"item.${key}"$)
 	vli.SetAttrSingle(":id", $"item.${key}"$)
 	vli.SetOnClick($"${ID}_click"$)
+	If UseVisibility Then
+		vli.SetVIf($"item.visibility"$)
+	Else
+		vli.SetVIf($"item.${key}"$)
+	End If
 	'
 	If avatar <> "" Then
 		Dim lia As VMListItemAvatar
@@ -471,6 +475,30 @@ Sub AddItem(key As String, avatar As String, iconName As String, title As String
 	HasContent = True
 	Return Me
 End Sub
+
+'add synamic items
+Sub AddItem2(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String) As VMList
+	key = key.tolowercase
+	If key = "" Then
+		key = items.size
+	End If
+	title = BANano.SF(title)
+	subtitle = BANano.SF(subtitle)
+	Dim item As Map = CreateMap()
+	item.Put("id", key)
+	item.Put("avatar", avatar)
+	item.Put("icon", iconName)
+	item.Put("iconcolor", iconColor)
+	item.Put("title", title)
+	item.Put("subtitle", subtitle)
+	item.Put("subtitle1", subtitle1)
+	item.Put("action", actionIcon)
+	item.Put("actioniconcolor", actionIconColor)
+	items.Put(key, item)
+	HasContent = True
+	Return Me
+End Sub
+
 
 Sub AddItemDivider() As VMList
 	Dim key As String = items.size
@@ -779,7 +807,7 @@ Sub ToString As String
 			xitems.Add(v)
 		Next
 		vue.SetStateSingle(listKey, xitems)
-		SetDataSourceTemplate(listKey, "id", "avatar", "icon", "title", "subtitle", "action")
+		SetDataSourceTemplate1(listKey, "id", "avatar", "icon", "iconcolor", "title", "subtitle", "subtitle1", "action", "actioniconcolor")
 	End If
 	'we use parent child relationship
 	If parentchild.Size > 0 Then
@@ -827,9 +855,7 @@ Sub Refresh
 		nl.Add(li)
 	Next
 	vue.SetData($"${ID}ds"$, nl)
-	Log(nl)
 End Sub
-
 
 Sub Clear As VMList
 	items.Clear
@@ -837,6 +863,11 @@ Sub Clear As VMList
 	Dim listKey As String = $"${ID}ds"$
 	vue.SetStateSingle(listKey, items)
 	Return Me
+End Sub
+
+Sub Update
+	Dim listKey As String = $"${ID}ds"$
+	vue.SetStateSingle(listKey, items)
 End Sub
 
 Sub SetVModel(k As String) As VMList

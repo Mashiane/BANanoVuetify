@@ -60,57 +60,59 @@ Library4=bananovuetifycore
 Library5=bananovuetifyconnect
 Library6=bananovuetifyprism
 Module1=modAlert
-Module10=modCard
-Module11=modCarousel
-Module12=modCheckBox
-Module13=modChips
-Module14=modColorPicker
-Module15=modCombo
-Module16=modDataTable
-Module17=modDatePicker
-Module18=modDesign
-Module19=modDialog
+Module10=modCalendar
+Module11=modCard
+Module12=modCarousel
+Module13=modCheckBox
+Module14=modChips
+Module15=modColorPicker
+Module16=modCombo
+Module17=modDataTable
+Module18=modDatePicker
+Module19=modDesign
 Module2=modAutoComplete
-Module20=modExpansionPanels
-Module21=modFileInput
-Module22=modForm
-Module23=modGrid
-Module24=modIcons
-Module25=modImages
-Module26=modLists
-Module27=modLoadingSkeleton
-Module28=modMenus
-Module29=modMessageBoard
+Module20=modDialog
+Module21=modExpansionPanels
+Module22=modFileInput
+Module23=modForm
+Module24=modGrid
+Module25=modIcons
+Module26=modImages
+Module27=modLists
+Module28=modLoadingSkeleton
+Module29=modMenus
 Module3=modAvatar
-Module30=modOverlay
-Module31=modPagination
-Module32=modParallax
-Module33=modProgress
-Module34=modRadioGroups
-Module35=modRating
-Module36=modSelects
-Module37=modSlider
-Module38=modSnackBar
-Module39=modSparkLine
+Module30=modMessageBoard
+Module31=modOverlay
+Module32=modPagination
+Module33=modParallax
+Module34=modProgress
+Module35=modRadioGroups
+Module36=modRating
+Module37=modRealtimeLogging
+Module38=modSelects
+Module39=modSlider
 Module4=modBadges
-Module40=modStepper
-Module41=modSwitch
-Module42=modTabs
-Module43=modTextArea
-Module44=modTextField
-Module45=modTimeLine
-Module46=modTimePicker
-Module47=modToolbar
-Module48=modTreeView
-Module49=pgIndex
+Module40=modSnackBar
+Module41=modSparkLine
+Module42=modStepper
+Module43=modSwitch
+Module44=modTabs
+Module45=modTextArea
+Module46=modTextField
+Module47=modTimeLine
+Module48=modTimePicker
+Module49=modToolbar
 Module5=modBanner
+Module50=modTreeView
+Module51=pgIndex
 Module6=modBottomNavigation
 Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=26
 NumberOfLibraries=6
-NumberOfModules=49
+NumberOfModules=51
 Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
@@ -127,7 +129,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.27"
+	Public Version As String = "4.28"
 	Public Port As String = "8080"
 End Sub
 
@@ -191,8 +193,8 @@ Sub BANano_Ready
 	alaSQL.SchemaCreateTable
 	alaSQL.result = db.ExecuteWait(alaSQL.query, alaSQL.args)
 	pgIndex.Init
+	
 End Sub
-
 
 Sub CreateVBCode(vue As BANanoVue, module As Object, codeID As String, sTitle As String, scode As String) As VMPrism
 	scode = scode.Replace("~", "$")

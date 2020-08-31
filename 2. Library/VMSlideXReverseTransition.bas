@@ -59,6 +59,11 @@ Sub AddChild(child As VMElement) As VMSlideXReverseTransition
 	Return Me
 End Sub
 
+'add a child element
+Sub SetText(child As String)
+	SlideXReverseTransition.SetText(child)
+End Sub
+
 'add to parent
 Sub Pop(p As VMElement)
 	p.SetText(ToString)

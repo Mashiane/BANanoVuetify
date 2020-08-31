@@ -32,6 +32,7 @@ Sub Init
 	'
 	AddPages
 	BuildFooter
+	
 	vm.UX
 	
 	vm.showpage(modProgress.name)
@@ -108,7 +109,7 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("ui", "bottomsheets", "", "", "Bottom Sheets","")
 	vm.Drawer.AddParentChild("ui", "breadcrumbs", "", "", "Breadcrumbs","")
 	vm.Drawer.AddParentChild("ui", "buttons", "", "", "Buttons","")
-	'vm.Drawer.AddParentChild("calendars", "", "Calendars")
+	vm.Drawer.AddParentChild("ui", "calendar", "", "", "Calendar","")
 	vm.Drawer.AddParentChild("ui", "cards", "", "", "Cards","")
 	vm.drawer.AddParentChild("ui", "carousel", "","", "Carousel","")
 	vm.Drawer.AddParentChild("ui", "chips", "", "", "Chips","")
@@ -158,6 +159,7 @@ Sub BuildDrawer
 	
 	vm.Drawer.AddParentChild("", "examples", "", "", "Examples", "")
 	vm.drawer.AddParentChild("examples", "messageboard", "", "", "Message Board","")
+	vm.drawer.AddParentChild("examples", "reallogs", "", "", "Realtime Logging","")
 	
 	'* IMPORTANT
 	vm.drawer.Refresh
@@ -201,7 +203,16 @@ End Sub
 Sub draweritems_click(elID As Object)
 	vm.pageresume
 	vm.BottomNav.Hide
+	modSnackBar.HideSnacks
+	'stop logs
+	vm.callmethod("stop")
 	Select Case elID
+	Case "calendar"
+		vm.NavBar.UpdateTitle(modCalendar.title)
+		vm.ShowPage(modCalendar.name)
+	Case "reallogs"
+		vm.NavBar.UpdateTitle(modRealtimeLogging.title)
+		vm.ShowPage(modRealtimeLogging.name)
 	Case "progress"
 		vm.NavBar.UpdateTitle(modProgress.title)
 		vm.ShowPage(modProgress.name)
@@ -295,8 +306,9 @@ Sub draweritems_click(elID As Object)
 			vm.NavBar.UpdateTitle(modDialog.title)
 		vm.ShowPage(modDialog.name)
 	Case "snackbars"
-			vm.NavBar.UpdateTitle(modSnackBar.title)
+		vm.NavBar.UpdateTitle(modSnackBar.title)
 		vm.ShowPage(modSnackBar.name)
+		modSnackBar.ShowSnacks
 	Case "checkbox"
 			vm.NavBar.UpdateTitle(modCheckBox.title)
 		vm.ShowPage(modCheckBox.name)
@@ -434,6 +446,8 @@ Sub AddPages
 	vm.AddPage(modPagination.name, modPagination)
 	vm.AddPage(modProgress.name, modProgress)
 	vm.AddPage(modOverlay.name, modOverlay)
+	vm.AddPage(modRealtimeLogging.name, modRealtimeLogging)
+	vm.AddPage(modCalendar.name, modCalendar)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

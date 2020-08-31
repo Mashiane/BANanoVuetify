@@ -18,6 +18,13 @@ Sub Class_Globals
 	Private hasAvatar As Boolean
 	Public Opposite As VMContainer
 	Public OppositeText As VMLabel
+	Public Card As VMCard
+	Public UsesCard As Boolean
+	Public CardTitle As VMCardTitle
+	Public CardSubTitle As VMCardSubTitle
+	Public CardText As VMCardText
+	Public CardActions As VMCardActions
+	Public CardContainer As VMContainer
 End Sub
 
 'initialize the TimeLineItem
@@ -36,6 +43,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	OppositeText.SetSpan
 	OppositeText.SetAttrSingle("slot","opposite")
 	hasAvatar = False
+	UsesCard = False
+	Card.Initialize(vue, $"${ID}card"$,eventHandler) 
+	CardTitle = Card.Title
+	CardSubTitle = Card.SubTitle
+	CardText = Card.Text
+	CardActions = Card.Actions
+	CardContainer = Card.Container
+	SetVisible(True)
 	Return Me
 End Sub
 
@@ -61,6 +76,9 @@ Sub ToString As String
 	'add a container if available
 	If Container.HasContent Then 
 		AddComponent(Container.ToString)
+	End If
+	If UsesCard Then
+		AddComponent(Card.ToString)
 	End If
 	Return TimeLineItem.ToString
 End Sub

@@ -156,8 +156,7 @@ Sub Class_Globals
 	Public const TEXT_LOWERCASE As String = "text-lowercase"
 	Public const TEXT_UPPERCASE As String = "text-uppercase"
 	Public const TEXT_CAPITALIZE As String = "text-capitalize"
-	
-		
+			
 	Public SnackBar As VMSnackBar
 	Public RTL As Boolean
 	Public Dark As Boolean
@@ -170,6 +169,84 @@ Sub Class_Globals
 	Private bUseRouter As Boolean
 	Public Position As Map
 	Public ShowWarnings As Boolean
+	Public ScrollBarWidth As Int
+	'
+	Public CONST BREAKPOINT_XS As String = "xs"
+	Public CONST BREAKPOINT_SM As String = "sm"
+	Public CONST BREAKPOINT_MD As String = "md"
+	Public CONST BREAKPOINT_LG As String = "lg"
+	Public CONST BREAKPOINT_XL As String = "xl"
+	
+	Public CONST BREAKPOINT_xsOnly As String = "xsOnly"
+	Public CONST BREAKPOINT_smOnly As String = "smOnly"
+	Public CONST BREAKPOINT_smAndDown As String = "smAndDown"
+	Public CONST BREAKPOINT_smAndUp As String = "smAndUp"
+	Public CONST BREAKPOINT_mdOnly As String = "mdOnly"
+	Public CONST BREAKPOINT_mdAndDown As String = "mdAndDown"
+	Public CONST BREAKPOINT_mdAndUp As String = "mdAndUp"
+	Public CONST BREAKPOINT_lgOnly As String = "lgOnly"
+	Public CONST BREAKPOINT_lgAndDown As String = "lgAndDown"
+	Public CONST BREAKPOINT_lgAndUp As String = "lgAndUp"
+	Public CONST BREAKPOINT_xlOnly As String = "xlOnly"
+	Public Breakpoint As Object
+	Public BreakpointName As String
+	Public Config As BANanoObject
+	Public UsesDrawer As Boolean
+	Public UsesNavBar As Boolean
+	Public UsesFooter As Boolean
+	Public UsesBottomNav As Boolean
+	'
+	Public const LOCALE_Afrikaans As String = "af" 
+	Public const LOCALE_Arabic As String = "ar"
+	Public const LOCALE_Catalan As String = "ca"
+	Public const LOCALE_Czech As String = "cs"
+	Public const LOCALE_German As String = "de"
+	Public const LOCALE_Greek As String = "el"
+	Public const LOCALE_English	As String = "en"
+	Public const LOCALE_Spanish As String = "es"
+	Public const LOCALE_Estonian As String = "et"
+	Public const LOCALE_Persian As String = "fa"
+	Public const LOCALE_Finnish	As String = "fi"
+	Public const LOCALE_French 	As String = "fr"
+	Public const LOCALE_Hebrew 	As String = "he"
+	Public const LOCALE_Croatian As String = "hr"
+	Public const LOCALE_Hungarian As String = "hu"
+	Public const LOCALE_Indonesian As String = "id"
+	Public const LOCALE_Italian As String = "it"
+	Public const LOCALE_Japanese As String = "ja"
+	Public const LOCALE_Korean As String = "ko"
+	Public const LOCALE_Lithuanian As String = "lt"
+	Public const LOCALE_Latvian As String = "lv"
+	Public const LOCALE_Dutch As String = "nl"
+	Public const LOCALE_Norwegian As String = "no"
+	Public const LOCALE_Polish As String = "pl"
+	Public const LOCALE_Portuguese As String = "pt"
+	Public const LOCALE_Romanian As String = "ro"
+	Public const LOCALE_Russian As String = "ru"
+	Public const LOCALE_Slovak As String = "sk"
+	Public const LOCALE_Slovene As String = "sl"
+	Public const LOCALE_Serbian As String = "srCyrl"
+	Public const LOCALE_Swedish As String = "sv"
+	Public const LOCALE_Thai As String = "th"
+	Public const LOCALE_Turkish As String = "tr"
+	Public const LOCALE_Ukrainian As String = "uk"
+	Public const LOCALE_Chinese As String = "zhHans"
+	Public const LOCALE_Chinese1 As String = "zhHant"
+	'
+	Public const VISIBILITY_PrintOnly As String = "print-only"
+	Public const VISIBILITY_ScreenOnly As String = "screen-only"
+	Public const VISIBILITY_XsOnly As String = "xs-only"
+	Public const VISIBILITY_SmOnly As String = "sm-only"
+	Public const VISIBILITY_SmAndDown As String = "sm-and-down"
+	Public const VISIBILITY_SmAndUp As String = "sm-and-up"
+	Public const VISIBILITY_MdOnly As String = "md-only"
+	Public const VISIBILITY_MdAndDown As String = "md-and-down"
+	Public const VISIBILITY_MdAndUp As String = "md-and-up"
+	Public const VISIBILITY_LgOnly As String = "lg-only"
+	Public const VISIBILITY_LgAndDown As String = "lg-and-down"
+	Public const VISIBILITY_LgAndUp As String = "lg-and-up"
+	Public const VISIBILITY_XlOnly As String = "xl-only"
+	Public const VISIBILITY_ALL As String = ""
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -269,6 +346,10 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Alert.AddOK("btnalertOk", "Ok")
 	'
 	InitColors
+	UsesDrawer = True
+	UsesNavBar = True
+	UsesFooter = True
+	UsesBottomNav = True
 End Sub
 
 Sub SetUseRouter(b As Boolean) As BANanoVM
@@ -2062,6 +2143,13 @@ Sub CreateSheet(sid As String, eventHandler As Object) As VMSheet
 	Return el
 End Sub
 
+Sub CreateCalendar(sid As String, eventHandler As Object) As VMCalendar
+	Dim el As VMCalendar
+	el.Initialize(vue, sid, eventHandler)
+	Return el
+End Sub
+
+
 Sub CreateChip(sid As String, eventHandler As Object) As VMChip
 	Dim el As VMChip
 	el.Initialize(vue, sid, eventHandler)
@@ -2335,9 +2423,9 @@ Sub UX
 	Notification.Pop(VContent)
 	
 	'add drawer first
-	Drawer.Pop(VApp)
+	If UsesDrawer Then Drawer.Pop(VApp)
 	'add navbar
-	NavBar.Pop(VApp)
+	If UsesNavBar Then NavBar.Pop(VApp)
 	
 	If bUseRouter Then
 		Animate.AddComponent(RouterView.ToString)
@@ -2349,9 +2437,9 @@ Sub UX
 	'add content
 	VContent.Pop(VApp)
 	'add footer
-	Footer.Pop(VApp)
+	If UsesFooter Then Footer.Pop(VApp)
 	'add bottom nan
-	BottomNav.Pop(VApp)
+	If UsesBottomNav Then BottomNav.Pop(VApp)
 	'template built from all pages
 	vue.SetTemplate(VApp.ToString)
 	'
@@ -2364,6 +2452,8 @@ Sub UX
 	'
 	Dim svuetify As String = "$vuetify"
 	vuetify = vue.BOVue.GetField(svuetify)
+	Breakpoint = vuetify.GetField("breakpoint").Result
+	BreakpointName = vuetify.GetField("breakpoint").GetField("name").Result
 End Sub
 
 'scroll to, 300, 0, easeInOutCubic
@@ -2384,6 +2474,7 @@ Sub ScrollTo(elID As String, duration As Int, offset As Int, easing As String)
 	End Try
 End Sub
 
+'change the locale
 Sub SetLocale(slang As String) As BANanoVM
 	lang = slang
 	Try
@@ -3050,4 +3141,44 @@ Sub CreateMultiCheckList(EventHandler As Object, dtID As String, dtSource As Str
 	'add item to list
 	dtList.AddComponent(vlig.tostring)
 	Return dtList
+End Sub
+
+Sub CreateH1(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).seth1
+	Return elx
+End Sub
+
+Sub CreateH2(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).seth2
+	Return elx
+End Sub
+
+Sub CreateH3(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).seth3
+	Return elx
+End Sub
+
+Sub CreateH4(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).seth4
+	Return elx
+End Sub
+
+Sub CreateH5(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).seth5
+	Return elx
+End Sub
+
+Sub CreateH6(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).seth6
+	Return elx
+End Sub
+
+Sub CreateParagraph(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).SetParagraph
+	Return elx
+End Sub
+
+Sub CreateAnchor(id As String) As VMLabel
+	Dim elx As VMLabel = CreateLabel(id).SetA
+	Return elx
 End Sub

@@ -30,6 +30,16 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub RemoveVModel As VMAlert
+	RemoveAttr("v-model")
+	Return Me
+End Sub
+
+'add a content of the alert
+Sub AddContent(child As String)
+	Alert.SetText(child)
+End Sub
+
 Sub SetContent(sContent As String) As VMAlert
 	If bStatic Then
 		AddComponent(sContent)
@@ -103,6 +113,9 @@ Sub AddChildren(children As List)
 		AddChild(childx)
 	Next
 End Sub
+
+
+
 
 'set border
 Sub SetBorder(varBorder As String) As VMAlert

@@ -37,6 +37,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub RemoveVModel As VMNavigationDrawer
+	RemoveAttr("v-model")
+	Return Me
+End Sub
+
 Sub Refresh
 	List.Refresh
 End Sub

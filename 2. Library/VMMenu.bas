@@ -137,6 +137,28 @@ Sub SetButton(iconName As String, btnText As String) As VMMenu
 	Return Me
 End Sub
 
+Sub SetButton1(iconName As String, iconPos As String, btnText As String,btnOutlined As Boolean) As VMMenu
+	Dim btn As VMButton
+	btn.Initialize(vue, $"${ID}button"$, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.AddIcon(iconName,iconPos,"")
+	btn.SetLabel(btnText)
+	btn.SetMenuTrigger(True)
+	btn.SetTransparent(True)
+	btn.SetOutlined(btnOutlined)
+	btn.Pop(act.Template)
+	hasActivator = True
+	Return Me
+End Sub
+
+
+'update the button label
+Sub UpdateButtonLabel(txt As String)
+	Dim skey As String = $"${ID}buttonlabel"$
+	vue.SetData(skey, txt)
+End Sub
+
 Sub SetAvatar(url As String) As VMMenu
 	Dim c6a As VMAvatar
 	c6a.Initialize(vue, $"${ID}avatar"$, Module)
@@ -154,6 +176,10 @@ Sub UpdateAvatar(url As String) As VMMenu
 	Dim urlLink As String = $"${ID}avatarimage"$
 	vue.SetData(urlLink, url)
 	Return Me
+End Sub
+
+Sub AddKeyValue(key As String, value As String)
+	AddItem(key, "", "", value, "", "")
 End Sub
 
 'add an item to the menu content

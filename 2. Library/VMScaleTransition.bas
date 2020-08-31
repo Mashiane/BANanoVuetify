@@ -27,6 +27,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+'add a child element
+Sub SetText(child As String)
+	ScaleTransition.SetText(child)
+End Sub
+
 'get component
 Sub ToString As String
 	Return ScaleTransition.ToString

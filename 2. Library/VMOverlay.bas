@@ -32,6 +32,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+'add a child element
+Sub SetText(child As String)
+	Overlay.SetText(child)
+End Sub
+
 'get component
 Sub ToString As String
 	If Container.HasContent Then AddComponent(Container.ToString)

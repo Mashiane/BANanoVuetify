@@ -14,6 +14,11 @@ Sub Class_Globals
 	Private Module As Object   'ignore
 	Private bStatic As Boolean
 	Private vmodel As String
+	Private sitems As String
+	Private items As List
+	Private hasItems As Boolean
+	Private hasListItems As Boolean
+	Private marked As Boolean
 End Sub
 
 'initialize the Combo
@@ -28,9 +33,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Combo.typeOf = "select"
 	bStatic = False
 	vmodel = ""
+	sitems = $"${ID}items"$
+	items = vue.newlist
+	hasItems = False
+	hasListItems = False
+	marked = False
 	Return Me
 End Sub
-
 
 Sub SetVOnce(t As Boolean) As VMSelect
 	Combo.setvonce(t)
@@ -110,16 +119,25 @@ Sub SetAttributes(attrs As List) As VMSelect
 	Return Me
 End Sub
 
-
 Sub AddComponent(comp As String) As VMSelect
 	Combo.SetText(comp)
 	Return Me
 End Sub
 
-Sub AddItems(items As List) As VMSelect
-	Dim targ As String = $"${ID}items"$
-	vue.SetData(targ, items)
-	SetItems(targ)
+'add a predefined list of items
+Sub AddItems(xitems As List) As VMSelect
+	vue.SetData(sitems, xitems)
+	SetItems(sitems)
+	items = xitems
+	hasItems = True
+	Return Me
+End Sub
+
+'clear the contents of the list
+Sub Clear As VMSelect
+	vue.SetData(sitems, vue.NewList)
+	items.clear
+	hasItems = True
 	Return Me
 End Sub
 
@@ -138,6 +156,7 @@ Sub SetDataSource(sourceName As String, sourceField As String, displayField As S
 	Return Me
 End Sub
 
+'use key value pairs
 Sub SetOptions(sourceName As String, options As Map, sourcefield As String, displayfield As String, returnObject As Boolean) As VMSelect
 	sourceName = sourceName.tolowercase
 	sourcefield = sourcefield.ToLowerCase
@@ -162,11 +181,153 @@ Sub SetOptions(sourceName As String, options As Map, sourcefield As String, disp
 	Return Me
 End Sub
 
+'Add a single item
+Sub AddItem(itemkey As String, itemvalue As String) As VMSelect
+	Dim nrec As Map = CreateMap()
+	nrec.Put("value", itemvalue)
+	nrec.Put("key", itemkey)
+	items.Add(nrec)
+	hasItems = True
+	If marked = False Then
+		UsesKeyValue
+		marked = True
+	End If
+	Return Me
+End Sub
+
+'indicate that it uses key values
+Sub UsesKeyValue As VMSelect
+	SetItemText("value")
+	SetItemValue("key")
+	SetReturnObject(False)
+	Return Me
+End Sub
+
+'indicate that it uses list items
+Sub UsesListItems As VMSelect
+	SetItemText("title")
+	SetItemValue("key")
+	SetReturnObject(False)
+	Return Me
+End Sub
+
+'add a list item
+Sub AddListItem(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String) As VMSelect
+	Dim nrec As Map = CreateMap()
+	nrec.Put("key", key)
+	nrec.Put("value", title)
+	nrec.Put("avatar", avatar)
+	nrec.Put("iconname", iconName)
+	nrec.Put("iconcolor", iconColor)
+	nrec.Put("title", title)
+	nrec.Put("subtitle", subtitle)
+	nrec.Put("subtitle1", subtitle1)
+	items.Add(nrec)
+	hasItems = True
+	hasListItems = True
+	If marked = False Then
+		UsesListItems
+		marked = True
+	End If
+	Return Me
+End Sub
+
+'define the list item for each of the items
+private Sub SetListItems As VMSelect
+	If DesignMode Then Return Me
+	'
+	Dim tmp As VMTemplate
+	tmp.Initialize(vue, $"${ID}tmpl"$, Module)
+	tmp.SetStatic(bStatic)
+	tmp.SetDesignMode(DesignMode)
+	tmp.SetAttrSingle("v-slot:item", "{ item, attrs, on }")
+	'
+	Dim vli As VMListItem
+	vli.Initialize(vue, "", Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	vli.SetVIf($"item.key"$)
+	vli.Bind(":key", $"item.key"$)
+	vli.SetAttrSingle(":id", $"item.key"$)
+	vli.SetAttrSingle("v-bind", "attrs")
+	vli.SetAttrSingle("v-on", "on")
+	'
+	Dim lia As VMListItemAvatar
+	lia.Initialize(vue, "", Module)
+	lia.SetStatic(bStatic)
+	lia.SetDesignMode(DesignMode)
+	lia.SetVIf($"item.avatar"$)
+	Dim img As VMImage
+	img.Initialize(vue, "", Module)
+	img.SetStatic(bStatic)
+	img.SetDesignMode(DesignMode)
+	img.SetAttrSingle(":src", $"item.avatar"$)
+	img.Pop(lia.ListItemAvatar)
+	lia.Pop(vli.ListItem)
+	'
+	Dim vlii As VMListItemIcon
+	vlii.Initialize(vue, "", Module)
+	vlii.SetStatic(bStatic)
+	vlii.SetDesignMode(DesignMode)
+	vlii.SetVif($"item.iconname"$)
+	Dim icon As VMIcon
+	icon.Initialize(vue,"", Module)
+	icon.SetStatic(bStatic)
+	icon.SetDesignMode(DesignMode)
+	icon.SetVText($"item.iconname"$)
+	icon.SetAttrSingle(":color", $"item.iconcolor"$)
+	icon.Pop(vlii.ListItemIcon)
+	vlii.Pop(vli.ListItem)
+	'
+	Dim lic As VMListItemContent
+	lic.Initialize(vue,"", Module)
+	lic.SetStatic(bStatic)
+	lic.SetDesignMode(DesignMode)
+	'
+	Dim lit As VMListItemTitle
+	lit.Initialize(vue, "", Module)
+	lit.SetStatic(bStatic)
+	lit.SetDesignMode(DesignMode)
+	lit.SetVif($"item.title"$)
+	lit.SetVText($"item.title"$)
+	lit.Pop(lic.ListItemContent)
+	'
+	Dim listt As VMListItemSubTitle
+	listt.Initialize(vue, "", Module)
+	listt.SetStatic(bStatic)
+	listt.SetDesignMode(DesignMode)
+	listt.SetVIf($"item.subtitle"$)
+	listt.SetVText($"item.subtitle"$)
+	listt.Pop(lic.ListItemContent)
+	'
+	Dim listt1 As VMListItemSubTitle
+	listt1.Initialize(vue, "", Module)
+	listt1.SetStatic(bStatic)
+	listt1.SetDesignMode(DesignMode)
+	listt1.SetVIf($"item.subtitle1"$)
+	listt1.SetVText($"item.subtitle1"$)
+	listt1.Pop(lic.ListItemContent)
+	'
+	lic.Pop(vli.ListItem)
+	
+	vli.Pop(tmp.Template)
+	SetText(tmp.ToString)
+	Return Me
+End Sub
+
 'get component
 Sub ToString As String
+	If hasItems Then 
+		SetItems(sitems)
+		vue.SetData(sitems, items)
+	End If
+	If hasListItems Then SetListItems
 	Return Combo.ToString
 End Sub
 
+'update after clear
+Sub Update
+	SetItems(sitems)
+	vue.SetData(sitems, items)
+End Sub
 
 'apply a theme to an element
 Sub UseTheme(themeName As String) As VMSelect

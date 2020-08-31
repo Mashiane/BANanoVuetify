@@ -13,6 +13,12 @@ Sub Class_Globals
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object   'ignore
 	Private bStatic As Boolean   'ignore
+	Private focus As String
+	Private events As List
+	Private eventsName As String
+	Private categories As List
+	Private categoryName As String
+	Private catmap As Map
 End Sub
 
 'initialize the Calendar
@@ -24,7 +30,117 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	Calendar.setref(ID)
+	focus = $"${ID}focus"$
+	SetVModel(focus)
+	vue.SetData(focus, "")
+	events = vue.newlist
+	SetType("month")
+	Calendar.SetRef(ID)
+	SetOnChange
+	SetOnClickDate
+	SetOnClickMore
+	SetOnClickEvent
+	eventsName = $"${ID}events"$
+	categoryName = $"${ID}categories"$
+	categories.Initialize 
+	SetCategories(categories)
+	SetEvents(events)
+	catmap.Initialize
+	SetAttrSingle(":event-color", "geteventcolor")
+	vue.SetMethod(Me, "geteventcolor")
 	Return Me
+End Sub
+
+Sub geteventcolor(e As Map) As String
+	Dim ecolor As String = e.Get("color")
+	Return ecolor
+End Sub
+
+Sub AddEvent(eID As String, eCategory As String, eName As String, eStartDT As String, eEndDT As String, eAllDay As Boolean)
+	Dim catColor As String 
+	If catmap.ContainsKey(eCategory) Then
+		catColor = catmap.Get(eCategory)
+	Else
+		catColor = "primary"
+	End If
+	Dim em As Map = CreateMap()
+	em.Put("id", eID)
+	em.Put("name", eName)
+	em.Put("start", eStartDT)
+	em.Put("end", eEndDT)
+	em.put("color", catColor)
+	em.Put("timed", eAllDay)
+	em.Put("category", eCategory)
+	events.Add(em)
+End Sub
+
+Sub ClearCategories
+	categories.Clear
+	vue.SetData(categoryName, categories)
+	catmap.clear
+End Sub
+
+Sub AddCategory(catName As String, catColor As String)
+	categories.Add(catName)
+	catmap.Put(catName, catColor)
+End Sub
+
+Sub WeekView
+	SetType("week")
+End Sub
+
+
+Sub DayView
+	SetType("day")
+End Sub
+
+Sub MonthView
+	SetType("month")
+End Sub
+
+'get title
+Sub GetTitle As String
+	Dim sTitle As String = vue.refs.GetField(ID).GetField("title").Result
+	Return sTitle
+End Sub
+
+'check change
+Sub CheckChange
+	vue.refs.GetField(ID).RunMethod("checkChange", Null)
+End Sub
+
+'show previous
+Sub ShowPrevious
+	vue.refs.GetField(ID).RunMethod("prev", Null)
+End Sub
+
+'show next
+Sub ShowNext
+	vue.refs.GetField(ID).RunMethod("next", Null)
+End Sub
+
+'select a date
+Sub SelectDate(selDate As Object)
+	vue.SetData(focus, selDate)
+	SetType("day")
+End Sub
+
+'select today
+Sub SelectToday
+	vue.SetData(focus, "")
+End Sub
+
+'clear the events
+Sub ClearEvents
+	events.clear
+	vue.SetData(eventsName, events)
+End Sub
+
+'update events
+Sub Update
+	vue.SetData(eventsName, events)
+	vue.SetData(categoryName, categories)
 End Sub
 
 'get component
@@ -96,12 +212,7 @@ Sub AddChildren(children As List)
 End Sub
 
 'set categories
-Sub SetCategories(varCategories As String) As VMCalendar
-	If varCategories = "" Then Return Me
-	If bStatic Then
-		SetAttrSingle("categories", varCategories)
-		Return Me
-	End If
+Sub SetCategories(varCategories As List) As VMCalendar
 	Dim pp As String = $"${ID}Categories"$
 	vue.SetStateSingle(pp, varCategories)
 	Calendar.Bind(":categories", pp)
@@ -547,8 +658,8 @@ End Sub
 
 'set type
 Sub SetType(varType As String) As VMCalendar
-	if varType = "" Then Return Me
-	if bStatic Then
+	If varType = "" Then Return Me
+	If bStatic Then
 		SetAttrSingle("type", varType)
 		Return Me
 	End If
@@ -599,8 +710,8 @@ End Sub
 
 'set category-show-all
 Sub SetCategoryShowAll(varCategoryShowAll As Boolean) As VMCalendar
-	if varCategoryShowAll = False Then Return Me
-	if bStatic Then
+	If varCategoryShowAll = False Then Return Me
+	If bStatic Then
 		SetAttrSingle("category-show-all", varCategoryShowAll)
 		Return Me
 	End If
@@ -612,8 +723,8 @@ End Sub
 
 'set dark
 Sub SetDark(varDark As Boolean) As VMCalendar
-	if varDark = False Then Return Me
-	if bStatic Then
+	If varDark = False Then Return Me
+	If bStatic Then
 		SetAttrSingle("dark", varDark)
 		Return Me
 	End If
@@ -625,8 +736,8 @@ End Sub
 
 'set event-more
 Sub SetEventMore(varEventMore As Boolean) As VMCalendar
-	if varEventMore = True Then Return Me
-	if bStatic Then
+	If varEventMore = True Then Return Me
+	If bStatic Then
 		SetAttrSingle("event-more", varEventMore)
 		Return Me
 	End If
@@ -638,8 +749,8 @@ End Sub
 
 'set event-ripple
 Sub SetEventRipple(varEventRipple As Boolean) As VMCalendar
-	if varEventRipple = False Then Return Me
-	if bStatic Then
+	If varEventRipple = False Then Return Me
+	If bStatic Then
 		SetAttrSingle("event-ripple", varEventRipple)
 		Return Me
 	End If
@@ -742,7 +853,7 @@ End Sub
 
 'set day-format
 Sub SetDayFormat(varDayFormat As List) As VMCalendar
-	if bStatic Then Return Me
+	If bStatic Then Return Me
 	Dim pp As String = $"${ID}DayFormat"$
 	vue.SetStateSingle(pp, varDayFormat)
 	Calendar.Bind(":day-format", pp)
@@ -788,7 +899,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMCalendar
-	Calendar.Enable(false)
+	Calendar.Enable(False)
 	Return Me
 End Sub
 
@@ -820,7 +931,7 @@ End Sub
 
 'set color intensity
 Sub SetColorIntensity(color As String, intensity As String) As VMCalendar
-	if color = "" then Return Me
+	If color = "" Then Return Me
 	Dim scolor As String = $"${color} ${intensity}"$
 	If bStatic Then
 		SetAttrSingle("color", scolor)
@@ -1001,5 +1112,49 @@ Sub SetTextColorIntensity(textcolor As String, textintensity As String) As VMCal
 	Dim sIntensity As String = $"text--${textintensity}"$
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
+	Return Me
+End Sub
+'
+Sub SetOnClickEvent As VMCalendar
+	Dim methodName As String = $"${ID}_clickevent"$
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim obj As Object
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(obj))
+	SetAttr(CreateMap("@click:event": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+Sub SetOnClickMore As VMCalendar
+	Dim methodName As String  = $"${ID}_clickmore"$
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim obj As Object
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(obj))
+	SetAttr(CreateMap("@click:more": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+Sub SetOnClickDate As VMCalendar
+	Dim methodName As String = $"${ID}_clickdate"$
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim obj As Object
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(obj))
+	SetAttr(CreateMap("@click:date": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+Sub SetOnChange As VMCalendar
+	Dim methodName As String = $"${ID}_change"$
+	If SubExists(Module, methodName) = False Then Return Me
+	Dim obj As Object
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(obj))
+	SetAttr(CreateMap("@change": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub

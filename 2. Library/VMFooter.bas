@@ -32,6 +32,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub RemoveVModel As VMFooter
+	RemoveAttr("v-model")
+	Return Me
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMFooter
 	bStatic = b
 	Footer.SetStatic(b)

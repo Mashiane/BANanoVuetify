@@ -49,6 +49,11 @@ Sub SetStatic(b As Boolean) As VMStepper
 End Sub
 
 
+Sub RemoveVModel As VMStepper
+	RemoveAttr("v-model")
+	Return Me
+End Sub
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMStepper
 	Stepper.SetRC(sRow, sCol)

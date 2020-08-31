@@ -26,34 +26,97 @@ Sub Process_Globals
     )
 End Sub
 
+Sub GetEmailResponse(email As String) As String
+	Dim respM As Map = BANano.FromJson(email)
+	Dim response As String = respM.Get("response")
+	Return response
+End Sub
+
+'build the map to send an email to use in callinlinephp
+Sub BuildEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
+	Dim se As Map = CreateMap("from":sfrom, "to":sto, "cc":scc, "subject":ssubject, "msg":smsg)
+	Return se
+End Sub
+
+#if PHP
+function EmailSend($from, $to, $cc, $subject, $msg) {
+	$hdr  = 'MIME-Version: 1.0' . "\r\n";
+	$hdr .= 'Content-type: text/html; charset=iso-8859-1' . "\r\n";
+	$hdr .= 'X-Mailer:PHP/' . phpversion() . "\r\n";
+	$hdr .= "From:" . $from . "\r\n"; 
+	$extra = '-f '. $from; 
+	$hdr .= "Cc: " . $cc . "\r\n"; 
+	$response = (mail($to, $subject, $msg, $hdr, $extra)) ? "success" : "failure"; 
+    $output = json_encode(Array("response" => $response)); 
+    header('content-type: application/json; charset=utf-8'); 
+    echo($output); 
+}
+#End If
+
+
+''on file change
+Sub UploadFileWait(e As BANanoEvent) As String
+	'get selected file(s)
+	Dim fileList As List = GetFileListFromTarget(e)
+	If fileList.size = 0 Then Return ""
+	
+	'get the file to upload
+	Dim fileO As Map = fileList.Get(0)
+	'start uploading the file
+	Dim fd As BANanoObject
+	fd.Initialize2("FormData", Null)
+	fd.RunMethod("append", Array("upload", fileO))
+	'
+	Dim Res As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
+	Return Res
+End Sub
+
+Sub SetInterval(module As Object, methodname As String, ms As Int, args As List) As Object
+	methodname = methodname.tolowercase
+	Dim cb As BANanoObject = BANano.callback(module, methodname, args)
+	Dim res As Object = BANano.Window.SetInterval(cb, ms)
+	Return res
+End Sub
+
+Sub ClearInterval(interval As Object)
+	BANano.Window.ClearInterval(interval)
+End Sub
+
+Sub ShuffleList(pl As List) As List
+	For i = pl.Size - 1 To 0 Step -1
+		Dim j As Int
+		Dim k As Object
+		j = Rnd(0, i + 1)
+		k = pl.Get(j)
+		pl.Set(j,pl.Get(i))
+		pl.Set(i,k)
+	Next
+	Return pl
+End Sub
+
+
+Sub ExplodeList(lst As List, runs As Int) As List
+	Dim nList As List
+	nList.Initialize
+	Dim oCnt As Int
+	For oCnt = 1 To runs
+		nList.AddAll(lst)
+	Next
+	nList = ShuffleList(nList)
+	Return nList
+End Sub
+
+Sub NewB4xList(items As List) As List
+	Dim nl As List
+	nl.Initialize 
+	nl.AddAll(items)
+	Return nl
+End Sub
+
 Sub NewList As List
 	Dim elx As List
 	elx.Initialize 
 	Return elx
-End Sub
-
-'build the map to send an email to use in callinlinephp
-Sub BuildPHPEmail(sfrom As String, sto As String, scc As String, ssubject As String, smsg As String) As Map
-	Dim Se As Map = CreateMap("from":sfrom, "to":sto, "cc":scc, "subject":ssubject, "msg":smsg)
-	Return Se
-End Sub
-
-Sub SendEmail(sfrom As String, sto As String, scc As String, sSubject As String, smsg As String) As Boolean
-	Dim Se As Map = CreateMap()
-	Se.put("from", sfrom)
-	Se.put("to", sto)
-	Se.put("cc", scc)
-	Se.put("subject", sSubject)
-	Se.put("msg", smsg)
-	Dim Result As String = BANano.CallInlinePHPWait("SendEmail", Se)
-	Dim ResultM As Map = BANano.FromJSON(Result)
-	Dim Response As String = ResultM.Get("response")
-	Select Case Response
-	Case "failure"	
-		Return False
-	Case Else
-		Return True
-	End Select
 End Sub
 
 'get id from event
@@ -1755,19 +1818,6 @@ Sub RamoveFromList(listX As List, item As String)
 	Dim li As Int = listX.IndexOf(item)
 	If li >= 0 Then listX.RemoveAt(li)
 End Sub
-
-Sub ShuffleList(pl As List) As List
-	For i = pl.Size - 1 To 0 Step -1
-		Dim j As Int
-		Dim k As Object
-		j = Rnd(0, i + 1)
-		k = pl.Get(j)
-		pl.Set(j,pl.Get(i))
-		pl.Set(i,k)
-	Next
-	Return pl
-End Sub
-
 '
 '''set the font family
 'Sub SetFontFamily(ff As Object)
@@ -2406,23 +2456,6 @@ Sub GetUploadFileName(e As BANanoEvent) As String
 	Return sFileName
 End Sub
 
-''on file change
-'Sub UploadFileWait(e As BANanoEvent) As BANanoPromise
-'	Dim prom As BANanoPromise
-'	'get selected file(s)
-'	Dim fileList As List = GetFileListFromTarget(e)
-'	If fileList.size = 0 Then Return prom
-'	
-'	'get the file to upload
-'	Dim fileO As Map = fileList.Get(0)
-'	'start uploading the file
-'	Dim fd As BANanoObject
-'	fd.Initialize2("FormData", Null)
-'	fd.RunMethod("append", Array("upload", fileO))
-'	'
-'	prom = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
-'	Return prom
-'End Sub
 
 public Sub GenerateNanoID() As String
 	' for IE

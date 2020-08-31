@@ -77,6 +77,25 @@ Sub UseTheme(themeName As String) As VMCardTitle
 	Return Me
 End Sub
 
+Sub AddIcon1(elID As String, iconName As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardTitle
+	Dim d As VMIcon
+	d.Initialize(vue,elID,Module).SetDesignMode(DesignMode)
+	d.SetText(iconName)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	CardTitle.SetText(d.ToString)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardTitle
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	CardTitle.SetText(d.ToString)
+	HasContent = True
+	Return Me
+End Sub
 
 Sub AddDivider(bVertical As Boolean, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMCardTitle
 	Dim d As VMDivider
@@ -119,6 +138,32 @@ Sub AddButton1(key As String, iconName As String, iconColor As String, text As S
 	Return Me
 End Sub
 
+Sub AddButton3(key As String, iconName As String, iconColor As String, iconPos As String, text As String, bOutlined As Boolean, toolTip As String, badge As String) As VMCardTitle
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	btn.SetToolTip(toolTip)
+	If iconName <> "" Then btn.AddIcon(iconName,iconPos,"")
+	btn.SetLabel(text)
+	btn.SetColor(iconColor)
+	btn.SetTransparent(True)
+	btn.SetOutlined(bOutlined)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
+	CardTitle.SetText(btn.tostring)
+	HasContent = True
+	Return Me
+End Sub
+
+
+'add divider on the toolbar
+Sub AddDivider1 As VMCardTitle
+	AddDivider(True, Null, Null, Array("mx-2"), Null)
+	Return Me
+End Sub
+
+
 Sub AddButton2(btnID As String, btnText As String, btnIcon As String, btnColor As String, btnValue As String, btnToolTip As String, btnBadge As String, btnRaised As Boolean, btnFab As Boolean)
 	Dim btn As VMButton
 	btn.Initialize(vue, btnID, Module)
@@ -148,6 +193,25 @@ Sub AddIcon(key As String, iconName As String, iconColor As String, iconSize As 
 	btn.SetIconButton(iconName).SetTooltip(toolTip)
 	btn.SetColor(iconColor)
 	btn.SetSize(iconSize)
+	If badge <> "" Then
+		btn.SetHasBadge(True)
+		btn.SetBadge(badge)
+	End If
+	CardTitle.SetText(btn.tostring)
+	HasContent = True
+	Return Me
+End Sub
+
+Sub AddIcon2(key As String, iconName As String, iconColor As String, iconSize As String, toolTip As String, badge As String, classes As String) As VMCardTitle
+	key = key.tolowercase
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetIconButton(iconName).SetTooltip(toolTip)
+	btn.SetColor(iconColor)
+	btn.SetSize(iconSize)
+	btn.AddClass(classes)
 	If badge <> "" Then
 		btn.SetHasBadge(True)
 		btn.SetBadge(badge)

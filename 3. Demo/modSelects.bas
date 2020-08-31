@@ -19,7 +19,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(20).AddColumns(1, 12, 12, 12, 12)
+	cont.AddRows(20).AddColumns12
 	'
 	vm.setstatesingle("items", Array("Programming", "Design", "Vue", "Vuetify"))
 	vm.SetStateSingle("states", Array("Alabama", "Alaska", "American Samoa", "Arizona", _
@@ -41,17 +41,17 @@ Sub Code
 	'
 	vm.CreateSelect("sel2", Me).SetItems("items").SetLabel("Read Only").SetReadonly(True).AddToContainer(cont, 2, 1)
 	'
-	vm.CreateSelect("sel3", Me).SetMultiple(True).SetChips(True).SetAttach(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 3, 1)
+	vm.CreateSelect("sel3", Me).SetMultiple(True).SetChips(True).SetAttach(True).SetVModel("sel3").SetItems("items").SetLabel("Chips").AddToContainer(cont, 3, 1)
 	'
-	vm.CreateSelect("sel4", Me).SetFilled(True).SetOnChange(Me, "sel4_change").SetChips(True).SetAttach(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 4, 1)
+	vm.CreateSelect("sel4", Me).SetFilled(True).SetOnChange(Me, "sel4_change").SetChips(True).SetAttach(True).SetVModel("sel4").SetItems("items").SetLabel("Chips").AddToContainer(cont, 4, 1)
 	'
-	vm.CreateSelect("sel5", Me).SetOutlined(True).SetMultiple(True).SetChips(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 5, 1)
+	vm.CreateSelect("sel5", Me).SetOutlined(True).SetMultiple(True).SetChips(True).SetVModel("sel5").SetItems("items").SetLabel("Chips").AddToContainer(cont, 5, 1)
 	'
-	vm.CreateSelect("sel6", Me).SetSolo(True).SetMultiple(True).SetChips(True).SetVModel("value").SetItems("items").SetLabel("Chips").AddToContainer(cont, 6, 1)
+	vm.CreateSelect("sel6", Me).SetSolo(True).SetMultiple(True).SetChips(True).SetVModel("sel6").SetItems("items").SetLabel("Chips").AddToContainer(cont, 6, 1)
 	'
-	vm.CreateSelect("sel7", Me).SetMenuProps("auto").SetHideDetails(True).SetPrependIcon("map").SetSingleLine(True).SetVModel("value").SetItems("states").SetLabel("States").AddToContainer(cont, 7, 1)
+	vm.CreateSelect("sel7", Me).SetMenuProps("auto").SetHideDetails(True).SetPrependIcon("map").SetSingleLine(True).SetVModel("sel7").SetItems("states").SetLabel("States").AddToContainer(cont, 7, 1)
 	'
-	Dim sel8 As VMSelect = vm.CreateSelect("sel8", Me).SetMenuProps("auto").SetHideDetails(True).SetAppendOuterIcon("map").SetVModel("value").SetItems("states").SetLabel("States")
+	Dim sel8 As VMSelect = vm.CreateSelect("sel8", Me).SetMenuProps("auto").SetHideDetails(True).SetAppendOuterIcon("map").SetVModel("sel8").SetItems("states").SetLabel("States")
 	sel8.SetHint("Pick your favorite states").SetPersistentHint(True).SetMultiple(True)
 	sel8.AddToContainer(cont, 8, 1)
 	'
@@ -66,10 +66,45 @@ Sub Code
 	vm.CreateSelect("sel12", Me).SetVModel("value").SetItems("items").SetLabel("Outlined").SetOutlined(True).SetDense(True).AddToContainer(cont, 12, 1)
 	'
 	vm.CreateSelect("sel13", Me).SetVModel("value").SetItems("items").SetLabel("Solo").SetSolo(True).SetDense(True).AddToContainer(cont, 13, 1)
+	
+	'select with list items
+	Dim selList As VMSelect = vm.CreateSelect("selList", Me)
+	selList.setvmodel("mylistx")
+	selList.SetLabel("List Items")
+	selList.AddListItem("myfiles", "", "mdi-folder", "red", "My Files", "", "")
+	selList.AddListItem("account", "", "mdi-account-multiple", "blue", "Shared with Me", "","")
+	selList.AddListItem("starred", "", "mdi-star", "yellow", "Starred", "", "")
+	selList.AddListItem("person1", "./assets/1.png", "", "", "Person 1", "", "")
+	selList.AddListItem("person2", "./assets/2.png", "", "", "Person 2", "", "")
+	selList.AddListItem("person3", "./assets/1.png", "", "", "Jane Smith", "Logged In", "")
+	selList.AddListItem("sa", "", "",  "", "Sandra Adams", "Chief Executive Officer", "sandra_a88@gmail.com")
+	selList.AddListItem("person4", "./assets/2.png", "", "", "Anele Mbanga", "", "")
+	selList.SetOnChange(Me, "sellist_change")
+	selList.AddToContainer(cont, 14,  1)
+	'
+	Dim selList1 As VMSelect = vm.CreateSelect("selList1", Me)
+	selList1.setvmodel("mylistx")
+	selList1.SetLabel("Add at runtime")
+	'add at least 1 item
+	selList1.AddItem("dummy", "dummy")
+	selList1.AddToContainer(cont, 15,  1)
+	
+	selList1.Clear
+	selList1.AddItem("markhams", "Khanyiso")
+	selList1.AddItem("siba", "Usibabale")
+	selList1.AddItem("orio", "Olothando")
+	selList1.AddItem("ernesto", "Esona")
+	selList1.AddItem("gift", "Sisipho")
+	selList1.Update
+	
 	'add container to page
 	vm.AddContainer(cont)
 End Sub
 
+'trap change event for the select
+Sub selList_change(value As Object)
+	vm.ShowSnackBarSuccess(value)
+End Sub
 
 Sub sel4_change(value As Object)
 	vm.ShowSnackBar(value)

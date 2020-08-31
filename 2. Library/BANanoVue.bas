@@ -1170,6 +1170,67 @@ Sub GetData(prop As String) As Object
 	Return obj
 End Sub
 
+'get list first item
+Sub ListFirstItem(lstName As String) As Object
+	lstName = lstName.tolowercase
+	Dim lst As List = BOVue.GetField(lstName).result
+	Dim obj As Object = lst.Get(0)
+	Return obj
+End Sub
+
+'add at beginning of list
+Sub ListUnshift(lstname As String, obj As Object)
+	lstname = lstname.tolowercase
+	Dim lst As List = BOVue.GetField(lstname).result
+	lst.InsertAt(0, obj)
+End Sub
+
+Sub ListGet(lstname As String) As List
+	lstname = lstname.tolowercase
+	Dim lst As List = BOVue.GetField(lstname).result
+	Return lst
+End Sub
+
+Sub ListSet(lstname As String, lst As List) As List
+	lstname = lstname.tolowercase
+	BOVue.SetField(lstname, lst)
+	Return lst
+End Sub
+
+
+'add at end of list
+Sub ListPush(lstname As String, obj As Object)
+	lstname = lstname.tolowercase
+	Dim lst As List = BOVue.GetField(lstname).result
+	lst.Add(obj)
+End Sub
+
+'remove list last item
+Sub ListPop(lstname As String)
+	lstname = lstname.tolowercase
+	Dim lst As List = BOVue.GetField(lstname).result
+	Dim arsize As Int = lst.Size - 1
+	lst.RemoveAt(arsize)
+End Sub
+'
+Sub StateIncrement(itemName As String) As Int
+	itemName = itemName.tolowercase
+	Dim intX As Int = BOVue.GetField(itemName).result
+	intX = BANAno.parseint(intX) + 1
+	BOVue.GetField(itemName)
+	BOVue.SetField(itemName, intX)
+	Return intX
+End Sub
+
+Sub StateDecrement(itemName As String) As Int
+	itemName = itemName.tolowercase
+	Dim intX As Int = BOVue.GetField(itemName).result
+	intX = BANAno.parseint(intX) - 1
+	BOVue.GetField(itemName)
+	BOVue.SetField(itemName, intX)
+	Return intX
+End Sub
+
 Sub ListRemoveDuplicates(lst As List) As List
 	Dim nd As Map = CreateMap()
 	For Each k As String In lst
