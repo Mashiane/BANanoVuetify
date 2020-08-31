@@ -154,6 +154,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modCalendar,cal_clickevent,158,0,modCalendar,cal_clickdate,164,0,modCalendar,calmenuitems_click,244,0,modCalendar,calprev_click,275,0,modCalendar,caluxdownload_click,308,0,modCalendar,caleventsdownload_click,308,0,modCalendar,calnext_click,278,0,modCalendar,caltoday_click,263,0,modCalendar,cal_clickmore,232,0,modCalendar,Code,201,0
+NavigationStack=modCalendar,cal_clickevent,158,0,modCalendar,cal_clickdate,164,0,modCalendar,calmenuitems_click,244,0,modCalendar,calprev_click,275,0,modCalendar,caluxdownload_click,308,0,modCalendar,caleventsdownload_click,308,0,modCalendar,calnext_click,278,0,modCalendar,caltoday_click,263,0,modCalendar,cal_clickmore,232,0,modCalendar,Code,216,0
 SelectedBuild=0
 VisibleModules=10,50
