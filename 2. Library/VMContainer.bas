@@ -2098,6 +2098,16 @@ private Sub CreateGrid
 	Next
 	If missingRC.Size -1 >= 0 Then
 		For Each strRC As String In missingRC
+			'add labels in place of missing components
+			Dim lblKey As String = "lbl" & strRC.Replace(".","")
+			Dim xRow As String = vue.MvField(strRC,1,".")
+			Dim xCol As String = vue.MvField(strRC,2,".")
+			'
+			Dim lbl As VMLabel
+			lbl.Initialize(vue, lblKey)
+			lbl.SetText(lblKey)
+			lbl.SetVisible(False)
+			AddControl(lbl.Label, lbl.ToString,xRow,xCol,"0","0","0","0","12","12","12","12")			
 			Log("VMContainer.CreateGrid: "& strRC & ": RC is NOT defined")
 		Next
 	End If

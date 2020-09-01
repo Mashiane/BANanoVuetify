@@ -8868,7 +8868,11 @@ Sub tbltransfer1_click(e As BANanoEvent)
 	Dim recCnt As Int
 	For recCnt = 0 To recTot
 		Dim fldm As Map = rslt.get(recCnt)
+		Dim skey As String = fldm.get("key")
 		Dim ctype As String = fldm.get("colcontroltype")
+		fldm = MakeItems(fldm)
+		'
+		skey = skey.tolowercase
 		ctype = ctype.tolowercase
 		ctype = ctype.replace(" ","")
 		ctype = ctype.trim
@@ -8880,6 +8884,7 @@ Sub tbltransfer1_click(e As BANanoEvent)
 			Log("Import Error: " & fldm)
 		End If	
 		fldm.put("colcontroltype", ctype)
+		fldm.put("key", skey)
 		rslt.set(recCnt, fldm)
 	Next
 	'covert list to json
@@ -8997,7 +9002,9 @@ Sub ExplodeTable(tblName As String, jsonFields As String)
 	Dim contSQL As BANanoAlaSQLE
 			
 	For Each item As Map In contents
+		item = MakeItems(item)
 		Dim ckey As String = item.getdefault("key", "")
+		ckey = ckey.tolowercase
 		Dim ctitle As String = item.getdefault("title", "")
 		Dim ccolcontroltype As String = item.getdefault("colcontroltype", "")
 		Dim ccollength As String = item.getdefault("collength", "")
@@ -9009,10 +9016,21 @@ Sub ExplodeTable(tblName As String, jsonFields As String)
 		Dim ccolvisible As String = item.getdefault("colvisible", "No")
 		Dim ccolontable As String = item.getdefault("colontable", "No")
 		Dim ccolforeigntable As String = item.GetDefault("colforeigntable", "")
+		ccolforeigntable = ccolforeigntable.tolowercase
 		Dim ccolforeignkey As String = item.getdefault("colforeignkey", "")
+		ccolforeignkey = ccolforeignkey.tolowercase
 		Dim ccolforeignvalue As String = item.getdefault("colforeignvalue", "")
+		ccolforeignvalue = ccolforeignvalue.tolowercase
 		Dim ccolislookup As String = item.getdefault("colislookup", "No")
 		Dim ccoldateformat As String = item.getdefault("coldateformat", "")
+		Dim coffsetsmall As String = item.getdefault("coloffsetsmall", "0")
+		Dim coffsetmedium As String = item.getdefault("coloffsetmedium","0")
+		Dim coffsetlarge As String = item.getdefault("coloffsetlarge","0")
+		Dim coffsetxlarge As String = item.getdefault("coloffsetxlarge","0")
+		Dim csizesmall As String = item.getdefault("colsizesmall","12")
+		Dim csizemedium As String = item.getdefault("colsizemedium","12")
+		Dim csizelarge As String = item.getdefault("colsizelarge","12")
+		Dim csizexlarge As String = item.getdefault("colsizexlarge","12")
 		'
 		Dim cid As String = DateTime.now
 		cid = BANano.parseint(cid)
@@ -9070,13 +9088,16 @@ Sub ExplodeTable(tblName As String, jsonFields As String)
 			"coldisplayvalue","colautoincrement","coluseoptions","colkeys","colvalues","coldontupdate"))
 		'
 		For Each k As String In matr
-			Dim v As String = item.GetDefault(k, "")
+			Dim v As String = item.Get(k)
 			Dim nk As String = vm.MidString2(k, 4)
 			nc.put(nk, v)
+			nc.put(k, v)
+			nc.put($"items${k}"$, v)
 		Next
+		
 		'
-		Dim crow As String = item.getdefault("colrow","")
-		Dim ccol As String = item.getdefault("colcolumn", "")
+		Dim crow As String = item.getdefault("colrow","1")
+		Dim ccol As String = item.getdefault("colcolumn", "1")
 		crow = BANano.parseint(crow)
 		ccol = BANano.parseint(ccol)
 		'convert to attributes
@@ -13302,6 +13323,7 @@ Sub SavePropertyBag
 		Dim contSQL As BANanoAlaSQLE
 			
 		For Each item As Map In contents
+			item = MakeItems(item)
 			Dim ckey As String = item.getdefault("key", "")
 			Dim ctitle As String = item.getdefault("title", "")
 			Dim ccolcontroltype As String = item.getdefault("colcontroltype", "")
@@ -13318,7 +13340,7 @@ Sub SavePropertyBag
 			Dim ccolforeignvalue As String = item.getdefault("colforeignvalue", "")
 			Dim ccolislookup As String = item.getdefault("colislookup", "No")
 			Dim ccoldateformat As String = item.getdefault("coldateformat", "")
-			'
+			
 			Dim cid As String = DateTime.now
 			cid = BANano.parseint(cid)
 			'
@@ -13378,6 +13400,7 @@ Sub SavePropertyBag
 				Dim v As String = item.GetDefault(k, "")
 				Dim nk As String = vm.MidString2(k, 4)
 				nc.put(nk, v)
+				nc.put(k, v)
 			Next
 			'
 			Dim crow As String = item.getdefault("colrow","")
@@ -13454,7 +13477,29 @@ Sub SavePropertyBag
 	'CreateUX
 End Sub
 
-
+Sub MakeItems(m As Map) As Map
+	Dim xitems As List = vue.NewList
+	xitems.AddAll(Array("title", "coldatatype", "collength", "colfieldtype", "coldateformat", "colontable"))
+	xitems.AddAll(Array("subtitle", "colwidth", "colalign", "colsortable", "colcontroltype", "colvalue"))
+	xitems.AddAll(Array("colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge", "coloffsetxlarge", "colsizesmall"))
+	xitems.AddAll(Array("colsizemedium", "colsizelarge", "colsizexlarge", "colprimarykey", "colautoincrement", "colisautofocus", "coldisplayvalue"))
+	xitems.AddAll(Array("colnoduplicate", "colindexed", "colrequired", "colreadonly", "colvisible", "colishidedetails", "colactive"))
+	xitems.AddAll(Array("coldontupdate", "colislookup", "colforeigntable", "colforeignkey", "colforeignvalue", "coluseoptions", "colkeys", "colvalues"))
+	For Each x As String In xitems
+		Dim y As String = m.getdefault(x, "")
+		
+		Select Case x
+		Case "colrow", "colcolumn", "coloffsetsmall", "coloffsetmedium", "coloffsetlarge","coloffsetxlarge", _
+			"colsizesmall", "colsizemedium", "colsizelarge", "colsizexlarge","colwidth"
+			If y = "" Then y = "0"
+			y = BANano.parseint(y)
+		End Select
+		Dim k As String = $"items${x}"$
+		m.put(k, y)
+		m.put(x, y)
+	Next
+	Return m
+End Sub
 
 Sub ShowBag(thisBag As String)
 	vm.HideDrawers
