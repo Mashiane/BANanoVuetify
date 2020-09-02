@@ -61,7 +61,6 @@ Sub Class_Globals
 	Public CenterOnParent As Boolean
 	Private classList As List
 	Private classKey As String
-
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -1244,6 +1243,16 @@ Sub SetOnClick(module As Object, methodName As String) As VMElement
 	Return Me
 End Sub
 
+'link an event to the element
+Sub SetOnEvent(module As Object, eventName As String,methodName As String, args As String) As VMElement
+	methodName = methodName.tolowercase
+	eventName = eventName.tolowercase
+	If SubExists(module, methodName) = False Then Return Me
+	SetAttrSingle($"v-on:${eventName}"$, methodName & $"(${args})"$)
+	vue.SetMethod(module, methodName)
+	Return Me
+End Sub
+
 'set onclick stop
 Sub SetOnClickStop(module As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
@@ -1422,5 +1431,21 @@ Sub SetRight(sright As String) As VMElement
 	Dim pp As String = $"${ID}right"$
 	vue.SetStateSingle(pp, sright)
 	Bind(":right", pp)
+	Return Me
+End Sub
+
+'add this element to parent
+Sub AddToParent(parent As VMElement) As VMElement
+	parent.SetText(ToString)
+	Return Me
+End Sub
+
+Sub AddAttr(attr As String, attrValue As String) As VMElement
+	SetAttrSingle(attr, attrValue)
+	Return Me
+End Sub
+
+Sub AddStyle(styleName As String, styleValue As String) As VMElement
+	SetStyleSingle(styleName, styleValue)
 	Return Me
 End Sub

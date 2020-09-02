@@ -195,6 +195,11 @@ Sub Class_Globals
 	Public UsesNavBar As Boolean
 	Public UsesFooter As Boolean
 	Public UsesBottomNav As Boolean
+	Public UsesOverlay As Boolean
+	Public UsesLoader As Boolean
+	Public UsesSnackBar As Boolean
+	Public UsesDialog As Boolean
+	Public UsesNotification As Boolean
 	'
 	Public const LOCALE_Afrikaans As String = "af" 
 	Public const LOCALE_Arabic As String = "ar"
@@ -280,8 +285,8 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Pages.initialize
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
-	VContent.Initialize(vue, "appcontent").SetTag("v-main")
-	Container.Initialize(vue, "appcontainer", eventHandler).SetFluid(True)
+	VContent.Initialize(vue, "main").SetTag("v-main")
+	Container.Initialize(vue, "container", eventHandler).SetFluid(True)
 	'
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	Drawer.SetApp(True)
@@ -350,6 +355,24 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	UsesNavBar = True
 	UsesFooter = True
 	UsesBottomNav = True
+	UsesOverlay = True
+	UsesLoader = True
+	UsesSnackBar = True
+	UsesDialog = True
+	UsesNotification = True
+End Sub
+
+'use a completelt blank template
+Sub UseBlankTemplate
+	UsesDrawer = False
+	UsesNavBar = False
+	UsesFooter = False
+	UsesBottomNav = False
+	UsesOverlay = False
+	UsesLoader = False
+	UsesSnackBar = False
+	UsesDialog = False
+	UsesNotification = False
 End Sub
 
 Sub SetUseRouter(b As Boolean) As BANanoVM
@@ -360,6 +383,32 @@ End Sub
 'show loading on toolbar
 Sub ShowLoading
 	NavBar.SetLoading(True)
+End Sub
+
+'create a new element
+Sub NewElement(elID As String, elTag As String, mprops As Map, mstyles As Map, lclasses As List, loose As List, elText As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag(elTag)
+	elx.BuildModel(mprops, mstyles, lclasses, loose)
+	elx.SetText(elText)
+	Return elx
+End Sub
+
+'create a new spacer
+Sub NewSpacer(elid As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elid)
+	elx.SetTag("v-spacer")
+	Return elx
+End Sub
+
+'create a new divider
+Sub NewDivider(elid As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elid)
+	elx.SetTag("v-divider")
+	Return elx
 End Sub
 
 'hide loading on toolbar
@@ -2412,15 +2461,17 @@ Sub UX
 	Options.Put("theme", theme)
 	Options.Put("lang", mlang)
 	'
-	Dim sDialog As String = Confirm.tostring
-	AddContent(sDialog)
+	If UsesDialog Then
+		Dim sDialog As String = Confirm.tostring
+		AddContent(sDialog)
 	'
-	Dim sDialog As String = Alert.tostring
-	AddContent(sDialog)
+		Dim sDialog As String = Alert.tostring
+		AddContent(sDialog)
+	End If
 	'
-	SnackBar.Pop(VContent)
-	Overlay.Pop(VContent)
-	Notification.Pop(VContent)
+	If UsesSnackBar Then SnackBar.Pop(VContent)
+	If UsesOverlay Then Overlay.Pop(VContent)
+	If UsesNotification Then Notification.Pop(VContent)
 	
 	'add drawer first
 	If UsesDrawer Then Drawer.Pop(VApp)
@@ -2498,6 +2549,11 @@ Sub AddDrawer(cont As VMNavigationDrawer)
 	Dim scont As String = cont.tostring
 	'Container.SetText(scont)
 	VApp.SetText(scont)
+End Sub
+
+'add content to the v-app element
+Sub AddToApp(content As String)
+	VApp.SetText(content)
 End Sub
 
 'add a container
@@ -3181,4 +3237,8 @@ End Sub
 Sub CreateAnchor(id As String) As VMLabel
 	Dim elx As VMLabel = CreateLabel(id).SetA
 	Return elx
+End Sub
+
+Sub LoremIpsum As String
+	Return BANanoShared.Rand_LoremIpsum(1)
 End Sub

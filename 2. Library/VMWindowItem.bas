@@ -12,6 +12,7 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object    'ignore
+	Public Container As VMContainer
 End Sub
 
 'initialize the WindowItem
@@ -22,11 +23,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Container.Initialize(vue, $"${ID}container"$, eventHandler)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	If Container.HasContent Then SetText(Container.ToString)
 	Return WindowItem.ToString
 End Sub
 
