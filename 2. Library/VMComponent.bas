@@ -63,6 +63,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As 
 	Return Me
 End Sub
 
+Sub ShowElement(elID As String)
+	elID = elID.ToLowerCase
+	SetData($"${elID}show"$, True)
+End Sub
+
+Sub HideElement(elID As String)
+	elID = elID.ToLowerCase
+	SetData($"${elID}show"$, False)
+End Sub
 
 'set mounted
 Sub SetMounted(module As Object, methodName As String) As VMComponent
@@ -195,6 +204,17 @@ Sub AddComponent(comp As String) As VMComponent
 	SetText(comp)
 	Return Me
 End Sub
+
+Sub AddElement(elx As VMElement)
+	Dim sTo As String = elx.ToString
+	Template.SetText(sTo)
+End Sub
+
+Sub AddContainer(elx As VMContainer)
+	Dim sTo As String = elx.ToString
+	Template.SetText(sTo)
+End Sub
+
 
 Sub SetText(t As String) As VMComponent
 	Template.SetText(t)

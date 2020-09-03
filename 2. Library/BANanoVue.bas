@@ -119,6 +119,7 @@ Sub Class_Globals
 	Public Module As Object
 	'Public store As BANanoObject
 	'Public state As Map
+	Public bindings As Map
 End Sub
 
 'initialize view
@@ -548,6 +549,7 @@ Public Sub Initialize(EventHandler As Object)
 	'If SubExists(Module, "ReadyChange") = False Then
 	'	Log("Initialize.ReadyChange - please consider adding this optional callback!")
 	'End If
+	bindings.Initialize 
 End Sub
 
 #if css

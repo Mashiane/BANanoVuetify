@@ -58,6 +58,7 @@ Sub Class_Globals
 	Public NoGutters As Boolean
 	Private cStatic As Boolean
 	Public HasContent As Boolean
+	Public bindings As Map
 End Sub
 
 'initialize the Container
@@ -105,7 +106,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	cStatic = True
 	Return Me
 End Sub
-
 
 Sub SetVElse(vif As String) As VMContainer
 	Container.SetVElse(vif)

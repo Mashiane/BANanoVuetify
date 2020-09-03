@@ -322,6 +322,16 @@ Sub AddSubHeader(Text As String) As VMElement
 	Return Me
 End Sub
 
+Sub AddVerticalDivider(className As String) As VMElement
+	'create a spacer And add it To the appbar
+	Dim elx As VMElement
+	elx.Initialize(vue, "").SetTag("v-divider")
+	elx.AddAttr("vertical", True)
+	elx.AddClass(className)
+	SetText(elx.ToString)
+	Return Me
+End Sub
+
 Sub AddDivider As VMElement
 	Dim strLine As String = $"<v-divider></v-divider>"$
 	SetText(strLine)
@@ -850,6 +860,11 @@ Sub AddDynamicClass(className As String) As VMElement
 	If cpos = -1 Then classList.Add(className)
 	vue.SetData(classKey, classList)
 	hasContent = True
+	Return Me
+End Sub
+
+Sub BindClass(className As String) As VMElement
+	AddDynamicClass(className)
 	Return Me
 End Sub
 

@@ -373,6 +373,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMElement,AddStyle,1445,6,VMElement,AddAttr,1438,6,VMElement,AddToParent,1433,6,VMElement,Class_Globals,51,0,VMElement,SetActiveClass,136,0,VMElement,SetHideOnLeave,137,0,BANanoShared,LoremIpsum,384,0,VMElement,Initialize,123,0,BANanoVM,CreateAnchor,3234,0,BANanoVM,LoremIpsum,3237,3,Main,Process_Globals,12,0
+NavigationStack=VMContainer,Class_Globals,54,6,VMContainer,Initialize,84,0,VMContainer,ToString,1828,0,VMContainer,AddControl1,1822,0,BANanoVue,Class_Globals,115,4,BANanoVue,Initialize,545,1,VMElement,Class_Globals,15,0,VMElement,Initialize,100,2,Main,Process_Globals,11,0,VMComponent,Initialize,48,0
 SelectedBuild=0
 VisibleModules=
