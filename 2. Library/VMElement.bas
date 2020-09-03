@@ -21,6 +21,8 @@ Sub Class_Globals
 	Private bUsesRequired As Boolean
 	Private bUsedDisabled As Boolean
 	Private bUsesShow As Boolean
+	Private bUsesVModel As Boolean
+	Private bUsesClass As Boolean
 	Public ErrorMessage As String
 	
 	'
@@ -92,6 +94,8 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	bUsedDisabled = False
 	bUsesShow = False
 	CenterOnParent = False
+	bUsesVModel = False
+	bUsesClass = False
 	vmodel = ""
 	
 	showKey = $"${ID}show"$
@@ -860,6 +864,7 @@ Sub AddDynamicClass(className As String) As VMElement
 	If cpos = -1 Then classList.Add(className)
 	vue.SetData(classKey, classList)
 	hasContent = True
+	bUsesClass = True
 	Return Me
 End Sub
 
@@ -876,6 +881,7 @@ Sub AddClassDynamic(className As String) As VMElement
 	If cpos = -1 Then classList.Add(className)
 	vue.SetData(classKey, classList)
 	hasContent = True
+	bUsesClass = True
 	Return Me
 End Sub
 
@@ -886,6 +892,7 @@ Sub RemoveClassDynamic(className As String) As VMElement
 	If cpos <> -1 Then classList.RemoveAt(cpos)
 	vue.SetData(classKey, classList)
 	hasContent = True
+	bUsesClass = True
 	Return Me
 End Sub
 
@@ -897,6 +904,7 @@ Sub RemoveDynamicClass(className As String) As VMElement
 	If cpos <> -1 Then classList.RemoveAt(cpos)
 	vue.SetData(classKey, classList)
 	hasContent = True
+	bUsesClass = True
 	Return Me
 End Sub
 
@@ -1045,6 +1053,10 @@ Sub SetAttr(m As Map) As VMElement
 			bUsesStyles = True
 		Case "v-show"
 			bUsesShow = True
+		Case "v-model"
+			bUsesVModel = True
+		Case ":class"
+			bUsesClass = True
 		End Select
 		Element.SetAttr(k, v)
 	Next
@@ -1115,6 +1127,7 @@ Sub SetVModel(k As String) As VMElement
 		vue.SetData(k, Null)
 	End If
 	Element.SetAttrSingle("v-model", k)
+	bUsesVModel = True
 	Return Me
 End Sub
 
@@ -1169,11 +1182,21 @@ Sub ToString As String
 		RemoveAttr(":disabled")
 	End If
 	If bUsesShow = False Then
+		RemoveAttr("v-show")
 		vue.RemoveData(showKey)		
 	End If
-	If classList.Size > 0 Then
+	If bUsesVModel = False Then
+		RemoveAttr("v-model")
+	End If
+	If classList.Size = 0 Then
+		bUsesClass = False
+	Else
 		vue.SetData(classKey, classList)
 		SetAttrSingle(":class", classKey)
+		bUsesClass = True
+	End If
+	If bUsesClass = False Then
+		RemoveAttr(":class")
 	End If
 	If DesignMode Then
 		RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
@@ -1181,6 +1204,18 @@ Sub ToString As String
 	'save the template
 	Template = Element.tostring
 	Return Template
+End Sub
+
+Sub RemoveVShow As VMElement
+	RemoveAttr("v-show")
+	bUsesShow = False
+	Return Me
+End Sub
+
+Sub RemoveVModel As VMElement
+	RemoveAttr("v-show")
+	bUsesVModel = False
+	Return Me
 End Sub
 
 'remove mutliple attributes

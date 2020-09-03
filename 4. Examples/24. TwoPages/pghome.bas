@@ -22,11 +22,8 @@ Sub Initialize
 	'create a container
 	Dim homecont As VMContainer
 	homecont.Initialize(vue, "homecont", Me)
+	homecont.UseVShow = False
 	homecont.AddRows(1).AddColumns12
-	'IMPORTANT: bind v-show directive of the container to component
-	home.ShowElement(homecont.ID)
-	home.ShowElement("homecontr1")
-	home.ShowElement("homecontr1c1")
 	'build the HTLML content of the page
 	Dim homeh1 As VMLabel = vm.CreateH1("").SetText("This is the home page...")
 	homeh1.AddToContainer(homecont, 1, 1)

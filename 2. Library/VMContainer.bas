@@ -59,6 +59,7 @@ Sub Class_Globals
 	Private cStatic As Boolean
 	Public HasContent As Boolean
 	Public bindings As Map
+	Public UseVShow As Boolean
 End Sub
 
 'initialize the Container
@@ -104,6 +105,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ShowMatrix = False
 	NoGutters = False
 	cStatic = True
+	UseVShow = True
 	Return Me
 End Sub
 
@@ -1726,9 +1728,11 @@ private Sub BuildRow(row As GridRow) As String
 					Dim lst As List = Components.Get(cellKey)
 					tColumn.AddContentList(lst)
 				End If
+				If UseVShow = False Then tColumn.Col.RemoveVShow
 				tRow.AddComponent(tColumn.ToString)
 			Next
 		Next
+		If UseVShow = False Then tRow.Row.RemoveVShow
 		Dim strRow As String = tRow.tostring
 		sb.Append(strRow)
 	Next
@@ -1752,7 +1756,7 @@ Sub AddComponent(rowPos As Int, colPos As Int, elHTML As String)
 		lst.Add(elHTML)
 		Components.Put(cellKey,lst)
 	End If
-	hascontent = True
+	HasContent = True
 End Sub
 
 'backward compatibility
@@ -1851,6 +1855,7 @@ Sub ToString As String
 	Next
 	'set the result of the container
 	SetText(sb.tostring)
+	If UseVShow = False Then Container.RemoveVShow
 	Return Container.ToString
 End Sub
 

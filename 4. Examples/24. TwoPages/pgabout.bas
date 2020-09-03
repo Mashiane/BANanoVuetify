@@ -21,12 +21,9 @@ Sub Initialize
 	
 	'create a container
 	Dim aboutcont As VMContainer
-	aboutcont.Initialize(vue, "aboutcont", Me).Show
+	aboutcont.Initialize(vue, "aboutcont", Me)
+	aboutcont.UseVShow = False
 	aboutcont.AddRows(1).AddColumns12
-	'IMPORTANT: bind v-show directive of the container to component
-	about.ShowElement(aboutcont.ID)
-	about.ShowElement("aboutcontr1")
-	about.ShowElement("aboutcontr1c1")
 	'build the HTLML content of the page
 	Dim abouth1 As VMLabel = vm.CreateH1("").SetText("This is the about page...")
 	abouth1.AddToContainer(aboutcont, 1, 1)
