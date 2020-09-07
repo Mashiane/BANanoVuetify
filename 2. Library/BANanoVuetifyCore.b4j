@@ -264,7 +264,7 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.31"
+	Public Version As String = "4.32"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -286,13 +286,15 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'2. remove links that point to interweb above
 	'3. uncomment lines from below
 	
+	
+		
 	BANano.Header.AddCSSFile("fontawesome.min.css")
 	BANano.Header.AddCSSFile("roboto.min.css")
 	BANano.Header.AddCSSFile("market.min.css")
 	BANano.Header.AddCSSFile("materialfont.min.css")
 	BANano.header.AddCSSFile("materialdesignicons.min.css")
 	BANano.Header.AddCSSFile("vuetify.min.css")
-	
+		
 	BANano.Header.AddJavascriptFile("vue.min.js")
 	BANano.Header.AddJavascriptFile("vuetify.min.js")
 	BANano.Header.AddJavascriptFile("vue-router.min.js")

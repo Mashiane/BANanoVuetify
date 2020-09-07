@@ -375,6 +375,308 @@ Sub UseBlankTemplate
 	UsesNotification = False
 End Sub
 
+Sub VRow(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-row")
+	Return elx
+End Sub
+
+Sub VDialog(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-dialog")
+	Return elx
+End Sub
+
+Sub VCardActions(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-card-actions")
+	Return elx
+End Sub
+
+Sub Form(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("form")
+	Return elx
+End Sub
+
+Sub VListItemGroup(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-group")
+	Return elx
+End Sub
+
+Sub VListItemActionText(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-action-text")
+	Return elx
+End Sub
+
+
+Sub VTemplate(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("template")
+	Return elx
+End Sub
+
+Sub VContainer(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-container")
+	Return elx
+End Sub
+
+Sub VCard(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-card")
+	Return elx
+End Sub
+
+Sub VCardText(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-card-text")
+	Return elx
+End Sub
+
+Sub VCardTitle(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-card-title")
+	Return elx
+End Sub
+
+Sub VCol(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-col")
+	Return elx
+End Sub
+
+Sub VSelect(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-select")
+	Return elx
+End Sub
+
+
+Sub VAutoComplete(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-autocomplete")
+	Return elx
+End Sub
+
+
+Sub VProgressLinear(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-progress-linear")
+	Return elx
+End Sub
+
+
+Sub VToolBar(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-toolbar")
+	Return elx
+End Sub
+
+Sub VSubHeader(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-subheader")
+	Return elx
+End Sub
+
+Sub VCheckBox(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("<v-checkbox")
+	Return elx
+End Sub
+
+Sub VListItemSubTitle(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-subtitle")
+	Return elx
+End Sub
+
+
+Sub VImg(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-img")
+	Return elx
+End Sub
+
+
+Sub VToolTip(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-tooltip")
+	Return elx
+End Sub
+
+Sub VMenu(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-menu")
+	Return elx
+End Sub
+
+
+Sub VToolbarItems(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-toolbar-items")
+	Return elx
+End Sub
+
+
+Sub VRadio(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-radio")
+	Return elx
+End Sub
+
+Sub VRadioGroup(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-radio-group")
+	Return elx
+End Sub
+
+Sub VTextField(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-text-field")
+	Return elx
+End Sub
+
+Sub VAppBar(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-app-bar").AddAttr("app", True)
+	Return elx
+End Sub
+
+Sub VNavigationDrawer(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-navigation-drawer")
+	Return elx
+End Sub
+
+Sub VAppBarNavIcon(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-app-bar-nav-icon")
+	Return elx
+End Sub
+
+Sub VListItem(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item")
+	Return elx
+End Sub
+
+Sub VListItemAvatar(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-avatar")
+	Return elx
+End Sub
+
+Sub VListItemContent(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-content")
+	Return elx
+End Sub
+
+Sub VListItemTitle(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-title")
+	Return elx
+End Sub
+
+Sub VListItemAction(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list-item-action")
+	Return elx
+End Sub
+
+Sub VSpacer(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-spacer")
+	Return elx
+End Sub
+
+Sub VDivider(elid As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elid)
+	elx.SetTag("v-divider")
+	Return elx
+End Sub
+
+Sub VList(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-list")
+	Return elx
+End Sub
+
+Sub VBtn(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-btn")
+	Return elx
+End Sub
+
+Sub VToolbarTitle(tID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, tID)
+	elx.SetTag("v-toolbar-title")
+	Return elx
+End Sub
+
+Sub VAvatar(tID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, tID)
+	elx.SetTag("v-avatar")
+	Return elx
+End Sub
+
+Sub VIcon(tID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, tID)
+	elx.SetTag("v-icon")
+	Return elx
+End Sub
+
+Sub Img(tID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, tID)
+	elx.SetTag("img")
+	Return elx
+End Sub
+
 Sub SetUseRouter(b As Boolean) As BANanoVM
 	bUseRouter = b
 	Return Me
@@ -1249,9 +1551,9 @@ Sub JSONPretty(m As Object) As String
 	Return vue.JSONPretty(m)
 End Sub
 
-Sub CreateImage(img As String, eventHandler As Object) As VMImage
+Sub CreateImage(sImg As String, eventHandler As Object) As VMImage
 	Dim el As VMImage
-	el.Initialize(vue, img, eventHandler)
+	el.Initialize(vue, sImg, eventHandler)
 	el.Image.typeof = "image"
 	Return el
 End Sub

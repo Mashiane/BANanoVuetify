@@ -1040,6 +1040,18 @@ Sub SetOnKeydown(eventHandler As Object, methodName As String) As VMTextField
 	Return Me
 End Sub
 
+Sub SetOnKeydownEnter(eventHandler As Object, methodName As String) As VMTextField
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	SetAttr(CreateMap("@keydown.enter": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+
 '
 Sub SetOnMousedown(methodName As String) As VMTextField
 	methodName = methodName.tolowercase

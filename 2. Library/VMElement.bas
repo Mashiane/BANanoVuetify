@@ -137,8 +137,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Return Me
 End Sub
 
-
-
 'active class for router links
 Sub SetActiveClass(sClass As String) As VMElement
 	SetAttrSingle("active-class", sClass)
@@ -238,6 +236,24 @@ Sub SetDeviceSizes(sSizeSmall As String, sSizeMedium As String, sSizeLarge As St
 	SM = sSizeMedium
 	SL = sSizeLarge
 	SX = sSizeXLarge
+	Return Me
+End Sub
+
+'set attribute sizes
+Sub AddSizes(sSizeSmall As String, sSizeMedium As String, sSizeLarge As String, sSizeXLarge As String) As VMElement
+	AddAttr("sm", sSizeSmall)
+	AddAttr("xl", sSizeXLarge)
+	AddAttr("md", sSizeMedium)
+	AddAttr("lg", sSizeLarge)
+	Return Me
+End Sub
+
+'set attribute offsets
+Sub AddOffsets(sOffsetSmall As String, sOffsetMedium As String,sOffsetLarge As String,sOffsetXLarge As String) As VMElement
+	AddAttr("offset-sm", sOffsetSmall)
+	AddAttr("offset-xl", sOffsetXLarge)
+	AddAttr("offset-md", sOffsetMedium)
+	AddAttr("offset-lg", sOffsetLarge)
 	Return Me
 End Sub
 
@@ -1497,5 +1513,17 @@ End Sub
 
 Sub AddStyle(styleName As String, styleValue As String) As VMElement
 	SetStyleSingle(styleName, styleValue)
+	Return Me
+End Sub
+
+
+Sub SetOnKeydownEnter(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	SetAttr(CreateMap("@keydown.enter": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub

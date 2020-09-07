@@ -13,7 +13,6 @@ Sub Class_Globals
 	Public filters As Map
 	Public ShowWarnings As Boolean
 	Public data As Map
-	'Public store As Map
 	Public el As BANanoObject
 	Public refs As BANanoObject
 	Public emit As BANanoObject
@@ -117,8 +116,8 @@ Sub Class_Globals
 	Public Errors As Map
 	Public Position As Map
 	Public Module As Object
-	'Public store As BANanoObject
-	'Public state As Map
+	Public store As BANanoObject
+	Public state As Map
 	Public bindings As Map
 End Sub
 
@@ -147,7 +146,7 @@ Public Sub Initialize(EventHandler As Object)
 	routes.Initialize
 	'
 	'***use a global prototype
-	'state.Initialize
+	state.Initialize
 		
 	Position.initialize
 	Position.Put("static","static")
@@ -698,73 +697,73 @@ End Sub
         }; 
 #End If
 
-'Sub SetDataGlobal(prop As String, value As String) As BANanoVue
-'	prop = prop.ToLowerCase
-'	state.Put(prop, value)
-'	'
-'	Try
-'		Dim bo As BANanoObject = store.GetField(prop)
-'		If BANAno.IsNull(bo) Then Return Me
-'		If BANAno.IsUndefined(bo) Then Return Me
-'		'update the store
-'		store.GetField(prop).SetField(prop, value)
-'	Catch
-'		Log($"Error - VueApp.SetDataGlobal: ${prop}.${value}"$)
-'	End Try
-'	'
-'	'computed is not set
-'	If computed.ContainsKey(prop) = False Then
-'		Dim cb As BANanoObject = BANAno.CallBackExtra(Me, "getglobalstate", Null, Array(prop))
-'		computed.Put(prop, cb.Result)
-'	End If
-'	Return Me
-'End Sub
+Sub SetDataGlobal(prop As String, value As Object) As BANanoVue
+	prop = prop.ToLowerCase
+	state.Put(prop, value)
+	'
+	Try
+		Dim bo As BANanoObject = store.GetField(prop)
+		If BANAno.IsNull(bo) Then Return Me
+		If BANAno.IsUndefined(bo) Then Return Me
+		'update the store
+		store.GetField(prop).SetField(prop, value)
+	Catch
+		Log($"Error - VueApp.SetDataGlobal: ${prop}.${value}"$)
+	End Try
+	'
+	'computed is not set
+	If computed.ContainsKey(prop) = False Then
+		Dim cb As BANanoObject = BANAno.CallBackExtra(Me, "getglobalstate", Null, Array(prop))
+		computed.Put(prop, cb.Result)
+	End If
+	Return Me
+End Sub
 '
-''read the value of the prop we need
-'private Sub getglobalstate(prop As String) As Object
-'	prop = prop.tolowercase
-'	Dim rslt As Object = GetDataGlobal(prop)
-'	Return rslt
-'End Sub
-'
-'Sub GetDataGlobal(prop As String) As Object
-'	prop = prop.tolowercase
-'	Dim rslt As Object
-'	rslt = state.GetDefault(prop, Null)
-'	Try
-'		Dim bo As BANanoObject = store.GetField(prop)
-'		If BANAno.IsNull(bo) Then Return Me
-'		If BANAno.IsUndefined(bo) Then Return Me
-'		rslt = store.GetField(prop)
-'	Catch
-'		Log($"Error - VueApp.GetDataGlobal: ${prop}"$)
-'	End Try
-'	Return rslt
-'End Sub
-'
-''increment state
-'Sub IncrementGlobal(prop As String, addVal As Int)
-'	prop = prop.tolowercase
-'	'get the value of the coun
-'	Dim cc As Int = GetDataGlobal(prop)
-'	cc = BANAno.parseInt(cc)
-'	'increment by 1
-'	cc = cc + addVal
-'	'save back to state
-'	SetDataGlobal(prop, cc)
-'End Sub
-'
-''decremenent state
-'Sub DecrementGlobal(prop As String, addVal As Int)
-'	prop = prop.tolowercase
-'	'get the value of the coun
-'	Dim cc As Int = GetDataGlobal(prop)
-'	cc = BANAno.parseInt(cc)
-'	'decrement by 1
-'	cc = cc - addVal
-'	'save back to state
-'	SetDataGlobal(prop, cc)
-'End Sub
+'read the value of the prop we need
+private Sub getglobalstate(prop As String) As Object
+	prop = prop.tolowercase
+	Dim rslt As Object = GetDataGlobal(prop)
+	Return rslt
+End Sub
+
+Sub GetDataGlobal(prop As String) As Object
+	prop = prop.tolowercase
+	Dim rslt As Object
+	rslt = state.GetDefault(prop, Null)
+	Try
+		Dim bo As BANanoObject = store.GetField(prop)
+		If BANAno.IsNull(bo) Then Return Me
+		If BANAno.IsUndefined(bo) Then Return Me
+		rslt = store.GetField(prop)
+	Catch
+		Log($"Error - VueApp.GetDataGlobal: ${prop}"$)
+	End Try
+	Return rslt
+End Sub
+
+'increment state
+Sub IncrementGlobal(prop As String, addVal As Int)
+	prop = prop.tolowercase
+	'get the value of the coun
+	Dim cc As Int = GetDataGlobal(prop)
+	cc = BANAno.parseInt(cc)
+	'increment by 1
+	cc = cc + addVal
+	'save back to state
+	SetDataGlobal(prop, cc)
+End Sub
+
+'decremenent state
+Sub DecrementGlobal(prop As String, addVal As Int)
+	prop = prop.tolowercase
+	'get the value of the coun
+	Dim cc As Int = GetDataGlobal(prop)
+	cc = BANAno.parseInt(cc)
+	'decrement by 1
+	cc = cc - addVal
+	'save back to state
+	SetDataGlobal(prop, cc)
+End Sub
 
 Sub CorrectName(oldName As String) As String
 	Dim strName As String = StringBreakAtUpperCase(oldName)
@@ -1222,6 +1221,17 @@ Sub StateIncrement(itemName As String) As Int
 	BOVue.GetField(itemName)
 	BOVue.SetField(itemName, intX)
 	Return intX
+End Sub
+
+'set state value 
+Sub StateSet(key As String, value As Object)
+	BOVue.RunMethod("set", Array(key, value))
+End Sub
+
+'get state value 
+Sub StateGet(key As String) As Object
+	Dim rslt As Object = BOVue.RunMethod("get", Array(key))
+	Return rslt
 End Sub
 
 Sub StateDecrement(itemName As String) As Int
@@ -3345,8 +3355,8 @@ Sub UX()
 	If watches.Size > 0 Then Options.Put("watch", watches)
 	If components.Size > 0 Then Options.Put("components", components)
 	'
-	'store = BOVue.RunMethod("observable", Array(state))
-	'BOVue.GetField("prototype").SetField("$store", store)
+	store = BOVue.RunMethod("observable", Array(state))
+	BOVue.GetField("prototype").SetField("$store", store)
 	Options.Put("template", GetTemplate)
 	BOVue.Initialize2("Vue", Options)
 	'get the state
