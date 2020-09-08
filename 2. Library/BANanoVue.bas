@@ -119,6 +119,7 @@ Sub Class_Globals
 	Public store As BANanoObject
 	Public state As Map
 	Public bindings As Map
+	Public Router As BANanoObject
 End Sub
 
 'initialize view
@@ -3343,9 +3344,8 @@ Sub UX()
 		Dim ropt As Map = CreateMap()
 		'ropt.Put("mode", "history") 
 		ropt.Put("routes", routes)
-		Dim router As BANanoObject
-		router.Initialize2("VueRouter", Array(ropt))
-		Options.Put("router", router)
+		Router.Initialize2("VueRouter", Array(ropt))
+		Options.Put("router", Router)
 	End If
 	Options.Put("el", "#app")
 	If data.Size > 0 Then Options.put("data", data)
@@ -3369,7 +3369,16 @@ Sub UX()
 	el = BOVue.GetField(elKey)
 	Dim emitKey As String = "$emit"
 	emit = BOVue.GetField(emitKey)
-	'enable data to be available globally
+	Dim srouter As String = "$router"
+	Router = BOVue.GetField(srouter)
+End Sub
+
+'Use router To navigate
+Sub NavigateTo(sPath As String)
+	sPath = sPath.tolowercase
+	Dim namem As Map = CreateMap()
+	namem.put("path", sPath)
+	Router.RunMethod("push", Array(namem))
 End Sub
 
 Sub ForceUpdate

@@ -375,6 +375,173 @@ Sub UseBlankTemplate
 	UsesNotification = False
 End Sub
 
+Sub H1(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("h1")
+	Return elx
+End Sub
+
+Sub H2(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("h2")
+	Return elx
+End Sub
+
+Sub H3(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("h3")
+	Return elx
+End Sub
+
+Sub H4(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("h4")
+	Return elx
+End Sub
+
+
+Sub H5(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("h5")
+	Return elx
+End Sub
+
+
+Sub H6(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("h6")
+	Return elx
+End Sub
+
+
+Sub Div(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("div")
+	Return elx
+End Sub
+
+Sub Span(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("span")
+	Return elx
+End Sub
+
+Sub VSnackBar(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-snackbar")
+	Return elx
+End Sub
+
+Sub A(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("a")
+	Return elx
+End Sub
+
+Sub P(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("p")
+	Return elx
+End Sub
+
+Sub VRating(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-rating")
+	Return elx
+End Sub
+
+Sub VCarouselItem(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-carousel-item")
+	Return elx
+End Sub
+
+
+Sub VCarousel(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-carousel")
+	Return elx
+End Sub
+
+Sub VResponsive(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-responsive")
+	Return elx
+End Sub
+
+Sub VBottomNav(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-bottom-nav")
+	Return elx
+End Sub
+
+Sub VStepper(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-stepper")
+	Return elx
+End Sub
+
+Sub VStepperHeader(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-stepper-header")
+	Return elx
+End Sub
+
+
+Sub VStepperStep(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-stepper-step")
+	Return elx
+End Sub
+
+Sub VTimeline(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-timeline")
+	Return elx
+End Sub
+
+Sub VTimelineItem(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-timeline-item")
+	Return elx
+End Sub
+
+
+Sub VStepperItems(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-stepper-items")
+	Return elx
+End Sub
+
+Sub VStepperContent(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-stepper-content")
+	Return elx
+End Sub
+
 Sub VRow(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
@@ -393,6 +560,13 @@ Sub VCardActions(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
 	elx.SetTag("v-card-actions")
+	Return elx
+End Sub
+
+Sub VTooltip(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-tooltip")
 	Return elx
 End Sub
 
@@ -520,13 +694,6 @@ Sub VImg(elID As String) As VMElement
 	Return elx
 End Sub
 
-
-Sub VToolTip(elID As String) As VMElement
-	Dim elx As VMElement
-	elx.Initialize(vue, elID)
-	elx.SetTag("v-tooltip")
-	Return elx
-End Sub
 
 Sub VMenu(elID As String) As VMElement
 	Dim elx As VMElement

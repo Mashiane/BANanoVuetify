@@ -1516,6 +1516,23 @@ Sub AddStyle(styleName As String, styleValue As String) As VMElement
 	Return Me
 End Sub
 
+'add multiple styles
+Sub AddStyles(m As Map) As VMElement
+	For Each k As String In m.Keys
+		Dim v As String = m.Get(k)
+		AddStyle(k,v)
+	Next
+	Return Me
+End Sub
+
+'add multiple attributes
+Sub AddAttributes(m As Map) As VMElement
+	For Each k As String In m.Keys
+		Dim v As Object = m.Get(k)
+		SetAttrSingle(k, v)
+	Next
+	Return Me
+End Sub
 
 Sub SetOnKeydownEnter(eventHandler As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
