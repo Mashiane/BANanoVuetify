@@ -293,10 +293,13 @@ Sub onmessageschanges(snapshot As Map)
 	vue.setdataglobal("messages", recs)
 End Sub
 
-Sub newDate As Object
+Sub newDate As String
 	Dim obj As BANanoObject
-	obj.Initialize2("Date", Null)
-	Return obj.Result 
+	Dim sdate As String = obj.Initialize2("Date", Null).RunMethod("toISOString", Null).Result
+	'
+	Dim dateX As BANanoObject
+	Dim res As String = dateX.Initialize4("moment", sdate).RunMethod("format", Array("LLL")).Result
+	Return res
 End Sub
 
 'reset some stuff

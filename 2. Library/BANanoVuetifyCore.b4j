@@ -298,6 +298,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("vue.min.js")
 	BANano.Header.AddJavascriptFile("vuetify.min.js")
 	BANano.Header.AddJavascriptFile("vue-router.min.js")
+	BANano.Header.AddJavascriptFile("moment.js")
 	
 	' start the build
 	#if release

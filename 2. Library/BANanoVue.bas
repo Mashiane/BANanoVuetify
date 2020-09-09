@@ -1149,12 +1149,12 @@ Sub getElementById(sid As String) As BANanoObject
 	Return el
 End Sub
 '
-'Sub DateDiff(currentDate As String, otherDate As String) As Int
-'	Dim dateS, dateE As BANanoObject
-'	dateS.Initialize4("moment", currentDate)
-'	dateE.Initialize4("moment", otherDate)
-'	Return dateS.RunMethod("diff", Array(dateE, "days"))
-'End Sub
+Sub DateDiff(currentDate As String, otherDate As String) As Int
+	Dim dateS, dateE As BANanoObject
+	dateS.Initialize4("moment", currentDate)
+	dateE.Initialize4("moment", otherDate)
+	Return dateS.RunMethod("diff", Array(dateE, "days"))
+End Sub
 
 Sub RemoveData(key As String) As BANanoVue
 	key = key.ToLowerCase
