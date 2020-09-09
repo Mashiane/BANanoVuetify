@@ -31,10 +31,11 @@ Library5=bananofirestore
 Module1=pgabout
 Module2=pghome
 Module3=pgIndex
-Module4=pgSignIn
+Module4=pgRegister
+Module5=pgSignIn
 NumberOfFiles=11
 NumberOfLibraries=5
-NumberOfModules=4
+NumberOfModules=5
 Version=8.5
 @EndOfDesignText@
 #Region Project Attributes 

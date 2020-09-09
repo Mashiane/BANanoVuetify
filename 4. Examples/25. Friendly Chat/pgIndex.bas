@@ -8,7 +8,7 @@ Version=8.5
 Sub Process_Globals
 	Public vm As BANanoVM
 	Public vue As BANanoVue   'ignore
-	Private fb As BANanoFireStoreDB
+	Public fb As BANanoFireStoreDB
 	Private BANano As BANano
 End Sub
 
@@ -21,6 +21,7 @@ Sub Init
 	'
 	BuildDrawer
 	BuildNavBar
+	BuildSnackBar
 	'
 	'connect to firebase
 	fb.Initialize
@@ -46,10 +47,32 @@ Sub Init
 	pghome.Initialize
 	pgabout.Initialize
 	pgSignIn.Initialize
+	pgRegister.Initialize
 	'
 	vue.SetDataGlobal("showmessages", False)
 	'
 	vm.ux
+End Sub
+
+Sub BuildSnackBar
+	vue.SetDataGlobal("snackshow", False)
+	vue.SetDataGlobal("snackmsg", "")
+	vue.SetDataGlobal("snackcolor", "")
+	Dim snack As VMElement = vm.VSnackBar("").AddAttr("v-model", "$store.snackshow").SetText("{{ $store.snackmsg }}")
+	snack.AddAttributes(CreateMap(":multi-line": True, "app":True,"centered":True,":color":"$store.snackcolor",":shaped":True))
+	vm.VApp.AddElement(snack)
+End Sub
+
+Sub ShowSnackBarError(msg As String)
+	vue.SetDataGlobal("snackshow", True)
+	vue.SetDataGlobal("snackmsg",msg)
+	vue.SetDataGlobal("snackcolor", "error")
+End Sub
+
+Sub ShowSnackBarSuccess(msg As String)
+	vue.SetDataGlobal("snackshow", True)
+	vue.SetDataGlobal("snackmsg",msg)
+	vue.SetDataGlobal("snackcolor", "success")
 End Sub
 
 'if state is changed
@@ -67,11 +90,14 @@ Sub onAuthStateChanged(user As Map)
 	Dim sphotoURL As String = activeUser.get("photoURL")
 	Dim suid As String = activeUser.get("uid")
 	'update some states
-	vm.Setdata("userximage", sphotoURL)
-	vm.SetData("userxalt", sdisplayName)
-	vm.SetData("displayname", sdisplayName)
+	If sphotoURL = "" Then sphotoURL = "./assets/avatar.png"
+	If sdisplayName = "" Then sdisplayName = semail
+	'
+	vue.SetdataGlobal("userximage", sphotoURL)
+	vue.SetdataGlobal("userxalt", sdisplayName)
+	vue.SetdataGlobal("displayname", sdisplayName)
 	vue.setdataglobal("signedin", True)
-	vm.setdata("user", activeUser)
+	vue.SetdataGlobal("user", activeUser)
 	vue.setdataglobal("msgmessage", False)
 	'
 	vm.CallMethod("LoadMessages")
@@ -131,8 +157,8 @@ Sub BuildNavBar
 	'create an image
 	Dim img As VMElement = vm.img("userximg")
 	'bind the image source to a state
-	img.AddAttr(":src", "userximage")
-	img.AddAttr(":alt", "userxalt")
+	img.AddAttr(":src", "$store.userximage")
+	img.AddAttr(":alt", "$store.userxalt")
 	
 	'add image to avatar
 	img.AddToParent(avatar)
@@ -140,7 +166,7 @@ Sub BuildNavBar
 	avatar.AddToParent(appBar)
 	
 	'create the toolbar title
-	Dim title As VMElement = vm.VToolbarTitle("tbltitle").SetText("Friendly Chat {{ displayname }}")
+	Dim title As VMElement = vm.VToolbarTitle("tbltitle").SetText("Friendly Chat {{ $store.displayname }}")
 	title.AddClass("headline").AddClass("white--text")
 	title.AddClass("hidden-sm-and-down")
 	'add title To the toolbar
@@ -154,13 +180,29 @@ Sub BuildNavBar
 	btnLogin.AddAttr("v-if", "!$store.signedin")
 	btnLogin.AddAttr("@click", "login")
 	appBar.AddElement(btnLogin)
+	'add vertical divider
+	appBar.AddVerticalDivider("mx-2")
+	'register
+	Dim btnRegister As VMElement = vm.VBtn("btnRegister").AddAttr("text", True).SetText("Register").AddClass("white--text")
+	btnRegister.AddAttr("v-if", "!$store.signedin")
+	btnRegister.AddAttr("@click", "register")
+	appBar.AddElement(btnRegister)
+	'add vertical divider
+	appBar.AddVerticalDivider("mx-2")
+	
 	'
-	Dim btnSignIn As VMElement = vm.VBtn("btnSignIn").AddAttr("text", True).SetText("Sign In").AddClass("white--text")
+	Dim btnSignIn As VMElement = vm.VBtn("btnSignIn").AddAttr("text", True).AddClass("white--text")
 	'show if signin = false
 	btnSignIn.AddAttr("v-if", "!$store.signedin")
 	btnSignIn.AddAttr("@click", "signin")
+	'add icon to button
+	Dim signicon As VMElement = vm.VIcon("").SetText("mdi-google")
+	btnSignIn.AddElement(signicon)
+	
 	'add button to appbar
 	btnSignIn.AddToParent(appBar)
+	'add vertical divider
+	appBar.AddVerticalDivider("mx-2")
 	
 	Dim btnSignOut As VMElement = vm.VBtn("btnSignOut").AddAttr("text", True).SetText("Sign Out").AddClass("white--text")
 	'show if we are signed in
@@ -182,8 +224,13 @@ Sub BuildNavBar
 	vm.SetMethod(Me, "toggledrawer")
 	vm.SetMethod(Me, "addmessage")
 	vm.SetMethod(Me, "login")
+	vm.SetMethod(Me, "register")
 	'initialize states
 	reset
+End Sub
+
+Sub register
+	vue.NavigateTo("/register")
 End Sub
 
 Sub login
@@ -197,7 +244,7 @@ End Sub
 
 'add the message from this user
 Sub AddMessage(messageText As String)
-	Dim activeUser As Map = vm.GetData("user")
+	Dim activeUser As Map = vue.GetDataGlobal("user")
 	If BANano.isnull(activeUser) Or BANano.IsUndefined(activeUser) Then 
 		'user is not logged in
 		vue.CallMethod("reset")
@@ -254,14 +301,19 @@ End Sub
 
 'reset some stuff
 Sub reset
-	vm.Setdata("userximage", "./assets/avatar.png")
-	vm.SetData("userxalt", "User")
-	vm.SetData("displayname", "")
+	vue.SetdataGlobal("userximage", "./assets/avatar.png")
+	vue.SetdataGlobal("userxalt", "User")
+	vue.SetdataGlobal("displayname", "")
 	vue.setdataglobal("signedin", False)
-	vm.setdata("user", vue.NewMap)
+	vue.SetdataGlobal("user", vue.NewMap)
 	vue.Setdataglobal("messages", vue.newlist)
 	vue.setdataglobal("msgmessage", True)
 	vue.SetDataGlobal("message", "")
+	Try
+		vue.NavigateTo("/")
+	Catch
+		Log(LastException)
+	End Try
 End Sub
 
 'the callback to sign out
@@ -271,6 +323,10 @@ End Sub
 
 'the callback to sign in
 Sub signin(e As BANanoEvent)
-	vue.NavigateTo("/")
+	Try
+		vue.NavigateTo("/")
+	Catch
+		Log(LastException)
+	End Try
 	fb.signInWithPopupGoogle
 End Sub

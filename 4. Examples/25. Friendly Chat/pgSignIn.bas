@@ -97,7 +97,25 @@ End Sub
 
 'define the callback
 Sub loginx(e As BANanoEvent)
+	'get the user details
 	Dim userdata As Map = signin.getdata("login")
-	Log(userdata)
-	'signin.SetData("loading", True)
+	Dim semail As String = userdata.get("email")
+	Dim spassword As String = userdata.get("password")
+	If semail = "" Or spassword = "" Then Return
+	'show loading
+	signin.SetData("loading", True)
+	'
+	Dim fb As BANanoFireStoreDB = pgIndex.fb
+	'sign in using email and password
+	Dim sres As Map
+	Dim serr As Map
+	Dim signinp As BANanoPromise = fb.signInWithEmailAndPassword(semail, spassword)
+	signinp.Then(sres)
+		signin.SetData("loading", False)
+		vue.NavigateTo("/")
+	signinp.Else(serr)
+		Dim xerror As String = fb.getMessage(serr)
+		signin.SetData("loading", False)
+		pgIndex.ShowSnackBarError(xerror)
+	signinp.end
 End Sub
