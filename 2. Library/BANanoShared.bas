@@ -26,6 +26,14 @@ Sub Process_Globals
     )
 End Sub
 
+'get new date as iso string
+Sub DateTimeNowToISOString As String
+	Dim obj As BANanoObject
+	Dim sdate As String = obj.Initialize2("Date", Null).RunMethod("toISOString", Null).Result
+	Return sdate
+End Sub
+
+
 Sub GetEmailResponse(email As String) As String
 	Dim respM As Map = BANano.FromJson(email)
 	Dim response As String = respM.Get("response")
@@ -2456,6 +2464,16 @@ Sub GetUploadFileName(e As BANanoEvent) As String
 	Return sFileName
 End Sub
 
+'get the file name from file_change(e)
+Sub GetSelectedFileObject(e As BANanoEvent) As FileObject
+	'get selected file(s)
+	Dim fileList As List = GetFileListFromTarget(e)
+	If fileList.size = 0 Then Return Null
+	'get the file to upload
+	Dim fileO As Map = fileList.Get(0)
+	Dim fo As FileObject = GetFileDetails(fileO)
+	Return fo
+End Sub
 
 public Sub GenerateNanoID() As String
 	' for IE

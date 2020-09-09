@@ -322,13 +322,14 @@ Sub SetAttrLoose(loose As String) As VMElement
 End Sub
 
 'apply a theme to an element
-Sub UseTheme(themeName As String)
+Sub UseTheme(themeName As String) As VMElement
 	themeName = themeName.ToLowerCase
 	Dim themes As Map = vue.themes
 	If themes.ContainsKey(themeName) Then
 		Dim sclass As String = themes.Get(themeName)
 		AddClass(sclass)
 	End If
+	Return Me
 End Sub
 
 Sub AddContentList(lst As List) As VMElement
@@ -401,24 +402,28 @@ Sub SetStyleRound(size As String) As VMElement
 	Return Me
 End Sub
 
-Sub EnableItem(elID As String)
+Sub EnableItem(elID As String) As VMElement
 	elID = elID.tolowercase
 	vue.SetStateSingle($"${elID}disabled"$, False)
+	Return Me
 End Sub
 
-Sub DisableItem(elID As String)
+Sub DisableItem(elID As String) As VMElement
 	elID = elID.tolowercase
 	vue.SetStateSingle($"${elID}disabled"$, True)
+	Return Me
 End Sub
 
 
-Sub HideItem(elID As String)
+Sub HideItem(elID As String) As VMElement
 	elID = elID.tolowercase
 	vue.SetStateSingle($"${elID}show"$, False)
+	Return Me
 End Sub
 
-Sub ShowItem(elID As String)
+Sub ShowItem(elID As String) As VMElement
 	vue.SetStateSingle($"${elID}show"$, True)
+	Return Me
 End Sub
 
 Sub SetContainer(b As Boolean) As VMElement
@@ -433,11 +438,12 @@ Sub CenterAlign As VMElement
 	Return Me
 End Sub
 
-Sub AddChildDiv(divID As String, divClass As String)
+Sub AddChildDiv(divID As String, divClass As String) As VMElement
 	Dim childDiv As VMElement
 	childDiv.Initialize(vue, divID).AddClass(divClass)
 	childDiv.SetDesignMode(DesignMode)
 	AddChild(childDiv)
+	Return Me
 End Sub
 
 Sub SetDesignMode(b As Boolean) As VMElement
@@ -856,13 +862,15 @@ Sub BindStyleSingle(prop As String, optm As String) As VMElement
 End Sub
 
 'add break
-Sub AddBR
+Sub AddBR As VMElement
 	SetText("<br>")
+	Return Me
 End Sub
 
 'add hr
-Sub AddHR
+Sub AddHR As VMElement
 	SetText("<hr>")
+	Return Me
 End Sub
 
 'add a class
@@ -992,10 +1000,11 @@ Sub AddChild(child As VMElement) As VMElement
 End Sub
 
 'add children
-Sub AddChildren(children As List)
+Sub AddChildren(children As List) As VMElement
 	For Each childx As VMElement In children
 		AddChild(childx)
 	Next
+	Return Me
 End Sub
 
 'set padding
@@ -1158,14 +1167,16 @@ Sub SetTag(t As String) As VMElement
 	Return Me
 End Sub
 
-Sub AddElements(lst As List)
+Sub AddElements(lst As List) As VMElement
 	For Each li As VMElement In lst
 		SetText(li.tostring)
 	Next
+	Return Me
 End Sub
 
-Sub AddElement(el As VMElement)
+Sub AddElement(el As VMElement) As VMElement
 	SetText(el.ToString)
+	Return Me
 End Sub
 
 Sub SetText(t As String) As VMElement

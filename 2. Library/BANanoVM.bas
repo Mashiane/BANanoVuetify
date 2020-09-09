@@ -382,6 +382,13 @@ Sub H1(elID As String) As VMElement
 	Return elx
 End Sub
 
+Sub VFileInput(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-file-input")
+	Return elx
+End Sub
+
 Sub H2(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
@@ -1001,6 +1008,11 @@ Sub FormValidate(frmID As String)
 End Sub
 
 Sub FormReset(frmID As String)
+	frmID = frmID.tolowercase
+	vue.refs.GetField(frmID).RunMethod("reset", Null)
+End Sub
+
+Sub RefReset(frmID As String)
 	frmID = frmID.tolowercase
 	vue.refs.GetField(frmID).RunMethod("reset", Null)
 End Sub

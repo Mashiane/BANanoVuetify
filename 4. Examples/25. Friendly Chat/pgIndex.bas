@@ -10,6 +10,7 @@ Sub Process_Globals
 	Public vue As BANanoVue   'ignore
 	Public fb As BANanoFireStoreDB
 	Private BANano As BANano
+	Private LOADING_IMAGE_URL As String = "https://www.google.com/images/spin-32.gif?a?sz=100"
 End Sub
 
 Sub Init
@@ -77,6 +78,8 @@ End Sub
 
 'if state is changed
 Sub onAuthStateChanged(user As Map)
+	Log("onAuthStateChanged")
+	Log(user)
 	If BANano.isnull(user) Or BANano.IsUndefined(user) Then
 		'user is not logged in
 		vue.CallMethod("reset")
@@ -226,6 +229,7 @@ Sub BuildNavBar
 	vm.SetMethod(Me, "login")
 	vm.SetMethod(Me, "register")
 	vm.SetMethod(Me, "dateoconv")
+	vm.SetMethod(Me, "addimage")
 	'initialize states
 	reset
 End Sub
@@ -246,21 +250,18 @@ End Sub
 'add the message from this user
 Sub AddMessage(messageText As String)
 	Dim activeUser As Map = vue.GetDataGlobal("user")
-	If BANano.isnull(activeUser) Or BANano.IsUndefined(activeUser) Then 
-		'user is not logged in
-		vue.CallMethod("reset")
-		Return 
-	End If
 	Dim sdisplayName As String = activeUser.get("displayName")
 	Dim semail As String = activeUser.Get("email")
 	Dim sphotoURL As String = activeUser.get("photoURL")
 	Dim suid As String = activeUser.get("uid")
 	'
+	Dim dtNow As String = BANanoShared.DateTimeNowToISOString
 	Dim nm As Map = CreateMap()
 	nm.put("name", sdisplayName)
 	nm.put("text", messageText)
 	nm.put("profilepicurl", sphotoURL)
-	nm.put("timestamp", newDate)
+	nm.put("timestamp", dtNow)
+	nm.put("userid", suid)
 	'add message to messages
 	Dim res As Map
 	Dim err As Map
@@ -269,7 +270,87 @@ Sub AddMessage(messageText As String)
 	nmp.Then(res)
 	vue.setdataglobal("message", "")
 	nmp.Else(err)
+	Dim msg As String = fb.getMessage(err)
+	ShowSnackBarError(msg)
 	nmp.End
+End Sub
+
+'add the message from this user
+Sub AddImage(fo As Map)
+	Dim activeUser As Map = vue.GetDataGlobal("user")
+	Dim sdisplayName As String = activeUser.get("displayName")
+	Dim semail As String = activeUser.Get("email")
+	Dim sphotoURL As String = activeUser.get("photoURL")
+	Dim suid As String = activeUser.get("uid")
+	'
+	Dim dtNow As String = BANanoShared.DateTimeNowToISOString
+	Dim nm As Map = CreateMap()
+	nm.put("name", sdisplayName)
+	nm.put("imageurl", LOADING_IMAGE_URL)
+	nm.put("profilepicurl", sphotoURL)
+	nm.put("timestamp", dtNow)
+	nm.put("userid", suid)
+	'add message to messages
+	Dim msgRef As BANanoObject
+	Dim msgErr As Map
+	Dim nmp As BANanoPromise
+	nmp = fb.collectionAdd("messages", nm)
+	nmp.Then(msgRef)
+	StoragePut(msgRef, fo)
+	nmp.Else(msgErr)
+	Dim msg As String = fb.getMessage(msgErr)
+	ShowSnackBarError(msg)
+	nmp.End
+End Sub
+
+Sub StoragePut(msgRef As BANanoObject, fo As Map)
+	'get the current user id
+	Dim uid As String = fb.getCurrentUID
+	'get the file name
+	Dim fname As String = fo.get("name")
+	'get the message id
+	Dim msgID As String = fb.getID(msgRef)
+	'define the document path
+	Dim filePath As String = $"${uid}/${msgID}/${fname}"$
+	'execute the storing
+	Dim fSnapShot As Map
+	Dim eSnapShot As Map
+	Dim bp As BANanoPromise = fb.StoragePut(filePath, fo)
+	bp.Then(fSnapShot)
+	getDownloadPath(msgRef, fSnapShot)
+	bp.Else(eSnapShot)
+	Dim msg As String = fb.getMessage(eSnapShot)
+	ShowSnackBarError(msg)
+	bp.End 
+End Sub
+
+Sub getDownloadPath(msgRef As BANanoObject, fsnapShot As Map)
+	Dim sStorageURI As String = fb.getStorageURI(fsnapShot)
+	Dim url As Object
+	Dim urlErr As Map
+	Dim bp As BANanoPromise = fb.getDownloadURL(fsnapShot)
+	bp.Then(url)
+	'update the message
+	Dim msgu As Map = CreateMap()
+	msgu.put("imageurl", url)
+	msgu.put("storageuri", sStorageURI)
+	'update the message with the links
+	UpdateMessage(msgRef, msgu)
+	bp.Else(urlErr)
+	Dim emsg As String = fb.getMessage(urlErr)
+	ShowSnackBarError(emsg)
+	bp.End
+End Sub
+
+Sub UpdateMessage(msgRef As BANanoObject, msg As Map)
+	Dim msgDone As Map
+	Dim msgError As Map
+	Dim bp As BANanoPromise = fb.CollectionUpdateRecord(msgRef, msg)
+	bp.Then(msgDone)
+	bp.Else(msgError)
+	Dim emsg As String = fb.getMessage(msgError)
+	ShowSnackBarError(emsg)
+	bp.End
 End Sub
 
 'load 12 messages
@@ -283,6 +364,10 @@ Sub LoadMessages
 End Sub
 
 Sub onmessageschanges(snapshot As Map)
+	'trap each message change
+	'fb.SetOnDocChanges(snapshot, Me, "docChanges")
+	
+	
 	'get document changes
 	Dim recs As List = fb.FromJSON(snapshot)
 	'Dim recs As List = fb.docChanges(snapshot)
@@ -294,12 +379,13 @@ Sub onmessageschanges(snapshot As Map)
 	vue.setdataglobal("messages", recs)
 End Sub
 
-Sub newDate As String
-	Dim obj As BANanoObject
-	Dim sdate As String = obj.Initialize2("Date", Null).RunMethod("toISOString", Null).Result
-	Return sdate
-End Sub
-
+''each record change
+'Sub docChanges(record As Map)
+'	'add message to the top of the list
+'	If fb.IsAdded(record) Then
+'		vue.ListUnshiftGlobal("messages", record)
+'	End If	 
+'End Sub
 
 'reset some stuff
 Sub reset

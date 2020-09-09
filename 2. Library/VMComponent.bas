@@ -18,7 +18,7 @@ Sub Class_Globals
 	Private filters As Map
 	Private opt As Map
 	Private data As Map
-	Private refs As Map
+	Public refs As Map
 	Private props As List
 	Private BANano As BANano   'ignore
 	Public Path As String

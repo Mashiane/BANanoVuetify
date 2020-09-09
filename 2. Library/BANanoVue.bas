@@ -742,6 +742,31 @@ Sub GetDataGlobal(prop As String) As Object
 	Return rslt
 End Sub
 
+'remove list last item
+Sub ListPopGlobal(lstname As String)
+	lstname = lstname.tolowercase
+	store.GetField(lstname).RunMethod("pop", Null)
+End Sub
+
+Sub ListFirstItemGlobal(lstName As String) As Object
+	lstName = lstName.tolowercase
+	Dim lst As List = store.GetField(lstName).result
+	Dim obj As Object = lst.Get(0)
+	Return obj
+End Sub
+
+'add item at end of the list
+Sub ListPushGlobal(listName As String, item As Object)
+	listName = listName.ToLowerCase
+	store.GetField(listName).RunMethod("push", item)
+End Sub
+
+'add item at beginning of list
+Sub ListUnshiftGlobal(lstname As String, obj As Object)
+	lstname = lstname.tolowercase
+	store.GetField(lstname).RunMethod("unshift", obj)
+End Sub
+
 'increment state
 Sub IncrementGlobal(prop As String, addVal As Int)
 	prop = prop.tolowercase
@@ -3045,6 +3070,12 @@ End Sub
 Sub GetFileListFromTarget(e As BANanoEvent) As List
 	Dim files As List = e.OtherField("target").GetField("files").Result
 	Return files
+End Sub
+
+
+Sub RefReset(frmID As String)
+	frmID = frmID.tolowercase
+	refs.GetField(frmID).RunMethod("reset", Null)
 End Sub
 
 Sub CallComputed(methodName As String) As Object
