@@ -60,7 +60,7 @@ Sub Initialize
 	Dim st2 As VMElement = vm.VListItemSubTitle("list2").AddAttr("v-text", "item.text")
 	'
 	Dim lia As VMElement = vm.VListItemAction("lia1")
-	Dim liad As VMElement = vm.VListItemActionText("liad").AddAttr("v-text", "item.timestamp")
+	Dim liad As VMElement = vm.VListItemActionText("liad").AddAttr("v-text", "dateoconv(item.timestamp)")
 	liad.AddToParent(lia)
 	
 	'add the avatar first
@@ -110,10 +110,17 @@ Sub Initialize
 	home.AddElement(chatCard)
 	'
 	home.setmethod(Me, "newmessage")
+	home.Setmethod(Me, "dateoconv")
 	'add the component as a router/page
 	vm.AddRoute(home)
 End Sub
 
+
+Sub DateOconv(sdate As String) As String
+	Dim dateX As BANanoObject
+	Dim res As String = dateX.Initialize4("moment", sdate).RunMethod("format", Array("llll")).Result
+	Return res
+End Sub
 
 Sub newmessage(e As BANanoEvent)
 	'get the message entered

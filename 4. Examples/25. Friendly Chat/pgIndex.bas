@@ -225,6 +225,7 @@ Sub BuildNavBar
 	vm.SetMethod(Me, "addmessage")
 	vm.SetMethod(Me, "login")
 	vm.SetMethod(Me, "register")
+	vm.SetMethod(Me, "dateoconv")
 	'initialize states
 	reset
 End Sub
@@ -296,11 +297,9 @@ End Sub
 Sub newDate As String
 	Dim obj As BANanoObject
 	Dim sdate As String = obj.Initialize2("Date", Null).RunMethod("toISOString", Null).Result
-	'
-	Dim dateX As BANanoObject
-	Dim res As String = dateX.Initialize4("moment", sdate).RunMethod("format", Array("LLL")).Result
-	Return res
+	Return sdate
 End Sub
+
 
 'reset some stuff
 Sub reset
