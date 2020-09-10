@@ -9,6 +9,7 @@ Sub Process_Globals
 	Private signin As VMComponent
 	Private vm As BANanoVM
 	Private vue As BANanoVue
+	Private BANAno As BANano
 End Sub
 
 
@@ -52,17 +53,17 @@ Sub Initialize
 	Dim cform As VMElement = vm.Form("frmsignin")
 	'create email input
 	Dim txtEmail As VMElement = vm.VTextField("txtemail")
-	txtEmail.AddAttributes(CreateMap("append-icon": "person", "name":"email", "label":"Email Address", "type":"text"))
-	txtEmail.AddAttributes(CreateMap("v-model": "login.email"))
-	'txtEmail.AddAttributes(CreateMap( ":error": "error", ":rules": "[emailrules]"))
+	txtEmail.AddAttributes(CreateMap("append-icon": "person", "name":"email", "label":"Email Address", "type":"email"))
+	txtEmail.AddAttributes(CreateMap("v-model": "login.email","required":True,"autocomplete":"off"))
+	txtEmail.AddAttributes(CreateMap(":rules": "emailrules1"))
 	cform.AddElement(txtEmail)
 	'create password input
 	Dim txtPassword As VMElement = vm.VTextField("txtpassword")
 	txtPassword.AddAttributes(CreateMap(":type": "hidepassword ? 'password' : 'text'"))
 	txtPassword.AddAttributes(CreateMap(":append-icon": "hidepassword ? 'visibility_off' : 'visibility'"))
 	txtPassword.AddAttributes(CreateMap("name":"password", "label":"Password", "v-model":"login.password"))
-	txtPassword.AddAttributes(CreateMap("@click:append": "hidepassword = !hidepassword"))
-	'txtPassword.AddAttributes(CreateMap(":error":"error", ":rules":"[passwordrules]"))
+	txtPassword.AddAttributes(CreateMap("@click:append": "hidepassword = !hidepassword","required":True,"autocomplete":"off"))
+	txtPassword.AddAttributes(CreateMap(":rules":"passwordrules1"))
 	cform.AddElement(txtPassword)
 	'add form to the card text	
 	ctext.AddElement(cform)
@@ -91,9 +92,42 @@ Sub Initialize
 	signin.AddElement(vsignin)
 	'register a method
 	signin.SetMethod(Me, "loginx")
+	
+	'
+	'adding rules
+	Dim v As Object
+	Dim checkemailcallback As BANanoObject = BANAno.CallBack(Me, "checkemail1", Array(v))
+	Dim emailrules As List = vue.newlist
+	emailrules.Add(checkemailcallback.Result)
+	signin.SetData("emailrules1", emailrules)
+	
+	'
+	Dim passwordrulesCB As BANanoObject = BANAno.CallBack(Me, "checkpassword1", Array(v))
+	Dim passwordrules As List = vue.newlist
+	passwordrules.Add(passwordrulesCB.Result)
+	signin.SetData("passwordrules1", passwordrules)
+	
 	'add the component as a router/page
 	vm.AddRoute(signin)
 End Sub
+
+
+Sub checkemail1(v As String) As Object
+	If v = "" Then
+		Return "The email should be specified!"
+	Else
+		Return True
+	End If
+End Sub
+
+Sub checkpassword1(v As String) As Object
+	If v = "" Then
+		Return "The password should be specified!"
+	Else
+		Return True
+	End If
+End Sub
+
 
 'define the callback
 Sub loginx(e As BANanoEvent)

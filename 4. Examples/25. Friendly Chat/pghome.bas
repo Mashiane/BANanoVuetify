@@ -88,7 +88,6 @@ Sub Initialize
 	txtmsg.AddAttributes(CreateMap("clearable": True, "label": "Message", "rounded": True, "outlined": True))
 	txtmsg.AddAttributes(CreateMap("dense": True, "hide-details": True, "v-model": "$store.message"))
 	txtmsg.AddAttributes(CreateMap("autocomplete": "off"))
-	txtmsg.AddAttr("width","calc(100% - 100px)")
 	'when enter is pressed on the textfield, fire newmessage
 	txtmsg.AddAttributes(CreateMap("@keydown.enter": "newmessage", ":disabled": "$store.msgmessage"))
 	'add text to toolbar
@@ -101,7 +100,7 @@ Sub Initialize
 	'create an image picker
 	Dim btnImgSend As VMElement = vm.VFileInput("imagechooser")
 	btnImgSend.AddAttributes(CreateMap(":key":"imagechooser","accept": "image/png, image/jpeg, image/bmp", "prepend-icon": "mdi-camera", "hide-input": True, "icon":True))
-	btnImgSend.AddAttributes(CreateMap("@change": "sendimage", "capture":"camera"))
+	btnImgSend.AddAttributes(CreateMap("@change": "sendimage", "capture":"camera")).AddClass("shrink")
 	msgtoolbar.AddElement(btnImgSend)
 	'add toolbar to actions
 	cactions.AddElement(msgtoolbar)

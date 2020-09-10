@@ -9,6 +9,7 @@ Sub Process_Globals
 	Private register As VMComponent
 	Private vm As BANanoVM
 	Private vue As BANanoVue
+	Private BANano As BANano
 End Sub
 
 
@@ -21,11 +22,11 @@ Sub Initialize
 	register.Initialize(vue, "register", "/register", Me)
 	'initialize the states values
 	register.SetData("login", vue.NewMap)
-	register.SetData("error", False)
 	register.SetData("emailrules", vue.NewList)
 	register.SetData("hidepassword", True)
 	register.SetData("hideconfirmpassword", True)
 	register.SetData("passwordrules", vue.newlist)
+	register.SetData("confirmpasswordrules", vue.newlist)
 	register.SetData("loading", False)
 	
 	'create a container
@@ -53,25 +54,25 @@ Sub Initialize
 	Dim cform As VMElement = vm.Form("frmregister")
 	'create email input
 	Dim txtEmail As VMElement = vm.VTextField("txtemail")
-	txtEmail.AddAttributes(CreateMap("append-icon": "person", "name":"email", "label":"Email Address", "type":"text"))
-	txtEmail.AddAttributes(CreateMap("v-model": "login.email"))
-	'txtEmail.AddAttributes(CreateMap( ":error": "error", ":rules": "[emailrules]"))
+	txtEmail.AddAttributes(CreateMap("append-icon": "person", "name":"email", "label":"Email Address", "type":"email"))
+	txtEmail.AddAttributes(CreateMap("v-model": "login.email","required":True))
+	txtEmail.AddAttributes(CreateMap(":rules": "emailrules","autocomplete":"off"))
 	cform.AddElement(txtEmail)
 	'create password input
 	Dim txtPassword As VMElement = vm.VTextField("txtpassword")
 	txtPassword.AddAttributes(CreateMap(":type": "hidepassword ? 'password' : 'text'"))
 	txtPassword.AddAttributes(CreateMap(":append-icon": "hidepassword ? 'visibility_off' : 'visibility'"))
 	txtPassword.AddAttributes(CreateMap("name":"password", "label":"Password", "v-model":"login.password"))
-	txtPassword.AddAttributes(CreateMap("@click:append": "hidepassword = !hidepassword"))
-	'txtPassword.AddAttributes(CreateMap(":error":"error", ":rules":"[passwordrules]"))
+	txtPassword.AddAttributes(CreateMap("@click:append": "hidepassword = !hidepassword","required":True))
+	txtPassword.AddAttributes(CreateMap(":rules":"passwordrules","autocomplete":"off"))
 	cform.AddElement(txtPassword)
 	'confirm email
 	Dim txtConfirmPassword As VMElement = vm.VTextField("txtconfirmpassword")
 	txtConfirmPassword.AddAttributes(CreateMap(":type": "hideconfirmpassword ? 'password' : 'text'"))
 	txtConfirmPassword.AddAttributes(CreateMap(":append-icon": "hideconfirmpassword ? 'visibility_off' : 'visibility'"))
 	txtConfirmPassword.AddAttributes(CreateMap("name":"password", "label":"Confirm Password", "v-model":"login.confirmpassword"))
-	txtConfirmPassword.AddAttributes(CreateMap("@click:append": "hideconfirmpassword = !hideconfirmpassword"))
-	'txtPassword.AddAttributes(CreateMap(":error":"error", ":rules":"[passwordrules]"))
+	txtConfirmPassword.AddAttributes(CreateMap("@click:append": "hideconfirmpassword = !hideconfirmpassword","required":True))
+	txtConfirmPassword.AddAttributes(CreateMap(":rules":"confirmpasswordrules","autocomplete":"off"))
 	cform.AddElement(txtConfirmPassword)
 	
 	'add form to the card text
@@ -101,8 +102,51 @@ Sub Initialize
 	register.AddElement(vregister)
 	'register a method
 	register.SetMethod(Me, "loginy")
+	
+	'adding rules
+	Dim v As Object
+	Dim checkemailcallback As BANanoObject = BANano.CallBack(Me, "checkemail", Array(v))
+	Dim emailrules As List = vue.newlist
+	emailrules.Add(checkemailcallback.Result)
+	register.SetData("emailrules", emailrules)
+	
+	'
+	Dim passwordrulesCB As BANanoObject = BANano.CallBack(Me, "checkpassword", Array(v))
+	Dim passwordrules As List = vue.newlist
+	passwordrules.Add(passwordrulesCB.Result)
+	register.SetData("passwordrules", passwordrules)
+	
+	Dim confirmpasswordrulesCB As BANanoObject = BANano.callback(Me, "checkconfirmpassword", Array(v))
+	Dim confirmpasswordrules As List = vue.newlist
+	confirmpasswordrules.add(confirmpasswordrulesCB.Result)
+	register.SetData("confirmpasswordrules", confirmpasswordrules)
+	
 	'add the component as a router/page
 	vm.AddRoute(register)
+End Sub
+
+Sub checkemail(v As String) As Object
+	If v = "" Then 
+		Return "The email should be specified!"
+	Else
+		Return True
+	End If	
+End Sub
+
+Sub checkpassword(v As String) As Object
+	If v = "" Then 
+		Return "The password should be specified!"
+	Else
+		Return True
+	End If	
+End Sub
+
+Sub checkconfirmpassword(v As String) As Object
+	If v = "" Then
+		Return "The confirm password should be specified!"
+	Else
+		Return True
+	End If
 End Sub
 
 'define the callback
