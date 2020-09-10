@@ -16,6 +16,6 @@ ModuleClosedNodes2=
 ModuleClosedNodes3=
 ModuleClosedNodes4=
 ModuleClosedNodes5=
-NavigationStack=pgRegister,checkpassword,131,0,pgRegister,loginy,151,0,pgSignIn,Process_Globals,5,1,pgSignIn,loginx,122,0,pgRegister,checkemail,121,5,pgSignIn,checkemail1,108,0,pgSignIn,checkpassword1,116,0,pgSignIn,Initialize,105,3,pgRegister,Initialize,120,6,pghome,Initialize,93,0,pgIndex,Process_Globals,2,0
+NavigationStack=pgIndex,AddImage,272,0,pgIndex,Process_Globals,7,0,pgIndex,ShowSnackBarError,61,0,pgRegister,passwordsshouldmatch,120,1,pgRegister,Initialize,121,6,pgRegister,checkpassword,148,0,pgRegister,checkemail,135,0,pgRegister,Process_Globals,4,0,pghome,sendimage,116,0,pgIndex,Init,50,0
 SelectedBuild=0
 VisibleModules=

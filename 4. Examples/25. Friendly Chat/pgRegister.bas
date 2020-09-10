@@ -42,10 +42,9 @@ Sub Initialize
 	'create the card text
 	Dim ctext As VMElement = vm.VCardText("")
 	'add image
-	Dim div As VMElement = vm.Div("").AddClass("layout column align-center")
+	Dim div As VMElement = vm.Div("").AddClass("layout column align-center").AddStyle("margin-top", "-100px")
 	Dim img As VMElement = vm.Img("").AddAttributes(CreateMap("src":"./assets/vuejs.png", "alt":"VueJS Logo", "width":"180","height":"180"))
 	Dim h1 As VMElement = vm.H1("").AddClass("flex my-4 primary--text").SetText("Register")
-	div.AddStyle("margin-top", "-100px")
 	div.AddElement(img)
 	div.AddElement(h1)
 	ctext.AddElement(div)
@@ -117,12 +116,25 @@ Sub Initialize
 	register.SetData("passwordrules", passwordrules)
 	
 	Dim confirmpasswordrulesCB As BANanoObject = BANano.callback(Me, "checkconfirmpassword", Array(v))
+	Dim passwordsshouldmatchCB As BANanoObject = BANano.CallBack(Me, "passwordsshouldmatch", Null)
 	Dim confirmpasswordrules As List = vue.newlist
 	confirmpasswordrules.add(confirmpasswordrulesCB.Result)
+	confirmpasswordrules.Add(passwordsshouldmatchCB.Result)
 	register.SetData("confirmpasswordrules", confirmpasswordrules)
 	
 	'add the component as a router/page
 	vm.AddRoute(register)
+End Sub
+
+Sub passwordsshouldmatch As Object
+	Dim mlogin As Map = register.getdata("login")
+	Dim password As String = mlogin.get("password")
+	Dim confirmpassword As String = mlogin.get("confirmpassword")
+	If password = confirmpassword Then
+		Return True
+	Else
+		Return "The passwords do not match!"
+	End If
 End Sub
 
 Sub checkemail(v As String) As Object
