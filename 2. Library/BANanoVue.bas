@@ -698,6 +698,15 @@ End Sub
         }; 
 #End If
 
+
+Sub NewList1(lst As List) As List
+	Dim nl As List
+	nl.Initialize
+	nl.AddAll(lst)
+	Return nl
+End Sub
+
+
 Sub SetDataGlobal(prop As String, value As Object) As BANanoVue
 	prop = prop.ToLowerCase
 	state.Put(prop, value)
@@ -915,7 +924,8 @@ End Sub
 'set ready change event
 Sub SetOnReadyChange(EventHandler As Object) As BANanoVue
 	If SubExists(EventHandler, "ReadyChange") = False Then Return Me
-	Dim cb As BANanoObject = BANAno.callback(EventHandler, "ReadyChange", Null)
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANAno.callback(EventHandler, "ReadyChange", Array(e))
 	BANAno.Window.GetField("document").AddEventListener("readystatechange", cb, True)
 	Return Me
 End Sub
@@ -3092,6 +3102,11 @@ Sub RunMethod(methodName As String, params As Object) As BANanoObject
 	Return BOVue.RunMethod(methodName, params)
 End Sub
 
+Sub RunMethod1(methodName As String, args As List) As BANanoObject
+	methodName = methodName.tolowercase
+	Return BOVue.RunMethod(methodName, args)
+End Sub
+
 Sub SetStateTrue(k As String) As BANanoVue
 	SetStateSingle(k,True)
 	Return Me
@@ -3427,7 +3442,8 @@ End Sub
 Sub SetMounted(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim mounted As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim mounted As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("mounted", mounted)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3438,7 +3454,8 @@ End Sub
 Sub SetDestroyed(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(Module, methodName) = False Then Return Me
-	Dim destroyed As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim destroyed As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("destroyed", destroyed)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3449,7 +3466,8 @@ End Sub
 Sub SetActivated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim activated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim activated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("activated", activated)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3460,7 +3478,8 @@ End Sub
 Sub SetDeActivated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim deactivated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim deactivated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("deactivated", deactivated)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3471,7 +3490,8 @@ End Sub
 Sub SetUpdated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim updated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim updated As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("updated", updated)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3481,7 +3501,8 @@ End Sub
 Sub SetBeforeMount(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim beforeMount As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeMount As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("beforeMount", beforeMount)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3491,7 +3512,8 @@ End Sub
 Sub SetBeforeUpdate(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim beforeUpdate As Boolean = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeUpdate As Boolean = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("beforeUpdate", beforeUpdate)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3501,7 +3523,8 @@ End Sub
 Sub SetBeforeDestroy(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim beforeDestroy As Boolean = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeDestroy As Boolean = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("beforeDestroy", beforeDestroy)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3512,7 +3535,8 @@ End Sub
 Sub SetBeforeCreate(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim beforeCreate As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeCreate As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("beforeCreate", beforeCreate)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3523,7 +3547,8 @@ End Sub
 Sub SetCreated(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) = False Then Return Me
-	Dim created As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim created As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	Options.Put("created", created)
 	SetMethod(EventHandler, methodName)
 	Return Me
@@ -3538,6 +3563,16 @@ Sub SetMethod(EventHandler As Object, methodName As String) As BANanoVue
 		methods.Put(methodName, cb)
 	Else
 		Log($"SetMethod.${methodName} could not be found!"$)
+	End If
+	Return Me
+End Sub
+
+'set direct method
+Sub SetMethod1(EventHandler As Object, methodName As String, args As List) As BANanoVue
+	methodName = methodName.ToLowerCase
+	If SubExists(EventHandler, methodName) Then
+		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, args)
+		methods.Put(methodName, cb)
 	End If
 	Return Me
 End Sub
@@ -3574,7 +3609,8 @@ Sub SetComputed(k As String, EventHandler As Object, methodName As String) As BA
 	k = k.tolowercase
 	methodName = methodName.ToLowerCase
 	If SubExists(EventHandler, methodName) Then
-		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+		Dim e As BANanoEvent
+		Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 		computed.Put(k, cb.Result)
 	End If
 	Return Me
@@ -3582,7 +3618,8 @@ End Sub
 
 Sub SetNextTick(EventHandler As Object, methodName As String) As BANanoVue
 	methodName = methodName.ToLowerCase
-	Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Null)
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANAno.CallBack(EventHandler, methodName, Array(e))
 	BOVue.RunMethod("nextTick", cb)
 	Return Me
 End Sub

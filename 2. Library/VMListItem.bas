@@ -37,6 +37,12 @@ Sub AddComponent(comp As String) As VMListItem
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItem
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetStatic(b As Boolean) As VMListItem
 	bStatic = b
@@ -412,7 +418,7 @@ Sub SetOnClick(methodName As String) As VMListItem
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -423,7 +429,7 @@ Sub SetOnKeydown(methodName As String) As VMListItem
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@keydown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

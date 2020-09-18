@@ -156,10 +156,13 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("grid", "grids", "", "", "Grids","")
 	vm.Drawer.AddParentChild("grid", "design", "", "", "Grid Design","")
 	
-	
 	vm.Drawer.AddParentChild("", "examples", "", "", "Examples", "")
 	vm.drawer.AddParentChild("examples", "messageboard", "", "", "Message Board","")
 	vm.drawer.AddParentChild("examples", "reallogs", "", "", "Realtime Logging","")
+	
+	'vm.Drawer.AddParentChild("", "extensions", "", "", "Extensions", "")
+	'vm.Drawer.AddParentChild("extensions", "toolkit", "", "", "Toolkit", "")
+	
 	
 	'* IMPORTANT
 	vm.drawer.Refresh
@@ -207,6 +210,10 @@ Sub draweritems_click(elID As Object)
 	'stop logs
 	vm.callmethod("stop")
 	Select Case elID
+	Case "toolkit"
+		vm.NavBar.UpdateTitle(modToolkit.title)
+		vm.ShowPage(modToolkit.name)
+		modToolkit.Show
 	Case "calendar"
 		vm.NavBar.UpdateTitle(modCalendar.title)
 		vm.ShowPage(modCalendar.name)
@@ -448,6 +455,7 @@ Sub AddPages
 	vm.AddPage(modOverlay.name, modOverlay)
 	vm.AddPage(modRealtimeLogging.name, modRealtimeLogging)
 	vm.AddPage(modCalendar.name, modCalendar)
+	vm.AddPage(modToolkit.name, modToolkit)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

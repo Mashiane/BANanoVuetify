@@ -34,6 +34,13 @@ Public Sub Initialize(v As BANanoVue, sparent As String, sid As String, eventHan
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMExpansionPanel
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetStatic(b As Boolean) As VMExpansionPanel
 	bStatic = b
 	Header.SetStatic(b)
@@ -153,7 +160,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMExpansionPane
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -165,7 +172,7 @@ Sub SetOnClick(methodName As String) As VMExpansionPanel
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

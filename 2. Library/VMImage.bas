@@ -45,6 +45,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMImage
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetHover(b As Boolean) As VMImage
 	hasHover = b
 	Return Me
@@ -59,7 +66,7 @@ Sub SetOnClick(EventHandler As Object, methodName As String) As VMImage
 	methodName = methodName.tolowercase
 	If SubExists(EventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -611,7 +618,7 @@ Sub SetOnError(methodName As String) As VMImage
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@error": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -623,7 +630,7 @@ Sub SetOnLoad(methodName As String) As VMImage
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@load": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

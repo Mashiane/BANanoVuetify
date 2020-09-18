@@ -70,6 +70,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+Sub SetData(xprop As String, xValue As Object) As VMToolBar
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'add divider on the toolbar
 Sub AddDivider1 As VMToolBar
 	AddDivider(True, Null, Null, Array("mx-2"), Null)

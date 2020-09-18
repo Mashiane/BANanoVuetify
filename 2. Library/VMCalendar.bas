@@ -52,6 +52,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCalendar
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub geteventcolor(e As Map) As String
 	Dim ecolor As String = e.Get("color")
 	Return ecolor

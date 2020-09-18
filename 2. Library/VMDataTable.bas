@@ -134,6 +134,12 @@ Sub GetItemKeys(lst As List) As List
 	Return xlist
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMDataTable
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub BANanoReplace
 	Dim x As String = ToString
 	BANano.GetElement($"#${ID}card"$).RenderReplace(x, "")
@@ -2147,7 +2153,7 @@ Sub SetOnClickRow(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@click:row": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2159,7 +2165,7 @@ Sub SetOnCurrentItems(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@current-items": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2183,7 +2189,7 @@ Sub SetOnItemExpanded(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@item-expanded": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2195,7 +2201,7 @@ Sub SetOnItemSelected(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@item-selected": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2207,7 +2213,7 @@ Sub SetOnPageCount(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@page-count": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2219,7 +2225,7 @@ Sub SetOnPagination(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@pagination": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2231,7 +2237,7 @@ Sub SetOnToggleSelectAll(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@toggle-select-all": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2243,7 +2249,7 @@ Sub SetOnUpdateExpanded(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:expanded": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2255,7 +2261,7 @@ Sub SetOnUpdateGroupBy(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:group-by": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2267,7 +2273,7 @@ Sub SetOnUpdateGroupDesc(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:group-desc": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2279,7 +2285,7 @@ Sub SetOnUpdateItemsPerPage(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:items-per-page": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2291,7 +2297,7 @@ Sub SetOnUpdateMultiSort(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:multi-sort": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2303,7 +2309,7 @@ Sub SetOnUpdateMustSort(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:must-sort": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2315,7 +2321,7 @@ Sub SetOnUpdateOptions(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:options": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2327,7 +2333,7 @@ Sub SetOnUpdatePage(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:page": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2339,7 +2345,7 @@ Sub SetOnUpdateSortBy(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 Dim e As BANanoEvent
-		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 SetAttr(CreateMap("@update:sort-by": methodName))
 'add to methods
 		vue.SetCallBack(methodName, cb)
@@ -2351,7 +2357,7 @@ Sub SetOnUpdateSortDesc(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:sort-desc": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

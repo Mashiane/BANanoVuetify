@@ -35,6 +35,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMMenu
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub UseVisibility
 	MenuContent.UseVisibility = True
 End Sub

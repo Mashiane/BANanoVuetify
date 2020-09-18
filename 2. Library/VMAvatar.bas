@@ -52,6 +52,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMAvatar
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub SetBadge(scontent As String) As VMAvatar
 	Badge.SetContent(scontent)
 	Badge.SetBordered(True)

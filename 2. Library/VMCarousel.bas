@@ -31,6 +31,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCarousel
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 'add a static carousel item
 Sub AddItem1(src As String) As VMCarousel
 	Dim ci As VMCarouselItem
@@ -461,7 +467,7 @@ Sub SetOnInput(methodName As String) As VMCarousel
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

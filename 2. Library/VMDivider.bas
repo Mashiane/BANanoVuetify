@@ -32,6 +32,12 @@ Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VM
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMDivider
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 'set the sizes for this item
 Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMDivider
 	Divider.SetDeviceSizes(SS, SM, SL, SX)

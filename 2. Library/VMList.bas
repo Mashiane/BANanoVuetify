@@ -36,6 +36,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMList
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetVOnce(t As Boolean) As VMList
 	List.setvonce(t)

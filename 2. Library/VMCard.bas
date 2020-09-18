@@ -20,7 +20,7 @@ Sub Class_Globals
 	Public Image As VMImage
 	Public ToolBar As VMToolBar
 	Public Form As VMForm
-	Private lst As List
+	Public TextAfter As List
 	Private extra As List
 	Public IsTable As Boolean
 	Private bStatic As Boolean
@@ -47,7 +47,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	ToolBar.Initialize(vue, $"${ID}bar"$, Module).SetToolBar(True)
 	Image.Initialize(vue, $"${ID}img"$, Module)
 	Container = Form.Container
-	lst.Initialize 
+	TextAfter.Initialize
 	extra.Initialize 
 	IsTable = False
 	bStatic = False
@@ -171,6 +171,20 @@ Sub AddExtraContent(scontent As String) As VMCard
 	Return Me
 End Sub
 
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCard
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	AddStuff(d.ToString)
+	Return Me
+End Sub
+
+Sub AddCardText(ct As VMCardText) As VMCard
+	AddStuff(ct.ToString)
+	Return Me
+End Sub
+
 'add a component to the root of the card
 Sub AddComponent(comp As String) As VMCard
 	Card.SetText(comp)
@@ -179,14 +193,45 @@ End Sub
 
 'add stuff to the root of the card
 Sub AddStuff(stuff As String) As VMCard
-	lst.Add(stuff)
+	TextAfter.Add(stuff)
 	Return Me	
 End Sub
+
+Sub SetTextAfter(stuff As String) As VMCard
+	TextAfter.Add(stuff)
+	Return Me	
+End Sub
+
+Sub AddTextAfter(stuff As String) As VMCard
+	TextAfter.Add(stuff)
+	Return Me	
+End Sub
+
+Sub SetData(prop As String, value As Object) As VMCard
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
 
 Sub AddDivider As VMCard
 	IsDialog = True
 	Return Me
 End Sub
+
+Sub AddTextAfterDivider(className As String) As VMCard
+	Dim div As VMDivider
+	div.Initialize(vue).AddClass(className)
+	SetTextAfter(div.ToString)
+	Return Me
+End Sub
+
+Sub SetTextAfterDivider(className As String) As VMCard
+	Dim div As VMDivider
+	div.Initialize(vue).AddClass(className)
+	SetTextAfter(div.ToString)
+	Return Me
+End Sub
+
 
 Sub ToString As String
 	If ToolBar.hasContent Then ToolBar.Pop(Card)
@@ -197,7 +242,7 @@ Sub ToString As String
 		If Form.hascontent Then Text.AddContent(Form.ToString)
 		If Text.HasContent Then Text.Pop(Card)
 	End If
-	For Each strItem As String In lst
+	For Each strItem As String In TextAfter
 		Card.SetText(strItem)
 	Next
 	If IsDialog Then Card.AddDivider
@@ -738,7 +783,7 @@ Sub SetOnClick(methodName As String) As VMCard
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

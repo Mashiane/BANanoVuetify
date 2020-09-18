@@ -82,7 +82,35 @@ vue.AddCode($"End Sub"$)
 	Dim codeit1 As VMPrism = Main.CreateVBCode(vue, Me, "cardclickcode", "Card Button Click", vue.GetSourceCode)
 	cont.AddControl(codeit1.PrismComponent, codeit1.ToString, 2 ,1, 0, 0, 0, 0, 12, 12, 12, 12)
 	
-
+	
+	'profile card
+	Dim profileCard As VMElement = vm.VCard("profilecard")
+	Dim cardTitle As VMElement = vm.VCardTitle("").AddStyle("top", "-40px !important")
+	'avatar
+	Dim avatar As VMElement = vm.VAvatar("")
+	avatar.AddAttributes(CreateMap("size":"128"))
+	avatar.AddStyles(CreateMap("top": "-64px", "margin-bottom": "-32px", "border-radius": "50% !important", "position": "relative"))
+	avatar.AddClass("text-center mx-auto elevation-6")
+	Dim img As VMElement = vm.VImg("").AddAttr("src", "./assets/sponge.png")
+	avatar.AddElement(img)
+	'
+	cardTitle.AddElement(avatar)
+	'
+	profileCard.AddElement(cardTitle)
+	
+	Dim cardText As VMElement = vm.VCardText("profiletext").AddClass("text-center")
+	Dim h6 As VMElement = vm.H6("").AddClass("mb-1 grey--text").SetText("CEO / CO-FOUNDER")
+	cardText.AddElement(h6)
+	Dim h4 As VMElement = vm.H4("").AddClass("font-weight-light mb-3 black--text").SetText("Alec Thompson")
+	cardText.AddElement(h4)
+	Dim p As VMElement = vm.P("").AddClass("font-weight-light grey--text")
+	p.SetText("Don't be scared of the truth because we need to restart the human foundation in truth and I love you like Kanye loves Kanye, I love Rick Owens’ bed design but the back is...")
+	cardText.AddElement(p)
+	Dim btn As VMElement = vm.VBtn("").AddAttr("color", "success").AddAttr("rounded", True).AddClass("mr-0").SetText("Follow")
+	cardText.AddElement(btn)
+	profileCard.AddElement(cardText)
+	cont.AddControl(profileCard, profileCard.ToString, 5 ,1, 0, 0, 0, 0, 12, 4, 4, 4)
+			
 	vm.AddContainer(cont)
 End Sub
 

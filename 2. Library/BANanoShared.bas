@@ -127,6 +127,15 @@ Sub NewList As List
 	Return elx
 End Sub
 
+
+Sub NewList1(items As List) As List
+	Dim nl As List
+	nl.Initialize
+	nl.AddAll(items)
+	Return nl
+End Sub
+
+
 'get id from event
 Sub GetIDFromEvent(e As BANanoEvent) As String
 	Dim curEve As BANanoElement = BANano.ToElement(e.OtherField("currentTarget"))
@@ -139,6 +148,23 @@ Sub GetKeyFromEvent(e As BANanoEvent) As String
 	Dim curEve As BANanoElement = BANano.ToElement(e.OtherField("currentTarget"))
 	Dim ID As String = curEve.GetField("key").Result
 	Return ID
+End Sub
+
+'get id from event
+Sub GetTargetValueFromEvent(e As BANanoEvent) As String
+	Dim oValue As Object = e.OtherField("target").GetField("value").Result
+	Return oValue
+End Sub
+
+Sub GetTargetPropertyFromEvent(e As BANanoEvent, prop As String) As String
+	Dim oValue As Object = e.OtherField("target").GetField(prop).Result
+	Return oValue
+End Sub
+
+
+Sub GetTargetFromEvent(e As BANanoEvent) As BANanoObject
+	Dim oValue As BANanoObject = e.OtherField("target")
+	Return oValue
 End Sub
 
 Sub GetEventTargetProperty(e As BANanoEvent, prop As String) As String

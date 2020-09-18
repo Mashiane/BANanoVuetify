@@ -34,6 +34,12 @@ Sub SetStatic(b As Boolean) As VMListItemSubTitle
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItemSubTitle
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetAttrLoose(loose As String) As VMListItemSubTitle
 	ListItemSubTitle.SetAttrLoose(loose)

@@ -70,6 +70,12 @@ Sub AddSpacer As VMCardText
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCardText
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub AddDivider As VMCardText
 	CardText.AddDivider
 	HasContent = True

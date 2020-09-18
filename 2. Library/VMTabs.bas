@@ -36,6 +36,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTabs
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 'set transition
 Sub SetTransition(varTransition As String) As VMTabs

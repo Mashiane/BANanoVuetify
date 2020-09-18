@@ -92,6 +92,13 @@ Sub GetSelected As List
 	Return res
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTreeView
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'get active nodes
 Sub GetActive As List
 	Dim lst As List = vue.GetData(sActive)

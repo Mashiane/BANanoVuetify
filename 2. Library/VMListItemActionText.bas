@@ -34,6 +34,13 @@ Sub SetStatic(b As Boolean) As VMListItemActionText
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItemActionText
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub AddIcon(key As String, iconName As String) As VMListItemActionText
 	key = key.tolowercase
 	Dim btn As VMButton

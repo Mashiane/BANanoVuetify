@@ -124,6 +124,11 @@ Sub SetVhtml(vhtml As String) As VMContainer
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMContainer
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
 
 Sub SetSlotOpposite As VMContainer
 	Container.SetAttrLoose("v-slot:opposite")

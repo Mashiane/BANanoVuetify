@@ -33,6 +33,12 @@ Sub SetRC(sRow As String, sCol As String) As VMColorPicker
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMColorPicker
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 'set the offsets for this item
 Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VMColorPicker
 	ColorPicker.SetDeviceOffsets(OS, OM, OL, OX)

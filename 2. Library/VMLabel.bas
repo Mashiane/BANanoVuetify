@@ -32,6 +32,13 @@ Sub SetAttrSingle(prop As String, value As String) As VMLabel
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMLabel
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetFontFamily(ff As String) As VMLabel
 	If ff = "" Then Return Me
 	SetStyleSingle("font-family", ff)

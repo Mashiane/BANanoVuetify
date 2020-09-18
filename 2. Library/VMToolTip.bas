@@ -33,6 +33,13 @@ Sub SetStatic(b As Boolean) As VMToolTip
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As vmtooltip
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetAttrLoose(loose As String) As VMToolTip
 	ToolTip.SetAttrLoose(loose)
 	Return Me

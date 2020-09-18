@@ -77,7 +77,8 @@ End Sub
 Sub SetMounted(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim mounted As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim mounted As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("mounted", mounted)
 	SetMethod(module, methodName)
 	Return Me
@@ -87,7 +88,8 @@ End Sub
 Sub SetUpdated(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim updated As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim updated As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("updated", updated)
 	SetMethod(module, methodName)
 	Return Me
@@ -97,7 +99,8 @@ End Sub
 Sub SetBeforeMount(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeMount As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeMount As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("beforeMount", beforeMount)
 	SetMethod(module, methodName)
 	Return Me
@@ -107,7 +110,8 @@ End Sub
 Sub SetBeforeUpdate(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeUpdate As Boolean = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeUpdate As Boolean = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("beforeUpdate", beforeUpdate)
 	SetMethod(module, methodName)
 	Return Me
@@ -117,7 +121,8 @@ End Sub
 Sub SetBeforeDestroy(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeDestroy As Boolean = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeDestroy As Boolean = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("beforeDestroy", beforeDestroy)
 	SetMethod(module, methodName)
 	Return Me
@@ -128,7 +133,8 @@ End Sub
 Sub SetBeforeCreate(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim beforeCreate As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim beforeCreate As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("beforeCreate", beforeCreate)
 	SetMethod(module, methodName)
 	Return Me
@@ -139,7 +145,8 @@ End Sub
 Sub SetCreated(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim created As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim created As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("created", created)
 	SetMethod(module, methodName)
 	Return Me
@@ -149,7 +156,8 @@ End Sub
 Sub SetDestroyed(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim destroyed As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim destroyed As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("destroyed", destroyed)
 	SetMethod(module, methodName)
 	Return Me
@@ -160,7 +168,8 @@ End Sub
 Sub SetActivated(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim activated As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim activated As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("activated", activated)
 	SetMethod(module, methodName)
 	Return Me
@@ -171,7 +180,8 @@ End Sub
 Sub SetDeActivated(module As Object, methodName As String) As VMComponent
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) = False Then Return Me
-	Dim deactivated As BANanoObject = BANano.CallBack(module, methodName, Null)
+	Dim e As BANanoEvent
+	Dim deactivated As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 	opt.Put("deactivated", deactivated)
 	SetMethod(module, methodName)
 	Return Me
@@ -291,6 +301,15 @@ Sub Component() As Map
 	Return opt
 End Sub
 
+'set direct method
+Sub SetMethod1(Module As Object, methodName As String, args As List) As VMComponent
+	methodName = methodName.ToLowerCase
+	If SubExists(Module, methodName) Then
+		Dim cb As BANanoObject = BANano.CallBack(Module, methodName, args)
+		methods.Put(methodName, cb)
+	End If
+	Return Me
+End Sub
 
 'set direct method
 Sub SetFilter(module As Object, methodName As String) As VMComponent
@@ -314,7 +333,8 @@ Sub SetComputed(k As String, module As Object, methodName As String) As VMCompon
 	k = k.tolowercase
 	methodName = methodName.ToLowerCase
 	If SubExists(module, methodName) Then
-		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Null)
+		Dim e As BANanoEvent
+		Dim cb As BANanoObject = BANano.CallBack(module, methodName, Array(e))
 		computed.Put(k, cb.Result)
 	End If
 	Return Me

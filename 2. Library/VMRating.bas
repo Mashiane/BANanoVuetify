@@ -31,6 +31,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMRating
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetAttrSingle(prop As String, value As String) As VMRating
 	Rating.SetAttrSingle(prop, value)

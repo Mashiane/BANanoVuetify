@@ -35,6 +35,13 @@ Sub RemoveVModel As VMForm
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMForm
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 
 Sub HasContent As Boolean
 	Return Container.hascontent
@@ -191,7 +198,7 @@ Sub SetOnInput(methodName As String) As VMForm
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -203,7 +210,7 @@ Sub SetOnSubmit(methodName As String) As VMForm
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@submit": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

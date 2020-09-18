@@ -39,6 +39,21 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMChip
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
+'set for
+Sub SetVFor(item As String, dataSource As String) As VMChip
+	dataSource = dataSource.tolowercase
+	item = item.tolowercase
+	Dim sline As String = $"${item} in ${dataSource}"$
+	SetAttrSingle("v-for", sline)
+	Return Me
+End Sub
+
 Sub SetStatic(b As Boolean) As VMChip
 	bStatic = b
 	Chip.SetStatic(b)
@@ -628,7 +643,7 @@ Sub SetOnClick(methodName As String) As VMChip
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -640,7 +655,7 @@ Sub SetOnClickClose(methodName As String) As VMChip
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:close": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -652,7 +667,7 @@ Sub SetOnInput(methodName As String) As VMChip
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -664,7 +679,7 @@ Sub SetOnUpdateActive(methodName As String) As VMChip
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:active": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

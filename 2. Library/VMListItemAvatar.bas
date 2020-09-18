@@ -45,6 +45,13 @@ Sub SetAttributes(attrs As List) As VMListItemAvatar
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItemAvatar
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'get component
 Sub ToString As String
 	Return ListItemAvatar.ToString

@@ -38,6 +38,13 @@ Sub SetVModel(k As String) As VMWindowItem
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMWindowItem
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetVIf(vif As String) As VMWindowItem
 	WindowItem.SetVIf(vif)
 	Return Me

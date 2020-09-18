@@ -40,6 +40,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMStepper
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetStatic(b As Boolean) As VMStepper
 	bStatic = b
 	Stepper.SetStatic(b)

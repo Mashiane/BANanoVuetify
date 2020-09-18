@@ -46,6 +46,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSpeedDial
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub RemoveVModel As VMSpeedDial
 	RemoveAttr("v-model")
 	Return Me

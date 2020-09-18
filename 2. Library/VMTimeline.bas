@@ -31,6 +31,13 @@ Sub AddTimeLineItem(tlItem As VMTimelineItem)
 	AddComponent(tlItem.tostring)
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTimeline
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'get component
 Sub ToString As String
 	Return TimeLine.ToString

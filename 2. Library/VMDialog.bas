@@ -48,6 +48,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMDialog
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub RemoveVModel As VMDialog
 	RemoveAttr("v-model")
 	Return Me
@@ -577,7 +583,7 @@ Sub SetOnClickOutside(methodName As String) As VMDialog
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:outside": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -589,7 +595,7 @@ Sub SetOnInput(methodName As String) As VMDialog
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -601,7 +607,7 @@ Sub SetOnKeydown(methodName As String) As VMDialog
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@keydown": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -33,6 +33,12 @@ Sub SetStatic(b As Boolean) As VMCarouselItem
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCarouselItem
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return CarouselItem.ToString

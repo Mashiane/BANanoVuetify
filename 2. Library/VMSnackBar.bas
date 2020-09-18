@@ -41,6 +41,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSnackBar
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 
 Sub RemoveVModel As VMSnackBar
 	RemoveAttr("v-model")
@@ -392,7 +399,7 @@ Sub SetOnInput(methodName As String) As VMSnackBar
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

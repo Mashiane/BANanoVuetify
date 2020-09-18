@@ -35,6 +35,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As vmfileinput
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 Sub SetErrorText(sError As String) As VMFileInput    'ignore
 	ErrorText = sError
 	FileInput.ErrorMessage = sError

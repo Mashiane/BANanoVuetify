@@ -28,6 +28,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCardActions
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
 
 Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardActions
 	Dim d As VMElement

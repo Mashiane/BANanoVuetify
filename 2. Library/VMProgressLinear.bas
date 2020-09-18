@@ -37,6 +37,13 @@ Sub GetValue As String
 	Return svalue
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMProgressLinear
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetLabel(lblText As String) As VMProgressLinear
 	hasLabel = True
 	tmp.SetAttrSingle("v-slot", "{ value }")

@@ -39,6 +39,12 @@ Sub SetFieldType(ft As String) As VMSlider
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSlider
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetRangeSlider(b As Boolean) As VMSlider
 	If b = False Then Return Me

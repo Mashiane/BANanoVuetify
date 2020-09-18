@@ -38,6 +38,13 @@ Sub SetAttrLoose(loose As String) As VMListItemTitle
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItemTitle
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetAttributes(attrs As List) As VMListItemTitle
 	For Each stra As String In attrs
 		SetAttrLoose(stra)

@@ -34,6 +34,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMBottomSheet
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 'hide the bottom sheet
 Sub Hide
 	vue.SetData(showKey,False)

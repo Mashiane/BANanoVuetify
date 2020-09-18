@@ -30,6 +30,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMAlert
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
 Sub RemoveVModel As VMAlert
 	RemoveAttr("v-model")
 	Return Me

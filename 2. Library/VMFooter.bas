@@ -37,6 +37,12 @@ Sub RemoveVModel As VMFooter
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMFooter
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetStatic(b As Boolean) As VMFooter
 	bStatic = b

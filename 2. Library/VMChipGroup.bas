@@ -12,6 +12,10 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object   'ignore
+	Private itemKey As String
+	Private items As List
+	Private hasSubHeading As Boolean
+	Private heading As String
 End Sub
 
 'initialize the ChipGroup
@@ -22,12 +26,102 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	itemKey = $"${ID}items"$
+	vue.SetData(itemKey, vue.NewList)
+	items.Initialize 
+	hasSubHeading = False
+	heading = ""
+	Return Me
+End Sub
+
+Sub SetSubHeading(hdr As String) As VMChipGroup
+	hasSubHeading = True
+	Dim el As VMElement
+	el.Initialize(vue, $"${ID}hdr"$)
+	el.SetTag("span")
+	el.SetText(hdr)
+	el.AddClass("subheading") 
+	heading = el.tostring
+	Return Me
+End Sub
+
+'add an actual chip, does not work with clear
+Sub AddChip(chip As VMChip) As VMChipGroup
+	SetText(chip.ToString)
+	Return Me
+End Sub
+
+Sub SetData(prop As String, value As Object) As VMChipGroup
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+'add a chip from own specs
+Sub AddChip1(mkey As String, mtext As String, mprops As Map, mstyles As Map, lclasses As List) As VMChipGroup
+	Dim mchip As VMChip
+	mchip.Initialize(vue, mkey, Module)
+	mchip.BuildModel(mprops, mstyles, lclasses, Null)
+	mchip.SetText(mtext)
+	SetText(mchip.ToString)
+	Return Me
+End Sub
+
+'update contents and refresh UI
+Sub Update
+	vue.SetData(itemKey, items)
+End Sub
+
+'add a chip to the group, works with clear
+Sub AddItem(cKey As String, bOutlined As Boolean, bFilter As Boolean, cText As String)
+	Dim mchip As Map = CreateMap()
+	mchip.Put("key", cKey)
+	mchip.Put("outlined", bOutlined)
+	mchip.Put("filter", bFilter)
+	mchip.Put("outlined", bOutlined)
+	mchip.Put("label", cText)
+	items.Add(mchip)
+End Sub
+
+'add a chip to the group, works with clear
+Sub AddItems(cText As List) As VMChipGroup
+	For Each k As String In cText
+		Dim mchip As Map = CreateMap()
+		mchip.Put("label", k)
+		mchip.Put("key", k)
+		items.Add(mchip)
+	Next
+	Return Me
+End Sub
+
+'clear the items
+Sub Clear As VMChipGroup
+	vue.SetData(itemKey, vue.NewList)
+	items.clear
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
-	Return ChipGroup.ToString
+	If items.Size > 0 Then
+		Dim xchip As VMChip
+		xchip.Initialize(vue, "", Module)
+		xchip.SetVFor("item", itemKey)
+		xchip.SetAttrSingle(":outlined", "item.outlined")
+		xchip.SetAttrSingle(":filter", "item.filter")
+		xchip.SetAttrSingle(":key", "item.key")
+		xchip.SetAttrSingle(":id", "item.key")
+		xchip.SetAttrSingle(":value", "item.key")
+		xchip.SetText("{{ item.label }}")
+		SetText(xchip.ToString)
+		Update
+	End If
+	Dim sb As StringBuilder
+	sb.Initialize 
+	If hasSubHeading Then 
+		sb.Append(heading)
+	End If
+	sb.Append(ChipGroup.ToString)
+	Return sb.tostring
 End Sub
 
 Sub SetVModel(k As String) As VMChipGroup
@@ -75,7 +169,7 @@ Sub AddClass(c As String) As VMChipGroup
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMChipGroup
+Sub SetAttr(attr As Map) As VMChipGroup
 	ChipGroup.SetAttr(attr)
 	Return Me
 End Sub
@@ -208,7 +302,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMChipGroup
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -413,6 +507,7 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 ChipGroup.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
 Sub SetVisible(b As Boolean) As VMChipGroup
 ChipGroup.SetVisible(b)
 Return Me

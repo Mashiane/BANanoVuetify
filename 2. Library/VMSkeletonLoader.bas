@@ -25,6 +25,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSkeletonLoader
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMSkeletonLoader
 	SkeletonLoader.SetRC(sRow, sCol)

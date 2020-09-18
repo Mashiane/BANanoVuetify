@@ -35,6 +35,13 @@ Sub ToString As String
 	Return ItemGroup.ToString
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMItemGroup
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetVModel(k As String) As VMItemGroup
 	ItemGroup.SetVModel(k)
 	Return Me

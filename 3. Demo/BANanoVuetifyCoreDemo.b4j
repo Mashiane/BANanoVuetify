@@ -104,15 +104,16 @@ Module47=modTimeLine
 Module48=modTimePicker
 Module49=modToolbar
 Module5=modBanner
-Module50=modTreeView
-Module51=pgIndex
+Module50=modToolkit
+Module51=modTreeView
+Module52=pgIndex
 Module6=modBottomNavigation
 Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=26
 NumberOfLibraries=6
-NumberOfModules=51
+NumberOfModules=52
 Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15

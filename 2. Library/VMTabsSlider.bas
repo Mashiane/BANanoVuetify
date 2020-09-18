@@ -42,6 +42,13 @@ Sub SetAttributes(attrs As List) As VMTabsSlider
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTabsSlider
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'get component
 Sub ToString As String
 	

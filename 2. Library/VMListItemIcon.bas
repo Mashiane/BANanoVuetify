@@ -37,6 +37,13 @@ Sub SetAttrLoose(loose As String) As VMListItemIcon
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItemIcon
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetAttributes(attrs As List) As VMListItemIcon
 	For Each stra As String In attrs
 		SetAttrLoose(stra)

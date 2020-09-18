@@ -38,6 +38,12 @@ Sub SetAttributes(attrs As List) As VMCol
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCol
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 'get component
 Sub ToString As String	
 	Return Col.ToString

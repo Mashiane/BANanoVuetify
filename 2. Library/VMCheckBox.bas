@@ -31,6 +31,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMCheckBox
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub SetFieldType(ft As String) As VMCheckBox
 	CheckBox.fieldType = ft
 	Return Me
@@ -743,7 +749,7 @@ Sub SetOnUpdateError(methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:error": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -755,7 +761,7 @@ Sub SetOnUpdateIndeterminate(methodName As String) As VMCheckBox
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:indeterminate": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -37,6 +37,13 @@ Sub SetVIf(vif As String) As VMSubHeader
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSubHeader
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetVShow(vif As String) As VMSubHeader
 	SubHeader.SetVShow(vif)
 	Return Me

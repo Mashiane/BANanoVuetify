@@ -22,6 +22,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSkeleton
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 
 Sub SetAttrLoose(loose As String) As VMSkeleton
 	Skeleton.SetAttrLoose(loose)

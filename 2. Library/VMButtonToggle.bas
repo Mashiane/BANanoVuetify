@@ -42,6 +42,12 @@ Sub AddIcon(btnID As String, btnIcon As String, btnColor As String, btnValue As 
 	AddComponent(btn.ToString)
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMButtonToggle
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub AddButton(btnID As String, btnText As String, btnIcon As String, btnColor As String, btnValue As String, btnToolTip As String)
 	Dim btn As VMButton
 	btn.Initialize(vue, btnID, Module)

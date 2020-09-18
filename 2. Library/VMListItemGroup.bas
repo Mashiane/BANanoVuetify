@@ -38,6 +38,13 @@ Sub SetOnChange(methodName As String) As VMListItemGroup
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListItemGroup
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub AddComponent(comp As String) As VMListItemGroup
 	ListItemGroup.SetText(comp)
 	Return Me

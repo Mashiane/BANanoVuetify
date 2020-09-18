@@ -37,6 +37,14 @@ Sub SetDeviceOffsets(OS As String, OM As String,OL As String,OX As String) As VM
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMWindow
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
+
 'set the sizes for this item
 Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMWindow
 	Window.SetDeviceSizes(SS, SM, SL, SX)

@@ -38,6 +38,13 @@ Sub AddComponent(comp As String) As VMTabsItems
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTabsItems
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetAttrLoose(loose As String) As VMTabsItems
 	TabsItems.SetAttrLoose(loose)
 	Return Me
@@ -321,7 +328,7 @@ Sub SetOnChange(methodName As String) As VMTabsItems
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

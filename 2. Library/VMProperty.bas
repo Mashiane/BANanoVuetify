@@ -134,6 +134,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMProperty
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'make items to use a switch
 Sub SetItemsSwitch(itemKeys As List) As VMProperty
 	For Each k As String In itemKeys

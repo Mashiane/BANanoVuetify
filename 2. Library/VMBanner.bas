@@ -36,10 +36,15 @@ Sub SetOnClickIcon(methodName As String) As VMBanner
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:icon": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+Sub SetData(prop As String, value As Object) As VMBanner
+	vue.SetData(prop, value)
 	Return Me
 End Sub
 

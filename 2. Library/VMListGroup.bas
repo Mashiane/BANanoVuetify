@@ -40,6 +40,13 @@ Sub SetAttributes(attrs As List) As VMListGroup
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMListGroup
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetAttrLoose(loose As String) As VMListGroup
 	ListGroup.SetAttrLoose(loose)
 	Return Me 
@@ -268,7 +275,7 @@ Sub SetOnClick(methodName As String) As VMListGroup
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

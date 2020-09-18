@@ -39,6 +39,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMDateTimePicker
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 private Sub formatdate(sFormat As String) As String
 	Dim sdate As String = vue.GetData(vmodel)
 	If sdate.Length = 0 Then Return ""
@@ -821,7 +827,7 @@ Sub SetOnChange(eventHandler As Object, methodName As String) As VMDateTimePicke
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -833,7 +839,7 @@ Sub SetOnClickDate(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:date": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -845,7 +851,7 @@ Sub SetOnClickMonth(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:month": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -857,7 +863,7 @@ Sub SetOnDblclickMonth(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@dblclick:month": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -869,7 +875,7 @@ Sub SetOnDblclickDate(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@dblclick:date": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -881,7 +887,7 @@ Sub SetOnInput(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@input": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -893,7 +899,7 @@ Sub SetOnUpDatePickerDate(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:picker-date": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -1076,7 +1082,7 @@ Sub SetOnClickHour(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:hour": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -1088,7 +1094,7 @@ Sub SetOnClickMinute(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:minute": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -1100,7 +1106,7 @@ Sub SetOnClickSecond(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click:second": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -1112,7 +1118,7 @@ Sub SetOnUpdatePeriod(methodName As String) As VMDateTimePicker
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:period": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -27,6 +27,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSparkLine
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return Sparkline.ToString

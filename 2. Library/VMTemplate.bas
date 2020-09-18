@@ -36,6 +36,13 @@ Sub SetStatic(b As Boolean) As VMTemplate
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTemplate
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMTemplate
 	Template.SetRC(sRow, sCol)

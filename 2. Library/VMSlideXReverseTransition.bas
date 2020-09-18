@@ -37,6 +37,13 @@ Sub SetVModel(k As String) As VMSlideXReverseTransition
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMSlideXReverseTransition
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 Sub SetVIf(vif As String) As VMSlideXReverseTransition
 	SlideXReverseTransition.SetVIf(vif)
 	Return Me

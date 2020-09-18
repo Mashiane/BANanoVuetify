@@ -74,6 +74,37 @@ Sub Class_Globals
 	Public const COLOR_WARNING As String = "warning"
 	Public const COLOR_NONE As String = ""
 	'
+	
+	Public const COLOR_AMBER_TEXT As String = "amber--text"
+	Public const COLOR_BLACK_TEXT As String = "black--text"
+	Public const COLOR_BLUE_TEXT As String = "blue--text"
+	Public const COLOR_BLUEGREY_TEXT As String = "blue-grey--text"
+	Public const COLOR_BROWN_TEXT As String = "brown--text"
+	Public const COLOR_CYAN_TEXT As String = "cyan--text"
+	Public const COLOR_DEEPORANGE_TEXT As String = "deep-orange--text"
+	Public const COLOR_DEEPPURPLE_TEXT As String = "deep-purple--text"
+	Public const COLOR_GREEN_TEXT As String = "green--text"
+	Public const COLOR_GREY_TEXT As String = "grey--text"
+	Public const COLOR_INDIGO_TEXT As String = "indigo--text"
+	Public const COLOR_LIGHTBLUE_TEXT As String = "light-blue--text"
+	Public const COLOR_LIGHTGREEN_TEXT As String = "light-green--text"
+	Public const COLOR_LIME_TEXT As String = "lime--text"
+	Public const COLOR_ORANGE_TEXT As String = "orange--text"
+	Public const COLOR_PINK_TEXT As String = "pink--text"
+	Public const COLOR_PURPLE_TEXT As String = "purple--text"
+	Public const COLOR_RED_TEXT As String = "red--text"
+	Public const COLOR_TEAL_TEXT As String = "teal--text"
+	Public const COLOR_TRANSPARENT_TEXT As String = "transparent--text"
+	Public const COLOR_WHITE_TEXT As String = "white--text"
+	Public const COLOR_YELLOW_TEXT As String = "yellow--text"
+	Public const COLOR_PRIMARY_TEXT As String = "primary--text"
+	Public const COLOR_SECONDARY_TEXT As String = "secondary--text"
+	Public const COLOR_ACCENT_TEXT As String = "accent--text"
+	Public const COLOR_ERROR_TEXT As String = "error--text"
+	Public const COLOR_INFO_TEXT As String = "info--text"
+	Public const COLOR_SUCCESS_TEXT As String = "success--text"
+	Public const COLOR_WARNING_TEXT As String = "warning--text"
+	
 	Public const INTENSITY_NORMAL As String = ""
 	Public const INTENSITY_LIGHTEN5 As String = "lighten-5"
 	Public const INTENSITY_LIGHTEN4 As String = "lighten-4"
@@ -252,6 +283,16 @@ Sub Class_Globals
 	Public const VISIBILITY_LgAndUp As String = "lg-and-up"
 	Public const VISIBILITY_XlOnly As String = "xl-only"
 	Public const VISIBILITY_ALL As String = ""
+	
+	Public const ALERT_BORDER_LEFT As String = "left"
+	Public const ALERT_BORDER_RIGHT As String = "right"
+	Public const ALERT_BORDER_BOTTOM As String = "bottom"
+	Public const ALERT_BORDER_TOP As String = "top"
+	'
+	Public const ALERT_TYPE_SUCCESS As String = "success"
+	Public const ALERT_TYPE_INFO As String = "info"
+	Public const ALERT_TYPE_WARNING As String = "warning"
+	Public const ALERT_TYPE_ERROR As String = "error"
 End Sub
 
 'Initializes the object. You can add parameters to this method if needed.
@@ -809,6 +850,21 @@ Sub VDivider(elid As String) As VMElement
 	Return elx
 End Sub
 
+Sub VChip(elid As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elid)
+	elx.SetTag("v-chip")
+	Return elx
+End Sub
+
+Sub VChipGroup(elid As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elid)
+	elx.SetTag("v-chip-group")
+	Return elx
+End Sub
+
+
 Sub VList(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
@@ -1256,6 +1312,13 @@ Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	el.Initialize(vue, eID, eventHandler)
 	Return el
 End Sub
+
+Sub CreateChipGroup(eID As String, eventHandler As Object) As VMChipGroup
+	Dim el As VMChipGroup
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
 
 Sub NewParallax(eventHandler As Object,bStatic As Boolean, sname As String, sheight As String, src As String,salt As String) As VMParallax
 	Dim el As VMParallax = CreateParallax(sname, eventHandler)
@@ -2619,7 +2682,7 @@ Sub SetCallBack(moduleObj As Object, methodName As String) As BANanoVM
 	methodName = methodName.tolowercase
 	If SubExists(moduleObj, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(moduleObj, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(moduleObj, methodName, Array(e))
 	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
@@ -2797,6 +2860,13 @@ Sub CreateB4xList(lst As List) As List
 	Return nl
 End Sub
 
+Sub NewList1(lst As List) As List
+	Dim nl As List
+	nl.Initialize 
+	nl.AddAll(lst)
+	Return nl
+End Sub
+
 Sub CreateIconButton(sid As String,moduleObj As Object, iconName As String) As VMButton
 	Dim el As VMButton
 	el.Initialize(vue, sid, moduleObj)
@@ -2841,6 +2911,13 @@ Sub CreateToolbar(sid As String, moduleObj As Object) As VMToolBar
 	el.SetToolBar(True)
 	Return el
 End Sub
+
+Sub CreateToolbarTitle(sid As String, moduleObj As Object) As VMToolbarTitle
+	Dim el As VMToolbarTitle
+	el.Initialize(vue, sid, moduleObj)
+	Return el
+End Sub
+
 
 Sub CreateOverlay(sid As String, moduleObj As Object) As VMOverlay
 	Dim el As VMOverlay

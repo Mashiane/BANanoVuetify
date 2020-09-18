@@ -190,6 +190,12 @@ Sub IsValidID(idName As String) As Boolean
 	Return True
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMElement
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
 Sub AddElement1(elTag As String, elID As String, elText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMElement
 	Dim d As VMElement
 	d.Initialize(vue, elID).SetTag(elTag)
@@ -1549,7 +1555,7 @@ Sub SetOnKeydownEnter(eventHandler As Object, methodName As String) As VMElement
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@keydown.enter": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

@@ -29,6 +29,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(xprop As String, xValue As Object) As VMTabItem
+	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+
+
 'set key
 Sub SetKey(varKey As String) As VMTabItem
 	If varKey = "" Then Return Me

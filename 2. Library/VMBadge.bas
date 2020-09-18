@@ -30,6 +30,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMBadge
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMBadge
 	bStatic = b
 	Badge.SetStatic(b)

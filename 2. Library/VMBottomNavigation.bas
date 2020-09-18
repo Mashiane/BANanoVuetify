@@ -33,6 +33,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMBottomNavigation
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
+
 Sub SetActive(btnID As String) As VMBottomNavigation
 	vue.SetData($"${ID}bn"$, btnID)
 	Return Me
@@ -462,7 +468,7 @@ Sub SetOnChange(eventHandler As Object,methodName As String) As VMBottomNavigati
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)
@@ -474,7 +480,7 @@ Sub SetOnUpdateInputValue(methodName As String) As VMBottomNavigation
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, e)
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@update:input-value": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

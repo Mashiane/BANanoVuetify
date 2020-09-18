@@ -41,6 +41,11 @@ Sub AddItem(sText As String, shref As String, sTo As String, bExact As Boolean, 
 	items.Add(bci)
 End Sub
 
+Sub SetData(prop As String, value As Object) As VMBreadCrumbs
+	vue.SetData(prop, value)
+	Return Me
+End Sub
+
 'clear the breadcrumbs
 Sub Clear
 	items.Clear
