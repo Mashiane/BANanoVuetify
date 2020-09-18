@@ -261,12 +261,79 @@ vue.AddCode($"shirtBlouse.AddToContainer(xcont, 1, 2)"$)
 vue.AddCode($""$)
 Main.CreateVBCode(vue, Me, "shblouse", "Shirt Blouse", vue.GetSourceCode).AddToContainer(cont, 7, 1)
 
+'
+'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"'3rd card"$)
+vue.AddCode($"Dim card3 As VMElement = vm.VCard("card3").AddClass("mx-auto").SetMaxWidth("400")"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim tbl1 As VMElement = vm.VToolBar("card2tbl1")"$)
+vue.AddCode($"tbl1.SetAttr(CreateMap("flat":True, "color":"deep-purple accent-4", "dark":True))"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim btn1 As VMElement = vm.VBtn("").SetAttrSingle("icon", True).SetTextColor(vm.COLOR_WHITE)"$)
+vue.AddCode($"Dim icn As VMElement = vm.VIcon("").SetText("mdi-close")"$)
+vue.AddCode($"btn1.AddElement(icn)"$)
+vue.AddCode($"tbl1.AddElement(btn1)"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim tt As VMElement = vm.VToolbarTitle("").SetText("Filter Results").SetTextColor(vm.COLOR_white)"$)
+vue.AddCode($"tbl1.AddElement(tt)"$)
+vue.AddCode($"card3.AddElement(tbl1)"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim c3t1 As VMElement = vm.VCardText("")"$)
+vue.AddCode($"Dim c3t2 As VMElement = vm.VCardText("")"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim h2 As VMElement = vm.H2("").AddClass("title mb-2").SetText("Choose amenities")"$)
+vue.AddCode($"c3t1.AddElement(h2)"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim cg4 As VMElement = vm.VChipGroup("").SetVModel("amenities").SetAttrSingle("column", True).SetAttrSingle("multiple", True)"$)
+vue.AddCode($"Dim amenities As List = vm.NewList1(Array As Int(1, 4))"$)
+vue.AddCode($"cg4.SetData("amenities", amenities)"$)
+vue.AddCode($"cg4.AddElement1("v-chip", "", "Elevator", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg4.AddElement1("v-chip", "", "Washer", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg4.AddElement1("v-chip", "", "Fireplace", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg4.AddElement1("v-chip", "", "Wheelchair", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg4.AddElement1("v-chip", "", "Dogs ok", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg4.AddElement1("v-chip", "", "Cats ok", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"c3t1.AddElement(cg4)"$)
+vue.AddCode($""$)
+vue.AddCode($"card3.AddElement(c3t1)"$)
+vue.AddCode($"'"$)
+vue.AddCode($"Dim h2a As VMElement = vm.H2("").AddClass("title mb-2").SetText("Choose neighborhoods")"$)
+vue.AddCode($"c3t2.AddElement(h2a)"$)
+vue.AddCode($""$)
+vue.AddCode($"Dim cg5 As VMElement = vm.VChipGroup("").SetVModel("neighborhoods").SetAttrSingle("column", True).SetAttrSingle("multiple", True)"$)
+vue.AddCode($"Dim neighborhoods As List = vm.NewList1(Array As Int(1))"$)
+vue.AddCode($"cg5.SetData("neighborhoods", neighborhoods)"$)
+vue.AddCode($"cg5.AddElement1("v-chip", "", "Snowy Rock Place", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg5.AddElement1("v-chip", "", "Honeylane Circle", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg5.AddElement1("v-chip", "", "Donna Drive", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg5.AddElement1("v-chip", "", "Elaine Street", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg5.AddElement1("v-chip", "", "Court Street", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"cg5.AddElement1("v-chip", "", "Kennedy Park", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
+vue.AddCode($"c3t2.AddElement(cg5)"$)
+vue.AddCode($""$)
+vue.AddCode($"card3.AddElement(c3t2)"$)
+vue.AddCode($""$)
+vue.AddCode($"'add card to container"$)
+vue.AddCode($"card3.AddToContainer(xcont, 1, 3)"$)
+Main.CreateVBCode(vue, Me, "chipfilter", "Chip Group Filter ", vue.GetSourceCode).AddToContainer(cont, 8, 1)
+
 
 
 
 '
 	vm.AddContainer(cont)
 End Sub
+
+
+Sub chipfiltercopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("chipfilter")
+End Sub
+
+Sub chipfilterdownload_click(e As BANanoEvent)
+	vue.DownloadCode("chipfilter", "chipfilter.txt")
+End Sub
+
 
 Sub shblousecopy_click(e As BANanoEvent)
 	vue.CopyCode2Clipboard("shblouse")

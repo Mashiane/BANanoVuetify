@@ -157,6 +157,6 @@ ModuleClosedNodes6=
 ModuleClosedNodes7=
 ModuleClosedNodes8=
 ModuleClosedNodes9=
-NavigationStack=modChips,Process_Globals,3,0,modChips,chipscodecopy_click,85,0,modChips,chipscodedownload_click,92,0,modChips,toothbrushcopy_click,144,0,modChips,toothbrushdownload_click,156,0,modChips,chipgroupcopy_click,158,0,modChips,chipgroupdownload_click,200,0,modChips,shblousedownload_click,221,0,modChips,Code,182,6
+NavigationStack=modChips,Process_Globals,3,0,modChips,chipscodecopy_click,85,0,modChips,chipscodedownload_click,92,0,modChips,toothbrushcopy_click,144,0,modChips,toothbrushdownload_click,156,0,modChips,chipgroupcopy_click,158,0,modChips,chipgroupdownload_click,200,0,modChips,shblousedownload_click,221,0,modChips,chipfilterdownload_click,329,0,modChips,Code,320,6
 SelectedBuild=0
 VisibleModules=10,51,50,52,11,14
