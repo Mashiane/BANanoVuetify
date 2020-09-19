@@ -42,7 +42,7 @@ Sub Code
 	vue.AddCode($"Dim elID As String = vm.GetIDFromEvent(e)"$)
 	vue.AddCode($"vm.ShowSnackBar(elID)"$)
 	vue.AddCode($"End Sub"$)
-	Main.CreateVBCode(vue, Me, "menu1code", "Menu", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "menu1code", "Menu", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 	'
 	Dim menu1 As VMMenu = vm.CreateMenu("menu2", Me).SetButton("mdi-image", "My Button")
@@ -64,7 +64,7 @@ vue.AddCode($"'get the id from the event"$)
 vue.AddCode($"Dim elID As String = vm.GetIDFromEvent(e)"$)
 vue.AddCode($"vm.ShowSnackBar(elID)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "menu2code", "Menu", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "menu2code", "Menu", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'
 	Dim menu2 As VMMenu = vm.CreateMenu("menu3", Me).SetAvatar("./assets/sponge.png")
@@ -87,7 +87,7 @@ vue.AddCode($"'get the id from the event"$)
 vue.AddCode($"Dim elID As String = vm.GetIDFromEvent(e)"$)
 vue.AddCode($"vm.ShowSnackBar(elID)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "menu3code", "Menu", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+pgIndex.CreateVBCode(vue, Me, "menu3code", "Menu", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 
 
 

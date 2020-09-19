@@ -33,6 +33,10 @@ Sub SetData(prop As String, value As Object) As VMCardActions
 	Return Me
 End Sub
 
+Sub SetSpaceBetween As VMCardActions
+	AddClass("justify-space-between")
+	Return Me
+End Sub
 
 Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardActions
 	Dim d As VMElement

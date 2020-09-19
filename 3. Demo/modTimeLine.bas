@@ -142,7 +142,7 @@ vue.AddCode($"tl4.CardContainer.AddComponent(1,1,lblX.ToString)"$)
 vue.AddCode($"tltimeline1.AddTimeLineItem(tl4)"$)
 vue.AddCode($"'"$)
 vue.AddCode($"tltimeline1.AddToContainer(cont,1,1)"$)
-Main.CreateVBCode(vue, Me, "timelinex", "Timeline", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "timelinex", "Timeline", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 
 	'add timelines using v-for
@@ -273,7 +273,7 @@ vue.AddCode($"Dim btnID As String = vm.GetIDFromEvent(e)"$)
 vue.AddCode($"'show the button id"$)
 vue.AddCode($"vm.ShowSnackBarSuccess(btnID)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "dynamictimeline", "Dynamic Timeline", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+pgIndex.CreateVBCode(vue, Me, "dynamictimeline", "Dynamic Timeline", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 	
 	'add container to page
 	vm.AddContainer(cont)

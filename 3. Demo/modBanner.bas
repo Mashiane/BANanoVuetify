@@ -58,7 +58,7 @@ vue.AddCode($"btnGetOnline.SetLAbel("Get Online")"$)
 vue.AddCode($"banner.AddAction(btnGetOnline)"$)
 vue.AddCode($"card.AddStuff(banner.ToString)"$)
 vue.AddCode($"cont.AddComponent(1, 1, card.ToString)"$)
-Main.CreateVBCode(vue, Me, "bannercardcode", "Banner", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "bannercardcode", "Banner", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 	
 	'	
 	Dim banner1 As VMBanner = vm.CreateBanner("banner1", Me).SetTwoLine(True)
@@ -88,7 +88,7 @@ vue.AddCode($"'"$)
 vue.AddCode($"banner1.SetOnClickIcon("checkConnection")"$)
 vue.AddCode($""$)
 vue.AddCode($"cont.AddComponent(1, 2, banner1.ToString)"$)
-Main.CreateVBCode(vue, Me, "banner1code", "Banner", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "banner1code", "Banner", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 	
 	vm.AddContainer(cont)
 End Sub

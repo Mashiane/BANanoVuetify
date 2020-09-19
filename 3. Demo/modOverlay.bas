@@ -26,7 +26,7 @@ Sub Code
 	vue.AddCode($"vm.PageResume"$)
 	vue.AddCode($"'hide the overlay"$)
 	vue.AddCode($"vm.PagePause"$)
-	Main.CreateVBCode(vue, Me, "overlaycode", "Overlay", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "overlaycode", "Overlay", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 	'hide this container
 	cont.Hide

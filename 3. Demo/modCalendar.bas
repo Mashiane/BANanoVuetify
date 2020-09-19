@@ -85,7 +85,7 @@ vue.AddCode($"Private calmenu As VMMenu"$)
 vue.AddCode($"Private cal As VMCalendar"$)
 vue.AddCode($"Private calcard As VMCard"$)
 vue.AddCode($"Private BANano As BANano"$)
-Main.CreateVBCode(vue, Me, "caldef", "Calendar Definition", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "caldef", "Calendar Definition", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -143,7 +143,7 @@ vue.AddCode($"cal.Update"$)
 vue.AddCode($"'run when app is mounded"$)
 vue.AddCode($"vue.SetMounted(Me, "MoundCalendar")"$)
 vue.AddCode($""$)
-Main.CreateVBCode(vue, Me, "calux", "Calendar User Interface", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+pgIndex.CreateVBCode(vue, Me, "calux", "Calendar User Interface", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -212,7 +212,7 @@ vue.AddCode($"cal.ShowNext"$)
 vue.AddCode($"Dim caltitle As String = cal.GetTitle"$)
 vue.AddCode($"calcard.UpdateTitle(caltitle)"$)
 vue.AddCode($"End Sub"$)
-	Main.CreateVBCode(vue, Me, "calevents", "Calendar Events & Methods", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	pgIndex.CreateVBCode(vue, Me, "calevents", "Calendar Events & Methods", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 	
 	'add container to page

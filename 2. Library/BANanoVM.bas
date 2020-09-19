@@ -303,6 +303,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	Modules = vue.modules
 	placeHolder = 0
 	ShowWarnings = True
+	vue.ShowWarnings = True
 	Options.Initialize
 	drawers.Initialize
 	Position.initialize
@@ -344,7 +345,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	BottomNav.SetApp(True)
 	BottomNav.Hide
 	
-	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False)
+	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False) 
 	'
 	Notification = CreateAlert("notif", eventHandler, "")
 	Notification.SetContent("Notification")
@@ -1300,6 +1301,38 @@ Sub CreateExpandTransition(eID As String, eventHandler As Object) As VMExpandTra
 	Return el
 End Sub
 
+Sub CreateItemGroup(eID As String, eventHandler As Object) As VMItemGroup
+	Dim el As VMItemGroup
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateWindow(eID As String, eventHandler As Object) As VMWindow
+	Dim el As VMWindow
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+Sub CreateWindowItem(eID As String, eventHandler As Object) As VMWindowItem
+	Dim el As VMWindowItem
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+
+Sub CreateSlideItem(eID As String, eventHandler As Object) As VMSlideItem
+	Dim el As VMSlideItem
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
+
+Sub CreateItem(eID As String, eventHandler As Object) As VMItem
+	Dim el As VMItem
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
 Sub CreateAlert(eID As String, eventHandler As Object, typeOf As String) As VMAlert
 	Dim el As VMAlert
 	el.Initialize(vue, eID, eventHandler)
@@ -1543,6 +1576,26 @@ Sub Decrement(elID As String, valueOf As Int) As BANanoVM
 	vue.SetStateSingle(elID, oldv)
 	Return Me
 End Sub
+
+'decrement limit to
+Sub DecrementTo(elID As String, valueOf As Int, LimitTo As Int) As BANanoVM
+	elID = elID.tolowercase
+	Dim oldv As Int = vue.GetState(elID,0)
+	oldv = BANano.parseInt(oldv) - valueOf
+	If oldv <= 0 Then oldv = LimitTo
+	vue.SetStateSingle(elID, oldv)
+	Return Me
+End Sub
+
+Sub IncrementTo(elID As String, valueOf As Int, LimitTo As Int) As BANanoVM
+	elID = elID.tolowercase
+	Dim oldv As Int = vue.GetState(elID,0)
+	oldv = BANano.parseInt(oldv) + valueOf
+	If oldv >= LimitTo Then oldv = LimitTo
+	vue.SetStateSingle(elID, oldv)
+	Return Me
+End Sub
+
 
 'add a theme to use in the app
 Sub AddTheme(themeName As String, ForeColor As String, ForeColorIntensity As String, BackColor As String, BackColorIntensity As String)
@@ -2893,6 +2946,13 @@ Sub CreateAppBar(sid As String, moduleObj As Object) As VMToolBar
 	el.SetAppBar(True)
 	Return el
 End Sub
+
+Sub CreateSlideGroup(sid As String, moduleObj As Object) As VMSlideGroup
+	Dim el As VMSlideGroup
+	el.Initialize(vue, sid, moduleObj)
+	Return el
+End Sub
+
 
 Sub CreateSystemBar(sid As String, moduleObj As Object) As VMToolBar
 	Dim el As VMToolBar

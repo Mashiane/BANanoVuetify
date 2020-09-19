@@ -33,6 +33,17 @@ Sub SetData(xprop As String, xValue As Object) As VMScrollXTransition
 End Sub
 
 
+
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMScrollXTransition
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	SetText(d.ToString)
+	Return Me
+End Sub
+
+
 'add a child element
 Sub SetText(child As String)
 	ScrollXTransition.SetText(child)

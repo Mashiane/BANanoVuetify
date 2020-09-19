@@ -28,6 +28,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	vmodel = ""
 	Rating.typeOf = "rating"
 	Rating.fieldType = "dbl"
+	SetOnInput(Module, $"${ID}_input"$)
 	Return Me
 End Sub
 
@@ -95,6 +96,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_input"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMRating.${eName} event has not been defined!"$)
+	End If
+	End If
 	Return Rating.ToString
 End Sub
 

@@ -70,7 +70,7 @@ Sub Code
 	vue.AddCode($"Dim contbtnc As VMContainer"$)
 	vue.AddCode($"contbtnc = vm.CreateContainer("contxc", Me)"$)
 	vue.AddCode($"contbtnc.AddControlS(lbl3.Label, lbl3.tostring, 1, 1, 12, 12, 12, 12)"$)
-	Main.CreateVBCode(vue, Me, "step1code", "Creating Containers with Content", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "step1code", "Creating Containers with Content", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 	'initialize code builder
 vue.SourceCodeBuilder
@@ -81,7 +81,7 @@ vue.AddCode($"stepper.AddStep("astep2", "Step 2", "Name of Step 2", True, contbt
 vue.AddCode($"stepper.AddStep("astep3", "Step 3", "Name of Step 3", True, contbtnc.ToString)"$)
 vue.AddCode($"stepper.AddToContainer(cont, 1, 1)"$)
 vue.AddCode($"'"$)
-Main.CreateVBCode(vue, Me, "step2code", "Stepper", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "step2code", "Stepper", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 	
 	
@@ -116,7 +116,7 @@ vue.AddCode($""$)
 vue.AddCode($"Sub stepperChange(numx As Int)		'ignore"$)
 vue.AddCode($"vm.ShowSnackBar(numx)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "step3code", "Stepper with Event", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+pgIndex.CreateVBCode(vue, Me, "step3code", "Stepper with Event", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 
 

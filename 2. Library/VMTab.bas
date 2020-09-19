@@ -30,6 +30,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Icon.Initialize(vue, $"${ID}icon"$, Module)
 	Badge.Initialize(vue, $"${ID}badge"$, Module)
 	hasBadge = False
+	SetOnClick($"${ID}_click"$)
+	SetOnChange($"${ID}_change"$)
 	Return Me
 End Sub
 
@@ -81,6 +83,16 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMTab.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_click"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMTab.${eName} event has not been defined!"$)
+	End If
+	End If
 	If hasBadge Then AddComponent(Badge.ToString)
 	Return TabItem.ToString
 End Sub

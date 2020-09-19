@@ -62,7 +62,7 @@ Sub Code
 	vue.AddCode($"c1.item.SetReverseTransition("fade-transition")"$)
 	vue.AddCode($"c1.item.SetTransition("fade-transition")"$)
 	vue.AddCode($"cont.AddComponent(1, 1, c1.tostring)"$)
-	Main.CreateVBCode(vue, Me, "carcode", "Carousel", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	pgIndex.CreateVBCode(vue, Me, "carcode", "Carousel", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'add container to page
 	vm.AddContainer(cont)

@@ -1388,6 +1388,62 @@ Sub AddColumns12 As VMContainer
 	Return Me
 End Sub
 
+Sub AddColumns6 As VMContainer
+	AddColumns(1,"12","6","6","6")
+	Return Me
+End Sub
+
+Sub AddColumns2 As VMContainer
+	AddColumns(1,"12","2","2","2")
+	Return Me
+End Sub
+
+Sub AddColumns1 As VMContainer
+	AddColumns(1,"12","1","1","1")
+	Return Me
+End Sub
+
+Sub AddColumns3 As VMContainer
+	AddColumns(1,"12","3","3","3")
+	Return Me
+End Sub
+
+Sub AddColumns4 As VMContainer
+	AddColumns(1,"12","4","4","4")
+	Return Me
+End Sub
+
+Sub AddColumns5 As VMContainer
+	AddColumns(1,"12","5","5","5")
+	Return Me
+End Sub
+
+Sub AddColumns7 As VMContainer
+	AddColumns(1,"12","7","7","7")
+	Return Me
+End Sub
+
+Sub AddColumns8 As VMContainer
+	AddColumns(1,"12","8","8","8")
+	Return Me
+End Sub
+
+Sub AddColumns9 As VMContainer
+	AddColumns(1,"12","9","9","9")
+	Return Me
+End Sub
+
+Sub AddColumns10 As VMContainer
+	AddColumns(1,"12","10","10","10")
+	Return Me
+End Sub
+
+Sub AddColumns11 As VMContainer
+	AddColumns(1,"12","11","11","11")
+	Return Me
+End Sub
+
+
 'add a style to a column
 Sub SetStyleRC(rowPos As Int, colPos As Int, prop As String, value As String) As VMContainer
 	Dim rowc As Map
@@ -2118,7 +2174,7 @@ private Sub CreateGrid
 			lbl.SetText(lblKey)
 			lbl.SetVisible(False)
 			AddControl(lbl.Label, lbl.ToString,xRow,xCol,"0","0","0","0","12","12","12","12")			
-			Log("VMContainer.CreateGrid: "& strRC & ": RC is NOT defined")
+			Log("VMContainer.CreateGrid: " & ID & "." & strRC & ": RC is NOT defined")
 		Next
 	End If
 	'add the grid definition

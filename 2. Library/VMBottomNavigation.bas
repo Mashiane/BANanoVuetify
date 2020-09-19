@@ -88,6 +88,16 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+		Dim eName As String = $"${ID}_change"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMBottomNavigation.${eName} event has not been defined!"$)
+		End If
+		eName  = $"${ID}_updateinputvalue"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMBottomNavigation.${eName} event has not been defined!"$)
+		End If
+	End If
 	Return BottomNavigation.ToString
 End Sub
 

@@ -45,7 +45,7 @@ vue.AddCode($"pgnpagination1.SetOnInput("pgnpagination1_input")"$)
 vue.AddCode($"pgnpagination1.SetOnNext("pgnpagination1_next")"$)
 vue.AddCode($"pgnpagination1.SetOnPrevious("pgnpagination1_previous")"$)
 vue.AddCode($"pgnpagination1.AddToContainer(cont,1,1)"$)
-Main.CreateVBCode(vue, Me, "pagi1code", "Pagination", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "pagi1code", "Pagination", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -62,7 +62,7 @@ vue.AddCode($""$)
 vue.AddCode($"Private Sub pgnpagination1_previous(e As BANanoEvent)"$)
 vue.AddCode($"vm.ShowSnackBar("Previous....")"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "pagi1clickcode", "Pagination Events", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "pagi1clickcode", "Pagination Events", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 
 	'add container to page

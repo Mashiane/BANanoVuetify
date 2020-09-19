@@ -42,7 +42,31 @@ Sub SetData(xprop As String, xValue As Object) As VMTextField
 	Return Me
 End Sub
 
+'add a menu after the text box
+Sub AddMenuAfter(menu As VMMenu) As VMTextField
+	Dim appendOuter As VMTemplate
+	appendOuter.Initialize(vue, $"${ID}menuafter"$, Module)
+	appendOuter.SetAttrLoose("v-slot:append-outer")
+	appendOuter.AddComponent(menu.ToString)
+	AddComponent(appendOuter.ToString)
+	Return Me
+End Sub
 
+'add a menu after the text box
+Sub AddButtonAfter(btn As VMButton) As VMTextField
+	Dim appendOuter As VMTemplate
+	appendOuter.Initialize(vue, $"${ID}menuafter"$, Module)
+	appendOuter.SetAttrLoose("v-slot:append-outer")
+	appendOuter.AddComponent(btn.ToString)
+	AddComponent(appendOuter.ToString)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMTextField
+	SetText(comp)
+	Return Me
+End Sub
 
 Sub SetErrorText(sError As String) As VMTextField    'ignore
 	ErrorText = sError

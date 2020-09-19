@@ -31,6 +31,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Slider.fieldType = "int"
 	bStatic = False
 	bIsRange = False
+	SetOnClick($"${ID}_click"$)
 	Return Me
 End Sub
 
@@ -138,6 +139,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_click"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMSlider.${eName} event has not been defined!"$)
+	End If
+	End If
 	Return Slider.ToString
 End Sub
 

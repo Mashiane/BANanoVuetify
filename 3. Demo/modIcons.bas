@@ -27,7 +27,7 @@ Sub Code
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateIcon("icon1", Me).SetText("home").AddToContainer(cont, 1, 1)"$)
-	Main.CreateVBCode(vue, Me, "icon1code", "Icon", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "icon1code", "Icon", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	'
@@ -35,14 +35,14 @@ Sub Code
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateIcon("icon2", Me).SetText("add").SetColor("red").SetLarge(True).AddToContainer(cont, 2, 1)"$)
-	Main.CreateVBCode(vue, Me, "icon2code", "Icon", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	pgIndex.CreateVBCode(vue, Me, "icon2code", "Icon", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'
 	vm.CreateIcon("icon3", Me).SetText("mdi-email").SetColor("teal").SetXLarge(True).AddToContainer(cont, 3, 1)
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateIcon("icon3", Me).SetText("mdi-email").SetColor("teal").SetXLarge(True).AddToContainer(cont, 3, 1)"$)
-	Main.CreateVBCode(vue, Me, "icon3code", "Icon", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+	pgIndex.CreateVBCode(vue, Me, "icon3code", "Icon", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 
 
 
@@ -52,7 +52,7 @@ Sub Code
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("btn1", Me).SetLabel("Accept").SetColor("purple").AddIcon("add", "left", "").AddToContainer(cont, 4, 1)"$)
-	Main.CreateVBCode(vue, Me, "btnxcode", "Button Icon", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	pgIndex.CreateVBCode(vue, Me, "btnxcode", "Button Icon", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 
 	'add container to page

@@ -36,29 +36,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bTimePicker = False
 	bStatic = False
 	bHideIcons = False
+	SetOnChange(Module, $"${ID}_change"$)
+	SetOnClickDate($"${ID}_clickdate"$)
 	Return Me
 End Sub
 
 Sub SetData(prop As String, value As Object) As VMDateTimePicker
 	vue.SetData(prop, value)
 	Return Me
-End Sub
-
-
-private Sub formatdate(sFormat As String) As String
-	Dim sdate As String = vue.GetData(vmodel)
-	If sdate.Length = 0 Then Return ""
-	Try
-		sdate = vue.MvField(sdate,1," ")
-		sdate = sdate.trim
-		DateTime.DateFormat = "yyyy-MM-dd"
-		Dim dt As Long = DateTime.DateParse(sdate)
-		DateTime.DateFormat = sFormat
-		Dim rslt As String = DateTime.Date(dt)
-		Return rslt
-	Catch
-		Return sdate
-	End Try
 End Sub
 
 'set autofocus
@@ -230,6 +215,16 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMDateTimePicker.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_clickdate"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMDateTimePicker.${eName} event has not been defined!"$)
+	End If
+	End If
 	If bForInput Then
 		'create a menu
 		vue.SetStateSingle($"${ID}menu"$, False)
@@ -244,6 +239,8 @@ Sub ToString As String
 		dMenu.SetAttrSingle(":return-value.sync", vmodel)
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
+		dMenu.SetAttrLoose("full-width")
+		dMenu.SetAttrLoose("lazy")
 		dMenu.SetAttrSingle("min-width", "290px")
 		dMenu.SetAttrSingle("max-width", "290px")
 		'

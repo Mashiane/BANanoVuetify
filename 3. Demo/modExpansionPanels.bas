@@ -44,7 +44,7 @@ vue.AddCode($"expx.Header.SetText("Item")"$)
 vue.AddCode($"expx.Content.SetText(vm.Rand_LoremIpsum(1))"$)
 vue.AddCode($"ep.AddPanel(expx)"$)
 vue.AddCode($"cont.AddComponent(1, 1, ep.tostring)"$)
-Main.CreateVBCode(vue, Me, "exp1code", "Accordion v-for", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "exp1code", "Accordion v-for", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	Dim lbl1 As VMLabel = vm.CreateLabel("").SetH1
@@ -126,7 +126,7 @@ vue.AddCode($"exppanel1.AddPanel1("btnc", "Sky", contbtnc)"$)
 vue.AddCode($"exppanel1.AddPanel1("btnd", "Planet", contbtnd)"$)
 vue.AddCode($"exppanel1.AddPanel1("btne", "Bird", contbtne)"$)
 vue.AddCode($"cont.AddComponent(2, 1, exppanel1.tostring)"$)
-Main.CreateVBCode(vue, Me, "exp2code", "Accordion using Containers", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "exp2code", "Accordion using Containers", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 
 	vm.AddContainer(cont)

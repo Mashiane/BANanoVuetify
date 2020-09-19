@@ -78,42 +78,46 @@ Module23=modForm
 Module24=modGrid
 Module25=modIcons
 Module26=modImages
-Module27=modLists
-Module28=modLoadingSkeleton
-Module29=modMenus
+Module27=modItemGroups
+Module28=modLists
+Module29=modLoadingSkeleton
 Module3=modAvatar
-Module30=modMessageBoard
-Module31=modOverlay
-Module32=modPagination
-Module33=modParallax
-Module34=modProgress
-Module35=modRadioGroups
-Module36=modRating
-Module37=modRealtimeLogging
-Module38=modSelects
-Module39=modSlider
+Module30=modMenus
+Module31=modMessageBoard
+Module32=modOverlay
+Module33=modPagination
+Module34=modParallax
+Module35=modProgress
+Module36=modRadioGroups
+Module37=modRating
+Module38=modRealtimeLogging
+Module39=modSelects
 Module4=modBadges
-Module40=modSnackBar
-Module41=modSparkLine
-Module42=modStepper
-Module43=modSwitch
-Module44=modTabs
-Module45=modTextArea
-Module46=modTextField
-Module47=modTimeLine
-Module48=modTimePicker
-Module49=modToolbar
+Module40=modSlideGroups
+Module41=modSlider
+Module42=modSnackBar
+Module43=modSparkLine
+Module44=modStepper
+Module45=modSwitch
+Module46=modTabs
+Module47=modTextArea
+Module48=modTextField
+Module49=modTimeLine
 Module5=modBanner
-Module50=modToolkit
-Module51=modTreeView
-Module52=pgIndex
+Module50=modTimePicker
+Module51=modToolbar
+Module52=modToolkit
+Module53=modTreeView
+Module54=modWindow
+Module55=pgBRs
+Module56=pgIndex
 Module6=modBottomNavigation
 Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=26
 NumberOfLibraries=6
-NumberOfModules=52
+NumberOfModules=56
 Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
@@ -130,7 +134,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.28"
+	Public Version As String = "4.34"
 	Public Port As String = "8080"
 End Sub
 
@@ -196,14 +200,3 @@ Sub BANano_Ready
 	pgIndex.Init
 	
 End Sub
-
-Sub CreateVBCode(vue As BANanoVue, module As Object, codeID As String, sTitle As String, scode As String) As VMPrism
-	scode = scode.Replace("~", "$")
-	Dim pri As VMPrism
-	pri.Initialize(vue, codeID, module)
-	pri.SetLanguage("vb")
-	pri.SetTitle(sTitle)
-	pri.SetCode(scode)
-	Return pri
-End Sub
-  

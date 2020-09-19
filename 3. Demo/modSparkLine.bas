@@ -56,7 +56,7 @@ vue.AddCode($"sparksparkline1.SetAutoLineWidth(False)"$)
 vue.AddCode($"sparksparkline1.SetVisible(True)"$)
 vue.AddCode($"sparksparkline1.SetAutoDraw(True)"$)
 vue.AddCode($"sparksparkline1.AddToContainer(cont,1,1)"$)
-Main.CreateVBCode(vue, Me, "sparkcode", "Sparkline", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "sparkcode", "Sparkline", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	'add container to page

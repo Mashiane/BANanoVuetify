@@ -38,8 +38,23 @@ Sub SetVModel(k As String) As VMWindowItem
 	Return Me
 End Sub
 
+
+Sub AddComponent(comp As String) As VMWindowItem
+	SetText(comp)
+	Return Me
+End Sub
+
 Sub SetData(xprop As String, xValue As Object) As VMWindowItem
 	vue.SetData(xprop, xValue)
+	Return Me
+End Sub
+
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMWindowItem
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	SetText(d.ToString)
 	Return Me
 End Sub
 

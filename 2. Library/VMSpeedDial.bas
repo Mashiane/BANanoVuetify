@@ -43,6 +43,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	hasInitial = False
 	hasFinal = False
+	SetOnClick($"${ID}_click"$)
 	Return Me
 End Sub
 
@@ -205,6 +206,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_click"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMSpeedDial.${eName} event has not been defined!"$)
+	End If
+	End If
 	Slot.SetSlotActivator
 	Button.SetFab(True)
 	If hasFinal Then FinalIcon.Pop(Button.Button)

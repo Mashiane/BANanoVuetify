@@ -28,6 +28,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	CheckBox.fieldType = "bool"
 	bStatic = False
 	vmodel = ""
+	SetOnChange(Module, $"${ID}_change"$)
+	SetOnClick(Module, $"${ID}_click"$)
 	Return Me
 End Sub
 
@@ -180,6 +182,16 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_click"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMCheckBox.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMCheckBox.${eName} event has not been defined!"$)
+	End If
+	End If
 	Return CheckBox.ToString
 End Sub
 

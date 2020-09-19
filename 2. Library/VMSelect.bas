@@ -38,6 +38,27 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	hasItems = False
 	hasListItems = False
 	marked = False
+	SetOnChange(Module, $"${ID}_change"$)
+	Return Me
+End Sub
+
+'add a menu after the text box
+Sub AddMenuAfter(menu As VMMenu) As VMSelect
+	Dim appendOuter As VMTemplate
+	appendOuter.Initialize(vue, $"${ID}menuafter"$, Module)
+	appendOuter.SetAttrLoose("v-slot:append-outer")
+	appendOuter.AddComponent(menu.ToString)
+	AddComponent(appendOuter.ToString)
+	Return Me
+End Sub
+
+'add a menu after the text box
+Sub AddButtonAfter(btn As VMButton) As VMSelect
+	Dim appendOuter As VMTemplate
+	appendOuter.Initialize(vue, $"${ID}menuafter"$, Module)
+	appendOuter.SetAttrLoose("v-slot:append-outer")
+	appendOuter.AddComponent(btn.ToString)
+	AddComponent(appendOuter.ToString)
 	Return Me
 End Sub
 
@@ -322,6 +343,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMSelect.${eName} event has not been defined!"$)
+	End If
+	End If
 	If hasItems Then 
 		SetItems(sitems)
 		vue.SetData(sitems, items)

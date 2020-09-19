@@ -30,7 +30,7 @@ Sub Code
 	vue.SourceCodeBuilder
 	vue.AddCode($"Dim par As VMParallax = vm.CreateParallax("p1", Me).SetSRC("./assets/material.jpg")"$)
 	vue.AddCode($"cont.AddComponent(1, 1, par.tostring)"$)
-	Main.CreateVBCode(vue, Me, "par1code", "Parallax", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "par1code", "Parallax", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 	'
 	Dim par1 As VMParallax = vm.CreateParallax("p2", Me).SetSRC("./assets/bg-2.jpg").SetAttrLoose("dark")
 	par1.Container.AddRows(1).AddColumns12
@@ -61,7 +61,7 @@ vue.AddCode($"Dim h4 As VMLabel = vm.createlabel("h4").AddClass("subheading").Se
 vue.AddCode($"par1.Container.AddComponent(1, 1, h4.tostring)"$)
 vue.AddCode($""$)
 vue.AddCode($"cont.AddComponent(2, 1, par1.tostring)"$)
-Main.CreateVBCode(vue, Me, "par2code", "Parallax with Container", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "par2code", "Parallax with Container", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	vm.AddContainer(cont)
 End Sub

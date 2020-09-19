@@ -1561,3 +1561,106 @@ Sub SetOnKeydownEnter(eventHandler As Object, methodName As String) As VMElement
 	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
+
+Sub SetRounded As VMElement
+	AddClass("rounded")
+	Return Me
+End Sub
+
+Sub SetRounded_SM As VMElement
+	AddClass("rounded-sm")
+	Return Me
+End Sub
+
+Sub SetRounded_LG As VMElement
+	AddClass("rounded-lg")
+	Return Me
+End Sub
+
+Sub SetRounded_XL As VMElement
+	AddClass("rounded-xl")
+	Return Me
+End Sub
+
+
+Sub SetRounded_Pill As VMElement
+	AddClass("rounded-pill")
+	Return Me
+End Sub
+
+Sub SetRounded_Circle As VMElement
+	AddClass("rounded-circle")
+	Return Me
+End Sub
+
+Sub SetRounded_Top(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-t")
+	Else
+		AddClass($"rounded-t-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_Bottom(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-b")
+	Else
+		AddClass($"rounded-b-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_Right(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-r")
+	Else
+		AddClass($"rounded-r-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_Left(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-l")
+	Else
+		AddClass($"rounded-l-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_TopLeft(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-tl")
+	Else
+		AddClass($"rounded-tl-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_TopRight(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-tr")
+	Else
+		AddClass($"rounded-tr-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_BottomLeft(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-bl")
+	Else
+		AddClass($"rounded-bl-${Size}"$)
+	End If
+	Return Me
+End Sub
+
+Sub SetRounded_BottomRight(Size As String) As VMElement
+	If Size = "" Then
+		AddClass("rounded-br")
+	Else
+		AddClass($"rounded-br-${Size}"$)
+	End If
+	Return Me
+End Sub

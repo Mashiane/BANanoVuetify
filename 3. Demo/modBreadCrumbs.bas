@@ -51,7 +51,7 @@ vue.AddCode($"bcbreadcrumbs1.AddItem("Bird", "", "", False, False, True)"$)
 vue.AddCode($"bcbreadcrumbs1.Refresh"$)
 vue.AddCode($""$)
 	vue.AddCode($"bcbreadcrumbs1.AddToContainer(cont, 2,1)"$)
-Main.CreateVBCode(vue, Me, "bccode", "Bread Crumb", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "bccode", "Bread Crumb", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'add container to page
 	vm.AddContainer(cont)

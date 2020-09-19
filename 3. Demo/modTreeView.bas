@@ -76,7 +76,7 @@ vue.AddCode($"tv.AddItem("11", "14", "v-window.ts", "", "ts", False)"$)
 vue.AddCode($"tv.AddToContainer(cont, 1, 1)"$)
 vue.AddCode($"'"$)
 vue.AddCode($"cont.AddLabel(2, 1, "lblx2","p", ~"Selected: {{ tv1selected }}"~)"$)
-Main.CreateVBCode(vue, Me, "tv1code", "Treeview with Checkboxes", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+pgIndex.CreateVBCode(vue, Me, "tv1code", "Treeview with Checkboxes", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -86,7 +86,7 @@ vue.AddCode($"Sub tv1_oninput(items As List)"$)
 vue.AddCode($"Dim sCode As String = BANano.tojson(items)"$)
 vue.AddCode($"vm.showsnackbar("Selected: " & sCode)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "tv1codechecked", "TreeView Get Checked", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+pgIndex.CreateVBCode(vue, Me, "tv1codechecked", "TreeView Get Checked", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 	'
 	Dim tv2 As VMTreeView = vm.CreateTreeView("tv2", Me)
 	tv2.SetActivatable(True)
@@ -138,7 +138,7 @@ vue.AddCode($"tv2.AddToContainer(cont, 5, 1)"$)
 vue.AddCode($"'"$)
 vue.AddCode($"cont.AddLabel(6, 1, "lblxx3","p", ~"Active: {{ tv2active }}"~)"$)
 vue.AddCode($""$)
-Main.CreateVBCode(vue, Me, "tv2code", "TreeView Node Click", vue.GetSourceCode).AddToContainer(cont, 7, 1)
+pgIndex.CreateVBCode(vue, Me, "tv2code", "TreeView Node Click", vue.GetSourceCode).AddToContainer(cont, 7, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -148,7 +148,7 @@ vue.AddCode($"Sub tv2_updateactive(items As List)"$)
 vue.AddCode($"Dim sCode As String = BANano.tojson(items)"$)
 vue.AddCode($"vm.showsnackbar("Active: " & sCode)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "tv2codeclick", "TreeView Node Click Event", vue.GetSourceCode).AddToContainer(cont, 8, 1)
+pgIndex.CreateVBCode(vue, Me, "tv2codeclick", "TreeView Node Click Event", vue.GetSourceCode).AddToContainer(cont, 8, 1)
 
 
 	'add container to page

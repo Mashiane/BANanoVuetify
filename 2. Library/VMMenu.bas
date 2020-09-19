@@ -129,6 +129,22 @@ Sub SetIcon(iconName As String) As VMMenu
 	Return Me
 End Sub
 
+'set the icon to activate the menu
+Sub SetIconColor(iconName As String, iconColor As String) As VMMenu
+	Dim btn As VMButton
+	btn.Initialize(vue, $"${ID}button"$, Module)
+	btn.SetStatic(bStatic)
+	btn.SetDesignMode(DesignMode)
+	btn.SetIconButton(iconName)
+	btn.SetMenuTrigger(True)
+	btn.SetColor(iconColor)
+	btn.SetDark(True)
+	btn.Pop(act.Template)
+	hasActivator = True
+	Return Me
+End Sub
+
+
 'set the button to activate the menu
 Sub SetButton(iconName As String, btnText As String) As VMMenu
 	Dim btn As VMButton

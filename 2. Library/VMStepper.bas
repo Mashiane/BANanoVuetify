@@ -37,6 +37,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	steps.Initialize
 	bStatic = False
 	vue.SetData(ID, 1)
+	SetOnChange(Module, $"${ID}_change"$)
 	Return Me
 End Sub
 
@@ -222,6 +223,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMStepper.${eName} event has not been defined!"$)
+	End If
+	End If
 	Build
 	'add the header
 	If bVertical = False Then

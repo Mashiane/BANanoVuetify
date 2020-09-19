@@ -52,7 +52,7 @@ Sub Code
 	vue.AddCode("Sub btnok_click(e As BANanoEvent)")
 	vue.AddCode($"vm.hidedialog("diag1")"$)
 	vue.AddCode("End Sub")
-	Main.CreateVBCode(vue, Me, "diag1code", "Dialog", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	pgIndex.CreateVBCode(vue, Me, "diag1code", "Dialog", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 	'
 	Dim diag2 As VMDialog = vm.CreateDialog("diag2", Me).SetMaxWidth("390").SetModal(True).SetTitle("Use Google's location service?")
@@ -70,7 +70,7 @@ vue.AddCode($"diag2.Container.SetText("Let Google help apps determine location. 
 vue.AddCode($"diag2.AddCancel("btnDisagree", "I Disagree")"$)
 vue.AddCode($"diag2.AddOK("btnOk1", "I agree")"$)
 vue.AddCode($"vm.AddDialog(diag2)"$)
-Main.CreateVBCode(vue, Me, "diag2code", "Dialog", vue.GetSourceCode).AddToContainer(cont, 5, 1)
+pgIndex.CreateVBCode(vue, Me, "diag2code", "Dialog", vue.GetSourceCode).AddToContainer(cont, 5, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -78,7 +78,7 @@ vue.AddCode($"'see pgIndex.alert_ok"$)
 vue.AddCode($"Sub btnPrompt1_click(e As BANanoEvent)"$)
 vue.AddCode($"vm.ShowAlert("alertuser", "Alert User", "This is an alert!", "Yippie!")"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "alertCode", "Alert", vue.GetSourceCode).AddToContainer(cont, 6, 1)
+pgIndex.CreateVBCode(vue, Me, "alertCode", "Alert", vue.GetSourceCode).AddToContainer(cont, 6, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -87,7 +87,7 @@ vue.AddCode($"'see pgIndex.confirm_ok"$)
 vue.AddCode($"Sub btnConfirm1_click(e As BANanoEvent)"$)
 vue.AddCode($"vm.ShowConfirm("promptuser", "Confirm Vuetify", "Are you sure that you want to use Vuetify?", "Yep", "Nada")"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "confirmCode", "Confirm", vue.GetSourceCode).AddToContainer(cont, 7, 1)
+pgIndex.CreateVBCode(vue, Me, "confirmCode", "Confirm", vue.GetSourceCode).AddToContainer(cont, 7, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -101,7 +101,7 @@ vue.AddCode($"Case Else"$)
 vue.AddCode($"vm.ShowSnackBar(sproc)"$)
 vue.AddCode($"End Select"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "confirmAnswer", "Confirm Response", vue.GetSourceCode).AddToContainer(cont, 8, 1)
+pgIndex.CreateVBCode(vue, Me, "confirmAnswer", "Confirm Response", vue.GetSourceCode).AddToContainer(cont, 8, 1)
 
 
 

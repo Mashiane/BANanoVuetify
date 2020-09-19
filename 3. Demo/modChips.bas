@@ -56,7 +56,7 @@ vue.AddCode($"vm.createchip("c10", Me).AddClass("ma-2").SetColor("success").SetI
 vue.AddCode($"vm.createchip("c11", Me).AddClass("ma-2").SetColor(vm.COLOR_PINK).SetTextColor(vm.COLOR_WHITE).SetIcon("mdi-label", "left").SetLabel(True).SetText("Tags").AddToContainer(chipsx, 0, 0)"$)
 vue.AddCode($"vm.createchip("c12", Me).AddClass("ma-2").SetColor(vm.COLOR_RED).SetTextColor(vm.COLOR_WHITE).SetText("Remove").SetClose(True).AddToContainer(chipsx, 0, 0)"$)
 vue.AddCode($""$)
-Main.CreateVBCode(vue, Me, "chipscode", "Chips", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "chipscode", "Chips", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 	
 	'chip groups
 	Dim cg As VMChipGroup = vm.CreateChipGroup("cg", Me).SetColumn(True).SetActiveClass(vm.COLOR_PRIMARY_TEXT)
@@ -71,7 +71,7 @@ vue.AddCode($"Dim cg As VMChipGroup = vm.CreateChipGroup("cg", Me).SetColumn(Tru
 vue.AddCode($"cg.AddItems(Array("Work", "Home Improvement", "Vacation", "Food", "Drawers"))"$)
 vue.AddCode($"cg.AddItems(Array("Shopping", "Art", "Tech", "Creative Writing"))"$)
 vue.AddCode($"cg.AddToContainer(cont, 3, 1)"$)
-	Main.CreateVBCode(vue, Me, "chipgroup", "Chip Group", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	pgIndex.CreateVBCode(vue, Me, "chipgroup", "Chip Group", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 	Dim xcont As VMContainer = vm.CreateContainer("xcont", Me)
 	xcont.AddRows(1).AddColumns4x3
@@ -91,7 +91,7 @@ vue.AddCode($"cg.AddToContainer(cont, 3, 1)"$)
 	'add a span
 	vcardtext.AddElement("", "span", "Select Type", Null, Null, Array("subheading"))
 	'
-	Dim cg1 As VMChipGroup = vm.CreateChipGroup("", Me)
+	Dim cg1 As VMChipGroup = vm.CreateChipGroup("cg1", Me)
 	cg1.SetVModel("selection").SetData("selection", 2).SetActiveClass("deep-purple--text text--accent-4").SetMandatory(True)
 	cg1.AddItems(Array("Extra Soft", "Soft", "Medium", "Hard"))
 	'add chip group to text
@@ -155,32 +155,37 @@ vue.AddCode($"cg.AddToContainer(cont, 3, 1)"$)
 	Dim h2 As VMElement = vm.H2("").AddClass("title mb-2").SetText("Choose amenities")
 	c3t1.AddElement(h2)
 	'
-	Dim cg4 As VMElement = vm.VChipGroup("").SetVModel("amenities").SetAttrSingle("column", True).SetAttrSingle("multiple", True)
-	Dim amenities As List = vm.NewList1(Array As Int(1, 4))
+	
+	Dim cg4 As VMChipGroup = vm.CreateChipGroup("cg4", Me).SetVmodel("amenities")
+	cg4.SetMultiple(True)
+	cg4.SetColumn(True)
+	Dim amenities As List = vm.NewList1(Array As String("washer", "dogs"))
 	cg4.SetData("amenities", amenities)
-	cg4.AddElement1("v-chip", "", "Elevator", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg4.AddElement1("v-chip", "", "Washer", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg4.AddElement1("v-chip", "", "Fireplace", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg4.AddElement1("v-chip", "", "Wheelchair", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg4.AddElement1("v-chip", "", "Dogs ok", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg4.AddElement1("v-chip", "", "Cats ok", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	c3t1.AddElement(cg4)
+	cg4.AddItem("elevator", True, True, "Elevator")
+	cg4.AddItem("washer", True, True, "Washer")
+	cg4.AddItem("fireplace", True, True, "Fireplace")
+	cg4.AddItem("wheelchair", True, True,  "Wheelchair")
+	cg4.AddItem("dogs", True, True,  "Dogs ok")
+	cg4.AddItem("cats", True, True, "Cats ok")
+	c3t1.SetText(cg4.tostring)
 	
 	card3.AddElement(c3t1)
 	'
 	Dim h2a As VMElement = vm.H2("").AddClass("title mb-2").SetText("Choose neighborhoods")
 	c3t2.AddElement(h2a)
 	
-	Dim cg5 As VMElement = vm.VChipGroup("").SetVModel("neighborhoods").SetAttrSingle("column", True).SetAttrSingle("multiple", True)
-	Dim neighborhoods As List = vm.NewList1(Array As Int(1))
+	Dim cg5 As VMChipGroup = vm.CreateChipGroup("cg5", Me).SetVmodel("neighborhoods")
+	cg5.SetMultiple(True)
+	cg5.SetColumn(True)
+	Dim neighborhoods As List = vm.NewList1(Array As String("3", "4"))
 	cg5.SetData("neighborhoods", neighborhoods)
-	cg5.AddElement1("v-chip", "", "Snowy Rock Place", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg5.AddElement1("v-chip", "", "Honeylane Circle", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg5.AddElement1("v-chip", "", "Donna Drive", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg5.AddElement1("v-chip", "", "Elaine Street", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg5.AddElement1("v-chip", "", "Court Street", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	cg5.AddElement1("v-chip", "", "Kennedy Park", CreateMap("filter":True, "outlined":True), Null, Null, Null)
-	c3t2.AddElement(cg5)
+	cg5.AddItem("1", True, True,  "Snowy Rock Place")
+	cg5.AddItem("2", True, True,  "Honeylane Circle")
+	cg5.AddItem("3", True, True,  "Donna Drive")
+	cg5.AddItem("4", True, True,  "Elaine Street")
+	cg5.AddItem("5", True, True,  "Court Street")
+	cg5.AddItem("6", True, True,  "Kennedy Park")
+	c3t2.SetText(cg5.tostring)
 		
 	card3.AddElement(c3t2)
 	
@@ -228,7 +233,7 @@ vue.AddCode($"'"$)
 vue.AddCode($"product1.Actions.AddButton(btnAdd2Cart)"$)
 vue.AddCode($"product1.AddToContainer(xcont, 1, 1)"$)
 vue.AddCode($"cont.AddComponent(5,1, xcont.tostring)"$)
-Main.CreateVBCode(vue, Me, "toothbrush", "Tooth Brush", vue.GetSourceCode).AddToContainer(cont, 6, 1)
+pgIndex.CreateVBCode(vue, Me, "toothbrush", "Tooth Brush", vue.GetSourceCode).AddToContainer(cont, 6, 1)
 '
 
 'initialize code builder
@@ -259,7 +264,7 @@ vue.AddCode($"'"$)
 vue.AddCode($"shirtBlouse.Actions.AddButton(btnAdd2Cart1)"$)
 vue.AddCode($"shirtBlouse.AddToContainer(xcont, 1, 2)"$)
 vue.AddCode($""$)
-Main.CreateVBCode(vue, Me, "shblouse", "Shirt Blouse", vue.GetSourceCode).AddToContainer(cont, 7, 1)
+pgIndex.CreateVBCode(vue, Me, "shblouse", "Shirt Blouse", vue.GetSourceCode).AddToContainer(cont, 7, 1)
 
 '
 'initialize code builder
@@ -284,47 +289,67 @@ vue.AddCode($"Dim c3t2 As VMElement = vm.VCardText("")"$)
 vue.AddCode($"'"$)
 vue.AddCode($"Dim h2 As VMElement = vm.H2("").AddClass("title mb-2").SetText("Choose amenities")"$)
 vue.AddCode($"c3t1.AddElement(h2)"$)
-vue.AddCode($"'"$)
-vue.AddCode($"Dim cg4 As VMElement = vm.VChipGroup("").SetVModel("amenities").SetAttrSingle("column", True).SetAttrSingle("multiple", True)"$)
-vue.AddCode($"Dim amenities As List = vm.NewList1(Array As Int(1, 4))"$)
-vue.AddCode($"cg4.SetData("amenities", amenities)"$)
-vue.AddCode($"cg4.AddElement1("v-chip", "", "Elevator", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg4.AddElement1("v-chip", "", "Washer", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg4.AddElement1("v-chip", "", "Fireplace", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg4.AddElement1("v-chip", "", "Wheelchair", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg4.AddElement1("v-chip", "", "Dogs ok", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg4.AddElement1("v-chip", "", "Cats ok", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"c3t1.AddElement(cg4)"$)
-vue.AddCode($""$)
+	vue.AddCode($"'"$)
+	vue.AddCode($"Dim cg4 As VMChipGroup = vm.CreateChipGroup("cg4", Me).SetVmodel("amenities")"$)
+	vue.AddCode($"cg4.SetMultiple(True)"$)
+	vue.AddCode($"cg4.SetColumn(True)"$)
+	vue.AddCode($"Dim amenities As List = vm.NewList1(Array As String("washer", "dogs"))"$)
+	vue.AddCode($"cg4.SetData("amenities", amenities)"$)
+	vue.AddCode($"cg4.AddItem("elevator", True, True, "Elevator")"$)
+	vue.AddCode($"cg4.AddItem("washer", True, True, "Washer")"$)
+	vue.AddCode($"cg4.AddItem("fireplace", True, True, "Fireplace")"$)
+	vue.AddCode($"cg4.AddItem("wheelchair", True, True,  "Wheelchair")"$)
+	vue.AddCode($"cg4.AddItem("dogs", True, True,  "Dogs ok")"$)
+	vue.AddCode($"cg4.AddItem("cats", True, True, "Cats ok")"$)
+	vue.AddCode($"c3t1.SetText(cg4.tostring)"$)
+	vue.AddCode($""$)
 vue.AddCode($"card3.AddElement(c3t1)"$)
 vue.AddCode($"'"$)
 vue.AddCode($"Dim h2a As VMElement = vm.H2("").AddClass("title mb-2").SetText("Choose neighborhoods")"$)
 vue.AddCode($"c3t2.AddElement(h2a)"$)
-vue.AddCode($""$)
-vue.AddCode($"Dim cg5 As VMElement = vm.VChipGroup("").SetVModel("neighborhoods").SetAttrSingle("column", True).SetAttrSingle("multiple", True)"$)
-vue.AddCode($"Dim neighborhoods As List = vm.NewList1(Array As Int(1))"$)
-vue.AddCode($"cg5.SetData("neighborhoods", neighborhoods)"$)
-vue.AddCode($"cg5.AddElement1("v-chip", "", "Snowy Rock Place", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg5.AddElement1("v-chip", "", "Honeylane Circle", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg5.AddElement1("v-chip", "", "Donna Drive", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg5.AddElement1("v-chip", "", "Elaine Street", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg5.AddElement1("v-chip", "", "Court Street", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"cg5.AddElement1("v-chip", "", "Kennedy Park", CreateMap("filter":True, "outlined":True), Null, Null, Null)"$)
-vue.AddCode($"c3t2.AddElement(cg5)"$)
+	vue.AddCode($""$)
+	vue.AddCode($"Dim cg5 As VMChipGroup = vm.CreateChipGroup("cg5", Me).SetVmodel("neighborhoods")"$)
+	vue.AddCode($"cg5.SetMultiple(True)"$)
+	vue.AddCode($"cg5.SetColumn(True)"$)
+	vue.AddCode($"Dim neighborhoods As List = vm.NewList1(Array As String("3", "4"))"$)
+	vue.AddCode($"cg5.SetData("neighborhoods", neighborhoods)"$)
+	vue.AddCode($"cg5.AddItem("1", True, True,  "Snowy Rock Place")"$)
+	vue.AddCode($"cg5.AddItem("2", True, True,  "Honeylane Circle")"$)
+	vue.AddCode($"cg5.AddItem("3", True, True,  "Donna Drive")"$)
+	vue.AddCode($"cg5.AddItem("4", True, True,  "Elaine Street")"$)
+	vue.AddCode($"cg5.AddItem("5", True, True,  "Court Street")"$)
+	vue.AddCode($"cg5.AddItem("6", True, True,  "Kennedy Park")"$)
+	vue.AddCode($"c3t2.SetText(cg5.tostring)"$)
 vue.AddCode($""$)
 vue.AddCode($"card3.AddElement(c3t2)"$)
 vue.AddCode($""$)
 vue.AddCode($"'add card to container"$)
 vue.AddCode($"card3.AddToContainer(xcont, 1, 3)"$)
-Main.CreateVBCode(vue, Me, "chipfilter", "Chip Group Filter ", vue.GetSourceCode).AddToContainer(cont, 8, 1)
+pgIndex.CreateVBCode(vue, Me, "chipfilter", "Chip Group Filter ", vue.GetSourceCode).AddToContainer(cont, 8, 1)
 
-
-
-
-'
 	vm.AddContainer(cont)
 End Sub
 
+
+Sub cg_change(value As String)
+	vm.ShowSnackBarSuccess(value)
+End Sub
+
+Sub cg1_change(value As String)
+	vm.ShowSnackBarSuccess(value)
+End Sub
+
+Sub cg2_change(value As String)
+	vm.ShowSnackBarSuccess(value)
+End Sub
+
+Sub cg4_change(value As List)
+	vm.ShowSnackBarSUccess(BANano.ToJson(value))
+End Sub
+
+Sub cg5_change(value As List)
+	vm.ShowSnackBarSUccess(BANano.ToJson(value))
+End Sub
 
 Sub chipfiltercopy_click(e As BANanoEvent)
 	vue.CopyCode2Clipboard("chipfilter")

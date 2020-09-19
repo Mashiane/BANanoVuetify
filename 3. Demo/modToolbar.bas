@@ -92,7 +92,7 @@ vue.AddCode($"tbl1.AddFAB(fab)"$)
 vue.AddCode($"tbl1.AddFAB(fab2)"$)
 vue.AddCode($"'"$)
 vue.AddCode($"tbl1.AddToContainer(cont, 1, 1)"$)
-Main.CreateVBCode(vue, Me, "toolbar1code", "Toolbar", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "toolbar1code", "Toolbar", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 
 	'
@@ -133,7 +133,7 @@ vue.AddCode($""$)
 vue.AddCode($"Sub btnexport_click(e As BANanoEvent)"$)
 vue.AddCode($"vm.ShowSnackBar("Export!")"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "toolbar2code", "Toolbar", vue.GetSourceCode).AddToContainer(cont,5, 1)
+pgIndex.CreateVBCode(vue, Me, "toolbar2code", "Toolbar", vue.GetSourceCode).AddToContainer(cont,5, 1)
 
 
 	'add container to page

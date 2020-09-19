@@ -33,7 +33,7 @@ Sub Code
 	vue.AddCode($"Dim icon As VMIcon = vm.CreateIcon("icon1", Me).SetText("mdi-email").SetLarge(True)"$)
 	vue.AddCode($"b1.AddComponent(icon.ToString)"$)
 	vue.AddCode($"cont.AddComponent(1, 1, b1.ToString)"$)
-	Main.CreateVBCode(vue, Me, "b1code", "Badge", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "b1code", "Badge", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 	
 	'
 	Dim b2 As VMBadge = vm.CreateBadge("b2", Me).SetBordered(True).SetColor("error").SetIcon("mdi-lock").SetOverlap(True)
@@ -46,7 +46,7 @@ Sub Code
 	vue.AddCode($"Dim b2btn As VMButton = vm.CreateButton("b2btn", Me).SetLabel("Lock Account").SetColor("error").SetDepressed(True).AddClass("white--text")"$)
 	vue.AddCode($"b2.AddComponent(b2btn.ToString)"$)
 	vue.AddCode($"cont.AddComponent(2, 1, b2.ToString)"$)
-	Main.CreateVBCode(vue, Me, "b2code", "Badge", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	pgIndex.CreateVBCode(vue, Me, "b2code", "Badge", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 	
 	'
 	Dim b3 As VMBadge = vm.CreateBadge("b3", Me).SetOnlineIndicator(True).SetColorIntensity(vm.COLOR_DEEPPURPLE, vm.INTENSITY_ACCENT4)
@@ -59,7 +59,7 @@ Sub Code
 	vue.AddCode($"Dim av As VMAvatar = vm.CreateAvatar("avx", Me).SetImage("https://cdn.vuetifyjs.com/images/lists/2.jpg","",Null, Null, Null)"$)
 	vue.AddCode($"b3.AddComponent(av.ToString)"$)
 	vue.AddCode($"cont.AddComponent(3, 1, b3.ToString)"$)
-	Main.CreateVBCode(vue, Me, "b3code", "Badge", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+	pgIndex.CreateVBCode(vue, Me, "b3code", "Badge", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 	
 	'add container to page
 	vm.AddContainer(cont)

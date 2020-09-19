@@ -125,7 +125,17 @@ Sub SetAttributes(attrs As List) As VMChip
 End Sub
 
 'get component
-Sub ToString As String	
+Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_click"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMChip.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_close"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMChip.${eName} event has not been defined!"$)
+	End If
+	End If
 	Select Case sPos
 	Case "left"
 		Chip.SetText(icon)

@@ -35,7 +35,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
-Sub SetData(xprop As String, xValue As Object) As vmfileinput
+Sub SetData(xprop As String, xValue As Object) As VMFileInput
 	vue.SetData(xprop, xValue)
 	Return Me
 End Sub
@@ -70,6 +70,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMFileInput.${eName} event has not been defined!"$)
+	End If
+	End If
 	Return FileInput.ToString
 End Sub
 

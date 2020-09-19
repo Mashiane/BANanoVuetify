@@ -50,7 +50,7 @@ vue.AddCode($"vm.BottomNav.AddButton("btnbz", "Squirrel", "account_box", "indigo
 vue.AddCode($"vm.BottomNav.AddButton("btncz", "Sky", "gavel", "green", "btncz", "Heavens", "")"$)
 vue.AddCode($"vm.BottomNav.AddButton("btndz", "Planet", "question_answer", "purple", "btndz", "Planets of the world", "")"$)
 vue.AddCode($"vm.BottomNav.AddButton("btnez", "Bird", "mdi-account", "yellow", "btnez", "This is a beautiful bird", "")"$)
-Main.CreateVBCode(vue, Me, "botnavcode", "Bottom Nav", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "botnavcode", "Bottom Nav", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	vm.AddContainer(cont)

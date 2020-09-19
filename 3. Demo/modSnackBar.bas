@@ -37,7 +37,7 @@ Sub Code
 	vue.AddCode($"Sub btns1_click(e As BANanoEvent)"$)
 	vue.AddCode($"vm.ShowSnackBar("I am a snack bar!")"$)
 	vue.AddCode($"End Sub"$)
-	Main.CreateVBCode(vue, Me, "snack1code", "Show SnackBar", vue.GetSourceCode).AddToContainer(cont, 6, 1)
+	pgIndex.CreateVBCode(vue, Me, "snack1code", "Show SnackBar", vue.GetSourceCode).AddToContainer(cont, 6, 1)
 	'
 	snack1 = vm.CreateSnackBar("snack2", Me)
 	snack1.SetLabel("Shaped SnackBar")

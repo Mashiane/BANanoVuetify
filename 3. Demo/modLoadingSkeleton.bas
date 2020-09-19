@@ -37,7 +37,7 @@ Sub Code
 	vue.AddCode($"Dim skl As VMSkeletonLoader = vm.CreateSkeletonLoader("sl1", Me).AddClass("mx-auto").SetMaxWidth("300").SetType("card")"$)
 	vue.AddCode($"s1.AddComponent(skl.tostring)"$)
 	vue.AddCode($"cont.AddComponent(1, 1, s1.tostring)"$)
-	Main.CreateVBCode(vue, Me, "skel1code", "Skeleton", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	pgIndex.CreateVBCode(vue, Me, "skel1code", "Skeleton", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 
 	'add container to page

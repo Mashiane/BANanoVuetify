@@ -24,6 +24,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	bStatic = False
+	SetOnChange($"${ID}_change"$)
 	Return Me
 End Sub
 
@@ -60,7 +61,12 @@ End Sub
 
 'get component
 Sub ToString As String
-	
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMTabsItems.${eName} event has not been defined!"$)
+	End If
+	End If
 	Return TabsItems.ToString
 End Sub
 

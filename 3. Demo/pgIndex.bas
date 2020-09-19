@@ -8,16 +8,20 @@ Version=7.8
 #IgnoreWarnings:12
 Sub Process_Globals
 	Dim vm As BANanoVM
+	Dim vue As BANanoVue
 End Sub
 
 Sub Init
 	vm.Initialize(Me, Main.appname)
-		
+	vue = vm.vue
+	vm.ShowWarnings = False
+	vue.ShowWarnings = False		
 	'vm.Dark = True
 	'vm.SetLocale("ar")
 	vm.RTL = False
 	vm.SnackBar.SetColor("green")
 	vm.SnackBar.SetTop(True)
+	vm.SnackBar.SetShaped(True) 
 	
 	BuildNavBar
 	BuildDrawer
@@ -100,6 +104,13 @@ Sub BuildDrawer
 	vm.Drawer.SetWidth("300")
 	vm.Drawer.AddTitleSubTitle("BANanoVuetifyCore", $"Version ${Main.version}"$)
 	vm.Drawer.AddDivider
+	'
+	vm.Drawer.AddParentChild("","styles", "", "", "Styles & Animations","")
+	vm.Drawer.AddParentChild("styles","borders", "", "", "Borders & Radius","")
+	vm.Drawer.AddParentChild("styles","itemgroups", "", "", "Item Groups","")
+	vm.Drawer.AddParentChild("styles","slidegroups", "", "", "Slide Groups","")
+	vm.Drawer.AddParentChild("styles","windows", "", "", "Windows","")
+	'
 	vm.Drawer.AddParentChild("","ui", "", "", "UI Components","")
 	vm.Drawer.AddParentChild("ui","alerts", "", "", "Alerts","")
 	vm.Drawer.AddParentChild("ui", "avatars", "", "", "Avatars","")
@@ -210,6 +221,18 @@ Sub draweritems_click(elID As Object)
 	'stop logs
 	vm.callmethod("stop")
 	Select Case elID
+	Case "windows"
+		vm.NavBar.UpdateTitle(modWindow.title)
+		vm.ShowPage(modWindow.name)
+	Case "slidegroups"
+		vm.NavBar.UpdateTitle(modSlideGroups.title)
+		vm.ShowPage(modSlideGroups.name)
+	Case "itemgroups"
+		vm.NavBar.UpdateTitle(modItemGroups.title)
+		vm.ShowPage(modItemGroups.name)
+	Case "borders"
+		vm.NavBar.UpdateTitle(pgBRs.title)
+		vm.ShowPage(pgBRs.name)
 	Case "toolkit"
 		vm.NavBar.UpdateTitle(modToolkit.title)
 		vm.ShowPage(modToolkit.name)
@@ -456,8 +479,23 @@ Sub AddPages
 	vm.AddPage(modRealtimeLogging.name, modRealtimeLogging)
 	vm.AddPage(modCalendar.name, modCalendar)
 	vm.AddPage(modToolkit.name, modToolkit)
+	vm.AddPage(pgBRs.name, pgBRs)
+	vm.AddPage(modItemGroups.name, modItemGroups)
+	vm.AddPage(modSlideGroups.name, modSlideGroups)
+	vm.AddPage(modWindow.name, modWindow)
 End Sub
 
 Private Sub bottomnav_change(value As Object)
 	vm.ShowSnackBarSuccess(value)
 End Sub
+
+Sub CreateVBCode(vuex As BANanoVue, module As Object, codeID As String, sTitle As String, scode As String) As VMPrism
+	scode = scode.Replace("~", "$")
+	Dim pri As VMPrism
+	pri.Initialize(vuex, codeID, module)
+	pri.SetLanguage("vb")
+	pri.SetTitle(sTitle)
+	pri.SetCode(scode)
+	Return pri
+End Sub
+  

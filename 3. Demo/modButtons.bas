@@ -26,47 +26,47 @@ Sub Code
 	vm.CreateButton("btn4", Me).SetLabel("Confirm").UseTheme("red-l-2").AddToContainer(cont, 1, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("btn4", Me).SetLabel("Confirm").UseTheme("red-l-2").AddToContainer(cont, 1, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode", "Buttons", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode", "Buttons", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 	'
 	vm.CreateButton("btnPrimary", Me).SetLabel("Alert").SetPrimary(True).AddToContainer(cont, 2, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("btnPrimary", Me).SetLabel("Alert").SetPrimary(True).AddToContainer(cont, 2, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode1", "Buttons", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode1", "Buttons", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	vm.CreateButton("btnAccent", Me).SetLabel("Accent").SetAccent(True).AddToContainer(cont, 3, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("btnAccent", Me).SetLabel("Accent").SetAccent(True).AddToContainer(cont, 3, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode2", "Buttons", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode2", "Buttons", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 	'
 	vm.CreateIconButton("btnx", Me, "mdi-heart").SetColor("pink").AddToContainer(cont, 4, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateIconButton("btnx", Me, "mdi-heart").SetColor("pink").AddToContainer(cont, 4, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode3", "Buttons", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode3", "Buttons", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 	'
 	vm.CreateFABButton("fab1", Me, "mdi-plus").SetColor("indigo").AddToContainer(cont, 5, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateFABButton("fab1", Me, "mdi-plus").SetColor("indigo").AddToContainer(cont, 5, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode4", "Buttons", vue.GetSourceCode).AddToContainer(cont, 5, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode4", "Buttons", vue.GetSourceCode).AddToContainer(cont, 5, 1)
 	'
 	vm.CreateFABButton("fab2", Me, "mdi-pencil").SetOutlined(True).SetLarge(True).SetColor("teal").AddToContainer(cont, 6, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateFABButton("fab2", Me, "mdi-pencil").SetOutlined(True).SetLarge(True).SetColor("teal").AddToContainer(cont, 6, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode5", "Buttons", vue.GetSourceCode).AddToContainer(cont, 6, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode5", "Buttons", vue.GetSourceCode).AddToContainer(cont, 6, 1)
 	'
 	vm.CreateButton("tilex", Me).SetLabel("Tile Button").SetTile(True).SetColor("orange").AddToContainer(cont, 7, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("tilex", Me).SetLabel("Tile Button").SetTile(True).SetColor("orange").AddToContainer(cont, 7, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode6", "Buttons", vue.GetSourceCode).AddToContainer(cont, 7, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode6", "Buttons", vue.GetSourceCode).AddToContainer(cont, 7, 1)
 	'
 	vm.CreateButton("blockx", Me).SetLabel("Block Button").SetBlock(True).SetColor("green").AddToContainer(cont, 8, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("blockx", Me).SetLabel("Block Button").SetBlock(True).SetColor("green").AddToContainer(cont, 8, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode7", "Buttons", vue.GetSourceCode).AddToContainer(cont, 8, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode7", "Buttons", vue.GetSourceCode).AddToContainer(cont, 8, 1)
 	'
 	vm.CreateButton("roundx", Me).SetLabel("Round Button").SetRounded(True).SetColor("yellow").AddToContainer(cont, 9, 1)
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateButton("roundx", Me).SetLabel("Round Button").SetRounded(True).SetColor("yellow").AddToContainer(cont, 9, 1)"$)
-	Main.CreateVBCode(vue, Me, "buttoncode8", "Buttons", vue.GetSourceCode).AddToContainer(cont, 9, 1)
+	pgIndex.CreateVBCode(vue, Me, "buttoncode8", "Buttons", vue.GetSourceCode).AddToContainer(cont, 9, 1)
 	'
 	'initialize code builder
 	vue.SourceCodeBuilder
@@ -84,7 +84,7 @@ Sub Code
 	vue.AddCode($"Sub deleteit_click(e As BANanoEvent)"$)
 	vue.AddCode($"vm.ShowSnackBar("Delete It!")"$)
 	vue.AddCode($"End Sub"$)
-	Main.CreateVBCode(vue, Me, "btnButtonClick", "Button Clicks", vue.GetSourceCode).AddToContainer(cont, 10, 1)
+	pgIndex.CreateVBCode(vue, Me, "btnButtonClick", "Button Clicks", vue.GetSourceCode).AddToContainer(cont, 10, 1)
 
 	'single selection	
 	Dim btnToggle As VMButtonToggle = vm.CreateButtonToggle("btnToggle", Me)
@@ -106,7 +106,7 @@ Sub Code
 	vue.AddCode($"btnToggle.AddIcon("ar", "mdi-format-align-right", "", "", "Align right")"$)
 	vue.AddCode($"btnToggle.AddIcon("aj", "mdi-format-align-justify","","", "Align justify")"$)
 	vue.AddCode($"btnToggle.AddToContainer(cont, 10,1)"$)
-	Main.CreateVBCode(vue, Me, "btnToggleCode", "Toggle", vue.GetSourceCode).AddToContainer(cont, 11, 1)
+	pgIndex.CreateVBCode(vue, Me, "btnToggleCode", "Toggle", vue.GetSourceCode).AddToContainer(cont, 11, 1)
 
 	'multiple selection
 	Dim btnToggleM As VMButtonToggle = vm.CreateButtonToggle("btnToggleM", Me)
@@ -135,7 +135,7 @@ vue.AddCode($"btnToggleM.AddIcon("ac", "mdi-format-italic","","", "Italic")"$)
 vue.AddCode($"btnToggleM.AddIcon("ar", "mdi-format-underline", "", "", "Underline")"$)
 vue.AddCode($"btnToggleM.AddIcon("aj", "mdi-format-color-fill","","", "Color Fill")"$)
 vue.AddCode($"btnToggleM.AddToContainer(cont, 11,1)"$)
-Main.CreateVBCode(vue, Me, "btnToggleCodeM", "Toggle Multiple", vue.GetSourceCode).AddToContainer(cont, 12, 1)
+pgIndex.CreateVBCode(vue, Me, "btnToggleCodeM", "Toggle Multiple", vue.GetSourceCode).AddToContainer(cont, 12, 1)
 		
 	Dim sp1 As VMSpeedDial = vm.CreateSpeedDial("sp1", Me, "mdi-account-circle", "mdi-close")
 	sp1.SetColorIntensity(vm.COLOR_BLUE, vm.INTENSITY_DARKEN2)
@@ -165,7 +165,7 @@ vue.AddCode($"vm.AddSpeedDial(sp1)"$)
 vue.AddCode($""$)
 vue.AddCode($"'add container to page"$)
 vue.AddCode($"vm.AddContainer(cont)"$)
-Main.CreateVBCode(vue, Me, "btnSpeedDialCode", "Speed Dial", vue.GetSourceCode).AddToContainer(cont, 13, 1)
+pgIndex.CreateVBCode(vue, Me, "btnSpeedDialCode", "Speed Dial", vue.GetSourceCode).AddToContainer(cont, 13, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -181,7 +181,7 @@ vue.AddCode($""$)
 vue.AddCode($"Sub speeddeleteit_click(e As BANanoEvent)"$)
 vue.AddCode($"vm.ShowSnackBarSuccess("Speed delete it")"$)
 vue.AddCode($"End Sub"$)
-	Main.CreateVBCode(vue, Me, "btnSpeedDialClick", "Speed Dial Click", vue.GetSourceCode).AddToContainer(cont, 14, 1)
+	pgIndex.CreateVBCode(vue, Me, "btnSpeedDialClick", "Speed Dial Click", vue.GetSourceCode).AddToContainer(cont, 14, 1)
 	'
 	
 	'add container to page

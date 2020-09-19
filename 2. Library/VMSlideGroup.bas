@@ -22,6 +22,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	SetOnChange(Module, $"${ID}_change"$)
 	Return Me
 End Sub
 
@@ -31,9 +32,37 @@ Sub SetData(xprop As String, xValue As Object) As VMSlideGroup
 End Sub
 
 
+Sub AddComponent(comp As String) As VMSlideGroup
+	SetText(comp)
+	Return Me
+End Sub
+
+Sub AddItem(vitem As VMSlideItem) As VMSlideGroup
+	SetText(vitem.ToString)
+	Return Me
+End Sub
+
+'selValue
+Sub SetOnChange(eventHandler As Object,methodName As String) As VMSlideGroup
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@change": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+		Dim eName As String = $"${ID}_change"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMSlideGroup.${eName} event has not been defined!"$)
+		End If
+	End If
 	Return SlideGroup.ToString
 End Sub
 
@@ -82,7 +111,7 @@ Sub AddClass(c As String) As VMSlideGroup
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMSlideGroup
+Sub SetAttr(attr As Map) As VMSlideGroup
 	SlideGroup.SetAttr(attr)
 	Return Me
 End Sub
@@ -393,12 +422,6 @@ End Sub
 'set the sizes for this item
 Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMSlideGroup
 	SlideGroup.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-
-Sub AddComponent(comp As String) As VMSlideGroup
-	SlideGroup.SetText(comp)
 	Return Me
 End Sub
 

@@ -31,6 +31,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	items.Initialize 
 	hasSubHeading = False
 	heading = ""
+	SetOnChange(Module, $"${ID}_change"$)
 	Return Me
 End Sub
 
@@ -102,6 +103,12 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+		Dim eName As String = $"${ID}_change"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMChipGroup.${eName} event has not been defined!"$)
+		End If
+	End If
 	If items.Size > 0 Then
 		Dim xchip As VMChip
 		xchip.Initialize(vue, "", Module)

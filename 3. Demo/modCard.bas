@@ -66,7 +66,7 @@ vue.AddCode($"carcard1.Actions.AddIcon("btnc", "gavel", "green", "", "Heavens", 
 vue.AddCode($"carcard1.Actions.AddIcon("btnd", "question_answer", "purple", "", "Planets of the world", "")"$)
 vue.AddCode($"carcard1.Actions.AddIcon("btne", "mdi-account", "yellow", "", "This is a beautiful bird", "")"$)
 vue.AddCode($"cont.AddControl(carcard1.Card, carcard1.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)"$)
-	Dim codeit As VMPrism = Main.CreateVBCode(vue, Me, "cardcode", "Card", vue.GetSourceCode)
+	Dim codeit As VMPrism = pgIndex.CreateVBCode(vue, Me, "cardcode", "Card", vue.GetSourceCode)
 	cont.AddControl(codeit.PrismComponent, codeit.ToString, 2 ,1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	'initialize code builder
@@ -79,7 +79,7 @@ vue.AddCode($""$)
 vue.AddCode($"Private Sub btnb_click(e As BANanoEvent)"$)
 vue.AddCode($"vm.ShowSnackBar("Squirrel")"$)
 vue.AddCode($"End Sub"$)
-	Dim codeit1 As VMPrism = Main.CreateVBCode(vue, Me, "cardclickcode", "Card Button Click", vue.GetSourceCode)
+	Dim codeit1 As VMPrism = pgIndex.CreateVBCode(vue, Me, "cardclickcode", "Card Button Click", vue.GetSourceCode)
 	cont.AddControl(codeit1.PrismComponent, codeit1.ToString, 2 ,1, 0, 0, 0, 0, 12, 12, 12, 12)
 	
 	

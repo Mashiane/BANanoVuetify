@@ -25,12 +25,37 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
-	Container.Initialize(vue, $"${ID}cont"$, Module) 
+	Container.Initialize(vue, $"${ID}cont"$, Module)
+	SetOnChange(Module, $"${ID}_change"$)
+	Return Me
+End Sub
+
+'selValue
+Sub SetOnChange(eventHandler As Object,methodName As String) As VMItemGroup
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@change": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMItemGroup
+	SetText(comp)
 	Return Me
 End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+		Dim eName As String = $"${ID}_change"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMItemGroup.${eName} event has not been defined!"$)
+		End If
+	End If
 	If Container.HasContent Then ItemGroup.AddComponent(Container.ToString)
 	Return ItemGroup.ToString
 End Sub
@@ -69,6 +94,15 @@ Sub AddChild(child As VMElement) As VMItemGroup
 	Return Me
 End Sub
 
+Sub AddItem(vitem As VMItem) As VMItemGroup
+	SetText(vitem.ToString)
+	Return Me
+End Sub
+
+Sub SetText(txt As String) As VMItemGroup
+	ItemGroup.SetText(txt)
+	Return Me
+End Sub
 
 'add to parent
 Sub Pop(p As VMElement)
@@ -380,12 +414,6 @@ Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VM
 End Sub
 
 
-Sub AddComponent(comp As String) As VMItemGroup
-	ItemGroup.SetText(comp)
-	Return Me
-End Sub
-
-
 Sub SetTextCenter As VMItemGroup
 	ItemGroup.AddClass("text-center")
 	Return Me
@@ -407,3 +435,12 @@ Sub SetVisible(b As Boolean) As VMItemGroup
 	Return Me
 End Sub
 
+
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMItemGroup
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	SetText(d.ToString)
+	Return Me
+End Sub

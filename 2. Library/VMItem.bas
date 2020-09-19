@@ -24,7 +24,33 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	Return Me
+End Sub
+
+Sub SetActiveToggle As VMItem
 	SetAttrSingle("v-slot:default", "{ active, toggle }")
+	Return Me
+End Sub
+
+
+Sub AddComponent(comp As String) As VMItem
+	SetText(comp)
+	Return Me
+End Sub
+
+
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMItem
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	SetText(d.ToString)
+	Return Me
+End Sub
+
+
+Sub SetText(txt As String) As VMItem
+	Item.SetText(txt)
 	Return Me
 End Sub
 
@@ -100,8 +126,8 @@ End Sub
 
 'set active-class
 Sub SetActiveClass(varActiveClass As String) As VMItem
-	if varActiveClass = "" Then Return Me
-	if bStatic Then
+	If varActiveClass = "" Then Return Me
+	If bStatic Then
 		SetAttrSingle("active-class", varActiveClass)
 		Return Me
 	End If
@@ -113,8 +139,8 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMItem
-	if varValue = "" Then Return Me
-	if bStatic Then
+	If varValue = "" Then Return Me
+	If bStatic Then
 		SetAttrSingle("value", varValue)
 		Return Me
 	End If
@@ -126,8 +152,8 @@ End Sub
 
 'set disabled
 Sub SetDisabled(varDisabled As Boolean) As VMItem
-	if varDisabled = False Then Return Me
-	if bStatic Then
+	If varDisabled = False Then Return Me
+	If bStatic Then
 		SetAttrSingle("disabled", varDisabled)
 		Return Me
 	End If
@@ -158,7 +184,7 @@ End Sub
 
 'disable the component
 Sub Disable As VMItem
-	Item.Disable(true)
+	Item.Disable(True)
 	Return Me
 End Sub
 
@@ -319,12 +345,6 @@ End Sub
 'set the sizes for this item
 Sub SetDeviceSizes(SS As String, SM As String, SL As String, SX As String) As VMItem
 	Item.SetDeviceSizes(SS, SM, SL, SX)
-	Return Me
-End Sub
-
-
-Sub AddComponent(comp As String) As VMItem
-	Item.SetText(comp)
 	Return Me
 End Sub
 

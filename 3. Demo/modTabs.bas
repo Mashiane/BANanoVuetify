@@ -74,7 +74,7 @@ Sub Code
 	vue.AddCode($"Dim contbtnc As VMContainer"$)
 	vue.AddCode($"contbtnc = vm.CreateContainer("contxc", Me)"$)
 	vue.AddCode($"contbtnc.AddControlS(lbl3.Label, lbl3.tostring, 1, 1, 12, 12, 12, 12)"$)
-	Main.CreateVBCode(vue, Me, "tab1code", "Tab Containers", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "tab1code", "Tab Containers", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 	'
 	'initialize code builder
 vue.SourceCodeBuilder
@@ -87,7 +87,7 @@ vue.AddCode($"vm.SetBadgeOffsetX("b2", "-40")"$)
 vue.AddCode($"vm.SetBadgeOffsetY("b2", "20")"$)
 vue.AddCode($"b.AddTab("b3", "Item 3", "mdi-account-box", contbtnc)"$)
 vue.AddCode($"b.AddToContainer(cont, 1, 1)"$)
-Main.CreateVBCode(vue, Me, "tab2code", "Tabs", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "tab2code", "Tabs", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 
 	'

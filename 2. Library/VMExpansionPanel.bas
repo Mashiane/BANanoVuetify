@@ -31,8 +31,22 @@ Public Sub Initialize(v As BANanoVue, sparent As String, sid As String, eventHan
 	Content.Initialize(vue, $"${ID}cnt"$, Module)
 	Container = Content.container 
 	SetAttrSingle("key", ID) 
+	SetOnClick($"${ID}_click"$)
+	SetOnChange(Module, $"${ID}_change"$)
 	Return Me
 End Sub
+
+
+
+Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMExpansionPanel
+	Dim d As VMElement
+	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	SetText(d.ToString)
+	Return Me
+End Sub
+
 
 Sub SetData(xprop As String, xValue As Object) As VMExpansionPanel
 	vue.SetData(xprop, xValue)
@@ -51,6 +65,16 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMExpansionPanel.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_click"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMExpansionPanel.${eName} event has not been defined!"$)
+	End If
+	End If
 	Content.RemoveAttr("v-show")
 	Content.RemoveAttr(":style")
 	ExpansionPanel.RemoveAttr("v-show")

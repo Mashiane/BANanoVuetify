@@ -151,6 +151,24 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_change"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMCalendar.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_clickdate"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMCalendar.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_clickmore"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMCalendar.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_clickevent"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMCalendar.${eName} event has not been defined!"$)
+	End If
+	End If
 	Return Calendar.ToString
 End Sub
 

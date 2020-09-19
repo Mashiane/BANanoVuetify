@@ -62,7 +62,7 @@ vue.AddCode("' to show the sheet...")
 vue.AddCode("bs1.show")
 vue.AddCode("' to hide the sheet...")
 vue.AddCode("bs1.hide")
-Main.CreateVBCode(vue, Me, "bscode", "Bottom Sheet", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+pgIndex.CreateVBCode(vue, Me, "bscode", "Bottom Sheet", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 
 	'
 	bs2 = vm.CreateBottomSheet("bs2", Me).SetInset(True)

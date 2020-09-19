@@ -27,7 +27,7 @@ Sub Code
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateImage("img1", Me).SetValue("./assets/bg-2.jpg").SetHover(True).SetHeight("125").SetAspectRatio("1.7").AddToContainer(cont, 1, 1)"$)
-	Main.CreateVBCode(vue, Me, "image1code", "Image", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "image1code", "Image", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	'
@@ -35,13 +35,13 @@ Sub Code
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.CreateImage("img2", Me).SetLazySrc("https://picsum.photos/id/11/100/60").SetMaxWidth("500").SetMaxHeight("300").SetValue("https://picsum.photos/510/300?random").SetAspectRatio("2").AddToContainer(cont, 2, 1)"$)
-	Main.CreateVBCode(vue, Me, "image2code", "Image Lady Load", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	pgIndex.CreateVBCode(vue, Me, "image2code", "Image Lady Load", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	vm.CreateImage("img3", Me).SetValue("./assets/squirrel.jpg").SetContain("125").SetMaxHeight("125").SetAspectRatio("1.4").AddToContainer(cont, 3, 1)
 	'initialize code builder
 vue.SourceCodeBuilder
 vue.AddCode($"vm.CreateImage("img3", Me).SetValue("./assets/squirrel.jpg").SetContain("125").SetMaxHeight("125").SetAspectRatio("1.4").AddToContainer(cont, 3, 1)"$)
-Main.CreateVBCode(vue, Me, "image3code", "Image", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+pgIndex.CreateVBCode(vue, Me, "image3code", "Image", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 
 
 	vm.AddContainer(cont)

@@ -181,7 +181,7 @@ vue.AddCode($""iron": "6%","$)
 vue.AddCode($""glutenfree": "False""$)
 vue.AddCode($"}"$)
 vue.AddCode($"]"~)"$)
-Main.CreateVBCode(vue, Me, "datDataCode", "Define DataTable Data - JSON Arrray", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "datDataCode", "Define DataTable Data - JSON Arrray", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -220,7 +220,7 @@ vue.AddCode($"dt1.SetClearSort"$)
 vue.AddCode($"dt1.AddDivider"$)
 vue.AddCode($"dt1.SetColumnChooser(True)"$)
 vue.AddCode($"dt1.AddToContainer(cont, 1, 1)"$)
-Main.CreateVBCode(vue, Me, "dt1code", "Data Table", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "dt1code", "Data Table", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
@@ -313,7 +313,7 @@ vue.AddCode($"Else"$)
 vue.AddCode($"Return "green""$)
 vue.AddCode($"End If"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "dt1codex", "Data Table Methods", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "dt1codex", "Data Table Methods", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	
 	
@@ -375,7 +375,7 @@ vue.AddCode($"dtUsers.SetIconDimensions("delete", "32p", "error")"$)
 vue.AddCode($"dtUsers.SetDataSource(users)"$)
 vue.AddCode($"dtUsers.SetExternalPagination"$)
 vue.AddCode($"dtUsers.AddToContainer(cont, 3, 1)"$)
-Main.CreateVBCode(vue, Me, "usrdtcode", "Users Data Table", vue.GetSourceCode).AddToContainer(cont, 3, 1)
+pgIndex.CreateVBCode(vue, Me, "usrdtcode", "Users Data Table", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 
 
 	'
@@ -419,7 +419,7 @@ vue.AddCode($"dtImages.SetDataSource(images)"$)
 vue.AddCode($"dtImages.SetExternalPagination"$)
 vue.AddCode($"dtImages.AddToContainer(cont, 4, 1)"$)
 vue.AddCode($""$)
-Main.CreateVBCode(vue, Me, "imgdtcode", "Images Data Table", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+pgIndex.CreateVBCode(vue, Me, "imgdtcode", "Images Data Table", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 	'add container to page
 	vm.AddContainer(cont)

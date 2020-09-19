@@ -53,6 +53,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	titleKey = $"${ID}title"$
 	subTitleKey = $"${ID}subtitle"$
+	SetOnClick($"${ID}_click"$)
 	Return Me
 End Sub
 
@@ -234,6 +235,12 @@ End Sub
 
 
 Sub ToString As String
+	If vue.ShowWarnings Then
+		Dim eName As String = $"${ID}_click"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMCard.${eName} event has not been defined!"$)
+		End If
+	End If
 	If ToolBar.hasContent Then ToolBar.Pop(Card)
 	If Image.HasContent Then Image.Pop(Card)
 	If Title.HasContent Then Title.Pop(Card)
@@ -783,7 +790,7 @@ Sub SetOnClick(methodName As String) As VMCard
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, array(e))
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

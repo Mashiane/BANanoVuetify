@@ -182,6 +182,16 @@ End Sub
 
 'get component
 Sub ToString As String
+	If vue.ShowWarnings Then
+	Dim eName As String = $"${ID}_updateactive"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMTreeView.${eName} event has not been defined!"$)
+	End If
+	eName = $"${ID}_updateopen"$
+	If SubExists(Module, eName) = False Then
+		Log($"VMTreeView.${eName} event has not been defined!"$)
+	End If
+	End If
 	'unflatten the data
 	Dim unflat As List = vue.Unflatten(items, "children")
 	vue.SetData($"${ID}items"$, unflat)

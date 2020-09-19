@@ -49,7 +49,7 @@ vue.AddCode($"vList.AddItem("person3", "./assets/1.png", "", "Jane Smith", "Logg
 vue.AddCode($"vList.AddItem("sa", "", "",  "Sandra Adams", "sandra_a88@gmail.com","mdi-information")"$)
 vue.AddCode($"vList.AddItem("person4", "./assets/2.png", "", "Anele Mbanga", "","mdi-information")"$)
 vue.AddCode($"vList.AddToContainer(cont, 1,  1)"$)
-Main.CreateVBCode(vue, Me, "list1code", "List", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "list1code", "List", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 'initialize code builder
 vue.SourceCodeBuilder
@@ -58,7 +58,7 @@ vue.AddCode($"Sub lst1_click(e As BANanoEvent)"$)
 vue.AddCode($"Dim itemID As String = vm.GetIDFromEvent(e)"$)
 vue.AddCode($"vm.ShowSnackBar(itemID)"$)
 vue.AddCode($"End Sub"$)
-Main.CreateVBCode(vue, Me, "list1click", "List Item Click", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+pgIndex.CreateVBCode(vue, Me, "list1click", "List Item Click", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	
@@ -99,7 +99,7 @@ vue.AddCode($"vm.SetData("lst2", ds)"$)
 vue.AddCode($"Dim vList1 As VMList = vm.CreateList("lst2", Me).SetElevation(3)"$)
 vue.AddCode($"vList1.SetDataSourceTemplate("lst2", "action", "", "action", "title", "", "")"$)
 vue.AddCode($"vList1.AddToContainer(cont, 2,  1)"$)
-Main.CreateVBCode(vue, Me, "list2code", "List State", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+pgIndex.CreateVBCode(vue, Me, "list2code", "List State", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'add container to page
 	vm.AddContainer(cont)

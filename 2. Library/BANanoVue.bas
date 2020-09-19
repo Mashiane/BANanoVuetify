@@ -11,7 +11,6 @@ Sub Class_Globals
 	Private BANAno As BANano  'ignore
 	Public methods As Map
 	Public filters As Map
-	Public ShowWarnings As Boolean
 	Public data As Map
 	Public el As BANanoObject
 	Public refs As BANanoObject
@@ -25,6 +24,7 @@ Sub Class_Globals
 	Public Options As Map
 	Private dynamicStyle As Map
 	Public GetTemplate As String
+	Public ShowWarnings As Boolean
 	Public const BORDER_DEFAULT As String = ""
 	Public const BORDER_DASHED As String = "dashed"
 	Public const BORDER_DOTTED As String = "dotted"
@@ -125,7 +125,6 @@ End Sub
 'initialize view
 Public Sub Initialize(EventHandler As Object)
 	'empty the body of the page
-	ShowWarnings = True
 	body = BANAno.GetElement("#body")
 	body.empty
 	body.Append($"<div id="app"></div>"$)
@@ -537,18 +536,11 @@ Public Sub Initialize(EventHandler As Object)
 	ControlTypes.Put("sparkline", "Sparkline")
 	ControlTypes.Put("number", "Number")
 	'
-	SetBeforeCreate(Module, "BeforeCreate")
-	SetCreated(Module, "Created")
-	SetBeforeMount(Module, "BeforeMount")
-	SetMounted(Module, "Mounted")
-	SetBeforeUpdate(Module, "BeforeUpdate")
-	SetUpdated(Module, "Updated")
-	SetBeforeDestroy(Module, "BeforeDestroy")
-	SetDestroyed(Module, "Destroyed")
-	'
 	'If SubExists(Module, "ReadyChange") = False Then
 	'	Log("Initialize.ReadyChange - please consider adding this optional callback!")
 	'End If
+	
+	ShowWarnings = True
 	bindings.Initialize 
 End Sub
 
@@ -3351,40 +3343,6 @@ End Sub
 
 'render the ux
 Sub UX()
-	If ShowWarnings Then
-		If SubExists(Module, "BeforeCreate") = False Then
-			Log("Initialize.BeforeCreate - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "Created") = False Then
-			Log("Initialize.Created - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "BeforeMount") = False Then
-			Log("Initialize.BeforeMount - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "Mounted") = False Then
-			Log("Initialize.Mounted - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "BeforeUpdate") = False Then
-			Log("Initialize.BeforeUpdate - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "Updated") = False Then
-			Log("Initialize.Updated - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "BeforeDestroy") = False Then
-			Log("Initialize.BeforeDestroy - please consider adding this optional callback!")
-		End If
-		'
-		If SubExists(Module, "Destroyed") = False Then
-			Log("Initialize.Destroyed - please consider adding this optional callback!")
-		End If
-	End If
-
 	GetTemplate = Template.tostring
 	If routes.Size > 0 Then
 		Dim ropt As Map = CreateMap()

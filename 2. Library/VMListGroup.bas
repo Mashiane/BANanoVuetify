@@ -33,6 +33,12 @@ Sub SetStatic(b As Boolean) As VMListGroup
 	Return Me
 End Sub
 
+
+Sub AddComponent(comp As String) As VMListGroup
+	SetText(comp)
+	Return Me
+End Sub
+
 Sub SetAttributes(attrs As List) As VMListGroup
 	For Each stra As String In attrs
 		SetAttrLoose(stra)
