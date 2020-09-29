@@ -27,6 +27,7 @@ Sub Class_Globals
 	Private titleKey As String
 	Private subTitleKey As String
 	Public Container As VMContainer
+	Public TopSheet As VMSheet
 End Sub
 
 'initialize the Card
@@ -46,6 +47,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Form.Initialize(vue, $"${ID}form"$, Module)
 	ToolBar.Initialize(vue, $"${ID}bar"$, Module).SetToolBar(True)
 	Image.Initialize(vue, $"${ID}img"$, Module)
+	TopSheet.Initialize(vue, $"${ID}ps"$, Module).SetTopOverlap 
 	Container = Form.Container
 	TextAfter.Initialize
 	extra.Initialize 
@@ -115,6 +117,7 @@ Sub SetStatic(b As Boolean) As VMCard
 	Form.SetStatic(b)
 	Container.SetStatic(b)
 	Image.SetStatic(b)
+	TopSheet.SetStatic(b)
 	Return Me
 End Sub
 
@@ -241,6 +244,7 @@ Sub ToString As String
 			Log($"VMCard.${eName} event has not been defined!"$)
 		End If
 	End If
+	If TopSheet.hascontent Then TopSheet.Pop(Card)
 	If ToolBar.hasContent Then ToolBar.Pop(Card)
 	If Image.HasContent Then Image.Pop(Card)
 	If Title.HasContent Then Title.Pop(Card)

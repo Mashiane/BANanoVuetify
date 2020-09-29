@@ -24,6 +24,7 @@ Sub Process_Globals
         "", "Thousand", "Million", "Billion", "Trillion", _
         "Quadrillion", "Pentillion", "Sexillion", "Septillion", "Octillion" _
     )
+	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
 End Sub
 
 'get new date as iso string
@@ -62,22 +63,22 @@ function EmailSend($from, $to, $cc, $subject, $msg) {
 #End If
 
 
-''on file change
-Sub UploadFileWait(e As BANanoEvent) As String
-	'get selected file(s)
-	Dim fileList As List = GetFileListFromTarget(e)
-	If fileList.size = 0 Then Return ""
-	
-	'get the file to upload
-	Dim fileO As Map = fileList.Get(0)
-	'start uploading the file
-	Dim fd As BANanoObject
-	fd.Initialize2("FormData", Null)
-	fd.RunMethod("append", Array("upload", fileO))
-	'
-	Dim Res As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
-	Return Res
-End Sub
+'''on file change
+'Sub UploadFileWait(e As BANanoEvent) As String
+'	'get selected file(s)
+'	Dim fileList As List = GetFileListFromTarget(e)
+'	If fileList.size = 0 Then Return ""
+'	
+'	'get the file to upload
+'	Dim fileO As Map = fileList.Get(0)
+'	'start uploading the file
+'	Dim fd As BANanoObject
+'	fd.Initialize2("FormData", Null)
+'	fd.RunMethod("append", Array("upload", fileO))
+'	'
+'	Dim Res As String = BANano.CallAjaxWait("./assets/upload.php", "POST", "", fd, True, Null)
+'	Return Res
+'End Sub
 
 Sub SetInterval(module As Object, methodname As String, ms As Int, args As List) As Object
 	methodname = methodname.tolowercase
@@ -589,20 +590,20 @@ private Sub DoUpload(fileObj As Object) As String   'ignore
 	xhr.Send2(fd)
 End Sub
 
-Sub HTTPUpload(fileObj As Object, module As Object, methodname As String)
-	Dim promise As BANanoPromise 'ignore
-	' some vars to hold our results
-	Dim Error As String
-	Dim json As String
-	
-	' call the http request
-	promise.CallSub(Me, "DoUpload", Array(fileObj))
-	promise.ThenWait(json)
-	BANano.CallSub(module, methodname, Array(fileObj, json))
-	promise.ElseWait(Error)  'ignore
-	BANano.CallSub(module, methodname, Array(fileObj, Error))
-	promise.End
-End Sub
+'Sub HTTPUpload(fileObj As Object, module As Object, methodname As String)
+'	Dim promise As BANanoPromise 'ignore
+'	' some vars to hold our results
+'	Dim Error As String
+'	Dim json As String
+'	
+'	' call the http request
+'	promise.CallSub(Me, "DoUpload", Array(fileObj))
+'	promise.ThenWait(json)
+'	BANano.CallSub(module, methodname, Array(fileObj, json))
+'	promise.ElseWait(Error)  'ignore
+'	BANano.CallSub(module, methodname, Array(fileObj, Error))
+'	promise.End
+'End Sub
 
 
 Public Sub GetAlphabets(value As String) As String
@@ -880,7 +881,7 @@ Sub SumListOfMapsProperty(lst As List, prop As String) As Double
 	Dim tsum As Double = 0
 	For Each rec As Map In lst
 		Dim propv As String = rec.GetDefault(prop,"0")
-		tsum = tsum + BANAno.parseFloat(propv)
+		tsum = tsum + BANano.parseFloat(propv)
 	Next
 	Return tsum
 End Sub
@@ -2264,6 +2265,8 @@ Sub FormatText(sText As String) As String
 	RM.Put("€","&euro;")
 	RM.put("©","&copy;")
 	RM.Put("®","&reg;")
+	RM.put("{COPYRIGHT}", "&copy;")
+	RM.Put("{TRADEMARK}", "&reg;")
 	RM.Put("{POUND}","&pound;")
 	RM.Put("{/B}", "</b>")
 	RM.Put("{I}", "<i>")
@@ -2273,7 +2276,6 @@ Sub FormatText(sText As String) As String
 	RM.Put("{/CODE}","</code>")
 	RM.put("{COPYRIGHT}","&copy;")
 	RM.Put("{REGISTERED}","&reg;")
-	RM.Put("®", "&reg;")
 	RM.Put("{B}", "<b>")
 	RM.Put("{SMALL}", "<small>")
 	RM.Put("{/SMALL}", "</small>")
@@ -2304,7 +2306,6 @@ Sub FormatText(sText As String) As String
 End Sub
 '
 Sub HideElement(elID As String)
-	elID = elID.tolowercase
 	Dim stylem As Map = CreateMap("visibility":"hidden")
 	BANano.GetElement($"#${elID}"$).SetStyle(BANano.ToJson(stylem))
 End Sub

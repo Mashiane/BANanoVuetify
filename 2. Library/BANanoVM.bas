@@ -2240,6 +2240,13 @@ Sub CreateAvatar(sid As String, moduleObj As Object) As VMAvatar
 	Return el
 End Sub
 
+Sub CreateSparkLine(sid As String, moduleObj As Object) As VMSparkLine
+	Dim el As VMSparkLine
+	el.Initialize(vue,sid, moduleObj)
+	Return el
+End Sub
+
+
 Sub CreateCarousel(sid As String, moduleObj As Object) As VMCarousel
 	Dim el As VMCarousel
 	el.Initialize(vue,sid, moduleObj)

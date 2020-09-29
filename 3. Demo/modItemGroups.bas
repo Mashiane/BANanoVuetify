@@ -21,7 +21,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'create 2 columns each spanning 12 columns
-	cont.addrows(3).AddColumns12
+	cont.addrows(5).AddColumns12
 	'
 	Dim ig As VMItemGroup = vm.CreateItemGroup("ig", Me)
 	ig.Container.AddRows(1).AddColumns(3, 12, 4, 4, 4)
@@ -86,7 +86,62 @@ vue.AddCode($"Sub ig_change(values As List)"$)
 vue.AddCode($"vm.ShowSnackBarSuccess(BANano.tojson(values))"$)
 vue.AddCode($"End Sub"$)
 pgIndex.CreateVBCode(vue, Me, "ige", "Item Group Event", vue.GetSourceCode).AddToContainer(cont, 3, 1)
-
+'
+	'create a color picker
+'	Dim colorpicker As VMItemGroup = vm.CreateItemGroup("colorpicker", Me)
+'	colorpicker.setvmodel("color")
+'	vue.setdata("color", "colors[0]")
+'	colorpicker.setmandatory(True)
+'	colorpicker.Container.AddRows(1).AddColumns12
+'	Dim colors As List = vue.newlist
+'	colors.add(Array As String("#ffc107"))
+'	colors.add(Array As String("#000000"))
+'	colors.add(Array As String("#2196f3"))
+'	colors.add(Array As String("#607d8b"))
+'	colors.add(Array As String("#795548"))
+'	colors.add(Array As String("#00bcd4"))
+'	colors.add(Array As String("#ff5722"))
+'	colors.add(Array As String("#673ab7"))
+'	colors.add(Array As String("#4caf50"))
+'	colors.add(Array As String("#9e9e9e"))
+'	colors.add(Array As String("#3f51b5"))
+'	colors.add(Array As String("#03a9f4"))
+'	colors.add(Array As String("#8bc34a"))
+'	colors.add(Array As String("#cddc39"))
+'	colors.add(Array As String("#ff9800"))
+'	colors.add(Array As String("#f44336"))
+'	colors.add(Array As String("#9c27b0"))
+'	colors.add(Array As String("#f44336"))
+'	colors.add(Array As String("#009688"))
+'	colors.add(Array As String("#ffffff"))
+'	colors.add(Array As String("#ffeb3b"))
+'	vue.setdata("colors", colors)
+'	'
+'	Dim color As VMItem = vm.CreateItem("eachcolor", Me)
+'	color.setvfor("(color, i)", "colors")
+'	color.SetAttrSingle(":key", "i")
+'	color.SetActiveToggle
+'	color.SetAttrSingle(":value", "color")
+'	'
+'	Dim colorStyle As Map = CreateMap()
+'	colorStyle.put("borderColor", "active ? '#222' : 'white'")
+'	colorStyle.put("border", "2px solid")
+'	colorStyle.put("background", "color.length > 1	? `linear-gradient(0deg, ${color})`	: color[0]")
+'	vue.setdata("colorstyle", colorStyle)
+'	Dim card As VMCard = vm.CreateCard("colorcard", Me)
+'	card.SetAttrSingle(":color", "active ? 'primary' : ''")
+'	card.setAttrSingle(":style", "colorstyle")
+'	card.setwidth("30")
+'	card.setheight("30")
+'	card.addclass("mr-2")
+'	card.SetAttrSingle("@click.native", "toggle")
+'	'add the card to the item
+'	color.AddComponent(card.tostring)
+'	'add color to item group
+'	colorpicker.Container.AddComponent(1,1, color.tostring)
+'		
+'	'add to container
+'	colorpicker.AddToContainer(cont, 4, 1)
 
 	vm.AddContainer(cont)
 End Sub

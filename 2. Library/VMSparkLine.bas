@@ -13,6 +13,8 @@ Sub Class_Globals
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object      'ignore
 	Private bStatic As Boolean
+	Private xy As Map
+	Private hasXY As Boolean
 End Sub
 
 'initialize the Sparkline
@@ -24,6 +26,15 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	xy.Initialize 
+	hasXY = False
+	Return Me
+End Sub
+
+'add xy values
+Sub AddXY(x As String, y As Int) As VMSparkLine
+	xy.Put(x, y)
+	hasXY = True
 	Return Me
 End Sub
 
@@ -35,6 +46,21 @@ End Sub
 
 'get component
 Sub ToString As String
+	If hasXY Then
+		Dim labels As List
+		labels.Initialize 
+		Dim values As List
+		values.Initialize 
+		'
+		For Each k As String In xy.Keys
+			Dim v As String = xy.Get(k)
+			v = BANano.parseInt(v)
+			labels.Add(k)
+			values.Add(v)
+		Next
+		SetLabels(labels)
+		SetValue(values)
+	End If
 	Return Sparkline.ToString
 End Sub
 

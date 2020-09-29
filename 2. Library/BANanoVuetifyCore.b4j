@@ -289,8 +289,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'1. copy the 'local resources' contents to the 'files folder'
 	'2. remove links that point to interweb above
 	'3. uncomment lines from below
-	
-	
+		
 		
 	BANano.Header.AddCSSFile("fontawesome.min.css")
 	BANano.Header.AddCSSFile("roboto.min.css")

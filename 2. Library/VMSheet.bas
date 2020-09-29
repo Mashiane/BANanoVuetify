@@ -13,6 +13,8 @@ Sub Class_Globals
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object   'ignore
 	Private bStatic As Boolean   'ignore
+	Public Container As VMContainer
+	Public HasContent As Boolean
 End Sub
 
 'initialize the Sheet
@@ -23,6 +25,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
+	Container.Initialize(vue, $"${ID}cont"$, eventHandler)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -31,10 +35,21 @@ Sub SetData(xprop As String, xValue As Object) As VMSheet
 	Return Me
 End Sub
 
-
+'set as top part
+Sub SetTopOverlap As VMSheet
+	AddClass("mx-auto")
+	SetStyleSingle("top", "-24px")
+	SetStyleSingle("position", "relative")
+	SetAttrSingle("max-width", "calc(100% - 32px)")
+	Return Me
+End Sub
 
 'get component
 Sub ToString As String
+	If Container.HasContent Then 
+		HasContent = True
+		SetText(Container.ToString)
+	End If
 	Return Sheet.ToString
 End Sub
 
@@ -62,6 +77,7 @@ End Sub
 Sub AddChild(child As VMElement) As VMSheet
 	Dim childHTML As String = child.ToString
 	Sheet.SetText(childHTML)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -72,6 +88,7 @@ End Sub
 
 Sub SetText(txt As String)
 	Sheet.SetText(txt)
+	HasContent = True
 End Sub
 
 'add a class
@@ -328,6 +345,7 @@ End Sub
 'set design mode
 Sub SetDesignMode(b As Boolean) As VMSheet
 	Sheet.SetDesignMode(b)
+	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -335,6 +353,7 @@ End Sub
 'set static
 Sub SetStatic(b As Boolean) As VMSheet
 	Sheet.SetStatic(b)
+	Container.SetDesignMode(b)
 	bStatic = b
 	Return Me
 End Sub
@@ -370,11 +389,13 @@ End Sub
 
 Sub SetVText(vhtml As String) As VMSheet
 	Sheet.SetVText(vhtml)
+	HasContent = True
 	Return Me
 End Sub
 
 Sub SetVhtml(vhtml As String) As VMSheet
 	Sheet.SetVHtml(vhtml)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -391,6 +412,7 @@ Sub SetVFor(item As String, dataSource As String) As VMSheet
 	item = item.tolowercase
 	Dim sline As String = $"${item} in ${dataSource}"$
 	SetAttrSingle("v-for", sline)
+	HasContent = True
 	Return Me
 End Sub
 
@@ -429,6 +451,7 @@ End Sub
 
 Sub AddComponent(comp As String) As VMSheet
 	Sheet.SetText(comp)
+	HasContent = True
 	Return Me
 End Sub
 

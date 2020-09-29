@@ -330,11 +330,12 @@ End Sub
 'get component
 Sub ToString As String
 	If vue.ShowWarnings Then
-	Dim eName As String = $"${ID}_click"$
-	If SubExists(Module, eName) = False Then
-		Log($"VMButton.${eName} event has not been defined!"$)
+		Dim eName As String = $"${ID}_click"$
+		If SubExists(Module, eName) = False Then
+			Log($"VMButton.${eName} event has not been defined!"$)
+		End If
 	End If
-	End If
+	
 	Select Case iconPos
 	Case "left"
 		Button.SetText(icon)

@@ -85,6 +85,7 @@ vue.AddCode($"End Sub"$)
 	
 	'profile card
 	Dim profileCard As VMElement = vm.VCard("profilecard")
+	profileCard.setvisible(True)
 	Dim cardTitle As VMElement = vm.VCardTitle("").AddStyle("top", "-40px !important")
 	'avatar
 	Dim avatar As VMElement = vm.VAvatar("")
@@ -101,7 +102,7 @@ vue.AddCode($"End Sub"$)
 	Dim cardText As VMElement = vm.VCardText("profiletext").AddClass("text-center")
 	Dim h6 As VMElement = vm.H6("").AddClass("mb-1 grey--text").SetText("CEO / CO-FOUNDER")
 	cardText.AddElement(h6)
-	Dim h4 As VMElement = vm.H4("").AddClass("font-weight-light mb-3 black--text").SetText("Alec Thompson")
+	Dim h4 As VMElement = vm.H4("").AddClass("font-weight-light mb-3 black--text").SetText("Anele Mbanga (Mashy)")
 	cardText.AddElement(h4)
 	Dim p As VMElement = vm.P("").AddClass("font-weight-light grey--text")
 	p.SetText("Don't be scared of the truth because we need to restart the human foundation in truth and I love you like Kanye loves Kanye, I love Rick Owens’ bed design but the back is...")
@@ -109,8 +110,47 @@ vue.AddCode($"End Sub"$)
 	Dim btn As VMElement = vm.VBtn("").AddAttr("color", "success").AddAttr("rounded", True).AddClass("mr-0").SetText("Follow")
 	cardText.AddElement(btn)
 	profileCard.AddElement(cardText)
-	cont.AddControl(profileCard, profileCard.ToString, 5 ,1, 0, 0, 0, 0, 12, 4, 4, 4)
-			
+	cont.AddControl(profileCard, profileCard.ToString, 3 ,1, 0, 0, 0, 0, 12, 4, 4, 4)
+	'
+	'create a card with a top sheet
+	Dim cardsheet As VMCard = vm.createcard("cardsheet", Me)
+	cardsheet.addclass("mt-4 mx-auto")
+	cardsheet.setmaxwidth("400")
+	cardsheet.SetVisible(True)
+	cardsheet.TopSheet.SetColor(vm.COLOR_CYAN)
+	cardsheet.topsheet.setelevation(12)
+	'
+	Dim sl As VMSparkLine = vm.CreateSparkLine("sl", Me)
+	sl.setcolor(vm.color_white)
+	sl.setlinewidth("2")
+	sl.setpadding("16")
+	sl.addxy("12am", 200)
+	sl.addxy("3am", 675)
+	sl.addxy("6am", 410)
+	sl.addxy("9am", 390)
+	sl.addxy("12pm", 310)
+	sl.addxy("3pm", 460)
+	sl.addxy("6pm", 250)
+	sl.addxy("9pm", 240)
+	
+	'add sparkline to stop sheet
+	cardsheet.topsheet.AddComponent(sl.tostring)
+	'add text to card
+	cardsheet.Text.AddElement("", "div", "User Registration",Null,Null,Array("title font-weight-light mb-2"))
+	cardsheet.Text.AddElement("", "div", "Last Campaign Performance",Null,Null,Array("subheading font-weight-light grey--text"))
+	cardsheet.Text.AddDivider
+	cardsheet.Text.AddElement("", "v-icon", "mdi-clock",CreateMap("small":True),Null,Array("mr-2"))
+	cardsheet.Text.AddElement("", "span", "last registration 26 minutes ago",CreateMap("small":True),Null,Array("caption grey--text font-weight-light"))
+	
+	
+	'
+	Dim scard As String = cardsheet.tostring
+	Dim div As VMElement = vm.Div("divcard")
+	div.setvisible(True)
+	div.AddComponent(scard)
+	'
+	cont.AddControl(div, div.ToString, 4 ,1, 0, 0, 0, 0, 12, 4, 4, 4)
+	
 	vm.AddContainer(cont)
 End Sub
 

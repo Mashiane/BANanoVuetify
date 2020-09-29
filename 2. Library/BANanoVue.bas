@@ -6,7 +6,6 @@ Version=7.8
 @EndOfDesignText@
 #IgnoreWarnings:12, 9
 Sub Class_Globals
-	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
 	Public BOVue As BANanoObject
 	Private BANAno As BANano  'ignore
 	Public methods As Map
@@ -137,7 +136,7 @@ Public Sub Initialize(EventHandler As Object)
 	Modules.Initialize
 	BOVue.Initialize("Vue")
 	
-	'Template.SetVCloak
+	Template.SetVCloak
 	methods.Initialize
 	filters.initialize
 	data.Initialize
@@ -158,7 +157,6 @@ Public Sub Initialize(EventHandler As Object)
 	
 	Options = CreateMap()
 	dynamicStyle = CreateMap()
-	'SetFontFamily("'Roboto', 'Helvetica', Arial, sans-serif")
 	'
 	Colors.initialize
 	Colors.red = "red"
