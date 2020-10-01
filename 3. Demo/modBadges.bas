@@ -23,7 +23,7 @@ Sub Code
 	'
 	cont.AddRows(4).AddColumns12
 	'
-	Dim b1 As VMBadge = vm.CreateBadge("b1", Me).SetColor("green").SetOverlap(True).SetContent("5")
+	Dim b1 As VMBadge = vm.CreateBadge("bb1", Me).SetColor("green").SetOverlap(True).SetContent("5")
 	Dim icon As VMIcon = vm.CreateIcon("icon1", Me).SetText("mdi-email").SetLarge(True)
 	b1.AddComponent(icon.ToString)
 	cont.AddComponent(1, 1, b1.ToString)

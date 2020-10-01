@@ -1,0 +1,32 @@
+[WARNING]: The method CallAjaxWait will not work in old browsers!
+[WARNING]: The method AddEventlistenerOpenAsync will not work in old browsers!
+[WARNING]: The method TCopying CSS files to WebApp assets...
+Copying Javascript files to WebApp assets...
+Building C:\laragon\www\bvmcoredemo\index.html
+listenerOpenAsync will not work in old browsers!
+[WARNING]: The method ThenWait will not work in old browsers!
+[WARNING]: The method ElseWait will not work in old browsers!
+[WARNING]: The method CheckInternetConnectionWait will not work in old browsers!
+[WARNING]: The method OpenWait will not work in old browsers!
+[WARNING]: The method ExecuteWait will not work in old browsers!
+[WARNING]: The method ExecuteWait will not work in old browsers!
+[WARNING]: The method uploadfilewait will not work in old browsers!
+[WARNING]: The method searchitems in (MODULE: modAutoComplete) uses Wait functions, but doesn't end itself with wait()
+         This will not work if compiled to a libray. You should call the method:
+         searchitemsWait()
+[WARNING]: The method searchitems will not work in old browsers!
+[WARNING]: The method searchitems in (MODULE: modAutoComplete) uses Wait functions, but doesn't end itself with wait()
+         This will not work if compiled to a libray. You should call the method:
+         searchitemsWait()
+OPTMIZATION TIPS
+----------------------
+You are using A LOT of seperate CSS and JS files! This demands a lot of server roundtrips which can slow down your website/webapp considerably
+This results in fewer page views, a decreased customer satisfaction and ultimately a loss in sales conversions
+ 
+
+The total size of your local CSS and JS files is 4.2MB and another 7.4MB in other assets.
+It is very important to only load the JS and CSS files from components that you actually use in your website/webapp!
+ 
+
+If you are using public frameworks (like jQuery, Bootstrap, Vue, etc...), consider using their CDN so the browser can use already buffered versions.
+Done!
