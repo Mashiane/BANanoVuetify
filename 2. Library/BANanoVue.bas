@@ -119,6 +119,7 @@ Sub Class_Globals
 	Public state As Map
 	Public bindings As Map
 	Public Router As BANanoObject
+	Public DateDisplayFormat As String
 End Sub
 
 'initialize view
@@ -540,6 +541,7 @@ Public Sub Initialize(EventHandler As Object)
 	
 	ShowWarnings = True
 	bindings.Initialize 
+	DateDisplayFormat = "YYYY-MM-DD"
 End Sub
 
 #if css
@@ -2039,21 +2041,24 @@ Sub LongDate(sDate As String) As String
 	End Try
 End Sub
 
+'format date to meet your needs
+Sub FormatDisplayDate(item As String, sFormat As String) As String
+	item = "" & item
+	If item = "" Then Return ""
+	If BANAno.isnull(item) Or BANAno.IsUndefined(item) Then Return ""
+	Dim bo As BANanoObject = BANAno.RunJavascriptMethod("dayjs", Array(item))
+	Dim sDate As String = bo.RunMethod("format", Array(sFormat)).Result
+	Return sDate
+End Sub
 
-Sub DateFormat(item As String, sFormat As String) As String
-	If BANAno.IsUndefined(item) Or BANAno.IsNull(item) Then Return ""
-	If item.Length = 0 Then Return ""
-	Try
-		item = MvField(item,1," ")
-		item = item.trim
-		DateTime.DateFormat = "yyyy-MM-dd"
-		Dim dt As Long = DateTime.DateParse(item)
-		DateTime.DateFormat = sFormat
-		Dim rslt As String = DateTime.Date(dt)
-		Return rslt
-	Catch
-		Return item
-	End Try
+'format numeric display
+Sub FormatDisplayNumber(item As String, sFormat As String) As String
+	item = "" & item
+	If item = "" Then Return ""
+	If BANAno.isnull(item) Or BANAno.IsUndefined(item) Then Return ""
+	Dim bo As BANanoObject = BANAno.RunJavascriptMethod("numeral", Array(item))
+	Dim sDate As String = bo.RunMethod("format", Array(sFormat)).Result
+	Return sDate
 End Sub
 
 

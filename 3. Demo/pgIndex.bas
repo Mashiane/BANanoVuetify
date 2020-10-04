@@ -110,6 +110,7 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("styles","itemgroups", "", "", "Item Groups","")
 	vm.Drawer.AddParentChild("styles","slidegroups", "", "", "Slide Groups","")
 	vm.Drawer.AddParentChild("styles","windows", "", "", "Windows","")
+	vm.Drawer.AddParentChild("styles","dynamic", "", "", "Dynamic Input Controls","")
 	'
 	vm.Drawer.AddParentChild("","ui", "", "", "UI Components","")
 	vm.Drawer.AddParentChild("ui","alerts", "", "", "Alerts","")
@@ -221,6 +222,10 @@ Sub draweritems_click(elID As Object)
 	'stop logs
 	vm.callmethod("stop")
 	Select Case elID
+	Case "dynamic"
+		vm.NavBar.UpdateTitle(modDynamic.title)
+		vm.showpage(modDynamic.name)
+		modDynamic.BuildDynamicForm
 	Case "windows"
 		vm.NavBar.UpdateTitle(modWindow.title)
 		vm.ShowPage(modWindow.name)
@@ -483,6 +488,7 @@ Sub AddPages
 	vm.AddPage(modItemGroups.name, modItemGroups)
 	vm.AddPage(modSlideGroups.name, modSlideGroups)
 	vm.AddPage(modWindow.name, modWindow)
+	vm.addpage(modDynamic.name, modDynamic)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

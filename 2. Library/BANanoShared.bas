@@ -2326,23 +2326,6 @@ Sub Age(sdob As String) As Long
 	Return p2
 End Sub
 
-
-Sub DateFormat(item As String, sFormat As String) As String
-	If BANano.IsUndefined(item) Or BANano.IsNull(item) Then Return ""
-	If item.Length = 0 Then Return ""
-	Try
-		item = MvField(item,1," ")
-		item = item.trim
-		DateTime.DateFormat = "yyyy-MM-dd"
-		Dim dt As Long = DateTime.DateParse(item)
-		DateTime.DateFormat = sFormat
-		Dim rslt As String = DateTime.Date(dt)
-		Return rslt
-	Catch
-		Return item
-	End Try
-End Sub
-
 Sub GetAlphaNumeric(value As String) As String
 	value = CStr(value)
 	Try

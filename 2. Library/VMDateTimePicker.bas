@@ -262,7 +262,14 @@ Sub ToString As String
 				TextField.SetAttrSingle("@click:append", $"${ID}menu = !${ID}menu"$)
 			End If
 		End If
-		
+		'
+		If bTimePicker Then
+		Else
+			TextField.SetAttrSingle("v-model", $"${ID}date"$)
+			vue.SetMethod(Me, "formatDate")
+			vue.SetComputed($"${ID}date"$, Me, "computedDateFormatted")
+		End If
+		'
 		TextField.Pop(tmpl.Template)
 		dMenu.SetText(tmpl.ToString)
 		'
@@ -280,6 +287,24 @@ Sub ToString As String
 	Else
 		Return DateTimePicker.ToString
 	End If
+End Sub
+
+private Sub computedDateFormatted As String
+	'get the saved model
+	Dim rdate As String = vue.GetData(vmodel)
+	If rdate = "" Then Return ""
+	Return vue.RunMethod1("formatDate", Array(rdate)).Result
+End Sub
+
+'format the date
+private Sub formatDate(date As Object) As String
+	date = "" & date
+	If date = "" Then Return Null
+    If BANano.isnull(date) Or BANano.IsUndefined(date) Then Return Null 
+	Dim bo As BANanoObject = BANano.RunJavascriptMethod("dayjs", Array(date))
+	Dim sdf As String = vue.DateDisplayFormat
+	Dim sdate As String = bo.RunMethod("format", Array(sdf)).Result
+	Return sdate
 End Sub
 
 private Sub AddSpacer As VMDateTimePicker

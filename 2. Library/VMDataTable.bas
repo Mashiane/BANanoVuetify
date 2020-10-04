@@ -23,6 +23,7 @@ Sub Class_Globals
 	Public COLUMN_DATETIME As String = "datetime"
 	Public COLUMN_IMAGE As String = "image"
 	Public COLUMN_MONEY As String = "money"
+	Public COLUMN_NUMBER As String = "number"
 	Public COLUMN_FILESIZE As String = "filesize"
 	Public COLUMN_CHIP As String = "chip"
 	Public COLUMN_EDIT As String = "edit"
@@ -65,6 +66,8 @@ Sub Class_Globals
 End Sub
 
 'initialize the DataTable
+'<code>dt.Initialize(vue, "dt1", "id", Me)
+'</code>
 Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, eventHandler As Object) As VMDataTable
 	ID = sid.tolowercase
 	vue = v
@@ -134,22 +137,25 @@ Sub GetItemKeys(lst As List) As List
 	Return xlist
 End Sub
 
+'set vuejs state
 Sub SetData(prop As String, value As Object) As VMDataTable
 	vue.SetData(prop, value)
 	Return Me
 End Sub
 
-
+'clear the data-table content
 Sub BANanoReplace
 	Dim x As String = ToString
 	BANano.GetElement($"#${ID}card"$).RenderReplace(x, "")
 	Refresh
 End Sub
 
+'reset the filters
 Sub ResetFilter
 	ApplyFilter(masterColumns)
 End Sub
 
+'apply a filters bases on fields
 Sub ApplyFilter(thisFilter As List)
 	'save this filter as a map, use the sequence of added columns
 	'to the data-table
@@ -183,6 +189,7 @@ Sub ApplyFilter(thisFilter As List)
 	vue.SetData($"${ID}fsource"$, ds)
 End Sub
 
+'set the content as static
 Sub SetStatic(b As Boolean) As VMDataTable
 	bStatic = b
 	DataTable.SetStatic(b)
@@ -279,6 +286,7 @@ Sub AddEdit(colField As String, colTitle As String)
 	SetColumnIcon(colField, "mdi-pencil")
 End Sub
 
+'add delete icon
 Sub AddDelete(colField As String, colTitle As String)
 	AddExclusion(colField)
 	AddColumn(colField,colTitle)
@@ -289,6 +297,7 @@ Sub AddDelete(colField As String, colTitle As String)
 	SetColumnIcon(colField, "mdi-delete")
 End Sub
 
+'add an icon
 Sub AddIcon(colField As String, colTitle As String, colIcon As String)
 	AddExclusion(colField)
 	AddColumn(colField,colTitle)
@@ -299,6 +308,7 @@ Sub AddIcon(colField As String, colTitle As String, colIcon As String)
 	SetColumnIcon(colField, colIcon)
 End Sub
 
+'add an action
 Sub AddAction(colField As String, colTitle As String, colIcon As String)
 	AddExclusion(colField)
 	AddColumn(colField,colTitle)
@@ -309,6 +319,7 @@ Sub AddAction(colField As String, colTitle As String, colIcon As String)
 	SetColumnIcon(colField, colIcon)
 End Sub
 
+'add icon field
 Sub AddIconView(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_ICON)
@@ -316,6 +327,7 @@ Sub AddIconView(colField As String, colTitle As String)
 	SetColumnSortable(colField, False)
 End Sub
 
+'add switch field
 Sub AddSwitch(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_SWITCH)
@@ -323,6 +335,7 @@ Sub AddSwitch(colField As String, colTitle As String)
 	SetColumnSortable(colField, False)
 End Sub
 
+'set a field as a switch
 Sub SetColumnsSwitch(colFields As List)
 	For Each col As String In colFields
 		SetColumnType(col, COLUMN_SWITCH)
@@ -331,6 +344,7 @@ Sub SetColumnsSwitch(colFields As List)
 	Next
 End Sub
 
+'set column as a checkbox
 Sub SetColumnsCheckBox(colFields As List)
 	For Each col As String In colFields
 		SetColumnType(col, COLUMN_CHECKBOX)
@@ -339,6 +353,7 @@ Sub SetColumnsCheckBox(colFields As List)
 	Next
 End Sub
 
+'add an image
 Sub AddImage(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_IMAGE)
@@ -346,7 +361,7 @@ Sub AddImage(colField As String, colTitle As String)
 	SetColumnSortable(colField, False)
 End Sub
 
-
+'add an avatar image
 Sub AddAvatarImg(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_AVATARIMG)
@@ -354,16 +369,19 @@ Sub AddAvatarImg(colField As String, colTitle As String)
 	SetColumnSortable(colField, False)
 End Sub
 
+'add a rating
 Sub AddRating(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_RATING)
 End Sub
 
+'add a progress circular
 Sub AddProgressCircular(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_PROGRESS_CIRCULAR)
 End Sub
 
+'add a progress linear
 Sub AddProgressLinear(colField As String, colTitle As String)
 	AddColumn(colField,colTitle)
 	SetColumnType(colField, COLUMN_PROGRESS_LINEAR)
@@ -375,75 +393,88 @@ Sub AddEditThrash
 	AddAction("delete", "Delete", "mdi-delete")
 End Sub
 
+'add a delete icon
 Sub SetDelete(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddAction("delete", "Delete", "mdi-delete")
 	Return Me
 End Sub
 
+'add an edit icon
 Sub SetEdit(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddAction("edit", "Edit", "mdi-pencil")
 	Return Me
 End Sub
 
+'add a save icon
 Sub SetSave(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddSave("save", "Save")
 	Return Me
 End Sub
 
+'add a cancel button
 Sub SetCancel(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddCancel("cancel", "Cancel")
 	Return Me
 End Sub
 
-
+'add a download button
 Sub SetDownload(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddDownload
 	Return Me
 End Sub
 
+'add download
 Sub AddDownload
 	AddIcon("download","Get","attach_file")
 End Sub
 
+'add horizontal menu button
 Sub AddMenuH
 	AddIcon("menu","Menu","more_horiz")
 End Sub
 
+'add vertical menu
 Sub SetMenu(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddMenuV
 	Return Me
 End Sub
 
+'add vertical menu
 Sub AddMenuV
 	AddIcon("menu","Menu","more_vert")
 End Sub
 
+'add clone
 Sub SetClone(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddClone
 	Return Me
 End Sub
 
+'add clone
 Sub AddClone
 	AddIcon("clone","Clone","done_all")
 End Sub
 
+'add print
 Sub SetPrint(b As Boolean) As VMDataTable
 	If b = False Then Return Me
 	AddPrint
 	Return Me
 End Sub
 
+'add print
 Sub AddPrint
 	AddIcon("print", "Print", "print")
 End Sub
 
+'add new
 Sub SetAddNew(key As String, iconName As String, toolTip As String) As VMDataTable
 	AddNew(key, iconName, toolTip)
 	Return Me
@@ -456,6 +487,7 @@ Sub SetSearchBox(b As Boolean) As VMDataTable
 	Return Me
 End Sub
 
+'add search box
 Sub AddSearch
 	DataTable.Bind(":search", search)
 	vcard.Title.AddSearch(search)
@@ -467,10 +499,12 @@ Sub AddToolBarSpacer As VMDataTable
 	Return Me
 End Sub
 
+'add divider
 Sub AddDivider
 	AddToolBarDivider
 End Sub
 
+'add spacer
 Sub AddSpacer
 	AddToolBarSpacer
 End Sub
@@ -496,6 +530,7 @@ Sub SetClearSort
 	vcard.Title.AddComponent(btn.tostring)
 End Sub
 
+'remove sort
 Sub removesort_click(e As BANanoEvent)
 	SetSortBy(vue.NewList)
 End Sub
@@ -646,6 +681,7 @@ Sub GetSelectedColumns As List
 	Return cols
 End Sub
 
+'add a new button
 Sub AddNew(key As String, iconName As String, toolTip As String) As VMDataTable
 	key = key.tolowercase
 	Dim btn As VMButton
@@ -686,21 +722,25 @@ Sub SetDataSource(ds As List) As VMDataTable
 	Return Me
 End Sub
 
+'add button to title
 Sub AddButton(btn As VMButton) As VMDataTable
 	vcard.Title.SetText(btn.tostring)
 	Return Me
 End Sub
 
+'add button to title
 Sub AddButton1(key As String, iconName As String, text As String, toolTip As String) As VMDataTable
 	vcard.Title.AddButton1(key, iconName, "", text, toolTip, "")
 	Return Me
 End Sub
 
+'add icon to title
 Sub AddButtonIcon(key As String, iconName As String, iconColor As String, toolTip As String) As VMDataTable
 	vcard.Title.AddIcon(key, iconName, iconColor, "", toolTip, "")
 	Return Me
 End Sub
 
+'add menu to title
 Sub AddMenu(menu As VMMenu) As VMDataTable
 	vcard.Title.SetText(menu.ToString)
 	Return Me
@@ -720,6 +760,7 @@ Sub SetTitle(sTitle As String) As VMDataTable
 	Return Me
 End Sub
 
+'update the table title
 Sub UpdateTitle(sTitle As String) As VMDataTable
 	vue.SetData(title, sTitle)
 	Return Me
@@ -740,6 +781,33 @@ End Sub
 'add a column
 Sub AddColumn(colName As String, colTitle As String) As VMDataTable
 	AddColumn1(colName, colTitle, COLUMN_TEXT, 0, True, ALIGN_LEFT)
+	Return Me
+End Sub
+
+'add date column and use any of dayjs formats
+'<code>dt.AddDateColumn("dateColumn", "Date", "DD/MM/YYY")
+'</code>
+Sub AddDateColumn(colName As String, colTitle As String, colFormat As String) As VMDataTable
+	AddColumn(colName, colTitle)
+	SetColumnDateFormat(colName, colFormat)
+	Return Me
+End Sub
+
+'add date time column and use any dayjs formats
+'<code>dt.AddDateColumn("dateColumn", "Date", "DD/MM/YYY HH:MM:SS")
+'</code>
+Sub AddDateTimeColumnDate(colName As String, colTitle As String, colFormat As String) As VMDataTable
+	AddColumn(colName, colTitle)
+	SetColumnDateTimeFormat(colName, colFormat)
+	Return Me
+End Sub
+
+'add number column and use any numeraljs formats
+'<code>dt.AddNumberColumn("money", "Received", "$0,0.00")
+'</code>
+Sub AddNumberColumn(colName As String, colTitle As String, colFormat As String) As VMDataTable
+	AddColumn(colName, colTitle)
+	SetColumnNumberFormat(colName, colFormat)
 	Return Me
 End Sub
 
@@ -766,6 +834,7 @@ Sub AddExpandSlot(bSingleExpand As Boolean, cont As VMContainer)
 	AddComponent(expandSlot.tostring)
 End Sub
 
+'add a combo dialog
 Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean)
 	Dim changeEvent As String = $"${ID}_${colName}_change"$
 	Dim el As VMSelect
@@ -797,6 +866,7 @@ Sub AddEditDialogCombo(colName As String, bLarge As Boolean, sourceTable As Stri
 	AddComponent(temp)
 End Sub
 '
+'add autocomplete edit
 Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable As String, sourceField As String, displayField As String, returnObject As Boolean)
 	Dim changeEvent As String = $"${ID}_${colName}_change"$
 	Dim el As VMSelect
@@ -828,6 +898,7 @@ Sub AddEditDialogAutoComplete(colName As String, bLarge As Boolean, sourceTable 
 	AddComponent(temp)
 End Sub
 
+'add edit dialog
 Sub AddEditDialog(colName As String, bLarge As Boolean)
 	Dim slarge As String = "large"
 	If bLarge = False Then slarge = ""
@@ -850,7 +921,7 @@ Dim temp As String = $"<template v-slot:item.${colName}="props">
 	  AddComponent(temp)
 End Sub
 
-
+'add save cancel
 Sub AddSaveCancelOpenClose
 	Dim savemethodName As String = $"${ID}_saveitem"$
 	If SubExists(Module, savemethodName) = False Then 
@@ -889,6 +960,7 @@ Sub AddSaveCancelOpenClose
 	vue.SetCallBack(closemethodName, cb)
 End Sub
 
+'add expand column
 Sub AddExpandColumn
 	AddColumn("data-table-expand", "")
 End Sub
@@ -998,6 +1070,7 @@ Sub SetColumnExtra(colName As String, colExtra As String) As VMDataTable
 	Return Me
 End Sub
 
+'change column icon
 Sub SetColumnIcon(colName As String, icon As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
@@ -1007,6 +1080,7 @@ Sub SetColumnIcon(colName As String, icon As String) As VMDataTable
 	Return Me
 End Sub
 
+'set icon dimension
 Sub SetIconDimensions(colName As String, iconSize As String, iconColor As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
@@ -1028,7 +1102,7 @@ Sub SetIconDimensions1(colName As String, iconSize As String, iconColor As Strin
 	Return Me
 End Sub
 
-
+'set progress circular dialog
 Sub SetProgressCircularDimensions(colName As String, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
@@ -1052,6 +1126,7 @@ Sub SetProgressLinearDimensions(colName As String, progressColor As String, prog
 	Return Me
 End Sub
 
+'set rating dimensions
 Sub SetRatingDimensions(colName As String, ratLength As String, ratColor As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
@@ -1093,6 +1168,7 @@ Sub SetColumnClass(colName As String, colClass As String) As VMDataTable
 	Return Me
 End Sub
 
+'build headers
 private Sub BuildHeaders(colNames As Map)
 	hdr.Initialize 
 	'
@@ -1125,10 +1201,20 @@ Sub SetColumnType(colName As String, colType As String) As VMDataTable
 		Select Case colType
 		Case COLUMN_IMAGE, COLUMN_AVATARIMG, COLUMN_SWITCH
 			col.filterable = False
+		Case COLUMN_NUMBER
+			col.align = ALIGN_RIGHT
+			col.valueFormat = "0"
+			Dim item As Map
+			Dim value As String
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getmoneyformat", Array(item, value))
+			'add to methods
+			vue.SetCallBack("getmoneyformat", cb)
 		Case COLUMN_MONEY
 			col.align = ALIGN_RIGHT
+			col.valueFormat = "0,0.00"
 			Dim item As Map
-			Dim cb As BANanoObject = BANano.CallBack(Me, "getmoneyformat", Array(item))
+			Dim value As String
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getmoneyformat", Array(item, value))
 			'add to methods
 			vue.SetCallBack("getmoneyformat", cb)
 		Case COLUMN_FILESIZE
@@ -1146,14 +1232,25 @@ Sub SetColumnType(colName As String, colType As String) As VMDataTable
 			vue.SetCallBack("getdateformat", cb)
 		Case COLUMN_TIME
 			col.valueFormat = "HH:MM"
+			Dim item As Map
+			Dim value As String
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getdateformat", Array(item, value))
+			'add to methods
+			vue.SetCallBack("getdateformat", cb)
 		Case COLUMN_DATETIME
 			col.valueFormat = "yyyy-MM-dd HH:MM"
+			Dim item As Map
+			Dim value As String
+			Dim cb As BANanoObject = BANano.CallBack(Me, "getdateformat", Array(item, value))
+			'add to methods
+			vue.SetCallBack("getdateformat", cb)
 		End Select
 		columnsM.Put(colName,col)
 	End If
 	Return Me
 End Sub
 
+'build controls
 private Sub BuildControls
 	Dim sbTotals As StringBuilder
 	sbTotals.Initialize 
@@ -1199,7 +1296,10 @@ private Sub BuildControls
 			span.SetText($"{{ getdateformat(item.${value}, "${df}") }}"$)
 			tmp.AddComponent(span.ToString)
 			sb.Append(tmp.ToString)
-		Case COLUMN_MONEY
+		Case COLUMN_MONEY, COLUMN_NUMBER
+			'get the date format
+			Dim mf As String = nf.valueFormat
+			'
 			Dim tmp As VMTemplate
 			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
 			tmp.SetAttrSingle($"#item.${value}"$, "{item}")
@@ -1207,7 +1307,7 @@ private Sub BuildControls
 			Dim span As VMElement
 			span.Initialize(vue,"")
 			span.SetTag("span")
-			span.SetText($"{{ getmoneyformat(item.${value}) }}"$)
+			span.SetText($"{{ getmoneyformat(item.${value}, "${mf}") }}"$)
 			tmp.AddComponent(span.ToString)
 			sb.Append(tmp.ToString)
 		Case COLUMN_FILESIZE
@@ -1458,11 +1558,13 @@ Sub Refresh
 	vue.SetData(keyID, dt)
 End Sub
 
+'set vmodel
 Sub SetVModel(k As String) As VMDataTable
 	DataTable.SetVModel(k)
 	Return Me
 End Sub
 
+'set vif
 Sub SetVIf(vif As String) As VMDataTable
 	vcard.SetVIf(vif)
 	Return Me
@@ -1480,6 +1582,7 @@ Sub AddChild(child As VMElement) As VMDataTable
 	Return Me
 End Sub
 
+'add a component 
 Sub AddComponent(tcomp As String) As VMDataTable
 	SetText(tcomp)
 	Return Me
@@ -2148,7 +2251,7 @@ SetAttr(CreateMap("slot": "top"))
 Return Me
 End Sub
 
-'
+'set what will happen when the row is clicked
 Sub SetOnClickRow(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2160,7 +2263,7 @@ SetAttr(CreateMap("@click:row": methodName))
 		Return Me
 End Sub
 
-'
+'get currentitems
 Sub SetOnCurrentItems(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2172,7 +2275,7 @@ SetAttr(CreateMap("@current-items": methodName))
 		Return Me
 End Sub
 
-'
+'set on input event
 Sub SetOnInput(methodName As String) As VMDataTable
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
@@ -2184,7 +2287,7 @@ Sub SetOnInput(methodName As String) As VMDataTable
 	Return Me
 End Sub
 
-'
+'set when expended event
 Sub SetOnItemExpanded(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2196,7 +2299,7 @@ SetAttr(CreateMap("@item-expanded": methodName))
 		Return Me
 End Sub
 
-'
+'on item selected event
 Sub SetOnItemSelected(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2208,7 +2311,7 @@ SetAttr(CreateMap("@item-selected": methodName))
 		Return Me
 End Sub
 
-'
+'page count event
 Sub SetOnPageCount(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2220,7 +2323,7 @@ SetAttr(CreateMap("@page-count": methodName))
 		Return Me
 End Sub
 
-'
+'on pagination event
 Sub SetOnPagination(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2244,7 +2347,7 @@ SetAttr(CreateMap("@toggle-select-all": methodName))
 		Return Me
 End Sub
 
-'
+'on update expanded event
 Sub SetOnUpdateExpanded(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2256,7 +2359,7 @@ SetAttr(CreateMap("@update:expanded": methodName))
 		Return Me
 End Sub
 
-'
+'on update group by
 Sub SetOnUpdateGroupBy(methodName As String) As VMDataTable
 methodName = methodName.tolowercase
 If SubExists(Module, methodName) = False Then Return Me
@@ -2624,6 +2727,15 @@ Sub SetMoneyColumns(dates As List) As VMDataTable
 	Return Me
 End Sub
 
+'set the column type to time for these columns
+Sub SetNumberColumns(dates As List) As VMDataTable
+	For Each k As String In dates
+		SetColumnType(k, COLUMN_NUMBER)
+	Next
+	Return Me
+End Sub
+
+
 Sub SetItemClass(methodName As String) As VMDataTable
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) Then
@@ -2641,6 +2753,7 @@ End Sub
 'set the format of the date in the column
 Sub SetColumnDateFormat(colName As String, colFormat As String) As VMDataTable
 	'valueFormat
+	SetColumnType(colName, COLUMN_DATE)
 	If columnsM.ContainsKey(colName) Then
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.valueFormat = colFormat
@@ -2654,14 +2767,49 @@ Sub SetColumnDateFormat(colName As String, colFormat As String) As VMDataTable
 	Return Me
 End Sub
 
+'set the format of the date time in the column
+Sub SetColumnDateTimeFormat(colName As String, colFormat As String) As VMDataTable
+	'valueFormat
+	SetColumnType(colName, COLUMN_DATETIME)
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.valueFormat = colFormat
+		columnsM.Put(colName,col)
+		'
+		Dim item As Map
+		Dim cb As BANanoObject = BANano.CallBack(Me, "getdateformat", Array(item, colFormat))
+		'add to methods
+		vue.SetCallBack("getdateformat", cb)
+	End If
+	Return Me
+End Sub
+
+'set the format of the number in the column
+Sub SetColumnNumberFormat(colName As String, colFormat As String) As VMDataTable
+	'valueFormat
+	SetColumnType(colName, COLUMN_NUMBER)
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.valueFormat = colFormat
+		col.align = ALIGN_RIGHT
+		columnsM.Put(colName,col)
+		'
+		Dim item As Map
+		Dim cb As BANanoObject = BANano.CallBack(Me, "getmoneyformat", Array(item, colFormat))
+		'add to methods
+		vue.SetCallBack("getmoneyformat", cb)
+	End If
+	Return Me
+End Sub
+
 private Sub getdateformat(item As String, sFormat As String) As String
-	Dim svalue As String = vue.DateFormat(item, sFormat)
+	Dim svalue As String = vue.FormatDisplayDate(item, sFormat)
 	Return svalue
 End Sub
 
 
-private Sub getmoneyformat(item As String) As String
-	Dim svalue As String = vue.MakeMoney(item)
+private Sub getmoneyformat(item As String, sformat As String) As String
+	Dim svalue As String = vue.FormatDisplayNumber(item, sformat)
 	Return svalue
 End Sub
 

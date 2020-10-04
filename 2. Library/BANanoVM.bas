@@ -453,7 +453,6 @@ Sub H4(elID As String) As VMElement
 	Return elx
 End Sub
 
-
 Sub H5(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
@@ -1528,6 +1527,19 @@ Sub ShowSnackBarSuccess(Message As String)
 	SnackBar.Button.Hide
 	SnackBar.show
 End Sub
+
+Sub ShowSnackBarWarning(Message As String)
+	Message = CStr(Message)
+	Message = Message.Replace("null", "")
+	Message = Message.Trim
+	If Message = "" Then Return
+	SetStateSingle("snackmessage", Message)
+	SnackBar.SetColor("amber")
+	SnackBar.SetTop(True)
+	SnackBar.Button.Hide
+	SnackBar.show
+End Sub
+
 
 Sub ShowSnackBar(Message As String)
 	Message = CStr(Message)

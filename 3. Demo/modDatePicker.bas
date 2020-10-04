@@ -9,11 +9,14 @@ Sub Process_Globals
 	Public name As String = "datePickerCode"
 	Public title As String = "Date Picker"
 	Private vm As BANanoVM
+	Private vue As BANanoVue
 End Sub
 
 
 Sub Code
 	vm = pgIndex.vm
+	vue = vm.vue
+	vue.DateDisplayFormat = "DD, MMM YYYY"
 	'create a container to hold all contents
 	Dim cont As VMContainer = vm.CreateContainer(name,Me)
 	'hide this container
@@ -22,6 +25,7 @@ Sub Code
 	cont.addrows(5).AddColumns2x6
 	'
 	Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetLabel("Date of Birth").SetForInput
+	
 	dp4.AddToContainer(cont, 1, 1)
 	
 	vm.CreateLabel("lbl2").SetParagraph.SetText("Dates: {{ dp4 }}").AddToContainer(cont, 1, 2)
