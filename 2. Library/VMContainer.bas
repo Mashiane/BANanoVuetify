@@ -2037,6 +2037,11 @@ Sub SetTag(varTag As String) As VMContainer
 	Return Me
 End Sub
 
+
+Sub SetVisible(b As Boolean)
+	Container.SetVisible(b)
+End Sub
+
 Sub Hide As VMContainer
 	Container.SetVisible(False)
 	Return Me
@@ -2255,11 +2260,6 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMContainer
 	Container.BuildModel(mprops, mstyles, lclasses, loose)
-	Return Me
-End Sub
-
-Sub SetVisible(b As Boolean) As VMContainer
-	Container.SetVisible(b)
 	Return Me
 End Sub
 

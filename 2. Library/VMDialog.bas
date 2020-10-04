@@ -618,6 +618,10 @@ Sub SetOnKeydown(methodName As String) As VMDialog
 End Sub
 
 
+Sub SetVisible(b As Boolean)
+	vue.SetData(smodel, b)
+End Sub
+
 Sub Hide As VMDialog
 	vue.SetStateSingle(smodel, False)
 	Return Me

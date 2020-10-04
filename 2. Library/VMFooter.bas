@@ -122,6 +122,11 @@ Sub SetAttributes(attrs As List) As VMFooter
 	Return Me
 End Sub
 
+
+Sub SetVisible(b As Boolean)
+	vue.SetData(smodel, b)
+End Sub
+
 Sub Hide As VMFooter
 	vue.SetStateSingle(smodel, False)
 	Return Me

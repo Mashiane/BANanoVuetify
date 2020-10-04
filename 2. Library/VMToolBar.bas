@@ -312,6 +312,11 @@ Sub AddClass(c As String) As VMToolBar
 	Return Me
 End Sub
 
+
+Sub SetVisible(b As Boolean)
+	vue.SetData(smodel, b)
+End Sub
+
 Sub Hide
 	vue.SetStateSingle(smodel, False)
 End Sub
@@ -1035,11 +1040,6 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMToolBar
 	ToolBar.BuildModel(mprops, mstyles, lclasses, loose)
-	Return Me
-End Sub
-
-Sub SetVisible(b As Boolean) As VMToolBar
-	ToolBar.SetVisible(b)
 	Return Me
 End Sub
 

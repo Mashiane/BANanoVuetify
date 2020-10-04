@@ -45,6 +45,10 @@ Sub SetData(prop As String, value As Object) As VMBottomSheet
 End Sub
 
 
+Sub SetVisible(b As Boolean)
+	vue.SetData(smodel, b)
+End Sub
+
 'hide the bottom sheet
 Sub Hide
 	vue.SetData(smodel, False)
@@ -607,12 +611,6 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMBottomSheet
 	BottomSheet.BuildModel(mprops, mstyles, lclasses, loose)
-	Return Me
-End Sub
-
-
-Sub SetVisible(b As Boolean) As VMBottomSheet
-	BottomSheet.SetVisible(b)
 	Return Me
 End Sub
 

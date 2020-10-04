@@ -523,6 +523,10 @@ Sub SetSlotActivator(b As Boolean) As VMSpeedDial    'ignore
 End Sub
 
 
+Sub SetVisible(b As Boolean)
+	vue.SetData(smodel, b)
+End Sub
+
 Sub Hide As VMSpeedDial
 	vue.SetStateSingle(smodel, False)
 	Return Me

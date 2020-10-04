@@ -410,6 +410,7 @@ Sub SetVModel(k As String) As VMBadge
 	Return Me
 End Sub
 
+
 Sub Hide As VMBadge
 	vue.SetData(smodel, False)
 	Return Me

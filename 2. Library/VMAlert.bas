@@ -459,6 +459,9 @@ SetAttr(CreateMap("@input": methodName))
 		Return Me
 End Sub
 
+Sub SetVisible(b As Boolean) 
+	vue.SetData(smodel, b)
+End Sub
 
 'hide the component
 Sub Hide As VMAlert

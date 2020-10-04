@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMFormBase,AddPassword,477,0,VMFormBase,SetKeyValues,378,1,VMFormBase,SetItemValue,374,0,VMFormBase,AddArrayItemData,336,0,VMFormBase,RefreshItems,152,0,VMFormBase,Class_Globals,12,0,VMFormBase,GetEvent,71,0,VMFormBase,Initialize,113,0,Main,Process_Globals,10,0,Main,AppStart,31,0
+NavigationStack=VMToolBar,Hide,308,0,VMToolBar,AddClass,308,0,VMToolBar,UpdateLogo,300,0,VMContainer,SetVisible,2035,0,VMBadge,SetVModel,406,0,VMBottomSheet,BuildModel,610,0,VMContainer,BuildModel,2259,0,VMSnackBar,BuildModel,491,0,VMToolBar,BuildModel,1038,0,VMToolBar,SetVisible,311,0
 SelectedBuild=0
 VisibleModules=
