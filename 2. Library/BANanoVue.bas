@@ -1175,13 +1175,18 @@ Sub getElementById(sid As String) As BANanoObject
 	Dim el As BANanoObject = BANAno.Window.GetField("document").RunMethod("getElementById", Array(sid))
 	Return el
 End Sub
-'
+
 Sub DateDiff(currentDate As String, otherDate As String) As Int
-	Dim dateS, dateE As BANanoObject
-	dateS.Initialize4("moment", currentDate)
-	dateE.Initialize4("moment", otherDate)
-	Return dateS.RunMethod("diff", Array(dateE, "days"))
+	If BANAno.IsNull(currentDate) Or BANAno.IsUndefined(currentDate) Then Return 0
+	If BANAno.IsNull(otherDate) Or BANAno.IsUndefined(otherDate) Then Return 0
+	
+	Dim bo As BANanoObject = BANAno.RunJavascriptMethod("dayjs", Array(currentDate))
+	Dim bo1 As BANanoObject = BANAno.RunJavascriptMethod("dayjs", Array(otherDate))
+	'
+	Dim rslt As String = bo.RunMethod("diff", Array(bo1, "day")).Result
+	Return rslt
 End Sub
+
 
 Sub RemoveData(key As String) As BANanoVue
 	key = key.ToLowerCase

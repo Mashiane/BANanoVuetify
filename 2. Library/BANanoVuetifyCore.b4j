@@ -1,17 +1,17 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=avatar.png
-File10=fa-regular-400.ttf
-File11=fa-regular-400.woff
-File12=fa-regular-400.woff2
-File13=fa-solid-900.eot
-File14=fa-solid-900.svg
-File15=fa-solid-900.ttf
-File16=fa-solid-900.woff
-File17=fa-solid-900.woff2
-File18=fileSaver.min.js
-File19=fontawesome.min.css
-File2=dayjs.min.js
+File1=all.min.css
+File10=fa-regular-400.svg
+File11=fa-regular-400.ttf
+File12=fa-regular-400.woff
+File13=fa-regular-400.woff2
+File14=fa-solid-900.eot
+File15=fa-solid-900.svg
+File16=fa-solid-900.ttf
+File17=fa-solid-900.woff
+File18=fa-solid-900.woff2
+File19=fileSaver.min.js
+File2=avatar.png
 File20=helpers.min.css
 File21=market.min.css
 File22=marketweb-webfont.woff
@@ -22,50 +22,52 @@ File26=materialdesignicons-webfont.eot
 File27=materialdesignicons-webfont.ttf
 File28=materialdesignicons-webfont.woff
 File29=materialdesignicons-webfont.woff2
-File3=fa-brands-400.eot
+File3=dayjs.min.js
 File30=materialfont.min.css
 File31=MaterialIcons-Regular.eot
 File32=MaterialIcons-Regular.ttf
 File33=MaterialIcons-Regular.woff
 File34=MaterialIcons-Regular.woff2
-File35=moment.js
-File36=numeral.js
-File37=roboto.min.css
-File38=roboto-v20-latin-500.eot
-File39=roboto-v20-latin-500.svg
-File4=fa-brands-400.svg
-File40=roboto-v20-latin-500.ttf
-File41=roboto-v20-latin-500.woff
-File42=roboto-v20-latin-500.woff2
-File43=roboto-v20-latin-700.eot
-File44=roboto-v20-latin-700.svg
-File45=roboto-v20-latin-700.ttf
-File46=roboto-v20-latin-700.woff
-File47=roboto-v20-latin-700.woff2
-File48=roboto-v20-latin-italic.eot
-File49=roboto-v20-latin-italic.svg
-File5=fa-brands-400.ttf
-File50=roboto-v20-latin-italic.ttf
-File51=roboto-v20-latin-italic.woff
-File52=roboto-v20-latin-italic.woff2
-File53=roboto-v20-latin-regular.eot
-File54=roboto-v20-latin-regular.svg
-File55=roboto-v20-latin-regular.ttf
-File56=roboto-v20-latin-regular.woff
-File57=roboto-v20-latin-regular.woff2
-File58=upload.php
-File59=vFormBase.umd.min.js
-File6=fa-brands-400.woff
-File60=vue.min.js
-File61=vue-page-transition.browser.js
-File62=vue-page-transition.css
-File63=vue-router.min.js
-File64=vuetify.min.css
-File65=vuetify.min.js
-File66=vue-timeago.js
-File7=fa-brands-400.woff2
-File8=fa-regular-400.eot
-File9=fa-regular-400.svg
+File35=numeral.js
+File36=roboto.min.css
+File37=roboto-v20-latin-500.eot
+File38=roboto-v20-latin-500.svg
+File39=roboto-v20-latin-500.ttf
+File4=fa-brands-400.eot
+File40=roboto-v20-latin-500.woff
+File41=roboto-v20-latin-500.woff2
+File42=roboto-v20-latin-700.eot
+File43=roboto-v20-latin-700.svg
+File44=roboto-v20-latin-700.ttf
+File45=roboto-v20-latin-700.woff
+File46=roboto-v20-latin-700.woff2
+File47=roboto-v20-latin-italic.eot
+File48=roboto-v20-latin-italic.svg
+File49=roboto-v20-latin-italic.ttf
+File5=fa-brands-400.svg
+File50=roboto-v20-latin-italic.woff
+File51=roboto-v20-latin-italic.woff2
+File52=roboto-v20-latin-regular.eot
+File53=roboto-v20-latin-regular.svg
+File54=roboto-v20-latin-regular.ttf
+File55=roboto-v20-latin-regular.woff
+File56=roboto-v20-latin-regular.woff2
+File57=upload.php
+File58=vFormBase.umd.min.js
+File59=vue.min.js
+File6=fa-brands-400.ttf
+File60=vue-page-transition.browser.js
+File61=vue-page-transition.css
+File62=vue-router.min.js
+File63=vuetify.min.css
+File64=vuetify.min.js
+File65=vuetify-numeric.umd.min.js
+File66=vuetify-toolkit.css
+File67=vuetify-toolkit.umd.min.js
+File68=vue-timeago.js
+File7=fa-brands-400.woff
+File8=fa-brands-400.woff2
+File9=fa-regular-400.eot
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=Default Group
@@ -129,6 +131,8 @@ FileGroup63=Default Group
 FileGroup64=Default Group
 FileGroup65=Default Group
 FileGroup66=Default Group
+FileGroup67=Default Group
+FileGroup68=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
 FileGroup9=Default Group
@@ -259,7 +263,7 @@ Module96=VMSlideYReverseTransition
 Module97=VMSlideYTransition
 Module98=VMSnackBar
 Module99=VMSparkLine
-NumberOfFiles=66
+NumberOfFiles=68
 NumberOfLibraries=3
 NumberOfModules=123
 Version=8.5
@@ -298,7 +302,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'3. uncomment lines from below
 		
 		
-	BANano.Header.AddCSSFile("fontawesome.min.css")
+	BANano.Header.AddCSSFile("all.min.css")
 	BANano.Header.AddCSSFile("roboto.min.css")
 	BANano.Header.AddCSSFile("market.min.css")
 	BANano.Header.AddCSSFile("materialfont.min.css")
@@ -309,12 +313,15 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("vue.min.js")
 	BANano.Header.AddJavascriptFile("vuetify.min.js")
 	BANano.Header.AddJavascriptFile("vue-router.min.js")
-	BANano.Header.AddJavascriptFile("moment.js")
 	BANano.Header.AddJavascriptFile("vue-timeago.js")
 	BANano.Header.AddJavascriptFile("vFormBase.umd.min.js")
 	BANano.Header.AddJavascriptFile("dayjs.min.js")
 	BANano.Header.AddJavascriptFile("numeral.js")
-	
+	'
+	BANano.Header.AddCSSFile("vuetify-toolkit.css")
+	BANano.Header.AddJavascriptFile("vuetify-toolkit.umd.min.js")
+	BANano.Header.AddJavascriptFile("vuetify-numeric.umd.min.js")
+	'
 	' start the build
 	#if release
 		BANano.BuildAsB4Xlib(Version)

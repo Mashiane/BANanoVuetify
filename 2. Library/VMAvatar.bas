@@ -492,7 +492,7 @@ Sub Enable As VMAvatar
 End Sub
 
 Sub Disable As VMAvatar
-	Avatar.Enable(false)
+	Avatar.Enable(False)
 	Return Me
 End Sub
 

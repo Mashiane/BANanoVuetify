@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMToolBar,Hide,308,0,VMToolBar,AddClass,308,0,VMToolBar,UpdateLogo,300,0,VMContainer,SetVisible,2035,0,VMBadge,SetVModel,406,0,VMBottomSheet,BuildModel,610,0,VMContainer,BuildModel,2259,0,VMSnackBar,BuildModel,491,0,VMToolBar,BuildModel,1038,0,VMToolBar,SetVisible,311,0
+NavigationStack=VMTextField,SetUseGrouping,122,4,VMTextField,SetFab,135,3,VMTextField,SetTransparent,136,0,VMDateTimePicker,formatDate,297,0,BANanoVue,getElementById,1171,0,BANanoShared,getElementById,501,0,BANanoShared,DateDiff,501,0,BANanoVue,DateDiff,1172,0,Main,AppStart,40,0
 SelectedBuild=0
 VisibleModules=

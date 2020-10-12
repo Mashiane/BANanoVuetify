@@ -28,6 +28,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	Container.Initialize(vue, $"${ID}cont"$, Module)
 	SetVModel(Alert.showkey)
+	Hide
 	Return Me
 End Sub
 

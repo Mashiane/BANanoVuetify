@@ -34,6 +34,12 @@ Sub DateTimeNowToISOString As String
 	Return sdate
 End Sub
 
+'banano helper class
+Sub AddElement(parentID As String, tag As String, id As String) As BANanoElement
+	id = id.tolowercase
+	Dim el As BANanoElement = BANano.GetElement($"#${parentID}"$).Append($"<${tag} id="${id}"></${tag}>"$).Get($"#${id}"$)
+	Return el
+End Sub
 
 Sub GetEmailResponse(email As String) As String
 	Dim respM As Map = BANano.FromJson(email)
@@ -498,14 +504,17 @@ Sub getElementById(sid As String) As BANanoObject
 	Dim el As BANanoObject = BANano.Window.GetField("document").RunMethod("getElementById", Array(sid))
 	Return el
 End Sub
-'
-Sub DateDiff(currentDate As String, otherDate As String) As Int
-	Dim dateS, dateE As BANanoObject
-	dateS.Initialize4("moment", currentDate)
-	dateE.Initialize4("moment", otherDate)
-	Return dateS.RunMethod("diff", Array(dateE, "days"))
-End Sub
 
+Sub DateDiff(currentDate As String, otherDate As String) As Int
+	If BANano.IsNull(currentDate) Or BANano.IsUndefined(currentDate) Then Return 0
+	If BANano.IsNull(otherDate) Or BANano.IsUndefined(otherDate) Then Return 0
+	
+	Dim bo As BANanoObject = BANano.RunJavascriptMethod("dayjs", Array(currentDate))
+	Dim bo1 As BANanoObject = BANano.RunJavascriptMethod("dayjs", Array(otherDate))
+	'
+	Dim rslt As String = bo.RunMethod("diff", Array(bo1, "day")).Result
+	Return rslt
+End Sub
 
 Sub ListRemoveDuplicates(lst As List) As List
 	Dim nd As Map = CreateMap()

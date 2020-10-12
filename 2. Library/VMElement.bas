@@ -106,14 +106,14 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	classKey = $"${ID}class"$
 		
 	If ID <> "" Then
-		'Dim SMp As Map = CreateMap()
+		Dim SMp As Map = CreateMap()
 		SetRef(ID)
-'		vue.SetStateSingle(showKey, True)
-'		vue.SetStateSingle(disKey, False)
-'		vue.SetStateSingle(reqKey, False)
-'		vue.SetStateSingle(errKey, False)
-'		vue.SetStateSingle(styleKey, SMp)
-'		vue.SetData(classKey, classList)
+		vue.SetStateSingle(showKey, True)
+		vue.SetStateSingle(disKey, False)
+		vue.SetStateSingle(reqKey, False)
+		vue.SetStateSingle(errKey, False)
+		vue.SetStateSingle(styleKey, SMp)
+		vue.SetData(classKey, classList)
 	End If
 	'	
 	DesignMode = False
@@ -133,7 +133,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	ActualID = ""
 	Host = ""
 	Exclude = False
-	
 	Return Me
 End Sub
 

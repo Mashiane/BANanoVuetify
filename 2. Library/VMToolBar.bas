@@ -54,9 +54,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	TitleVModel = tTitle
 	Title.Initialize(vue, $"${ID}title"$).SetTag("v-toolbar-title")
 	Title.SetCursorPointer
+	Title.Show
 	'
 	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").AddClass("my-1").BindStyleSingle("opacity", "1")
 	Logo.Image.SetCursorPointer
+	Logo.Show
 	'
 	compx = 0
 	bStatic = False
@@ -65,10 +67,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Progress.SetBottom(True)
 	Progress.SetIndeterminate(False) 
 	Progress.SetAbsolute(True)
+	Progress.Show
 	'
 	SubHeadingKey = $"${ID}subheading"$
 	SubHeading.Initialize(vue, SubHeadingKey)
-	
+	Show
 	Return Me
 End Sub
 

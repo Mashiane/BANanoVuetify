@@ -37,6 +37,121 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'should have calculator
+Sub SetCalculator() As VMTextField
+	TextField.SetTag("v-numeric")
+	Return Me
+End Sub
+
+'set maximum value
+Sub SetMax(varMax As String) As VMTextField
+	If varMax = "0" Then Return Me
+	If varMax = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("max", varMax)
+	Else
+		Dim pp As String = $"${ID}varMax"$
+		vue.SetStateSingle(pp, varMax)
+		TextField.Bind(":max", pp)
+	End If
+	Return Me
+End Sub
+
+'set min value
+Sub SetMin(varMin As String) As VMTextField
+	If varMin = "0" Then Return Me
+	If varMin = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("min", varMin)
+	Else
+		Dim pp As String = $"${ID}varMin"$
+		vue.SetStateSingle(pp, varMin)
+		TextField.Bind(":min", pp)
+	End If
+	Return Me
+End Sub
+
+'set precision
+Sub SetPrecision(varprecision As String) As VMTextField
+	If varprecision = "0" Then Return Me
+	If varprecision = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("precision", varprecision)
+	Else
+		Dim pp As String = $"${ID}varMin"$
+		vue.SetStateSingle(pp, varprecision)
+		TextField.Bind(":precision", pp)
+	End If
+	Return Me
+End Sub
+
+'set length
+Sub SetLength(varLength As String) As VMTextField
+	If varLength = "0" Or varLength = "10" Then Return Me
+	If varLength = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("length", varLength)
+	Else
+		Dim pp As String = $"${ID}varLength"$
+		vue.SetStateSingle(pp, varLength)
+		TextField.Bind(":length", pp)
+	End If
+	Return Me
+End Sub
+
+'set negativeTextColor
+Sub SetNegativeTextColor(varNegativeTextColor As String) As VMTextField
+	If varNegativeTextColor = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("negativeTextColor", varNegativeTextColor)
+	Else
+		Dim pp As String = $"${ID}varNegativeTextColor"$
+		vue.SetStateSingle(pp, varNegativeTextColor)
+		TextField.Bind(":negativeTextColor", pp)
+	End If
+	Return Me
+End Sub
+
+'set useGrouping
+Sub SetUseGrouping(varUseGrouping As Boolean) As VMTextField
+	If varUseGrouping = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("useGrouping", varUseGrouping)
+	Else
+		Dim pp As String = $"${ID}varUseGrouping"$
+		vue.SetStateSingle(pp, varUseGrouping)
+		TextField.Bind(":useGrouping", pp)
+	End If
+	Return Me
+End Sub
+
+'set fab
+Sub SetFab(varFAB As Boolean) As VMTextField
+	If varFAB = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("fab", varFAB)
+	Else
+		Dim pp As String = $"${ID}varFAB"$
+		vue.SetStateSingle(pp, varFAB)
+		TextField.Bind(":fab", pp)
+	End If
+	Return Me
+End Sub
+
+'set transparent
+Sub SetTransparent(varText As Boolean) As VMTextField
+	If varText = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("text", varText)
+	Else
+		Dim pp As String = $"${ID}varText"$
+		vue.SetStateSingle(pp, varText)
+		TextField.Bind(":text", pp)
+	End If
+	Return Me
+End Sub
+
+
 Sub SetData(xprop As String, xValue As Object) As VMTextField
 	vue.SetData(xprop, xValue)
 	Return Me

@@ -40,7 +40,8 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	HasContent = False
 	Hover.Initialize(vue, $"${ID}hover"$, Module)
-	hasHover = False 
+	hasHover = False
+	Show 
 	Return Me
 End Sub
 

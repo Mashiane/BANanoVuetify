@@ -109,6 +109,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	UseVShow = True
 	SetVShow(Container.showKey)
 	Show
+	Container.typeOf = "container"
 	Return Me
 End Sub
 
@@ -2126,7 +2127,7 @@ private Sub CreateGrid
 		If idxpos = -1 Then
 			Select Case el.typeOf
 				Case "button", "list", "image", "label", "profile", "table", _
-					"alert", "badge", "avatar","banner","nav"
+					"alert", "badge", "avatar","banner","nav", "container"
 					el.fieldType = ""
 					el.IsRequired = False
 				Case Else

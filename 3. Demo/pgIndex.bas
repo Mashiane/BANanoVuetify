@@ -9,6 +9,7 @@ Version=7.8
 Sub Process_Globals
 	Dim vm As BANanoVM
 	Dim vue As BANanoVue
+	Private BANano As BANano
 End Sub
 
 Sub Init
@@ -40,6 +41,8 @@ Sub Init
 	vm.UX
 	
 	vm.showpage(modProgress.name)
+	'
+	Log(BANano.window)
 End Sub
 
 Sub BuildNavBar
@@ -111,6 +114,7 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("styles","slidegroups", "", "", "Slide Groups","")
 	vm.Drawer.AddParentChild("styles","windows", "", "", "Windows","")
 	vm.Drawer.AddParentChild("styles","dynamic", "", "", "Dynamic Input Controls","")
+	vm.drawer.AddParentChild("styles", "gridselect", "", "", "Grid Select", "")
 	'
 	vm.Drawer.AddParentChild("","ui", "", "", "UI Components","")
 	vm.Drawer.AddParentChild("ui","alerts", "", "", "Alerts","")
@@ -222,6 +226,9 @@ Sub draweritems_click(elID As Object)
 	'stop logs
 	vm.callmethod("stop")
 	Select Case elID
+	Case "gridselect"
+		vm.NavBar.UpdateTitle(modGridSelect.title)
+		vm.showpage(modGridSelect.name)
 	Case "dynamic"
 		vm.NavBar.UpdateTitle(modDynamic.title)
 		vm.showpage(modDynamic.name)
@@ -489,6 +496,7 @@ Sub AddPages
 	vm.AddPage(modSlideGroups.name, modSlideGroups)
 	vm.AddPage(modWindow.name, modWindow)
 	vm.addpage(modDynamic.name, modDynamic)
+	vm.AddPage(modGridSelect.Name, modGridSelect)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

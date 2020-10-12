@@ -23,6 +23,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	Show
 	Return Me
 End Sub
 

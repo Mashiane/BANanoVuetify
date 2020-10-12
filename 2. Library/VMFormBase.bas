@@ -159,6 +159,9 @@ Sub RefreshItems As VMFormBase
 		For Each rm As Map In nitems
 			Dim sid As String = rm.get("id")
 			Dim stext As String = rm.get("text")
+			Dim nr As Map = CreateMap()
+			nr.Put("label", stext)
+			nr.Put("value", sid)
 			xitems.add(stext)
 		Next
 		SetProperty(lastItem, "options", xitems)
