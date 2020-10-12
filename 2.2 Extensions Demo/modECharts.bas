@@ -10,6 +10,39 @@ Sub Process_Globals
 	Public title As String = "ECharts"
 	Private vm As BANanoVM
 	Private vue As BANanoVue
+	Private echart1 As VMEChart
+	Dim echart2 As VMEChart
+	Dim echart3 As VMEChart
+	Dim echart4 As VMEChart
+	Dim echart5 As VMEChart
+	Dim echart6 As VMEChart
+	Dim echart7 As VMEChart
+	Dim echart8 As VMEChart
+	Dim echart9 As VMEChart
+	Dim echart10 As VMEChart
+	Dim echart11 As VMEChart
+	Dim echart12 As VMEChart
+	Dim echart13 As VMEChart
+	Dim echart14 As VMEChart
+	Dim echart15 As VMEChart
+	Dim echart16 As VMEChart
+	Dim echart17 As VMEChart
+	Dim echart18 As VMEChart
+	Dim echart19 As VMEChart
+	Dim echart20 As VMEChart
+	Dim echart21 As VMEChart
+	Dim echart22 As VMEChart
+	Dim echart23 As VMEChart
+	Dim echart24 As VMEChart
+	Dim echart26 As VMEChart
+	Dim echart27 As VMEChart
+	Dim echart28 As VMEChart
+	Dim echart29 As VMEChart
+	Dim echart30 As VMEChart
+	Dim echart31 As VMEChart
+	Dim echart32 As VMEChart
+	Dim echart33 As VMEChart
+	Dim echart34 As VMEChart
 End Sub
 
 
@@ -39,24 +72,14 @@ Sub Code
     pieD.Add(CreateMap("date": "01/05", "cost": 3123, "profit": 1223))
     pieD.Add(CreateMap("date": "01/06", "cost": 7123,"profit": 1123))
 	'
-	Dim echart1 As VMEChart
 	echart1.Initialize(vue, "e1", Me).SetLineChart
-	echart1.SetColumns(Array("date", "sales"))
-	echart1.AddRow(CreateMap("date": "01-Jan", "sales": 123))
-	echart1.AddRow(CreateMap("date": "01-Feb", "sales": 1223))
-	echart1.AddRow(CreateMap("date": "01-Mar", "sales": 2123))
-	echart1.AddRow(CreateMap("date": "01-Apr", "sales": 4123))
-	echart1.AddRow(CreateMap("date": "01-May", "sales": 3123))
-	'
 	cont.AddComponent(1, 1, echart1.tostring)
 	'	
-	Dim echart2 As VMEChart
 	echart2.Initialize(vue, "e2", Me).SetLineChart
 	echart2.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart2.SetRows(chartD)
 	cont.AddComponent(1, 2, echart2.tostring)
 	'
-	Dim echart3 As VMEChart
 	echart3.Initialize(vue,  "e3", Me).SetLineChart
 	echart3.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart3.SetMetrics(Array("cost","profit"))
@@ -65,7 +88,6 @@ Sub Code
 	echart3.SetRows(chartD)
 	cont.AddComponent(1, 3, echart3.tostring)
 	'
-	Dim echart4 As VMEChart
 	echart4.Initialize(vue,  "e4", Me).SetLineChart
 	echart4.SetArea
 	echart4.SetStack("sell", Array("cost", "profit"))
@@ -73,13 +95,11 @@ Sub Code
 	echart4.SetRows(chartD)
 	cont.AddComponent(1, 4, echart4.tostring)
 	'histogram
-	Dim echart5 As VMEChart
 	echart5.Initialize(vue, "e5", Me).SetHistogram
 	echart5.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart5.SetRows(chartD)
 	cont.AddComponent(2, 1, echart5.tostring)
 	'
-	Dim echart6 As VMEChart
 	echart6.Initialize(vue, "e6", Me).SetHistogram
 	echart6.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart6.SetRows(chartD)
@@ -87,7 +107,6 @@ Sub Code
 	echart6.SetDimension(Array("date"))
 	cont.AddComponent(2, 2, echart6.tostring)
 	'
-	Dim echart7 As VMEChart
 	echart7.Initialize(vue, "e7", Me).SetHistogram
 	echart7.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart7.SetRows(chartD)
@@ -96,7 +115,6 @@ Sub Code
 	echart7.SetShowLabelOnTop
 	cont.AddComponent(2, 3, echart7.tostring)
 	'
-	Dim echart8 As VMEChart
 	echart8.Initialize(vue,  "e8", Me).SetHistogram
 	echart8.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart8.SetRows(chartD)
@@ -104,7 +122,6 @@ Sub Code
 	echart8.SetStack("sales", Array("cost", "profit"))
 	cont.AddComponent(2, 4, echart8.tostring)
 	'
-	Dim echart9 As VMEChart
 	echart9.Initialize(vue,  "e9", Me).SetBarChart
 	echart9.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart9.SetRows(chartD)
@@ -112,7 +129,6 @@ Sub Code
 	echart9.SetDimension(Array("date"))
 	cont.AddComponent(3, 1, echart9.tostring)
 	'
-	Dim echart10 As VMEChart
 	echart10.Initialize(vue, "e10", Me).SetBarChart
 	echart10.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart10.SetRows(chartD)
@@ -121,7 +137,6 @@ Sub Code
 	echart10.SetStack("xxx", Array("cost", "profit"))
 	cont.AddComponent(3, 2, echart10.tostring)
 	'
-	Dim echart11 As VMEChart
 	echart11.Initialize(vue, "e11", Me).SetBarChart
 	echart11.SetColumns(Array("date", "cost", "profit", "growthRate", "people"))
 	echart11.SetRows(chartD)
@@ -130,13 +145,11 @@ Sub Code
 	echart11.SetDataOrder("profit", "desc")
 	cont.AddComponent(3, 3, echart11.tostring)
 	'
-	Dim echart12 As VMEChart
 	echart12.Initialize(vue, "e12", Me).SetPieChart
 	echart12.SetColumns(Array("date", "cost", "profit"))
 	echart12.SetRows(pieD)
 	cont.AddComponent(4, 1, echart12.tostring)
 	'
-	Dim echart13 As VMEChart
 	echart13.Initialize(vue,  "e13", Me).SetPieChart
 	echart13.SetColumns(Array("date", "cost", "profit"))
 	echart13.SetRows(pieD)
@@ -144,27 +157,23 @@ Sub Code
 	echart13.SetMetrics(Array("profit"))
 	cont.AddComponent(4, 2, echart13.tostring)
 	'
-	Dim echart14 As VMEChart
 	echart14.Initialize(vue, "e14", Me).SetPieChart
 	echart14.SetColumns(Array("date", "cost", "profit"))
 	echart14.SetRows(pieD)
 	echart14.SetRoseTypeRadius
 	cont.AddComponent(4, 3, echart14.tostring)
 	'
-	Dim echart15 As VMEChart
 	echart15.Initialize(vue, "e15", Me).SetPieChart
 	echart15.SetColumns(Array("date", "cost", "profit"))
 	echart15.SetRows(pieD)
 	echart15.SetDataTypePercent
 	cont.AddComponent(4, 4, echart15.tostring)
 	'
-	Dim echart16 As VMEChart
 	echart16.Initialize(vue, "e16", Me).SetRingChart
 	echart16.SetColumns(Array("date", "cost", "profit"))
 	echart16.SetRows(pieD)
 	cont.AddComponent(5, 1, echart16.tostring)
 	'
-	Dim echart17 As VMEChart
 	echart17.Initialize(vue,  "e17", Me).SetRingChart
 	echart17.SetColumns(Array("date", "cost", "profit"))
 	echart17.SetRows(pieD)
@@ -172,7 +181,6 @@ Sub Code
 	echart17.SetMetrics(Array("profit"))
 	cont.AddComponent(5, 2, echart17.tostring)
 	'
-	Dim echart18 As VMEChart
 	echart18.Initialize(vue, "e18", Me).SetRingChart
 	echart18.SetColumns(Array("date", "cost", "profit"))
 	echart18.SetRows(pieD)
@@ -187,13 +195,11 @@ Sub Code
     funnelD.add(CreateMap("status": "order", "value": 200))
 	funnelD.add(CreateMap("status": "zeroValue", "value": 0))
 	'
-	Dim echart19 As VMEChart
 	echart19.Initialize(vue,  "e19", Me).SetFunnelChart
 	echart19.SetColumns(Array("status", "value"))
 	echart19.SetRows(funnelD)
 	cont.AddComponent(6, 1, echart19.tostring)
 	'
-	Dim echart20 As VMEChart
 	echart20.Initialize(vue, "e20", Me).SetFunnelChart
 	echart20.SetColumns(Array("status", "value"))
 	echart20.SetRows(funnelD)
@@ -201,7 +207,6 @@ Sub Code
 	echart20.SetMetrics(Array("value"))
 	cont.AddComponent(6, 2, echart20.tostring)
 	'
-	Dim echart21 As VMEChart
 	echart21.Initialize(vue, "e21", Me).SetFunnelChart
 	echart21.SetColumns(Array("status", "value"))
 	echart21.SetRows(funnelD)
@@ -215,13 +220,11 @@ Sub Code
     mapD.add(CreateMap("location": "上海", "GDP": 2123, "person": 1243, "area": 94234))
     mapD.add(CreateMap("location": "浙江", "GDP": 4123, "person": 5123, "area": 29234))
     '
-	Dim echart22 As VMEChart
 	echart22.Initialize(vue,  "e22", Me).SetMapChart
 	echart22.SetColumns(Array("location", "GDP"))
 	echart22.SetRows(mapD)
 	cont.AddComponent(7, 1, echart22.tostring)
 	'
-	Dim echart23 As VMEChart
 	echart23.Initialize(vue, "e23", Me).SetMapChart
 	echart23.SetColumns(Array("location", "GDP"))
 	echart23.SetPosition("china")
@@ -238,7 +241,6 @@ Sub Code
     mapD1.add(CreateMap("location": "平谷区", "GDP": 2123))
     mapD1.add(CreateMap("location": "海淀区", "GDP": 4123))
     '
-	Dim echart24 As VMEChart
 	echart24.Initialize(vue, "e24", Me).SetMapChart
 	echart24.SetColumns(Array("location", "GDP"))
 	echart24.SetPosition("province/beijing")
@@ -270,7 +272,6 @@ Sub Code
     sData.add(CreateMap("page": "content-b-1", "pv": 60000))
     sData.add(CreateMap("page": "content-b-2", "pv": 20000))
 		
-	Dim echart26 As VMEChart
 	echart26.Initialize(vue,  "e26", Me).SetSanKeyChart
 	echart26.SetLinks(links)
 	echart26.SetColumns(Array("page", "pv"))
@@ -290,7 +291,6 @@ Sub Code
     hData.add(CreateMap("week": "Wednesday", "location": "Shanghai", "person": 300))
     hData.add(CreateMap("week": "Tuesday", "location": "Hangzhou", "person": 500))
     '	
-	Dim echart27 As VMEChart
 	echart27.Initialize(vue, "e27", Me).SetHeatMap
 	echart27.SetColumns(Array("week", "location", "person"))
 	echart27.SetRows(hData)
@@ -310,7 +310,6 @@ Sub Code
     mData.Add(CreateMap("lat": 120.13023980134, "lng": 30.228226570416))
    
 	
-	Dim echart28 As VMEChart
 	echart28.Initialize(vue, "e28", Me).SetHeatMap
 	echart28.SetColumns(Array("lat", "lng"))
 	echart28.SetRows(mData)
@@ -320,7 +319,6 @@ Sub Code
 	echart28.SetBMapRoam(True)
 	cont.AddComponent(9, 3, echart28.tostring)
 	'
-	Dim echart29 As VMEChart
 	echart29.Initialize(vue, "e29", Me).SetGaugeChart
 	echart29.SetColumns(Array("type", "value"))
 	echart29.AddRow(CreateMap("type": "speed", "value": 80))
@@ -328,7 +326,6 @@ Sub Code
 	echart29.SetMetrics(Array("value"))
 	cont.AddComponent(10, 1, echart29.tostring)
 	'
-	Dim echart30 As VMEChart
 	echart30.Initialize(vue,  "e30", Me).SetGaugeChart
 	echart30.SetColumns(Array("type", "value"))
 	echart30.AddRow(CreateMap("type": "rate", "value": 0.8))
@@ -336,7 +333,6 @@ Sub Code
 	echart30.SetSeriesMap("rate", CreateMap("min":0, "max":1))
 	cont.AddComponent(10, 2, echart30.tostring)
 	'
-	Dim echart31 As VMEChart
 	echart31.Initialize(vue, "e31", Me).SetGaugeChart
 	echart31.SetColumns(Array("type", "value"))
 	echart31.AddRow(CreateMap("type": "speed", "value": 60))
@@ -344,7 +340,6 @@ Sub Code
 	echart31.SetDataName("speed", "km/h")
 	cont.AddComponent(10, 3, echart31.tostring)
 	'
-	Dim echart32 As VMEChart
 	echart32.Initialize(vue, "e32", Me).SetTreeChart
 	echart32.SetColumns(Array("name", "value"))
 	'
@@ -368,7 +363,6 @@ Sub Code
 	echart32.AddRow(CreateMap("name": "tree", "value": echart32.treeData))
 	cont.AddComponent(11, 1, echart32.tostring)
 	' radial chart
-	Dim echart33 As VMEChart
 	echart33.Initialize(vue, "e33", Me).SetTreeChart
 	echart33.SetColumns(Array("name", "value"))
 	echart33.SetTreeRadial("tree")
@@ -393,7 +387,6 @@ Sub Code
 	echart33.AddRow(CreateMap("name": "tree", "value": echart33.treeData))
 	cont.AddComponent(11, 2, echart33.tostring)
 	' vertical tree
-	Dim echart34 As VMEChart
 	echart34.Initialize(vue, "e34", Me).SetTreeChart
 	echart34.SetColumns(Array("name", "value"))
 	echart34.SetTreeVertical("tree")
@@ -420,3 +413,52 @@ Sub Code
 	'add container to page
 	vm.AddContainer(cont)
 End Sub
+
+Sub Show
+	'runtime update
+	echart1.Clear
+	echart1.SetColumns(Array("date", "sales"))
+	echart1.AddRow(CreateMap("date": "01-Jan", "sales": 123))
+	echart1.AddRow(CreateMap("date": "01-Feb", "sales": 1223))
+	echart1.AddRow(CreateMap("date": "01-Mar", "sales": 2123))
+	echart1.AddRow(CreateMap("date": "01-Apr", "sales": 4123))
+	echart1.AddRow(CreateMap("date": "01-May", "sales": 3123))
+	echart1.Refresh
+	
+	'refreshing static
+	echart2.Refresh
+	echart3.Refresh
+	echart4.Refresh
+	echart5.Refresh
+	echart6.Refresh
+	echart7.Refresh
+	echart8.Refresh
+	echart9.Refresh
+	echart10.Refresh
+	echart11.Refresh
+	echart12.Refresh
+	echart13.Refresh
+	echart14.Refresh
+	echart15.Refresh
+	echart16.Refresh
+	echart17.Refresh
+	echart18.Refresh
+	echart19.Refresh
+	echart20.Refresh
+	echart21.Refresh
+	echart22.Refresh
+	echart23.Refresh
+	echart24.Refresh
+	echart26.Refresh
+	echart27.Refresh
+	echart28.Refresh
+	echart29.Refresh
+	echart30.Refresh
+	echart31.Refresh
+	echart32.Refresh
+	echart33.Refresh
+	echart34.Refresh
+	
+	
+End Sub
+	

@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=VMArcCounter,Class_Globals,7,0,Main,AppStart,30,0,Main,Process_Globals,11,0,VMArcCounter,Initialize,14,3,Main,BANano_Ready,38,0
+NavigationStack=Main,AppStart,30,0,Main,Process_Globals,11,0,Main,BANano_Ready,38,0,VMArcCounter,Initialize,22,3,VMArcCounter,Class_Globals,8,0,VMArcCounter,SetCenterOnParent,33,0
 SelectedBuild=0
 VisibleModules=1

@@ -1,0 +1,369 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=abc-news.png
+File10=associated-press.png
+File100=reddit-r-all.png
+File101=reuters.png
+File102=rt.png
+File103=rte.png
+File104=rtl-nieuws.png
+File105=sabq.png
+File106=sevenska-dagbladet.png
+File107=spiegel-online.png
+File108=t3n.png
+File109=talksport.png
+File11=australian-financial-review.png
+File110=techcrunch.png
+File111=techcrunch-cn.png
+File112=techradar.png
+File113=the-american-conservative.png
+File114=the-economist.png
+File115=the-globe-and-mail.png
+File116=the-guardian-au.png
+File117=the-guardian-uk.png
+File118=the-hill.png
+File119=the-hindu.png
+File12=axios.png
+File120=the-huffington-post.png
+File121=the-irish-times.png
+File122=the-jerusalem-post.png
+File123=the-lad-bible.png
+File124=the-new-york-times.png
+File125=the-next-web.png
+File126=the-sport-bible.png
+File127=the-telegraph.png
+File128=the-times-of-india.png
+File129=the-verge.png
+File13=bbc-news.png
+File130=the-wall-street-journal.png
+File131=the-washington-post.png
+File132=the-washington-times.png
+File133=time.png
+File134=usa-today.png
+File135=vice-news.png
+File136=wired.png
+File137=wired-de.png
+File138=wirtschafts-woche.png
+File139=xinhua-net.png
+File14=bbc-sport.png
+File140=ynet.png
+File15=bild.png
+File16=blasting-news-br.png
+File17=bleacher-report.png
+File18=bloomberg.png
+File19=breitbart-news.png
+File2=abc-news-au.png
+File20=business-insider.png
+File21=business-insider-uk.png
+File22=buzzfeed.png
+File23=cbc-news.png
+File24=cbs-news.png
+File25=cnbc.png
+File26=cnn.png
+File27=cnn-es.png
+File28=crypto-coins-news.png
+File29=daily-mail.png
+File3=aftenposten.png
+File30=der-tagesspiegel.png
+File31=die-zeit.png
+File32=el-mundo.png
+File33=engadget.png
+File34=entertainment-weekly.png
+File35=espn.png
+File36=espn-cric-info.png
+File37=financial-post.png
+File38=financial-times.png
+File39=focus.png
+File4=al-jazeera-english.png
+File40=football-italia.png
+File41=fortune.png
+File42=four-four-two.png
+File43=fox-news.png
+File44=fox-sports.png
+File45=globo.png
+File46=google-news.png
+File47=google-news-ar.png
+File48=google-news-au.png
+File49=google-news-br.png
+File5=ansa.png
+File50=google-news-ca.png
+File51=google-news-fr.png
+File52=google-news-in.png
+File53=google-news-it.png
+File54=google-news-ru.png
+File55=google-news-sa.png
+File56=google-news-uk.png
+File57=goteborgs-posten.png
+File58=gruenderszene.png
+File59=hacker-news.png
+File6=applayout.bjl
+File60=handelsblatt.png
+File61=ign.png
+File62=il-sole-24-ore.png
+File63=independent.png
+File64=infobae.png
+File65=info-money.png
+File66=la-gaceta.png
+File67=la-nacion.png
+File68=la-repubblica.png
+File69=le-monde.png
+File7=argaam.png
+File70=lenta.png
+File71=lequipe.png
+File72=les-echos.png
+File73=liberation.png
+File74=marca.png
+File75=mashable.png
+File76=medical-news-today.png
+File77=metro.png
+File78=mirror.png
+File79=msnbc.png
+File8=ars-technica.png
+File80=mtv-news.png
+File81=mtv-news-uk.png
+File82=national-geographic.png
+File83=national-review.png
+File84=nbc-news.png
+File85=news24.png
+File86=newsarticles.bjl
+File87=new-scientist.png
+File88=news-com-au.png
+File89=newssource.bjl
+File9=ary-news.png
+File90=newsweek.png
+File91=new-york-magazine.png
+File92=next-big-future.png
+File93=nfl-news.png
+File94=nhl-news.png
+File95=nrk.png
+File96=politico.png
+File97=polygon.png
+File98=rbc.png
+File99=recode.png
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup100=Default Group
+FileGroup101=Default Group
+FileGroup102=Default Group
+FileGroup103=Default Group
+FileGroup104=Default Group
+FileGroup105=Default Group
+FileGroup106=Default Group
+FileGroup107=Default Group
+FileGroup108=Default Group
+FileGroup109=Default Group
+FileGroup11=Default Group
+FileGroup110=Default Group
+FileGroup111=Default Group
+FileGroup112=Default Group
+FileGroup113=Default Group
+FileGroup114=Default Group
+FileGroup115=Default Group
+FileGroup116=Default Group
+FileGroup117=Default Group
+FileGroup118=Default Group
+FileGroup119=Default Group
+FileGroup12=Default Group
+FileGroup120=Default Group
+FileGroup121=Default Group
+FileGroup122=Default Group
+FileGroup123=Default Group
+FileGroup124=Default Group
+FileGroup125=Default Group
+FileGroup126=Default Group
+FileGroup127=Default Group
+FileGroup128=Default Group
+FileGroup129=Default Group
+FileGroup13=Default Group
+FileGroup130=Default Group
+FileGroup131=Default Group
+FileGroup132=Default Group
+FileGroup133=Default Group
+FileGroup134=Default Group
+FileGroup135=Default Group
+FileGroup136=Default Group
+FileGroup137=Default Group
+FileGroup138=Default Group
+FileGroup139=Default Group
+FileGroup14=Default Group
+FileGroup140=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
+FileGroup3=Default Group
+FileGroup30=Default Group
+FileGroup31=Default Group
+FileGroup32=Default Group
+FileGroup33=Default Group
+FileGroup34=Default Group
+FileGroup35=Default Group
+FileGroup36=Default Group
+FileGroup37=Default Group
+FileGroup38=Default Group
+FileGroup39=Default Group
+FileGroup4=Default Group
+FileGroup40=Default Group
+FileGroup41=Default Group
+FileGroup42=Default Group
+FileGroup43=Default Group
+FileGroup44=Default Group
+FileGroup45=Default Group
+FileGroup46=Default Group
+FileGroup47=Default Group
+FileGroup48=Default Group
+FileGroup49=Default Group
+FileGroup5=Default Group
+FileGroup50=Default Group
+FileGroup51=Default Group
+FileGroup52=Default Group
+FileGroup53=Default Group
+FileGroup54=Default Group
+FileGroup55=Default Group
+FileGroup56=Default Group
+FileGroup57=Default Group
+FileGroup58=Default Group
+FileGroup59=Default Group
+FileGroup6=Default Group
+FileGroup60=Default Group
+FileGroup61=Default Group
+FileGroup62=Default Group
+FileGroup63=Default Group
+FileGroup64=Default Group
+FileGroup65=Default Group
+FileGroup66=Default Group
+FileGroup67=Default Group
+FileGroup68=Default Group
+FileGroup69=Default Group
+FileGroup7=Default Group
+FileGroup70=Default Group
+FileGroup71=Default Group
+FileGroup72=Default Group
+FileGroup73=Default Group
+FileGroup74=Default Group
+FileGroup75=Default Group
+FileGroup76=Default Group
+FileGroup77=Default Group
+FileGroup78=Default Group
+FileGroup79=Default Group
+FileGroup8=Default Group
+FileGroup80=Default Group
+FileGroup81=Default Group
+FileGroup82=Default Group
+FileGroup83=Default Group
+FileGroup84=Default Group
+FileGroup85=Default Group
+FileGroup86=Default Group
+FileGroup87=Default Group
+FileGroup88=Default Group
+FileGroup89=Default Group
+FileGroup9=Default Group
+FileGroup90=Default Group
+FileGroup91=Default Group
+FileGroup92=Default Group
+FileGroup93=Default Group
+FileGroup94=Default Group
+FileGroup95=Default Group
+FileGroup96=Default Group
+FileGroup97=Default Group
+FileGroup98=Default Group
+FileGroup99=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Library4=bananovuetifyad
+Library5=bananopostprocessor
+Library6=bananophp
+Module1=pgIndex
+NumberOfFiles=140
+NumberOfLibraries=6
+NumberOfModules=1
+Version=8.45
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 600
+	#MainFormHeight: 600 
+	'#IgnoreWarnings: 16, 10, 14, 15	
+#End Region
+
+Sub Process_Globals
+	Private BANano As BANano 'ignore
+	Private AppName As String = "newsapp"
+	Private Version As String = "1.00"
+	Public AppTitle As String = "NewsApp"
+	Private Publish As String = "C:\laragon\www"
+	Private BP As BANanoPostProcessor
+	Public ServerIP As String = "localhost"
+	Public Version As String = "1.00"
+	Public Port As String = "8080"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	'post processor
+	BP.Initialize
+	BP.RedirectOutput(File.DirApp,"log.txt")
+	
+	' you can change some output params here
+	BANano.Initialize("BANano", AppName, DateTime.now)
+	BANano.HTML_NAME = "index.html"
+	BANano.Header.Title = AppTitle
+	'
+	'BANano.Header.AddFavicon("favicon-16x16.png", "16x16")
+	'BANano.Header.AddAppleTouchIcon("apple-touch-icon.png", "180x180")
+	'BANano.Header.AddMSTileIcon("mstile-150x150.png", "144x144")
+	'BANano.Header.SetMaskIcon("safari-pinned-tab.svg")
+	'BANano.Header.AddManifestIcon("android-chrome-192x192.png", "192x192")
+	'BANano.Header.AddManifestIcon("android-chrome-512x512.png", "512x512")
+	BANano.TranspilerOptions.UseServiceWorker = False
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
+	BANano.TranspilerOptions.MinifyOnline = False
+	BANano.TranspilerOptions.IgnoreB4JLibrary("BANanoPostProcessor")
+	BANano.TranspilerOptions.ExternalTestConnectionServer = "http://www.localhost"
+	'
+	'BANano.Header.AddCssFile("aos.css")
+	'BANano.Header.AddJavascriptFile("aos.js")
+	
+	'set php settings
+	BANano.PHP_NAME = $"${AppName}.php"$
+	BANano.PHPHost = $"http://${ServerIP}:${Port}/${AppName}/"$
+	'BANano.PHPHost = $"http://www.tgifzone.com/${AppName}/"$
+	BANano.PHPAddHeader("Access-Control-Allow-Origin: *")
+	
+	'
+	BANano.Build(Publish)
+	BP.OpenLog(File.DirApp, "log.txt")
+	
+	BP.PublishPath = Publish
+	BP.ShortName = AppName
+	BP.AssetsPath = BANano.ASSETS_FOLDER
+	BP.ScriptsPath = BANano.SCRIPTS_FOLDER
+	BP.StylesPath = BANano.STYLES_FOLDER
+	BP.ScriptFile = BANano.JAVASCRIPT_NAME
+	BP.OpenOnPort(True, Port)
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+' HERE STARTS YOUR APP
+Sub BANano_Ready()
+	pgIndex.init
+End Sub
+

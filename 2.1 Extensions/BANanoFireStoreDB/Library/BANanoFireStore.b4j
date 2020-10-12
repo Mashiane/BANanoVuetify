@@ -21,7 +21,7 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoFireStore"
-	Public Version As String = "1.01"
+	Public Version As String = "1.3"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -33,6 +33,11 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-analytics.js")
 	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-auth.js")
 	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-firestore.js")
+	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-messaging.js")
+	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-storage.js")
+	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-performance.js")
+	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-database.js")
+	BANano.header.AddJavaScriptfile("https://www.gstatic.com/firebasejs/7.17.1/firebase-functions.js")
 	
 	' start the build
 	#if release

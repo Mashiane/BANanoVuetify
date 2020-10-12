@@ -1,0 +1,174 @@
+﻿AppType=JavaFX
+Build1=Default,b4j.example
+File1=fileSaver.min.js
+File10=marketweb-webfont.woff
+File11=marketweb-webfont.woff2
+File12=material.jpg
+File13=materialdesignicons.min.css
+File14=materialdesignicons-webfont.eot
+File15=materialdesignicons-webfont.ttf
+File16=materialdesignicons-webfont.woff
+File17=materialdesignicons-webfont.woff2
+File18=materialfont.min.css
+File19=MaterialIcons-Regular.eot
+File2=fontawesome.min.css
+File20=MaterialIcons-Regular.ttf
+File21=MaterialIcons-Regular.woff
+File22=MaterialIcons-Regular.woff2
+File23=roboto.min.css
+File24=roboto-v20-latin-500.eot
+File25=roboto-v20-latin-500.svg
+File26=roboto-v20-latin-500.ttf
+File27=roboto-v20-latin-500.woff
+File28=roboto-v20-latin-500.woff2
+File29=roboto-v20-latin-700.eot
+File3=FontAwesome.otf
+File30=roboto-v20-latin-700.svg
+File31=roboto-v20-latin-700.ttf
+File32=roboto-v20-latin-700.woff
+File33=roboto-v20-latin-700.woff2
+File34=roboto-v20-latin-italic.eot
+File35=roboto-v20-latin-italic.svg
+File36=roboto-v20-latin-italic.ttf
+File37=roboto-v20-latin-italic.woff
+File38=roboto-v20-latin-italic.woff2
+File39=roboto-v20-latin-regular.eot
+File4=fontawesome-webfont.eot
+File40=roboto-v20-latin-regular.svg
+File41=roboto-v20-latin-regular.ttf
+File42=roboto-v20-latin-regular.woff
+File43=roboto-v20-latin-regular.woff2
+File44=upload.php
+File45=vue.min.js
+File46=vue-router.min.js
+File47=zircle.css
+File48=zircle.umd.js
+File5=fontawesome-webfont.svg
+File6=fontawesome-webfont.ttf
+File7=fontawesome-webfont.woff
+File8=fontawesome-webfont.woff2
+File9=market.min.css
+FileGroup1=Default Group
+FileGroup10=Default Group
+FileGroup11=Default Group
+FileGroup12=Default Group
+FileGroup13=Default Group
+FileGroup14=Default Group
+FileGroup15=Default Group
+FileGroup16=Default Group
+FileGroup17=Default Group
+FileGroup18=Default Group
+FileGroup19=Default Group
+FileGroup2=Default Group
+FileGroup20=Default Group
+FileGroup21=Default Group
+FileGroup22=Default Group
+FileGroup23=Default Group
+FileGroup24=Default Group
+FileGroup25=Default Group
+FileGroup26=Default Group
+FileGroup27=Default Group
+FileGroup28=Default Group
+FileGroup29=Default Group
+FileGroup3=Default Group
+FileGroup30=Default Group
+FileGroup31=Default Group
+FileGroup32=Default Group
+FileGroup33=Default Group
+FileGroup34=Default Group
+FileGroup35=Default Group
+FileGroup36=Default Group
+FileGroup37=Default Group
+FileGroup38=Default Group
+FileGroup39=Default Group
+FileGroup4=Default Group
+FileGroup40=Default Group
+FileGroup41=Default Group
+FileGroup42=Default Group
+FileGroup43=Default Group
+FileGroup44=Default Group
+FileGroup45=Default Group
+FileGroup46=Default Group
+FileGroup47=Default Group
+FileGroup48=Default Group
+FileGroup5=Default Group
+FileGroup6=Default Group
+FileGroup7=Default Group
+FileGroup8=Default Group
+FileGroup9=Default Group
+Group=Default Group
+Library1=jcore
+Library2=jfx
+Library3=banano
+Module1=|absolute|C:\Users\anelembanga\Documents\MEGA\MyApps\b4j\Shared\BANanoShared
+Module2=VA
+Module3=VApp
+Module4=VHTML
+Module5=VMElement
+Module6=VRouterLink
+Module7=VRouterView
+Module8=VueApp
+NumberOfFiles=48
+NumberOfLibraries=3
+NumberOfModules=8
+Version=8.5
+@EndOfDesignText@
+#Region Project Attributes 
+	#MainFormWidth: 600
+	#MainFormHeight: 600 
+	#IgnoreWarnings: 16, 10, 14, 15, 19
+	#LibraryAuthor: Anele Mbanga (Mashiane)
+	#LibraryVersion: 1.00
+#End Region
+
+#Region Notes
+	'Drawer, SnackBar - show and hide using vmodel
+	'Dialog - show and hide using vmodel
+	
+#End Region
+
+Sub Process_Globals
+	Private BANano As BANano 'ignore
+	Public Version As String = "1.00"
+	Public AppName As String = "BANanoZUI"
+End Sub
+
+Sub AppStart (Form1 As Form, Args() As String)
+	
+	' you can change some output params here
+	BANano.Initialize("BANano", AppName,Version)
+	BANano.HTML_NAME = "index.html"
+	
+	BANano.Header.Title = AppName
+	
+	BANano.Header.AddCSSFile("roboto.min.css")
+	BANano.Header.AddCSSFile("market.min.css")
+	BANano.Header.AddCSSFile("materialfont.min.css")
+	BANano.header.AddCSSFile("materialdesignicons.min.css")
+	BANano.Header.AddCSSFile("fontawesome.min.css")
+		
+	BANano.Header.AddJavascriptFile("vue.min.js")
+	BANano.Header.AddJavascriptFile("vue-router.min.js")
+	'for file download
+	BANano.Header.AddCSSFile("zircle.css")
+	BANano.Header.AddJavascriptFile("zircle.umd.js")
+	'
+	' start the build
+	#if release
+		BANano.BuildAsB4Xlib(Version)
+	#else
+		BANano.Build(File.DirApp)
+	#end if
+	
+	ExitApplication
+End Sub
+
+'Return true to allow the default exceptions handler to handle the uncaught exception.
+Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
+	Return True
+End Sub
+
+' HERE STARTS YOUR APP
+Sub BANano_Ready()
+	
+End Sub

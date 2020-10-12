@@ -49,8 +49,9 @@ Sub Init
 	'
 	vm.UX
 	'
-	vm.NavBar.UpdateTitle(modChartKick.title)
-	vm.ShowPage(modChartKick.name)
+	vm.NavBar.UpdateTitle(modECharts.title)
+	vm.ShowPage(modECharts.name)
+	modECharts.Show
 End Sub
 
 Sub BuildDrawer
@@ -122,6 +123,7 @@ Sub draweritems_click(e As BANanoEvent)
 	Case "echarts"
 		vm.NavBar.UpdateTitle(modECharts.title)
 		vm.ShowPage(modECharts.name)
+		modECharts.show
 	Case "prism"
 		vm.NavBar.UpdateTitle(modPrism.title)
 		vm.ShowPage(modPrism.name)

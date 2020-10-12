@@ -9,7 +9,7 @@ Module1=VMFake
 NumberOfFiles=0
 NumberOfLibraries=4
 NumberOfModules=1
-Version=8.27
+Version=8.5
 @EndOfDesignText@
 'https://www.b4x.com/android/forum/threads/bananohashes-4-types-4-algorithm-plus-1.112222/#content
 #IgnoreWarnings: 12, 15

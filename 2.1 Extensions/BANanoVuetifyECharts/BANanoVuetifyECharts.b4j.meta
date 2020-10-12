@@ -4,6 +4,6 @@ ModuleBreakpoints0=
 ModuleBreakpoints1=
 ModuleClosedNodes0=
 ModuleClosedNodes1=
-NavigationStack=VMEChart,SetTextColor,845,0,VMEChart,AddToContainer,823,0,VMEChart,SetDevicePositions,799,0,VMEChart,SetDeviceOffsets,794,0,VMEChart,SetKey,779,0,VMEChart,SetVhtml,762,0,VMEChart,BindStyleSingle,746,0,VMEChart,SetTabIndex,723,0,VMEChart,SetDesignMode,713,0,VMEChart,Initialize,32,0,Main,BANano_Ready,42,0
+NavigationStack=VMEChart,SetShowLabelOnTop,184,0,VMEChart,SetDataType,198,0,VMEChart,SetXAxisTypeValue,108,0,VMEChart,SetSettings,510,0,VMEChart,ToString,433,0,VMEChart,TreeData,100,0,VMEChart,AddItem,86,0,VMEChart,Refresh,78,0,VMEChart,Clear,71,0,VMEChart,Initialize,53,0
 SelectedBuild=0
 VisibleModules=1

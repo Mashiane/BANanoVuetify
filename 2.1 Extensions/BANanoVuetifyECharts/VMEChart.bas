@@ -22,6 +22,7 @@ Private options As Map
 Private extend As Map
 Private extKey As String
 Private treeItems As List
+Private ckey As String
 End Sub
 
 'initialize the EChart
@@ -32,8 +33,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	BANano.DependsOnAsset("v-chart.min.css")
 	'
 	ID = sid.tolowercase
+	ckey = $"${ID}key"$
 	EChart.Initialize(v, ID)
 	EChart.SetTag("ve-chart")
+	EChart.SetAttrSingle(":key", ckey)
 	Module = eventHandler
 	vue = v
 	
@@ -43,12 +46,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	columnsD.Initialize 
 	chartData.Initialize 
 	cdKey = $"${ID}chartdata"$
-	vue.SetData(cdKey, vue.newlist)
+	vue.SetData(cdKey, vue.newmap)
 	Bind(":data", cdKey)
 	optKey = $"${ID}settings"$
 	options.Initialize 
 	vue.SetData(optKey, options)
-	extend.Initialize 
+	Bind(":settings", optKey)
+	extend.Initialize
 	extKey = $"${ID}extend"$
 	vue.SetData(extKey, extend)
 	Bind(":extend", extKey)
@@ -61,7 +65,30 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	toolbox.Put("feature", feature)
 	'
 	vue.SetData($"${ID}toolbox"$, toolbox)
+	vue.setdata(ckey, DateTime.now)
 	Return Me
+End Sub
+
+'Clear
+Sub Clear
+	columnsD.initialize
+	rowsD.initialize
+	vue.SetData(cdKey, vue.newmap)
+	options.Initialize
+	vue.SetData(optKey, options)
+	extend.Initialize
+	vue.SetData(extKey, extend)
+	vue.setdata(ckey, DateTime.now)
+End Sub
+
+'refresh
+Sub Refresh	
+	vue.SetData(extKey, extend)
+	chartData.Put("columns", columnsD)
+	chartData.Put("rows", rowsD)
+	vue.SetData(cdKey, chartData)
+	vue.SetData(optKey, options)
+	vue.setdata(ckey, DateTime.now)
 End Sub
 
 'add items for tree
@@ -413,10 +440,7 @@ Sub ToString As String
 	chartData.Put("columns", columnsD)
 	chartData.Put("rows", rowsD)
 	vue.SetData(cdKey, chartData)
-	If options.Size > 0 Then
-		vue.SetData(optKey, options)
-		Bind(":settings", optKey)
-	End If
+	vue.SetData(optKey, options)
 	Return EChart.ToString
 End Sub
 
@@ -580,7 +604,7 @@ Return Me
 End Sub
 
 'set resizable
-Sub SetResizable(varResizable As Object) As VMEChart
+Sub SetResizable(varResizable As Boolean) As VMEChart
 Dim pp As String = $"${ID}Resizable"$
 vue.SetStateSingle(pp, varResizable)
 EChart.Bind(":resizable", pp)

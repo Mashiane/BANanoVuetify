@@ -15,9 +15,10 @@ Sub Class_Globals
 	Public appId As String
 	Public measurementId As String
 	Private BANano As BANano  'ignore
-	Private firebase As BANanoObject
-	Private firebaseApp As BANanoObject
-	Private firestore As BANanoObject
+	Public firebase As BANanoObject
+	Public firebaseApp As BANanoObject
+	Public firestore As BANanoObject
+	
 	'
 	Private fromCollection As String
 	Private whereClauses As List
@@ -44,8 +45,10 @@ Sub Class_Globals
 	Private oendAt As Object
 	'
 	Public storage As BANanoObject
+	Public database As BANanoObject
 	Public performance As BANanoObject
 	Public analytics As BANanoObject
+	Public messaging As BANanoObject
 	Private settings As Map
 	Private GoogleAuthProvider As BANanoObject
 	Private FacebookAuthProvider As BANanoObject
@@ -86,7 +89,11 @@ Sub Connect() As BANanoFireStoreDB
 	'initialize the app
 	firebaseApp = firebase.RunMethod("initializeApp", firebaseConfig)
 	'start analytics
-	firebase.RunMethod("analytics", Null)
+	analytics = firebase.RunMethod("analytics", Null)
+	database = firebase.RunMethod("database", Null)
+	storage = firebase.RunMethod("storage", Null)
+	performance = firebase.RunMethod("performance", Null)
+	messaging = firebase.RunMethod("messaging", Null)
 	'get the db
 	firestore = firebaseApp.RunMethod("firestore", Null)
 	firestore.SetField("settings", settings)
@@ -143,6 +150,14 @@ Sub onSnapshot(Collection As String, Module As Object, methodName As String)
 	getCollection(Collection).RunMethod("onSnapshot", cb)
 End Sub
 
+'set snapshots
+Sub SetOnSnapShot(bo As BANanoObject, Module As Object, methodName As String)
+	methodName = methodName.ToLowerCase
+	Dim doc As Map
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(doc))
+	bo.RunMethod("onSnapshot", cb)
+End Sub
+
 'detect user log in and log off pass the user variable
 Sub onAuthStateChanged(Module As Object, methodName As String)
 	methodName = methodName.ToLowerCase
@@ -157,23 +172,6 @@ Sub timestampsInSnapshots As BANanoFireStoreDB
 	Return Me
 End Sub
 
-'enable analytics
-Sub enableAnalytics() As BANanoFireStoreDB
-	analytics = firestore.RunMethod("analytics", Null)
-	Return Me
-End Sub
-
-'enable storage
-Sub enableStorage() As BANanoFireStoreDB
-	storage = firestore.RunMethod("storage", Null)
-	Return Me
-End Sub
-
-'enable performance reporting
-Sub enablePerformance() As BANanoFireStoreDB
-	performance = firestore.RunMethod("performance", Null)
-	Return Me
-End Sub
 
 'enable persistence
 Sub enablePersistence() As BANanoPromise
@@ -195,16 +193,18 @@ Sub enableNetwork() As BANanoPromise
 End Sub
 
 'get the auth object
-private Sub getAuth() As BANanoObject
+public Sub getAuth() As BANanoObject
 	Dim boAuth As BANanoObject = firebaseApp.RunMethod("auth", Null)
 	Return boAuth
 End Sub
 
 
 'get logged in user
-Public Sub getCurrentUser() As BANanoPromise
-	Dim boUser As BANanoPromise = getAuth.RunMethod("currentUser", Null)
-	Return boUser
+Public Sub getCurrentUser() As Map
+	Dim boUser As Object = getAuth.GetField("currentUser").Result
+	If BANano.IsNull(boUser) Or BANano.IsUndefined(boUser) Then Return Null
+	Dim usr As Map = GetUserData(boUser)
+	Return usr
 End Sub
 
 'get a user
@@ -220,7 +220,7 @@ public Sub getDisplayName(resp As Map) As String
 End Sub
 
 'get a collection
-private Sub getCollection(colName As String) As BANanoObject
+Sub getCollection(colName As String) As BANanoObject
 	Dim boTable As BANanoObject = firestore.RunMethod("collection", Array(colName))
 	Return boTable
 End Sub
@@ -240,6 +240,12 @@ Sub collectionUpdate(Collection As String, colID As String, record As Map) As BA
 	Return promAdd
 End Sub
 
+'update a single record
+Sub collectionUpdateRecord(rec As BANanoObject, record As Map) As BANanoPromise
+	Dim promAdd As BANanoPromise = rec.RunMethod("update", Array(record))
+	Return promAdd
+End Sub
+
 'delete a record using a primary autoincrement id
 Sub collectionDelete(Collection As String, colID As String) As BANanoPromise
 	'execute the update
@@ -248,8 +254,8 @@ Sub collectionDelete(Collection As String, colID As String) As BANanoPromise
 End Sub
 
 'get all records
-Sub collectionGetAll(collection As String, sOrderBy As String) As BANanoPromise
-	Dim boTable As BANanoObject = getCollection(collection)
+Sub collectionGetAll(Collection As String, sOrderBy As String) As BANanoPromise
+	Dim boTable As BANanoObject = getCollection(Collection)
 	If sOrderBy <> "" Then
 		If sOrderBy.IndexOf(" ") = -1 Then
 			boTable = boTable.RunMethod("orderBy", Array(sOrderBy, "asc"))
@@ -261,6 +267,30 @@ Sub collectionGetAll(collection As String, sOrderBy As String) As BANanoPromise
 	Dim promGet As BANanoPromise = boTable.RunMethod("get", Null)
 	Return promGet
 End Sub
+
+'set orderby on bananoobject
+Sub SetOrderBy(bo As BANanoObject, fld As String, orderType As String) As BANanoObject
+	bo = bo.RunMethod("orderBy", Array(fld, orderType))
+	Return bo
+End Sub
+
+'set limit
+Sub SetLimit(bo As BANanoObject, iLimit As Int) As BANanoObject
+	bo = bo.RunMethod("limit", Array(iLimit))
+	Return bo
+End Sub	
+
+'set startat
+Sub SetStartAt(bo As BANanoObject, iLimit As Int) As BANanoObject
+	bo = bo.RunMethod("startAt", Array(iLimit))
+	Return bo
+End Sub	
+
+'set end at
+Sub SetEndAt(bo As BANanoObject, iLimit As Int) As BANanoObject
+	bo = bo.RunMethod("endAt", Array(iLimit))
+	Return bo
+End Sub	
 
 'get a record
 Sub collectionGet(collection As String, colID As String) As BANanoPromise
@@ -328,7 +358,7 @@ Sub FromJSON(response As Map) As List
 End Sub
 
 'get the changes that have been made for added, modified, removed
-Sub DocChanges(snapShot As Map) As List
+Sub docChanges(snapShot As Map) As List
 	Dim xDocChanges As BANanoObject = snapShot
 	Dim changes As List = xDocChanges.RunMethod("docChanges",Null).Result
 	Dim recs As List
@@ -345,19 +375,53 @@ Sub DocChanges(snapShot As Map) As List
 	Return recs
 End Sub
 
+'set on each doc change
+Sub SetOnDocChanges(snapShot As Map, Module As Object, methodName As String)
+	methodName = methodName.ToLowerCase
+	Dim xDocChanges As BANanoObject = snapShot
+	Dim changes As List = xDocChanges.RunMethod("docChanges",Null).Result
+	For Each recx As BANanoObject In changes
+		Dim stype As String = recx.GetField("type").Result
+		Dim doc As BANanoObject = recx.GetField("doc")
+		Dim rdata As Map = doc.RunMethod("data", Null).Result
+		Dim uid As String = doc.Getfield("id").Result
+		rdata.Put("changetype", stype)
+		rdata.Put("id", uid)
+		BANano.CallSub(Module, methodName, Array(rdata))
+	Next
+End Sub
+
+Sub IsRemoved(m As Map) As Boolean
+	Dim ct As String = getChangeType(m)
+	If ct = "removed" Then Return True
+	Return False
+End Sub
+
+Sub IsAdded(m As Map) As Boolean
+	Dim ct As String = getChangeType(m)
+	If ct = "added" Then Return True
+	Return False
+End Sub
+
+Sub IsModified(m As Map) As Boolean
+	Dim ct As String = getChangeType(m)
+	If ct = "modified" Then Return True
+	Return False
+End Sub
+
 'get the change type
 Sub getChangeType(item As Map) As String
 	Dim ct As String = item.Get("changetype")
 	Return ct
 End Sub
 
-'get the id
+'get the id from a response
 Sub getID(response As Map) As String
 	Dim res As String = response.Get("id")
 	Return res
 End Sub
 
-'get the message
+'get the message from error
 Sub getMessage(error As Map) As String
 	Dim res As String = error.Get("message")
 	Return res
@@ -417,6 +481,17 @@ Sub whereCondition(fieldName As String, fieldOperation As String, fieldValue As 
 	Return Me
 End Sub
 
+Sub SetWhere(bo As BANanoObject, fld As String, oper As String, value As Object) As BANanoObject
+	Select Case oper
+	Case "ne"
+		bo = bo.RunMethod("where", Array(fld, "<", value))
+		bo = bo.RunMethod("where", Array(fld, ">", value))
+	Case Else
+		bo = bo.RunMethod("where", Array(fld, oper, value))
+	End Select
+	Return bo
+End Sub
+
 'execute the query
 Sub execute As BANanoPromise
 	'get the collection
@@ -466,10 +541,23 @@ Sub execute As BANanoPromise
 	Return promExec
 End Sub
 
+'get
+Sub Get(bo As BANanoObject) As BANanoPromise
+	Dim promExec As BANanoPromise = bo.RunMethod("get", Null)
+	Return promExec
+End Sub
+
 'set a limit to the number of pages
 Sub LimitTo(lt As Int) As BANanoFireStoreDB
 	limitSelectionTo = lt
 	Return Me
+End Sub
+
+'returned the signed in user details
+Sub getSignedInUserDetails(user As Map) As Map
+	Dim usr As Map = getUser(user)
+	Dim usr1 As Map = GetUserData(usr)
+	Return usr1
 End Sub
 
 'get user data after sign in
@@ -498,4 +586,50 @@ End Sub
 Sub getUID(userData As Map) As String
 	Dim suid As String = userData.Get("uid")
 	Return suid
+End Sub
+
+'get current user UID
+Sub getCurrentUID As String
+	'get the current user
+	Dim user As Map = getCurrentUser
+	'get the user id
+	Dim uid As String = user.Get("uid")
+	Return uid
+End Sub
+
+'get a reference to a realtime collection
+Sub getDatabaseRef(refName As String) As BANanoObject
+	Dim bo As BANanoObject = database.RunMethod("ref", Array(refName))
+	Return bo
+End Sub
+
+'push to a ref a record
+Sub DatabasePush(refName As String, record As Map) As BANanoPromise
+	Dim tbl As BANanoObject = getDatabaseRef(refName)
+	Dim bp As BANanoPromise = tbl.RunMethod("push", Array(record))
+	Return bp
+End Sub
+
+'get a reference to a storage path
+Sub getStorageRef(refName As String) As BANanoObject
+	Dim bo As BANanoObject = storage.RunMethod("ref", Array(refName))
+	Return bo
+End Sub
+
+'put a file to storage 
+Sub StoragePut(refName As String, fo As Map) As BANanoPromise
+	Dim tbl As BANanoObject = getStorageRef(refName)
+	Dim bp As BANanoPromise = tbl.RunMethod("put", Array(fo))
+	Return bp
+End Sub
+
+'get the storage URI
+Sub getStorageURI(snapShot As BANanoObject) As String
+	Dim sURI As String = snapShot.GetField("metadata").GetField("fullPath").Result
+	Return sURI
+End Sub
+
+Sub getDownloadURL(snapShot As BANanoObject) As BANanoPromise
+	Dim bp As BANanoPromise = snapShot.getfield("ref").RunMethod("getDownloadURL", Null)
+	Return bp
 End Sub

@@ -83,6 +83,7 @@ Sub BANano_Ready()
 	fb.messagingSenderId = "905575318254"
 	fb.appId = "1:905575318254:web:fb5c35cdc13288aeb329ff"
 	fb.measurementId = "G-41GS0509JY"
+	fb.timestampsInSnapshots
 	'
 	Log("Connect to firebase...")
 	fb.connect
