@@ -112,11 +112,19 @@ pgIndex.CreateVBCode(vue, Me, "t1eve", "Text Field Events", vue.GetSourceCode).A
 	menuAfter.AddKeyValue("month", "Month")
 	'
 	vm.CreateTextField("t2", Me).SetLabel("Solo").SetPlaceholder("Text fields").SetPrependInnerIcon("place").SetSolo(True).SetClearable(True).SetCounter(25).AddMenuAfter(menuAfter).AddToContainer(cont, 4, 1)
-	vm.CreateTextField("t3", Me).SetLabel("Filled").SetAppendIcon("place").SetFilled(True).SetClearable(True).AddToContainer(cont, 5, 1)
+	
+	Dim t3 As VMTextField = vm.CreateTextField("t3", Me).SetCalculator.SetFab(True).SetPrecision(2).SetUseGrouping(True)
+	t3.SetPrefix("$").SetLabel("Calculator").SetAppendIcon("place")
+	t3.AddToContainer(cont, 5, 1)
+	
 	vm.CreateTextField("t4", Me).SetLabel("Outline").SetPrefix("$").SetAppendOuterIcon("place").SetValue("10").Setoutlined(True).SetClearable(True).AddToContainer(cont, 6, 1)
+	
 	vm.CreateTextField("t5", Me).SetVModel("firstname").SetLabel("Filled Shaped").SetCounter(25).SetClearable(True).SetShaped(True).SetFilled(True).AddToContainer(cont, 7, 1)
+	
 	vm.CreateTextField("t6", Me).SetVModel("lastname").SetSuffix("@gmail.com").SetLabel("Outline Shaped").SetClearable(True).SetShaped(True).SetOutlined(True).AddToContainer(cont, 8, 1)
+	
 	vm.CreateTextField("p1", Me).SetLabel("Password").SetPassword(True,True).SetName("password",False).SetHint("At least enter 8 characters.").SetCounter(8).AddToContainer(cont, 9, 1)
+	
 	vm.AddContainer(cont)
 End Sub
 

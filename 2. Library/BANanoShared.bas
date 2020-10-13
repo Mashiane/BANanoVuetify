@@ -27,6 +27,13 @@ Sub Process_Globals
 	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
 End Sub
 
+Sub CreateElement(parent As String, tag As String, id As String) As BANanoElement
+	Dim item As String = $"<${tag} id="${id}"></${tag}>"$
+	Dim el As BANanoElement = BANano.GetElement($"#${parent}"$).Append(item).Get($"#${id}"$)
+	Return el
+End Sub
+
+
 'get new date as iso string
 Sub DateTimeNowToISOString As String
 	Dim obj As BANanoObject
