@@ -359,8 +359,10 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'put loader on page
 	Overlay.Initialize(vue, "pageloader", eventHandler)
 		'
-	Animate.Initialize(vue, "appanimate", eventHandler).SetType(TRANSITION_FADE)
-	Animate.SetMode("out-in").SetHideOnLeave(True)
+	Animate.Initialize(vue, "appanimate", eventHandler)
+	Animate.SetType("v-fade-transition")
+	Animate.SetMode("out-in")
+	Animate.SetHideOnLeave(True)
 	
 	Dim vpc As VMProgressCircular
 	vpc.Initialize(vue, "pageloaderprogress", eventHandler)

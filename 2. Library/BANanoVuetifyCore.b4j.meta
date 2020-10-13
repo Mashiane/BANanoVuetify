@@ -370,6 +370,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMTextField,SetUseGrouping,122,4,VMTextField,SetFab,135,3,VMTextField,SetTransparent,136,0,VMDateTimePicker,formatDate,297,0,BANanoVue,getElementById,1171,0,BANanoShared,getElementById,501,0,BANanoShared,DateDiff,501,0,BANanoVue,DateDiff,1172,0,Main,AppStart,38,0
+NavigationStack=VMSheet,SetName,354,0,VMSheet,SetVElse,376,0,VMSheet,SetVText,377,0,VMSheet,SetAttributes,394,0,VMSheet,SetRC,415,0,VMSheet,SetDeviceOffsets,423,0,VMSheet,AddComponent,440,0,VMSheet,BuildModel,457,0,VMSheet,SetTextColorIntensity,484,0,VMSheet,AddChild,64,0,VMSheet,SetVIf,49,0
 SelectedBuild=0
 VisibleModules=

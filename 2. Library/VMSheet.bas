@@ -25,7 +25,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
-	HasContent = True
+	HasContent = False
 	Footer.Initialize(vue, $"${ID}footer"$, eventHandler)
 	Footer.SetTag("v-sheet-footer")
 	Return Me
@@ -40,6 +40,7 @@ End Sub
 Sub SetTopOverlap As VMSheet
 	AddClass("mx-auto")
 	SetStyleSingle("top", "-24px")
+	SetStyleSingle("margin-bottom", "-24px")
 	SetStyleSingle("position", "relative")
 	SetAttrSingle("max-width", "calc(100% - 32px)")
 	Return Me
