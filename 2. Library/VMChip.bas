@@ -45,6 +45,12 @@ Sub SetData(prop As String, value As Object) As VMChip
 End Sub
 
 
+Sub SetVisible(b As Boolean) As VMChip
+	SetActive(b)
+	Return Me
+End Sub
+
+
 'set for
 Sub SetVFor(item As String, dataSource As String) As VMChip
 	dataSource = dataSource.tolowercase

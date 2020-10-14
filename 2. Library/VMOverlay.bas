@@ -179,8 +179,9 @@ Sub SetLight(varLight As Boolean) As VMOverlay
 End Sub
 
 
-Sub SetVisible(b As Boolean)
+Sub SetVisible(b As Boolean) As VMOverlay
 	vue.SetData(smodel, b)
+	Return Me
 End Sub
 
 'hide the component

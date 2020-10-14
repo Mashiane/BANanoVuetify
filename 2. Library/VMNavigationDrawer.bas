@@ -660,8 +660,9 @@ Sub SetOnUpdateMiniVariant(methodName As String) As VMNavigationDrawer
 End Sub
 
 
-Sub SetVisible(b As Boolean)
+Sub SetVisible(b As Boolean) As VMNavigationDrawer
 	vue.SetData(smodel, b)
+	Return Me
 End Sub
 
 Sub Hide As VMNavigationDrawer

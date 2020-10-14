@@ -408,8 +408,9 @@ End Sub
 
 
 
-Sub SetVisible(b As Boolean)
+Sub SetVisible(b As Boolean) As VMSnackBar
 	vue.SetData(smodel, b)
+	Return Me
 End Sub
 
 Sub Hide As VMSnackBar

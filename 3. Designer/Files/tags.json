@@ -1,9 +1,7 @@
 {
   "v-app": {
     "attributes": [
-      "dark",
-      "id",
-      "light"
+      "id"
     ],
     "description": ""
   },
@@ -456,39 +454,6 @@
     ],
     "description": ""
   },
-  "v-calendar-category": {
-    "attributes": [
-      "categories",
-      "category-days",
-      "category-for-invalid",
-      "category-hide-dynamic",
-      "category-show-all",
-      "color",
-      "dark",
-      "day-format",
-      "end",
-      "first-interval",
-      "first-time",
-      "hide-header",
-      "interval-count",
-      "interval-format",
-      "interval-height",
-      "interval-minutes",
-      "interval-style",
-      "interval-width",
-      "light",
-      "locale",
-      "max-days",
-      "now",
-      "short-intervals",
-      "short-weekdays",
-      "show-interval-label",
-      "start",
-      "weekday-format",
-      "weekdays"
-    ],
-    "description": ""
-  },
   "v-calendar-daily": {
     "attributes": [
       "color",
@@ -681,7 +646,6 @@
       "error-count",
       "error-messages",
       "false-value",
-      "height",
       "hide-details",
       "hint",
       "id",
@@ -690,7 +654,6 @@
       "input-value",
       "label",
       "light",
-      "loading",
       "messages",
       "multiple",
       "off-icon",
@@ -801,27 +764,6 @@
     ],
     "description": ""
   },
-  "v-color-picker-swatches": {
-    "attributes": [
-      "color",
-      "dark",
-      "light",
-      "max-height",
-      "max-width",
-      "swatches"
-    ],
-    "description": ""
-  },
-  "v-color-picker-canvas": {
-    "attributes": [
-      "color",
-      "disabled",
-      "dot-size",
-      "height",
-      "width"
-    ],
-    "description": ""
-  },
   "v-content": {
     "attributes": [
       "tag"
@@ -903,40 +845,6 @@
       "validate-on-blur",
       "value",
       "value-comparator"
-    ],
-    "description": ""
-  },
-  "v-counter": {
-    "attributes": [
-      "dark",
-      "light",
-      "max",
-      "value"
-    ],
-    "description": ""
-  },
-  "v-data": {
-    "attributes": [
-      "custom-filter",
-      "custom-group",
-      "custom-sort",
-      "disable-filtering",
-      "disable-pagination",
-      "disable-sort",
-      "group-by",
-      "group-desc",
-      "item-key",
-      "items",
-      "items-per-page",
-      "locale",
-      "multi-sort",
-      "must-sort",
-      "options",
-      "page",
-      "search",
-      "server-items-length",
-      "sort-by",
-      "sort-desc"
     ],
     "description": ""
   },
@@ -1066,10 +974,6 @@
     ],
     "description": ""
   },
-  "v-table-overflow": {
-    "attributes": [],
-    "description": ""
-  },
   "v-data-table-header": {
     "attributes": [
       "disable-sort",
@@ -1091,20 +995,6 @@
       "fixed-header",
       "height",
       "light"
-    ],
-    "description": ""
-  },
-  "v-virtual-table": {
-    "attributes": [
-      "chunk-size",
-      "dark",
-      "dense",
-      "fixed-header",
-      "header-height",
-      "height",
-      "items",
-      "light",
-      "row-height"
     ],
     "description": ""
   },
@@ -1153,98 +1043,6 @@
       "width",
       "year-format",
       "year-icon"
-    ],
-    "description": ""
-  },
-  "v-date-picker-title": {
-    "attributes": [
-      "color",
-      "date",
-      "disabled",
-      "readonly",
-      "selecting-year",
-      "value",
-      "year",
-      "year-icon"
-    ],
-    "description": ""
-  },
-  "v-date-picker-header": {
-    "attributes": [
-      "color",
-      "dark",
-      "disabled",
-      "format",
-      "light",
-      "locale",
-      "max",
-      "min",
-      "next-aria-label",
-      "next-icon",
-      "prev-aria-label",
-      "prev-icon",
-      "readonly",
-      "value"
-    ],
-    "description": ""
-  },
-  "v-date-picker-date-table": {
-    "attributes": [
-      "allowed-dates",
-      "color",
-      "current",
-      "dark",
-      "disabled",
-      "event-color",
-      "events",
-      "first-day-of-week",
-      "format",
-      "light",
-      "locale",
-      "locale-first-day-of-year",
-      "max",
-      "min",
-      "range",
-      "readonly",
-      "scrollable",
-      "show-week",
-      "table-date",
-      "value",
-      "weekday-format"
-    ],
-    "description": ""
-  },
-  "v-date-picker-month-table": {
-    "attributes": [
-      "allowed-dates",
-      "color",
-      "current",
-      "dark",
-      "disabled",
-      "event-color",
-      "events",
-      "format",
-      "light",
-      "locale",
-      "max",
-      "min",
-      "range",
-      "readonly",
-      "scrollable",
-      "table-date",
-      "value"
-    ],
-    "description": ""
-  },
-  "v-date-picker-years": {
-    "attributes": [
-      "color",
-      "format",
-      "locale",
-      "max",
-      "min",
-      "readonly",
-      "value"
     ],
     "description": ""
   },
@@ -1606,14 +1404,6 @@
       "success",
       "success-messages",
       "validate-on-blur",
-      "value"
-    ],
-    "description": ""
-  },
-  "v-item": {
-    "attributes": [
-      "active-class",
-      "disabled",
       "value"
     ],
     "description": ""
@@ -2000,21 +1790,6 @@
     ],
     "description": ""
   },
-  "v-picker": {
-    "attributes": [
-      "color",
-      "dark",
-      "elevation",
-      "flat",
-      "full-width",
-      "landscape",
-      "light",
-      "no-title",
-      "transition",
-      "width"
-    ],
-    "description": ""
-  },
   "v-progress-circular": {
     "attributes": [
       "button",
@@ -2056,7 +1831,6 @@
       "active-class",
       "append-icon",
       "background-color",
-      "color",
       "column",
       "dark",
       "dense",
@@ -2064,13 +1838,11 @@
       "error",
       "error-count",
       "error-messages",
-      "height",
       "hide-details",
       "hint",
       "id",
       "label",
       "light",
-      "loading",
       "mandatory",
       "max",
       "messages",
@@ -2214,7 +1986,6 @@
       "error-count",
       "error-messages",
       "filled",
-      "filter",
       "flat",
       "full-width",
       "height",
@@ -2484,7 +2255,6 @@
       "error-messages",
       "false-value",
       "flat",
-      "height",
       "hide-details",
       "hint",
       "id",
@@ -2779,42 +2549,6 @@
     ],
     "description": ""
   },
-  "v-time-picker-clock": {
-    "attributes": [
-      "allowed-values",
-      "ampm",
-      "color",
-      "dark",
-      "disabled",
-      "double",
-      "format",
-      "light",
-      "max",
-      "min",
-      "readonly",
-      "rotate",
-      "scrollable",
-      "step",
-      "value"
-    ],
-    "description": ""
-  },
-  "v-time-picker-title": {
-    "attributes": [
-      "ampm",
-      "ampm-readonly",
-      "color",
-      "disabled",
-      "hour",
-      "minute",
-      "period",
-      "readonly",
-      "second",
-      "selecting",
-      "use-seconds"
-    ],
-    "description": ""
-  },
   "v-toolbar": {
     "attributes": [
       "absolute",
@@ -2864,13 +2598,11 @@
       "close-delay",
       "color",
       "content-class",
-      "dark",
       "disabled",
       "eager",
       "fixed",
       "internal-activator",
       "left",
-      "light",
       "max-width",
       "min-width",
       "nudge-bottom",
@@ -2980,9 +2712,6 @@
       "continuous",
       "dark",
       "light",
-      "mandatory",
-      "max",
-      "multiple",
       "next-icon",
       "prev-icon",
       "reverse",

@@ -336,17 +336,21 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'
 	NavBar.Initialize(vue, "appbar", eventHandler)
 	NavBar.SetAppBar(True)
+	NavBar.SetVShow("appbarshow")
 	NavBar.Show
 	'
 	Footer.Initialize(vue, "footer", eventHandler)
+	Footer.SetVShow("footershow")
 	Footer.SetApp(True)
 	'
 	BottomNav.Initialize(vue, "bottomnav", eventHandler)
 	BottomNav.SetApp(True)
+	BottomNav.SetVShow("bottomnavshow")
 	BottomNav.Hide
 	
 	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False) 
-	Notification = CreateAlert("notif", eventHandler, "")
+	Notification = CreateAlert("appnotif", eventHandler, "")
+	Notification.SetVModel("appnotifshow")
 	Notification.SetContent("Notification")
 	Notification.SetBorder("left")
 	Notification.SetColor("green")
@@ -383,13 +387,15 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	vue.SetData("confirmkey", "confirm")
 	
 	Confirm = CreateDialog("confirm", Me).SetWidth("600").SetModal(True)
+	Confirm.SetVModel("confirmshow")
 	Confirm.SetTitle("Title")
 	Confirm.SetContent("Confirm Message")
 	Confirm.AddCancel("btnConfirmCancel", "Cancel")
 	Confirm.AddOK("btnConfirmOk", "Ok")
 	Confirm.Hide
 	'
-	Alert = CreateDialog("alert", Me).SetWidth("600").SetModal(True)
+	Alert = CreateDialog("appalert", Me).SetWidth("600").SetModal(True)
+	Alert.SetVModel("appalertshow")
 	Alert.SetTitle("Title")
 	Alert.SetContent("Alert Message")
 	Alert.AddOK("btnalertOk", "Ok")
@@ -1751,21 +1757,21 @@ End Sub
 
 Sub HideDrawer(dID As String)
 	dID = dID.tolowercase
-	SetStateFalse(dID)
+	SetStateFalse(dID & "show")
 End Sub
 
 'show a specific drawer and hide all others
 Sub ShowDrawer(dID As String)
 	dID = dID.tolowercase
 	HideOtherDrawers(dID)
-	SetStateTrue(dID)
+	SetStateTrue($"${dID}show"$)
 End Sub
 
 'show a specific drawer and hide all others
 Sub HideDrawers
 	Dim nm As Map = CreateMap()
 	For Each k As String In drawers
-		nm.Put(k, False)
+		nm.Put($"${k}show"$, False)
 	Next
 	SetState(nm)
 End Sub
@@ -1773,7 +1779,7 @@ End Sub
 Sub HideOtherDrawers(sexcept As String)
 	Dim nm As Map = CreateMap()
 	For Each k As String In drawers
-		If k.EqualsIgnoreCase(sexcept) = False Then nm.Put(k, False)
+		If k.EqualsIgnoreCase(sexcept) = False Then nm.Put($"${k}show"$, False)
 	Next
 	SetState(nm)
 End Sub

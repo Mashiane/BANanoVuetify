@@ -42,22 +42,28 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	'
 	'build the hamburger menu
 	Hamburger.Initialize(vue, "menu").SetTag("v-app-bar-nav-icon").SetOnClickStop(Me, "menu_click")
+	Hamburger.SetVShow("menushow")
 	RightHamburger.Initialize(vue, "rightmenu").SetTag("v-app-bar-nav-icon")
+	RightHamburger.SetVShow("rightmenushow")
 	RightHamburger.SetVisible(False)
 	objects.Initialize
 	DesignMode = False
 	Extension.Initialize(vue, $"${ID}tmpl"$, module).SetSlotExtension
 	Tabs.Initialize(vue, $"${ID}tabls"$, module)
+	Tabs.SetVShow($"${ID}tablsshow"$)
 	Tabs.OnToolBar = True
+	Tabs.Hide
 	'
 	tTitle = $"${ID}title"$
 	TitleVModel = tTitle
 	Title.Initialize(vue, $"${ID}title"$).SetTag("v-toolbar-title")
+	Title.SetVShow($"${ID}titleshow"$)
 	Title.SetCursorPointer
 	Title.Show
 	'
 	Logo.Initialize(vue, $"${ID}logo"$, module).SetSize("46", "46").AddClass("mx-2").AddClass("my-1").BindStyleSingle("opacity", "1")
 	Logo.Image.SetCursorPointer
+	Logo.SetVShow($"${ID}logoshow"$)
 	Logo.Show
 	'
 	compx = 0
@@ -67,6 +73,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Progress.SetBottom(True)
 	Progress.SetIndeterminate(False) 
 	Progress.SetAbsolute(True)
+	Progress.SetVShow($"${ID}progressshow"$)
 	Progress.Show
 	'
 	SubHeadingKey = $"${ID}subheading"$
@@ -316,8 +323,9 @@ Sub AddClass(c As String) As VMToolBar
 End Sub
 
 
-Sub SetVisible(b As Boolean)
+Sub SetVisible(b As Boolean) As VMToolBar
 	vue.SetData(smodel, b)
+	Return Me
 End Sub
 
 Sub Hide
@@ -1122,6 +1130,7 @@ End Sub
 
 
 Sub SetVIf(vif As String) As VMToolBar
+	smodel = vif
 	ToolBar.SetVIf(vif)
 	Return Me
 End Sub

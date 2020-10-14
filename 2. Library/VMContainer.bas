@@ -2039,8 +2039,9 @@ Sub SetTag(varTag As String) As VMContainer
 End Sub
 
 
-Sub SetVisible(b As Boolean)
+Sub SetVisible(b As Boolean) As VMContainer
 	Container.SetVisible(b)
+	Return Me
 End Sub
 
 Sub Hide As VMContainer
