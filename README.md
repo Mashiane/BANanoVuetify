@@ -1,5 +1,7 @@
 # BANanoVuetify
 
+NB: BANanoPostProcessor: The BP used in some of the examples is an updated version of what Kiffi did in the forum. Due to BANano latest enhancements, BANanoVueMaterial no longer needs the BP. In some old examples in this repo, you can completely un-reference it and comment out the source code. Newer code is not using it.
+
 [Watch Video](https://youtu.be/cLbyAqwR-DQ)
 
 [B4X Blog about BANanoVuetify](https://www.b4x.com/android/forum/threads/bananovuematerial-the-first-complete-opensource-vuejs-ux-based-framework-for-banano.113789/#content)
