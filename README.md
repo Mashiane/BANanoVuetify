@@ -1,6 +1,6 @@
 # BANanoVuetify
 
-NB: BANanoPostProcessor: The BP used in some of the examples is an updated version of what Kiffi did in the forum. Due to BANano latest enhancements, BANanoVueMaterial no longer needs the BP. In some old examples in this repo, you can completely un-reference it and comment out the source code. Newer code is not using it.
+**NB: BANanoPostProcessor: The BP used in some of the examples is an updated version of what Kiffi did in the forum. The examples are old and have not been maintained due to time challenges as the focus has been to maintain the core library. The newer BANanoVuetify is no longer using the BP due to enhancements in BANano, this means you can un-reference it and comment out the code that uses it.
 
 [Watch Video](https://youtu.be/cLbyAqwR-DQ)
 
