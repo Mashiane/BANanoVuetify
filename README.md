@@ -1,6 +1,6 @@
 # BANanoVuetify
 
-**NB: BANanoPostProcessor: The BP used in some of the examples is an updated version of what Kiffi did in the forum. The examples are old and have not been maintained due to time challenges as the focus has been to maintain the core library. The newer BANanoVuetify is no longer using the BP due to enhancements in BANano, this means you can un-reference it and comment out the code that uses it.
+**NB: BANanoPostProcessor: The BP used in some of the examples is an updated version of what Kiffi did in the forum. The examples are old and have not been maintained due to time challenges as the focus has been to maintain the core library. The newer BANanoVuetify is no longer using the BP due to enhancements in BANano, this means you can un-reference it and comment out the code that uses it for BANanoVuetify
 
 [Watch Video](https://youtu.be/cLbyAqwR-DQ)
 
