@@ -801,8 +801,8 @@ End Sub
 Sub SetOnChange(methodName As String) As VMFileInput
 	methodName = methodName.tolowercase
 	If SubExists(Module, methodName) = False Then Return Me
-	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(e))
+	Dim fl As Object
+	Dim cb As BANanoObject = BANano.CallBack(Module, methodName, Array(fl))
 	SetAttr(CreateMap("@change": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

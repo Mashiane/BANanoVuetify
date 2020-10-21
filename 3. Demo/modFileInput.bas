@@ -21,7 +21,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(10).AddColumns(1, 12, 12, 12, 12)
+	cont.AddRows(12).AddColumns(1, 12, 12, 12, 12)
 	'
 	vm.CreateFileInput("fi1", Me).SetMultiple(True).SetLabel("File input").SetVModel("myfiles").SetPlaceholder("Please choose some files").AddToContainer(cont, 1, 1)
 	
@@ -34,7 +34,6 @@ Sub Code
 	vue.SourceCodeBuilder
 	vue.AddCode($"'file change"$)
 	vue.AddCode($"Sub fi1_change(fileList As List)"$)
-	vue.AddCode($"Log("fi1_change")"$)
 	vue.AddCode($"For Each obj As Object In fileList"$)
 	vue.AddCode($"Dim fo As FileObject = BANanoShared.GetFileDetails(obj)"$)
 	vue.AddCode($"Log(fo.filename)"$)
@@ -44,11 +43,29 @@ Sub Code
 	vue.AddCode($"Log("***")"$)
 	vue.AddCode($"Next"$)
 	vue.AddCode($"End Sub"$)
-	pgIndex.CreateVBCode(vue, Me, "filechange", "File Change Event", vue.GetSourceCode).AddToContainer(cont, 1, 1)
-
+	pgIndex.CreateVBCode(vue, Me, "filechange", "Multiple Files Change Event", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 	'
 	vm.CreateFileInput("fi2", Me).SetAccept("image/*").SetLabel("File input").SetPrependIcon("mdi-camera").SetHideInput(True).AddToContainer(cont, 2, 1)
+	'
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"vm.CreateFileInput("fi2", Me).SetAccept("image/*").SetLabel("File input").SetPrependIcon("mdi-camera").SetHideInput(True).AddToContainer(cont, 2, 1)"$)
+pgIndex.CreateVBCode(vue, Me, "singlefile", "Single File", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+
+	'initialize code builder
+	vue.SourceCodeBuilder
+	vue.AddCode($""$)
+	vue.AddCode($"Sub fi2_change(fObj As Map)"$)
+	vue.AddCode($"Try"$)
+	vue.AddCode($"Dim fO As FileObject = BANanoShared.GetFileDetails(fObj)"$)
+	vue.AddCode($"vm.ShowSnackBarSuccess(fO.filename)"$)
+	vue.AddCode($"Catch"$)
+	vue.AddCode($"Log("myfile_change Error")"$)
+	vue.AddCode($"End Try"$)
+	vue.AddCode($"End Sub"$)
+	pgIndex.CreateVBCode(vue, Me, "multipleoff", "Single File Change Event", vue.GetSourceCode).AddToContainer(cont, 2, 1)
+	
 	'
 	vm.CreateFileInput("fi3", Me).SetChips(True).SetLabel("File input (with chips)").AddToContainer(cont, 3, 1)
 	'
@@ -65,9 +82,31 @@ Sub Code
 	Dim fi9 As VMFileInput = vm.CreateFileInput("fi9", Me).SetVModel("files").SetColorIntensity(vm.vue.COLOR_DEEPPURPLE, vm.vue.INTENSITY_ACCENT4)
 	fi9.SetCounter(True).SetLabel("File Input").SetMultiple(True).SetPlaceholder("Select your files")
 	fi9.SetPrependIcon("mdi-paperclip").SetOutlined(True).SetShowSize("1000").AddToContainer(cont, 9, 1)
+	'
 	
+
+
 	'add container to page
 	vm.AddContainer(cont)
+End Sub
+
+
+Sub singlefilecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("singlefile")
+End Sub
+
+Sub singlefiledownload_click(e As BANanoEvent)
+	vue.DownloadCode("singlefile", "singlefile.txt")
+End Sub
+
+
+
+Sub multipleoffcopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("multipleoff")
+End Sub
+
+Sub multipleoffdownload_click(e As BANanoEvent)
+	vue.DownloadCode("multipleoff", "multipleoff.txt")
 End Sub
 
 
@@ -93,7 +132,8 @@ End Sub
 
 'file change
 Sub fi1_change(fileList As List)
-	Log("fi1_change")
+	Dim sb As StringBuilder
+	sb.initialize
 	For Each obj As Object In fileList
 		Dim fo As FileObject = BANanoShared.GetFileDetails(obj)
 		Log(fo.filename)
@@ -101,18 +141,13 @@ Sub fi1_change(fileList As List)
 		Log(fo.filesize)
 		Log(fo.filetype)
 		Log("***")
+		sb.append(fo.filename).append(CRLF)
 	Next
+	vm.ShowSnackBarSuccess(sb.tostring)
 End Sub
 
 'file change
-Sub fi2_change(fileList As List)
-	Log("fi2_change")
-	For Each obj As Object In fileList
-		Dim fo As FileObject = BANanoShared.GetFileDetails(obj)
-		Log(fo.filename)
-		Log(fo.fileDate)
-		Log(fo.filesize)
-		Log(fo.filetype)
-		Log("***")
-	Next
+Sub fi2_change(fileList As Map)
+	Dim fo As FileObject = BANanoShared.GetFileDetails(fileList)
+	vm.ShowSnackBarSuccess(fo.filename)
 End Sub

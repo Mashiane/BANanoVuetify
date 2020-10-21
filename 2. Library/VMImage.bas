@@ -21,6 +21,7 @@ Sub Class_Globals
 	Public HasContent As Boolean
 	Public Hover As VMHover
 	Private hasHover As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the Image
@@ -42,6 +43,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Hover.Initialize(vue, $"${ID}hover"$, Module)
 	hasHover = False
 	Show 
+	SetOnClick(Module, $"${ID}_click"$)
 	Return Me
 End Sub
 
@@ -49,8 +51,6 @@ Sub SetData(xprop As String, xValue As Object) As VMImage
 	vue.SetData(xprop, xValue)
 	Return Me
 End Sub
-
-
 
 Sub SetHover(b As Boolean) As VMImage
 	hasHover = b
@@ -301,6 +301,11 @@ Sub ToString As String
 	End If
 End Sub
 
+Sub GetValue As String
+	Dim sdata As String = vue.GetData(vmodel)
+	Return sdata
+End Sub
+
 Sub SetValue(url As String) As VMImage
 	SetVModel(imgLink, url)
 	HasContent = True
@@ -309,13 +314,14 @@ End Sub
 
 Sub SetVModel(k As String, value As String) As VMImage
 	Image.Value = value
+	vmodel = k
 	If bStatic Then
-		SetSrc(value)
+		SetSRC(value)
 		Return Me
 	End If
 	k = k.tolowercase
 	vue.SetData(k, value)
-	SetSrc(k)
+	SetSRC(k)
 	Return Me
 End Sub
 
@@ -556,8 +562,9 @@ Sub SetSizes(varSizes As String) As VMImage
 End Sub
 
 'set src via vmodel
-Sub SetSrc(varSrc As String) As VMImage
+Sub SetSRC(varSrc As String) As VMImage
 	If varSrc = "" Then Return Me
+	vmodel = varSrc
 	If bStatic Then
 		SetAttrSingle("src", varSrc)
 		Return Me
@@ -567,9 +574,15 @@ Sub SetSrc(varSrc As String) As VMImage
 	Return Me
 End Sub
 
+Sub GetSRC As String
+	Dim svalue As String = vue.GetData(vmodel)
+	Return svalue
+End Sub
+
 'set srcset
 Sub SetSrcSet(varSrcset As String) As VMImage
 	If varSrcset = "" Then Return Me
+	vmodel = varSrcset
 	If bStatic Then
 		SetAttrSingle("srcset", varSrcset)
 		Return Me

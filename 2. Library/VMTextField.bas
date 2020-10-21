@@ -167,6 +167,36 @@ Sub AddMenuAfter(menu As VMMenu) As VMTextField
 	Return Me
 End Sub
 
+'add decrement icon
+Sub AddDecrementIcon(iconColor As String) As VMTextField
+	Dim appendOuter As VMTemplate
+	appendOuter.Initialize(vue, $"${ID}iconbefore"$, Module)
+	appendOuter.SetAttrLoose("v-slot:prepend")
+	Dim icn As VMIcon
+	icn.Initialize(vue, $"${ID}decrement"$, Module)
+	icn.SetText("mdi-minus")
+	icn.SetColor(iconColor)
+	icn.SetDark(True)
+	appendOuter.AddComponent(icn.ToString)
+	AddComponent(appendOuter.ToString)
+	Return Me
+End Sub
+
+'add increment icon
+Sub AddIncrementIcon(iconColor As String) As VMTextField
+	Dim appendOuter As VMTemplate
+	appendOuter.Initialize(vue, $"${ID}iconafter"$, Module)
+	appendOuter.SetAttrLoose("v-slot:append-outer")
+	Dim icn As VMIcon
+	icn.Initialize(vue, $"${ID}increment"$, Module)
+	icn.SetText("mdi-plus")
+	icn.SetColor(iconColor)
+	icn.SetDark(True)
+	appendOuter.AddComponent(icn.ToString)
+	AddComponent(appendOuter.ToString)
+	Return Me
+End Sub
+
 'add a menu after the text box
 Sub AddButtonAfter(btn As VMButton) As VMTextField
 	Dim appendOuter As VMTemplate
@@ -353,6 +383,72 @@ Sub SetRequired(varRequired As Boolean) As VMTextField
 	Return Me
 End Sub
 
+'add color picker
+Sub AddColorPicker As VMTextField
+	'set color of color picker
+	vue.SetData(vmodel, "#ffffff")
+	Dim bc As Map = CreateMap()
+	bc.Put("backgroundColor", "#ffffff")
+	vue.SetData($"${ID}color"$, bc)
+	'hide the menu
+	vue.SetData($"${ID}menu"$, False)
+	Dim dMenu As VMElement
+	dMenu.Initialize(vue, "").SetTag("v-menu").SetSlot("append-outer").SetAttrSingle(":close-on-content-click", False)
+	dMenu.SetVModel($"${ID}menu"$)
+	dMenu.SetAttrSingle("transition", "scale-transition")
+	dMenu.SetAttrLoose("full-width")
+	dMenu.SetAttrLoose("lazy")
+	SetReadonly(True)
+	
+	'
+	Dim tmpl As VMTemplate
+	tmpl.Initialize(vue, "", Module).SetSlotActivatorOn
+	'
+	Dim btn As VMElement
+	btn.Initialize(vue, "").SetTag("btn").SetAttrSingle("icon",True).SetAttrSingle("v-on", "on")
+	btn.SetCursorPointer
+	'
+	Dim avatr As VMElement
+	avatr.Initialize(vue,"").SetTag("v-avatar").SetAttrSingle("size", "30px")
+	avatr.SetStyleSingle("border", "solid 1px")
+	avatr.SetAttrSingle(":style", $"${ID}color"$)
+	btn.SetText(avatr.ToString)
+	'add btn to template
+	tmpl.SetText(btn.ToString)
+	'add template to menu
+	dMenu.SetText(tmpl.ToString)
+	'
+	Dim vcard As VMCard
+	vcard.Initialize(vue, "", Module).SetStyleSingle("padding", "10px")
+	'
+	Dim vcolor As VMColorPicker 
+	vcolor.Initialize(vue, "", Module).SetFlat(True).SetSwatchesMaxHeight("200px").SetVModel(vmodel)
+	vcolor.SetMode("hexa").SetHideInputs(True).SetHideModeSwitch(True)
+	vcard.SetText(vcolor.ToString)
+	'
+	Dim div As VMElement
+	div.Initialize(vue, "").SetTag("div").AddClass("text-center my-2")
+	div.AddElement1("v-btn", "", "Cancel", CreateMap("outlined":True, "@click": $"${ID}menu = !${ID}menu"$), Null, Array("ma-2"), Null)
+	div.AddElement1("v-btn", "", "Apply", CreateMap("outlined":True, "color":"primary", "@click": $"${ID}menu = !${ID}menu"$), Null, Array("ma-2"), Null)
+	vcard.SetText(div.ToString)
+	dMenu.SetText(vcard.ToString)
+	'add menu to textfield
+	SetText(dMenu.ToString)
+	'
+	vue.SetWatch(vmodel, True, True, Me, "watchcolor")
+	Return Me
+End Sub
+
+Sub watchcolor(val As Object)
+	If BANano.IsNull(val) = False And BANano.IsUndefined(val) = False Then
+		Dim inputvalue As Object = vue.GetData(vmodel)
+		If BANano.IsNull(inputvalue) = False And BANano.IsUndefined(inputvalue) = False Then
+			Dim mycolor As Map = CreateMap()
+			mycolor.Put("backgroundColor", inputvalue)
+			vue.SetData($"${ID}color"$, mycolor)
+		End If
+	End If
+End Sub
 
 'get component
 Sub ToString As String
@@ -993,13 +1089,6 @@ Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMTextField
 	Return Me
 End Sub
 
-'set value
-Sub SetValue(varValue As String) As VMTextField
-	TextField.SetValue(varValue,False)
-	vue.SetData(vmodel, varValue)
-	Return Me
-End Sub
-
 '
 Sub SetSlotAppend(b As Boolean) As VMTextField    'ignore
 	SetAttr(CreateMap("slot": "append"))
@@ -1535,3 +1624,24 @@ Sub SetWidth(w As String) As VMTextField
 	TextField.SetStyleSingle("width", w)
 	Return Me
 End Sub
+
+'get the value
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(vmodel)
+	Return svalue
+End Sub
+
+'set value
+Sub SetValue(svalue As String) As VMTextField
+	If bStatic Then
+		SetAttrSingle("value", svalue)
+		Return Me
+	End If
+	If vmodel = "" Then 
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
+	vue.setdata(vmodel, svalue)
+	Return Me
+End Sub
+

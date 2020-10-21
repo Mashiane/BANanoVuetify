@@ -990,6 +990,8 @@ Sub AddComment1(sbx As StringBuilder, sc As String)
 End Sub
 
 Sub GetSourceCode As String
+	Dim sout As String = SourceCode.tostring
+	sout = sout.Replace("~", "$")
 	Return SourceCode.tostring
 End Sub
 

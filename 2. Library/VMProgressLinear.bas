@@ -15,6 +15,7 @@ Sub Class_Globals
 	Private bStatic As Boolean   'ignore
 	Private tmp As VMElement
 	Private hasLabel As Boolean
+	Private vmodel As String
 End Sub
 
 'initialize the ProgressLinear
@@ -28,12 +29,25 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bStatic = False
 	tmp.Initialize(vue, $"${ID}tmp"$).SetTag("template")
 	hasLabel = False
+	vmodel = $"${ID}value"$
+	SetOnChange(Module, $"${ID}_change"$)
+	Return Me
+End Sub
+
+
+Sub SetOnChange(eventHandler As Object, methodName As String) As VMProgressLinear
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim value As Object
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(value))
+	SetAttr(CreateMap("@change": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
 	Return Me
 End Sub
 
 Sub GetValue As String
-	Dim pp As String = $"${ID}Value"$
-	Dim svalue As String = vue.GetData(pp)
+	Dim svalue As String = vue.GetData(vmodel)
 	Return svalue
 End Sub
 
@@ -82,6 +96,7 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMProgressLinear
+	vmodel = k.tolowercase
 	ProgressLinear.SetVModel(k)
 	Return Me
 End Sub
@@ -377,12 +392,13 @@ Sub SetValue(varValue As String) As VMProgressLinear
 		SetAttrSingle("value", varValue)
 		Return Me
 	End If
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ProgressLinear.Bind(":value", pp)
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
-
 
 'hide the component
 Sub Hide As VMProgressLinear

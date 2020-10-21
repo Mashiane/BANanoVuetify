@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean    'ignore
 	Private bStatic As Boolean
 	Private BANano As BANano     'ignore
+	Private vmodel As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
@@ -23,6 +24,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Label.typeOf = "label"
 	DesignMode = False
 	bStatic = False
+	vmodel = ""
 	Return Me
 End Sub
 
@@ -69,6 +71,7 @@ Sub SetStatic(b As Boolean) As VMLabel
 End Sub
 
 Sub SetVModel(svmodel As String, value As String) As VMLabel
+	vmodel = svmodel
 	value = BANano.SF(value)
 	svmodel = svmodel.tolowercase
 	If bStatic Then
@@ -78,6 +81,30 @@ Sub SetVModel(svmodel As String, value As String) As VMLabel
 	vue.SetData(svmodel, value)
 	SetText($"{{ ${svmodel} }}"$)
 	Return Me
+End Sub
+
+Sub SetVModel1(svmodel As String) As VMLabel
+	vmodel = svmodel.tolowercase
+	SetText($"{{ ${vmodel} }}"$)
+	Return Me
+End Sub
+
+Sub SetValue(varValue As String) As VMLabel
+	If bStatic Then
+		SetText(varValue)
+		Return Me
+	End If
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel, varValue)
+	End If
+	vue.SetData(vmodel, varValue)
+	Return Me
+End Sub
+
+Sub GetValue As String
+	Dim sdata As String = vue.GetData(vmodel)
+	Return sdata
 End Sub
 
 'set the row and column position

@@ -255,6 +255,10 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMSimpleCheckBox
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
 	SimpleCheckBox.SetValue(varValue, False)
 	vue.SetData(vmodel, varValue)
 	Return Me

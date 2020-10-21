@@ -227,6 +227,14 @@ Sub InputDialog As VMDialog
 	Return diag
 End Sub
 
+Sub myfile_change(fObj As Map)
+	Try
+		Dim fO As FileObject = BANanoShared.GetFileDetails(fObj)
+		vm.ShowSnackBarSuccess(fO.filename)
+	Catch
+		Log("myfile_change Error")
+	End Try
+End Sub
 
 Sub btnSaveIt_click(e As BANanoEvent)
 	Dim user As Map = vm.GetData("user")

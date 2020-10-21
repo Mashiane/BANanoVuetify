@@ -700,8 +700,13 @@ End Sub
 
 'set value, updated the vmodel
 Sub SetValue(varValue As String) As VMSlider
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
 	If xmodel = "" Then
-		Log($"VMSlider.SetValue '${ID}' - please set the vmodel first!"$)
+		xmodel = $"${ID}value"$
+		SetVModel(xmodel)
 	End If
 	If bIsRange Then
 		Dim v1 As String = vue.MvField(varValue,1,",")
@@ -967,4 +972,11 @@ Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSlide
 	Dim mcolor As String = $"${sColor} ${sIntensity}"$
 	AddClass(mcolor)
 	Return Me
+End Sub
+
+
+'get the value
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(xmodel)
+	Return svalue
 End Sub

@@ -119,6 +119,133 @@ Sub AddIcon(key As String, iconName As String, iconColor As String, iconSize As 
 	Return Me
 End Sub
 
+'Sub AddIconWeb(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-web").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconTwitter(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-twitter").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconLinkedIn(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-linkedin").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconFacebook(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-facebook").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconInstagram(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-instagram").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconShare(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-share").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'
+'Sub AddIconWeChat(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-wechat").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconDotsVertical(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-dots-vertical").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+'
+'Sub AddIconWhatsApp(key As String, iconColor As String, iconSize As String, toolTip As String) As VMCardActions
+'	key = key.tolowercase
+'	Dim btn As VMButton
+'	btn.Initialize(vue, key, Module)
+'	btn.SetStatic(bStatic)
+'	btn.SetDesignMode(DesignMode)
+'	btn.SetIconButton("mdi-whatsapp").SetTooltip(toolTip)
+'	btn.SetColor(iconColor)
+'	btn.SetSize(iconSize)
+'	CardActions.SetText(btn.tostring)
+'	HasContent = True
+'	Return Me
+'End Sub
+
 
 Sub AddMenu(menu As VMMenu) As VMCardActions
 	menu.Pop(CardActions)

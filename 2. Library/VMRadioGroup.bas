@@ -622,9 +622,23 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMRadioGroup
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	If xmodel = "" Then
+		xmodel = $"${ID}value"$
+		SetVModel(xmodel)
+	End If
 	RadioGroup.SetValue(varValue, False)
 	vue.SetData(xmodel, varValue)
 	Return Me
+End Sub
+
+'get the data
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(xmodel)
+	Return svalue
 End Sub
 
 'set value-comparator

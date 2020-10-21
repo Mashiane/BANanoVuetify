@@ -43,9 +43,9 @@ Sub Code
 	vue.AddCode($"vm.CreateIconButton("btnx", Me, "mdi-heart").SetColor("pink").AddToContainer(cont, 4, 1)"$)
 	pgIndex.CreateVBCode(vue, Me, "buttoncode3", "Buttons", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 	'
-	vm.CreateFABButton("fab1", Me, "mdi-plus").SetColor("indigo").AddToContainer(cont, 5, 1)
+	vm.CreateFABButton("fab1", Me, "mdi-plus").SetColor("indigo").AddClass("pulse").AddToContainer(cont, 5, 1)
 	vue.SourceCodeBuilder
-	vue.AddCode($"vm.CreateFABButton("fab1", Me, "mdi-plus").SetColor("indigo").AddToContainer(cont, 5, 1)"$)
+	vue.AddCode($"vm.CreateFABButton("fab1", Me, "mdi-plus").SetColor("indigo").AddClass("pulse").AddToContainer(cont, 5, 1)"$)
 	pgIndex.CreateVBCode(vue, Me, "buttoncode4", "Buttons", vue.GetSourceCode).AddToContainer(cont, 5, 1)
 	'
 	vm.CreateFABButton("fab2", Me, "mdi-pencil").SetOutlined(True).SetLarge(True).SetColor("teal").AddToContainer(cont, 6, 1)
@@ -184,12 +184,39 @@ vue.AddCode($"End Sub"$)
 	pgIndex.CreateVBCode(vue, Me, "btnSpeedDialClick", "Speed Dial Click", vue.GetSourceCode).AddToContainer(cont, 14, 1)
 	'
 	
+	vm.CreateButton("btnGradient", Me).SetLabel("Black Teal").SetTextColor(vm.color_white).SetGradient(vm.color_black, vm.color_teal).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient1", Me).SetLabel("Purple Teal").SetGradient(vm.color_purple, vm.color_teal).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient2", Me).SetLabel("Pink Indigo").SetGradient(vm.color_pink, vm.color_indigo).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient3", Me).SetLabel("Green Orange").SetGradient(vm.color_green, vm.color_orange).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient4", Me).SetLabel("Yellow Cyan").SetGradient(vm.color_yellow, vm.color_cyan).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient5", Me).SetLabel("Amber Yellow").SetGradient(vm.color_amber, vm.color_yellow).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient6", Me).SetLabel("Blue Red").SetGradient(vm.color_blue, vm.COLOR_RED).AddToContainer(cont, 15, 1)
+	vm.CreateButton("btnGradient7", Me).SetLabel("Gray Light Blue").SetGradient(vm.color_grey, vm.color_Lightblue).AddToContainer(cont, 15, 1)
+	
+	'initialize code builder
+vue.SourceCodeBuilder
+	vue.AddCode($"vm.CreateButton("btnGradient", Me).SetLabel("Black Teal").SetTextColor(vm.color_white).SetGradient(vm.color_black, vm.color_teal).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient1", Me).SetLabel("Purple Teal").SetGradient(vm.color_purple, vm.color_teal).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient2", Me).SetLabel("Pink Indigo").SetGradient(vm.color_pink, vm.color_indigo).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient3", Me).SetLabel("Green Orange").SetGradient(vm.color_green, vm.color_orange).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient4", Me).SetLabel("Yellow Cyan").SetGradient(vm.color_yellow, vm.color_cyan).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient5", Me).SetLabel("Amber Yellow").SetGradient(vm.color_amber, vm.color_yellow).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient6", Me).SetLabel("Blue Red").SetGradient(vm.color_blue, vm.COLOR_RED).AddToContainer(cont, 15, 1)"$)
+vue.AddCode($"vm.CreateButton("btnGradient7", Me).SetLabel("Gray Light Blue").SetGradient(vm.color_grey, vm.color_Lightblue).AddToContainer(cont, 15, 1)"$)
+pgIndex.CreateVBCode(vue, Me, "ButtonGradients", "Button Gradients", vue.GetSourceCode).AddToContainer(cont, 16, 1)
+	
 	'add container to page
 	vm.AddContainer(cont)
 	
+End Sub
 
 
+Sub ButtonGradientscopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("Button Gradients")
+End Sub
 
+Sub ButtonGradientsdownload_click(e As BANanoEvent)
+vue.DownloadCode("Button Gradients", "Button Gradients.txt")
 End Sub
 
 

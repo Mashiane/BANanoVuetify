@@ -42,7 +42,14 @@ Sub SetData(xprop As String, xValue As Object) As VMTabs
 	Return Me
 End Sub
 
-
+'update the badge value using tab-panel id
+Sub SetBadgeContent(elID As String, counted As String) As VMTabs
+	elID = elID.tolowercase
+	counted = BANano.parseInt(counted)
+	Dim badValue As String = $"${elID}badgecontent"$
+	vue.SetStateSingle(badValue, counted)
+	Return Me
+End Sub
 
 'set transition
 Sub SetTransition(varTransition As String) As VMTabs

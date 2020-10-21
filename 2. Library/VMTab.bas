@@ -40,7 +40,13 @@ Sub SetData(xprop As String, xValue As Object) As VMTab
 	Return Me
 End Sub
 
-
+'update the badge value using tab-panel id
+Sub SetBadgeContent(counted As String) As VMTab
+	counted = BANano.parseInt(counted)
+	Dim badValue As String = $"${ID}badgecontent"$
+	vue.SetStateSingle(badValue, counted)
+	Return Me
+End Sub
 
 Sub SetBadge(scontent As String) As VMTab
 	Badge.SetContent(scontent)

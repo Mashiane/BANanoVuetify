@@ -41,8 +41,6 @@ Sub Init
 	vm.UX
 	
 	vm.showpage(modProgress.name)
-	'
-	Log(BANano.window)
 End Sub
 
 Sub BuildNavBar

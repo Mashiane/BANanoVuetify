@@ -1240,6 +1240,9 @@ Sub ToString As String
 	End If
 	'save the template
 	Template = Element.tostring
+	If bUsesStyles Then
+		Log(Template)
+	End If
 	Return Template
 End Sub
 

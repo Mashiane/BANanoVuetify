@@ -50,6 +50,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetGradient(color1 As String, color2 As String) As VMButton
+	Dim hex1 As String = vue.GetColorHex(color1)
+	Dim hex2 As String = vue.GetColorHex(color2)
+	SetStyleSingle("background", $"-webkit-linear-gradient(45deg, ${hex1}, ${hex2});linear-gradient(45deg, ${hex1}, ${hex2})"$)
+	Return Me
+End Sub
+
+
 Sub SetData(prop As String, value As Object) As VMButton
 	vue.SetData(prop, value)
 	Return Me
@@ -70,6 +78,7 @@ Sub SetBadge(bvalue As String) As VMButton
 	Badge.SetAvatar(True)
 	Badge.SetIcon("")
 	Badge.SetDot(False)
+	Badge.Show
 	Return Me
 End Sub
 
@@ -166,6 +175,7 @@ Sub SetIconButton(iconName As String) As VMButton
 	bicon.SetDesignMode(DesignMode)
 	bicon.SetText(iconName)
 	bicon.Pop(Button)
+	bicon.Show
 	txt = ""
 	iconPos = ""
 	icon = ""
@@ -223,6 +233,7 @@ Sub SetFABButton(iconName As String) As VMButton
 	bicon.SetStatic(bStatic)
 	bicon.SetDesignMode(DesignMode)
 	bicon.SetText(iconName)
+	bicon.show
 	bicon.Pop(Button)
 	iconPos = ""
 	txt = ""
@@ -280,6 +291,7 @@ Sub AddIcon(iconName As String, siconPos As String, iconTheme As String) As VMBu
 	bicon.SetDesignMode(DesignMode)
 	bicon.SetText(iconName)
 	bicon.SetHasBadge(False)
+	bicon.show
 	Select Case iconPos
 	Case "left"
 		bicon.SetLeft(True)

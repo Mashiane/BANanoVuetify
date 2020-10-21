@@ -13,6 +13,7 @@ Sub Class_Globals
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object    'ignore
 	Private vmodel As String
+	Private bStatic As Boolean
 End Sub
 
 'initialize the ColorPicker
@@ -24,8 +25,27 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	vmodel = ""
+	SetOnInput(eventHandler, $"${ID}_input"$)
 	Return Me
 End Sub
+
+Sub SetStatic(b As Boolean) As VMColorPicker
+	bStatic = b
+	ColorPicker.SetStatic(b)
+	Return Me
+End Sub
+'
+Sub SetOnInput(eventHandler As Object, methodName As String) As VMColorPicker
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim value As Object
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(value))
+	SetAttr(CreateMap("@input": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
 
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMColorPicker
@@ -128,7 +148,11 @@ Sub AddChildren(children As List)
 End Sub
 
 'set canvas-height
-Sub SetCanvasHeight(varCanvasHeight As Object) As VMColorPicker
+Sub SetCanvasHeight(varCanvasHeight As String) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("canvas-height", varCanvasHeight)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}CanvasHeight"$
 	vue.SetStateSingle(pp, varCanvasHeight)
 	ColorPicker.Bind(":canvas-height", pp)
@@ -136,7 +160,11 @@ Sub SetCanvasHeight(varCanvasHeight As Object) As VMColorPicker
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMColorPicker
+Sub SetDark(varDark As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("dark", varDark)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	ColorPicker.Bind(":dark", pp)
@@ -150,7 +178,11 @@ Sub SetDisabled(varDisabled As Boolean) As VMColorPicker
 End Sub
 
 'set dot-size
-Sub SetDotSize(varDotSize As Object) As VMColorPicker
+Sub SetDotSize(varDotSize As String) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("dot-size", varDotSize)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}DotSize"$
 	vue.SetStateSingle(pp, varDotSize)
 	ColorPicker.Bind(":dot-size", pp)
@@ -158,7 +190,11 @@ Sub SetDotSize(varDotSize As Object) As VMColorPicker
 End Sub
 
 'set flat
-Sub SetFlat(varFlat As Object) As VMColorPicker
+Sub SetFlat(varFlat As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("flat", varFlat)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}Flat"$
 	vue.SetStateSingle(pp, varFlat)
 	ColorPicker.Bind(":flat", pp)
@@ -166,7 +202,11 @@ Sub SetFlat(varFlat As Object) As VMColorPicker
 End Sub
 
 'set hide-canvas
-Sub SetHideCanvas(varHideCanvas As Object) As VMColorPicker
+Sub SetHideCanvas(varHideCanvas As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("hide-canvar", varHideCanvas)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}HideCanvas"$
 	vue.SetStateSingle(pp, varHideCanvas)
 	ColorPicker.Bind(":hide-canvas", pp)
@@ -174,7 +214,11 @@ Sub SetHideCanvas(varHideCanvas As Object) As VMColorPicker
 End Sub
 
 'set hide-inputs
-Sub SetHideInputs(varHideInputs As Object) As VMColorPicker
+Sub SetHideInputs(varHideInputs As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("hide-inputs", varHideInputs)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}HideInputs"$
 	vue.SetStateSingle(pp, varHideInputs)
 	ColorPicker.Bind(":hide-inputs", pp)
@@ -182,7 +226,11 @@ Sub SetHideInputs(varHideInputs As Object) As VMColorPicker
 End Sub
 
 'set hide-mode-switch
-Sub SetHideModeSwitch(varHideModeSwitch As Object) As VMColorPicker
+Sub SetHideModeSwitch(varHideModeSwitch As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("hide-mode-switch", varHideModeSwitch)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}HideModeSwitch"$
 	vue.SetStateSingle(pp, varHideModeSwitch)
 	ColorPicker.Bind(":hide-mode-switch", pp)
@@ -190,7 +238,11 @@ Sub SetHideModeSwitch(varHideModeSwitch As Object) As VMColorPicker
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMColorPicker
+Sub SetLight(varLight As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("light", varLight)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	ColorPicker.Bind(":light", pp)
@@ -198,7 +250,11 @@ Sub SetLight(varLight As Object) As VMColorPicker
 End Sub
 
 'set mode
-Sub SetMode(varMode As Object) As VMColorPicker
+Sub SetMode(varMode As String) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("mode", varMode)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}Mode"$
 	vue.SetStateSingle(pp, varMode)
 	ColorPicker.Bind(":mode", pp)
@@ -206,7 +262,11 @@ Sub SetMode(varMode As Object) As VMColorPicker
 End Sub
 
 'set show-swatches
-Sub SetShowSwatches(varShowSwatches As Object) As VMColorPicker
+Sub SetShowSwatches(varShowSwatches As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("show-swatches", varShowSwatches)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}ShowSwatches"$
 	vue.SetStateSingle(pp, varShowSwatches)
 	ColorPicker.Bind(":show-swatches", pp)
@@ -214,7 +274,11 @@ Sub SetShowSwatches(varShowSwatches As Object) As VMColorPicker
 End Sub
 
 'set swatches
-Sub SetSwatches(varSwatches As Object) As VMColorPicker
+Sub SetSwatches(varSwatches As Boolean) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("swatches", varSwatches)
+		Return Me
+	End If
 	Dim pp As String = $"${ID}Swatches"$
 	vue.SetStateSingle(pp, varSwatches)
 	ColorPicker.Bind(":swatches", pp)
@@ -222,7 +286,11 @@ Sub SetSwatches(varSwatches As Object) As VMColorPicker
 End Sub
 
 'set swatches-max-height
-Sub SetSwatchesMaxHeight(varSwatchesMaxHeight As Object) As VMColorPicker
+Sub SetSwatchesMaxHeight(varSwatchesMaxHeight As String) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("swatches-max-height", varSwatchesMaxHeight)
+		Return Me
+	End If	
 	Dim pp As String = $"${ID}SwatchesMaxHeight"$
 	vue.SetStateSingle(pp, varSwatchesMaxHeight)
 	ColorPicker.Bind(":swatches-max-height", pp)
@@ -231,13 +299,28 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+	End If
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
 	ColorPicker.SetValue(varValue,False)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 
+Sub GetValue As String
+	Dim sdata As String = vue.GetData(vmodel)
+	Return sdata
+End Sub
+
 'set width
-Sub SetWidth(varWidth As Object) As VMColorPicker
+Sub SetWidth(varWidth As String) As VMColorPicker
+	If bStatic Then
+		SetAttrSingle("width", varWidth)
+	End If
 	Dim pp As String = $"${ID}Width"$
 	vue.SetStateSingle(pp, varWidth)
 	ColorPicker.Bind(":width", pp)
@@ -291,16 +374,6 @@ Sub UseTheme(themeName As String) As VMColorPicker
 		Dim sclass As String = themes.Get(themeName)
 		AddClass(sclass)
 	End If
-	Return Me
-End Sub
-
-
-'set color intensity
-Sub SetColorIntensity(varColor As String, varIntensity As String) As VMColorPicker
-	Dim pp As String = $"${ID}Color"$
-	Dim scolor As String = $"${varColor} ${varIntensity}"$
-	vue.SetStateSingle(pp, scolor)
-	ColorPicker.Bind(":color", pp)
 	Return Me
 End Sub
 

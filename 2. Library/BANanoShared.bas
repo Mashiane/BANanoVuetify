@@ -25,14 +25,42 @@ Sub Process_Globals
         "Quadrillion", "Pentillion", "Sexillion", "Septillion", "Octillion" _
     )
 	Type FileObject(FileName As String, FileDate As String, FileSize As Long, FileType As String)
+	Private SourceCode As StringBuilder
 End Sub
+
+'start source code builder
+Sub SourceCodeBuilder
+	SourceCode.Initialize
+End Sub
+
+'add a new line
+Sub AddNewLine
+	SourceCode.append(CRLF)
+End Sub
+
+'add code
+Sub AddCode(scomment As String)
+	SourceCode.append(scomment).append(CRLF)
+End Sub
+
+'add comment
+Sub AddComment(sc As String)
+	SourceCode.append($"'${sc}"$).append(CRLF)
+End Sub
+
+'get the source code
+Sub GetSourceCode As String
+	Dim sout As String = SourceCode.tostring
+	sout = sout.Replace("~", "$")
+	Return SourceCode.tostring
+End Sub
+
 
 Sub CreateElement(parent As String, tag As String, id As String) As BANanoElement
 	Dim item As String = $"<${tag} id="${id}"></${tag}>"$
-	Dim el As BANanoElement = BANano.GetElement($"#${parent}"$).Append(item).Get($"#${id}"$)
+	Dim el As BANanoElement = BANano.GetElement($"${parent}"$).Append(item).Get($"#${id}"$)
 	Return el
 End Sub
-
 
 'get new date as iso string
 Sub DateTimeNowToISOString As String

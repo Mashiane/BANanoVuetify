@@ -32,6 +32,7 @@ Sub Class_Globals
 	Public COLUMN_SWITCH As String = "switch"
 	Public COLUMN_AVATARIMG As String = "avatarimg"
 	Public COLUMN_RATING As String = "rating"
+	Public COLUMN_LINK As String = "link"
 	Public COLUMN_PROGRESS_CIRCULAR As String = "progresscircular"
 	Public COLUMN_PROGRESS_LINEAR As String = "progresslinear"
 	Public COLUMN_SAVE As String = "save"
@@ -132,6 +133,17 @@ Sub GetItemKeys(lst As List) As List
 	xlist.Initialize
 	For Each m As Map In lst
 		Dim xkey As String = m.GetDefault(PrimaryKey, "")
+		xlist.Add(xkey)
+	Next
+	Return xlist
+End Sub
+
+'return a list of selected property values
+Sub GetItemProps(lst As List, prop As String) As List
+	Dim xlist As List
+	xlist.Initialize
+	For Each m As Map In lst
+		Dim xkey As String = m.GetDefault(prop, "")
 		xlist.Add(xkey)
 	Next
 	Return xlist
@@ -344,6 +356,13 @@ Sub SetColumnsSwitch(colFields As List)
 	Next
 End Sub
 
+'set a field as a link
+Sub SetColumnsLinks(colFields As List)
+	For Each col As String In colFields
+		SetColumnType(col, COLUMN_LINK)
+	Next
+End Sub
+
 'set column as a checkbox
 Sub SetColumnsCheckBox(colFields As List)
 	For Each col As String In colFields
@@ -359,6 +378,12 @@ Sub AddImage(colField As String, colTitle As String)
 	SetColumnType(colField, COLUMN_IMAGE)
 	SetColumnFilterable(colField,False)
 	SetColumnSortable(colField, False)
+End Sub
+
+'add a link
+Sub AddLink(colField As String, colTitle As String)
+	AddColumn(colField, colTitle)
+	SetColumnType(colField, COLUMN_LINK)
 End Sub
 
 'add an avatar image
@@ -921,7 +946,20 @@ Dim temp As String = $"<template v-slot:item.${colName}="props">
 	  AddComponent(temp)
 End Sub
 
-'add save cancel
+'add save cancel for dialog
+'<code>
+'Sub tableName_saveitem(item As Map)
+'End Sub
+'
+'Sub tableName_cancelitem(item As Map)
+'End Sub
+'
+'Sub tableName_openitem(item As Map)
+'End Sub
+'
+'Sub tableName_closeitem(item As Map)
+'End Sub
+'</code>
 Sub AddSaveCancelOpenClose
 	Dim savemethodName As String = $"${ID}_saveitem"$
 	If SubExists(Module, savemethodName) = False Then 

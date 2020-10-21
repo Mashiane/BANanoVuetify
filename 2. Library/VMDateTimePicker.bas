@@ -38,6 +38,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	bHideIcons = False
 	SetOnChange(Module, $"${ID}_change"$)
 	SetOnClickDate($"${ID}_clickdate"$)
+	SetOnClickMinute($"${ID}_clickminute"$)
 	Return Me
 End Sub
 
@@ -764,10 +765,23 @@ Sub SetFieldType(ft As String) As VMDateTimePicker
 	Return Me
 End Sub
 
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(vmodel)
+	Return svalue
+End Sub
+
 'set value
 Sub SetValue(varValue As String) As VMDateTimePicker
 	DateTimePicker.SetValue(varValue,False)
 	TextField.SetValue(varValue)
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub

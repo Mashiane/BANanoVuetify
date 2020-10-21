@@ -655,9 +655,22 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMCheckBox
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
 	CheckBox.SetValue(varValue,False)
 	vue.SetData(vmodel, varValue)
 	Return Me
+End Sub
+
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(vmodel)
+	Return svalue
 End Sub
 
 'set value-comparator

@@ -214,7 +214,7 @@ vue.SourceCodeBuilder
 vue.AddCode($"'when the app is mounted, execute startit"$)
 vue.AddCode($"vue.SetMounted(Me, "startit")"$)
 vue.AddCode($""$)
-vue.AddCode($"pc5.Initialize(vue, "pc5", Me).SetVisible(True).SetLabel("%").SetTextColor(vm.COLOR_BLUE)"$)
+	vue.AddCode($"pc5.Initialize(vue, "pc5", Me).SetVisible(True).SetLabel("%").SetTextColor(vm.COLOR_BLUE)$)
 vue.AddCode($"pc5.SetRotate("360").SetSize("90").SetWidth("20").SetColor(vm.COLOR_AMBER).SetValue("0")"$)
 vue.AddCode($"pc5.AddToContainer(cont, 7,2)"$)
 vue.AddCode($"'"$)

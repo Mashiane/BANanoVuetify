@@ -17,6 +17,7 @@ Sub Class_Globals
 	Public Text As VMElement
 	Private suffix As String
 	Private pValue As String
+	Private vmodel As String
 End Sub
 
 'initialize the ProgressCircular
@@ -32,6 +33,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Text.Initialize(vue, $"${ID}tmp"$).SetTag("span")
 	suffix = ""
 	pValue = ""
+	vmodel = ""
 	Return Me
 End Sub
 
@@ -99,6 +101,7 @@ Sub ToString As String
 End Sub
 
 Sub SetVModel(k As String) As VMProgressCircular
+	vmodel = k
 	ProgressCircular.SetVModel(k)
 	Return Me
 End Sub
@@ -198,20 +201,20 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMProgressCircular
-	pValue = varValue
 	If bStatic Then
 		SetAttrSingle("value", varValue)
 		Return Me
 	End If
-	Dim pp As String = $"${ID}Value"$
-	vue.SetStateSingle(pp, varValue)
-	ProgressCircular.Bind(":value", pp)
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
+	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
 
 Sub GetValue As String
-	Dim pp As String = $"${ID}Value"$
-	Dim svalue As String = vue.GetData(pp)
+	Dim svalue As String = vue.GetData(vmodel)
 	Return svalue
 End Sub
 

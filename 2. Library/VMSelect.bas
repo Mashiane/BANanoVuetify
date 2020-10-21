@@ -1266,10 +1266,25 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMSelect
+	If bStatic Then
+		SetAttrSingle("value", varValue)
+		Return Me
+	End If
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
 	Combo.SetValue(varValue, False)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub
+
+'get the value
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(vmodel)
+	Return svalue
+End Sub
+
 
 'set value-comparator
 Sub SetValueComparator(varValueComparator As Object) As VMSelect
