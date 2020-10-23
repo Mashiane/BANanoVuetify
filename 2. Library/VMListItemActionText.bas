@@ -27,6 +27,10 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub SetVText(vhtml As String) As VMListItemActionText
+	ListItemActionText.SetVText(vhtml)
+	Return Me
+End Sub
 
 Sub SetStatic(b As Boolean) As VMListItemActionText
 	bStatic = b
@@ -38,7 +42,6 @@ Sub SetData(xprop As String, xValue As Object) As VMListItemActionText
 	vue.SetData(xprop, xValue)
 	Return Me
 End Sub
-
 
 
 Sub AddIcon(key As String, iconName As String) As VMListItemActionText

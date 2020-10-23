@@ -163,6 +163,13 @@ Sub AddParentChild(parent As String, key As String, iconName As String, iconColo
 	Return Me
 End Sub
 
+'add a list item
+Sub AddListItem(li As VMListItem) As VMNavigationDrawer
+	List.AddListItem(li)
+	Return Me
+End Sub
+
+
 'apply a theme to an element
 Sub UseTheme(themeName As String) As VMNavigationDrawer
 	themeName = themeName.ToLowerCase

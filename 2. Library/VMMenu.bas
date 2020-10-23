@@ -214,6 +214,10 @@ Sub AddItem1(key As String, avatar As String, iconName As String, iconColor As S
 	MenuContent.AddItem1(key, avatar, iconName, iconColor, title, subtitle, subtitle1, actionIcon, actionIconColor)
 End Sub
 
+Sub AddListItem(li As VMListItem)
+	MenuContent.AddListItem(li)
+End Sub
+
 Sub AddDivider1(bInset As Boolean) As VMMenu
 	MenuContent.AddDivider1(bInset)
 	Return Me

@@ -509,3 +509,20 @@ Sub SetStateSingle(k As String, v As Object) As VMComponent
 	SetState(optx)
 	Return Me
 End Sub
+
+'add a rule
+Sub AddRule(ruleName As String, MethodName As String)
+	ruleName = ruleName.ToLowerCase
+	MethodName = MethodName.ToLowerCase
+	Dim rules As List
+	If data.ContainsKey(ruleName) Then
+		rules = data.Get(ruleName)
+	Else
+		rules = vue.newlist	
+	End If
+	'
+	Dim v As Object
+	Dim cb As BANanoObject = BANano.CallBack(EventHandler, MethodName, Array(v))
+	rules.Add(cb.Result)
+	data.put(ruleName, rules)
+End Sub

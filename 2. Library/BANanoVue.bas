@@ -710,8 +710,8 @@ Sub SetDataGlobal(prop As String, value As Object) As BANanoVue
 		'update the store
 		store.GetField(prop).SetField(prop, value)
 	Catch
-		Log($"Error - VueApp.SetDataGlobal: ${prop}.${value}"$)
-	End Try
+		'Log($"Warning - VueApp.SetDataGlobal: ${prop}.${value}"$)
+	End Try  'ignore
 	'
 	'computed is not set
 	If computed.ContainsKey(prop) = False Then
@@ -738,8 +738,8 @@ Sub GetDataGlobal(prop As String) As Object
 		If BANAno.IsUndefined(bo) Then Return Me
 		rslt = store.GetField(prop)
 	Catch
-		Log($"Error - VueApp.GetDataGlobal: ${prop}"$)
-	End Try
+		'Log($"Warning - VueApp.GetDataGlobal: ${prop}"$)
+	End Try   'ignore
 	Return rslt
 End Sub
 
@@ -4233,4 +4233,22 @@ Sub Decrement(elID As String, valueOf As Int) As BANanoVue
 	oldv = BANAno.parseInt(oldv) - valueOf
 	SetStateSingle(elID, oldv)
 	Return Me
+End Sub
+
+
+'add a rule
+Sub AddRule(ruleName As String, MethodName As String)
+	ruleName = ruleName.ToLowerCase
+	MethodName = MethodName.ToLowerCase
+	Dim rules As List
+	If data.ContainsKey(ruleName) Then
+		rules = data.Get(ruleName)
+	Else
+		rules = NewList
+	End If
+	'
+	Dim v As Object
+	Dim cb As BANanoObject = BANAno.CallBack(Module, MethodName, Array(v))
+	rules.Add(cb.Result)
+	data.put(ruleName, rules)
 End Sub

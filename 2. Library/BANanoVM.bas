@@ -283,6 +283,14 @@ Sub Class_Globals
 	Public const VISIBILITY_LgAndUp As String = "lg-and-up"
 	Public const VISIBILITY_XlOnly As String = "xl-only"
 	Public const VISIBILITY_ALL As String = ""
+	Public const VISIBILITY_HIDDEN_MD_AND_UP As String = "hidden-md-and-up"
+	Public const VISIBILITY_HIDDEN_SM_AND_DOWN As String = "hidden-sm-and-down"
+	Public const VISIBILITY_HIDDEN_MD_AND_DOWN As String = "hidden-md-and-down"
+	Public const VISIBILITY_HIDDEN_XL_AND_DOWN As String = "hidden-xl-and-down"
+	Public const VISIBILITY_HIDDEN_SM_AND_UP As String = "hidden-sm-and-up"
+	Public const VISIBILITY_HIDDEN_XL_AND_UP As String = "hidden-xl-and-up"
+	Public const VISIBILITY_HIDDEN_XS_ONLY As String = "hidden-xs-only"
+	Public const VISIBILITY_HIDDEN_XL_ONLY As String = "hidden-xl-only"
 	
 	Public const ALERT_BORDER_LEFT As String = "left"
 	Public const ALERT_BORDER_RIGHT As String = "right"
@@ -413,6 +421,18 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	UsesNotification = True
 End Sub
 
+'set the transition for the router
+Sub SetTransition(trans As String) As BANanoVM
+	Animate.SetType($"v-${trans}"$)
+	Return Me
+End Sub
+
+'set the transition mode
+Sub SetTransitionMode(mode As String) As BANanoVM
+	Animate.SetMode(mode)
+	Return Me
+End Sub
+
 'use a completelt blank template
 Sub UseBlankTemplate
 	UsesDrawer = False
@@ -424,6 +444,15 @@ Sub UseBlankTemplate
 	UsesSnackBar = False
 	UsesDialog = False
 	UsesNotification = False
+End Sub
+
+Sub GetDataGlobal(prop As String) As Object
+	Return GetDataGlobal(prop)
+End Sub
+
+Sub SetDataGlobal(prop As String, value As Object) As BANanoVM
+	vue.SetDataGlobal(prop, value)
+	Return Me
 End Sub
 
 Sub H1(elID As String) As VMElement
@@ -902,6 +931,21 @@ Sub VAvatar(tID As String) As VMElement
 	Return elx
 End Sub
 
+Sub VRouterLink(tID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, tID)
+	elx.SetTag("router-link")
+	Return elx
+End Sub
+
+Sub VRouterView(tID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, tID)
+	elx.SetTag("router-view")
+	Return elx
+End Sub
+
+
 Sub VIcon(tID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, tID)
@@ -1353,6 +1397,13 @@ Sub CreateParallax(eID As String, eventHandler As Object) As VMParallax
 	el.Initialize(vue, eID, eventHandler)
 	Return el
 End Sub
+
+Sub CreateListItem(eID As String, eventHandler As Object) As VMListItem
+	Dim el As VMListItem
+	el.Initialize(vue, eID, eventHandler)
+	Return el
+End Sub
+
 
 Sub CreateChipGroup(eID As String, eventHandler As Object) As VMChipGroup
 	Dim el As VMChipGroup
@@ -3151,6 +3202,12 @@ Sub UX
 	vuetify = vue.BOVue.GetField(svuetify)
 	Breakpoint = vuetify.GetField("breakpoint").Result
 	BreakpointName = vuetify.GetField("breakpoint").GetField("name").Result
+End Sub
+
+'Use router To navigate
+Sub NavigateTo(sPath As String) As BANanoVM
+	vue.NavigateTo(sPath)
+	Return Me
 End Sub
 
 'scroll to, 300, 0, easeInOutCubic

@@ -89,6 +89,22 @@ Sub SetData(xprop As String, xValue As Object) As VMToolBar
 End Sub
 
 
+Sub AddSpacer1(className As String) As VMToolBar
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("v-spacer")
+	el.AddClass(className)
+	ToolBar.SetText(el.tostring)
+	Return Me
+End Sub
+
+
+Sub AddDivider2(className As String) As VMToolBar
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("v-divider")
+	el.AddClass(className)
+	ToolBar.SetText(el.tostring)
+	Return Me
+End Sub
 
 'add divider on the toolbar
 Sub AddDivider1 As VMToolBar
@@ -247,6 +263,11 @@ Sub AddComponent(key As String, comp As String) As VMToolBar
 	ToolBar.SetText(comp)
 	objects.Add(key)
 	HasContent = True
+	Return Me
+End Sub
+
+Sub AddElement(el As VMElement) As VMToolBar
+	AddComponent(el.ID, el.ToString)
 	Return Me
 End Sub
 

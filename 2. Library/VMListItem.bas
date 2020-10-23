@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private Module As Object
 	Public childList As VMList
 	Private bStatic As Boolean
+	Public Item As Map
 End Sub
 
 'initialize the ListItem
@@ -28,9 +29,77 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetOnClick($"${ID}_click"$)
 	childList.Initialize(vue, $"${ID}children"$, Module)
 	bStatic = False
+	Item.Initialize
+	Item.Put("id", ID) 
 	Return Me
 End Sub
 
+'set visibility state of the item
+Sub SetVisible(b As Boolean) As VMListItem
+	Item.Put("visibility", b)
+	Return Me
+End Sub
+
+'set avatar
+Sub SetAvatar(a As String) As VMListItem
+	Item.Put("avatar", a)
+	Return Me
+End Sub
+
+'when action is clicked, goto this URL
+Sub SetActionTo(v As String) As VMListItem
+	Item.Put("actionto", v)
+	Return Me
+End Sub
+
+'when item is clicked, goto this url
+Sub SetItemTo(v As String) As VMListItem
+	Item.Put("itemto", v)
+	Return Me
+End Sub
+
+'set the action icon color
+Sub SetActionIconColor(v As String) As VMListItem
+	Item.Put("actioniconcolor", v)
+	Return Me
+End Sub
+
+'set the action icon
+Sub SetActionIcon(v As String) As VMListItem
+	Item.Put("action", v)
+	Return Me
+End Sub
+
+'set the action text
+Sub SetActionText(v As String) As VMListItem
+	Item.Put("actiontext", v)
+	Return Me
+End Sub
+
+Sub SetSubTitle1(v As String) As VMListItem
+	Item.Put("subtitle1", v)
+	Return Me
+End Sub
+
+Sub SetSubTitle(v As String) As VMListItem
+	Item.Put("subtitle", v)
+	Return Me
+End Sub
+
+Sub SetTitle(v As String) As VMListItem
+	Item.Put("title", v)
+	Return Me
+End Sub
+
+Sub SetIconColor(v As String) As VMListItem
+	Item.Put("iconcolor", v)
+	Return Me
+End Sub
+
+Sub SetIcon(v As String) As VMListItem
+	Item.Put("icon", v)
+	Return Me
+End Sub
 
 Sub AddComponent(comp As String) As VMListItem
 	ListItem.SetText(comp)
@@ -41,8 +110,6 @@ Sub SetData(xprop As String, xValue As Object) As VMListItem
 	vue.SetData(xprop, xValue)
 	Return Me
 End Sub
-
-
 
 Sub SetStatic(b As Boolean) As VMListItem
 	bStatic = b
@@ -516,11 +583,6 @@ End Sub
 
 Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) As VMListItem
 	ListItem.BuildModel(mprops, mstyles, lclasses, loose)
-	Return Me
-End Sub
-
-Sub SetVisible(b As Boolean) As VMListItem
-	ListItem.SetVisible(b)
 	Return Me
 End Sub
 

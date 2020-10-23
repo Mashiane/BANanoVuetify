@@ -373,6 +373,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMAlert,SetMinHeight,221,0,VMAlert,SetIcon,183,0,VMAlert,Initialize,28,0,VMAlert,Show,482,0,VMAlert,SetText,425,0,VMAlert,AddComponent,664,0,VMAlert,AddPrependIcon,31,6,VMTemplate,SetSlotPrepend,77,0,VMTreeView,Initialize,42,0,BANanoVM,CreateAlert,1337,0,Main,AppStart,38,0
+NavigationStack=VMMenu,AddListItem,211,0,VMNavigationDrawer,AddListItem,161,0,VMSelect,AddListItem,243,0,VMList,AddItem1,817,0,VMList,CreateListItem,118,0,VMList,SetDataSourceTemplate,208,0,VMList,AddListItem,613,2,VMList,ToString,968,0,VMList,SetDataSourceTemplate1,446,0,VMList,SetDataSourceTemplate2,471,6
 SelectedBuild=0
 VisibleModules=

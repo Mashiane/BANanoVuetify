@@ -113,6 +113,24 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+'the container should take the full screen
+Sub SetFullScreen As VMContainer
+	SetFluid(True)
+	SetFillHeight(True)
+	SetStyleSingle("max-height", "100vh")
+	Return Me
+End Sub
+
+'set the conver image for the container
+Sub SetCoverImage(url As String) As VMContainer
+	SetStyleSingle("background", $"url('${url}')"$)
+	SetStyleSingle("background-size", "cover")
+	SetStyleSingle("width", "100%")
+	SetStyleSingle("height", "100%")
+	Return Me
+End Sub
+
+
 Sub SetVElse(vif As String) As VMContainer
 	Container.SetVElse(vif)
 	Return Me

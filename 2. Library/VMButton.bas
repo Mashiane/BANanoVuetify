@@ -82,6 +82,12 @@ Sub SetBadge(bvalue As String) As VMButton
 	Return Me
 End Sub
 
+
+Sub SetFlat(b As Boolean) As VMButton
+	SetAttrSingle("text", True)
+	Return Me
+End Sub
+
 'the image should be centered on the RC
 Sub SetCenterOnParent(b As Boolean) As VMButton
 	If b = False Then Return Me

@@ -17,6 +17,7 @@ Sub Class_Globals
 	Private bStatic As Boolean
 	Private parentchild As Map
 	Public UseVisibility As Boolean
+	Private hasparentchild As Boolean
 End Sub
 
 'initialize the List
@@ -33,6 +34,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	parentchild.Initialize 
 	vue.SetData($"${ID}ds"$, Null)
 	UseVisibility = False
+	hasparentchild = False
 	Return Me
 End Sub
 
@@ -454,6 +456,158 @@ Sub SetDataSourceTemplate1(datasource As String, key As String, avatar As String
 	Return Me
 End Sub
 
+'define a template to load items from
+Sub SetDataSourceTemplate2(datasource As String, key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String, itemTo As String, actionTo As String, actiontext As String) As VMList
+	If vue.StateExists(datasource) = False Then
+		vue.SetData(datasource, vue.newlist)
+	End If
+	If DesignMode Then Return Me
+	'
+	Dim tmp As VMTemplate
+	tmp.Initialize(vue, $"${ID}tmpl"$, Module)
+	tmp.SetStatic(bStatic)
+	tmp.SetDesignMode(DesignMode)
+	tmp.SetAttrSingle("v-for", $"(item, i) in ${datasource}"$)
+	'
+	Dim vli As VMListItem
+	vli.Initialize(vue, "", Module).SetStatic(bStatic)
+	vli.Bind(":key", $"item.${key}"$)
+	vli.SetAttrSingle(":id", $"item.${key}"$)
+	vli.SetAttrSingle(":to", $"item.${itemTo}"$)
+	vli.SetOnClick($"${ID}_click"$)
+	
+	If UseVisibility Then
+		vli.SetVIf($"item.visibility"$)
+	Else
+		vli.SetVIf($"item.${key}"$)
+	End If
+	'
+	If avatar <> "" Then
+		Dim lia As VMListItemAvatar
+		lia.Initialize(vue, "", Module)
+		lia.SetStatic(bStatic)
+		lia.SetDesignMode(DesignMode)
+		lia.SetVIf($"item.${avatar}"$)
+		Dim img As VMImage
+		img.Initialize(vue, "", Module)
+		img.SetStatic(bStatic)
+		img.SetDesignMode(DesignMode)
+		img.SetAttrSingle(":src", $"item.${avatar}"$)
+		img.Pop(lia.ListItemAvatar)
+		lia.Pop(vli.ListItem)
+	End If
+	'
+	If iconName <> "" Then
+		Dim vlii As VMListItemIcon
+		vlii.Initialize(vue, "", Module)
+		vlii.SetStatic(bStatic)
+		vlii.SetDesignMode(DesignMode)
+		vlii.SetVif($"item.${iconName}"$)
+		Dim icon As VMIcon
+		icon.Initialize(vue,"", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		icon.SetVText($"item.${iconName}"$)
+		If iconColor <> "" Then icon.SetAttrSingle(":color", $"item.${iconColor}"$)
+		icon.Pop(vlii.ListItemIcon)
+		vlii.Pop(vli.ListItem)
+	End If
+	'
+	Dim iContent As Int = 0
+	If title <> "" Then iContent = iContent + 1
+	If subtitle <> "" Then iContent = iContent + 1
+	
+	If iContent > 0 Then
+		Dim lic As VMListItemContent
+		lic.Initialize(vue,"", Module)
+		lic.SetStatic(bStatic)
+		lic.SetDesignMode(DesignMode)
+		'
+		If title <> "" Then
+			Dim lit As VMListItemTitle
+			lit.Initialize(vue, "", Module)
+			lit.SetStatic(bStatic)
+			lit.SetDesignMode(DesignMode)
+			lit.SetVif($"item.${title}"$)
+			lit.SetVText($"item.${title}"$)
+			lit.Pop(lic.ListItemContent)
+		End If
+		'
+		If subtitle <> "" Then
+			Dim listt As VMListItemSubTitle
+			listt.Initialize(vue, "", Module)
+			listt.SetStatic(bStatic)
+			listt.SetDesignMode(DesignMode)
+			listt.SetVIf($"item.${subtitle}"$)
+			listt.SetVText($"item.${subtitle}"$)
+			listt.Pop(lic.ListItemContent)
+		End If
+		'
+		If subtitle1 <> "" Then
+			Dim listt1 As VMListItemSubTitle
+			listt1.Initialize(vue, "", Module)
+			listt1.SetStatic(bStatic)
+			listt1.SetDesignMode(DesignMode)
+			listt1.SetVIf($"item.${subtitle1}"$)
+			listt1.SetVText($"item.${subtitle1}"$)
+			listt1.Pop(lic.ListItemContent)
+		End If
+		lic.Pop(vli.ListItem)
+	End If
+	'
+	If actionIcon <> "" Or actiontext <> "" Then
+		Dim la As VMListItemAction
+		la.Initialize(vue, "", Module)
+		la.SetStatic(bStatic)
+		la.SetDesignMode(DesignMode)
+		'
+		Dim btn As VMButton
+		btn.Initialize(vue, "", Module)
+		btn.SetStatic(bStatic)
+		btn.SetDesignMode(DesignMode)
+		btn.SetAttrLoose("icon")
+		btn.SetVIf($"item.${actionIcon}"$)
+		Dim icon As VMIcon
+		icon.Initialize(vue, "", Module)
+		icon.SetStatic(bStatic)
+		icon.SetDesignMode(DesignMode)
+		If actionIconColor <> "" Then 
+			icon.SetAttrSingle(":color", $"item.${actionIconColor}"$)
+		End If
+		icon.SetVText($"item.${actionIcon}"$)
+		btn.AddComponent(icon.ToString)
+		la.AddComponent(btn.ToString)
+		'
+		Dim liat As VMListItemActionText
+		liat.Initialize(vue, "", Module)
+		liat.SetStatic(bStatic)
+		liat.SetDesignMode(DesignMode)
+		liat.SetVIf($"item.${actiontext}"$)
+		liat.SetVText($"item.${actiontext}"$)
+		la.AddComponent(liat.ToString)
+		la.Pop(vli.ListItem)
+	End If
+	
+	vli.Pop(tmp.Template)	
+	'add the divider
+	Dim dvd As VMDivider
+	dvd.Initialize(vue)
+	dvd.SetVElseIf("item.divider")
+	dvd.Bind(":key", "i").SetInset
+	dvd.Pop(tmp.Template)
+	'add sub heading
+	Dim sh As VMSubHeader
+	sh.Initialize(vue)
+	sh.SetVElseIf("item.header")
+	sh.Bind(":key", "item.header")
+	sh.SetVText("item.header")
+	sh.SetInset(True)
+	sh.Pop(tmp.Template)
+	tmp.Pop(List)
+	HasContent = True
+	Return Me
+End Sub
+
 
 'add title subtitle
 Sub SetDataSource(datasource As String, key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMList
@@ -461,6 +615,12 @@ Sub SetDataSource(datasource As String, key As String, avatar As String, iconNam
 	vli.pop(List)
 	HasContent = True
 	Return Me
+End Sub
+
+'add a list item
+Sub AddListItem(li As VMListItem)
+	items.Put(li.id, li.item)
+	HasContent = True
 End Sub
 
 Sub AddItem(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMList
@@ -504,7 +664,6 @@ Sub AddItem2(key As String, avatar As String, iconName As String, iconColor As S
 	HasContent = True
 	Return Me
 End Sub
-
 
 Sub AddItemDivider() As VMList
 	Dim key As String = items.size
@@ -572,6 +731,7 @@ End Sub
 
 'add parent child items
 Sub AddParentChild(parent As String, key As String, iconName As String, iconColor As String, title As String, badge As String) As VMList
+	hasparentchild = True
 	parent = parent.ToLowerCase
 	key = key.tolowercase
 	If key = "" Then Return Me
@@ -813,7 +973,7 @@ Sub ToString As String
 			xitems.Add(v)
 		Next
 		vue.SetStateSingle(listKey, xitems)
-		SetDataSourceTemplate1(listKey, "id", "avatar", "icon", "iconcolor", "title", "subtitle", "subtitle1", "action", "actioniconcolor")
+		SetDataSourceTemplate2(listKey, "id", "avatar", "icon", "iconcolor", "title", "subtitle", "subtitle1", "action", "actioniconcolor", "itemto", "actionto", "actiontext")
 	End If
 	'we use parent child relationship
 	If parentchild.Size > 0 Then
@@ -855,6 +1015,7 @@ End Sub
 
 'refresh parent and child relationships
 Sub Refresh
+	If hasparentchild = False Then Return
 	Dim nl As List = vue.NewList
 	For Each k As String In parentchild.Keys
 		Dim li As Map = parentchild.get(k)
@@ -866,6 +1027,7 @@ End Sub
 Sub Clear As VMList
 	items.Clear
 	parentchild.Clear
+	hasparentchild = False
 	Dim listKey As String = $"${ID}ds"$
 	vue.SetStateSingle(listKey, items)
 	Return Me

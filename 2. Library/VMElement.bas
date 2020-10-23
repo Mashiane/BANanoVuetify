@@ -359,17 +359,39 @@ Sub AddVerticalDivider(className As String) As VMElement
 End Sub
 
 Sub AddDivider As VMElement
-	Dim strLine As String = $"<v-divider></v-divider>"$
-	SetText(strLine)
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("v-divider")
+	SetText(el.tostring)
+	Return Me
+End Sub
+
+Sub AddDivider1(className As String) As VMElement
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("v-divider")
+	el.AddClass(className)
+	SetText(el.tostring)
 	Return Me
 End Sub
 
 Sub AddSpacer As VMElement
-	Dim strLine As String = $"<v-spacer></v-spacer>"$
-	SetText(strLine)
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("v-spacer")
+	SetText(el.tostring)
 	Return Me
 End Sub
 
+Sub AddSpacer1(className As String) As VMElement
+	Dim el As VMElement
+	el.Initialize(vue, "").SetTag("v-spacer")
+	el.AddClass(className)
+	SetText(el.tostring)
+	Return Me
+End Sub
+
+Sub SetFlat(b As Boolean) As VMElement
+	Element.SetAttr("text", True)
+	Return Me
+End Sub
 
 Sub SetFluid As VMElement
 	Element.SetAttr("fluid", True)
@@ -1034,8 +1056,14 @@ Sub SetMaxWidth(mw As String) As VMElement
 	Return Me
 End Sub
 
+
 Sub SetMaxHeight(mw As String) As VMElement
 	Element.SetStyle("max-height",mw)
+	Return Me
+End Sub
+
+Sub SetOutlined() As VMElement
+	Element.SetAttr("outlined",True)
 	Return Me
 End Sub
 
@@ -1249,6 +1277,12 @@ Sub RemoveVShow As VMElement
 	Return Me
 End Sub
 
+Sub RemoveVIf As VMElement
+	RemoveAttr("v-if")
+	bUsesShow = False
+	Return Me
+End Sub
+
 Sub RemoveVModel As VMElement
 	RemoveAttr("v-model")
 	bUsesVModel = False
@@ -1318,6 +1352,13 @@ End Sub
 'set pointer
 Sub SetPointer(b As Boolean) As VMElement
 	Element.SetPointer(True)
+	Return Me
+End Sub
+
+Sub SetHiddenMdAndUp As VMElement
+	AddClass("hidden-md-and-up")
+	RemoveVShow
+	removevif
 	Return Me
 End Sub
 
