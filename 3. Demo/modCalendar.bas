@@ -76,7 +76,7 @@ Sub Code
 	cal.AddEvent("3", "b4j", "Develop B4J App", sNow2, sNow2, True)
 	cal.Update
 	'run when app is mounded
-	vue.SetMounted(Me, "MoundCalendar")
+	vue.SetMounted(Me, "MountCalendar")
 	
 	'
 	'initialize code builder
@@ -141,14 +141,14 @@ vue.AddCode($"cal.AddEvent("2", "b4i", "Develop B4i App", sNow1, sNow1, False)"$
 vue.AddCode($"cal.AddEvent("3", "b4j", "Develop B4J App", sNow2, sNow2, True)"$)
 vue.AddCode($"cal.Update"$)
 vue.AddCode($"'run when app is mounded"$)
-vue.AddCode($"vue.SetMounted(Me, "MoundCalendar")"$)
+vue.AddCode($"vue.SetMounted(Me, "MountCalendar")"$)
 vue.AddCode($""$)
 pgIndex.CreateVBCode(vue, Me, "calux", "Calendar User Interface", vue.GetSourceCode).AddToContainer(cont, 3, 1)
 '
 'initialize code builder
 vue.SourceCodeBuilder
 vue.AddCode($"'when calendar is mounted"$)
-vue.AddCode($"Sub MoundCalendar"$)
+vue.AddCode($"Sub MountCalendar"$)
 vue.AddCode($"cal.CheckChange"$)
 vue.AddCode($"Dim caltitle As String = cal.GetTitle"$)
 vue.AddCode($"calcard.UpdateTitle(caltitle)"$)
@@ -221,7 +221,7 @@ vue.AddCode($"End Sub"$)
 End Sub
 
 'when calendar is mounted
-Sub MoundCalendar
+Sub MountCalendar
 	cal.CheckChange
 	Dim caltitle As String = cal.GetTitle
 	calcard.UpdateTitle(caltitle)

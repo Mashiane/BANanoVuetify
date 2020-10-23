@@ -23,8 +23,8 @@ Sub Code
 	'
 	cont.AddRows(15).AddColumns12
 	'
-	vm.CreateAlert("a1", Me, "success").SetContent("I'm a success alert.").Show.AddToContainer(cont, 1, 1)
-	pgIndex.CreateVBCode(vue, Me, "a1code", "Alert", $"vm.CreateAlert("a1", Me, "success").SetContent("I'm a success alert.").Show.AddToContainer(cont, 1, 1)"$).AddToContainer(cont, 1, 1)
+	vm.CreateAlert("a1", Me, "").SetColor(vm.color_green).SetContent("I'm a success alert.").Show.AddPrependIcon("mdi-material-design", "red").SetDismissible(True).AddToContainer(cont, 1, 1)
+	pgIndex.CreateVBCode(vue, Me, "a1code", "Alert", $"vm.CreateAlert("a1", Me, "").SetColor(vm.color_green).SetContent("I'm a success alert.").Show.AddPrependIcon("mdi-material-design", "red").SetDismissible(True).AddToContainer(cont, 1, 1)"$).AddToContainer(cont, 1, 1)
 	'
 	vm.CreateAlert("a2", Me, "info").SetContent("I'm an info alert.").Show.AddToContainer(cont, 2, 1)
 	pgIndex.CreateVBCode(vue, Me, "a2code", "Alert", $"vm.CreateAlert("a2", Me, "info").SetContent("I'm an info alert.").AddToContainer(cont, 1, 1)"$).AddToContainer(cont, 2, 1)

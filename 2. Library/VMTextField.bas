@@ -396,8 +396,6 @@ Sub AddColorPicker As VMTextField
 	dMenu.Initialize(vue, "").SetTag("v-menu").SetSlot("append-outer").SetAttrSingle(":close-on-content-click", False)
 	dMenu.SetVModel($"${ID}menu"$)
 	dMenu.SetAttrSingle("transition", "scale-transition")
-	dMenu.SetAttrLoose("full-width")
-	dMenu.SetAttrLoose("lazy")
 	SetReadonly(True)
 	
 	'

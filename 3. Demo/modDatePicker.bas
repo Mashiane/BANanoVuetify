@@ -22,12 +22,16 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'create 2 columns each spanning 12 columns
-	cont.addrows(5).AddColumns2x6
+	cont.addrows(10).AddColumns9p3
 	'
 	Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetLabel("Date of Birth").SetForInput
-	
 	dp4.AddToContainer(cont, 1, 1)
-	
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetLabel("Date of Birth").SetForInput"$)
+vue.AddCode($"dp4.AddToContainer(cont, 1, 1)"$)
+pgIndex.CreateVBCode(vue, Me, "datep", "Date Picker", vue.GetSourceCode).AddToContainer(cont, 1, 1)
+
 	vm.CreateLabel("lbl2").SetParagraph.SetText("Dates: {{ dp4 }}").AddToContainer(cont, 1, 2)
 	'
 	Dim dpx As VMDateTimePicker = vm.CreateDatePicker("dp1", Me).SetVModel("dp1")
@@ -41,6 +45,17 @@ Sub Code
 	Dim dp3 As VMDateTimePicker = vm.CreateDatePicker("dp3", Me).SetVModel("dp3").SetMonthPicker
 	dp3.AddToContainer(cont, 3, 2)
 	'
+	Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetDateTimePicker
+	dp4.AddToContainer(cont, 4, 1)
 	
 	vm.AddContainer(cont)
+End Sub
+
+
+Sub datepcopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("datep")
+End Sub
+
+Sub datepdownload_click(e As BANanoEvent)
+	vue.DownloadCode("datep", "datep.txt")
 End Sub

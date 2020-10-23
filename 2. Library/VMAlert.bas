@@ -32,6 +32,30 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub AddPrependIcon(iconName As String, iconColor As String) As VMAlert
+	SetStyleSingle("margin-top", "32px")
+	Dim tmp As VMTemplate
+	tmp.Initialize(vue, "", Module).SetSlotPrepend("")
+	Dim icn As VMElement
+	icn.Initialize(vue, "").SetTag("v-icon")
+	icn.SetAttrSingle("light", "true")
+	icn.SetColor(iconColor)
+	icn.SetStyleSingle("top", "-36px")
+	icn.SetStyleSingle("font-size", "24px")
+	icn.SetStyleSingle("height", "38px")
+	icn.SetStyleSingle("min-width", "38px")
+	icn.AddClass("elevation-6")
+	icn.AddClass("white")
+	icn.SetStyleSingle("border-radius", "50%")
+	icn.SetStyleSingle("margin-right", "16px")
+	icn.SetStyleSingle("align-self", "flex-start")
+	icn.SetText(iconName)
+	tmp.SetText(icn.ToString)
+	AddComponent(tmp.ToString)
+	Return Me
+End Sub
+
+
 Sub SetData(prop As String, value As Object) As VMAlert
 	vue.SetData(prop, value)
 	Return Me

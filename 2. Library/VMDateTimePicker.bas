@@ -16,6 +16,7 @@ Sub Class_Globals
 	Private vmodel As String
 	Public TextField As VMTextField
 	Private bTimePicker As Boolean
+	Private bDatePicker As Boolean
 	Private bStatic As Boolean
 	Private bHideIcons As Boolean
 End Sub
@@ -34,6 +35,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DateTimePicker.fieldType = "date"
 	TextField.Initialize(vue, $"${ID}txt"$, Module)
 	bTimePicker = False
+	bDatePicker = True
 	bStatic = False
 	bHideIcons = False
 	SetOnChange(Module, $"${ID}_change"$)
@@ -73,9 +75,27 @@ End Sub
 
 Sub SetTimePicker As VMDateTimePicker
 	bTimePicker = True
+	bDatePicker = False
 	DateTimePicker.SetTag("v-time-picker")
 	DateTimePicker.typeOf = "timepicker"
 	DateTimePicker.fieldType = "string"
+	Return Me
+End Sub
+
+Sub SetDateTimePicker As VMDateTimePicker
+	bTimePicker = False
+	bDatePicker = False
+	DateTimePicker.SetTag("v-datetime-picker")
+	DateTimePicker.typeOf = "datetimepicker"
+	DateTimePicker.fieldType = "string"
+	SetForInput
+	'
+'	If vue.ModuleExist("v-datetime-picker") = False Then
+'		Dim co As BANanoObject
+'		co.Initialize("VuetifyDatetimePicker")
+'		vue.AddComponentBO("v-datetime-picker", co)
+'		vue.AddModule("v-datetime-picker")
+'	End If
 	Return Me
 End Sub
 
@@ -227,6 +247,9 @@ Sub ToString As String
 	End If
 	End If
 	If bForInput Then
+		If DateTimePicker.typeOf = "datetimepicker" Then
+			Return DateTimePicker.ToString
+		End If
 		'create a menu
 		vue.SetStateSingle($"${ID}menu"$, False)
 		Dim dMenu As VMElement
@@ -240,8 +263,6 @@ Sub ToString As String
 		dMenu.SetAttrSingle(":return-value.sync", vmodel)
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
-		dMenu.SetAttrLoose("full-width")
-		dMenu.SetAttrLoose("lazy")
 		dMenu.SetAttrSingle("min-width", "290px")
 		dMenu.SetAttrSingle("max-width", "290px")
 		'
@@ -291,21 +312,30 @@ Sub ToString As String
 End Sub
 
 private Sub computedDateFormatted As String
-	'get the saved model
-	Dim rdate As String = vue.GetData(vmodel)
-	If rdate = "" Then Return ""
-	Return vue.RunMethod1("formatDate", Array(rdate)).Result
+	Try
+		'get the saved model
+		Dim rdate As String = vue.GetData(vmodel)
+		If rdate = "" Then Return ""
+		Return vue.RunMethod1("formatDate", Array(rdate)).Result
+	Catch
+		Return ""
+	End Try
 End Sub
 
 'format the date
 private Sub formatDate(date As Object) As String
-	date = "" & date
-	If date = "" Then Return Null
-    If BANano.isnull(date) Or BANano.IsUndefined(date) Then Return Null 
-	Dim bo As BANanoObject = BANano.RunJavascriptMethod("dayjs", Array(date))
-	Dim sdf As String = vue.DateDisplayFormat
-	Dim sdate As String = bo.RunMethod("format", Array(sdf)).Result
-	Return sdate
+	Try
+		date = "" & date
+		If date = "" Then Return Null
+	    If BANano.isnull(date) Or BANano.IsUndefined(date) Then Return Null 
+		Dim bo As BANanoObject = BANano.RunJavascriptMethod("dayjs", Array(date))
+		Dim sdf As String = vue.DateDisplayFormat
+		If sdf = "" Then sdf = "YYYY-MM-DD"
+		Dim sdate As String = bo.RunMethod("format", Array(sdf)).Result
+		Return sdate
+	Catch
+		Return ""
+	End Try
 End Sub
 
 private Sub AddSpacer As VMDateTimePicker

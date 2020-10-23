@@ -15,6 +15,7 @@ End Sub
 Sub Init
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
+	vue.DateDisplayFormat = "DD, MMM YYYY"
 	vm.ShowWarnings = False
 	vue.ShowWarnings = False		
 	'vm.Dark = True

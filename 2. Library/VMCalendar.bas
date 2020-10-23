@@ -105,13 +105,21 @@ End Sub
 
 'get title
 Sub GetTitle As String
-	Dim sTitle As String = vue.refs.GetField(ID).GetField("title").Result
-	Return sTitle
+	Try
+		Dim sTitle As String = vue.refs.GetField(ID).GetField("title").Result
+		Return sTitle
+	Catch
+		Return ""
+	End Try
 End Sub
 
 'check change
 Sub CheckChange
-	vue.refs.GetField(ID).RunMethod("checkChange", Null)
+	Try
+		vue.refs.GetField(ID).RunMethod("checkChange", Null)
+	Catch
+		Log("VMCalendar.CheckChange")
+	End Try
 End Sub
 
 'show previous
