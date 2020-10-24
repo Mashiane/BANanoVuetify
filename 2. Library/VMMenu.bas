@@ -40,7 +40,20 @@ Sub SetData(xprop As String, xValue As Object) As VMMenu
 	Return Me
 End Sub
 
+Sub Clear
+	MenuContent.clear
+End Sub
 
+
+Sub AddListItemDivider() As VMMenu
+	MenuContent.AddItemDivider
+	Return Me
+End Sub
+
+Sub AddListItemHeader(hdr As String) As VMMenu
+	MenuContent.AddItemHeader(hdr)
+	Return Me
+End Sub
 
 Sub UseVisibility
 	MenuContent.UseVisibility = True

@@ -593,7 +593,7 @@ Sub SetDataSourceTemplate2(datasource As String, key As String, avatar As String
 	Dim dvd As VMDivider
 	dvd.Initialize(vue)
 	dvd.SetVElseIf("item.divider")
-	dvd.Bind(":key", "i").SetInset
+	dvd.Bind(":key", "i")
 	dvd.Pop(tmp.Template)
 	'add sub heading
 	Dim sh As VMSubHeader
@@ -626,7 +626,7 @@ End Sub
 Sub AddItem(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String) As VMList
 	key = key.tolowercase
 	If key = "" Then
-		key = items.size
+		key = "k" & DateTime.now
 	End If
 	title = BANano.SF(title)
 	subtitle = BANano.SF(subtitle)
@@ -646,7 +646,7 @@ End Sub
 Sub AddItem2(key As String, avatar As String, iconName As String, iconColor As String, title As String, subtitle As String, subtitle1 As String, actionIcon As String, actionIconColor As String) As VMList
 	key = key.tolowercase
 	If key = "" Then
-		key = items.size
+		key = "k" & DateTime.now
 	End If
 	title = BANano.SF(title)
 	subtitle = BANano.SF(subtitle)
@@ -666,7 +666,7 @@ Sub AddItem2(key As String, avatar As String, iconName As String, iconColor As S
 End Sub
 
 Sub AddItemDivider() As VMList
-	Dim key As String = items.size
+	Dim key As String = "k" & DateTime.now
 	Dim item As Map = CreateMap()
 	item.Put("divider", True)
 	items.Put(key, item)
@@ -675,7 +675,7 @@ Sub AddItemDivider() As VMList
 End Sub
 
 Sub AddItemHeader(hdr As String) As VMList
-	Dim key As String = items.size
+	Dim key As String = "k" & DateTime.now
 	Dim item As Map = CreateMap()
 	item.Put("header", hdr)
 	items.Put(key, item)
@@ -687,7 +687,7 @@ End Sub
 Sub AddItemV(key As String, avatar As String, iconName As String, title As String, subtitle As String, actionIcon As String,visibility As Boolean) As VMList
 	key = key.tolowercase
 	If key = "" Then
-		key = items.size
+		key = "k" & DateTime.now
 	End If
 	title = BANano.SF(title)
 	subtitle = BANano.SF(subtitle)
@@ -707,24 +707,27 @@ End Sub
 
 'add item from json
 Sub AddItemJSON(json As String) As VMList
+	Dim key As String = "k" & DateTime.now
 	Dim m As Map = vue.Json2Map(json)
-	items.Put(items.size, m)
+	items.Put(key, m)
 	HasContent = True
 	Return Me
 End Sub
 
 'add an item from a map
 Sub AddItemMap(m As Map) As VMList
-	items.Put(items.size, m)
+	Dim key As String = "k" & DateTime.now
+	items.Put(key, m)
 	HasContent = True
 	Return Me
 End Sub
 
 'add a header to separate items
 Sub AddItemSubHeader(hdr As String) As VMList
+	Dim key As String = "k" & DateTime.now
 	Dim item As Map = CreateMap()
 	item.Put("header", hdr)
-	items.Put(items.Size, item)
+	items.Put(key, item)
 	HasContent = True
 	Return Me
 End Sub

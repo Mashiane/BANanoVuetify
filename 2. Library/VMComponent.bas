@@ -14,6 +14,7 @@ Sub Class_Globals
 	Private vue As BANanoVue    'ignore
 	Private methods As Map
 	Private computed As Map
+	Private components As Map
 	Private watches As Map
 	Private filters As Map
 	Private opt As Map
@@ -50,6 +51,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As 
 	computed.Initialize
 	watches.Initialize
 	filters.Initialize 
+	components.Initialize 
 	Path = sPath
 	name = ID
 	Query.Initialize
@@ -60,6 +62,33 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As 
 	jsArray.Initialize("Array")
 	jsObject.Initialize("Object")
 	'
+	Return Me
+End Sub
+
+'import a component, the module should have the Initilize method without parameters
+Sub Import(compname As String, comp As VMComponent) As VMComponent
+	compname = compname.tolowercase
+	If components.ContainsKey(compname) = True Then Return Me
+	components.Put(compname, comp.Component)
+	Return Me
+End Sub
+
+Sub AddElement1(elTag As String, elID As String, elText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List)
+	Dim d As VMElement
+	d.Initialize(vue, elID).SetTag(elTag)
+	d.BuildModel(mprops, mstyles, lclasses, loose)
+	d.SetText(elText)
+	SetText(d.ToString)
+End Sub
+
+Sub AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
+	AddElement1(eltag, elid, eltext, elprops, Null, Null, Null)
+End Sub
+
+'import a bananoobject component
+Sub ImportBO(compName As String, comp As BANanoObject) As VMComponent
+	If components.ContainsKey(compName) = True Then Return Me
+	components.Put(compName, comp)
 	Return Me
 End Sub
 
@@ -297,6 +326,7 @@ Sub Component() As Map
 	If watches.Size > 0 Then opt.Put("watch", watches)
 	If props.Size <> 0 Then opt.Put("props", props)
 	If filters.Size <> 0 Then opt.Put("filters", filters)
+	If components.Size > 0 Then opt.Put("components", components)
 	opt.Put("template", tmp)
 	Return opt
 End Sub

@@ -136,6 +136,42 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Return Me
 End Sub
 
+
+Sub SetColumn As VMElement
+	AddClass("column")
+	Return Me
+End Sub
+
+Sub SetGridListXS As VMElement
+	AddClass("grid-list-xs")
+	Return Me
+End Sub
+
+Sub SetGridListSM As VMElement
+	AddClass("grid-list-sm")
+	Return Me
+End Sub
+
+Sub SetGridListMD As VMElement
+	AddClass("grid-list-md")
+	Return Me
+End Sub
+
+Sub SetGridListLG As VMElement
+	AddClass("grid-list-lg")
+	Return Me
+End Sub
+
+Sub SetGridListXL As VMElement
+	AddClass("grid-list-xl")
+	Return Me
+End Sub
+
+
+Sub AddCustomElement(eltag As String, elid As String, props As Map, eltext As String)
+	AddElement1(eltag, elid, eltext, props, Null, Null, Null)
+End Sub
+
 'active class for router links
 Sub SetActiveClass(sClass As String) As VMElement
 	SetAttrSingle("active-class", sClass)

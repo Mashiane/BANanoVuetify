@@ -113,20 +113,42 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
-'the container should take the full screen
-Sub SetFullScreen As VMContainer
-	SetFluid(True)
-	SetFillHeight(True)
-	SetStyleSingle("max-height", "100vh")
-	Return Me
-End Sub
-
 'set the conver image for the container
 Sub SetCoverImage(url As String) As VMContainer
 	SetStyleSingle("background", $"url('${url}')"$)
 	SetStyleSingle("background-size", "cover")
 	SetStyleSingle("width", "100%")
 	SetStyleSingle("height", "100%")
+	Return Me
+End Sub
+
+Sub SetColumn As VMContainer
+	AddClass("column")
+	Return Me
+End Sub
+
+Sub SetGridListXS As VMContainer
+	AddClass("grid-list-xs")
+	Return Me
+End Sub
+
+Sub SetGridListSM As VMContainer
+	AddClass("grid-list-sm")
+	Return Me
+End Sub
+
+Sub SetGridListMD As VMContainer
+	AddClass("grid-list-md")
+	Return Me
+End Sub
+
+Sub SetGridListLG As VMContainer
+	AddClass("grid-list-lg")
+	Return Me
+End Sub
+
+Sub SetGridListXL As VMContainer
+	AddClass("grid-list-xl")
 	Return Me
 End Sub
 

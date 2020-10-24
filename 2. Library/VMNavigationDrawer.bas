@@ -38,6 +38,18 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub AddListItemDivider() As VMNavigationDrawer
+	List.AddItemDivider
+	Return Me
+End Sub
+
+Sub AddListItemHeader(hdr As String) As VMNavigationDrawer
+	List.AddItemHeader(hdr)
+	Return Me
+End Sub
+
+
+
 Sub SetData(xprop As String, xValue As Object) As VMNavigationDrawer
 	vue.SetData(xprop, xValue)
 	Return Me

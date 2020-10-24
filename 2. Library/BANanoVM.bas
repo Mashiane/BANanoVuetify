@@ -513,6 +513,21 @@ Sub Div(elID As String) As VMElement
 	Return elx
 End Sub
 
+Sub VLayout(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-layout")
+	Return elx
+End Sub
+
+Sub VFlex(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-flex")
+	Return elx
+End Sub
+
+
 Sub Span(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
