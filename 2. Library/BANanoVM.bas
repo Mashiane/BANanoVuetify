@@ -447,7 +447,7 @@ Sub UseBlankTemplate
 End Sub
 
 Sub GetDataGlobal(prop As String) As Object
-	Return GetDataGlobal(prop)
+	Return vue.GetDataGlobal(prop)
 End Sub
 
 Sub SetDataGlobal(prop As String, value As Object) As BANanoVM

@@ -734,8 +734,7 @@ Sub GetDataGlobal(prop As String) As Object
 	rslt = state.GetDefault(prop, Null)
 	Try
 		Dim bo As BANanoObject = store.GetField(prop)
-		If BANAno.IsNull(bo) Then Return Me
-		If BANAno.IsUndefined(bo) Then Return Me
+		If BANAno.IsNull(bo) Or BANAno.IsUndefined(bo) Then Return Null
 		rslt = store.GetField(prop)
 	Catch
 		'Log($"Warning - VueApp.GetDataGlobal: ${prop}"$)
