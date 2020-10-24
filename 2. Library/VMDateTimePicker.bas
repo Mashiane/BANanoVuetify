@@ -316,7 +316,7 @@ private Sub computedDateFormatted As String
 		'get the saved model
 		Dim rdate As String = vue.GetData(vmodel)
 		If rdate = "" Then Return ""
-		Return vue.RunMethod1("formatDate", Array(rdate)).Result
+		Return vue.RunMethod("formatDate", Array(rdate)).Result
 	Catch
 		Return ""
 	End Try

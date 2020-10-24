@@ -3100,11 +3100,12 @@ Sub CallMethod(methodName As String)
 	BOVue.RunMethod(methodName, Null)
 End Sub
 
-Sub RunMethod(methodName As String, params As Object) As BANanoObject
-	Return BOVue.RunMethod(methodName, params)
+Sub CallMethod1(methodName As String, args As List) As BANanoObject
+	methodName = methodName.tolowercase
+	Return BOVue.RunMethod(methodName, args)
 End Sub
 
-Sub RunMethod1(methodName As String, args As List) As BANanoObject
+Sub RunMethod(methodName As String, args As List) As BANanoObject
 	methodName = methodName.tolowercase
 	Return BOVue.RunMethod(methodName, args)
 End Sub

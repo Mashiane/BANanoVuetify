@@ -39,11 +39,15 @@ Sub Init
 	vm.SetDataGlobal("isAuthenticated", False)
 	vm.SetDataGlobal("userRecipes", vue.NewList)
 	
+	'add the getrecipes method to global scope
+	vm.SetMethod(Me, "GetRecipes")
 	'add the pages
 	'add the home page
 	AddPages
 	'
 	vm.UX
+	'test if API is working
+	vm.RunMethod("getrecipes", "vegan")
 End Sub
 
 Sub AddPages
@@ -51,6 +55,24 @@ Sub AddPages
 	ViewMenu.Initialize
 	ViewSignIn.initialize
 	ViewJoin.Initialize
+End Sub
+
+'execute REST API call, we use BANanoFetch which uses promises
+Sub GetRecipes(plan As String)
+	vm.ShowLoading
+	Dim Response As BANanoFetchResponse
+	Dim json As BANanoJSONParser
+	Dim fetch As BANanoFetch
+	Dim app_id As String = "5b6623d5"
+	Dim app_key As String = "46674aa2193dbb7b88ffd897331e661a"
+	'
+	fetch.Initialize($"https://api.edamam.com/search?q=${plan}&app_id=${app_id}&app_key=${app_key}&from=0&to=9"$, Null)
+	fetch.Then(Response)
+	fetch.return(Response.Json)
+	fetch.Then(json)
+	Log(json)
+	fetch.end
+	vm.HideLoading
 End Sub
 
 'Sub BuildSnackBar
@@ -85,10 +107,14 @@ End Sub
 
 
 Sub BuildNavBar
+	
 	'add a hamburger
 	'vm.NavBar.Hamburger.SetHiddenMdAndUp
 	vm.navbar.AddHamburger
 	'vm.NavBar.SetClippedLeft(True)
+	
+	'the progressbar for long operations
+	vm.NavBar.Progress.SetColorIntensity(vm.COLOR_YELLOW, vm.INTENSITY_ACCENT4)
 		
 	'add a logo
 	vm.NavBar.Logo.SetBorderRadius("50%")

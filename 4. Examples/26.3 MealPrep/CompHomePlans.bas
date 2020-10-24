@@ -62,9 +62,17 @@ Sub Initialize
 	
 	'set the template
 	homeplans.SetTemplate(cont.tostring)
+	'register method
+	homeplans.SetMethod(Me, "showRecipes")
+End Sub
+
+'define the callback
+Sub showRecipes(plan As String)
+	vm.RunMethod("getrecipes", plan)
 End Sub
 
 Sub MealPlanTemplate(key As String, img As String, title As String, desc As String) As String
+	Dim q As String = key.tolowercase
 	Dim card As String = $"<v-card>
                     <v-responsive>
                         <v-img src="${img}" height="500px">
@@ -86,7 +94,7 @@ Sub MealPlanTemplate(key As String, img As String, title As String, desc As Stri
                     </v-card-text>
 
                     <v-card-actions>
-                        <v-btn outlined block color="green">Select This Plan</v-btn>
+                        <v-btn outlined block color="green" @click="showrecipes('${q}')">Select This Plan</v-btn>
                     </v-card-actions>
                 </v-card>"$
 	Return card
