@@ -89,7 +89,6 @@ End Sub
 
 'initialize the form base
 Sub Initialize(EventHandler As Object, v As BANanoVue, fid As String) As VMFormBase
-	BANano.DependsOnAsset("vFormBase.umd.min.js")
 	Module = EventHandler
 	vue = v
 	ID = fid.tolowercase

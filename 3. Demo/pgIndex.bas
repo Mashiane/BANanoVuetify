@@ -172,6 +172,7 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("grid", "design", "", "", "Grid Design","")
 	
 	vm.Drawer.AddParentChild("", "examples", "", "", "Examples", "")
+	vm.drawer.AddParentChild("examples", "pages", "", "", "Creating Pages","")
 	vm.drawer.AddParentChild("examples", "messageboard", "", "", "Message Board","")
 	vm.drawer.AddParentChild("examples", "reallogs", "", "", "Realtime Logging","")
 	
@@ -225,6 +226,9 @@ Sub draweritems_click(elID As Object)
 	'stop logs
 	vm.callmethod("stop")
 	Select Case elID
+	Case "pages"
+		vm.NavBar.UpdateTitle(modPages.title)
+		vm.showpage(modPages.name)
 	Case "gridselect"
 		vm.NavBar.UpdateTitle(modGridSelect.title)
 		vm.showpage(modGridSelect.name)
@@ -496,6 +500,7 @@ Sub AddPages
 	vm.AddPage(modWindow.name, modWindow)
 	vm.addpage(modDynamic.name, modDynamic)
 	vm.AddPage(modGridSelect.Name, modGridSelect)
+	vm.AddPage(modPages.name, modPages)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

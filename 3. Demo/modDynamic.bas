@@ -91,8 +91,8 @@ Sub BuildR1
 	'we have 6 spans per row
 	dynaR1.setCols("6")
 	
-	dynaR1.AddButton("btnAdd", "Add").SetColor("green").SetDark.SetIconLeft("add")
-	dynaR1.AddButton("btnRemove", "Remove").SetColor("red").SetDark.SetIconRight("remove")
+	dynaR1.AddButton("btnAdd", "Add").SetColor("green").SetDark.SetIconLeft("mdi-plus")
+	dynaR1.AddButton("btnRemove", "Remove").SetColor("red").SetDark.SetIconRight("mdi-delete")
 	'
 	dynaR1.AddSheet("divider2", "MULTIPLE ITEMS")
 	dynaR1.SetColor("white--text green lighten-2")
@@ -129,7 +129,7 @@ Sub BuildR1
 	dynaR1.RefreshItems
 	dynaR1.SetValue(2)
 	
-	dynaR1.AddIcon("icon1", "print").SetColor("red")
+	dynaR1.AddIcon("icon1", "mdi-printer").SetColor("red")
 	dynaR1.SetTooltip("Icon Label", "left", "green")
 	
 		
@@ -153,15 +153,15 @@ Sub BuildR1
 	dynaR1.RefreshItems
 	dynaR1.SetValue(3)
 		
-	dynaR1.AddTextField("creditcard", "Credit Card").setPrependInnerIcon("credit_card").setMask("####-####-####-####").setHint("####-####-####-####")
+	dynaR1.AddTextField("creditcard", "Credit Card").setPrependInnerIcon("mdi-credit-card").setMask("####-####-####-####").setHint("####-####-####-####")
 	dynaR1.AddFileInput("file", "Images", False, False, "image/*")
 '	'
 	dynaR1.AddNumber("count", "Number")
 	dynaR1.SetToolTip("My number", "left", "orange")
-	dynaR1.AddColor("color", "My Color").SetValue("#D22A4D").SetPrependIcon("palette")
+	dynaR1.AddColor("color", "My Color").SetValue("#D22A4D").SetPrependIcon("mdi-palette")
 '	'
-	dynaR1.AddDate("date", "Meeting Date").SetLocale("en").SetPrependIcon("event")
-	dynaR1.AddTime("time", "Meeting Time").SetPrependIcon("timer")
+	dynaR1.AddDate("date", "Meeting Date").SetLocale("en").SetPrependIcon("mdi-calendar")
+	dynaR1.AddTime("time", "Meeting Time").SetPrependIcon("mdi-timer")
 '	'
 	dynaR1.AddSelect("countries", "Countries")
 	dynaR1.AddSelect("states", "States").SetMultiple

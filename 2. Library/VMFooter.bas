@@ -60,7 +60,7 @@ Sub AddMadeWithLove(Row As Int, Col As Int, Message As String, CreatorName As St
 	footerDiv.SetText("Made with")
 	'
 	Dim footerIcon As VMIcon
-	footerIcon.Initialize(vue, "footerlove", Me).SetText("favorite").AddClass("red--text")
+	footerIcon.Initialize(vue, "footerlove", Me).SetText("mdi-heart-multiple").AddClass("red--text")
 	footerIcon.AddClass("mx-1")
 	footerDiv.SetText(footerIcon.tostring)
 	'

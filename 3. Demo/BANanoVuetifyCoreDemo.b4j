@@ -79,6 +79,9 @@ Library3=bananovuetifycore
 Library4=bananovuetifyconnect
 Library5=bananovuetifyprism
 Library6=banano
+Library7=bananovuetifytoolkit
+Library8=bananovuetifyformbase
+Library9=bananomarketfont
 Module1=modAlert
 Module10=modCalendar
 Module11=modCard
@@ -107,39 +110,40 @@ Module31=modLoadingSkeleton
 Module32=modMenus
 Module33=modMessageBoard
 Module34=modOverlay
-Module35=modPagination
-Module36=modParallax
-Module37=modProgress
-Module38=modRadioGroups
-Module39=modRating
+Module35=modPages
+Module36=modPagination
+Module37=modParallax
+Module38=modProgress
+Module39=modRadioGroups
 Module4=modBadges
-Module40=modRealtimeLogging
-Module41=modSelects
-Module42=modSlideGroups
-Module43=modSlider
-Module44=modSnackBar
-Module45=modSparkLine
-Module46=modStepper
-Module47=modSwitch
-Module48=modTabs
-Module49=modTextArea
+Module40=modRating
+Module41=modRealtimeLogging
+Module42=modSelects
+Module43=modSlideGroups
+Module44=modSlider
+Module45=modSnackBar
+Module46=modSparkLine
+Module47=modStepper
+Module48=modSwitch
+Module49=modTabs
 Module5=modBanner
-Module50=modTextField
-Module51=modTimeLine
-Module52=modTimePicker
-Module53=modToolbar
-Module54=modToolkit
-Module55=modTreeView
-Module56=modWindow
-Module57=pgBRs
-Module58=pgIndex
+Module50=modTextArea
+Module51=modTextField
+Module52=modTimeLine
+Module53=modTimePicker
+Module54=modToolbar
+Module55=modToolkit
+Module56=modTreeView
+Module57=modWindow
+Module58=pgBRs
+Module59=pgIndex
 Module6=modBottomNavigation
 Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=36
-NumberOfLibraries=6
-NumberOfModules=58
+NumberOfLibraries=9
+NumberOfModules=59
 Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
@@ -171,10 +175,12 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'BANano.Header.SetMaskIcon("safari-pinned-tab.svg")
 	'BANano.Header.AddManifestIcon("android-chrome-192x192.png", "192x192")
 	'BANano.Header.AddManifestIcon("android-chrome-512x512.png", "512x512")
-	BANano.TranspilerOptions.UseServiceWorker = False
-	BANano.TranspilerOptions.MergeAllCSSFiles = False
-	BANano.TranspilerOptions.MergeAllJavascriptFiles = False
+	BANano.TranspilerOptions.UseServiceWorker = True
+	BANano.TranspilerOptions.MergeAllCSSFiles = True
+	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
 	BANano.TranspilerOptions.MinifyOnline = False
+	
+	
 	#if release
 		BANano.TranspilerOptions.EnableLiveCodeSwapping = False
 	#end if

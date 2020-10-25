@@ -23,18 +23,18 @@ Sub Code
 	'
 	cont.AddRows(4).AddColumns12
 	'
-	vm.CreateIcon("icon1", Me).SetText("home").AddToContainer(cont, 1, 1)
+	vm.CreateIcon("icon1", Me).SetText("mdi-home").AddToContainer(cont, 1, 1)
 	'initialize code builder
 	vue.SourceCodeBuilder
-	vue.AddCode($"vm.CreateIcon("icon1", Me).SetText("home").AddToContainer(cont, 1, 1)"$)
+	vue.AddCode($"vm.CreateIcon("icon1", Me).SetText("mdi-home").AddToContainer(cont, 1, 1)"$)
 	pgIndex.CreateVBCode(vue, Me, "icon1code", "Icon", vue.GetSourceCode).AddToContainer(cont, 1, 1)
 
 
 	'
-	vm.CreateIcon("icon2", Me).SetText("add").SetColor("red").SetLarge(True).AddToContainer(cont, 2, 1)
+	vm.CreateIcon("icon2", Me).SetText("mdi-plus").SetColor("red").SetLarge(True).AddToContainer(cont, 2, 1)
 	'initialize code builder
 	vue.SourceCodeBuilder
-	vue.AddCode($"vm.CreateIcon("icon2", Me).SetText("add").SetColor("red").SetLarge(True).AddToContainer(cont, 2, 1)"$)
+	vue.AddCode($"vm.CreateIcon("icon2", Me).SetText("mdi-plus").SetColor("red").SetLarge(True).AddToContainer(cont, 2, 1)"$)
 	pgIndex.CreateVBCode(vue, Me, "icon2code", "Icon", vue.GetSourceCode).AddToContainer(cont, 2, 1)
 
 	'
@@ -47,11 +47,11 @@ Sub Code
 
 
 	'
-	vm.CreateButton("btn1", Me).SetLabel("Accept").SetColor("purple").AddIcon("add", "left", "").AddToContainer(cont, 4, 1)
+	vm.CreateButton("btn1", Me).SetLabel("Accept").SetColor("purple").AddIcon("mdi-plus", "left", "").AddToContainer(cont, 4, 1)
 	'
 	'initialize code builder
 	vue.SourceCodeBuilder
-	vue.AddCode($"vm.CreateButton("btn1", Me).SetLabel("Accept").SetColor("purple").AddIcon("add", "left", "").AddToContainer(cont, 4, 1)"$)
+	vue.AddCode($"vm.CreateButton("btn1", Me).SetLabel("Accept").SetColor("purple").AddIcon("mdi-plus", "left", "").AddToContainer(cont, 4, 1)"$)
 	pgIndex.CreateVBCode(vue, Me, "btnxcode", "Button Icon", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 

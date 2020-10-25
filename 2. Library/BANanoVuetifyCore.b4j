@@ -1,138 +1,26 @@
 ﻿AppType=JavaFX
 Build1=Default,b4j.example
-File1=all.min.css
-File10=fa-regular-400.svg
-File11=fa-regular-400.ttf
-File12=fa-regular-400.woff
-File13=fa-regular-400.woff2
-File14=fa-solid-900.eot
-File15=fa-solid-900.svg
-File16=fa-solid-900.ttf
-File17=fa-solid-900.woff
-File18=fa-solid-900.woff2
-File19=fileSaver.min.js
-File2=avatar.png
-File20=helpers.min.css
-File21=market.min.css
-File22=marketweb-webfont.woff
-File23=marketweb-webfont.woff2
-File24=material.jpg
-File25=materialdesignicons.min.css
-File26=materialdesignicons-webfont.eot
-File27=materialdesignicons-webfont.ttf
-File28=materialdesignicons-webfont.woff
-File29=materialdesignicons-webfont.woff2
-File3=dayjs.min.js
-File30=materialfont.min.css
-File31=MaterialIcons-Regular.eot
-File32=MaterialIcons-Regular.ttf
-File33=MaterialIcons-Regular.woff
-File34=MaterialIcons-Regular.woff2
-File35=numeral.js
-File36=roboto.min.css
-File37=roboto-v20-latin-500.eot
-File38=roboto-v20-latin-500.svg
-File39=roboto-v20-latin-500.ttf
-File4=fa-brands-400.eot
-File40=roboto-v20-latin-500.woff
-File41=roboto-v20-latin-500.woff2
-File42=roboto-v20-latin-700.eot
-File43=roboto-v20-latin-700.svg
-File44=roboto-v20-latin-700.ttf
-File45=roboto-v20-latin-700.woff
-File46=roboto-v20-latin-700.woff2
-File47=roboto-v20-latin-italic.eot
-File48=roboto-v20-latin-italic.svg
-File49=roboto-v20-latin-italic.ttf
-File5=fa-brands-400.svg
-File50=roboto-v20-latin-italic.woff
-File51=roboto-v20-latin-italic.woff2
-File52=roboto-v20-latin-regular.eot
-File53=roboto-v20-latin-regular.svg
-File54=roboto-v20-latin-regular.ttf
-File55=roboto-v20-latin-regular.woff
-File56=roboto-v20-latin-regular.woff2
-File57=upload.php
-File58=vFormBase.umd.min.js
-File59=vue.min.js
-File6=fa-brands-400.ttf
-File60=vue-page-transition.browser.js
-File61=vue-page-transition.css
-File62=vue-router.min.js
-File63=vuetify.min.css
-File64=vuetify.min.js
-File65=vuetify-numeric.umd.min.js
-File66=vuetify-toolkit.css
-File67=vuetify-toolkit.umd.min.js
-File68=vue-timeago.js
-File7=fa-brands-400.woff
-File8=fa-brands-400.woff2
-File9=fa-regular-400.eot
+File1=1.png
+File10=red.png
+File11=sadface.png
+File12=upload.php
+File2=2.png
+File3=avatar.png
+File4=config.php
+File5=gray.png
+File6=green.png
+File7=happyface.png
+File8=neutralface.png
+File9=orange.png
 FileGroup1=Default Group
 FileGroup10=Default Group
 FileGroup11=Default Group
 FileGroup12=Default Group
-FileGroup13=Default Group
-FileGroup14=Default Group
-FileGroup15=Default Group
-FileGroup16=Default Group
-FileGroup17=Default Group
-FileGroup18=Default Group
-FileGroup19=Default Group
 FileGroup2=Default Group
-FileGroup20=Default Group
-FileGroup21=Default Group
-FileGroup22=Default Group
-FileGroup23=Default Group
-FileGroup24=Default Group
-FileGroup25=Default Group
-FileGroup26=Default Group
-FileGroup27=Default Group
-FileGroup28=Default Group
-FileGroup29=Default Group
 FileGroup3=Default Group
-FileGroup30=Default Group
-FileGroup31=Default Group
-FileGroup32=Default Group
-FileGroup33=Default Group
-FileGroup34=Default Group
-FileGroup35=Default Group
-FileGroup36=Default Group
-FileGroup37=Default Group
-FileGroup38=Default Group
-FileGroup39=Default Group
 FileGroup4=Default Group
-FileGroup40=Default Group
-FileGroup41=Default Group
-FileGroup42=Default Group
-FileGroup43=Default Group
-FileGroup44=Default Group
-FileGroup45=Default Group
-FileGroup46=Default Group
-FileGroup47=Default Group
-FileGroup48=Default Group
-FileGroup49=Default Group
 FileGroup5=Default Group
-FileGroup50=Default Group
-FileGroup51=Default Group
-FileGroup52=Default Group
-FileGroup53=Default Group
-FileGroup54=Default Group
-FileGroup55=Default Group
-FileGroup56=Default Group
-FileGroup57=Default Group
-FileGroup58=Default Group
-FileGroup59=Default Group
 FileGroup6=Default Group
-FileGroup60=Default Group
-FileGroup61=Default Group
-FileGroup62=Default Group
-FileGroup63=Default Group
-FileGroup64=Default Group
-FileGroup65=Default Group
-FileGroup66=Default Group
-FileGroup67=Default Group
-FileGroup68=Default Group
 FileGroup7=Default Group
 FileGroup8=Default Group
 FileGroup9=Default Group
@@ -264,7 +152,7 @@ Module96=VMSlideXTransition
 Module97=VMSlideYReverseTransition
 Module98=VMSlideYTransition
 Module99=VMSnackBar
-NumberOfFiles=68
+NumberOfFiles=12
 NumberOfLibraries=3
 NumberOfModules=124
 Version=8.5
@@ -280,7 +168,7 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.40"
+	Public Version As String = "4.41"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -288,14 +176,12 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Initialize("BANano", AppName, Version)
 	BANano.Header.Title = AppName
 	'online installation
-'	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900")
-'	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Material+Icons|Material+Icons+Outlined|Material+Icons+Two+Tone|Material+Icons+Round|Material+Icons+Sharp")
-'	BANano.Header.AddCSSFile("https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css")
-'	BANano.Header.AddCSSFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css")
-'	'
-'	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue@2.6.11/dist/vue.min.js")
-'	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js")
-'	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue-router@3.1.6/dist/vue-router.min.js")
+	BANano.Header.AddCSSFile("https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900")
+	BANano.Header.AddCSSFile("https://cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css")
+	BANano.Header.AddCSSFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css")
+	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js")
+	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js")
+	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue-router@3.4.7/dist/vue-router.min.js")
 	
 	'local installation
 	'1. copy the 'local resources' contents to the 'files folder'
@@ -303,26 +189,16 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'3. uncomment lines from below
 		
 		
-	BANano.Header.AddCSSFile("all.min.css")
-	BANano.Header.AddCSSFile("roboto.min.css")
-	BANano.Header.AddCSSFile("market.min.css")
-	BANano.Header.AddCSSFile("materialfont.min.css")
-	BANano.header.AddCSSFile("materialdesignicons.min.css")
-	BANano.Header.AddCSSFile("helpers.min.css")
-	BANano.Header.AddCSSFile("vuetify.min.css")
-		
-	BANano.Header.AddJavascriptFile("vue.min.js")
-	BANano.Header.AddJavascriptFile("vuetify.min.js")
-	BANano.Header.AddJavascriptFile("vue-router.min.js")
-	BANano.Header.AddJavascriptFile("vue-timeago.js")
-	BANano.Header.AddJavascriptFile("vFormBase.umd.min.js")
-	BANano.Header.AddJavascriptFile("dayjs.min.js")
-	BANano.Header.AddJavascriptFile("numeral.js")
-	'
-	BANano.Header.AddCSSFile("vuetify-toolkit.css")
-	BANano.Header.AddJavascriptFile("vuetify-toolkit.umd.min.js")
-	BANano.Header.AddJavascriptFile("vuetify-numeric.umd.min.js")
-		'
+	'BANano.Header.AddCSSFile("all.min.css")
+	'BANano.Header.AddCSSFile("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
+	'BANano.Header.AddCSSFile("roboto.min.css")
+	'BANano.Header.AddCSSFile("materialfont.min.css")
+	'BANano.header.AddCSSFile("materialdesignicons.min.css")
+	'BANano.Header.AddCSSFile("helpers.min.css")
+	
+	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/dayjs@1.9.4/dayjs.min.js")
+	BANano.Header.AddJavascriptFile("https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js")
+	
 	' start the build
 	#if release
 		BANano.BuildAsB4Xlib(Version)
@@ -340,3 +216,22 @@ End Sub
 Sub BANano_Ready
 	
 End Sub
+
+#if css
+.pulse {
+    box-shadow: 0 0 0 rgba(88, 120, 243, 0.4);
+    animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(88, 120, 243, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 0 10px rgba(88, 120, 243, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(88, 120, 243, 0);
+    }
+}
+#End If
