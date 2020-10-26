@@ -663,7 +663,7 @@ Sub SetValue(varValue As String) As VMCheckBox
 		vmodel = $"${ID}value"$
 		SetVModel(vmodel)
 	End If
-	CheckBox.SetValue(varValue,False)
+	CheckBox.SetValue(varValue)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub

@@ -255,7 +255,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMListGroup
-	ListGroup.SetValue(varValue, False)
+	ListGroup.SetValue(varValue)
 	Return Me
 End Sub
 '

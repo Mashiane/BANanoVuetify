@@ -63,6 +63,7 @@ Sub Class_Globals
 	Public CenterOnParent As Boolean
 	Private classList As List
 	Private classKey As String
+	Public password As String
 End Sub
 
 Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
@@ -121,6 +122,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	SetDeviceOffsets(0,0,0,0)
 	SetDeviceSizes(12,12,12,12)
 	'
+	password = $"${ID}password"$
 	typeOf = "text"
 	fieldType = "string"
 	InputType = "text"
@@ -324,6 +326,35 @@ Sub SetInt As VMElement
 	Return Me
 End Sub
 
+'set lazy-validation
+Sub SetLazyValidation As VMElement
+	If bStatic Then
+		SetAttrSingle("lazy-validation", True)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}LazyValidation"$
+	vue.SetStateSingle(pp, True)
+	Bind(":lazy-validation", pp)
+	Return Me
+End Sub
+
+Sub Validate
+	vue.refs.GetField(ID).RunMethod("validate", Null)
+End Sub
+
+Sub Reset
+	vue.refs.GetField(ID).RunMethod("reset", Null)
+End Sub
+
+Sub ResetValidation
+	vue.refs.GetField(ID).RunMethod("resetValidation", Null)
+End Sub
+
+Sub SetFillHeight As VMElement
+	AddClass("fill-height")
+	Return Me
+End Sub
+
 Sub SetDate As VMElement
 	fieldType = "date"
 	Return Me
@@ -425,23 +456,23 @@ Sub AddSpacer1(className As String) As VMElement
 End Sub
 
 Sub SetFlat(b As Boolean) As VMElement
-	Element.SetAttr("text", True)
+	SetAttrSingle("text", True)
 	Return Me
 End Sub
 
 Sub SetFluid As VMElement
-	Element.SetAttr("fluid", True)
+	SetAttrSingle("fluid", True)
 	Return Me
 End Sub
 
 Sub SetDense As VMElement
-	Element.SetAttr("dense", True)
+	SetAttrSingle("dense", True)
 	Return Me
 End Sub
 
 Sub SetElevation(elNum As String) As VMElement
 	AddClass($"elevation-${elNum}"$)
-	Element.SetAttr("elevation", BANano.parseInt(elNum))
+	SetAttrSingle("elevation", BANano.parseInt(elNum))
 	Return Me
 End Sub
 
@@ -520,6 +551,17 @@ Sub SetStyleSingle(prop As String, vals As Object) As VMElement
 	Dim attr As Map = CreateMap()
 	attr.Put(prop, vals)
 	SetStyle(attr)
+	Return Me
+End Sub
+
+Sub SetDark(b As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("dark", b)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}dark"$
+	vue.SetStateSingle(pp, b)
+	Bind(":dark", pp)
 	Return Me
 End Sub
 
@@ -612,7 +654,7 @@ Sub MakePx(sValue As String) As String
 End Sub
 
 Sub SetFor(f As String) As VMElement
-	Element.SetAttrSingle("for", f)
+	SetAttrSingle("for", f)
 	Return Me
 End Sub
 
@@ -673,6 +715,18 @@ Sub SetBorder(width As String, color As String, bstyle As String) As VMElement
 	Return Me
 End Sub
 
+Sub SetJustify(just As String) As VMElement
+	Dim skey As String = $"justify-${just}"$
+	SetAttrSingle(skey, skey)
+	Return Me
+End Sub
+
+Sub SetAlign(align As String) As VMElement
+	Dim skey As String = $"align-${align}"$
+	SetAttrSingle(skey, skey)
+	Return Me
+End Sub
+
 'set cursor move
 Sub SetCursorMove As VMElement
 	SetStyle(CreateMap("cursor": "move"))
@@ -696,17 +750,17 @@ Sub Clear As VMElement
 End Sub
 
 Sub SetSlot(sltValue As String) As VMElement
-	Element.SetAttrSingle("slot", sltValue)
+	SetAttrSingle("slot", sltValue)
 	Return Me
 End Sub
 
 Sub SetSlotScope(sltValue As String) As VMElement
-	Element.SetAttrSingle("slot-scope", sltValue)
+	SetAttrSingle("slot-scope", sltValue)
 	Return Me
 End Sub
 
 Sub SetType(stypeOf As String) As VMElement
-	Element.SetAttrSingle("type", stypeOf)
+	SetAttrSingle("type", stypeOf)
 	Return Me
 End Sub
 
@@ -746,10 +800,10 @@ Sub SetKey(k As Object, bBind As Boolean) As VMElement
 	If bBind Then
 		If vue.StateExists(k) = False Then vue.SetStateSingle(k, DateTime.now)
 		RemoveAttr("key")
-		Element.SetAttrSingle(":key", k)
+		SetAttrSingle(":key", k)
 	Else
 		RemoveAttr(":key")
-		Element.SetAttrSingle("key", k)
+		SetAttrSingle("key", k)
 	End If
 	Return Me
 End Sub
@@ -827,16 +881,16 @@ Sub SetVFor(item As String, dataSource As String) As VMElement
 End Sub
 
 'set value
-Sub SetValue(valueName As String, bbind As Boolean) As VMElement
-	If bbind Then
-		RemoveAttr("value")
-		valueName = valueName.tolowercase
-		SetAttr(CreateMap(":value":valueName))
-	Else
-		Value = valueName
-		RemoveAttr(":value")	
-		SetAttr(CreateMap("value":valueName))
+Sub SetValue(svalue As String) As VMElement
+	If bStatic Then
+		SetAttrSingle("value", svalue)
+		Return Me
 	End If
+	If vmodel = "" Then
+		vmodel = $"${ID}value"$
+		SetVModel(vmodel)
+	End If
+	vue.setdata(vmodel, svalue)
 	Return Me
 End Sub
 
@@ -851,7 +905,7 @@ Sub SetVHtml(h As String) As VMElement
 	If h = "" Then Return Me
 	h = h.tolowercase
 	If vue.StateExists(h) = False Then vue.SetStateSingle(h, Null)
-	Element.SetAttrSingle("v-html", h)
+	SetAttrSingle("v-html", h)
 	Return Me
 End Sub
 
@@ -1099,12 +1153,12 @@ Sub SetMaxHeight(mw As String) As VMElement
 End Sub
 
 Sub SetOutlined() As VMElement
-	Element.SetAttr("outlined",True)
+	SetAttrSingle("outlined",True)
 	Return Me
 End Sub
 
 Sub SetTo(t As String) As VMElement
-	Element.SetAttrSingle("to", t)
+	SetAttrSingle("to", t)
 	Return Me
 End Sub
 
@@ -1118,7 +1172,7 @@ Sub SetDisabled(b As Boolean) As VMElement
 	bUsedDisabled = b
 	IsDisabled = b
 	vue.SetStatesingle(disKey, b)
-	Element.SetAttrSingle(":disabled", disKey)
+	SetAttrSingle(":disabled", disKey)
 	Return Me
 End Sub
 
@@ -1126,12 +1180,12 @@ Sub SetRequired(b As Boolean) As VMElement
 	IsRequired = b
 	bUsesRequired = True
 	If bStatic Then
-		Element.SetAttrSingle("required", b)
+		SetAttrSingle("required", b)
 		Return Me
 	End If
 	If ID = "" Then Return Me
 	vue.SetStateSingle(reqKey, b)
-	Element.SetAttr(":required", reqKey)
+	SetAttrSingle(":required", reqKey)
 	vue.SetStateSingle(errKey, False)
 	Return Me
 End Sub
@@ -1205,13 +1259,6 @@ Sub Bind(prop As String, stateprop As String) As VMElement
 	prop = prop.tolowercase
 	stateprop = stateprop.ToLowerCase
 	SetAttrSingle(prop, stateprop)
-	'
-	Select Case prop
-	Case ":disabled"
-		bUsedDisabled = True
-	Case ":required"
-		bUsesRequired = True
-	End Select
 	Return Me
 End Sub
 
@@ -1224,7 +1271,7 @@ Sub SetVModel(k As String) As VMElement
 	If vue.HasState(k) = False Then
 		vue.SetData(k, Null)
 	End If
-	Element.SetAttrSingle("v-model", k)
+	SetAttrSingle("v-model", k)
 	bUsesVModel = True
 	Return Me
 End Sub
@@ -1394,7 +1441,7 @@ End Sub
 Sub SetHiddenMdAndUp As VMElement
 	AddClass("hidden-md-and-up")
 	RemoveVShow
-	removevif
+	RemoveVIf
 	Return Me
 End Sub
 
@@ -1743,5 +1790,484 @@ Sub SetRounded_BottomRight(Size As String) As VMElement
 	Else
 		AddClass($"rounded-br-${Size}"$)
 	End If
+	Return Me
+End Sub
+
+Sub SetTypeEmail As VMElement
+	SetType("email")
+	Return Me
+End Sub
+
+Sub SetTypePassword As VMElement
+	SetType("password")
+	Return Me
+End Sub
+
+'this textbox accepts passwords
+Sub SetPassword(b As Boolean, toggle As Boolean) As VMElement
+	vue.SetData(password, False)
+	Dim sline As String = $"${password} ? 'mdi-eye' : 'mdi-eye-off'"$
+	If toggle Then Bind(":append-icon", sline)
+	Bind(":type", $"${password} ? 'text' : 'password'"$)
+	If toggle Then SetAttrSingle("@click:append", $"${password} = !${password}"$)
+	typeOf = "password"
+	SetAutoComplete("off")
+	Return Me
+End Sub
+
+Sub SetAutoCompleteOff As VMElement
+	SetAutoComplete("off")
+	Return Me
+End Sub
+
+Sub SetAutoCompleteOn As VMElement
+	SetAutoComplete("on")
+	Return Me
+End Sub
+
+'get the value
+Sub GetValue As String
+	Dim svalue As String = vue.GetData(vmodel)
+	Return svalue
+End Sub
+
+Sub SetShaped(varShaped As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("shaped", varShaped)
+	Else
+		Dim pp As String = $"${ID}Shaped"$
+		vue.SetStateSingle(pp, varShaped)
+		Bind(":shaped", pp)
+	End If
+	Return Me
+End Sub
+
+'set single-line
+Sub SetSingleLine(varSingleLine As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("single-line", varSingleLine)
+	Else
+		Dim pp As String = $"${ID}SingleLine"$
+		vue.SetStateSingle(pp, varSingleLine)
+		Bind(":single-line", pp)
+	End If
+	Return Me
+End Sub
+
+'set solo
+Sub SetSolo(varSolo As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("solo", varSolo)
+	Else
+		Dim pp As String = $"${ID}Solo"$
+		vue.SetStateSingle(pp, varSolo)
+		Bind(":solo", pp)
+	End If
+	Return Me
+End Sub
+
+'set solo-inverted
+Sub SetSoloInverted(varSoloInverted As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("solo-inverted", varSoloInverted)
+	Else
+		Dim pp As String = $"${ID}SoloInverted"$
+		vue.SetStateSingle(pp, varSoloInverted)
+		Bind(":solo-inverted", pp)
+	End If
+	Return Me
+End Sub
+
+
+'set prepend-icon
+Sub SetPrependIcon(varPrependIcon As String) As VMElement
+	If bStatic Then
+		SetAttrSingle("prepend-icon", varPrependIcon)
+	Else
+		Dim pp As String = $"${ID}PrependIcon"$
+		vue.SetStateSingle(pp, varPrependIcon)
+		Bind(":prepend-icon", pp)
+	End If
+	Return Me
+End Sub
+
+'set prepend-inner-icon
+Sub SetPrependInnerIcon(varPrependInnerIcon As String) As VMElement
+	If bStatic Then
+		SetAttrSingle("prepend-inner-icon", varPrependInnerIcon)
+	Else
+		Dim pp As String = $"${ID}PrependInnerIcon"$
+		vue.SetStateSingle(pp, varPrependInnerIcon)
+		Bind(":prepend-inner-icon", pp)
+	End If
+	Return Me
+End Sub
+
+'set readonly
+Sub SetReadonly(varReadonly As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("readonly", varReadonly)
+	Else
+		Dim pp As String = $"${ID}Readonly"$
+		vue.SetStateSingle(pp, varReadonly)
+		Bind(":readonly", pp)
+	End If
+	Return Me
+End Sub
+
+'set prefix
+Sub SetPrefix(varPrefix As String) As VMElement
+	If bStatic Then
+		SetAttrSingle("prefix", varPrefix)
+	Else
+		Dim pp As String = $"${ID}Prefix"$
+		vue.SetStateSingle(pp, varPrefix)
+		Bind(":prefix", pp)
+	End If
+	Return Me
+End Sub
+
+'set persistent-hint
+Sub SetPersistentHint(varPersistentHint As Boolean) As VMElement
+	If bStatic Then
+		SetAttrSingle("persistent-hint", varPersistentHint)
+	Else
+	Dim pp As String = $"${ID}PersistentHint"$
+	vue.SetStateSingle(pp, varPersistentHint)
+	Bind(":persistent-hint", pp)
+	End If
+	Return Me
+End Sub
+
+Sub SetTextArea As VMElement
+	SetTag("v-textarea")
+	typeOf = "textarea"
+	Return Me
+End Sub
+
+Sub SetMaxLength(varMaxLen As String) As VMElement
+	If bStatic Then
+		SetAttrSingle("maxlength", varMaxLen)
+	Else
+		Dim pp As String = $"${ID}varMaxLen"$
+		vue.SetStateSingle(pp, varMaxLen)
+		Bind(":maxlength", pp)
+	End If
+	Return Me
+End Sub
+
+'set the conver image for the container
+Sub SetCoverImage(url As String) As VMElement
+	SetStyleSingle("background", $"url('${url}')"$)
+	SetStyleSingle("background-size", "cover")
+	SetStyleSingle("width", "100%")
+	SetStyleSingle("height", "100%")
+	Return Me
+End Sub
+
+Sub SetMinWidth(w As String) As VMElement
+	If w = "" Then Return Me
+	SetStyleSingle("min-width", w)
+	Return Me
+End Sub
+
+Sub SetMinHeight(h As String) As VMElement
+	If h = "" Then Return Me
+	SetStyleSingle("min-height", h)
+	Return Me
+End Sub
+
+'set transition
+Sub SetTransition(varTransition As String) As VMElement
+	If varTransition = "" Then Return Me
+	SetAttrSingle("transition", varTransition)
+	Return Me
+End Sub
+
+'set the border
+Sub SetBorderStyle(bstyle As String) As VMElement
+	If bstyle = "" Then Return Me
+	SetStyleSingle("border-style", bstyle)
+	Return Me
+End Sub
+
+Sub SetBorderWidth(bwidth As String) As VMElement
+	If bwidth = "" Then Return Me
+	SetStyleSingle("border-width", bwidth)
+	Return Me
+End Sub
+
+'set the border
+Sub SetBorderColor(bcolor As String) As VMElement
+	If bcolor = "" Then Return Me
+	SetStyleSingle("border-color", bcolor)
+	Return Me
+End Sub
+
+Sub SetCenterContent As VMElement
+	SetJustify("center")
+	SetAlign("center")
+	AddClass("mx-auto")
+	Return Me
+End Sub
+
+
+'set append-icon
+Sub SetAppendIcon(varAppendIcon As String) As VMElement
+	If varAppendIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("append-icon", varAppendIcon)
+	Else
+		Dim pp As String = $"${ID}AppendIcon"$
+		vue.SetStateSingle(pp, varAppendIcon)
+		Bind(":append-icon", pp)
+	End If
+	Return Me
+End Sub
+
+'set append-outer-icon
+Sub SetAppendOuterIcon(varAppendOuterIcon As String) As VMElement
+	If varAppendOuterIcon = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("append-outer-icon", varAppendOuterIcon)
+	Else
+		Dim pp As String = $"${ID}AppendOuterIcon"$
+		vue.SetStateSingle(pp, varAppendOuterIcon)
+		Bind(":append-outer-icon", pp)
+	End If
+	Return Me
+End Sub
+
+'set autofocus
+Sub SetAutofocus(varAutofocus As Boolean) As VMElement
+	If varAutofocus = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("autofocus", varAutofocus)
+	Else
+		Dim pp As String = $"${ID}Autofocus"$
+		vue.SetStateSingle(pp, varAutofocus)
+		Bind(":autofocus", pp)
+	End If
+	Return Me
+End Sub
+
+
+'set clearable
+Sub SetClearable(varClearable As Boolean) As VMElement
+	If varClearable = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("clearable", varClearable)
+	Else
+		Dim pp As String = $"${ID}Clearable"$
+		vue.SetStateSingle(pp, varClearable)
+		Bind(":clearable", pp)
+	End If
+	Return Me
+End Sub
+
+
+'set counter
+Sub SetCounter(varCounter As Boolean) As VMElement
+	If varCounter = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("counter", varCounter)
+	Else
+		Dim pp As String = $"${ID}Counter"$
+		vue.SetStateSingle(pp, varCounter)
+		Bind(":counter", pp)
+	End If
+	Return Me
+End Sub
+
+'set counter-value
+Sub SetCounterValue(varCounterValue As String) As VMElement
+	If varCounterValue = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("counter-value", varCounterValue)
+	Else
+		Dim pp As String = $"${ID}CounterValue"$
+		vue.SetStateSingle(pp, varCounterValue)
+		Bind(":counter-value", pp)
+	End If
+	Return Me
+End Sub
+
+
+'set filled
+Sub SetFilled(varFilled As Boolean) As VMElement
+	If varFilled = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("filled", varFilled)
+	Else
+	Dim pp As String = $"${ID}Filled"$
+	vue.SetStateSingle(pp, varFilled)
+	Bind(":filled", pp)
+	End If
+	Return Me
+End Sub
+
+
+'set hide-details
+Sub SetHideDetails(varHideDetails As Boolean) As VMElement
+	If varHideDetails = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("hide-details", varHideDetails)
+	Else
+	Dim pp As String = $"${ID}HideDetails"$
+	vue.SetStateSingle(pp, varHideDetails)
+	Bind(":hide-details", pp)
+	End If
+	Return Me
+End Sub
+
+'set hint
+Sub SetHint(varHint As String) As VMElement
+	If varHint = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("hint", varHint)
+	Else
+	Dim pp As String = $"${ID}Hint"$
+	vue.SetStateSingle(pp, varHint)
+	Bind(":hint", pp)
+	End If
+	Return Me
+End Sub
+
+'set label
+Sub SetLabel(varLabel As String) As VMElement
+	If varLabel = "" Then Return Me
+	If bStatic Then
+		SetAttrSingle("label", varLabel)
+	Else
+	Dim pp As String = $"${ID}Label"$
+	vue.SetStateSingle(pp, varLabel)
+	Bind(":label", pp)
+	End If
+	Return Me
+End Sub
+
+'set validate-on-blur
+Sub SetValidateOnBlur(varValidateOnBlur As Boolean) As VMElement
+	If varValidateOnBlur = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("validate-on-blur", varValidateOnBlur)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}ValidateOnBlur"$
+	vue.SetBoolean(pp, varValidateOnBlur)
+	Bind(":validate-on-blur", pp)
+	Return Me
+End Sub
+
+'
+Sub SetOnClickAppend(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click:append": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnClickAppendOuter(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click:append-outer": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnClickClear(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click:clear": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnClickPrepend(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click:prepend": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnClickPrependInner(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@click:prepend-inner": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'
+Sub SetOnKeydown(eventHandler As Object, methodName As String) As VMElement
+	methodName = methodName.tolowercase
+	If SubExists(eventHandler, methodName) = False Then Return Me
+	Dim e As BANanoEvent
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
+	SetAttr(CreateMap("@keydown": methodName))
+	'add to methods
+	vue.SetCallBack(methodName, cb)
+	Return Me
+End Sub
+
+'set chips
+Sub SetChips(varChips As Boolean) As VMElement
+	If varChips = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("chips", varChips)
+		Return Me
+	End If	
+	Dim pp As String = $"${ID}Chips"$
+	vue.SetStateSingle(pp, varChips)
+	Bind(":chips", pp)
+	Return Me
+End Sub
+
+
+'set multiple
+Sub SetMultiple(varMultiple As Boolean) As VMElement
+	If varMultiple = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("multiple", varMultiple)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}Multiple"$
+	vue.SetStateSingle(pp, varMultiple)
+	Bind(":multiple", pp)
+	Return Me
+End Sub
+
+
+'set small-chips
+Sub SetSmallChips(varSmallChips As Boolean) As VMElement
+	If varSmallChips = False Then Return Me
+	If bStatic Then
+		SetAttrSingle("small-chips", varSmallChips)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}SmallChips"$
+	vue.SetStateSingle(pp, varSmallChips)
+	Bind(":small-chips", pp)
 	Return Me
 End Sub

@@ -257,6 +257,17 @@ Sub SetPassword(b As Boolean, toggle As Boolean) As VMTextField
 	TextField.Bind(":type", $"${password} ? 'text' : 'password'"$)
 	If toggle Then TextField.SetAttrSingle("@click:append", $"${password} = !${password}"$)
 	TextField.typeOf = "password"
+	TextField.SetAutoComplete("off")
+	Return Me
+End Sub
+
+Sub SetAutoCompleteOff As VMTextField
+	TextField.SetAutoComplete("off")
+	Return Me
+End Sub
+
+Sub SetAutoCompleteOn As VMTextField
+	TextField.SetAutoComplete("on")
 	Return Me
 End Sub
 
@@ -437,7 +448,7 @@ Sub AddColorPicker As VMTextField
 	Return Me
 End Sub
 
-Sub watchcolor(val As Object)
+Sub watchcolor(val As Object)  'ignoredeadcode
 	If BANano.IsNull(val) = False And BANano.IsUndefined(val) = False Then
 		Dim inputvalue As Object = vue.GetData(vmodel)
 		If BANano.IsNull(inputvalue) = False And BANano.IsUndefined(inputvalue) = False Then
@@ -1169,7 +1180,7 @@ Sub SetOnClick(eventHandler As Object, methodName As String) As VMTextField
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me
 	Dim e As BANanoEvent
-	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, array(e))
+	Dim cb As BANanoObject = BANano.CallBack(eventHandler, methodName, Array(e))
 	SetAttr(CreateMap("@click": methodName))
 	'add to methods
 	vue.SetCallBack(methodName, cb)

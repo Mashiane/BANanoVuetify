@@ -4,7 +4,6 @@ ModulesStructureVersion=1
 Type=StaticCode
 Version=8.3
 @EndOfDesignText@
-#ignorewarnings: 12
 Sub Process_Globals
 	Private BANano As BANano  'ignore
 	Dim UnitWords() As String = Array As String( _
@@ -2290,7 +2289,7 @@ private Sub ReadFile(FileToRead As Object, MethodName As String)
 	FileReader.RunMethod(MethodName, FileToRead)
 End Sub
 
-private Sub OnLoad(event As Map) As String 'ignore
+private Sub OnLoad(event As Map) As String 'IgnoreDeadCode
 	' getting our file again (set in UploadFileAndGetDataURL)
 	Dim FileReader As BANanoObject = event.Get("target")
 	Dim UploadedFile As BANanoObject = FileReader.GetField("file")
@@ -2298,7 +2297,7 @@ private Sub OnLoad(event As Map) As String 'ignore
 	BANano.ReturnThen(CreateMap("name": UploadedFile.GetField("name"), "result": FileReader.Getfield("result")))
 End Sub
 
-private Sub OnError(event As Map) As String 'ignore
+private Sub OnError(event As Map) As String 'IgnoreDeadCode
 	Dim FileReader As BANanoObject = event.Get("target")
 	Dim UploadedFile As BANanoObject = FileReader.GetField("file")
 	Dim Abort As Boolean = False

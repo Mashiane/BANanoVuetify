@@ -645,7 +645,7 @@ End Sub
 Sub SetValue(varValue As String) As VMChip
 	If varValue = "" Then Return Me
 	If bStatic Then
-		Chip.SetValue(varValue, False)
+		Chip.SetValue(varValue)
 		Return Me
 	End If
 	Dim pp As String = $"${ID}Value"$

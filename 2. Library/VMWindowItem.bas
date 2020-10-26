@@ -158,7 +158,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMWindowItem
-	WindowItem.SetValue(varValue, False)
+	WindowItem.SetValue(varValue)
 	Return Me
 End Sub
 

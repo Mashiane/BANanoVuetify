@@ -977,7 +977,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMToolBar
-	ToolBar.SetValue(varValue, False)
+	ToolBar.SetValue(varValue)
 Return Me
 End Sub
 

@@ -613,7 +613,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMNavigationDrawer
-	NavigationDrawer.SetValue(varValue, False)
+	NavigationDrawer.SetValue(varValue)
 	Return Me
 End Sub
 

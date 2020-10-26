@@ -803,11 +803,13 @@ End Sub
 
 
 Sub Hide As VMCard
+	SetVShow($"${ID}show"$)
 	Card.SetVisible(False)
 	Return Me
 End Sub
 
 Sub Show As VMCard
+	SetVShow($"${ID}show"$)
 	Card.SetVisible(True)
 	Return Me
 End Sub

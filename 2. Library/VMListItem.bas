@@ -483,7 +483,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMListItem
-	ListItem.SetValue(varValue, False)
+	ListItem.SetValue(varValue)
 	Return Me
 End Sub
 '

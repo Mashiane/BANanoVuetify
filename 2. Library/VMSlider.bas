@@ -724,7 +724,7 @@ Sub SetValue(varValue As String) As VMSlider
 	End If
 	varValue = BANano.parseFloat(varValue)
 	vue.SetData(xmodel, varValue)
-	Slider.SetValue(varValue,False)
+	Slider.SetValue(varValue)
 	Return Me
 End Sub
 

@@ -134,7 +134,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMLazy
-	Lazy.SetValue(varValue, False)
+	Lazy.SetValue(varValue)
 	Return Me
 End Sub
 

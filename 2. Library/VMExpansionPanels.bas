@@ -332,7 +332,7 @@ End Sub
 
 'set value, opened panel
 Sub SetValue(varValue As String) As VMExpansionPanels
-	ExpansionPanels.SetValue(varValue, False)
+	ExpansionPanels.SetValue(varValue)
 	Return Me
 End Sub
 

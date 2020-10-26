@@ -1274,7 +1274,7 @@ Sub SetValue(varValue As String) As VMSelect
 		vmodel = $"${ID}value"$
 		SetVModel(vmodel)
 	End If
-	Combo.SetValue(varValue, False)
+	Combo.SetValue(varValue)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub

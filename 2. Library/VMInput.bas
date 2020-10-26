@@ -345,7 +345,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMInput
-	Input.SetValue(varValue, False)
+	Input.SetValue(varValue)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub

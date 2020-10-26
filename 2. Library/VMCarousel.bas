@@ -432,7 +432,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMCarousel
-	Carousel.SetValue(varValue, False)
+	Carousel.SetValue(varValue)
 	Return Me
 End Sub
 

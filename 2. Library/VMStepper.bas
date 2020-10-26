@@ -364,7 +364,7 @@ End Sub
 'set value
 Sub SetValue(varValue As String) As VMStepper
 	If varValue = "" Then Return Me
-	Stepper.SetValue(varValue, False)
+	Stepper.SetValue(varValue)
 	Return Me
 End Sub
 

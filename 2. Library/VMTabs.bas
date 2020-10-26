@@ -621,7 +621,7 @@ End Sub
 'set value
 Sub SetValue(varValue As String) As VMTabs
 	varValue = varValue.tolowercase
-	Tabs.SetValue(varValue, False)
+	Tabs.SetValue(varValue)
 	Return Me
 End Sub
 

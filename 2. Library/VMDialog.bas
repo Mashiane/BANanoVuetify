@@ -558,7 +558,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMDialog
-	Dialog.SetValue(varValue, False)
+	Dialog.SetValue(varValue)
 	Return Me
 End Sub
 

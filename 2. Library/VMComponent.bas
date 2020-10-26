@@ -541,7 +541,7 @@ Sub SetStateSingle(k As String, v As Object) As VMComponent
 End Sub
 
 'add a rule
-Sub AddRule(ruleName As String, MethodName As String)
+Sub AddRule(ruleName As String, Module As Object,  MethodName As String)
 	ruleName = ruleName.ToLowerCase
 	MethodName = MethodName.ToLowerCase
 	Dim rules As List
@@ -552,7 +552,9 @@ Sub AddRule(ruleName As String, MethodName As String)
 	End If
 	'
 	Dim v As Object
-	Dim cb As BANanoObject = BANano.CallBack(EventHandler, MethodName, Array(v))
-	rules.Add(cb.Result)
+	Dim cb As BANanoObject = BANano.CallBack(Module, MethodName, Array(v))
+	If SubExists(Module, MethodName) Then
+		rules.Add(cb.Result)
+	End If	
 	data.put(ruleName, rules)
 End Sub

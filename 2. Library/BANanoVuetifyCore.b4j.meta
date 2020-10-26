@@ -373,6 +373,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoVM,UseBlankTemplate,441,0,BANanoVM,GetDataGlobal,443,1,BANanoVue,getglobalstate,720,0,BANanoVue,GetDataGlobal,727,3,VMFormBase,Initialize,85,0,VMFooter,SetStatic,43,0,VMFooter,AddMadeWithLove,56,0,Main,Process_Globals,13,0,Main,AppStart,38,6,Main,BANano_Ready,59,0
+NavigationStack=VMElement,SetRequired,1181,0,VMElement,SetAttrSingle,562,0,VMElement,SetDark,558,0,VMComponent,SetStateSingle,536,0,BANanoVue,Decrement,4258,0,BANanoVue,AddRule,4261,1,BANanoVue,Increment,4250,0,BANanoVue,Class_Globals,7,0,BANanoVue,Initialize,127,0,VMComponent,AddRule,537,6,Main,Process_Globals,11,0
 SelectedBuild=0
 VisibleModules=

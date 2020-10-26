@@ -312,7 +312,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMTabsItems
-	TabsItems.SetValue(varValue, False)
+	TabsItems.SetValue(varValue)
 	Return Me
 End Sub
 

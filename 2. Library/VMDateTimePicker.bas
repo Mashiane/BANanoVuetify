@@ -311,7 +311,7 @@ Sub ToString As String
 	End If
 End Sub
 
-private Sub computedDateFormatted As String
+private Sub computedDateFormatted As String   'IgnoreDeadCode
 	Try
 		'get the saved model
 		Dim rdate As String = vue.GetData(vmodel)
@@ -323,7 +323,7 @@ private Sub computedDateFormatted As String
 End Sub
 
 'format the date
-private Sub formatDate(date As Object) As String
+private Sub formatDate(date As Object) As String  'IgnoreDeadCode
 	Try
 		date = "" & date
 		If date = "" Then Return Null
@@ -802,7 +802,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMDateTimePicker
-	DateTimePicker.SetValue(varValue,False)
+	DateTimePicker.SetValue(varValue)
 	TextField.SetValue(varValue)
 	If bStatic Then
 		SetAttrSingle("value", varValue)

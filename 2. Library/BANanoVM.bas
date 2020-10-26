@@ -678,6 +678,14 @@ Sub Form(elID As String) As VMElement
 	Return elx
 End Sub
 
+Sub VForm(elID As String) As VMElement
+	Dim elx As VMElement
+	elx.Initialize(vue, elID)
+	elx.SetTag("v-form")
+	Return elx
+End Sub
+
+
 Sub VListItemGroup(elID As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(vue, elID)
@@ -1126,9 +1134,10 @@ Sub RefNull(refID As String)
 	vue.refs.GetField(refID).SetField("value", Null)
 End Sub
 
-Sub FormValidate(frmID As String)
+Sub FormValidate(frmID As String) As Boolean
 	frmID = frmID.tolowercase
-	vue.refs.GetField(frmID).RunMethod("validate", Null)
+	Dim bValid As Boolean = vue.refs.GetField(frmID).RunMethod("validate", Null).Result
+	Return bValid
 End Sub
 
 Sub FormReset(frmID As String)

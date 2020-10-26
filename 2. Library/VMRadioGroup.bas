@@ -630,7 +630,7 @@ Sub SetValue(varValue As String) As VMRadioGroup
 		xmodel = $"${ID}value"$
 		SetVModel(xmodel)
 	End If
-	RadioGroup.SetValue(varValue, False)
+	RadioGroup.SetValue(varValue)
 	vue.SetData(xmodel, varValue)
 	Return Me
 End Sub

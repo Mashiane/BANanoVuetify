@@ -253,7 +253,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMWindow
-	Window.SetValue(varValue, False)
+	Window.SetValue(varValue)
 	Return Me
 End Sub
 

@@ -382,7 +382,7 @@ End Sub
 
 'set value for visibility
 Sub SetValue(varValue As Boolean) As VMSnackBar
-	SnackBar.SetValue(varValue, False)
+	SnackBar.SetValue(varValue)
 	Return Me
 End Sub
 

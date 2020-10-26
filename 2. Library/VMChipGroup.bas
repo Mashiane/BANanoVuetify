@@ -371,7 +371,7 @@ Sub SetValue(varValue As Object) As VMChipGroup
 		SetVModel(vmodel)
 	End If
 	vue.SetData(vmodel, varValue)
-	ChipGroup.SetValue(varValue, False)
+	ChipGroup.SetValue(varValue)
 	Return Me
 End Sub
 

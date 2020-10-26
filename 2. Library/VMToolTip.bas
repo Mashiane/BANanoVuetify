@@ -529,7 +529,7 @@ End Sub
 
 'set value, visible / not visible
 Sub SetValue(varValue As String) As VMToolTip
-	ToolTip.SetValue(varValue, False)
+	ToolTip.SetValue(varValue)
 	Return Me
 End Sub
 

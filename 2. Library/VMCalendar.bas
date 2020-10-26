@@ -56,7 +56,7 @@ Sub SetData(prop As String, value As Object) As VMCalendar
 End Sub
 
 
-Sub geteventcolor(e As Map) As String
+Sub geteventcolor(e As Map) As String  'IgnoreDeadCode
 	Dim ecolor As String = e.Get("color")
 	Return ecolor
 End Sub

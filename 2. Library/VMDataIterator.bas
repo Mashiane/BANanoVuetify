@@ -523,7 +523,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMDataIterator
-	DataIterator.SetValue(varValue, False)
+	DataIterator.SetValue(varValue)
 	Return Me
 End Sub
 

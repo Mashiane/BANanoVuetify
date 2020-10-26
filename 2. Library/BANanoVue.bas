@@ -852,6 +852,17 @@ Sub CreateB4xList(lst As List) As List
 	Return nl
 End Sub
 
+Sub FormValidate(frmID As String) As Boolean
+	frmID = frmID.tolowercase
+	Dim bValid As Boolean = refs.GetField(frmID).RunMethod("validate", Null).Result
+	Return bValid
+End Sub
+
+Sub FormReset(frmID As String)
+	frmID = frmID.tolowercase
+	refs.GetField(frmID).RunMethod("reset", Null)
+End Sub
+
 'format the text
 Sub FormatText(sText As String) As String
 	Dim RM As Map
@@ -3173,6 +3184,14 @@ Sub ToggleState(stateName As String) As BANanoVue
 	Return Me
 End Sub
 
+Sub ToggleStateGlobal(stateName As String) As BANanoVue
+	Dim bcurrent As Boolean = GetDataGlobal(stateName)
+	If bcurrent = Null Then bcurrent = True
+	bcurrent = Not(bcurrent)
+	SetDataGlobal(stateName, bcurrent)
+	Return Me
+End Sub
+
 Sub ToggleNamedState(stateName As String, state1 As String, state2 As String) As BANanoVue
 	Dim bcurrent As String = GetState(stateName,"")
 	If bcurrent.EqualsIgnoreCase(state1) Then
@@ -3183,6 +3202,16 @@ Sub ToggleNamedState(stateName As String, state1 As String, state2 As String) As
 		Dim opt As Map = CreateMap()
 		opt.Put(stateName, state1)
 		SetState(opt)
+	End If
+	Return Me
+End Sub
+
+Sub ToggleNamedStateGlobal(stateName As String, state1 As String, state2 As String) As BANanoVue
+	Dim bcurrent As String = GetDataGlobal(stateName)
+	If bcurrent.EqualsIgnoreCase(state1) Then
+		SetDataGlobal(stateName, state2)
+	Else
+		SetDataGlobal(stateName, state1)
 	End If
 	Return Me	
 End Sub
@@ -4235,9 +4264,8 @@ Sub Decrement(elID As String, valueOf As Int) As BANanoVue
 	Return Me
 End Sub
 
-
 'add a rule
-Sub AddRule(ruleName As String, MethodName As String)
+Sub AddRule(ruleName As String, EventHandler As Object,  MethodName As String)
 	ruleName = ruleName.ToLowerCase
 	MethodName = MethodName.ToLowerCase
 	Dim rules As List
@@ -4248,7 +4276,9 @@ Sub AddRule(ruleName As String, MethodName As String)
 	End If
 	'
 	Dim v As Object
-	Dim cb As BANanoObject = BANAno.CallBack(Module, MethodName, Array(v))
-	rules.Add(cb.Result)
+	Dim cb As BANanoObject = BANAno.CallBack(EventHandler, MethodName, Array(v))
+	If SubExists(Module, MethodName) Then
+		rules.Add(cb.Result)
+	End If
 	data.put(ruleName, rules)
 End Sub

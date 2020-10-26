@@ -979,7 +979,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMButton
-	Button.SetValue(varValue,False)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 

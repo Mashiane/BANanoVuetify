@@ -512,7 +512,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMSpeedDial
-	SpeedDial.SetValue(varValue, False)
+	SpeedDial.SetValue(varValue)
 	Return Me
 End Sub
 

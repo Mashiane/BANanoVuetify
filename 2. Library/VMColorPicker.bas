@@ -306,7 +306,7 @@ Sub SetValue(varValue As String) As VMColorPicker
 		vmodel = $"${ID}value"$
 		SetVModel(vmodel)
 	End If
-	ColorPicker.SetValue(varValue,False)
+	ColorPicker.SetValue(varValue)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub

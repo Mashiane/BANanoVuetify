@@ -830,7 +830,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Boolean) As VMMenu
-	Menu.SetValue(varValue,False)
+	Menu.SetValue(varValue)
 	Return Me
 End Sub
 

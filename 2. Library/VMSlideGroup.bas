@@ -219,7 +219,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As Object) As VMSlideGroup
-	SlideGroup.SetValue(varValue, False)
+	SlideGroup.SetValue(varValue)
 	Return Me
 End Sub
 

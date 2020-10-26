@@ -426,7 +426,7 @@ Sub SetValue(varValue As String) As VMRating
 		vmodel = $"${ID}value"$
 		SetVModel(vmodel)
 	End If
-	Rating.SetValue(varValue, False)
+	Rating.SetValue(varValue)
 	vue.SetData(vmodel, varValue)
 	Return Me
 End Sub

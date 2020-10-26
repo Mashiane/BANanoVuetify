@@ -456,7 +456,7 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMBottomNavigation
-	BottomNavigation.SetValue(varValue,False)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
 
