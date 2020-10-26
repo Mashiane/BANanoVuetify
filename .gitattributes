@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+*.bas linguist-language=B4X
+*.b4j linguist-language=B4X
