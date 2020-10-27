@@ -36,11 +36,11 @@ Sub Code
 	carcard1.SetVisible(True)
 	carcard1.AddDivider
 	carcard1.Actions.AddSpacer
-	carcard1.Actions.AddButton1("btna", "dashboard", "red", "Banner", "A business banner", "")
-	carcard1.Actions.AddIcon("btnb", "account_box", "indigo", "", "Another squirrel", "")
-	carcard1.Actions.AddIcon("btnc", "gavel", "green", "", "Heavens", "")
-	carcard1.Actions.AddIcon("btnd", "question_answer", "purple", "", "Planets of the world", "")
-	carcard1.Actions.AddIcon("btne", "mdi-account", "yellow", "", "This is a beautiful bird", "")
+	carcard1.Actions.AddButton1("btna", "mdi-view-dashboard", "red", "Banner", "A business banner", "")
+	carcard1.Actions.AddIcon("btnb", "mdi-account-box", "indigo", "", "Another squirrel", "")
+	carcard1.Actions.AddIcon("btnc", "mdi-gavel", "green", "", "Heavens", "")
+	carcard1.Actions.AddIcon("btnd", "mdi-comment-multiple", "purple", "", "Planets of the world", "")
+	carcard1.Actions.AddIcon("btne", "mdi-omega", "yellow", "", "This is a beautiful bird", "")
 	cont.AddControl(carcard1.Card, carcard1.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
 	'
 	'initialize code builder
@@ -136,11 +136,11 @@ vue.AddCode($"End Sub"$)
 	'add sparkline to stop sheet
 	cardsheet.topsheet.AddComponent(sl.tostring)
 	'add text to card
-	cardsheet.Text.AddElement("", "div", "User Registration",Null,Null,Array("title font-weight-light mb-2"))
-	cardsheet.Text.AddElement("", "div", "Last Campaign Performance",Null,Null,Array("subheading font-weight-light grey--text"))
+	cardsheet.Text.AddElement1("", "div", "User Registration",Null,Null,Array("title font-weight-light mb-2"))
+	cardsheet.Text.AddElement1("", "div", "Last Campaign Performance",Null,Null,Array("subheading font-weight-light grey--text"))
 	cardsheet.Text.AddDivider
-	cardsheet.Text.AddElement("", "v-icon", "mdi-clock",CreateMap("small":True),Null,Array("mr-2"))
-	cardsheet.Text.AddElement("", "span", "last registration 26 minutes ago",CreateMap("small":True),Null,Array("caption grey--text font-weight-light"))
+	cardsheet.Text.AddElement1("", "v-icon", "mdi-clock",CreateMap("small":True),Null,Array("mr-2"))
+	cardsheet.Text.AddElement1("", "span", "last registration 26 minutes ago",CreateMap("small":True),Null,Array("caption grey--text font-weight-light"))
 	
 	
 	'

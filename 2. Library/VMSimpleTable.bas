@@ -32,6 +32,12 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	SimpleTable.SetText(elm.ToString)
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return SimpleTable.ToString

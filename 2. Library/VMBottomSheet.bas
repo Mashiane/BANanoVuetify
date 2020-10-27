@@ -26,7 +26,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	DesignMode = False
 	Module = eventHandler
 	bStatic = False
-	SetVModel(BottomSheet.showkey)
+	SetVModel(BottomSheet.showKey)
 	Hide
 	Footer.Initialize(vue, $"${ID}footer"$, eventHandler)
 	Footer.SetTag("v-sheet-footer")
@@ -44,6 +44,11 @@ Sub SetData(prop As String, value As Object) As VMBottomSheet
 	Return Me
 End Sub
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	BottomSheet.SetText(elm.ToString)
+End Sub
 
 Sub SetVisible(b As Boolean) As VMBottomSheet
 	vue.SetData(smodel, b)

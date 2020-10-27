@@ -34,6 +34,12 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	StepperHeader.SetText(elm.ToString)
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMStepperHeader
 	bStatic = b
 	StepperHeader.SetStatic(b)

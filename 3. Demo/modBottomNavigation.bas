@@ -30,12 +30,12 @@ Sub Code
 	vm.BottomNav.SetHeight("56")
 	vm.BottomNav.SetShift(True)
 	'add items
-	vm.BottomNav.AddButton("btnaz", "Banner", "dashboard", "red", "btnaz", "A business banner", "")
-	vm.BottomNav.AddButton("btnbz", "Squirrel", "account_box", "indigo", "btnbz", "Another squirrel", "")
-	vm.BottomNav.AddButton("btncz", "Sky", "gavel", "green", "btncz", "Heavens", "")
-	vm.BottomNav.AddButton("btndz", "Planet", "question_answer", "purple", "btndz", "Planets of the world", "")
-	vm.BottomNav.AddButton("btnez", "Bird", "mdi-account", "yellow", "btnez", "This is a beautiful bird", "")
-	'
+	vm.BottomNav.AddButton("btnaz", "Banner", "mdi-view-dashboard", "red", "btnaz", "A business banner", "")
+	vm.BottomNav.AddButton("btnbz", "Squirrel", "mdi-account-box", "indigo", "btnbz", "Another squirrel", "")
+	vm.BottomNav.AddButton("btncz", "Sky", "mdi-gavel", "green", "btncz", "Heavens", "")
+	vm.BottomNav.AddButton("btndz", "Planet", "mdi-comment-multiple", "purple", "btndz", "Planets of the world", "")
+	vm.BottomNav.AddButton("btnez", "Bird", "mdi-omega", "yellow", "btnez", "This is a beautiful bird", "")
+	
 	'initialize code builder
 	vue.SourceCodeBuilder
 	vue.AddCode($"vm.BottomNav.Hide"$)

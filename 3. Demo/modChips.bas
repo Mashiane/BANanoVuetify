@@ -78,9 +78,9 @@ vue.AddCode($"cg.AddToContainer(cont, 3, 1)"$)
 
 	Dim product1 As VMCard = vm.CreateCard("product1", Me).AddClass("mx-auto").SetMaxWidth("auto")
 	'** title add own heading
-	product1.Title.AddElement("", "h2", "Toothbrush", Null, Null, Array("display-1"))
+	product1.Title.AddElement1("", "h2", "Toothbrush", Null, Null, Array("display-1"))
 	product1.Title.AddSpacer
-	product1.Title.AddElement("", "span", "$4.99", Null, Null, Array("title"))
+	product1.Title.AddElement1("", "span", "$4.99", Null, Null, Array("title"))
 	'** text
 	product1.Text.SetText("Our company takes pride in making handmade brushes.")
 	product1.Text.SetText("Our toothbrushes are available in 4 different bristel types, from extra soft To hard.")
@@ -89,7 +89,7 @@ vue.AddCode($"cg.AddToContainer(cont, 3, 1)"$)
 	'
 	Dim vcardtext As VMCardText = vm.CreateCardText("", Me)
 	'add a span
-	vcardtext.AddElement("", "span", "Select Type", Null, Null, Array("subheading"))
+	vcardtext.AddElement1("", "span", "Select Type", Null, Null, Array("subheading"))
 	'
 	Dim cg1 As VMChipGroup = vm.CreateChipGroup("cg1", Me)
 	cg1.SetVModel("selection").SetData("selection", 2).SetActiveClass("deep-purple--text text--accent-4").SetMandatory(True)
@@ -109,14 +109,14 @@ vue.AddCode($"cg.AddToContainer(cont, 3, 1)"$)
 	'
 	'***
 	Dim shirtBlouse As VMCard = vm.CreateCard("shirtBlouse", Me).AddClass("mx-auto").SetMaxWidth("400")
-	shirtBlouse.Title.AddElement("", "h2", "Shirt Blouse", Null, Null, Array("display-1"))
+	shirtBlouse.Title.AddElement1("", "h2", "Shirt Blouse", Null, Null, Array("display-1"))
 	shirtBlouse.Title.AddSpacer
-	shirtBlouse.Title.AddElement("", "span", "$44.50", Null, Null, Array("title"))
+	shirtBlouse.Title.AddElement1("", "span", "$44.50", Null, Null, Array("title"))
 	shirtBlouse.Text.SetText("Our blouses are available in 8 colors. You can custom order a built-in arch support For any of the models.")
 	shirtBlouse.SetTextAfterDivider("mx-4")
 	'
 	Dim cardText1 As VMCardText = vm.CreateCardText("", Me)
-	cardText1.AddElement("", "span", "Select Size", Null, Null, Array("subheading"))
+	cardText1.AddElement1("", "span", "Select Size", Null, Null, Array("subheading"))
 	'
 	Dim cg2 As VMChipGroup = vm.CreateChipGroup("cg2", Me).SetVmodel("cg2selection").SetData("cg2selection", "08").SetMandatory(True)
 	cg2.SetActiveClass("deep-purple--text text--accent-4")

@@ -27,13 +27,20 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ToolTip.SetText(elm.ToString)
+End Sub
+
 Sub SetStatic(b As Boolean) As VMToolTip
 	bStatic = b
 	ToolTip.SetStatic(b)
 	Return Me
 End Sub
 
-Sub SetData(xprop As String, xValue As Object) As vmtooltip
+Sub SetData(xprop As String, xValue As Object) As VMToolTip
 	vue.SetData(xprop, xValue)
 	Return Me
 End Sub

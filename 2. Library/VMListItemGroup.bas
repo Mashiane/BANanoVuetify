@@ -26,6 +26,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ListItemGroup.SetText(elm.ToString)
+End Sub
+
 'set on change
 Sub SetOnChange(methodName As String) As VMListItemGroup
 	methodName = methodName.tolowercase

@@ -69,7 +69,7 @@ pgIndex.CreateVBCode(vue, Me, "slideg1", "Slide Group", vue.GetSourceCode).AddTo
 	'
 	Dim st As VMScaleTransition
 	st.Initialize(vue, "", Me)
-	st.AddElement("", "v-icon", "mdi-close-circle-outline", CreateMap("v-if":"active","color":"white","size":48), Null, Null)
+	st.AddElement1("", "v-icon", "mdi-close-circle-outline", CreateMap("v-if":"active","color":"white","size":48), Null, Null)
 	vcard.Container.AddComponent(1,1, st.ToString)
 	
 	si1.AddComponent(vcard.ToString)

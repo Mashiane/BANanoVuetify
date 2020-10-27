@@ -32,6 +32,12 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	SkeletonLoader.SetText(elm.ToString)
+End Sub
+
+
 'set the row and column position
 Sub SetRC(sRow As String, sCol As String) As VMSkeletonLoader
 	SkeletonLoader.SetRC(sRow, sCol)

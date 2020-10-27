@@ -84,6 +84,7 @@ End Sub
 
 'get component
 Sub ToString As String
+	Alert.RemoveVShow
 	If Container.HasContent Then AddComponent(Container.ToString)
 	Return Alert.ToString
 End Sub
@@ -678,6 +679,11 @@ End Sub
 Sub AddComponent(comp As String) As VMAlert
 	Alert.SetText(comp)
 	Return Me
+End Sub
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Alert.SetText(elm.ToString)
 End Sub
 
 

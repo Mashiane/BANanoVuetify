@@ -39,6 +39,12 @@ Sub SetData(prop As String, value As Object) As VMCarouselItem
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	CarouselItem.SetText(elm.ToString)
+End Sub
+
 'get component
 Sub ToString As String
 	Return CarouselItem.ToString

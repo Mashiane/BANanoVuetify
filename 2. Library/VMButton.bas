@@ -50,6 +50,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Button.SetText(elm.ToString)
+End Sub
+
+
 Sub SetGradient(color1 As String, color2 As String) As VMButton
 	Dim hex1 As String = vue.GetColorHex(color1)
 	Dim hex2 As String = vue.GetColorHex(color2)
@@ -57,6 +65,10 @@ Sub SetGradient(color1 As String, color2 As String) As VMButton
 	Return Me
 End Sub
 
+Sub RemoveVShow As VMButton
+	RemoveAttr("v-show")
+	Return Me
+End Sub
 
 Sub SetData(prop As String, value As Object) As VMButton
 	vue.SetData(prop, value)

@@ -6,13 +6,12 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-	Public Footer As VMElement
+	Public Footer As VMContainer
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean   'ignore
 	Private Module As Object
-	Public Container As VMContainer
 	Public HasContent As Boolean
 	Private bStatic As Boolean
 	Private smodel As String
@@ -21,17 +20,22 @@ End Sub
 'initialize the Footer
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMFooter
 	ID = sid.tolowercase
-	Footer.Initialize(v, ID)
+	Footer.Initialize(v, ID, eventHandler)
 	Footer.SetTag("v-footer")
 	DesignMode = False
 	Module = eventHandler
 	vue = v
 	SetVShow(Footer.showkey)
-	Container.Initialize(vue, $"${ID}content"$, Module) 
 	HasContent = False
 	bStatic = False
 	Show
 	Return Me
+End Sub
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Footer.SetText(elm.ToString)
 End Sub
 
 Sub RemoveVModel As VMFooter
@@ -44,12 +48,9 @@ Sub SetData(xprop As String, xValue As Object) As VMFooter
 	Return Me
 End Sub
 
-
-
 Sub SetStatic(b As Boolean) As VMFooter
 	bStatic = b
 	Footer.SetStatic(b)
-	Container.SetStatic(b)
 	Return Me
 End Sub
 
@@ -74,8 +75,7 @@ Sub AddMadeWithLove(Row As Int, Col As Int, Message As String, CreatorName As St
 	lbla.Initialize(vue, "lbla").SetTag("a").SetHREF($"mailto:${EmailAddress}"$).SetText($"${CreatorName}"$)
 	lbla.AddClass("white--text")
 	footerDiv.SetText(lbla.tostring)
-	'
-	Container.AddCOmponent(Row,Col, footerDiv.tostring)
+	Footer.AddCOmponent(Row,Col, footerDiv.tostring)
 End Sub
 
 'set color intensity
@@ -93,7 +93,9 @@ Sub SetColorIntensity(varColor As String, varIntensity As String) As VMFooter
 End Sub
 
 Sub AddSpacer As VMFooter
-	Footer.AddSpacer
+	Dim spc As VMElement
+	spc.Initialize(vue, "").SetTag("v-spacer")
+	Footer.AddElement(spc)
 	Return Me
 End Sub
 
@@ -140,7 +142,6 @@ End Sub
 
 'get component
 Sub ToString As String
-	If Container.HasContent Then AddComponent(Container.ToString)
 	Return Footer.ToString
 End Sub
 
@@ -400,17 +401,6 @@ Sub SetWidth(varWidth As String) As VMFooter
 	Return Me
 End Sub
 
-Sub Enable As VMFooter
-	Footer.Enable(True)
-	Return Me
-End Sub
-
-Sub Disable As VMFooter
-	Footer.Disable(True)
-	Return Me
-End Sub
-
-
 'bind a property to state
 Sub Bind(prop As String, stateprop As String) As VMFooter
 	stateprop = stateprop.ToLowerCase
@@ -437,7 +427,6 @@ End Sub
 
 Sub SetDesignMode(b As Boolean) As VMFooter
 	Footer.SetDesignMode(b)
-	Container.SetDesignMode(b)
 	DesignMode = b
 	Return Me
 End Sub
@@ -452,12 +441,6 @@ Sub SetName(varName As Object, bbind As Boolean) As VMFooter
 	Footer.SetName(varName, bbind)
 	Return Me
 End Sub
-
-Sub SetDisabled(b As Boolean) As VMFooter
-	Footer.SetDisabled(b)
-	Return Me
-End Sub
-
 
 Sub SetStyleSingle(prop As String, value As String) As VMFooter
 	Footer.SetStyleSingle(prop, value)

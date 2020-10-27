@@ -296,13 +296,22 @@ End Sub
 
 Sub SetVIf(vif As String) As VMAvatar
 	Avatar.SetVIf(vif)
+	vue.SetStateSingle(vif, True)
 	Return Me
 End Sub
 
 Sub SetVShow(vif As String) As VMAvatar
 	Avatar.SetVShow(vif)
+	vue.SetStateSingle(vif, True)
 	Return Me
 End Sub
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Avatar.SetText(elm.ToString)
+End Sub
+
 
 'add to app template
 Sub Render

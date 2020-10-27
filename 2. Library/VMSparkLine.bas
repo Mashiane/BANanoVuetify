@@ -31,6 +31,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Sparkline.SetText(elm.ToString)
+End Sub
+
 'add xy values
 Sub AddXY(x As String, y As Int) As VMSparkLine
 	xy.Put(x, y)

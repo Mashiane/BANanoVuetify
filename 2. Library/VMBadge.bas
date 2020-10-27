@@ -38,6 +38,12 @@ Sub SetData(prop As String, value As Object) As VMBadge
 End Sub
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Badge.SetText(elm.ToString)
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMBadge
 	bStatic = b
 	Badge.SetStatic(b)
@@ -82,6 +88,7 @@ End Sub
 
 'get component
 Sub ToString As String
+	Badge.RemoveVShow
 	Return Badge.ToString
 End Sub
 

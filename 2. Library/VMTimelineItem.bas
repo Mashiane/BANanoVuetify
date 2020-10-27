@@ -217,6 +217,13 @@ Sub SetLeft(varLeft As Boolean) As VMTimelineItem
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	TimeLineItem.SetText(elm.ToString)
+End Sub
+
 'set light
 Sub SetLight(varLight As Boolean) As VMTimelineItem
 	If varLight = False Then Return Me

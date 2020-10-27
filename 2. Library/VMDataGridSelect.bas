@@ -76,6 +76,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	DataGridSelect.SetText(elm.ToString)
+End Sub
+
 'set hide-details
 Sub SetHideDetails(varHideDetails As Boolean) As VMDataGridSelect
 	If varHideDetails = False Then Return Me

@@ -32,6 +32,11 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Row.SetText(elm.ToString)
+End Sub
+
 Sub SetAttrLoose(loose As String) As VMRow
 	Row.SetAttrLoose(loose)
 	Return Me

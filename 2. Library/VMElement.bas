@@ -12,10 +12,10 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Public hasContent As Boolean
 	Public showKey As String
-	Private disKey As String
-	Private reqKey As String
-	Private errKey As String
-	Private styleKey As String
+	Public disKey As String
+	Public reqKey As String
+	Public errKey As String
+	Public styleKey As String
 	Public DesignMode As Boolean
 	Private bUsesStyles As Boolean
 	Private bUsesRequired As Boolean
@@ -24,7 +24,6 @@ Sub Class_Globals
 	Private bUsesVModel As Boolean
 	Private bUsesClass As Boolean
 	Public ErrorMessage As String
-	
 	'
 	Public R As String
 	Public C As String
@@ -62,7 +61,7 @@ Sub Class_Globals
 	Private bStatic As Boolean
 	Public CenterOnParent As Boolean
 	Private classList As List
-	Private classKey As String
+	Public classKey As String
 	Public password As String
 End Sub
 
@@ -98,7 +97,7 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	bUsesVModel = False
 	bUsesClass = False
 	vmodel = ""
-	
+		
 	showKey = $"${ID}show"$
 	disKey = $"${ID}disabled"$
 	reqKey = $"${ID}required"$
@@ -107,13 +106,8 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	classKey = $"${ID}class"$
 		
 	If ID <> "" Then
-		Dim SMp As Map = CreateMap()
 		SetRef(ID)
-		vue.SetStateSingle(showKey, True)
-		vue.SetStateSingle(disKey, False)
-		vue.SetStateSingle(reqKey, False)
-		vue.SetStateSingle(errKey, False)
-		vue.SetStateSingle(styleKey, SMp)
+		
 		vue.SetData(classKey, classList)
 	End If
 	'	
@@ -138,6 +132,12 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Element.SetText(elm.ToString)
+End Sub
 
 Sub SetColumn As VMElement
 	AddClass("column")
@@ -618,6 +618,7 @@ End Sub
 'show using id
 Sub Show As VMElement
 	IsVisible = True
+	SetVShow(showKey)
 	vue.SetStateSingle(showKey, True)
 	Return Me
 End Sub
@@ -625,6 +626,7 @@ End Sub
 'hide using id
 Sub Hide As VMElement
 	IsVisible = False
+	SetVShow(showKey)
 	vue.SetStateSingle(showKey, False)
 	Return Me
 End Sub
@@ -1184,6 +1186,7 @@ Sub SetRequired(b As Boolean) As VMElement
 		Return Me
 	End If
 	If ID = "" Then Return Me
+	vue.SetStateSingle(errKey, False)
 	vue.SetStateSingle(reqKey, b)
 	SetAttrSingle(":required", reqKey)
 	vue.SetStateSingle(errKey, False)
@@ -1294,11 +1297,6 @@ Sub AddElements(lst As List) As VMElement
 	Return Me
 End Sub
 
-Sub AddElement(el As VMElement) As VMElement
-	SetText(el.ToString)
-	Return Me
-End Sub
-
 Sub SetText(t As String) As VMElement
 	Element.SetText(t)
 	hasContent = True
@@ -1357,6 +1355,10 @@ Sub ToString As String
 	'save the template
 	Template = Element.tostring
 	Return Template
+End Sub
+
+Sub HasAttribute(attrName As String) As Boolean
+	Return Element.HasAttribute(attrName)
 End Sub
 
 Sub RemoveVShow As VMElement

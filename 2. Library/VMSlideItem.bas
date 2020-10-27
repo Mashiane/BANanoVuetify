@@ -33,12 +33,18 @@ Sub SetActiveToggle As VMSlideItem
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	SlideItem.SetText(elm.ToString)
+End Sub
+
 Sub AddComponent(comp As String) As VMSlideItem
 	SetText(comp)
 	Return Me
 End Sub
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMSlideItem
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMSlideItem
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

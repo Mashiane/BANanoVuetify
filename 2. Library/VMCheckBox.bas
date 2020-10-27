@@ -39,6 +39,13 @@ Sub SetData(prop As String, value As Object) As VMCheckBox
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	CheckBox.SetText(elm.ToString)
+End Sub
+
+
 Sub SetFieldType(ft As String) As VMCheckBox
 	CheckBox.fieldType = ft
 	Return Me

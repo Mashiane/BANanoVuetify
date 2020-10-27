@@ -1066,7 +1066,7 @@ Sub CreateList(sid As String, eventHandler As Object) As VMList
 	Return el
 End Sub
 
-Sub btnAddMultiple_click(e As BANanoEvent)
+Sub btnAddMultiple_click(e As BANanoEvent)    'ignoredeadcode
 	If SubExists(module, "btnaddmultiple_click") Then
 		Dim e As BANanoEvent
 		BANano.CallSub(module, "btnaddmultiple_click", Array(e))
@@ -1074,7 +1074,7 @@ Sub btnAddMultiple_click(e As BANanoEvent)
 End Sub
 
 'add a new item
-Sub btnAddTable_click(e As BANanoEvent)
+Sub btnAddTable_click(e As BANanoEvent)   'ignoredeadcode
 	ClearContents
 	Dim m As Map = CreateMap()
 	m.Put("subtitle", "text")
@@ -1127,12 +1127,12 @@ Sub AddItem
 	ClearContents
 End Sub
 
-Sub btnSaveItem_click(e As BANanoEvent)
+Sub btnSaveItem_click(e As BANanoEvent)    'ignoredeadcode
 	SaveItem
 End Sub
 
 'save an item
-Sub btnSaveTable_click(e As BANanoEvent)
+Sub btnSaveTable_click(e As BANanoEvent)    'ignoredeadcode
 	SaveItem
 End Sub
 
@@ -1202,7 +1202,7 @@ Sub ClearContents
 	vue.SetState(item)
 End Sub
 
-Sub btnDeleteItem_click(e As BANanoEvent)
+Sub btnDeleteItem_click(e As BANanoEvent)    'ignoredeadcode
 	DeleteItem
 End Sub
 
@@ -1229,13 +1229,13 @@ Sub DeleteItem
 	BANano.CallSub(module, changeEvent, Null)
 End Sub
 
-Sub btnEmpty_click(e As BANanoEvent)
+Sub btnEmpty_click(e As BANanoEvent)    'ignoredeadcode
 	vue.SetData("tableitems", vue.NewList)
 	ClearContents
 	BANano.CallSub(module, changeEvent, Null)
 End Sub
 
-Sub btnDeleteTable_click(e As BANanoEvent)
+Sub btnDeleteTable_click(e As BANanoEvent)    'ignoredeadcode
 	DeleteItem
 End Sub
 
@@ -1258,7 +1258,7 @@ Sub EditItem(menuID As String)
 	vue.SetState(m)
 End Sub
 
-Sub itemscrud_click(e As BANanoEvent)
+Sub itemscrud_click(e As BANanoEvent)       'ignoredeadcode
 	Dim menuID As String = vue.getidfromevent(e)
 	EditItem(menuID)
 End Sub

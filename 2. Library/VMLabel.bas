@@ -28,6 +28,13 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMLabel
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Label.SetText(elm.ToString)
+End Sub
+
 'set single attribute
 Sub SetAttrSingle(prop As String, value As String) As VMLabel
 	Label.SetAttrSingle(prop, value)

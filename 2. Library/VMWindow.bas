@@ -33,6 +33,13 @@ Sub SetRC(sRow As String, sCol As String) As VMWindow
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Window.SetText(elm.ToString)
+End Sub
+
+
 Sub AddComponent(comp As String) As VMWindow
 	SetText(comp)
 	Return Me
@@ -80,7 +87,7 @@ Sub SetDevicePositions(srow As String, scell As String, small As String, medium 
 	Return Me
 End Sub
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMWindow
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMWindow
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

@@ -103,6 +103,10 @@ Public Sub Initialize(elID As String, stag As String) As VueHTML
 	Return Me
 End Sub
 
+Sub HasAttribute(attrName As String) As Boolean
+	Return properties.ContainsKey(attrName)
+End Sub
+
 
 Sub MoveUp(sTop As String) As VueHTML
 	SetAttrSingle("margin-top", sTop)

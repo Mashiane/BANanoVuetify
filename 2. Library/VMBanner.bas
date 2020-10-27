@@ -108,6 +108,13 @@ Sub Render
 	vue.SetTemplate(ToString)
 End Sub
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Banner.SetText(elm.ToString)
+End Sub
+
+
 'add a child
 Sub AddChild(child As VMElement) As VMBanner
 	Dim childHTML As String = child.ToString

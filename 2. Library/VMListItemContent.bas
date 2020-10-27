@@ -28,6 +28,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ListItemContent.SetText(elm.ToString)
+End Sub
+
 Sub AddComponent(comp As String) As VMListItemContent
 	ListItemContent.SetText(comp)
 	Return Me

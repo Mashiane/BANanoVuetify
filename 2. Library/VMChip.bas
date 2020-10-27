@@ -45,6 +45,13 @@ Sub SetData(prop As String, value As Object) As VMChip
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Chip.SetText(elm.ToString)
+End Sub
+
+
 Sub SetVisible(b As Boolean) As VMChip
 	SetActive(b)
 	Return Me

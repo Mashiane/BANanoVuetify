@@ -37,6 +37,13 @@ Sub SetData(prop As String, value As Object) As VMCarousel
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Carousel.SetText(elm.ToString)
+End Sub
+
+
 'add a static carousel item
 Sub AddItem1(src As String) As VMCarousel
 	Dim ci As VMCarouselItem

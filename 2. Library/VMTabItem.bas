@@ -36,6 +36,12 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	TabItem.SetText(elm.ToString)
+End Sub
+
+
 'set key
 Sub SetKey(varKey As String) As VMTabItem
 	If varKey = "" Then Return Me

@@ -34,7 +34,13 @@ End Sub
 
 
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMScrollYReverseTransition
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ScrollYReverseTransition.SetText(elm.ToString)
+End Sub
+
+
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMScrollYReverseTransition
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

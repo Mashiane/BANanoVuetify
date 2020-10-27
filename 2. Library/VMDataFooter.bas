@@ -25,6 +25,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	DataFooter.SetText(elm.ToString)
+End Sub
+
 Sub SetData(prop As String, value As Object) As VMDataFooter
 	vue.SetData(prop, value)
 	Return Me

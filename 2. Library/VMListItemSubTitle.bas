@@ -28,6 +28,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ListItemSubTitle.SetText(elm.ToString)
+End Sub
+
+
 Sub SetStatic(b As Boolean) As VMListItemSubTitle
 	bStatic = b
 	ListItemSubTitle.SetStatic(b)

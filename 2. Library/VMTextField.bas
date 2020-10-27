@@ -43,6 +43,13 @@ Sub SetCalculator() As VMTextField
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	TextField.SetText(elm.ToString)
+End Sub
+
 'set maximum value
 Sub SetMax(varMax As String) As VMTextField
 	If varMax = "0" Then Return Me

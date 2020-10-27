@@ -175,7 +175,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	'BANano.Header.SetMaskIcon("safari-pinned-tab.svg")
 	'BANano.Header.AddManifestIcon("android-chrome-192x192.png", "192x192")
 	'BANano.Header.AddManifestIcon("android-chrome-512x512.png", "512x512")
-	BANano.TranspilerOptions.UseServiceWorker = True
+	BANano.TranspilerOptions.UseServiceWorker = False
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
 	BANano.TranspilerOptions.MinifyOnline = False

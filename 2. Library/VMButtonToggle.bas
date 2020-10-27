@@ -42,6 +42,14 @@ Sub AddIcon(btnID As String, btnIcon As String, btnColor As String, btnValue As 
 	AddComponent(btn.ToString)
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ButtonToggle.SetText(elm.ToString)
+End Sub
+
+
 Sub SetData(prop As String, value As Object) As VMButtonToggle
 	vue.SetData(prop, value)
 	Return Me

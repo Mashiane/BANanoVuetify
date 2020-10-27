@@ -1358,19 +1358,19 @@ Sub GetConfirm As String
 	Return sproc
 End Sub
 
-Sub btnalertOk_click(e As BANanoEvent)
+Sub btnalertOk_click(e As BANanoEvent)    'ignoredeadcode
 	Alert.hide
 	Dim e As BANanoEvent
-	BANano.CallSub(Module, "alert_ok", Array(e))   'ignore
+	BANano.CallSub(Module, "alert_ok", Array(e))   'ignoredeadcode
 End Sub
 
-Sub btnConfirmCancel_click(e As BANanoEvent)
+Sub btnConfirmCancel_click(e As BANanoEvent)   'ignoredeadcode
 	Confirm.hide
 	Dim e As BANanoEvent
 	BANano.CallSub(Module, "confirm_cancel", Array(e))   'ignore
 End Sub
 
-Sub btnConfirmOk_click(e As BANanoEvent)
+Sub btnConfirmOk_click(e As BANanoEvent)  'ignoredeadcode
 	Confirm.hide
 	Dim e As BANanoEvent
 	BANano.CallSub(Module, "confirm_ok", Array(e))  'ignore

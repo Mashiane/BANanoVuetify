@@ -31,7 +31,7 @@ Sub Code
 	cardLog.AddClass("mx-auto").SetMaxWidth("600")
 	cardLog.Title.SetColor(vm.COLOR_BLUEGREY)
 	cardLog.Title.SetTextColor(vm.COLOR_WHITE)
-	cardLog.Title.AddElement("", "span", "Logs", Null, Null, Array("title"))
+	cardLog.Title.AddElement1("", "span", "Logs", Null, Null, Array("title"))
 	cardLog.Title.AddSpacer
 	Dim btnReadLog As VMButton
 	btnReadLog.Initialize(vue, "btnReadLog", Me)

@@ -35,6 +35,12 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ProgressLinear.SetText(elm.ToString)
+End Sub
+
 Sub SetOnChange(eventHandler As Object, methodName As String) As VMProgressLinear
 	methodName = methodName.tolowercase
 	If SubExists(eventHandler, methodName) = False Then Return Me

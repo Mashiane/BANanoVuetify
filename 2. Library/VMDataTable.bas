@@ -110,6 +110,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	DataTable.SetText(elm.ToString)
+End Sub
+
 'set all selected
 Sub SetSelected(nl As List)
 	vue.SetData(selected, nl)
@@ -547,16 +554,12 @@ Sub SetClearSort
 	btn.Initialize(vue, "removesort", Me)
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
-	btn.SetToolTip("Clear Sort")
-	btn.AddIcon("mdi-sort-variant-remove","","")
-	btn.SetColor("orange")
-	btn.SetAttrLoose("icon")
-	btn.SetTransparent(True)
+	btn.SetFabButton("mdi-sort-variant-remove").SetTooltip("Clear Sort").SetColor("orange").SetSmall(True)
 	vcard.Title.AddComponent(btn.tostring)
 End Sub
 
 'remove sort
-Sub removesort_click(e As BANanoEvent)
+Sub removesort_click(e As BANanoEvent)  'ignoredeadcode
 	SetSortBy(vue.NewList)
 End Sub
 
@@ -600,14 +603,18 @@ Sub SetColumnChooser(isfilter As Boolean)
 	'create the menu button
 	Dim btnMenu As VMButton
 	btnMenu.Initialize(vue, $"${ID}fsbutton"$, Me)
-	btnMenu.SetAttrLoose("icon")
+	'btnMenu.SetAttrLoose("icon")
 	btnMenu.SetAttrSingle("v-on", "on")
 	btnMenu.SetAttrSingle("v-bind", "attrs")
+	btnMenu.SetFab(True)
+	btnMenu.SetSmall(True)
+	btnMenu.SetColor("purple")
+	btnMenu.SetDark(True)
 	btnMenu.Show
 	'
 	Dim btnIcon As VMIcon
 	btnIcon.initialize(vue, $"${ID}fsicon"$, Me)
-	btnIcon.SetText("more_vert")
+	btnIcon.SetText("mdi-dots-vertical")
 	'add icon to button
 	btnMenu.AddComponent(btnIcon.tostring)
 	'add to template
@@ -680,21 +687,17 @@ Sub SetColumnChooser(isfilter As Boolean)
 	btn.Initialize(vue, "removefilter", Me)
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
-	btn.SetToolTip("Reset filter")
-	btn.AddIcon("mdi-filter-off","","")
-	btn.SetColor("red")
-	btn.SetAttrLoose("icon")
-	btn.SetTransparent(True)
+	btn.SetFabButton("mdi-filter-remove").SetTooltip("Reset filter").SetColor("red").SetSmall(True)
 	vcard.Title.AddComponent(btn.tostring)
 	'watch changes
 	'vue.SetWatch($"${ID}columns"$, True, False, Me, "columnchooser")
 End Sub
 
-private Sub removefilter_click(e As BANanoEvent)
+private Sub removefilter_click(e As BANanoEvent)  'ignoredeadcode
 	ApplyFilter(masterColumns)
 End Sub
 
-private Sub columnchooser
+private Sub columnchooser   'ignoredeadcode
 	'get chosen columns
 	Dim cols As List = vue.GetData($"${ID}columns"$)
 	ApplyFilter(cols)
@@ -711,10 +714,21 @@ Sub AddNew(key As String, iconName As String, toolTip As String) As VMDataTable
 	key = key.tolowercase
 	Dim btn As VMButton
 	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
-	btn.SetFabButton(iconName).SetTooltip(toolTip).SetPrimary(True).AddClass("mb-2")
+	btn.SetFabButton(iconName).SetTooltip(toolTip).SetPrimary(True).SetSmall(True)
 	vcard.Title.SetText(btn.ToString)
 	Return Me
 End Sub
+
+'add a delete all
+Sub AddDeleteAll(key As String, iconName As String, toolTip As String) As VMDataTable
+	key = key.tolowercase
+	Dim btn As VMButton
+	btn.Initialize(vue, key, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+	btn.SetFabButton(iconName).SetTooltip(toolTip).SetColor("red").SetSmall(True)
+	vcard.Title.SetText(btn.ToString)
+	Return Me
+End Sub
+
 
 'update database from existing saved state
 Sub SetDataSourceName(dsName As String) As VMDataTable

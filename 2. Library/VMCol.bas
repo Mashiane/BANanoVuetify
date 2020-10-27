@@ -26,6 +26,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Col.SetText(elm.ToString)
+End Sub
+
+
 Sub SetAttrLoose(loose As String) As VMCol
 	Col.SetAttrLoose(loose)
 	Return Me

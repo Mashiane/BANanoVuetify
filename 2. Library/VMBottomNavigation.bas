@@ -39,6 +39,11 @@ Sub SetData(prop As String, value As Object) As VMBottomNavigation
 End Sub
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	BottomNavigation.SetText(elm.ToString)
+End Sub
+
 Sub SetActive(btnID As String) As VMBottomNavigation
 	vue.SetData($"${ID}bn"$, btnID)
 	Return Me

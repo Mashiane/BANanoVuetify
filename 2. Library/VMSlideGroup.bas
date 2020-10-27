@@ -32,6 +32,13 @@ Sub SetData(xprop As String, xValue As Object) As VMSlideGroup
 End Sub
 
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	SlideGroup.SetText(elm.ToString)
+End Sub
+
 Sub AddComponent(comp As String) As VMSlideGroup
 	SetText(comp)
 	Return Me

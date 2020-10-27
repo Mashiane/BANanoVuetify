@@ -41,6 +41,12 @@ Sub AddItem(sText As String, shref As String, sTo As String, bExact As Boolean, 
 	items.Add(bci)
 End Sub
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	BreadCrumbs.SetText(elm.ToString)
+End Sub
+
 Sub SetData(prop As String, value As Object) As VMBreadCrumbs
 	vue.SetData(prop, value)
 	Return Me

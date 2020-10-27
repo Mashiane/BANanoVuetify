@@ -27,6 +27,13 @@ Sub ToString As String
 	Return SubHeader.ToString
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	SubHeader.SetText(elm.ToString)
+End Sub
+
 Sub SetVModel(k As String) As VMSubHeader
 	SubHeader.SetVModel(k)
 	Return Me

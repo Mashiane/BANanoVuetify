@@ -35,6 +35,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Slider.SetText(elm.ToString)
+End Sub
+
 Sub SetFieldType(ft As String) As VMSlider
 	Slider.fieldType = ft
 	Return Me

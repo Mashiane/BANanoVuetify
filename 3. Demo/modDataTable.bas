@@ -89,6 +89,8 @@ Sub Code
 	dt1.AddSearch
 	dt1.AddDivider
 	dt1.AddNew("btnNew", "mdi-plus", "Add a new record")
+	dt1.AddDivider
+	dt1.AddDeleteAll("btnDeleteAll", "mdi-delete", "Delete all records")
 	dt1.SetDataSource(recs)
 	dt1.AddColumn1("name", "Desset (100g serving)", dt1.COLUMN_TEXT, 0, False, dt1.ALIGN_LEFT)
 	dt1.AddColumns(CreateMap("calories": "Calories", "fat": "Fat (g)", "carbs": "Carbs (g)", "protein": "Protein (g)", "iron": "Iron (%)"))
@@ -436,6 +438,9 @@ pgIndex.CreateVBCode(vue, Me, "imgdtcode", "Images Data Table", vue.GetSourceCod
 	vm.SetMethod(Me,"getcolor")
 End Sub
 
+Sub btnDeleteAll_click(e As BANanoEvent)
+	vm.ShowSnackBarSuccess("Delete all!")
+End Sub
 
 Sub imgdtcodecopy_click(e As BANanoEvent)
 	vue.CopyCode2Clipboard("imgdtcode")

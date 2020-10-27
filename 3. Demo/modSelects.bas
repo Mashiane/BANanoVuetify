@@ -49,9 +49,9 @@ Sub Code
 	'
 	vm.CreateSelect("sel6", Me).SetSolo(True).SetMultiple(True).SetChips(True).SetVModel("sel6").SetItems("items").SetLabel("Chips").AddToContainer(cont, 6, 1)
 	'
-	vm.CreateSelect("sel7", Me).SetMenuProps("auto").SetHideDetails(True).SetPrependIcon("map").SetSingleLine(True).SetVModel("sel7").SetItems("states").SetLabel("States").AddToContainer(cont, 7, 1)
+	vm.CreateSelect("sel7", Me).SetMenuProps("auto").SetHideDetails(True).SetPrependIcon("mdi-map").SetSingleLine(True).SetVModel("sel7").SetItems("states").SetLabel("States").AddToContainer(cont, 7, 1)
 	'
-	Dim sel8 As VMSelect = vm.CreateSelect("sel8", Me).SetMenuProps("auto").SetHideDetails(True).SetAppendOuterIcon("map").SetVModel("sel8").SetItems("states").SetLabel("States")
+	Dim sel8 As VMSelect = vm.CreateSelect("sel8", Me).SetMenuProps("auto").SetHideDetails(True).SetAppendOuterIcon("mdi-map").SetVModel("sel8").SetItems("states").SetLabel("States")
 	sel8.SetHint("Pick your favorite states").SetPersistentHint(True).SetMultiple(True)
 	sel8.AddToContainer(cont, 8, 1)
 	'

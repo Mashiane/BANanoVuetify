@@ -34,6 +34,12 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Pagination.SetText(elm.ToString)
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return Pagination.ToString

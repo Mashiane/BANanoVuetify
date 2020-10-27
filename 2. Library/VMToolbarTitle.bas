@@ -27,13 +27,20 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ToolbarTitle.SetText(elm.ToString)
+End Sub
+
 Sub SetData(prop As String, value As Object) As VMToolbarTitle
 	vue.SetData(prop, value)
 	Return Me
 End Sub
 
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMToolbarTitle
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMToolbarTitle
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

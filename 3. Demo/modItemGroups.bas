@@ -37,7 +37,7 @@ Sub Code
 	'
 	Dim syt As VMScrollYTransition
 	syt.Initialize(vue, "", Me)
-	syt.AddElement("", "div", "Active", CreateMap("v-if" :"active"), Null, Array("display-3 flex-grow-1 text-center"))
+	syt.AddElement1("", "div", "Active", CreateMap("v-if" :"active"), Null, Array("display-3 flex-grow-1 text-center"))
 	card.SetTextAfter(syt.tostring)
 	
 	'add the card to the item

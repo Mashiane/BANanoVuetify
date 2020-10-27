@@ -27,8 +27,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	WindowItem.SetText(elm.ToString)
+End Sub
+
 'get component
-Sub ToString As String
+	Sub ToString As String
 	If Container.HasContent Then SetText(Container.ToString)
 	Return WindowItem.ToString
 End Sub
@@ -49,7 +55,7 @@ Sub SetData(xprop As String, xValue As Object) As VMWindowItem
 	Return Me
 End Sub
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMWindowItem
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMWindowItem
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

@@ -48,6 +48,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	SpeedDial.SetText(elm.ToString)
+End Sub
+
 Sub SetData(xprop As String, xValue As Object) As VMSpeedDial
 	vue.SetData(xprop, xValue)
 	Return Me
@@ -207,6 +214,8 @@ End Sub
 
 'get component
 Sub ToString As String
+	SpeedDial.RemoveVShow
+	Button.RemoveVShow
 	If vue.ShowWarnings Then
 	Dim eName As String = $"${ID}_click"$
 	If SubExists(Module, eName) = False Then

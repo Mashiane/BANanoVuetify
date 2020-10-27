@@ -34,6 +34,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ListItem.SetText(elm.ToString)
+End Sub
+
 'set visibility state of the item
 Sub SetVisible(b As Boolean) As VMListItem
 	Item.Put("visibility", b)

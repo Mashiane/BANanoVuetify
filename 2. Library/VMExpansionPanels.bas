@@ -31,6 +31,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ExpansionPanels.SetText(elm.ToString)
+End Sub
+
+
 Sub SetData(xprop As String, xValue As Object) As VMExpansionPanels
 	vue.SetData(xprop, xValue)
 	Return Me

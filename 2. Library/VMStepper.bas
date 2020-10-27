@@ -43,6 +43,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Stepper.SetText(elm.ToString)
+End Sub
+
 'change to this step
 Sub SetStep(iStep As Int) As VMStepper
 	vue.SetData(vmodel, iStep)

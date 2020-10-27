@@ -54,7 +54,7 @@ Sub Code
 	tl3.UsesCard = True
 	tl3.CardTitle.SetColorIntensity(vm.COLOR_purple, vm.INTENSITY_lighten2)
 	tl3.CardTitle.AddIcon1("icx1", "mdi-magnify", CreateMap("dark":True,"size":42,"color":"white"), Null, Array("mr-4"))
-	tl3.CardTitle.AddElement("ich1", "h2", "Uses Card", Null, Null, Array("display-1 white--text font-weight-light"))
+	tl3.CardTitle.AddElement1("ich1", "h2", "Uses Card", Null, Null, Array("display-1 white--text font-weight-light"))
 	'add 1 row with 1 column
 	tl3.CardContainer.AddRows(1).AddColumns12
 	Dim lblX As VMLabel = vm.CreateLabel("")
@@ -71,7 +71,7 @@ Sub Code
 	tl4.UsesCard = True
 	tl4.CardTitle.SetColorIntensity(vm.COLOR_AMBER, vm.INTENSITY_lighten1)
 	tl4.CardTitle.AddClass("justify-end")
-	tl4.CardTitle.AddElement("ich2", "h2", "Uses Card 1", Null, Null, Array("display-1 mr-4 white--text font-weight-light"))
+	tl4.CardTitle.AddElement1("ich2", "h2", "Uses Card 1", Null, Null, Array("display-1 mr-4 white--text font-weight-light"))
 	tl4.CardTitle.AddIcon1("icx2", "mdi-home-outline", CreateMap("dark":True,"size":42,"color":"white"), Null, Null)
 	'add 1 row with 1 column
 	tl4.CardContainer.AddRows(1).AddColumns12

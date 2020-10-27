@@ -83,6 +83,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 End Sub
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ToolBar.SetText(elm.ToString)
+End Sub
+
 Sub SetData(xprop As String, xValue As Object) As VMToolBar
 	vue.SetData(xprop, xValue)
 	Return Me
@@ -136,7 +141,7 @@ Sub SetOnRightMenuClick(eventHandler As Object, MethodName As String) As VMToolB
 	Return Me
 End Sub
 
-Sub menu_click(e As BANanoEvent)
+Sub menu_click(e As BANanoEvent)    'ignoredeadcode
 	vue.ToggleState("drawer")
 	If SubExists(module, "menu_click") Then
 		BANano.CallSub(module, "menu_click", Null)
@@ -266,11 +271,6 @@ Sub AddComponent(key As String, comp As String) As VMToolBar
 	Return Me
 End Sub
 
-Sub AddElement(el As VMElement) As VMToolBar
-	AddComponent(el.ID, el.ToString)
-	Return Me
-End Sub
-
 Sub AddButton(btn As VMButton) As VMToolBar
 	AddComponent(btn.ID, btn.ToString)
 	Return Me
@@ -393,7 +393,7 @@ Sub AddSearch(key As String) As VMToolBar
 	txt.SetStatic(bStatic)
 	txt.SetDesignMode(DesignMode)
 	txt.AddClass("mx-4").SetAttributes(Array("flat", "hide-details", "single-line"))
-	txt.SetLabel("Search").SetPrependInnerIcon("search").AddClass("hidden-sm-and-down").SetClearable(True).SetVModel(key)
+	txt.SetLabel("Search").SetPrependInnerIcon("mdi-magnify").AddClass("hidden-sm-and-down").SetClearable(True).SetVModel(key)
 	txt.SetOnChange(module, $"${key}_change"$)
 	ToolBar.SetText(txt.ToString)
 	objects.Add(key)

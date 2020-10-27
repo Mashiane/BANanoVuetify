@@ -36,6 +36,11 @@ End Sub
 
 
 
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Parallax.SetText(elm.ToString)
+End Sub
+
 Sub SetVOnce(t As Boolean) As VMParallax
 	Parallax.setvonce(t)
 	Return Me

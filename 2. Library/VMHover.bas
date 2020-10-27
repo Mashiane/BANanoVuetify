@@ -28,6 +28,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Hover.SetText(elm.ToString)
+End Sub
+
 'add a child element
 Sub SetText(child As String)
 	Hover.SetText(child)

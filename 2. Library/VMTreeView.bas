@@ -77,6 +77,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	TreeView.SetText(elm.ToString)
+End Sub
+
 'add an icon extension
 Sub AddExtension(icon As String, fullicon As String)
 	extm.Put(icon, fullicon)

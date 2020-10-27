@@ -27,6 +27,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	Item.SetText(elm.ToString)
+End Sub
+
 Sub SetActiveToggle As VMItem
 	SetAttrSingle("v-slot:default", "{ active, toggle }")
 	Return Me
@@ -39,7 +46,7 @@ Sub AddComponent(comp As String) As VMItem
 End Sub
 
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMItem
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMItem
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

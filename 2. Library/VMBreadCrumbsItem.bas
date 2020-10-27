@@ -33,6 +33,13 @@ Sub SetData(prop As String, value As Object) As VMBreadCrumbsItem
 End Sub
 
 
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	BreadCrumbsItem.SetText(elm.ToString)
+End Sub
+
+
 'get component
 Sub ToString As String
 	Return BreadCrumbsItem.ToString

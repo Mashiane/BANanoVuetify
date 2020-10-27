@@ -72,6 +72,7 @@ Sub Import(compname As String, comp As VMComponent) As VMComponent
 	Return Me
 End Sub
 
+
 Sub AddElement1(elTag As String, elID As String, elText As String, mprops As Map, mstyles As Map, lclasses As List, loose As List)
 	Dim d As VMElement
 	d.Initialize(vue, elID).SetTag(elTag)
@@ -325,6 +326,12 @@ End Sub
 
 Sub Component() As Map
 	Template.RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
+	vue.RemoveData(Template.showkey)
+	vue.RemoveData(Template.styleKey)
+	vue.removedata(Template.reqKey)
+	vue.RemoveData(Template.disKey)
+	vue.RemoveData(Template.classKey)
+	vue.RemoveData(Template.errKey)
 	Dim tmp As String = Template.tostring
 	If data.Size > 0 Then
 		Dim cb As BANanoObject = BANano.CallBack(Me, "returnData", Null)
@@ -339,6 +346,9 @@ Sub Component() As Map
 	opt.Put("template", tmp)
 	Return opt
 End Sub
+
+
+
 
 'set direct method
 Sub SetMethod1(Module As Object, methodName As String, args As List) As VMComponent

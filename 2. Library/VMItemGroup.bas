@@ -30,6 +30,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	ItemGroup.SetText(elm.ToString)
+End Sub
+
 'selValue
 Sub SetOnChange(eventHandler As Object,methodName As String) As VMItemGroup
 	methodName = methodName.tolowercase
@@ -436,7 +443,7 @@ Sub SetVisible(b As Boolean) As VMItemGroup
 End Sub
 
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMItemGroup
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMItemGroup
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

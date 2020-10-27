@@ -36,6 +36,14 @@ Sub SetStatic(b As Boolean) As VMCardTitle
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	CardTitle.SetText(elm.ToString)
+End Sub
+
+
 'add a search box
 Sub AddSearch(key As String) As VMCardTitle
 	Dim txt As VMTextField
@@ -87,7 +95,7 @@ Sub AddIcon1(elID As String, iconName As String, mprops As Map, mstyles As Map, 
 	Return Me
 End Sub
 
-Sub AddElement(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardTitle
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As VMCardTitle
 	Dim d As VMElement
 	d.Initialize(vue,elID).SetDesignMode(DesignMode).SetTag(elTag)
 	d.SetText(elText)

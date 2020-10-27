@@ -38,6 +38,13 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+
+
+'add an element to the page content
+Sub AddElement(elm As VMElement)
+	NavigationDrawer.SetText(elm.ToString)
+End Sub
+
 Sub AddListItemDivider() As VMNavigationDrawer
 	List.AddItemDivider
 	Return Me
@@ -209,6 +216,7 @@ End Sub
 
 'get component
 Sub ToString As String
+	NavigationDrawer.RemoveVShow
 	vue.SetStateSingle("item", 1)
 	If Container.HasContent Then SetText(Container.ToString)
 	If List.HasContent Then List.Pop(NavigationDrawer)
