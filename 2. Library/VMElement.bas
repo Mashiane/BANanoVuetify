@@ -1317,24 +1317,23 @@ End Sub
 
 Sub ToString As String
 	If bUsesStyles = False Then
-		'vue.RemoveData(styleKey)
 		RemoveAttr(":style")
+		vue.RemoveData(styleKey)
 	End If
 	If bUsesRequired = False Then
-		'vue.RemoveData(reqKey)
 		RemoveAttr(":required")
+		vue.removedata(reqKey)
+		vue.RemoveData(errKey)
 	End If
 	If bUsedDisabled = False Then
-		'vue.RemoveData(disKey)
 		RemoveAttr(":disabled")
+		vue.RemoveData(disKey)
 	End If
 	If bUsesShow = False Then
 		RemoveAttr("v-show")
-		'vue.RemoveData(showKey)		
 	End If
 	If bUsesVModel = False Then
 		RemoveAttr("v-model")
-		'vue.RemoveData(valueKey)
 	End If
 	If classList.Size = 0 Then
 		bUsesClass = False
@@ -1345,9 +1344,15 @@ Sub ToString As String
 	End If
 	If bUsesClass = False Then
 		RemoveAttr(":class")
+		vue.RemoveData(classKey)
 	End If
 	If DesignMode Then
 		RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
+		vue.RemoveData(styleKey)
+		vue.removedata(reqKey)
+		vue.RemoveData(disKey)
+		vue.RemoveData(classKey)
+		vue.RemoveData(errKey)
 	End If
 	'save the template
 	Template = Element.tostring

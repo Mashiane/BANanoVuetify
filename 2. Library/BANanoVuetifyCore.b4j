@@ -56,7 +56,10 @@ Module120=VMTransition
 Module121=VMTreeView
 Module122=VMWindow
 Module123=VMWindowItem
-Module124=|absolute|C:\CodingWorld\b4j\shared\VueHTML
+Module124=VueElement
+Module125=|absolute|C:\CodingWorld\b4j\shared\VueHTML
+Module126=VueRouterLink
+Module127=VueRouterView
 Module13=VMButtonToggle
 Module14=VMCalendar
 Module15=VMCard
@@ -154,7 +157,7 @@ Module98=VMSlideYTransition
 Module99=VMSnackBar
 NumberOfFiles=12
 NumberOfLibraries=3
-NumberOfModules=124
+NumberOfModules=127
 Version=8.5
 @EndOfDesignText@
 

@@ -128,6 +128,8 @@ Public Sub Initialize(EventHandler As Object)
 	body = BANAno.GetElement("#body")
 	body.empty
 	body.Append($"<div id="app"></div>"$)
+	body.Append($"<div id="placeholder" v-if="placeholder"></div>"$)
+	SetData("placeholder", False)
 	Template.Initialize("app1", "div")
 	Module = EventHandler
 	'
@@ -542,6 +544,29 @@ Public Sub Initialize(EventHandler As Object)
 	ShowWarnings = True
 	bindings.Initialize 
 	DateDisplayFormat = "YYYY-MM-DD"
+End Sub
+
+
+'create an element with a 'component' tag
+Sub CreateOwnComponent(id As String, compName As String) As VueElement
+	Dim elx As VueElement
+	elx.Initialize(Me, id, compName)
+	Return elx
+End Sub
+
+'create a dynamic component
+Sub CreateDynamicComponent(id As String, viewID As String, compID As String) As VueElement
+	Dim elx As VueElement
+	elx.Initialize(Me, id, "component")
+	elx.BindDynamicComponent(viewID, compID)
+	Return elx
+End Sub
+
+'add html content to template
+public Sub AddToTemplate(html As String) As BANanoVue
+	Dim mTarget As BANanoElement = BANAno.GetElement("#app1")
+	mTarget.Append(html)
+	Return Me
 End Sub
 
 #if css
@@ -3763,21 +3788,6 @@ Sub CreateComponent(id As String) As VMElement
 	Return elx
 End Sub
 
-
-Sub CreateDynamicComponent(id As String, viewID As String, compID As String) As VMElement
-	Dim elx As VMElement
-	elx.Initialize(Me, id).SetTag("component")
-	elx.BindDynamicComponent(viewID, compID)
-	Return elx
-End Sub
-
-'create an element with a 'component' tag
-Sub CreateOwnComponent(id As String, compName As String) As VMElement
-	Dim elx As VMElement
-	elx.Initialize(Me, id).SetTag(compName)
-	Return elx
-End Sub
-
 Sub CreateIMG(img As String) As VMElement
 	Dim elx As VMElement
 	elx.Initialize(Me, img).SetTag("img")
@@ -4281,4 +4291,24 @@ Sub AddRule(ruleName As String, EventHandler As Object,  MethodName As String)
 		rules.Add(cb.Result)
 	End If
 	data.put(ruleName, rules)
+End Sub
+
+'get the html part of a bananoelement
+Sub BANanoGetHTML(id As String) As String
+	id = id.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${id}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	xTemplate = xTemplate.Replace("v-template", "template")
+	Return xTemplate
+End Sub
+
+'get html from source and append it on target
+Sub BANanoMoveHTML(source As String, target As String)
+	source = source.tolowercase
+	target = target.tolowercase
+	Dim ssource As String = BANanoGetHTML(source)
+	'append the html to the target
+	BANAno.GetElement($"#${target}"$).Append(ssource)
 End Sub

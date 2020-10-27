@@ -2728,3 +2728,53 @@ Sub DIV(parentID As String, elID As String) As BANanoElement
 	Dim el As BANanoElement  = AddElement(parentID, "div", elID)
 	Return el
 End Sub
+
+'get the html part of a bananoelement
+Sub BANanoGetHTML(id As String) As String
+	id = id.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${id}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	xTemplate = xTemplate.Replace("v-template", "template")
+	Return xTemplate
+End Sub
+
+'get html from source and append it on target
+Sub BANanoMoveHTML(source As String, target As String)
+	source = source.tolowercase
+	target = target.tolowercase
+	Dim ssource As String = BANanoGetHTML(source)
+	'append the html to the target
+	BANano.GetElement($"#${target}"$).Append(ssource)
+End Sub
+
+Sub AddHTMLElement(Module As Object, parentID As String, elID As String, tag As String, props As Map, styleProps As Map, classNames As String, Text As String)
+	parentID = parentID.ToLowerCase
+	elID = elID.tolowercase
+	parentID = parentID.Replace("#","")
+	elID = elID.Replace("#","")
+	'
+	Dim elIT As VueElement
+	elIT.Initialize(Module, elID, tag)
+	elIT.SetText(Text)
+	'
+	If props <> Null Then
+		For Each k As String In props.Keys
+			Dim v As String = props.Get(k)
+			elIT.SetAttr(k, v)
+		Next
+	End If
+	If styleProps <> Null Then
+		For Each k As String In styleProps.Keys
+			Dim v As String = styleProps.get(k)
+			elIT.SetAttr(k, v)
+		Next
+	End If
+	If classNames <> "" Then
+		elIT.AddClass(classNames)
+	End If
+	'add to the parent element
+	Dim sElement As String = elIT.tostring
+	BANano.GetElement($"#${parentID}"$).Append(sElement)
+End Sub

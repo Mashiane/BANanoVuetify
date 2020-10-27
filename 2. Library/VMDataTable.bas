@@ -455,12 +455,12 @@ End Sub
 
 'add download
 Sub AddDownload
-	AddIcon("download","Get","attach_file")
+	AddIcon("download","Get","mdi-download")
 End Sub
 
 'add horizontal menu button
 Sub AddMenuH
-	AddIcon("menu","Menu","more_horiz")
+	AddIcon("menu","Menu","mdi-dots-horizontal")
 End Sub
 
 'add vertical menu
@@ -472,7 +472,7 @@ End Sub
 
 'add vertical menu
 Sub AddMenuV
-	AddIcon("menu","Menu","more_vert")
+	AddIcon("menu","Menu","mdi-dots-vertical")
 End Sub
 
 'add clone
@@ -484,7 +484,7 @@ End Sub
 
 'add clone
 Sub AddClone
-	AddIcon("clone","Clone","done_all")
+	AddIcon("clone","Clone","mdi-content-copy")
 End Sub
 
 'add print
@@ -496,7 +496,7 @@ End Sub
 
 'add print
 Sub AddPrint
-	AddIcon("print", "Print", "print")
+	AddIcon("print", "Print", "mdi-printer")
 End Sub
 
 'add new
@@ -681,7 +681,7 @@ Sub SetColumnChooser(isfilter As Boolean)
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
 	btn.SetToolTip("Reset filter")
-	btn.AddIcon("mdi-filter-remove","","")
+	btn.AddIcon("mdi-filter-off","","")
 	btn.SetColor("red")
 	btn.SetAttrLoose("icon")
 	btn.SetTransparent(True)

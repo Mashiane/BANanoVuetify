@@ -19,8 +19,8 @@ Sub Class_Globals
 	Private filters As Map
 	Private opt As Map
 	Private data As Map
-	Public refs As Map
-	Private props As List
+	Public refs As BANanoObject
+	Private props As Map
 	Private BANano As BANano   'ignore
 	Public Path As String
 	Public name As String
@@ -45,7 +45,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As 
 	DesignMode = False
 	opt.Initialize
 	data.Initialize
-	refs.Initialize
 	props.Initialize
 	methods.Initialize
 	computed.Initialize
@@ -265,15 +264,25 @@ Sub SetTemplate(t As String) As VMComponent
 	Return Me
 End Sub
 
-'add a property
-Sub AddProp(propName As String) As VMComponent
-	props.Add(propName)
+'add a string property
+Sub AddProperty(propName As String) As VMComponent
+	Dim mprop As Map = CreateMap()
+	mprop.Put("type", jsString)
+	props.Put(propName, mprop)
+	Return Me
+End Sub
+
+Sub AddProperty1(propName As String, propType As BANanoObject, propDefault As String) As VMComponent
+	Dim mprop As Map = CreateMap()
+	mprop.Put("type", propType)
+	mprop.Put("default", propDefault)
+	props.Put(propName, mprop)
 	Return Me
 End Sub
 
 Sub AddProps(propsList As List) As VMComponent
 	For Each k As String In propsList
-		AddProp(k)
+		AddProperty(k)
 	Next
 	Return Me
 End Sub

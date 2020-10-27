@@ -421,6 +421,16 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	UsesNotification = True
 End Sub
 
+
+'get the name of the breakpoint
+Sub GetBreakPointName As String
+	Dim bp As BANanoObject = vuetify.GetField("breakpoint")
+	Dim res As String = bp.GetField("name").Result
+	Return res
+End Sub
+
+
+
 'set the transition for the router
 Sub SetTransition(trans As String) As BANanoVM
 	Animate.SetType($"v-${trans}"$)
