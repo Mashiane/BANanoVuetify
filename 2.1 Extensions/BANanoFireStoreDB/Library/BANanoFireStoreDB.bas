@@ -85,7 +85,7 @@ Sub Connect() As BANanoFireStoreDB
 	firebaseConfig.put("storageBucket", storageBucket)
 	firebaseConfig.put("messagingSenderId", messagingSenderId)
 	firebaseConfig.put("appId", appId)
-	firebaseConfig.put("measurementId", measurementId)
+	If measurementId <> "" Then firebaseConfig.put("measurementId", measurementId)
 	'initialize the app
 	firebaseApp = firebase.RunMethod("initializeApp", firebaseConfig)
 	'start analytics
