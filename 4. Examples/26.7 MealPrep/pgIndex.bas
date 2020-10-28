@@ -147,33 +147,33 @@ Sub BuildNavBar
 	'
 	vm.NavBar.AddSpacer1(vm.VISIBILITY_HIDDEN_MD_AND_UP)
 	'add home button
-	Dim btnHome As VMElement = vm.VBtn("btnhome").SetText("Home").SetTo("/").SetFlat(True)
+	Dim btnHome As VMElement = vm.VBtn("btnhome").SetStatic(True).SetText("Home").SetTo("/").SetFlat(True)
 	btnHome.AddClass(vm.VISIBILITY_HIDDEN_SM_AND_DOWN)
 	vm.NavBar.AddElement(btnHome)
 	
 	'add menu button
-	Dim btnMenu As VMElement = vm.VBtn("btnmenu").SetText("Menu").SetTo("/menu").SetFlat(True)
+	Dim btnMenu As VMElement = vm.VBtn("btnmenu").SetStatic(True).SetText("Menu").SetTo("/menu").SetFlat(True)
 	btnMenu.AddClass(vm.VISIBILITY_HIDDEN_SM_AND_DOWN)
 	vm.NavBar.AddElement(btnMenu)
 	'
 	vm.NavBar.AddSpacer1(vm.VISIBILITY_HIDDEN_SM_AND_DOWN)
 	'
-	Dim btnSignIn As VMElement = vm.VBtn("btnsignin").SetText("Sign In").SetTo("/signin").SetFlat(True)
+	Dim btnSignIn As VMElement = vm.VBtn("btnsignin").SetStatic(True).SetText("Sign In").SetTo("/signin").SetFlat(True)
 	btnSignIn.AddClass(vm.VISIBILITY_HIDDEN_SM_AND_DOWN)
 	'btnSignIn.SetVIf("!isauthenticated")
 	vm.NavBar.AddElement(btnSignIn)
 	'
-	Dim btnJoin As VMElement = vm.VBtn("btnjoin").SetText("Join").SetTo("/join").SetFlat(True)
+	Dim btnJoin As VMElement = vm.VBtn("btnjoin").SetStatic(True).SetText("Join").SetTo("/join").SetFlat(True)
 	btnJoin.AddClass(vm.VISIBILITY_HIDDEN_SM_AND_DOWN)
 	'btnJoin.SetVIf("!isauthenticated")
 	btnJoin.SetColorIntensity(vm.COLOR_Brown, vm.intensity_lighten3)
 	vm.NavBar.AddElement(btnJoin)
 	'
-	Dim btnProfile As VMElement = vm.VBtn("btnprofile").SetText("Profile").SetTo("/about").SetFlat(True)
+	Dim btnProfile As VMElement = vm.VBtn("btnprofile").SetStatic(True).SetText("Profile").SetTo("/about").SetFlat(True)
 	'btnProfile.SetVIf("isauthenticated")
 	vm.NavBar.AddElement(btnProfile)
 	'
-	Dim btnlogout As VMElement = vm.VBtn("btnlogout").SetText("Logout").SetOnClick(Me, "btnlogout_click")
+	Dim btnlogout As VMElement = vm.VBtn("btnlogout").SetStatic(True).SetText("Logout").SetOnClick(Me, "btnlogout_click")
 	'btnlogout.SetVIf("isauthenticated")
 	btnlogout.SetColor(vm.COLOR_WHITE).SetOutlined
 	vm.NavBar.AddElement(btnlogout)

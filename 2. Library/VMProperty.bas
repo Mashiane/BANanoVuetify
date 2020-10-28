@@ -1366,8 +1366,8 @@ Sub ToString As String
 				tblx.SetDense(True).AddSpacer
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnAddMultiple", "mdi-book-plus-multiple", "Add multiple items", "")
-				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
-				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnSaveTable", "mdi-content-save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "mdi-delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'
@@ -1464,8 +1464,8 @@ Sub ToString As String
 				tblx.SetDense(True).AddSpacer
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnAddMultiple", "mdi-book-plus-multiple", "Add multiple items", "")
-				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
-				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnSaveTable", "mdi-content-save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "mdi-delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'
@@ -1761,8 +1761,8 @@ Sub ToString As String
 				tblx.SetDense(True).AddSpacer.SetElevation("1")
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnAddMultiple", "mdi-book-plus-multiple", "Add multiple items", "")
-				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
-				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnSaveTable", "mdi-content-save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "mdi-delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'
@@ -1843,8 +1843,8 @@ Sub ToString As String
 				tblx.SetDense(True).AddSpacer.SetElevation("1")
 				tblx.AddIcon("btnAddTable", "mdi-plus", "Add item", "")
 				tblx.AddIcon("btnAddMultiple", "mdi-book-plus-multiple", "Add multiple items", "")
-				tblx.AddIcon("btnSaveTable", "save", "Save item", "")
-				tblx.AddIcon("btnDeleteTable", "delete", "Delete item", "")
+				tblx.AddIcon("btnSaveTable", "mdi-save", "Save item", "")
+				tblx.AddIcon("btnDeleteTable", "mdi-delete", "Delete item", "")
 				tblx.AddIcon("btnEmpty","mdi-delete-empty-outline", "Empty items", "")
 				bcont.AddComponent(1, 1, tblx.tostring)
 				'

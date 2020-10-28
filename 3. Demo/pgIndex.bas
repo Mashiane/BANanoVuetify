@@ -70,7 +70,7 @@ Sub BuildNavBar
 	vm.NavBar.AddIcon("btnHeart", "mdi-heart", "My heart", "")
 	vm.NavBar.AddIcon("btnButton", "mdi-magnify", "My button", "")
 	'
-	vm.NavBar.SetSrc("https://picsum.photos/1920/1080?random")
+	'vm.NavBar.SetSrc("https://picsum.photos/1920/1080?random")
 	'
 
 End Sub
@@ -79,9 +79,8 @@ Sub BuildFooter
 	vm.Footer.SHow
 	vm.Footer.SetFixed(True)
 	vm.Footer.SetColor("indigo")
-	vm.footer.SetTag("div")
-	vm.footer.Footer.AddRows(1).AddColumns12
-	vm.Footer.Footer.SetAttrRC(1, 0, "align", "center")
+	vm.footer.Container.SetTag("div")
+	vm.footer.Container.AddRows(1).AddColumns12
 	vm.Footer.AddMadeWithLove(1, 1, "with B4J, BANanano & BANanoVuetify by", "TheMash", "mbanga.anele@gmail.com")
 End Sub
 

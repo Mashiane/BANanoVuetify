@@ -32,18 +32,18 @@ Sub Initialize
 	cont.SetAlignRC(1, 1, vm.ALIGN_CENTER)
 	cont.AddClassRC(1, 1, Array("pa-5"))
 	'
-	Dim div1 As VMElement = vm.Div("").AddClass("display-4 font-weight-black white--text text-xs-center").SetText("HEALTHY MEALS")
+	Dim div1 As VMElement = vm.Div("").SetStatic(True).AddClass("display-4 font-weight-black white--text text-xs-center").SetText("HEALTHY MEALS")
     cont.AddComponent(1, 1, div1.ToString)
 	'
-	Dim div2 As VMElement = vm.div("").AddClass("display-4 font-weight-black white--text text-xs-center mb-3").SetText("FOR YOUR TABLE")
+	Dim div2 As VMElement = vm.div("").SetStatic(True).AddClass("display-4 font-weight-black white--text text-xs-center mb-3").SetText("FOR YOUR TABLE")
 	cont.AddComponent(1, 1, div2.ToString)
 	'
-	Dim div3 As VMElement = vm.div("").AddClass("display-1 font-weight-bold white--text text-xs-center")
+	Dim div3 As VMElement = vm.div("").SetStatic(True).AddClass("display-1 font-weight-bold white--text text-xs-center")
 	div3.SetText("Finally be a foodie at home with fresh, chef-prepared meals delivered daily To YOUR door.")
 	cont.AddComponent(1, 1, div3.ToString)
 	'
-	Dim btn As VMElement = vm.VBtn("").SetAttrSingle("fab", True).AddClass("mt-5 brown darken-4")
-	btn.AddElement1("v-icon", "", "expand_more", CreateMap("large": True, "color":"white"), Null, Null, Null)
+	Dim btn As VMElement = vm.VBtn("").SetStatic(True).SetAttrSingle("fab", True).AddClass("mt-5 brown darken-4")
+	btn.AddElement1("v-icon", "", "mdi-chevron-down", CreateMap("large": True, "color":"white"), Null, Null, Null)
 	cont.AddComponent(1, 1, btn.ToString)
 	
 	'the row column matrix should be visible, added in case you want to hide

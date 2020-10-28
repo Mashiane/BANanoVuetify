@@ -25,7 +25,7 @@ Sub Initialize
 	menu.Import(CompMealRecipes.name, CompMealRecipes.mealrecipes)
 			
 	'define the structure of the page
-	Dim div As VMElement = vm.Div("")
+	Dim div As VMElement = vm.Div("").SetStatic(true)
 	'add each of the custom elements
 	div.AddCustomElement(CompHomePlans.name, "", Null, "")
 	div.AddCustomElement(CompMealRecipes.name, "", Null, "")

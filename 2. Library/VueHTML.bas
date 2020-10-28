@@ -2699,7 +2699,7 @@ End Sub
 'turn the element into html
 public Sub ToString As String
 	If DesignMode Then
-		RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
+		RemoveAttributes(Array("v-show", "v-if", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
 	End If
 	If ParentID <> "" Then
 		ID = ParentID & ID

@@ -21,11 +21,11 @@ Sub Code
 	'create 2 columns each spanning 12 columns
 	cont.addrows(10).AddColumns2x6
 	'
-	vm.CreateTextArea("ta1", Me).SetLabel("Prepend Icon").SetRows(1).SetPrependIcon("comment").AddToContainer(cont, 1, 1)
+	vm.CreateTextArea("ta1", Me).SetLabel("Prepend Icon").SetRows(1).SetPrependIcon("mdi-comment").AddToContainer(cont, 1, 1)
 	'
-	vm.CreateTextArea("ta2", Me).SetLabel("Prepend Inner Icon").SetPrependInnerIcon("comment").AddToContainer(cont, 1, 2)
+	vm.CreateTextArea("ta2", Me).SetLabel("Prepend Inner Icon").SetPrependInnerIcon("mdi-comment").AddToContainer(cont, 1, 2)
 	'
-	vm.CreateTextArea("ta3", Me).SetLabel("Prepend Outer Icon").SetAppendOuterIcon("comment").AddToContainer(cont, 2, 1)
+	vm.CreateTextArea("ta3", Me).SetLabel("Prepend Outer Icon").SetAppendOuterIcon("mdi-comment").AddToContainer(cont, 2, 1)
 	'
 	Dim ta4 As VMTextField = vm.CreateTextArea("ta4", Me)
 	ta4.SetLabel("Label").SetAutoGrow(True).SetName("ta4", False).SetFilled(True)

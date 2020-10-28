@@ -258,13 +258,13 @@ Sub ToString As String
 			Return DateTimePicker.ToString
 		End If
 		'create a menu
-		vue.SetStateSingle($"${ID}menu"$, False)
+		vue.SetStateSingle($"${ID}dtmenu"$, False)
 		Dim dMenu As VMElement
-		dMenu.Initialize(vue, $"${ID}menu"$).SetTag("v-menu")
+		dMenu.Initialize(vue, $"${ID}dtmenu"$).SetTag("v-menu")
 		dMenu.SetStatic(bStatic)
 		dMenu.SetDesignMode(DesignMode)
-		dMenu.SetAttrSingle("ref", $"${ID}menu"$)
-		dMenu.SetVModel($"${ID}menu"$)
+		dMenu.SetAttrSingle("ref", $"${ID}dtmenu"$)
+		dMenu.SetVModel($"${ID}dtmenu"$)
 		dMenu.SetAttrSingle(":close-on-content-click", False)
 		'dMenu.SetAttrSingle(":nudge-right", "40")
 		dMenu.SetAttrSingle(":return-value.sync", vmodel)
@@ -284,11 +284,11 @@ Sub ToString As String
 		'TextField.SetAttrSingle("@blur", $"${ID}menu = false"$)
 		If bHideIcons = False Then
 			If bTimePicker Then
-				TextField.SetAppendIcon("schedule")
-				TextField.SetAttrSingle("@click:append", $"${ID}menu = !${ID}menu"$)
+				TextField.SetAppendIcon("mdi-clock")
+				TextField.SetAttrSingle("@click:append", $"${ID}dtmenu = !${ID}dtmenu"$)
 			Else
-				TextField.SetAppendIcon("today")
-				TextField.SetAttrSingle("@click:append", $"${ID}menu = !${ID}menu"$)
+				TextField.SetAppendIcon("mdi-calendar-today")
+				TextField.SetAttrSingle("@click:append", $"${ID}dtmenu = !${ID}dtmenu"$)
 			End If
 		End If
 		'
@@ -302,7 +302,7 @@ Sub ToString As String
 		TextField.Pop(tmpl.Template)
 		dMenu.SetText(tmpl.ToString)
 		'
-		DateTimePicker.SetVIf($"${ID}menu"$)
+		DateTimePicker.SetVIf($"${ID}dtmenu"$)
 		Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
 		If bTimePicker Then
 			DateTimePicker.SetAttrSingle("@click:minute", ssave)

@@ -409,10 +409,10 @@ Sub AddColorPicker As VMTextField
 	bc.Put("backgroundColor", "#ffffff")
 	vue.SetData($"${ID}color"$, bc)
 	'hide the menu
-	vue.SetData($"${ID}menu"$, False)
+	vue.SetData($"${ID}cpmenu"$, False)
 	Dim dMenu As VMElement
 	dMenu.Initialize(vue, "").SetStatic(True).SetTag("v-menu").SetSlot("append-outer").SetAttrSingle(":close-on-content-click", False)
-	dMenu.SetVModel($"${ID}menu"$)
+	dMenu.SetVModel($"${ID}cpmenu"$)
 	dMenu.SetAttrSingle("transition", "scale-transition")
 	SetReadonly(True)
 	
@@ -443,8 +443,8 @@ Sub AddColorPicker As VMTextField
 	'
 	Dim div As VMElement
 	div.Initialize(vue, "").SetStatic(True).SetTag("div").AddClass("text-center my-2")
-	div.AddElement1("v-btn", "", "Cancel", CreateMap("outlined":True, "@click": $"${ID}menu = !${ID}menu"$), Null, Array("ma-2"), Null)
-	div.AddElement1("v-btn", "", "Apply", CreateMap("outlined":True, "color":"primary", "@click": $"${ID}menu = !${ID}menu"$), Null, Array("ma-2"), Null)
+	div.AddElement1("v-btn", "", "Cancel", CreateMap("outlined":True, "@click": $"${ID}cpmenu = !${ID}cpmenu"$), Null, Array("ma-2"), Null)
+	div.AddElement1("v-btn", "", "Apply", CreateMap("outlined":True, "color":"primary", "@click": $"${ID}cpmenu = !${ID}cpmenu"$), Null, Array("ma-2"), Null)
 	vcard.SetText(div.ToString)
 	dMenu.SetText(vcard.ToString)
 	'add menu to textfield

@@ -32,11 +32,11 @@ Sub Code
 	'
 	vm.CreateSlider("sl3", Me).SetVModel("min").SetDisabled(True).SetMin("-100").SetMax("100").SetLabel("Min").SetValue("30").SetInverseLabel(True).AddToContainer(cont, 3, 1)
 	'
-	vm.CreateSlider("sl4", Me).SetPrependIcon("volume_up").SetThumbLabel("always").SetTrackColor("pink").SetThumbColor("orange").SetVModel("volume").SetMin("0").SetMax("10").SetLabel("Volume").SetValue("5").AddToContainer(cont, 4, 1)
+	vm.CreateSlider("sl4", Me).SetPrependIcon("mdi-volume-high").SetThumbLabel("always").SetTrackColor("pink").SetThumbColor("orange").SetVModel("volume").SetMin("0").SetMax("10").SetLabel("Volume").SetValue("5").AddToContainer(cont, 4, 1)
 	'
-	vm.CreateSlider("sl5", Me).SetAppendIcon("alarm").SetVModel("alarm").SetMin("0").SetColor("brown").SetMax("10").SetLabel("Alarm").SetValue("5").AddToContainer(cont, 5, 1)
+	vm.CreateSlider("sl5", Me).SetAppendIcon("mdi-alarm").SetVModel("alarm").SetMin("0").SetColor("brown").SetMax("10").SetLabel("Alarm").SetValue("5").AddToContainer(cont, 5, 1)
 	'
-	vm.CreateSlider("sl6", Me).SetPrependIcon("zoom_out").SetAppendIcon("zoom_in").SetVModel("zoom").SetMin("0").SetMax("10").SetValue("5").AddToContainer(cont, 6, 1)
+	vm.CreateSlider("sl6", Me).SetPrependIcon("mdi-bell-minus").SetAppendIcon("mdi-bell-plus").SetVModel("zoom").SetMin("0").SetMax("10").SetValue("5").AddToContainer(cont, 6, 1)
 	'
 	Dim sldx As VMSlider = vm.CreateSlider("sldx", Me).SetTickLabels(seasons).SetVModel("season").SetValue("0")
 	sldx.SetMin("0").SetMax("3").SetTicks("always").SetTickSize("4").SetStep("1")

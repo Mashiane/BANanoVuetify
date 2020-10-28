@@ -1345,7 +1345,7 @@ Sub ToString As String
 		vue.RemoveData(classKey)
 	End If
 	If DesignMode Then
-		RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
+		RemoveAttributes(Array("v-show", "v-if", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
 		vue.RemoveData(styleKey)
 		vue.removedata(reqKey)
 		vue.RemoveData(disKey)

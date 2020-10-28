@@ -6,7 +6,7 @@ Version=8.1
 @EndOfDesignText@
 #IgnoreWarnings:12
 Sub Class_Globals
-	Public Footer As VMContainer
+	Public Footer As VMElement
 	Public ID As String
 	Private vue As BANanoVue
 	Private BANano As BANano  'ignore
@@ -15,12 +15,13 @@ Sub Class_Globals
 	Public HasContent As Boolean
 	Private bStatic As Boolean
 	Private smodel As String
+	Public Container As VMContainer
 End Sub
 
 'initialize the Footer
 Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMFooter
 	ID = sid.tolowercase
-	Footer.Initialize(v, ID, eventHandler)
+	Footer.Initialize(v, ID)
 	Footer.SetTag("v-footer")
 	DesignMode = False
 	Module = eventHandler
@@ -28,6 +29,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetVShow(Footer.showkey)
 	HasContent = False
 	bStatic = False
+	Container.Initialize(vue, $"${ID}cont"$, eventHandler)
 	Show
 	Return Me
 End Sub
@@ -75,7 +77,7 @@ Sub AddMadeWithLove(Row As Int, Col As Int, Message As String, CreatorName As St
 	lbla.Initialize(vue, "lbla").SetTag("a").SetHREF($"mailto:${EmailAddress}"$).SetText($"${CreatorName}"$)
 	lbla.AddClass("white--text")
 	footerDiv.SetText(lbla.tostring)
-	Footer.AddCOmponent(Row,Col, footerDiv.tostring)
+	Container.AddCOmponent(Row,Col, footerDiv.tostring)
 End Sub
 
 'set color intensity
@@ -142,6 +144,7 @@ End Sub
 
 'get component
 Sub ToString As String
+	If Container.HasContent Then Footer.SetText(Container.ToString)
 	Return Footer.ToString
 End Sub
 

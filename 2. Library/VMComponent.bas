@@ -315,6 +315,13 @@ Sub SetStatic(b As Boolean) As VMComponent
 End Sub
 
 Sub ToString As String
+	Template.RemoveAttributes(Array("v-show", "v-if", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
+	vue.RemoveData(Template.showkey)
+	vue.RemoveData(Template.styleKey)
+	vue.removedata(Template.reqKey)
+	vue.RemoveData(Template.disKey)
+	vue.RemoveData(Template.classKey)
+	vue.RemoveData(Template.errKey)
 	Return Template.ToString
 End Sub
 
@@ -325,13 +332,6 @@ Sub SetDesignMode(b As Boolean) As VMComponent
 End Sub
 
 Sub Component() As Map
-	Template.RemoveAttributes(Array("v-show", ":disabled", ":required", ":class", "v-model", "tabindex", ":style"))
-	vue.RemoveData(Template.showkey)
-	vue.RemoveData(Template.styleKey)
-	vue.removedata(Template.reqKey)
-	vue.RemoveData(Template.disKey)
-	vue.RemoveData(Template.classKey)
-	vue.RemoveData(Template.errKey)
 	Dim tmp As String = Template.tostring
 	If data.Size > 0 Then
 		Dim cb As BANanoObject = BANano.CallBack(Me, "returnData", Null)

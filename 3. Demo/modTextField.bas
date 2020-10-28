@@ -24,7 +24,7 @@ Sub Code
 	cont.addrows(15).AddColumns8
 	'
 	Dim mytxt As VMTextField = vm.CreateTextField("t1", Me).SetLabel("Regular").SetHint("Enter a name").SetPersistentHint(True)
-	mytxt.SetPrependIcon("place")
+	mytxt.SetPrependIcon("mdi-map-marker")
 	mytxt.SetPrependInnerIcon("mdi-account-circle-outline")
 	mytxt.SetAppendIcon("mdi-caravan")
 	mytxt.SetAppendOuterIcon("mdi-map-marker-radius")
@@ -47,7 +47,7 @@ Sub Code
 	'initialize code builder
 vue.SourceCodeBuilder
 vue.AddCode($"Dim mytxt As VMTextField = vm.CreateTextField("t1", Me).SetLabel("Regular").SetHint("Enter a name").SetPersistentHint(True)"$)
-vue.AddCode($"mytxt.SetPrependIcon("place")"$)
+	vue.AddCode($"mytxt.SetPrependIcon("mdi-map-marker")"$)
 vue.AddCode($"mytxt.SetPrependInnerIcon("mdi-account-circle-outline")"$)
 vue.AddCode($"mytxt.SetAppendIcon("mdi-caravan")"$)
 vue.AddCode($"mytxt.SetAppendOuterIcon("mdi-map-marker-radius")"$)
@@ -111,7 +111,7 @@ pgIndex.CreateVBCode(vue, Me, "t1eve", "Text Field Events", vue.GetSourceCode).A
 	menuAfter.AddKeyValue("week", "Week")
 	menuAfter.AddKeyValue("month", "Month")
 	'
-	vm.CreateTextField("t2", Me).SetLabel("Solo").SetPlaceholder("Text fields").SetPrependInnerIcon("place").SetSolo(True).SetClearable(True).SetCounter(25).AddMenuAfter(menuAfter).AddToContainer(cont, 4, 1)
+	vm.CreateTextField("t2", Me).SetLabel("Solo").SetPlaceholder("Text fields").SetPrependInnerIcon("mdi-map-marker").SetSolo(True).SetClearable(True).SetCounter(25).AddMenuAfter(menuAfter).AddToContainer(cont, 4, 1)
 	'initialize code builder
 vue.SourceCodeBuilder
 vue.AddCode($"'add a menu after"$)
@@ -122,24 +122,24 @@ vue.AddCode($"menuAfter.AddKeyValue("day", "Day")"$)
 vue.AddCode($"menuAfter.AddKeyValue("week", "Week")"$)
 vue.AddCode($"menuAfter.AddKeyValue("month", "Month")"$)
 vue.AddCode($"'"$)
-vue.AddCode($"vm.CreateTextField("t2", Me).SetLabel("Solo").SetPlaceholder("Text fields").SetPrependInnerIcon("place").SetSolo(True).SetClearable(True).SetCounter(25).AddMenuAfter(menuAfter).AddToContainer(cont, 4, 1)"$)
+	vue.AddCode($"vm.CreateTextField("t2", Me).SetLabel("Solo").SetPlaceholder("Text fields").SetPrependInnerIcon("mdi-map-marker").SetSolo(True).SetClearable(True).SetCounter(25).AddMenuAfter(menuAfter).AddToContainer(cont, 4, 1)"$)
 pgIndex.CreateVBCode(vue, Me, "textafter", "Menu After", vue.GetSourceCode).AddToContainer(cont, 4, 1)
 
 	Dim t3 As VMTextField = vm.CreateTextField("t3", Me).SetCalculator.SetFab(True).SetPrecision(2).SetUseGrouping(True)
-	t3.SetPrefix("$").SetLabel("Calculator").SetAppendIcon("place")
+	t3.SetPrefix("$").SetLabel("Calculator").SetAppendIcon("mdi-map-marker")
 	t3.AddToContainer(cont, 5, 1)
 	'initialize code builder
 vue.SourceCodeBuilder
 vue.AddCode($"Dim t3 As VMTextField = vm.CreateTextField("t3", Me).SetCalculator.SetFab(True).SetPrecision(2).SetUseGrouping(True)"$)
-vue.AddCode($"t3.SetPrefix("~").SetLabel("Calculator").SetAppendIcon("place")"$)
+	vue.AddCode($"t3.SetPrefix("~").SetLabel("Calculator").SetAppendIcon("mdi-map-marker")"$)
 vue.AddCode($"t3.AddToContainer(cont, 5, 1)"$)
 pgIndex.CreateVBCode(vue, Me, "calcit", "Calculator", vue.GetSourceCode).AddToContainer(cont, 5, 1)
 	
-	vm.CreateTextField("t4", Me).SetLabel("Outline").SetPrefix("$").SetAppendOuterIcon("place").SetValue("10").Setoutlined(True).SetClearable(True).AddToContainer(cont, 6, 1)
+	vm.CreateTextField("t4", Me).SetLabel("Outline").SetPrefix("$").SetAppendOuterIcon("mdi-map-marker").SetValue("10").Setoutlined(True).SetClearable(True).AddToContainer(cont, 6, 1)
 	'initialize code builder
 	'
 vue.SourceCodeBuilder
-vue.AddCode($"vm.CreateTextField("t4", Me).SetLabel("Outline").SetPrefix("~").SetAppendOuterIcon("place").SetValue("10").Setoutlined(True).SetClearable(True).AddToContainer(cont, 6, 1)"$)
+	vue.AddCode($"vm.CreateTextField("t4", Me).SetLabel("Outline").SetPrefix("~").SetAppendOuterIcon("mdi-map-marker").SetValue("10").Setoutlined(True).SetClearable(True).AddToContainer(cont, 6, 1)"$)
 pgIndex.CreateVBCode(vue, Me, "outline", "Outline", vue.GetSourceCode).AddToContainer(cont, 6, 1)
 
 

@@ -19,7 +19,7 @@ Sub Initialize
 	'initialize the component
 	join.Initialize(vue, "join", "/join", Me)
 	'setstatic = no state bindinds
-	Dim cont As VMContainer = vm.CreateContainer("contjoin", Me).SetStatic(True)
+	Dim cont As VMContainer = vm.CreateContainer("contjoin", Me)
 	cont.SetFluid(True)
 	cont.SetFillHeight(True)
 	cont.SetCoverImage("./assets/register.jpg")
@@ -31,7 +31,7 @@ Sub Initialize
 	
 	Dim vcard As VMElement = vm.VCard("").SetStatic(True).SetElevation("12")
 	Dim vtoolbar As VMElement = vm.vtoolbar("").SetStatic(True).SetDark(True).SetColor(vm.COLOR_BROWN)
-	Dim vtitle As VMElement = vm.vtoolbartitle("").SetStatic(True).SetText("Sign Up")
+	Dim vtitle As VMElement = vm.vtoolbartitle("").SetStatic(True).SetText("Sign Up").AddClass(vm.COLOR_WHITE_TEXT)
 	vtoolbar.AddElement(vtitle)
 	vcard.AddElement(vtoolbar)
 	'
@@ -84,7 +84,7 @@ Sub Initialize
 	vcardactions.AddElement(vspacer)
 	'
 	Dim vbtn As VMElement = vm.VBtn("btnSubmit").SetStatic(True)
-	vbtn.SetColor(vm.COLOR_BROWN)
+	vbtn.SetColor(vm.COLOR_BROWN).AddClass(vm.COLOR_WHITE_TEXT)
 	'bind disabled to validility of form
 	vbtn.Bind(":disabled", "!joinvalid")
 	'set attribute
