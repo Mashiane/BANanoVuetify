@@ -382,6 +382,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMProperty,EditItem,1252,0,VMTextField,SetColor,610,0,VMTextField,SetVModel,468,0,VMTextField,SetVIf,474,0,VMTextField,SetMaxLength,381,0,VMTextField,watchcolor,455,0,VMTextField,SetRequired,394,0,VMTextField,AddColorPicker,443,6,Main,AppStart,21,6,Main,Process_Globals,13,0
+NavigationStack=VMProperty,EditItem,1252,0,VMTextField,SetColor,610,0,VMTextField,SetVModel,468,0,VMTextField,SetVIf,474,0,VMTextField,SetMaxLength,381,0,VMTextField,watchcolor,455,0,VMTextField,SetRequired,394,0,VMTextField,AddColorPicker,443,6,Main,AppStart,20,6,Main,Process_Globals,10,0
 SelectedBuild=0
 VisibleModules=
