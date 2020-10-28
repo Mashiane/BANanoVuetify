@@ -411,21 +411,20 @@ Sub AddColorPicker As VMTextField
 	'hide the menu
 	vue.SetData($"${ID}menu"$, False)
 	Dim dMenu As VMElement
-	dMenu.Initialize(vue, "").SetTag("v-menu").SetSlot("append-outer").SetAttrSingle(":close-on-content-click", False)
+	dMenu.Initialize(vue, "").SetStatic(True).SetTag("v-menu").SetSlot("append-outer").SetAttrSingle(":close-on-content-click", False)
 	dMenu.SetVModel($"${ID}menu"$)
 	dMenu.SetAttrSingle("transition", "scale-transition")
 	SetReadonly(True)
 	
 	'
 	Dim tmpl As VMTemplate
-	tmpl.Initialize(vue, "", Module).SetSlotActivatorOn
+	tmpl.Initialize(vue, "", Module).SetStatic(True).SetSlotActivatorOn
 	'
 	Dim btn As VMElement
-	btn.Initialize(vue, "").SetTag("btn").SetAttrSingle("icon",True).SetAttrSingle("v-on", "on")
-	btn.SetCursorPointer
+	btn.Initialize(vue, "").SetStatic(True).SetTag("v-btn").SetAttrSingle("icon",True).SetAttrSingle("v-on", "on")
 	'
 	Dim avatr As VMElement
-	avatr.Initialize(vue,"").SetTag("v-avatar").SetAttrSingle("size", "30px")
+	avatr.Initialize(vue,"").SetStatic(True).SetTag("v-avatar").SetAttrSingle("size", "30px")
 	avatr.SetStyleSingle("border", "solid 1px")
 	avatr.SetAttrSingle(":style", $"${ID}color"$)
 	btn.SetText(avatr.ToString)
@@ -435,15 +434,15 @@ Sub AddColorPicker As VMTextField
 	dMenu.SetText(tmpl.ToString)
 	'
 	Dim vcard As VMCard
-	vcard.Initialize(vue, "", Module).SetStyleSingle("padding", "10px")
+	vcard.Initialize(vue, "", Module).SetStatic(True).SetStyleSingle("padding", "10px")
 	'
 	Dim vcolor As VMColorPicker 
-	vcolor.Initialize(vue, "", Module).SetFlat(True).SetSwatchesMaxHeight("200px").SetVModel(vmodel)
+	vcolor.Initialize(vue, "", Module).SetStatic(True).SetFlat(True).SetSwatchesMaxHeight("200px").SetVModel(vmodel)
 	vcolor.SetMode("hexa").SetHideInputs(True).SetHideModeSwitch(True)
 	vcard.SetText(vcolor.ToString)
 	'
 	Dim div As VMElement
-	div.Initialize(vue, "").SetTag("div").AddClass("text-center my-2")
+	div.Initialize(vue, "").SetStatic(True).SetTag("div").AddClass("text-center my-2")
 	div.AddElement1("v-btn", "", "Cancel", CreateMap("outlined":True, "@click": $"${ID}menu = !${ID}menu"$), Null, Array("ma-2"), Null)
 	div.AddElement1("v-btn", "", "Apply", CreateMap("outlined":True, "color":"primary", "@click": $"${ID}menu = !${ID}menu"$), Null, Array("ma-2"), Null)
 	vcard.SetText(div.ToString)
