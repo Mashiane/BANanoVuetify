@@ -160,7 +160,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.43"
+	Public Version As String = "4.46"
 	Public Port As String = "8080"
 End Sub
 
@@ -179,8 +179,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
 	BANano.TranspilerOptions.MinifyOnline = False
-	
-	
+	'
 	#if release
 		BANano.TranspilerOptions.EnableLiveCodeSwapping = False
 	#end if

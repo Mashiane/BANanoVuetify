@@ -171,7 +171,7 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.45"
+	Public Version As String = "4.46"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)
@@ -185,23 +185,9 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue@2.x/dist/vue.min.js")
 	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.js")
 	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/vue-router@3.4.7/dist/vue-router.min.js")
-	
-	'local installation
-	'1. copy the 'local resources' contents to the 'files folder'
-	'2. remove links that point to interweb above
-	'3. uncomment lines from below
-		
-		
-	'BANano.Header.AddCSSFile("all.min.css")
-	'BANano.Header.AddCSSFile("https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css")
-	'BANano.Header.AddCSSFile("roboto.min.css")
-	'BANano.Header.AddCSSFile("materialfont.min.css")
-	'BANano.header.AddCSSFile("materialdesignicons.min.css")
-	'BANano.Header.AddCSSFile("helpers.min.css")
-	
 	BANano.Header.AddJavascriptFile("https://cdn.jsdelivr.net/npm/dayjs@1.9.4/dayjs.min.js")
 	BANano.Header.AddJavascriptFile("https://cdnjs.cloudflare.com/ajax/libs/numeral.js/2.0.6/numeral.min.js")
-	
+	'
 	' start the build
 	#if release
 		BANano.BuildAsB4Xlib(Version)
@@ -217,7 +203,6 @@ Sub Application_Error (Error As Exception, StackTrace As String) As Boolean
 End Sub
 
 Sub BANano_Ready
-	
 End Sub
 
 #if css

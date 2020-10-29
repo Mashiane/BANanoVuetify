@@ -119,7 +119,7 @@ Sub AppStart (Form1 As Form, Args() As String)
 	BANano.TranspilerOptions.UseServiceWorker = False
 	BANano.TranspilerOptions.MergeAllCSSFiles = True
 	BANano.TranspilerOptions.MergeAllJavascriptFiles = True
-	'BANano.TranspilerOptions.MinifyOnline = True
+	BANano.TranspilerOptions.MinifyOnline = True
 	BANano.transpileroptions.RemoveDeadCode = True
 	#if release
 		BANano.TranspilerOptions.EnableLiveCodeSwapping = False
