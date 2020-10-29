@@ -34,6 +34,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
+Sub RemoveVShow As VMFooter
+	Footer.RemoveVShow
+	vue.RemoveData(Footer.showKey)
+	Return Me
+End Sub
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)
@@ -125,7 +130,6 @@ Sub SetAttributes(attrs As List) As VMFooter
 	Next
 	Return Me
 End Sub
-
 
 Sub SetVisible(b As Boolean) As VMFooter
 	vue.SetData(smodel, b)
@@ -460,3 +464,8 @@ Footer.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
 
+'set disabled
+Sub SetDisabled(varDisabled As Boolean) As VMFooter
+	Footer.SetDisabled(varDisabled)
+	Return Me
+End Sub

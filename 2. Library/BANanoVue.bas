@@ -139,7 +139,6 @@ Public Sub Initialize(EventHandler As Object)
 	Modules.Initialize
 	BOVue.Initialize("Vue")
 	
-	Template.SetVCloak
 	methods.Initialize
 	filters.initialize
 	data.Initialize
@@ -546,6 +545,10 @@ Public Sub Initialize(EventHandler As Object)
 	DateDisplayFormat = "YYYY-MM-DD"
 End Sub
 
+Sub SetVCloak As BANanoVue
+	Template.SetVCloak
+	Return Me
+End Sub
 
 'create an element with a 'component' tag
 Sub CreateOwnComponent(id As String, compName As String) As VueElement

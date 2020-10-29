@@ -171,7 +171,7 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.44"
+	Public Version As String = "4.45"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

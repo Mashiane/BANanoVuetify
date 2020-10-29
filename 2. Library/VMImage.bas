@@ -42,12 +42,17 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	HasContent = False
 	Hover.Initialize(vue, $"${ID}hover"$, Module)
 	hasHover = False
+	SetVShow(Image.showKey)
 	Show 
 	SetOnClick(Module, $"${ID}_click"$)
 	Return Me
 End Sub
 
-
+Sub RemoveVShow As VMImage
+	Image.RemoveVShow
+	vue.RemoveData(Image.showKey)
+	Return Me
+End Sub
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)

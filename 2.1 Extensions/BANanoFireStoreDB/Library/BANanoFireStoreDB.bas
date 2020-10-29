@@ -232,7 +232,7 @@ Sub collectionAdd(Collection As String, record As Map) As BANanoPromise
 	Return promAdd
 End Sub
 
-'update a record using a primary autoincrement id
+'update a record using a primary autoincrement id or unique key
 'dont pass the id as part of the record map
 Sub collectionUpdate(Collection As String, colID As String, record As Map) As BANanoPromise
 	'execute the update
@@ -290,7 +290,13 @@ End Sub
 Sub SetEndAt(bo As BANanoObject, iLimit As Int) As BANanoObject
 	bo = bo.RunMethod("endAt", Array(iLimit))
 	Return bo
-End Sub	
+End Sub
+
+'set a record and overwrite
+Sub collectionSet(collection As String, colID As String, record As Map) As BANanoPromise
+	Dim promSet As BANanoPromise = getCollection(collection).RunMethod("doc", Array(colID)).RunMethod("set", Array(record))
+	Return promSet
+End Sub
 
 'get a record
 Sub collectionGet(collection As String, colID As String) As BANanoPromise
