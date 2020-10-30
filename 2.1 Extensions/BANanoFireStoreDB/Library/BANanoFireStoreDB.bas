@@ -18,7 +18,6 @@ Sub Class_Globals
 	Public firebase As BANanoObject
 	Public firebaseApp As BANanoObject
 	Public firestore As BANanoObject
-	
 	'
 	Private fromCollection As String
 	Private whereClauses As List
@@ -78,13 +77,13 @@ End Sub
 
 'build up the config connection string
 Sub Connect() As BANanoFireStoreDB
-	firebaseConfig.put("apiKey", apiKey)
-	firebaseConfig.put("authDomain", authDomain)
-	firebaseConfig.put("databaseURL", databaseURL)
-	firebaseConfig.put("projectId", projectId)
-	firebaseConfig.put("storageBucket", storageBucket)
-	firebaseConfig.put("messagingSenderId", messagingSenderId)
-	firebaseConfig.put("appId", appId)
+	If apiKey <> "" Then firebaseConfig.put("apiKey", apiKey)
+	If authDomain <> "" Then firebaseConfig.put("authDomain", authDomain)
+	If databaseURL <> "" Then firebaseConfig.put("databaseURL", databaseURL)
+	If projectId <> "" Then firebaseConfig.put("projectId", projectId)
+	If storageBucket <> "" Then firebaseConfig.put("storageBucket", storageBucket)
+	If messagingSenderId <> "" Then firebaseConfig.put("messagingSenderId", messagingSenderId)
+	If appId <> "" Then firebaseConfig.put("appId", appId)
 	If measurementId <> "" Then firebaseConfig.put("measurementId", measurementId)
 	'initialize the app
 	firebaseApp = firebase.RunMethod("initializeApp", firebaseConfig)
@@ -232,9 +231,23 @@ Sub collectionAdd(Collection As String, record As Map) As BANanoPromise
 	Return promAdd
 End Sub
 
+'add a record uwing auto increment
+Sub CREATEAI(Collection As String, record As Map) As BANanoPromise
+	'execute the addition
+	Dim promAdd As BANanoPromise = getCollection(Collection).RunMethod("add", Array(record))
+	Return promAdd
+End Sub
+
 'update a record using a primary autoincrement id or unique key
 'dont pass the id as part of the record map
 Sub collectionUpdate(Collection As String, colID As String, record As Map) As BANanoPromise
+	'execute the update
+	Dim promAdd As BANanoPromise = getCollection(Collection).RunMethod("doc", Array(colID)).RunMethod("update", Array(record))
+	Return promAdd
+End Sub
+
+'update a record using a primary id or unique key
+Sub UPDATE(Collection As String, colID As String, record As Map) As BANanoPromise
 	'execute the update
 	Dim promAdd As BANanoPromise = getCollection(Collection).RunMethod("doc", Array(colID)).RunMethod("update", Array(record))
 	Return promAdd
@@ -248,6 +261,13 @@ End Sub
 
 'delete a record using a primary autoincrement id
 Sub collectionDelete(Collection As String, colID As String) As BANanoPromise
+	'execute the update
+	Dim promDel As BANanoPromise = getCollection(Collection).RunMethod("doc", Array(colID)).RunMethod("delete", Null)
+	Return promDel
+End Sub
+
+'delete a record using a primary id
+Sub DELETE(Collection As String, colID As String) As BANanoPromise
 	'execute the update
 	Dim promDel As BANanoPromise = getCollection(Collection).RunMethod("doc", Array(colID)).RunMethod("delete", Null)
 	Return promDel
@@ -298,8 +318,20 @@ Sub collectionSet(collection As String, colID As String, record As Map) As BANan
 	Return promSet
 End Sub
 
+'create a new record using own id
+Sub CREATE(collection As String, colID As String, record As Map) As BANanoPromise
+	Dim promSet As BANanoPromise = getCollection(collection).RunMethod("doc", Array(colID)).RunMethod("set", Array(record))
+	Return promSet
+End Sub
+
 'get a record
 Sub collectionGet(collection As String, colID As String) As BANanoPromise
+	Dim promGet As BANanoPromise = getCollection(collection).RunMethod("doc", Array(colID)).RunMethod("get", Null)
+	Return promGet
+End Sub
+
+'get a record using unique id
+Sub READ(collection As String, colID As String) As BANanoPromise
 	Dim promGet As BANanoPromise = getCollection(collection).RunMethod("doc", Array(colID)).RunMethod("get", Null)
 	Return promGet
 End Sub
@@ -315,7 +347,6 @@ Sub createUserWithEmailAndPassword(emailaddress As String, password As String) A
 	Dim promRegister As BANanoPromise = getAuth.RunMethod("createUserWithEmailAndPassword", Array(emailaddress, password))
 	Return promRegister
 End Sub
-
 
 'sign in
 Sub signInWithEmailAndPassword(emailaddress As String, password As String) As BANanoPromise
