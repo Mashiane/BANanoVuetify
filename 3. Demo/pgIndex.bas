@@ -144,6 +144,7 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("ui", "sparklines", "", "", "Sparklines","")
 	vm.Drawer.AddParentChild("ui", "steppers", "", "", "Steppers","")
 	vm.Drawer.AddParentChild("ui", "tables", "", "", "Tables","")
+	vm.Drawer.AddParentChild("ui", "simpletable", "", "", "Simple Table","")
 	vm.Drawer.AddParentChild("ui", "tabs", "", "", "Tabs","")
 	vm.Drawer.AddParentChild("ui", "timelines", "", "", "Timelines","")
 	vm.Drawer.AddParentChild("ui", "toolbars", "", "", "Toolbars","")
@@ -312,6 +313,9 @@ Sub draweritems_click(elID As Object)
 	Case "design"
 		vm.NavBar.UpdateTitle(modDesign.title)
 		vm.ShowPage(modDesign.name)
+	Case "simpletable"
+		vm.NavBar.UpdateTitle(modSimpleTable.title)
+		vm.ShowPage(modSimpleTable.name)
 	Case "tables"
 		vm.NavBar.UpdateTitle(modDataTable.title)
 		vm.ShowPage(modDataTable.name)
@@ -500,6 +504,7 @@ Sub AddPages
 	vm.addpage(modDynamic.name, modDynamic)
 	vm.AddPage(modGridSelect.Name, modGridSelect)
 	vm.AddPage(modPages.name, modPages)
+	vm.AddPage(modSimpleTable.name, modSimpleTable)
 End Sub
 
 Private Sub bottomnav_change(value As Object)

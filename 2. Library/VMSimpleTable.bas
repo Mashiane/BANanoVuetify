@@ -12,17 +12,123 @@ Sub Class_Globals
 	Private BANano As BANano  'ignore
 	Private DesignMode As Boolean    'ignore
 	Private Module As Object      'ignore
+	Private items As List
+	Private columns As Map
+	Type TableColumn(value As String, text As String, align As String, sortable As Boolean, filterable As Boolean, divider As Boolean, _
+	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String, bindTotals As String, hasTotal As Boolean)
+	Private template As VMElement
+	Private thead As VMElement
+	Private tbody As VMElement
+	'
+	'alignment
+	Public ALIGN_CENTER As String = "center"
+	Public ALIGN_RIGHT As String = "right"
+	Public ALIGN_LEFT As String = "left"
+	Private itemsname As String
+	Private pk As String
 End Sub
 
 'initialize the SimpleTable
-Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As VMSimpleTable
+Public Sub Initialize(v As BANanoVue, sid As String, primaryKey As String, eventHandler As Object) As VMSimpleTable
 	ID = sid.tolowercase
 	SimpleTable.Initialize(v, ID)
 	SimpleTable.SetTag("v-simple-table")
 	DesignMode = False
 	Module = eventHandler
 	vue = v
+	pk = primaryKey
+	items.Initialize 
+	columns.Initialize 
+	template.Initialize(vue, "").SetTag("template")
+	template.SetAttrLoose("v-slot:default")
+	thead.Initialize(vue, "").SetTag("thead")
+	tbody.Initialize(vue, "").SetTag("tbody")
+	itemsname = $"${ID}records"$
+	vue.SetData(itemsname, vue.NewList)
 	Return Me
+End Sub
+
+private Sub BuildHeaders
+	Dim tr As VMElement
+	tr.Initialize(vue, "").SetTag("tr")
+	'
+	For Each k As String In columns.Keys
+		Dim tc As TableColumn = columns.Get(k)
+		Dim th As VMElement
+		th.Initialize(vue, "").SetTag("th")
+		th.SetText(tc.text)
+		Select Case tc.align
+		Case ALIGN_CENTER
+		Case ALIGN_RIGHT	
+		Case Else
+			th.AddClass("text-left")
+		End Select
+		tr.AddElement(th)
+	Next
+	thead.AddElement(tr)
+End Sub
+
+private Sub BuildRecords
+	Dim tr As VMElement
+	tr.Initialize(vue, "").SetTag("tr")
+	tr.SetVFor("item", $"${ID}items"$)
+	If pk <> "" Then 
+		tr.Bind(":key", $"item.${pk}"$)
+	End If
+	For Each k As String In columns.Keys
+		Dim td As VMElement
+		td.Initialize(vue, "").SetTag("td")
+		td.SetText($"{{ item.${k} }}"$)
+		tr.AddElement(td)
+	Next
+	tbody.AddElement(tr)
+End Sub
+
+'set the column data template
+Sub SetColumnAlignment(colName As String, colAlign As String) As VMSimpleTable
+	If columns.ContainsKey(colName) Then
+		Dim col As TableColumn = columns.Get(colName)
+		col.align = colAlign
+		columns.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+
+'add column
+Sub AddColumn(fld As String, title As String) As VMSimpleTable
+	fld = fld.tolowercase
+	Dim tc As TableColumn
+	tc.Initialize 
+	tc.value = fld.ToLowerCase
+	tc.text = title
+	columns.Put(fld, tc)
+	Return Me 	
+End Sub
+
+'clear records
+Sub Clear As VMSimpleTable
+	items.Initialize
+	vue.SetData(itemsname, vue.NewList)
+	Return Me
+End Sub
+
+'add a new record
+Sub AddRow(rowData As Map) As VMSimpleTable
+	items.Add(rowData)
+	Return Me
+End Sub
+
+'set data source
+Sub SetDataSource(dsName As String) As VMSimpleTable
+	Dim recs As List = vue.GetData(dsName)
+	vue.SetData($"${ID}items"$, recs)
+	Return Me
+End Sub
+
+'refresh the table
+Sub Refresh
+	vue.SetData($"${ID}items"$, items)
 End Sub
 
 Sub SetData(xprop As String, xValue As Object) As VMSimpleTable
@@ -30,16 +136,21 @@ Sub SetData(xprop As String, xValue As Object) As VMSimpleTable
 	Return Me
 End Sub
 
-
-
 'add an element to the page content
 Sub AddElement(elm As VMElement)
 	SimpleTable.SetText(elm.ToString)
 End Sub
 
-
 'get component
 Sub ToString As String
+	BuildHeaders
+	BuildRecords
+	If items.Size > 0 Then
+		Refresh
+	End If
+	template.AddElement(thead)
+	template.AddElement(tbody)
+	SimpleTable.AddElement(template)
 	Return SimpleTable.ToString
 End Sub
 
@@ -88,7 +199,7 @@ Sub AddClass(c As String) As VMSimpleTable
 End Sub
 
 'set an attribute
-Sub SetAttr(attr as map) As VMSimpleTable
+Sub SetAttr(attr As Map) As VMSimpleTable
 	SimpleTable.SetAttr(attr)
 	Return Me
 End Sub
@@ -107,7 +218,7 @@ Sub AddChildren(children As List)
 End Sub
 
 'set dark
-Sub SetDark(varDark As Object) As VMSimpleTable
+Sub SetDark(varDark As Boolean) As VMSimpleTable
 	Dim pp As String = $"${ID}Dark"$
 	vue.SetStateSingle(pp, varDark)
 	SimpleTable.Bind(":dark", pp)
@@ -115,15 +226,23 @@ Sub SetDark(varDark As Object) As VMSimpleTable
 End Sub
 
 'set dense
-Sub SetDense(varDense As Object) As VMSimpleTable
+Sub SetDense(varDense As Boolean) As VMSimpleTable
 	Dim pp As String = $"${ID}Dense"$
 	vue.SetStateSingle(pp, varDense)
 	SimpleTable.Bind(":dense", pp)
 	Return Me
 End Sub
 
+Sub SetCalculateWidth(b As Boolean) As VMSimpleTable
+	'calculate-widths
+	Dim pp As String = $"${ID}calcwidths"$
+	vue.SetStateSingle(pp, b)
+	SimpleTable.Bind(":calculate-widths", pp)
+	Return Me
+End Sub
+
 'set fixed-header
-Sub SetFixedHeader(varFixedHeader As Object) As VMSimpleTable
+Sub SetFixedHeader(varFixedHeader As Boolean) As VMSimpleTable
 	Dim pp As String = $"${ID}FixedHeader"$
 	vue.SetStateSingle(pp, varFixedHeader)
 	SimpleTable.Bind(":fixed-header", pp)
@@ -131,7 +250,7 @@ Sub SetFixedHeader(varFixedHeader As Object) As VMSimpleTable
 End Sub
 
 'set height
-Sub SetHeight(varHeight As Object) As VMSimpleTable
+Sub SetHeight(varHeight As String) As VMSimpleTable
 	Dim pp As String = $"${ID}Height"$
 	vue.SetStateSingle(pp, varHeight)
 	SimpleTable.Bind(":height", pp)
@@ -139,13 +258,12 @@ Sub SetHeight(varHeight As Object) As VMSimpleTable
 End Sub
 
 'set light
-Sub SetLight(varLight As Object) As VMSimpleTable
+Sub SetLight(varLight As Boolean) As VMSimpleTable
 	Dim pp As String = $"${ID}Light"$
 	vue.SetStateSingle(pp, varLight)
 	SimpleTable.Bind(":light", pp)
 	Return Me
 End Sub
-
 
 'hide the component
 Sub Hide As VMSimpleTable
@@ -344,23 +462,9 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 SimpleTable.BuildModel(mprops, mstyles, lclasses, loose)
 Return Me
 End Sub
+
+
 Sub SetVisible(b As Boolean) As VMSimpleTable
 SimpleTable.SetVisible(b)
 Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColor(varColor As String) As VMSimpleTable
-	Dim sColor As String = $"${varColor}--text"$
-	AddClass(sColor)
-	Return Me
-End Sub
-
-'set color intensity
-Sub SetTextColorIntensity(varColor As String, varIntensity As String) As VMSimpleTable
-	Dim sColor As String = $"${varColor}--text"$
-	Dim sIntensity As String = $"text--${varIntensity}"$
-	Dim mcolor As String = $"${sColor} ${sIntensity}"$
-	AddClass(mcolor)
-	Return Me
 End Sub

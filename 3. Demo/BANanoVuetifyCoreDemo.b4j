@@ -119,31 +119,32 @@ Module4=modBadges
 Module40=modRating
 Module41=modRealtimeLogging
 Module42=modSelects
-Module43=modSlideGroups
-Module44=modSlider
-Module45=modSnackBar
-Module46=modSparkLine
-Module47=modStepper
-Module48=modSwitch
-Module49=modTabs
+Module43=modSimpleTable
+Module44=modSlideGroups
+Module45=modSlider
+Module46=modSnackBar
+Module47=modSparkLine
+Module48=modStepper
+Module49=modSwitch
 Module5=modBanner
-Module50=modTextArea
-Module51=modTextField
-Module52=modTimeLine
-Module53=modTimePicker
-Module54=modToolbar
-Module55=modToolkit
-Module56=modTreeView
-Module57=modWindow
-Module58=pgBRs
-Module59=pgIndex
+Module50=modTabs
+Module51=modTextArea
+Module52=modTextField
+Module53=modTimeLine
+Module54=modTimePicker
+Module55=modToolbar
+Module56=modToolkit
+Module57=modTreeView
+Module58=modWindow
+Module59=pgBRs
 Module6=modBottomNavigation
+Module60=pgIndex
 Module7=modBottomSheet
 Module8=modBreadCrumbs
 Module9=modButtons
 NumberOfFiles=36
 NumberOfLibraries=9
-NumberOfModules=59
+NumberOfModules=60
 Version=8.5
 @EndOfDesignText@
 #IgnoreWarnings: 12, 15
@@ -160,7 +161,7 @@ Sub Process_Globals
 	Public ServerIP As String = "localhost"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE
-	Public Version As String = "4.46"
+	Public Version As String = "4.47"
 	Public Port As String = "8080"
 End Sub
 

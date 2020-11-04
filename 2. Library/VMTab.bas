@@ -55,6 +55,7 @@ Sub SetBadgeContent(counted As String) As VMTab
 	Return Me
 End Sub
 
+
 Sub SetBadge(scontent As String) As VMTab
 	Badge.SetContent(scontent)
 	Badge.SetBordered(True)

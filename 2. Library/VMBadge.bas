@@ -37,7 +37,6 @@ Sub SetData(prop As String, value As Object) As VMBadge
 	Return Me
 End Sub
 
-
 'add an element to the page content
 Sub AddElement(elm As VMElement)
 	Badge.SetText(elm.ToString)

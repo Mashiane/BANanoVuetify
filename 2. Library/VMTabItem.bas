@@ -24,7 +24,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Module = eventHandler
 	vue = v
 	SetAttrSingle("key", ID)
-	TabItem.SetValue(ID)
+	SetAttrSingle("value", ID)
 	bStatic = False
 	Return Me
 End Sub
@@ -33,8 +33,6 @@ Sub SetData(xprop As String, xValue As Object) As VMTabItem
 	vue.SetData(xprop, xValue)
 	Return Me
 End Sub
-
-
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)
@@ -200,10 +198,9 @@ End Sub
 
 'set value
 Sub SetValue(varValue As String) As VMTabItem
-	TabItem.SetValue(varValue)
+	SetAttrSingle("value", varValue)
 	Return Me
 End Sub
-
 
 Sub Hide As VMTabItem
 	TabItem.SetVisible(False)

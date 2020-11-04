@@ -6,10 +6,10 @@ File11=sadface.png
 File12=upload.php
 File2=2.png
 File3=avatar.png
-File4=config.php
-File5=gray.png
-File6=green.png
-File7=happyface.png
+File4=gray.png
+File5=green.png
+File6=happyface.png
+File7=material.css
 File8=neutralface.png
 File9=orange.png
 FileGroup1=Default Group
@@ -171,7 +171,7 @@ Version=8.5
 Sub Process_Globals
 	Public BANano As BANano 'ignore
 	Public AppName As String = "BANanoVuetifyCore"
-	Public Version As String = "4.46"
+	Public Version As String = "4.47"
 End Sub
 
 Sub AppStart (Form1 As Form, Args() As String)

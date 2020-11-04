@@ -107,8 +107,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 		
 	If ID <> "" Then
 		SetRef(ID)
-		
-		vue.SetData(classKey, classList)
 	End If
 	'	
 	DesignMode = False
@@ -131,8 +129,6 @@ Public Sub Initialize(v As BANanoVue, sid As String) As VMElement
 	Exclude = False
 	Return Me
 End Sub
-
-
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)
@@ -195,7 +191,6 @@ Sub CreateMETA() As VMElement
 	el.Initialize(vue, "").SetTag("meta")
 	Return el
 End Sub
-
 
 Sub MoveUp(sTop As String) As VMElement
 	SetAttrSingle("margin-top", sTop)
@@ -893,6 +888,7 @@ Sub SetValue(svalue As String) As VMElement
 		SetVModel(vmodel)
 	End If
 	vue.setdata(vmodel, svalue)
+	SetAttrSingle("value", svalue)
 	Return Me
 End Sub
 

@@ -382,6 +382,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMFooter,SetStyleSingle,449,0,VMDateTimePicker,SetDisabled,466,0,VMDateTimePicker,SetDayFormat,464,0,VMFooter,BuildModel,460,0,VMFooter,SetDisabled,464,1,VMFooter,SetDesignMode,432,0,Main,Application_Error,51,0,Main,AppStart,19,6,Main,BANano_Ready,42,6,Main,Process_Globals,9,0
+NavigationStack=VMImage,SetAttributes,239,0,VMImage,SetSize,249,0,VMElement,AddElement,130,0,VMElement,SetGridListXS,141,0,VMElement,AddDynamicClass,1007,0,VMElement,RemoveDynamicClass,1034,0,VMElement,Class_Globals,11,0,VMElement,Initialize,98,0,VMElement,BindStyle,967,0,VMElement,ToString,1308,0,VMElement,AddComponent,1295,0
 SelectedBuild=0
 VisibleModules=

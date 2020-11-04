@@ -107,9 +107,9 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	hasExternalPagination = False
 	totalVisible = ""
 	SetVModel(selected)
+	SetNoDataText("Working on it, please wait...")
 	Return Me
 End Sub
-
 
 
 'add an element to the page content
