@@ -73,8 +73,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Progress.SetBottom(True)
 	Progress.SetIndeterminate(False) 
 	Progress.SetAbsolute(True)
-	Progress.SetVShow($"${ID}progressshow"$)
-	Progress.Show
 	'
 	SubHeadingKey = $"${ID}subheading"$
 	SubHeading.Initialize(vue, SubHeadingKey)

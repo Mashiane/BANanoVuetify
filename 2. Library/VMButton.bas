@@ -816,6 +816,21 @@ Sub SetOutlined(varOutlined As Boolean) As VMButton
 	Return Me
 End Sub
 
+'set shaped
+Sub SetShaped(varOutlined As Boolean) As VMButton
+	If varOutlined = False Then Return Me
+	If bStatic Then
+		Button.SetAttrSIngle("shaped", varOutlined)
+		Return Me
+	End If
+	Dim pp As String = $"${ID}shaped"$
+	vue.SetStateSingle(pp, varOutlined)
+	Button.Bind(":shaped", pp)
+	Return Me
+End Sub
+
+
+
 'set replace
 Sub SetReplace(varReplace As Boolean) As VMButton
 	If varReplace = False Then Return Me

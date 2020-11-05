@@ -140,7 +140,8 @@ Sub SetIcon(iconName As String) As VMMenu
 	btn.Initialize(vue, $"${ID}button"$, Module)
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
-	btn.SetIconButton(iconName)
+	btn.SetFabButton(iconName)
+	btn.SetSmall(True)
 	btn.SetMenuTrigger(True)
 	btn.Pop(act.Template)
 	hasActivator = True
@@ -153,9 +154,10 @@ Sub SetIconColor(iconName As String, iconColor As String) As VMMenu
 	btn.Initialize(vue, $"${ID}button"$, Module)
 	btn.SetStatic(bStatic)
 	btn.SetDesignMode(DesignMode)
-	btn.SetIconButton(iconName)
+	btn.SetFabButton(iconName)
 	btn.SetMenuTrigger(True)
 	btn.SetColor(iconColor)
+	btn.SetSmall(True)
 	btn.SetDark(True)
 	btn.Pop(act.Template)
 	hasActivator = True

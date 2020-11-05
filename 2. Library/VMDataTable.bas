@@ -37,6 +37,7 @@ Sub Class_Globals
 	Public COLUMN_PROGRESS_LINEAR As String = "progresslinear"
 	Public COLUMN_SAVE As String = "save"
 	Public COLUMN_CANCEL As String = "cancel"
+	Public COLUMN_BUTTON As String = "button"
 		
 	'alignment
 	Public ALIGN_CENTER As String = "center"
@@ -54,7 +55,7 @@ Sub Class_Globals
 	Private search As String
 	Private items As String
 	Type DataTableColumn(value As String, text As String, align As String, sortable As Boolean, filterable As Boolean, divider As Boolean, _
-	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String, bindTotals As String, hasTotal As Boolean)
+	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String, bindTotals As String, hasTotal As Boolean, depressed As Boolean, rounded As Boolean, dark As Boolean, label As String, color As String, outlined As Boolean, shaped As Boolean)
 	Private bStatic As Boolean
 	Private hdr As List
 	Private keyID As String
@@ -64,6 +65,7 @@ Sub Class_Globals
 	Private hasExternalPagination As Boolean
 	Private totalVisible As String
 	Private selected As String
+	Private rows As List
 End Sub
 
 'initialize the DataTable
@@ -108,6 +110,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPrimaryKey As String, even
 	totalVisible = ""
 	SetVModel(selected)
 	SetNoDataText("Working on it, please wait...")
+	rows.Initialize 
 	Return Me
 End Sub
 
@@ -218,6 +221,7 @@ End Sub
 
 'reset the structure of the data-table
 Sub Reset
+	rows.Initialize 
 	exclusions.Initialize 
 	filters.Initialize
 	hasFilters = False
@@ -240,6 +244,30 @@ Sub Reset
 	vue.SetData(keyID, DateTime.Now)
 End Sub
 
+'clear the row contents
+Sub Clear
+	rows.Initialize
+	exclusions.Initialize
+	filters.Initialize
+	hasFilters = False
+	vue.SetData(items, vue.newlist)
+	vue.SetData(selected, vue.NewList)
+	SetSortBy(vue.newlist)
+	SetGroupBy(vue.NewList)
+	SetExpanded(vue.NewList)
+	SetGroupDesc(vue.NewList)
+	SetSortDesc(vue.NewList)
+	SetValue(vue.NewList)
+	SetPage("1")
+	vue.SetData($"${ID}pagecount"$, "0")
+	vue.SetData($"${ID}fsource"$, vue.newlist)
+End Sub
+
+'add a new record
+Sub AddRow(rowData As Map) As VMDataTable
+	rows.Add(rowData)
+	Return Me
+End Sub
 
 'set dynamic data after adding columns
 Sub ResetColumns
@@ -729,7 +757,6 @@ Sub AddDeleteAll(key As String, iconName As String, toolTip As String) As VMData
 	Return Me
 End Sub
 
-
 'update database from existing saved state
 Sub SetDataSourceName(dsName As String) As VMDataTable
 	dsName = dsName.ToLowerCase
@@ -849,6 +876,26 @@ Sub AddNumberColumn(colName As String, colTitle As String, colFormat As String) 
 	SetColumnNumberFormat(colName, colFormat)
 	Return Me
 End Sub
+
+'add button column
+'<code>dt.AddButtonColumn("btnAdd1Day", "Add 1 Day")
+'</code>
+Sub AddButtonColumn(colName As String, colTitle As String) As VMDataTable
+	AddColumn(colName, colTitle)
+	SetColumnType(colName, COLUMN_BUTTON)
+	SetButtonLabel(colName, colTitle)
+	Return Me
+End Sub
+
+'add link column
+'<code>dt.AddLinkColumn("emailaddress", "Add 1 Day")
+'</code>
+Sub AddLinkColumn(colName As String, colTitle As String) As VMDataTable
+	AddColumn(colName, colTitle)
+	SetColumnType(colName, COLUMN_LINK)
+	Return Me
+End Sub
+
 
 'add columns from key value pairs
 Sub AddColumns(flds As Map) As VMDataTable
@@ -1044,7 +1091,13 @@ Sub AddColumn1(colName As String, colTitle As String, colType As String, colWidt
 	nf.valueFormat = ""
 	nf.bindTotals = ""
 	nf.hasTotal = False
-	'
+	nf.depressed = False
+	nf.rounded = False
+	nf.dark = False
+	nf.label = ""
+	nf.color = ""
+	nf.outlined = False
+	nf.shaped = False
 	columnsM.Put(colName, nf)
 	SetColumnType(colName, colType)
 	Return Me
@@ -1178,6 +1231,130 @@ Sub SetProgressLinearDimensions(colName As String, progressColor As String, prog
 	Return Me
 End Sub
 
+'make the button to be depressed
+Sub SetButtonDepressed(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.depressed = True
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be round
+Sub SetButtonRounded(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.rounded = True
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be shaped
+Sub SetButtonShaped(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.shaped = True
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+
+
+'make the button to be round
+Sub SetButtonOutlined(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.outlined = True
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be dark
+Sub SetButtonDark(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.dark = True
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+
+'make the button to have a single label
+Sub SetButtonLabel(colName As String, label As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.label = label
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be depressed
+Sub SetButtonColor(colName As String, color As String, intensity As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		Dim scolor As String = $"${color} ${intensity}"$
+		col.color = scolor
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be primary
+Sub SetButtonPrimary(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.color = "primary"
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be success
+Sub SetButtonSuccess(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.color = "success"
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be success
+Sub SetButtonError(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.color = "error"
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be warning
+Sub SetButtonWarning(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.color = "warning"
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+'make the button to be secondary
+Sub SetButtonSecondary(colName As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.color = "secondary"
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
 'set rating dimensions
 Sub SetRatingDimensions(colName As String, ratLength As String, ratColor As String) As VMDataTable
 	If columnsM.ContainsKey(colName) Then
@@ -1251,7 +1428,7 @@ Sub SetColumnType(colName As String, colType As String) As VMDataTable
 		Dim col As DataTableColumn = columnsM.Get(colName)
 		col.TypeOf = colType
 		Select Case colType
-		Case COLUMN_IMAGE, COLUMN_AVATARIMG, COLUMN_SWITCH
+		Case COLUMN_IMAGE, COLUMN_AVATARIMG, COLUMN_SWITCH, COLUMN_BUTTON
 			col.filterable = False
 		Case COLUMN_NUMBER
 			col.align = ALIGN_RIGHT
@@ -1312,7 +1489,7 @@ private Sub BuildControls
 		sbTotals.Append($"<tr>"$)
 		sbTotals.Append($"<th class="title">Totals</th>"$)
 	End If
-	
+	'
 	Dim sb As StringBuilder
 	sb.Initialize 
 	For Each k As String In columnsM.Keys
@@ -1537,6 +1714,29 @@ private Sub BuildControls
 			'
 			tmp.AddComponent(chp.ToString)
 			sb.Append(tmp.ToString)
+		Case COLUMN_BUTTON
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+			'
+			Dim abtn As VMButton
+			abtn.Initialize(vue, $"${ID}${value}"$, Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			abtn.AddClass("mr-2")
+			abtn.SetDepressed(nf.depressed)
+			abtn.SetRounded(nf.rounded)
+			abtn.SetDark(nf.dark)
+			abtn.SetLabel(nf.label)
+			abtn.SetColor(nf.color)
+			abtn.SetOutlined(nf.outlined)
+			abtn.SetShaped(nf.shaped)
+			'
+			If SubExists(Module, methodName) Then
+				abtn.SetAttrSingle("@click", $"${ID}_${value}(item)"$)
+				vue.SetMethod(Module, methodName)
+			End If
+			tmp.AddComponent(abtn.ToString)
+			sb.Append(tmp.tostring)
 		Case COLUMN_ACTION, COLUMN_EDIT, COLUMN_DELETE, COLUMN_SAVE, COLUMN_CANCEL
 			Dim tmpa As VMTemplate
 			tmpa.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
@@ -1575,6 +1775,9 @@ End Sub
 
 'get component
 Sub ToString As String
+	If rows.Size > 0 Then
+		vue.SetData(items, rows)
+	End If
 	vue.SetData(keyID, DateTime.Now)
 	'build the headers
 	BuildHeaders(columnsM)
@@ -1606,6 +1809,9 @@ End Sub
 
 'update the data
 Sub Refresh
+	If rows.Size > 0 Then
+		SetDataSource(rows)
+	End If
 	Dim dt As String = DateTime.now
 	vue.SetData(keyID, dt)
 End Sub

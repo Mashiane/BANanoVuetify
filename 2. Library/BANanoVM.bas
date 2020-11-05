@@ -1604,7 +1604,7 @@ Sub ShowSnackBarError(Message As String)
 	If Message = "" Then Return
 	SetStateSingle("snackmessage", Message)
 	SnackBar.SetTop(True)
-	SnackBar.SetColor("red")
+	SnackBar.SetColor("error")
 	SnackBar.Button.Hide
 	SnackBar.show
 End Sub
@@ -1615,11 +1615,36 @@ Sub ShowSnackBarSuccess(Message As String)
 	Message = Message.Trim
 	If Message = "" Then Return
 	SetStateSingle("snackmessage", Message)
-	SnackBar.SetColor("green")
+	SnackBar.SetColor("success")
 	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
 	SnackBar.show
 End Sub
+
+Sub ShowSnackBarPrimary(Message As String)
+	Message = CStr(Message)
+	Message = Message.Replace("null", "")
+	Message = Message.Trim
+	If Message = "" Then Return
+	SetStateSingle("snackmessage", Message)
+	SnackBar.SetColor("primary")
+	SnackBar.SetTop(True)
+	SnackBar.Button.Hide
+	SnackBar.show
+End Sub
+
+Sub ShowSnackBarSecondary(Message As String)
+	Message = CStr(Message)
+	Message = Message.Replace("null", "")
+	Message = Message.Trim
+	If Message = "" Then Return
+	SetStateSingle("snackmessage", Message)
+	SnackBar.SetColor("secondary")
+	SnackBar.SetTop(True)
+	SnackBar.Button.Hide
+	SnackBar.show
+End Sub
+
 
 Sub ShowSnackBarWarning(Message As String)
 	Message = CStr(Message)
@@ -1627,7 +1652,7 @@ Sub ShowSnackBarWarning(Message As String)
 	Message = Message.Trim
 	If Message = "" Then Return
 	SetStateSingle("snackmessage", Message)
-	SnackBar.SetColor("amber")
+	SnackBar.SetColor("warning")
 	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
 	SnackBar.show
@@ -3236,6 +3261,11 @@ Sub UX
 	vuetify = vue.BOVue.GetField(svuetify)
 	Breakpoint = vuetify.GetField("breakpoint").Result
 	BreakpointName = vuetify.GetField("breakpoint").GetField("name").Result
+End Sub
+
+'add custom element to VApp
+Sub AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
+	VApp.AddElement1(eltag, elid, eltext, elprops, Null, Null, Null)
 End Sub
 
 'Use router To navigate

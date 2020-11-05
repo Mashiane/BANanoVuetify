@@ -2697,6 +2697,13 @@ Sub RegisterComponent(compName As String, compOptions As Map) As BANanoVue
 	Return Me
 End Sub
 
+'import a component, the module should have the Initilize method without parameters
+Sub Import(compname As String, comp As VMComponent) As BANanoVue
+	compname = compname.tolowercase
+	If components.ContainsKey(compname) = True Then Return Me
+	components.Put(compname, comp.Component)
+	Return Me
+End Sub
 
 Sub AddComponent(comp As VMComponent) As BANanoVue
 	Dim sid As String = comp.id

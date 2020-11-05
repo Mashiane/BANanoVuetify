@@ -382,6 +382,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMImage,SetAttributes,239,0,VMImage,SetSize,249,0,VMElement,AddElement,130,0,VMElement,SetGridListXS,141,0,VMElement,AddDynamicClass,1007,0,VMElement,RemoveDynamicClass,1034,0,VMElement,Class_Globals,11,0,VMElement,Initialize,98,0,VMElement,BindStyle,967,0,VMElement,ToString,1308,0,VMElement,AddComponent,1295,0
+NavigationStack=VMMenu,AddComponent,111,0,VMMenu,SetAttrLoose,127,0,VMMenu,SetButton,161,0,VMMenu,SetIconColor,151,0,VMMenu,SetButton1,180,0,VMMenu,SetIcon,139,0,VMCardTitle,AddIcon3,213,0,VMDataTable,SetColumnChooser,633,0,VMDataTable,BuildControls,1741,0,VMAvatar,SetIconOnly,192,0,VMAvatar,SetIcon,186,0
 SelectedBuild=0
 VisibleModules=

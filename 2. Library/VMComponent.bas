@@ -260,6 +260,14 @@ Sub SetText(t As String) As VMComponent
 	Return Me
 End Sub
 
+'set template from a placeholder
+Sub SetTemplateFromPlaceholder() As VMComponent
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	Template.SetText(stemplate)
+	Return Me
+End Sub
+
+'set template
 Sub SetTemplate(t As String) As VMComponent
 	Template.SetText(t)
 	Return Me

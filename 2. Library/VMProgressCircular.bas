@@ -18,6 +18,7 @@ Sub Class_Globals
 	Private suffix As String
 	Private pValue As String
 	Private vmodel As String
+	Private vshow As String
 End Sub
 
 'initialize the ProgressCircular
@@ -34,10 +35,11 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	suffix = ""
 	pValue = ""
 	vmodel = ""
+	vshow = $"${ID}show"$
+	SetVShow(vshow)
+	Show
 	Return Me
 End Sub
-
-
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)
@@ -53,7 +55,6 @@ End Sub
 
 'set reactive
 Sub SetReactive(varReactive As Boolean) As VMProgressCircular
-	If varReactive = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("reactive", varReactive)
 		Return Me
@@ -119,6 +120,7 @@ Sub SetVIf(vif As String) As VMProgressCircular
 End Sub
 
 Sub SetVShow(vif As String) As VMProgressCircular
+	vshow = vif
 	ProgressCircular.SetVShow(vif)
 	Return Me
 End Sub
@@ -241,7 +243,6 @@ End Sub
 
 'set indeterminate
 Sub SetIndeterminate(varIndeterminate As Boolean) As VMProgressCircular
-	If varIndeterminate = False Then Return Me
 	If bStatic Then
 		SetAttrSingle("indeterminate", varIndeterminate)
 		Return Me
@@ -255,13 +256,13 @@ End Sub
 
 'hide the component
 Sub Hide As VMProgressCircular
-	ProgressCircular.SetVisible(False)
+	vue.SetData(vshow, False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMProgressCircular
-	ProgressCircular.SetVisible(True)
+	vue.SetData(vshow, True)
 	Return Me
 End Sub
 
@@ -466,9 +467,8 @@ Sub BuildModel(mprops As Map, mstyles As Map, lclasses As List, loose As List) A
 	Return Me
 End Sub
 
-
 Sub SetVisible(b As Boolean) As VMProgressCircular
-	ProgressCircular.SetVisible(b)
+	vue.SetData(vshow, b)
 	Return Me
 End Sub
 

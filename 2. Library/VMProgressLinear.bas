@@ -34,8 +34,6 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	Return Me
 End Sub
 
-
-
 'add an element to the page content
 Sub AddElement(elm As VMElement)
 	ProgressLinear.SetText(elm.ToString)
@@ -408,13 +406,13 @@ End Sub
 
 'hide the component
 Sub Hide As VMProgressLinear
-	ProgressLinear.SetVisible(False)
+	SetActive(False)
 	Return Me
 End Sub
 
 'show the component
 Sub Show As VMProgressLinear
-	ProgressLinear.SetVisible(True)
+	SetActive(True)
 	Return Me
 End Sub
 
