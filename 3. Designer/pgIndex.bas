@@ -513,7 +513,7 @@ Sub Process_Globals
 	Private bissearch As Boolean
 	Private sextensionheight As String
 	Private slogourl As String
-	Private stitleclass As String
+	Private stitleclassname As String
 	Private sbartype As String
 	Private slogowidth As String
 	Private slogoheight As String
@@ -759,6 +759,7 @@ Sub Init
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
+	vue.ShowWarnings = False
 	'
 '	Dim lst As List = vue.newlist
 '	Dim colors As Map = vm.ColorOptions
@@ -855,6 +856,7 @@ Sub Init
 	'vm.setmethod(Me, "importschemalist")
 	
 	vm.UX
+	Log(vue.gettemplate)
 	'
 	
 	vm.SetBadgeContent("btnToolbox", TotComponents)
@@ -1044,14 +1046,14 @@ Sub BuildNavBar
 	'
 	Dim gridmenu As VMMenu = vm.CreateMenu("gridMenu", Me).SetButton("", "Grid")
 	gridmenu.SetTransition(vm.TRANSITION_FAB)
-	gridmenu.AddItem("btnClearGrid", "", "delete", "Clear", "", "")
-	gridmenu.AddItem("btnRemoveLastGrid", "", "delete", "Remove Last", "", "")
+	gridmenu.AddItem("btnClearGrid", "", "mdi-delete", "Clear", "", "")
+	gridmenu.AddItem("btnRemoveLastGrid", "", "mdi-delete", "Remove Last", "", "")
 	vm.NavBar.AddMenu(gridmenu)
 	'
 	Dim compmenu As VMMenu = vm.CreateMenu("compMenu", Me).SetButton("", "Components")
 	compmenu.SetTransition(vm.TRANSITION_FAB)
-	compmenu.AddItem("btnclearcomp", "", "delete", "Clear", "", "")
-	compmenu.AddItem("btnremovelastcomp", "", "delete", "Remove Last", "", "")
+	compmenu.AddItem("btnclearcomp", "", "mdi-delete", "Clear", "", "")
+	compmenu.AddItem("btnremovelastcomp", "", "mdi-delete", "Remove Last", "", "")
 	compmenu.AddItem("btndownloadcomp", "", "mdi-cloud-download-outline", "Download", "", "")
 	compmenu.AddItem("btnuploadcomp","", "mdi-cloud-upload-outline","Upload", "", "")
 	vm.NavBar.AddMenu(compmenu)
@@ -1062,7 +1064,7 @@ Sub BuildNavBar
 	vm.navbar.AddIcon("btnipad","mdi-tablet-ipad", "iPad", "")
 	vm.NavBar.addicon("btniphone", "mdi-cellphone-iphone", "iPhone", "")
 	vm.NavBar.AddIcon("btnLandScape", "mdi-phone-rotate-landscape", "Rotate", "")
-	vm.NavBar.AddIcon("btnRefresh", "refresh", "Refresh", "")
+	vm.NavBar.AddIcon("btnRefresh", "mdi-refresh", "Refresh", "")
 	'
 	'add a logo
 	vm.NavBar.Logo.SetBorderRadius("50%")
@@ -1106,7 +1108,7 @@ Sub BuildDrawer
 	dtbl.AddIcon1("btnSaveComponents2Project", "mdi-content-save-outline", "orange", "Save components to project","")
 	dtbl.AddIcon1("btnExtractComponents", "mdi-application-export", "purple", "Export components to stage","")
 	dtbl.AddIcon1("btnDownloadComponents", "mdi-cloud-download-outline", "brown", "Download project components","")
-	dtbl.AddIcon1("btnDeleteProject", "delete", "red", "Delete project", "")
+	dtbl.AddIcon1("btnDeleteProject", "mdi-delete", "red", "Delete project", "")
 	'
 	vm.drawer.Container.SetNoGutters(True)
 	vm.Drawer.Container.AddControlS(dtbl.ToolBar, dtbl.ToString,1,1,12,12,12,12)
@@ -2162,8 +2164,8 @@ Sub CreatePropertyBagsDrawer
 	'create a toolbar to save and delete the property bag
 	tblProp = vm.CreateToolbar("tblx", Me).SetDense(True).SetVisible(False).SetFlat(True)
 	tblProp.AddSpacer
-	tblProp.AddIcon("btnSaveProp", "save", "Save property bag", "")
-	tblProp.AddIcon("btnDeleteProp", "delete", "Delete property bag", "")
+	tblProp.AddIcon("btnSaveProp", "mdi-content-save", "Save property bag", "")
+	tblProp.AddIcon("btnDeleteProp", "mdi-delete", "Delete property bag", "")
 	drwbags.Container.AddHTML(tblProp.tostring)
 	
 	'add property bags
@@ -3705,7 +3707,7 @@ Sub Read_Toolbar
 	sScrolltarget = mattr.getdefault("scrolltarget", "")
 	sScrollthreshold = mattr.getdefault("scrollthreshold", "")
 	slogourl = mattr.getdefault("logourl", "")
-	stitleclass = mattr.getdefault("titleclass", "")
+	stitleclassname = mattr.getdefault("titleclassname", "")
 	sbartype = mattr.getdefault("bartype","tool")
 	slogowidth = mattr.getdefault("logowidth", "46px")
 	slogoheight = mattr.getdefault("logoheight","46px")
@@ -6907,7 +6909,7 @@ Sub Design_ToolBar
 		tbl.AddLogo(slogourl)
 	End If
 	'
-	If bisTitle Then tbl.AddTitle(sTitle, stitleclass)
+	If bisTitle Then tbl.AddTitle(sTitle, stitleclassname)
 	If bissubtitle Then tbl.AddSubHeading1(stoolbarsubtitle)
 	If bissearch Then
 		tbl.AddSpacer
@@ -7067,7 +7069,7 @@ Sub Design_ToolBar
 	If biscurrent = False Then
 		If bisTitle Then 
 			AddCode(sb, $"tbl${sname}.Title.SetOnClick(Me, "title_click")"$)
-			CodeLine2(sb, sTitle, stitleclass, "s", "tbl", sname, "AddTitle")
+			CodeLine2(sb, sTitle, stitleclassname, "s", "tbl", sname, "AddTitle")
 		End If
 		If bissubtitle Then CodeLine(sb, stoolbarsubtitle, "s", "tbl", sname, "AddSubHeading1")
 		If bissearch Then
@@ -7077,8 +7079,8 @@ Sub Design_ToolBar
 		If bisspacer Then sb.append($"tbl${sname}.AddSpacer"$).append(CRLF)
 		
 		CodeLine(sb, sextensionheight, "s", "tbl", sname, "SetExtensionHeight")
-		CodeLine(sb, sscrolltarget, "s", "tbl", sname, "SetScrollTarget")
-		CodeLine(sb, sscrollthreshold, "s", "tbl", sname, "SetScrollThreshold")
+		CodeLine(sb, sScrolltarget, "s", "tbl", sname, "SetScrollTarget")
+		CodeLine(sb, sScrollthreshold, "s", "tbl", sname, "SetScrollThreshold")
 		CodeLine(sb, ssrc, "s", "tbl", sname, "SetSrc")
 		CodeLine(sb, sElevation, "s", "tbl", sname, "SetElevation")
 		CodeLine(sb, bisFlat, "b", "tbl", sname, "SetFlat")
@@ -7136,7 +7138,7 @@ Sub Design_ToolBar
 	Else
 		If bisTitle Then 
 			AddCode(sb, $"vm.NavBar.Title.SetOnClick(Me, "title_click")"$)
-			CodeLine2(sb, sTitle, stitleclass, "s", "vm.NavBar", "", "AddTitle")
+			CodeLine2(sb, sTitle, stitleclassname, "s", "vm.NavBar", "", "AddTitle")
 		End If
 		If bissubtitle Then CodeLine(sb, stoolbarsubtitle, "s", "vm.NavBar", "", "AddSubHeading1")
 		If bissearch Then
@@ -8130,7 +8132,7 @@ Sub DesignLayout
 	tabs.OnToolBar = True
 	tabs.AddTab("dndrea", "Drag n Drop / Preview", "mdi-drag-variant", dnd)
 	tabs.AddTab("previewdevide", "Device", "mdi-laptop-mac", device)
-	tabs.AddTab("b4xarea", "B4X", "code", b4x)
+	tabs.AddTab("b4xarea", "B4X", "mdi-code-braces", b4x)
 	tabs.AddTab("htmlarea", "HTML", "mdi-language-html5", html5)
 	tabs.AddTab("schemaarea", "Schema", "mdi-database", schema)
 	
@@ -9230,6 +9232,7 @@ Sub CreateSchema
 	dtschema.SetIconDimensions1("delete", "24px", "error", "80")
 	dtschema.AddDivider
 	dtschema.SetClearSort
+	dtschema.AddDivider
 	dtschema.SetColumnChooser(True)
 	'
 	contSchema.AddControl(dtschema.DataTable, dtschema.tostring, 1, 1, 0, 0, 0, 0, 12, 12, 12, 12)
@@ -12721,7 +12724,7 @@ End Sub
 Sub PropertyBag_Toolbar
 	vm.setdata("pbtoolbar", False)
 	lstBags.add("pbtoolbar")
-	pbtoolbar = vm.CreateProperty("ppbcontainer", Me)
+	pbtoolbar = vm.CreateProperty("pbbtoolbar", Me)
 	pbtoolbar.SetVShow("pbtoolbar")
 	pbtoolbar.AddHeading("d","Details")
 	pbtoolbar.AddText("d","id","ID","","")
@@ -12734,7 +12737,7 @@ Sub PropertyBag_Toolbar
 	pbtoolbar.AddText2("d",CreateMap("scrolltarget":"Scroll Target", "scrollthreshold":"Scroll Threshold"))
 	pbtoolbar.AddText("d","src","Background Image","","")
 	pbtoolbar.AddText("d","label","Title","","")
-	pbtoolbar.AddText("d","titleclass","Title Class(es)","","")
+	pbtoolbar.AddText("d","titleclassname","Title Class(es)","","")
 	pbtoolbar.AddText("d","toolbarsubtitle","Sub Heading","","")
 	pbtoolbar.AddSelect2("d","color","Color", vm.ColorOptions, "intensity","Intensity", vm.IntensityOptions)
 	pbtoolbar.AddSelect2("d","textcolor","Text Color", vm.ColorOptions, "textintensity","Text Intensity", vm.IntensityOptions)
@@ -14489,7 +14492,8 @@ Sub Design_Table
 	sb.append(sba.tostring)
 	AddCode(sb, $"dt${dlg}.AddDivider"$)
 	AddCode(sb, $"dt${dlg}.SetClearSort"$)
-	
+	AddCode(sb, $"dt${dlg}.AddDivider"$)
+	'
 	AddComment(sb,"add a column chooser, if any")
 	CodeLine(sb, bisFilter, "b", "dt", dlg, "SetColumnChooser")
 	If bisFilter Then 

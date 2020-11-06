@@ -727,6 +727,7 @@ Sub NewList1(lst As List) As List
 End Sub
 
 
+'set global state data
 Sub SetDataGlobal(prop As String, value As Object) As BANanoVue
 	prop = prop.ToLowerCase
 	state.Put(prop, value)
@@ -738,8 +739,8 @@ Sub SetDataGlobal(prop As String, value As Object) As BANanoVue
 		'update the store
 		store.GetField(prop).SetField(prop, value)
 	Catch
-		'Log($"Warning - VueApp.SetDataGlobal: ${prop}.${value}"$)
-	End Try  'ignore
+		'Log($"Error - BANanoVue.SetDataGlobal: ${prop}.${value}"$)
+	End Try   'ignore
 	'
 	'computed is not set
 	If computed.ContainsKey(prop) = False Then
@@ -748,7 +749,7 @@ Sub SetDataGlobal(prop As String, value As Object) As BANanoVue
 	End If
 	Return Me
 End Sub
-'
+
 'read the value of the prop we need
 private Sub getglobalstate(prop As String) As Object
 	prop = prop.tolowercase
@@ -756,16 +757,18 @@ private Sub getglobalstate(prop As String) As Object
 	Return rslt
 End Sub
 
+'get global state data
 Sub GetDataGlobal(prop As String) As Object
 	prop = prop.tolowercase
 	Dim rslt As Object
 	rslt = state.GetDefault(prop, Null)
 	Try
 		Dim bo As BANanoObject = store.GetField(prop)
-		If BANAno.IsNull(bo) Or BANAno.IsUndefined(bo) Then Return Null
-		rslt = store.GetField(prop)
+		If BANAno.IsNull(bo) Then Return Null
+		If BANAno.IsUndefined(bo) Then Return Null
+		rslt = store.GetField(prop).Result
 	Catch
-		'Log($"Warning - VueApp.GetDataGlobal: ${prop}"$)
+		'Log($"Error - BANanoVue.GetData: ${prop}"$)
 	End Try   'ignore
 	Return rslt
 End Sub
