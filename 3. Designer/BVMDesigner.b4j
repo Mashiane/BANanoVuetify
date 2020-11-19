@@ -215,7 +215,7 @@ Sub Process_Globals
 	Public AppTitle As String = "BVMDesigner"
 	Private Publish As String = "C:\laragon\www"
 	Public ServerIP As String = "localhost"
-	Public Version As String = "4.48"
+	Public Version As String = "4.52"
 	Public Port As String = "8080"
 	Private db As BANanoSQL
 	Private alaSQL As BANanoAlaSQLE

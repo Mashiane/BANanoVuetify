@@ -2274,3 +2274,10 @@ Sub SetSmallChips(varSmallChips As Boolean) As VMElement
 	Bind(":small-chips", pp)
 	Return Me
 End Sub
+
+'add placeholder to VAPP
+Sub AddPlaceholder() As VMElement
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	SetText(stemplate)
+	Return Me
+End Sub

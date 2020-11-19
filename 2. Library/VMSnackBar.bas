@@ -29,7 +29,7 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	mKey = $"${ID}message"$
 	vue.SetStateSingle(mKey, Null)
 	SetText($"{{ ${mKey} }}"$)
-	Button.Initialize(vue, "snackbutton", Me).SetColor("")
+	Button.Initialize(vue, "appsnackbutton", Me).SetColor("")
 	Button.hide
 	Button.SetLabel("Ok")
 	SetVModel(SnackBar.showkey)
@@ -194,9 +194,9 @@ Sub SetOnClick(methodName As String) As VMSnackBar
 	Return Me
 End Sub
 
-Sub snackbutton_click(e As BANanoEvent)    'ignoredeadcode
+Sub appsnackbutton_click(e As BANanoEvent)    'ignoredeadcode
 	If mName = "" Then
-		Log($"VMSnackbar.snackbutton_click: 'SetOnClick' has not been set!"$)
+		Log($"VMSnackbar.appsnackbutton_click: 'SetOnClick' has not been set!"$)
 	End If
 	Hide
 	BANano.CallSub(Module, mName, Null)

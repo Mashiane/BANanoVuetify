@@ -227,10 +227,10 @@ Sub Class_Globals
 	Public UsesFooter As Boolean
 	Public UsesBottomNav As Boolean
 	Public UsesOverlay As Boolean
-	Public UsesLoader As Boolean
 	Public UsesSnackBar As Boolean
 	Public UsesDialog As Boolean
 	Public UsesNotification As Boolean
+	Public UsesContainer As Boolean
 	'
 	Public const LOCALE_Afrikaans As String = "af" 
 	Public const LOCALE_Arabic As String = "ar"
@@ -329,14 +329,17 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	FontSizes.Initialize
 	bUseRouter = False 
 	'
-	RouterView.Initialize(vue, "").SetTag("router-view")
+	RouterView.Initialize(vue, "routerview").SetTag("router-view").SetStatic(True)
 	
 	'initialize the pages
 	Pages.initialize
 	'
 	VApp.Initialize(vue, appName).SetTag("v-app")
 	VContent.Initialize(vue, "main").SetTag("v-main")
-	Container.Initialize(vue, "container", eventHandler).SetFluid(True)
+	'
+	Container.Initialize(vue, "appcontainer", eventHandler)
+	Container.SetFluid(True)
+	Container.SetStatic(True)
 	'
 	Drawer.Initialize(vue, "drawer", eventHandler)
 	Drawer.SetApp(True)
@@ -347,16 +350,20 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	NavBar.SetVShow("appbarshow")
 	NavBar.Show
 	'
-	Footer.Initialize(vue, "footer", eventHandler)
-	Footer.SetVShow("footershow")
+	Footer.Initialize(vue, "appfooter", eventHandler)
+	Footer.SetVShow("appfootershow")
 	Footer.SetApp(True)
 	'
-	BottomNav.Initialize(vue, "bottomnav", eventHandler)
+	BottomNav.Initialize(vue, "appbottomnav", eventHandler)
 	BottomNav.SetApp(True)
-	BottomNav.SetVShow("bottomnavshow")
+	BottomNav.SetVShow("appbottomnavshow")
 	BottomNav.Hide
 	
-	SnackBar = CreateSnackBar("snack", eventHandler).SetColor("").SetBottom(False).SetRight(False) 
+	SnackBar = CreateSnackBar("appsnack", eventHandler)
+	SnackBar.SetColor("")
+	SnackBar.SetBottom(False)
+	SnackBar.SetRight(False) 
+	
 	Notification = CreateAlert("appnotif", eventHandler, "")
 	Notification.SetVModel("appnotifshow")
 	Notification.SetContent("Notification")
@@ -371,7 +378,7 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	'put loader on page
 	Overlay.Initialize(vue, "pageloader", eventHandler)
 		'
-	Animate.Initialize(vue, "appanimate", eventHandler)
+	Animate.Initialize(vue, "appanimate", eventHandler).SetStatic(True)
 	Animate.SetType("v-fade-transition")
 	Animate.SetMode("out-in")
 	Animate.SetHideOnLeave(True)
@@ -415,12 +422,24 @@ Public Sub Initialize(eventHandler As Object, appName As String)
 	UsesFooter = True
 	UsesBottomNav = True
 	UsesOverlay = True
-	UsesLoader = True
 	UsesSnackBar = True
 	UsesDialog = True
 	UsesNotification = True
+	UsesContainer = True
 End Sub
 
+'add anything from the appendholder
+Sub AppendHolderTo(target As String) As BANanoVM
+	Dim stemplate As String = vue.BANanoGetHTMLAsIs("appendholder")
+	Dim elx As BANanoElement = BANano.GetElement(target)
+	elx.append(stemplate)
+	Return Me
+End Sub
+
+'add html of component to app and this binds events and states
+Sub BindVueElement(elx As VueElement)
+	vue.BindVueElement(elx)
+End Sub
 
 'get the name of the breakpoint
 Sub GetBreakPointName As String
@@ -429,7 +448,9 @@ Sub GetBreakPointName As String
 	Return res
 End Sub
 
-
+Sub Toggle(stateID As String)
+	ToggleState(stateID)
+End Sub
 
 'set the transition for the router
 Sub SetTransition(trans As String) As BANanoVM
@@ -444,16 +465,90 @@ Sub SetTransitionMode(mode As String) As BANanoVM
 End Sub
 
 'use a completelt blank template
-Sub UseBlankTemplate
+Sub UseBlankTemplate As BANanoVM
 	UsesDrawer = False
 	UsesNavBar = False
 	UsesFooter = False
 	UsesBottomNav = False
 	UsesOverlay = False
-	UsesLoader = False
 	UsesSnackBar = False
 	UsesDialog = False
 	UsesNotification = False
+	'
+	RemoveNeeds
+	Return Me
+End Sub
+
+private Sub RemoveNeeds
+	If UsesContainer = False Then
+		vue.RemoveDataItems(Array("appcontainershow"))
+	End If
+	
+	If UsesDialog = False Then
+		vue.RemoveDataItems(Array("appalertcardbarlogoheight", "appalertcardbarlogomaxheight"))
+		vue.RemoveDataItems(Array("appalertcardbarlogomaxwidth", "appalertcardbarlogoshow", "appalertcardbarlogostyle"))
+		vue.RemoveDataItems(Array("appalertcardbarlogowidth", "appalertcardbarprogressabsolute", "appalertcardbarprogressactive"))
+		vue.RemoveDataItems(Array("appalertcardbarprogressbottom", "appalertcardbarprogressindeterminate", "appalertcardbarshow"))
+		vue.RemoveDataItems(Array("appalertcardbartablsds", "appalertcardbartablsshow", "appalertcardbartitleshow", "appalertcardformshow"))
+		vue.RemoveDataItems(Array("appalertcardformvalid", "appalertcardimgshow", "appalertcardpsfootershow", "appalertcardpsshow"))
+		vue.RemoveDataItems(Array("appalertcontent", "appalertpersistent", "appalertshow", "appalerttitle", "appalertwidth"))
+		vue.RemoveDataItems(Array("btnalertoklabel", "btnalertoktext", "btnalertokbadgeshow", "btnalertokcolor"))
+		vue.RemoveMethod("btnalertOk_click")
+		
+		'
+		vue.RemoveDataItems(Array("btnconfirmcancelbadgeshow", "btnconfirmcancelcolor", "btnconfirmcancellabel"))
+		vue.RemoveDataItems(Array("btnconfirmcanceltext", "btnconfirmokbadgeshow", "btnconfirmokcolor", "btnconfirmoklabel"))
+		vue.RemoveDataItems(Array("btnconfirmoktext", "confirmcardbarlogoheight", "confirmcardbarlogomaxheight", "confirmcardbarlogomaxwidth"))
+		vue.RemoveDataItems(Array("confirmcardbarlogoshow", "confirmcardbarlogostyle", "confirmcardbarlogowidth", "confirmcardbarprogressabsolute"))
+		vue.RemoveDataItems(Array("confirmcardbarprogressactive", "confirmcardbarprogressbottom", "confirmcardbarprogressindeterminate"))
+		vue.RemoveDataItems(Array("confirmcardbarshow", "confirmcardbartablsds", "confirmcardbartablsshow", "confirmcardbartitleshow", "confirmcardformshow"))
+		vue.RemoveDataItems(Array("confirmcardformvalid", "confirmcardimgshow", "confirmcardpsfootershow", "confirmcardpsshow", "confirmcontent"))
+		vue.RemoveDataItems(Array("confirmkey", "confirmpersistent", "confirmshow", "confirmtitle", "confirmwidth"))
+		vue.RemoveMethod("btnConfirmCancel_click")
+		vue.RemoveMethod("btnConfirmOk_click")
+	End If
+	
+	
+	If UsesNavBar = False Then
+		vue.RemoveDataItems(Array("appbarlogoheight", "appbarlogomaxheight", "appbarlogomaxwidth", "appbarlogoshow", "appbarlogostyle"))
+		vue.RemoveDataItems(Array("appbarlogowidth", "appbarprogressabsolute", "appbarprogressactive", "appbarprogressbottom", "appbarprogressindeterminate"))
+		vue.RemoveDataItems(Array("appbarshow", "appbartablsds", "appbartablsshow", "appbartitleshow", "menushow" ,"rightmenushow"))
+		vue.RemoveMethod("menu_click")
+	End If
+	
+	
+	If UsesOverlay = False Then
+		vue.RemoveDataItems(Array("pageloadercontshow", "pageloaderprogresscolor", "pageloaderprogressindeterminate"))
+		vue.RemoveDataItems(Array("pageloaderprogressshow", "pageloaderprogresssize", "pageloadershow"))
+	End If
+		
+	If UsesNotification = False Then
+		vue.RemoveDataItems(Array("appnotifborder", "appnotifcolor"))
+		vue.RemoveDataItems(Array("appnotifcoloredborder", "appnotifcontent", "appnotifcontshow", "appnotifdismissible", "appnotificon"))
+		vue.RemoveDataItems(Array("appnotifshow", "appnotiftype"))
+	End If
+	
+		
+	If UsesBottomNav = False Then
+		vue.RemoveDataItems(Array("appbottomnavbn", "appbottomnavshow"))
+	End If
+	
+	
+	If UsesDrawer = False Then
+		vue.RemoveDataItems(Array("drawer", "drawercontshow", "draweritemsds", "draweritemsnav", "drawershow"))
+	End If
+
+	If UsesFooter = False Then
+		vue.RemoveDataItems(Array("appfootercontshow", "appfootershow"))
+	End If
+	
+		
+	If UsesSnackBar = False Then
+		vue.RemoveDataItems(Array("appsnackbottom", "appsnackbuttonbadgeshow"))
+		vue.RemoveDataItems(Array("appsnackbuttonlabel", "appsnackbuttonshow", "appsnackcentered", "appsnackcolor", "appsnackleft", "appsnackmessage"))
+		vue.RemoveDataItems(Array("appsnackright", "appsnackshow", "appsnacktop"))
+		vue.RemoveMethod("appsnackbutton_click")
+	End If
 End Sub
 
 Sub GetDataGlobal(prop As String) As Object
@@ -1602,7 +1697,7 @@ Sub ShowSnackBarError(Message As String)
 	Message = Message.Replace("null", "")
 	Message = Message.Trim
 	If Message = "" Then Return
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.SetTop(True)
 	SnackBar.SetColor("error")
 	SnackBar.Button.Hide
@@ -1614,7 +1709,7 @@ Sub ShowSnackBarSuccess(Message As String)
 	Message = Message.Replace("null", "")
 	Message = Message.Trim
 	If Message = "" Then Return
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.SetColor("success")
 	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
@@ -1626,7 +1721,7 @@ Sub ShowSnackBarPrimary(Message As String)
 	Message = Message.Replace("null", "")
 	Message = Message.Trim
 	If Message = "" Then Return
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.SetColor("primary")
 	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
@@ -1638,7 +1733,7 @@ Sub ShowSnackBarSecondary(Message As String)
 	Message = Message.Replace("null", "")
 	Message = Message.Trim
 	If Message = "" Then Return
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.SetColor("secondary")
 	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
@@ -1651,7 +1746,7 @@ Sub ShowSnackBarWarning(Message As String)
 	Message = Message.Replace("null", "")
 	Message = Message.Trim
 	If Message = "" Then Return
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.SetColor("warning")
 	SnackBar.SetTop(True)
 	SnackBar.Button.Hide
@@ -1664,13 +1759,13 @@ Sub ShowSnackBar(Message As String)
 	Message = Message.Replace("null", "")
 	Message = Message.Trim
 	If Message = "" Then Return
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.Button.Hide
 	SnackBar.show
 End Sub
 
 Sub ShowSnackBarButton(Message As String, buttonText As String, OnClick As String)
-	SetStateSingle("snackmessage", Message)
+	SetStateSingle("appsnackmessage", Message)
 	SnackBar.Button.Show
 	SnackBar.SetOnClick(OnClick)
 	SnackBar.Button.SetLabel(buttonText)
@@ -3238,7 +3333,9 @@ Sub UX
 		Animate.AddComponent(RouterView.ToString)
 		VContent.AddComponent(Animate.ToString)
 	Else
-		Container.Pop(VContent)
+		If UsesContainer Then 
+			Container.Pop(VContent)
+		End If
 	End If
 	
 	'add content
@@ -3249,6 +3346,9 @@ Sub UX
 	If UsesBottomNav Then BottomNav.Pop(VApp)
 	'template built from all pages
 	vue.SetTemplate(VApp.ToString)
+	
+	'remove needs
+	RemoveNeeds
 	'
 	'set vuetify to the vue scope
 	'create a new instance of vuetify
@@ -3264,8 +3364,47 @@ Sub UX
 End Sub
 
 'add custom element to VApp
-Sub AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
+Sub VApp_AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
 	VApp.AddElement1(eltag, elid, eltext, elprops, Null, Null, Null)
+End Sub
+
+'add placeholder to VAPP
+Sub VApp_AddPlaceholder() As BANanoVM
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	VApp.SetText(stemplate)
+	Return Me
+End Sub
+
+'add layout to VAPP
+Sub VApp_AddLayout() As BANanoVM
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	VApp.SetText(stemplate)
+	Return Me
+End Sub
+
+
+'add custom element to VMain
+Sub VMain_AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
+	VContent.AddElement1(eltag, elid, eltext, elprops, Null, Null, Null)
+End Sub
+
+'add placeholder to VMain
+Sub VMain_AddPlaceholder() As BANanoVM
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	VContent.SetText(stemplate)
+	Return Me
+End Sub
+
+'add custom element to body
+Sub Body_AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
+	VContent.AddElement1(eltag, elid, eltext, elprops, Null, Null, Null)
+End Sub
+
+'add placeholder to body
+Sub Body_AddPlaceholder() As BANanoVM
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	VContent.SetText(stemplate)
+	Return Me
 End Sub
 
 'Use router To navigate
@@ -4008,4 +4147,51 @@ End Sub
 
 Sub LoremIpsum As String
 	Return BANanoShared.Rand_LoremIpsum(1)
+End Sub
+
+
+'add anything from the appendholder
+Sub AppendPlaceHolderTo(target As String)
+	Dim stemplate As String = BANanoGetHTMLAsIs("placeholder")
+	Dim elx As BANanoElement
+	elx.Initialize($"#${target}"$)
+	elx.append(stemplate)
+End Sub
+
+
+'get the html part of a bananoelement
+Sub BANanoGetHTMLAsIs(id As String) As String
+	id = id.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${id}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	Return xTemplate
+End Sub
+
+
+'get html from source and append it on target
+Sub BANanoMoveHTML(source As String, target As String)
+	source = source.tolowercase
+	target = target.tolowercase
+	Dim ssource As String = BANanoGetHTML(source)
+	'append the html to the target
+	BANano.GetElement($"#${target}"$).Append(ssource)
+End Sub
+
+'get the html part of a bananoelement
+Sub BANanoGetHTML(id As String) As String
+	id = id.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${id}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	xTemplate = xTemplate.Replace("v-template", "template")
+	Return xTemplate
+End Sub
+
+'set the template from the placeholder
+Sub AppendPlaceholderToTemplate
+	Dim ssource As String = BANanoGetHTML("placeholder")
+	VApp.SetText(ssource)
 End Sub

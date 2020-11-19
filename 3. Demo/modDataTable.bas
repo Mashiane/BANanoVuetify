@@ -15,6 +15,7 @@ Sub Process_Globals
 	Private dtUsers As VMDataTable
 	Private dtImages As VMDataTable
 	Private vue As BANanoVue
+	Private dtButtons As VMDataTable
 End Sub
 
 
@@ -26,7 +27,7 @@ Sub Code
 	'hide this container
 	cont.Hide
 	'
-	cont.AddRows(5).AddColumns12
+	cont.AddRows(10).AddColumns12
 	'
 	Dim recs As List = vm.Json2List($"[
     {
@@ -430,12 +431,163 @@ vue.AddCode($"dtImages.SetDataSource(images)"$)
 vue.AddCode($"dtImages.SetExternalPagination"$)
 vue.AddCode($"dtImages.AddToContainer(cont, 4, 1)"$)
 vue.AddCode($""$)
-pgIndex.CreateVBCode(vue, Me, "imgdtcode", "Images Data Table", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	pgIndex.CreateVBCode(vue, Me, "imgdtcode", "Images Data Table", vue.GetSourceCode).AddToContainer(cont, 4, 1)
+	'
+	'buttons on columns
+	dtButtons = vm.CreateDataTable("dtButtons", "name", Me)
+	dtButtons.SetTitle("Button Variants")
+	dtButtons.AddColumn("name", "Name")
+	dtButtons.AddColumn("calories", "Calories")
+	'
+	dtButtons.AddButtonColumn("btnwarn", "Warning").SetButtonWarning("btnwarn")
+	dtButtons.AddButtonColumn("btnerror", "Errors").SetButtonError("btnerror")
+	dtButtons.AddButtonColumn("btnsuccess", "Success").SetButtonSuccess("btnsuccess")
+	dtButtons.AddButtonColumn("btnsecondary", "Secondary").SetButtonSecondary("btnsecondary")
+	dtButtons.AddButtonColumn("btnprimary", "Primary").SetButtonPrimary("btnprimary")
+	dtButtons.AddButtonColumn("btnrounded", "Rounded").SetButtonRounded("btnrounded").SetButtonPrimary("btnrounded")
+	dtButtons.AddButtonColumn("btnoutlined", "Outlined").SetButtonOutlined("btnoutlined").SetButtonPrimary("btnoutlined")
+	'
+	dtButtons.AddRow(CreateMap("name": "Frozen Yogurt", "calories": 159))
+	dtButtons.AddRow(CreateMap("name": "Ice cream sandwich", "calories": 237))
+	dtButtons.AddRow(CreateMap("name": "Eclair", "calories": 262))
+	dtButtons.AddRow(CreateMap("name": "Cupcake", "calories": 305))
+	dtButtons.AddRow(CreateMap("name": "Gingerbread", "calories": 356))
+	dtButtons.AddRow(CreateMap("name": "Jelly bean", "calories": 375))
+	dtButtons.AddRow(CreateMap("name": "Lollipop", "calories": 392))
+	dtButtons.AddRow(CreateMap("name": "Honeycomb", "calories": 408))
+	dtButtons.AddRow(CreateMap("name": "Donut", "calories": 452))
+	dtButtons.AddRow(CreateMap("name": "KitKat", "calories": 518))
+	dtButtons.AddToContainer(cont, 5, 1)
+	'
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"'buttons on columns"$)
+vue.AddCode($"dtButtons = vm.CreateDataTable("dtButtons", "name", Me)"$)
+vue.AddCode($"dtButtons.SetTitle("Button Variants")"$)
+vue.AddCode($"dtButtons.AddColumn("name", "Name")"$)
+vue.AddCode($"dtButtons.AddColumn("calories", "Calories")"$)
+vue.AddCode($"'"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnwarn", "Warning").SetButtonWarning("btnwarn")"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnerror", "Errors").SetButtonError("btnerror")"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnsuccess", "Success").SetButtonSuccess("btnsuccess")"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnsecondary", "Secondary").SetButtonSecondary("btnsecondary")"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnprimary", "Primary").SetButtonPrimary("btnprimary")"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnrounded", "Rounded").SetButtonRounded("btnrounded")"$)
+vue.AddCode($"dtButtons.AddButtonColumn("btnoutlined", "Outlined").SetButtonOutlined("btnoutlined").SetButtonPrimary("btnoutlined")"$)
+vue.AddCode($"'"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Frozen Yogurt", "calories": 159))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Ice cream sandwich", "calories": 237))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Eclair", "calories": 262))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Cupcake", "calories": 305))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Gingerbread", "calories": 356))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Jelly bean", "calories": 375))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Lollipop", "calories": 392))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Honeycomb", "calories": 408))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "Donut", "calories": 452))"$)
+vue.AddCode($"dtButtons.AddRow(CreateMap("name": "KitKat", "calories": 518))"$)
+vue.AddCode($"dtButtons.AddToContainer(cont, 5, 1)"$)
+pgIndex.CreateVBCode(vue, Me, "tablebuttons", "Button Variants", vue.GetSourceCode).AddToContainer(cont, 6, 1)
+	'
+	'initialize code builder
+vue.SourceCodeBuilder
+vue.AddCode($"Sub dtButtons_btnoutlined(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarPrimary("Outlined...")"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtButtons_btnrounded(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarPrimary("Rounded...")"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtButtons_btnprimary(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarPrimary("Primary...")"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtButtons_btnsecondary(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarSecondary("Secondary...")"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtButtons_btnsuccess(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarSuccess("Success...")"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtButtons_btnwarn(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarWarning("Warning...")"$)
+vue.AddCode($"End Sub"$)
+vue.AddCode($""$)
+vue.AddCode($"Sub dtButtons_btnerror(item As Map)"$)
+vue.AddCode($"vm.ShowSnackBarError("Error...")"$)
+vue.AddCode($"End Sub"$)
+pgIndex.CreateVBCode(vue, Me, "buttoneve", "Button Events", vue.GetSourceCode).AddToContainer(cont, 7, 1)
 
+	
 	'add container to page
 	vm.AddContainer(cont)
 	'
 	vm.SetMethod(Me,"getcolor")
+End Sub
+
+
+
+Sub dtButtons_btnshaped(item As Map)
+	vm.ShowSnackBarPrimary("Shaped...")
+End Sub
+
+
+Sub buttonevecopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("buttoneve")
+End Sub
+
+Sub buttonevedownload_click(e As BANanoEvent)
+	vue.DownloadCode("buttoneve", "buttoneve.txt")
+End Sub
+
+
+
+Sub tablebuttonscopy_click(e As BANanoEvent)
+	vue.CopyCode2Clipboard("tablebuttons")
+End Sub
+
+Sub tablebuttonsdownload_click(e As BANanoEvent)
+	vue.DownloadCode("tablebuttons", "tablebuttons.txt")
+End Sub
+
+
+Sub dtButtons_btnoutlined(item As Map)
+	vm.ShowSnackBarPrimary("Outlined...")
+End Sub
+
+
+Sub dtButtons_btnrounded(item As Map)
+	vm.ShowSnackBarPrimary("Rounded...")
+End Sub
+
+
+Sub dtButtons_btnprimary(item As Map)
+	vm.ShowSnackBarPrimary("Primary...")
+End Sub
+
+
+Sub dtButtons_btnsecondary(item As Map)
+	vm.ShowSnackBarSecondary("Secondary...")
+End Sub
+
+
+Sub dtButtons_btnsuccess(item As Map)
+	vm.ShowSnackBarSuccess("Success...")
+End Sub
+
+
+Sub dtButtons_btnwarn(item As Map)
+	vm.ShowSnackBarWarning("Warning...")
+End Sub
+
+Sub dtButtons_btnerror(item As Map)
+	vm.ShowSnackBarError("Error...")
 End Sub
 
 Sub btnDeleteAll_click(e As BANanoEvent)
@@ -449,8 +601,6 @@ End Sub
 Sub imgdtcodedownload_click(e As BANanoEvent)
 	vue.DownloadCode("imgdtcode", "imgdtcode.txt")
 End Sub
-
-
 
 Sub usrdtcodecopy_click(e As BANanoEvent)
 	vue.CopyCode2Clipboard("usrdtcode")

@@ -19,6 +19,7 @@ Sub Class_Globals
 	Private bDatePicker As Boolean
 	Private bStatic As Boolean
 	Private bHideIcons As Boolean
+	Private bShowButtons As Boolean
 End Sub
 
 'initialize the DateTimePicker
@@ -41,10 +42,14 @@ Public Sub Initialize(v As BANanoVue, sid As String, eventHandler As Object) As 
 	SetOnChange(Module, $"${ID}_change"$)
 	SetOnClickDate($"${ID}_clickdate"$)
 	SetOnClickMinute($"${ID}_clickminute"$)
+	SetShowButtons(True)
 	Return Me
 End Sub
 
-
+'show or hide ok cancel buttons
+Sub SetShowButtons(b As Boolean)
+	bShowButtons = b
+End Sub
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)
@@ -88,23 +93,23 @@ Sub SetTimePicker As VMDateTimePicker
 	DateTimePicker.fieldType = "string"
 	Return Me
 End Sub
-
-Sub SetDateTimePicker As VMDateTimePicker
-	bTimePicker = False
-	bDatePicker = False
-	DateTimePicker.SetTag("v-datetime-picker")
-	DateTimePicker.typeOf = "datetimepicker"
-	DateTimePicker.fieldType = "string"
-	SetForInput
-	'
-'	If vue.ModuleExist("v-datetime-picker") = False Then
-'		Dim co As BANanoObject
-'		co.Initialize("VuetifyDatetimePicker")
-'		vue.AddComponentBO("v-datetime-picker", co)
-'		vue.AddModule("v-datetime-picker")
-'	End If
-	Return Me
-End Sub
+'
+'Sub SetDateTimePicker As VMDateTimePicker
+'	bTimePicker = False
+'	bDatePicker = False
+'	DateTimePicker.SetTag("v-datetime-picker")
+'	DateTimePicker.typeOf = "datetimepicker"
+'	DateTimePicker.fieldType = "string"
+'	SetForInput
+'	'
+''	If vue.ModuleExist("v-datetime-picker") = False Then
+''		Dim co As BANanoObject
+''		co.Initialize("VuetifyDatetimePicker")
+''		vue.AddComponentBO("v-datetime-picker", co)
+''		vue.AddModule("v-datetime-picker")
+''	End If
+'	Return Me
+'End Sub
 
 Sub SetHideDetails(b As Boolean) As VMDateTimePicker
 	TextField.SetHideDetails(b)
@@ -303,12 +308,19 @@ Sub ToString As String
 		dMenu.SetText(tmpl.ToString)
 		'
 		DateTimePicker.SetVIf($"${ID}dtmenu"$)
-		Dim ssave As String = "$refs." & ID & "menu.save(" & vmodel & ")"
+		Dim ssave As String = "$refs." & ID & "dtmenu.save(" & vmodel & ")"
 		If bTimePicker Then
 			DateTimePicker.SetAttrSingle("@click:minute", ssave)
 		Else
 			DateTimePicker.SetAttrLoose("scrollable")
 			DateTimePicker.SetAttrSingle("@click:date", ssave)
+		End If
+		'
+		If bShowButtons Then
+			DateTimePicker.SetText($"<v-btn text color="error" @click="${vmodel}=''">Clear</v-btn>"$)
+			DateTimePicker.SetText("<v-spacer></v-spacer>")
+			DateTimePicker.SetText($"<v-btn text color="primary" @click="${ID}dtmenu = false">Cancel</v-btn>"$)
+			DateTimePicker.SetText($"<v-btn text color="primary" @click="${ssave}">OK</v-btn>"$)
 		End If
 		'
 		dMenu.SetText(DateTimePicker.ToString)

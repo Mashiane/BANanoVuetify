@@ -129,7 +129,11 @@ Public Sub Initialize(EventHandler As Object)
 	body.empty
 	body.Append($"<div id="app"></div>"$)
 	body.Append($"<div id="placeholder" v-if="placeholder"></div>"$)
+	body.Append($"<div id="appendholder" v-if="appendholder"></div>"$)
+	'
 	SetData("placeholder", False)
+	SetData("appendholder", False)
+	'
 	Template.Initialize("app1", "div")
 	Module = EventHandler
 	'
@@ -764,8 +768,8 @@ Sub GetDataGlobal(prop As String) As Object
 	rslt = state.GetDefault(prop, Null)
 	Try
 		Dim bo As BANanoObject = store.GetField(prop)
-		If BANAno.IsNull(bo) Then Return Null
-		If BANAno.IsUndefined(bo) Then Return Null
+		If BANAno.IsNull(bo) Then Return ""
+		If BANAno.IsUndefined(bo) Then Return ""
 		rslt = store.GetField(prop).Result
 	Catch
 		'Log($"Error - BANanoVue.GetData: ${prop}"$)
@@ -1230,6 +1234,12 @@ Sub DateDiff(currentDate As String, otherDate As String) As Int
 	Return rslt
 End Sub
 
+Sub RemoveDataItems(items As List) As BANanoVue
+	For Each k As String In items
+		RemoveData(k)
+	Next
+	Return Me
+End Sub
 
 Sub RemoveData(key As String) As BANanoVue
 	key = key.ToLowerCase
@@ -1374,6 +1384,21 @@ Sub GetFileDetails(fileObj As Map) As FileObject
 	Return ff
 End Sub
 
+'add html of component to app and this binds events and states
+Sub BindVueElement(elx As VueElement)
+	Dim mbindings As Map = elx.bindings
+	Dim mmethods As Map = elx.methods
+	'apply the binding for the control
+	For Each k As String In mbindings.Keys
+		Dim v As String = mbindings.Get(k)
+		SetData(k, v)
+	Next
+	'apply the events
+	For Each k As String In mmethods.Keys
+		Dim cb As BANanoObject = mmethods.Get(k)
+		SetCallBack(k, cb)
+	Next
+End Sub
 
 Sub BeautifySourceCode(slang As String, sc As String) As String
 	Select Case slang
@@ -2494,6 +2519,35 @@ Sub SetCloak(b As Boolean) As BANanoVue
 	Return Me
 End Sub
 
+'add custom element to VApp
+Sub AddCustomElement(eltag As String, elid As String, elprops As Map, eltext As String)
+	AddElement1(elid, eltag, eltext, elprops, Null, Null)
+End Sub
+
+Sub AddElement1(elID As String, elTag As String, elText As String, mprops As Map, mstyles As Map, lclasses As List) As BANanoVue
+	Dim d As VMElement
+	d.Initialize(Me, elID).SetTag(elTag)
+	d.SetText(elText)
+	d.BuildModel(mprops, mstyles, lclasses, Null)
+	Template.SetText(d.ToString)
+	Return Me
+End Sub
+
+'add placeholder to VAPP
+Sub AddPlaceholder() As BANanoVue
+	Dim stemplate As String = BANanoGetHTML("placeholder")
+	Template.SetText(stemplate)
+	Return Me
+End Sub
+
+'add anything from the appendholder
+Sub AppendHolderTo(target As String) As BANanoVue
+	Dim stemplate As String = BANanoGetHTMLAsIs("appendholder")
+	Dim elx As BANanoElement = BANAno.GetElement(target)
+	elx.append(stemplate)
+	Return Me
+End Sub
+
 'add a theme to use in the app
 Sub AddTheme(themeName As String, ForeColor As String, ForeColorIntensity As String, BackColor As String, BackColorIntensity As String)
 	themeName = themeName.ToLowerCase
@@ -3183,26 +3237,34 @@ Sub SetStateDecrement(k As String) As BANanoVue
 End Sub
 
 Sub SetStateList(k As String, l As List) As BANanoVue
+	If BANAno.IsNull(k) Or BANAno.IsUndefined(k) Then k = ""
 	k = k.tolowercase
+	If k = "" Then Return Me
 	data.Put(k, l)
 	Return Me
 End Sub
 
 'a single state change
 Sub SetStateSingle(k As String, v As Object) As BANanoVue
+	If BANAno.IsNull(k) Or BANAno.IsUndefined(k) Then k = ""
 	k = k.tolowercase
+	If k = "" Then Return Me
 	data.Put(k, v)
 	Return Me 
 End Sub
 
 Sub SetBoolean(k As String, b As Boolean) As BANanoVue
+	If BANAno.IsNull(k) Or BANAno.IsUndefined(k) Then k = ""
 	k = k.tolowercase
+	If k = "" Then Return Me
 	data.Put(k, b)
 	Return Me
 End Sub
 
 Sub SetList(k As String, l As Boolean) As BANanoVue
+	If BANAno.IsNull(k) Or BANAno.IsUndefined(k) Then k = ""
 	k = k.tolowercase
+	If k = "" Then Return Me
 	data.Put(k, l)
 	Return Me
 End Sub
@@ -3693,8 +3755,10 @@ End Sub
 Sub SetState(m As Map) As BANanoVue
 	Try
 	For Each k As String In m.Keys
+		If BANAno.IsNull(k) Or BANAno.IsUndefined(k) Then k = ""
 		Dim v As Object = m.Get(k)
 		k = k.tolowercase
+		If k = "" Then Continue
 		data.Put(k, v)
 	Next
 	Catch
@@ -4288,7 +4352,9 @@ Sub Decrement(elID As String, valueOf As Int) As BANanoVue
 End Sub
 
 'add a rule
-Sub AddRule(ruleName As String, EventHandler As Object,  MethodName As String)
+Sub AddRule(ruleName As String, EventHandler As Object,  MethodName As String) As BANanoVue
+	If BANAno.IsNull(ruleName) Or BANAno.IsUndefined(ruleName) Then ruleName = ""
+	If ruleName = "" Then Return Me
 	ruleName = ruleName.ToLowerCase
 	MethodName = MethodName.ToLowerCase
 	Dim rules As List
@@ -4304,6 +4370,7 @@ Sub AddRule(ruleName As String, EventHandler As Object,  MethodName As String)
 		rules.Add(cb.Result)
 	End If
 	data.put(ruleName, rules)
+	Return Me
 End Sub
 
 'get the html part of a bananoelement
@@ -4317,6 +4384,17 @@ Sub BANanoGetHTML(id As String) As String
 	Return xTemplate
 End Sub
 
+'get the html part of a bananoelement
+Sub BANanoGetHTMLAsIs(id As String) As String
+	id = id.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${id}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	Return xTemplate
+End Sub
+
+
 'get html from source and append it on target
 Sub BANanoMoveHTML(source As String, target As String)
 	source = source.tolowercase
@@ -4324,4 +4402,18 @@ Sub BANanoMoveHTML(source As String, target As String)
 	Dim ssource As String = BANanoGetHTML(source)
 	'append the html to the target
 	BANAno.GetElement($"#${target}"$).Append(ssource)
+End Sub
+
+'add anything from the appendholder
+Sub AppendPlaceHolderTo(target As String)
+	Dim stemplate As String = BANanoGetHTMLAsIs("placeholder")
+	Dim elx As BANanoElement
+	elx.Initialize($"#${target}"$)
+	elx.append(stemplate)
+End Sub
+
+'set the template from the placeholder
+Sub AppendPlaceholderToTemplate
+	Dim ssource As String = BANanoGetHTML("placeholder")
+	SetTemplate(ssource)
 End Sub

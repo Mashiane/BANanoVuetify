@@ -64,6 +64,22 @@ Public Sub Initialize(v As BANanoVue, sid As String, sPath As String, Module As 
 	Return Me
 End Sub
 
+'add html of component to app and this binds events and states
+Sub BindVueElement(el As VueElement)
+	Dim mbindings As Map = el.bindings
+	Dim mmethods As Map = el.methods
+	'apply the binding for the control
+	For Each k As String In mbindings.Keys
+		Dim v As String = mbindings.Get(k)
+		SetData(k, v)
+	Next
+	'apply the events
+	For Each k As String In mmethods.Keys
+		Dim cb As BANanoObject = mmethods.Get(k)
+		SetCallBack(k, cb)
+	Next
+End Sub
+
 'import a component, the module should have the Initilize method without parameters
 Sub Import(compname As String, comp As VMComponent) As VMComponent
 	compname = compname.tolowercase
@@ -267,6 +283,13 @@ Sub SetTemplateFromPlaceholder() As VMComponent
 	Return Me
 End Sub
 
+'set template from a placeholder
+Sub AddPlaceholder() As VMComponent
+	Dim stemplate As String = vue.BANanoGetHTML("placeholder")
+	Template.SetText(stemplate)
+	Return Me
+End Sub
+
 'set template
 Sub SetTemplate(t As String) As VMComponent
 	Template.SetText(t)
@@ -438,8 +461,10 @@ End Sub
 'set the state
 Sub SetState(m As Map) As VMComponent
 	For Each k As String In m.Keys
+		If BANano.IsNull(k) Or BANano.IsUndefined(k) Then k = ""
 		Dim v As Object = m.Get(k)
 		k = k.tolowercase
+		If k = "" Then Continue
 		data.Put(k, v)
 	Next
 	Return Me
@@ -568,8 +593,10 @@ Sub SetStateSingle(k As String, v As Object) As VMComponent
 End Sub
 
 'add a rule
-Sub AddRule(ruleName As String, Module As Object,  MethodName As String)
+Sub AddRule(ruleName As String, Module As Object,  MethodName As String) As VMComponent
+	If BANano.IsNull(ruleName) Or BANano.IsUndefined(ruleName) Then ruleName = ""
 	ruleName = ruleName.ToLowerCase
+	If ruleName = "" Then Return Me
 	MethodName = MethodName.ToLowerCase
 	Dim rules As List
 	If data.ContainsKey(ruleName) Then
@@ -584,4 +611,39 @@ Sub AddRule(ruleName As String, Module As Object,  MethodName As String)
 		rules.Add(cb.Result)
 	End If	
 	data.put(ruleName, rules)
+	Return Me
+End Sub
+
+'add anything from the appendholder
+Sub AppendHolder
+	Dim stemplate As String = BANanoGetHTMLAsIs("appendholder")
+	Template.SetText(stemplate)
+End Sub
+
+'add anything from the appendholder
+Sub AppendHolderTo(target As String)
+	Dim stemplate As String = BANanoGetHTMLAsIs("appendholder")
+	Dim elx As BANanoElement = BANano.GetElement(target)
+	elx.append(stemplate)
+End Sub
+
+'get the html part of a bananoelement
+Sub BANanoGetHTML(sID As String) As String
+	sID = sID.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${sID}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	xTemplate = xTemplate.Replace("v-template", "template")
+	Return xTemplate
+End Sub
+
+'get the html part of a bananoelement
+private Sub BANanoGetHTMLAsIs(sID As String) As String
+	sID = sID.tolowercase
+	Dim be As BANanoElement
+	be.Initialize($"#${sID}"$)
+	Dim xTemplate As String = be.GetHTML
+	be.Empty
+	Return xTemplate
 End Sub

@@ -219,7 +219,7 @@ public Sub AddClass(varClass As String)
 If BANano.IsUndefined(varClass) Or BANano.IsNull(varClass) Then Return
 If BANano.IsNumber(varClass) Then varClass = BANanoShared.CStr(varClass)
 varClass = varClass.trim
-if varClass = "" Then Return
+If varClass = "" Then Return
 If mElement <> Null Then mElement.AddClass(varClass)
 Dim mxItems As List = BANanoShared.StrParse(" ", varClass)
 For Each mt As String In mxItems
@@ -228,13 +228,13 @@ Next
 End Sub
 
 'add a class on condition
-public Sub AddClassOnCondition(varClass As String, varCondition As Boolean, varShouldBe As boolean)
+public Sub AddClassOnCondition(varClass As String, varCondition As Boolean, varShouldBe As Boolean)
 If BANano.IsUndefined(varCondition) Or BANano.IsNull(varCondition) Then Return
-if varShouldBe <> varCondition Then Return
+If varShouldBe <> varCondition Then Return
 If BANano.IsUndefined(varClass) Or BANano.IsNull(varClass) Then Return
 If BANano.IsNumber(varClass) Then varClass = BANanoShared.CStr(varClass)
 varClass = varClass.trim
-if varClass = "" Then Return
+If varClass = "" Then Return
 If mElement <> Null Then mElement.AddClass(varClass)
 Dim mxItems As List = BANanoShared.StrParse(" ", varClass)
 For Each mt As String In mxItems
@@ -243,7 +243,7 @@ Next
 End Sub
 
 'add a style
-public Sub AddStyle(varProp As string, varStyle As String)
+public Sub AddStyle(varProp As String, varStyle As String)
 If BANano.IsUndefined(varStyle) Or BANano.IsNull(varStyle) Then Return
 If BANano.IsNumber(varStyle) Then varStyle = BANanoShared.CStr(varStyle)
 If mElement <> Null Then
@@ -294,7 +294,7 @@ End Sub
 Public Sub getClasses() As String
 Dim sbClass As StringBuilder
 sbClass.Initialize
-For each k As String in classList.Keys
+For Each k As String In classList.Keys
 sbClass.Append(k).Append(" ")
 Next
 mClasses = sbClass.ToString

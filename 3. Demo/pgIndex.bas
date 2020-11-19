@@ -111,8 +111,8 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("styles","itemgroups", "", "", "Item Groups","")
 	vm.Drawer.AddParentChild("styles","slidegroups", "", "", "Slide Groups","")
 	vm.Drawer.AddParentChild("styles","windows", "", "", "Windows","")
-	vm.Drawer.AddParentChild("styles","dynamic", "", "", "Dynamic Input Controls","")
-	vm.drawer.AddParentChild("styles", "gridselect", "", "", "Grid Select", "")
+	'vm.Drawer.AddParentChild("styles","dynamic", "", "", "Dynamic Input Controls","")
+	'vm.drawer.AddParentChild("styles", "gridselect", "", "", "Grid Select", "")
 	'
 	vm.Drawer.AddParentChild("","ui", "", "", "UI Components","")
 	vm.Drawer.AddParentChild("ui","alerts", "", "", "Alerts","")
@@ -172,7 +172,7 @@ Sub BuildDrawer
 	vm.Drawer.AddParentChild("grid", "design", "", "", "Grid Design","")
 	
 	vm.Drawer.AddParentChild("", "examples", "", "", "Examples", "")
-	vm.drawer.AddParentChild("examples", "pages", "", "", "Creating Pages","")
+	'vm.drawer.AddParentChild("examples", "pages", "", "", "Creating Pages","")
 	vm.drawer.AddParentChild("examples", "messageboard", "", "", "Message Board","")
 	vm.drawer.AddParentChild("examples", "reallogs", "", "", "Realtime Logging","")
 	
@@ -227,15 +227,15 @@ Sub draweritems_click(elID As Object)
 	vm.callmethod("stop")
 	Select Case elID
 	Case "pages"
-		vm.NavBar.UpdateTitle(modPages.title)
-		vm.showpage(modPages.name)
+		'vm.NavBar.UpdateTitle(modPages.title)
+		'vm.showpage(modPages.name)
 	Case "gridselect"
-		vm.NavBar.UpdateTitle(modGridSelect.title)
-		vm.showpage(modGridSelect.name)
+		'vm.NavBar.UpdateTitle(modGridSelect.title)
+		'vm.showpage(modGridSelect.name)
 	Case "dynamic"
-		vm.NavBar.UpdateTitle(modDynamic.title)
-		vm.showpage(modDynamic.name)
-		modDynamic.BuildDynamicForm
+		'vm.NavBar.UpdateTitle(modDynamic.title)
+		'vm.showpage(modDynamic.name)
+		'modDynamic.BuildDynamicForm
 	Case "windows"
 		vm.NavBar.UpdateTitle(modWindow.title)
 		vm.ShowPage(modWindow.name)
@@ -496,14 +496,14 @@ Sub AddPages
 	vm.AddPage(modOverlay.name, modOverlay)
 	vm.AddPage(modRealtimeLogging.name, modRealtimeLogging)
 	vm.AddPage(modCalendar.name, modCalendar)
-	vm.AddPage(modToolkit.name, modToolkit)
+	'vm.AddPage(modToolkit.name, modToolkit)
 	vm.AddPage(pgBRs.name, pgBRs)
 	vm.AddPage(modItemGroups.name, modItemGroups)
 	vm.AddPage(modSlideGroups.name, modSlideGroups)
 	vm.AddPage(modWindow.name, modWindow)
-	vm.addpage(modDynamic.name, modDynamic)
-	vm.AddPage(modGridSelect.Name, modGridSelect)
-	vm.AddPage(modPages.name, modPages)
+	'vm.addpage(modDynamic.name, modDynamic)
+	'vm.AddPage(modGridSelect.Name, modGridSelect)
+	'vm.AddPage(modPages.name, modPages)
 	vm.AddPage(modSimpleTable.name, modSimpleTable)
 End Sub
 

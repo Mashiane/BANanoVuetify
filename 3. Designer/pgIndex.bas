@@ -759,6 +759,7 @@ Sub Init
 	'initialize the application
 	vm.Initialize(Me, Main.appname)
 	vue = vm.vue
+	vm.ShowWarnings = False
 	vue.ShowWarnings = False
 	'
 '	Dim lst As List = vue.newlist
@@ -10534,7 +10535,7 @@ Sub Design_DBSourceCode
 		sbl.append($"Case "A""$).Append(CRLF)
 		
 		' we have an auto increment field
-		If bisautoincrement = True Then
+		If bisautoincrement  Then
 			Select Case sdbtype
 			Case "banano"
 				AddComment(sbl, "generate max value")

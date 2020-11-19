@@ -45,8 +45,8 @@ pgIndex.CreateVBCode(vue, Me, "datep", "Date Picker", vue.GetSourceCode).AddToCo
 	Dim dp3 As VMDateTimePicker = vm.CreateDatePicker("dp3", Me).SetVModel("dp3").SetMonthPicker
 	dp3.AddToContainer(cont, 3, 2)
 	'
-	Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetDateTimePicker
-	dp4.AddToContainer(cont, 4, 1)
+	'Dim dp4 As VMDateTimePicker = vm.CreateDatePicker("dp4", Me).SetVModel("dp4").SetDateTimePicker
+	'dp4.AddToContainer(cont, 4, 1)
 	
 	vm.AddContainer(cont)
 End Sub
