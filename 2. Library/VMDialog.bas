@@ -54,7 +54,7 @@ End Sub
 
 'add an element to the page content
 Sub AddElement(elm As VMElement)
-	dialog.SetText(elm.ToString)
+	Dialog.SetText(elm.ToString)
 End Sub
 
 Sub SetData(prop As String, value As Object) As VMDialog

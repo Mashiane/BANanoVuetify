@@ -1432,7 +1432,7 @@ End Sub
 
 Sub ShowAlert(process As String, Title As String, Message As String, ConfirmText As String)
 	process = process.tolowercase
-	vue.SetState(CreateMap("alertkey":process, "alerttitle":Title,"alertcontent":Message,"btnalertoklabel":ConfirmText))
+	vue.SetState(CreateMap("alertkey":process, "appalerttitle":Title,"appalertcontent":Message,"btnalertoklabel":ConfirmText))
 	Alert.Show
 End Sub
 

@@ -382,6 +382,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=VMDateTimePicker,SetRequired,210,0,VueElement,NewRadioGroupOptions,2760,0,VueElement,NewRadioGroup,2755,0,VMDateTimePicker,Initialize,39,1,VMDateTimePicker,Class_Globals,15,4,VMDateTimePicker,SetShowButtons,44,5,VMDateTimePicker,computedDateFormatted,329,0,VMDateTimePicker,ToString,318,6,VMTemplate,SetSlotActivator1,122,0,Main,Process_Globals,9,0,Main,AppStart,18,0
+NavigationStack=BANanoVM,ConfirmHide,1422,0,BANanoVM,RemoveNeeds,488,0,BANanoVM,Class_Globals,296,0,BANanoVM,Initialize,405,0,BANanoVM,ShowAlert,1428,0,VMDialog,Class_Globals,9,0,BANanoVM,ShowNotification,1437,0,Main,Process_Globals,11,0,Main,BANano_Ready,45,0,Main,AppStart,18,0
 SelectedBuild=0
 VisibleModules=
