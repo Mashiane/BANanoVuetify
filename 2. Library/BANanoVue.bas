@@ -127,9 +127,7 @@ Public Sub Initialize(EventHandler As Object)
 	'empty the body of the page
 	body = BANAno.GetElement("#body")
 	body.empty
-	body.Append($"<div id="app"></div>"$)
-	body.Append($"<div id="placeholder" v-if="placeholder"></div>"$)
-	body.Append($"<div id="appendholder" v-if="appendholder"></div>"$)
+	body.Append($"<div id="app"><div id="placeholder" v-if="placeholder"></div><div id="appendholder" v-if="appendholder"></div></div>"$)
 	'
 	SetData("placeholder", False)
 	SetData("appendholder", False)
@@ -807,6 +805,7 @@ Sub IncrementGlobal(prop As String, addVal As Int)
 	prop = prop.tolowercase
 	'get the value of the coun
 	Dim cc As Int = GetDataGlobal(prop)
+	If BANAno.IsNull(cc) Or cc = "" Then cc = 0
 	cc = BANAno.parseInt(cc)
 	'increment by 1
 	cc = cc + addVal
@@ -819,6 +818,7 @@ Sub DecrementGlobal(prop As String, addVal As Int)
 	prop = prop.tolowercase
 	'get the value of the coun
 	Dim cc As Int = GetDataGlobal(prop)
+	If BANAno.IsNull(cc) Or cc = "" Then cc = 0
 	cc = BANAno.parseInt(cc)
 	'decrement by 1
 	cc = cc - addVal
@@ -1303,6 +1303,7 @@ End Sub
 Sub StateIncrement(itemName As String) As Int
 	itemName = itemName.tolowercase
 	Dim intX As Int = BOVue.GetField(itemName).result
+	If BANAno.IsNull(intX) Or intX = "" Then intX = 0
 	intX = BANAno.parseint(intX) + 1
 	BOVue.GetField(itemName)
 	BOVue.SetField(itemName, intX)
@@ -1323,6 +1324,7 @@ End Sub
 Sub StateDecrement(itemName As String) As Int
 	itemName = itemName.tolowercase
 	Dim intX As Int = BOVue.GetField(itemName).result
+	If BANAno.IsNull(intX) Or intX = "" Then intX = 0
 	intX = BANAno.parseint(intX) - 1
 	BOVue.GetField(itemName)
 	BOVue.SetField(itemName, intX)
@@ -3224,6 +3226,7 @@ End Sub
 
 Sub SetStateIncrement(k As String) As BANanoVue
 	Dim oldV As String = GetState(k, "0")
+	If BANAno.IsNull(oldV) Or oldV = "" Then oldV = 0
 	oldV = BANAno.parseInt(oldV) + 1
 	SetStateSingle(k, oldV)
 	Return Me
@@ -3231,6 +3234,7 @@ End Sub
 
 Sub SetStateDecrement(k As String) As BANanoVue
 	Dim oldV As String = GetState(k, "0")
+	If BANAno.IsNull(oldV) Or oldV = "" Then oldV = 0
 	oldV = BANAno.parseInt(oldV) - 1
 	SetStateSingle(k, oldV)
 	Return Me
@@ -4338,6 +4342,7 @@ End Sub
 Sub Increment(elID As String, valueOf As Int) As BANanoVue
 	elID = elID.tolowercase
 	Dim oldv As Int = GetState(elID,0)
+	If BANAno.IsNull(oldv) Or oldv = "" Then oldv = 0
 	oldv = BANAno.parseInt(oldv) + valueOf
 	SetStateSingle(elID, oldv)
 	Return Me
@@ -4346,6 +4351,7 @@ End Sub
 Sub Decrement(elID As String, valueOf As Int) As BANanoVue
 	elID = elID.tolowercase
 	Dim oldv As Int = GetState(elID,0)
+	If BANAno.IsNull(oldv) Or oldv = "" Then oldv = 0
 	oldv = BANAno.parseInt(oldv) - valueOf
 	SetStateSingle(elID, oldv)
 	Return Me

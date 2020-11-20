@@ -384,16 +384,18 @@ pgIndex.CreateVBCode(vue, Me, "usrdtcode", "Users Data Table", vue.GetSourceCode
 	'http://numeraljs.com/
 	'
 	Dim images As List = vm.newlist
-	images.add(CreateMap("image": "./assets/bird.jpg", "comment":"A bird seen from above", "lat":"16.0", "lng":"20.1", "datetaken":"1973-04-15"))
-	images.add(CreateMap("image": "./assets/dark-beach.jpg", "comment":"Seen whilst walking", "lat":"36.0", "lng":"24.8", "datetaken":"2003-02-27"))
-	images.add(CreateMap("image": "./assets/planet.jpg", "comment":"A need to visit planets", "lat":"1.0", "lng":"1.1", "datetaken":"2009-04-01"))
-	images.add(CreateMap("image": "./assets/sky.jpg", "comment":"A beautiful skyline", "lat":"0", "lng":"0", "datetaken":"2010-04-24"))
-	images.add(CreateMap("image": "./assets/squirrel.jpg", "comment":"Nutting around", "lat":"45", "lng":"30", "datetaken":"2010-09-02"))
+	images.add(CreateMap("image": "./assets/bird.jpg", "sendto":"mashy@gmail.com", "comment":"A bird seen from above", "lat":"16.0", "lng":"20.1", "datetaken":"1973-04-15"))
+	images.add(CreateMap("image": "./assets/dark-beach.jpg", "sendto":"ozzie@gmail.com", "comment":"Seen whilst walking", "lat":"36.0", "lng":"24.8", "datetaken":"2003-02-27"))
+	images.add(CreateMap("image": "./assets/planet.jpg", "sendto":"orio@gmail.com", "comment":"A need to visit planets", "lat":"1.0", "lng":"1.1", "datetaken":"2009-04-01"))
+	images.add(CreateMap("image": "./assets/sky.jpg", "sendto":"ernesto@gmail.com", "comment":"A beautiful skyline", "lat":"0", "lng":"0", "datetaken":"2010-04-24"))
+	images.add(CreateMap("image": "./assets/squirrel.jpg", "sendto":"tgifzone.inc@gmail.com", "comment":"Nutting around", "lat":"45", "lng":"30", "datetaken":"2010-09-02"))
 	'
 	dtImages = vm.CreateDataTable("dtImages", "image", Me)
 	dtImages.SetTitle("Presentation")
 	dtImages.AddImage("image", "Image")
 	dtImages.SetImageDimensions("image", "80px", "80px")
+	dtImages.AddLink("sendto", "Email To", "_blank")
+	dtImages.SetColumnPrefix("sendto", "mailto:")
 	dtImages.AddColumn("comment", "Comment")
 	dtImages.AddColumn("datetaken", "Date Taken")
 	dtImages.SetColumnType("datetaken", dtImages.COLUMN_DATE)

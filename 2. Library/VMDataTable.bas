@@ -55,7 +55,7 @@ Sub Class_Globals
 	Private search As String
 	Private items As String
 	Type DataTableColumn(value As String, text As String, align As String, sortable As Boolean, filterable As Boolean, divider As Boolean, _
-	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String, bindTotals As String, hasTotal As Boolean, depressed As Boolean, rounded As Boolean, dark As Boolean, label As String, color As String, outlined As Boolean, shaped As Boolean)
+	className As String, width As String, filter As String, sort As String, TypeOf As String, extra As String, icon As String, Disabled As Boolean, imgWidth As String, imgHeight As String, avatarSize As String, iconSize As String, iconColor As String, ReadOnly As Boolean, progressColor As String, progressRotate As String, progressSize As String, progressWidth As String, progressHeight As String, progressShowValue As Boolean, valueFormat As String, bindTotals As String, hasTotal As Boolean, depressed As Boolean, rounded As Boolean, dark As Boolean, label As String, color As String, outlined As Boolean, shaped As Boolean, target As String, prefix As String)
 	Private bStatic As Boolean
 	Private hdr As List
 	Private keyID As String
@@ -416,9 +416,10 @@ Sub AddImage(colField As String, colTitle As String)
 End Sub
 
 'add a link
-Sub AddLink(colField As String, colTitle As String)
+Sub AddLink(colField As String, colTitle As String, target As String)
 	AddColumn(colField, colTitle)
 	SetColumnType(colField, COLUMN_LINK)
+	SetColumnTarget(colField, target)
 End Sub
 
 'add an avatar image
@@ -890,9 +891,10 @@ End Sub
 'add link column
 '<code>dt.AddLinkColumn("emailaddress", "Add 1 Day")
 '</code>
-Sub AddLinkColumn(colName As String, colTitle As String) As VMDataTable
+Sub AddLinkColumn(colName As String, colTitle As String, target As String) As VMDataTable
 	AddColumn(colName, colTitle)
 	SetColumnType(colName, COLUMN_LINK)
+	SetColumnTarget(colName, target)
 	Return Me
 End Sub
 
@@ -1102,6 +1104,25 @@ Sub AddColumn1(colName As String, colTitle As String, colType As String, colWidt
 	SetColumnType(colName, colType)
 	Return Me
 End Sub
+
+Sub SetColumnTarget(colName As String, target As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.target = target
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
+Sub SetColumnPrefix(colName As String, prefix As String) As VMDataTable
+	If columnsM.ContainsKey(colName) Then
+		Dim col As DataTableColumn = columnsM.Get(colName)
+		col.prefix = prefix
+		columnsM.Put(colName,col)
+	End If
+	Return Me
+End Sub
+
 
 'define whether a column will be totalled or not
 Sub SetColumnTotal(colName As String, callBackMethod As String) As VMDataTable
@@ -1524,6 +1545,22 @@ private Sub BuildControls
 			span.SetTag("span") 
 			span.SetText($"{{ getdateformat(item.${value}, "${df}") }}"$)
 			tmp.AddComponent(span.ToString)
+			sb.Append(tmp.ToString)
+		Case COLUMN_LINK
+			Dim tmp As VMTemplate
+			tmp.Initialize(vue, "" , Module).SetStatic(bStatic).SetDesignMode(DesignMode)
+			Dim sline As String = $"v-slot:item.${value}="{ item }""$
+			tmp.SetAttrLoose(sline)
+				'
+			Dim aLink As VMElement
+			aLink.Initialize(vue, "").SetTag("a")
+			aLink.SetStatic(bStatic)
+			aLink.SetDesignMode(DesignMode)
+			Dim sLink As String = $"item.${value}"$
+			aLink.AddAttr(":href", "'" & nf.prefix & "' + " & sLink)
+			aLink.AddAttr("target", nf.target)
+			aLink.SetText($"{{ item.${value} }}"$)
+			tmp.AddComponent(aLink.ToString)
 			sb.Append(tmp.ToString)
 		Case COLUMN_MONEY, COLUMN_NUMBER
 			'get the date format

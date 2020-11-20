@@ -259,6 +259,7 @@ Sub ToString As String
 	End If
 	End If
 	If bForInput Then
+		DateTimePicker.AddAttr(":landscape", True)
 		If DateTimePicker.typeOf = "datetimepicker" Then
 			Return DateTimePicker.ToString
 		End If
@@ -271,12 +272,12 @@ Sub ToString As String
 		dMenu.SetAttrSingle("ref", $"${ID}dtmenu"$)
 		dMenu.SetVModel($"${ID}dtmenu"$)
 		dMenu.SetAttrSingle(":close-on-content-click", False)
-		'dMenu.SetAttrSingle(":nudge-right", "40")
 		dMenu.SetAttrSingle(":return-value.sync", vmodel)
 		dMenu.SetAttrSingle("transition", "scale-transition")
 		dMenu.SetAttrloose("offset-y")
-		dMenu.SetAttrSingle("min-width", "290px")
-		dMenu.SetAttrSingle("max-width", "290px")
+		dMenu.AddAttr("min-width", "460px")
+		dMenu.AddAttr("max-width", "460px")
+		dMenu.AddAttr(":nudge-right", "40")
 		'
 		Dim tmpl As VMTemplate
 		tmpl.Initialize(vue, $"${ID}tmpl"$, Module)
@@ -317,10 +318,10 @@ Sub ToString As String
 		End If
 		'
 		If bShowButtons Then
-			DateTimePicker.SetText($"<v-btn text color="error" @click="${vmodel}=''">Clear</v-btn>"$)
+			DateTimePicker.SetText($"<v-btn text outlined color="error" @click="${vmodel}=''">Clear</v-btn>"$)
 			DateTimePicker.SetText("<v-spacer></v-spacer>")
-			DateTimePicker.SetText($"<v-btn text color="primary" @click="${ID}dtmenu = false">Cancel</v-btn>"$)
-			DateTimePicker.SetText($"<v-btn text color="primary" @click="${ssave}">OK</v-btn>"$)
+			DateTimePicker.SetText($"<v-btn text outlined color="primary" @click="${ID}dtmenu = false">Cancel</v-btn>"$)
+			DateTimePicker.SetText($"<v-btn text outlined color="primary" @click="${ssave}">OK</v-btn>"$)
 		End If
 		'
 		dMenu.SetText(DateTimePicker.ToString)

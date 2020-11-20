@@ -382,6 +382,6 @@ ModuleClosedNodes96=
 ModuleClosedNodes97=
 ModuleClosedNodes98=
 ModuleClosedNodes99=
-NavigationStack=BANanoVM,ConfirmHide,1422,0,BANanoVM,RemoveNeeds,488,0,BANanoVM,Class_Globals,296,0,BANanoVM,Initialize,405,0,BANanoVM,ShowAlert,1428,0,VMDialog,Class_Globals,9,0,BANanoVM,ShowNotification,1437,0,Main,Process_Globals,11,0,Main,BANano_Ready,45,0,Main,AppStart,18,0
+NavigationStack=Main,AppStart,31,1,VMDataTable,Initialize,80,0,VMDataTable,SetColumnsLinks,390,0,VMDataTable,AddLink,414,0,VMDataTable,AddLinkColumn,889,0,VMDataTable,Class_Globals,52,2,VMDataTable,AddColumn1,1101,0,VMDataTable,SetColumnTarget,1110,0,VMDataTable,SetColumnPrefix,1118,3,VMDataTable,BuildControls,1547,6
 SelectedBuild=0
 VisibleModules=

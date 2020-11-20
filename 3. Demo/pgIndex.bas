@@ -41,7 +41,7 @@ Sub Init
 	
 	vm.UX
 	
-	vm.showpage(modProgress.name)
+	vm.showpage(modDataTable.name)
 End Sub
 
 Sub BuildNavBar

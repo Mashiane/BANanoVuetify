@@ -1790,6 +1790,7 @@ End Sub
 Sub Increment(elID As String, valueOf As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim oldv As Int = vue.GetState(elID,0)
+	If BANano.IsNull(oldv) Or oldv = "" Then oldv = 0
 	oldv = BANano.parseInt(oldv) + valueOf
 	vue.SetStateSingle(elID, oldv)
 	Return Me
@@ -1798,6 +1799,7 @@ End Sub
 Sub Decrement(elID As String, valueOf As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim oldv As Int = vue.GetState(elID,0)
+	If BANano.IsNull(oldv) Or oldv = "" Then oldv = 0
 	oldv = BANano.parseInt(oldv) - valueOf
 	vue.SetStateSingle(elID, oldv)
 	Return Me
@@ -1807,6 +1809,7 @@ End Sub
 Sub DecrementTo(elID As String, valueOf As Int, LimitTo As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim oldv As Int = vue.GetState(elID,0)
+	If BANano.IsNull(oldv) Or oldv = "" Then oldv = 0
 	oldv = BANano.parseInt(oldv) - valueOf
 	If oldv <= 0 Then oldv = LimitTo
 	vue.SetStateSingle(elID, oldv)
@@ -1816,6 +1819,7 @@ End Sub
 Sub IncrementTo(elID As String, valueOf As Int, LimitTo As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim oldv As Int = vue.GetState(elID,0)
+	If BANano.IsNull(oldv) Or oldv = "" Then oldv = 0
 	oldv = BANano.parseInt(oldv) + valueOf
 	If oldv >= LimitTo Then oldv = LimitTo
 	vue.SetStateSingle(elID, oldv)
@@ -2425,6 +2429,7 @@ Sub IncrementBadge(elID As String, counted As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim badValue As String = $"${elID}badgecontent"$
 	Dim lastValue As String = vue.GetState(badValue, "0")
+	If BANano.IsNull(lastValue) Or lastValue = "" Then lastValue = 0
 	Dim intLast As Int = BANano.parseInt(lastValue)
 	intLast = intLast + counted
 	vue.SetStateSingle(badValue, intLast)
@@ -2435,6 +2440,7 @@ Sub DecrementBadge(elID As String, counted As Int) As BANanoVM
 	elID = elID.tolowercase
 	Dim badValue As String = $"${elID}badgecontent"$
 	Dim lastValue As String = vue.GetState(badValue, "0")
+	If BANano.IsNull(lastValue) Or lastValue = "" Then lastValue = 0
 	Dim intLast As Int = BANano.parseInt(lastValue)
 	intLast = intLast - counted
 	vue.SetStateSingle(badValue, intLast)
